@@ -1,17 +1,10 @@
-import torch
-from transformers import pipeline
+import subprocess
 
-pipe = pipeline(
-    "text-generation",
-    model="google/gemma-2-2b-it",
-    model_kwargs={"torch_dtype": torch.bfloat16},
-    device="cuda",  # replace with "mps" to run on a Mac device
-)
+bat_file_path = 'C:\\Programming\\AI_Culture_Mind\\text-generation-webui\\start_windows.bat'
 
-messages = [
-    {"role": "user", "content": "Who are you? Please, answer in pirate-speak."},
-]
+try:
+    # Run the batch script using subprocess module in python.
+    process = subprocess.Popen(['cmd.exe', '/c', bat_file_path], shell=True, stdout=subprocess.PIPE)
 
-outputs = pipe(messages, max_new_tokens=256)
-assistant_response = outputs[0]["generated_text"][-1]["content"].strip()
-print(assistant_response)
+except Exception as e:
+    print(f"Error: {e}")
