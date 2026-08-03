@@ -290,14 +290,16 @@ not total word-length parity: one inverse-generator pair is in the kernel and
 the other maps to the nontrivial element, realizing an index-two character
 `Q8 / C4 ~= C2`.
 
-The mathematically defensible cardinality-free rule is therefore not “choose
-the largest stable clustering.” It is: accept a unique finest reproducible
-congruence only when every other viable partition is certified to be its
-surjective homomorphic quotient. In a finite deterministic action, such a
-finest element retains every token-distinguishable state represented by the
-corpus; incomparable maximal congruences require refusal. This replaces an
-arbitrary Euclidean cluster-separation floor with an algebraic certificate,
-but its reliability remains a prospective experimental question.
+The historical cardinality-selection rule was not “choose the largest stable
+clustering.” It accepted the largest reproducible K-means candidate only when
+every other candidate found by that scan was certified to be its surjective
+homomorphic quotient. In a finite deterministic action, the discrete partition
+retains every state already separated by that particular metric fit;
+incomparable discovered candidates require refusal. This replaced an arbitrary
+Euclidean separation floor with a stronger within-scan algebraic certificate,
+but it did not enumerate the complete congruence lattice. Exhaustive enumeration
+of the recovered Q8 action later found block counts `{1:1, 2:3, 4:1, 8:1}` in
+all nine seeds and established the observation-free identifiability boundary.
 
 ## What remains unproven
 

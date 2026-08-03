@@ -27,6 +27,12 @@ from changed_generator_transfer import (
     generated_subgroup,
     select_changed_generators,
 )
+from action_congruence_lattice import (
+    enumerate_action_congruences,
+    exact_congruence_lattice_audit,
+    is_transition_congruence,
+    set_partitions,
+)
 from a5_anchor_representation_audit import align_representation, defect_lie_audit
 from mechanistic_group_actions import (
     MECHANISM_FAMILIES,
@@ -92,6 +98,7 @@ from spin8_triality import (
     algebra_diagnostics as spin8_algebra_diagnostics,
     build_spin8_triality_algebra,
     recurrent_diagnostics as spin8_recurrent_diagnostics,
+    so8_chart_equivalence_diagnostics,
     spin8_actions,
     torch_triality_generators,
 )
@@ -119,6 +126,7 @@ from spin8_state_only_compiler import (
     deterministic_kmeans,
 )
 from spin8_finest_congruence_compiler import quotient_certificate
+from spin8_so8_optimizer_equivariance import run_optimizer_pair
 from recurrence_families_torch import (
     FAMILY_NAMES,
     ComplexUnitaryRecurrence,
@@ -271,6 +279,41 @@ class AlgebraFamilyTests(unittest.TestCase):
         torch.testing.assert_close(actions.transpose(-1, -2) @ actions, identity)
         self.assertFalse(torch.allclose(actions[0], actions[1]))
         self.assertFalse(torch.allclose(actions[1], actions[2]))
+
+    def test_positive_spin8_and_generic_so8_charts_are_exactly_equivalent(self) -> None:
+        report = so8_chart_equivalence_diagnostics()
+        self.assertTrue(report["passed"], report)
+        self.assertLess(report["generator_reconstruction_max_abs_error"], 1e-12)
+        self.assertLess(report["random_action_equivalence_max_abs_error"], 1e-12)
+        self.assertLess(report["basis_change_orthogonality_max_abs_error"], 1e-12)
+
+        mapping = torch.tensor(report["coefficient_map"])
+        torch.manual_seed(2718)
+        positive = PureGroupActionModel(
+            4, 8, family="pure_spin8_positive", channels=2
+        ).eval()
+        torch.manual_seed(2718)
+        generic = PureGroupActionModel(
+            4, 8, family="pure_so8_exponential", channels=2
+        ).eval()
+        coefficients = 0.2 * torch.randn_like(positive.action_parameters)
+        with torch.no_grad():
+            positive.action_parameters.copy_(coefficients)
+            generic.action_parameters.copy_(coefficients @ mapping)
+        torch.testing.assert_close(
+            positive.action_matrices(), generic.action_matrices(), rtol=1e-5, atol=1e-6
+        )
+        torch.testing.assert_close(
+            positive.initial_orbit_state, generic.initial_orbit_state
+        )
+        torch.testing.assert_close(positive.output_head.weight, generic.output_head.weight)
+
+    def test_sgd_preserves_exact_spin8_so8_chart_equivalence(self) -> None:
+        result = run_optimizer_pair("sgd", steps=3, batch_size=16)
+        self.assertLess(result["maxima"]["coefficient_map_max_abs_error"], 1e-10)
+        self.assertLess(result["maxima"]["action_max_abs_error"], 1e-10)
+        self.assertLess(result["maxima"]["postupdate_logit_max_abs_error"], 1e-10)
+
 
     def test_spin8_fixed_construction_needs_no_fitted_alignment(self) -> None:
         algebra = build_spin8_triality_algebra()
@@ -1164,6 +1207,32 @@ class MechanisticGroupActionTests(unittest.TestCase):
 
 
 class StateOnlyCompilerTests(unittest.TestCase):
+    def test_q8_congruence_lattice_is_exhaustive_and_not_metric_unique(self) -> None:
+        group = GROUPS["q8"]
+        next_states = group.table[:, (1, 5, 2, 6)]
+        audit = exact_congruence_lattice_audit(next_states)
+        self.assertEqual(audit["enumerated_set_partitions"], 4140)
+        self.assertEqual(audit["transition_congruence_count"], 6)
+        self.assertEqual(
+            audit["congruence_count_by_block_count"],
+            {"1": 1, "2": 3, "4": 1, "8": 1},
+        )
+        self.assertEqual(
+            audit["regular_quotient_count_by_block_count"],
+            {"1": 1, "2": 3, "4": 1, "8": 1},
+        )
+        self.assertFalse(
+            audit["observation_free_unique_nontrivial_quotient_identifiable"]
+        )
+
+    def test_extreme_partitions_are_always_transition_congruences(self) -> None:
+        action = np.asarray(((1, 2), (2, 0), (0, 1)), dtype=np.int64)
+        self.assertTrue(is_transition_congruence(action, (0, 0, 0)))
+        self.assertTrue(is_transition_congruence(action, (0, 1, 2)))
+        self.assertEqual(sum(1 for _ in set_partitions(3)), 5)
+        congruences = enumerate_action_congruences(action)
+        self.assertGreaterEqual(len(congruences), 2)
+
     def test_deterministic_kmeans_recovers_separated_clouds(self) -> None:
         rng = np.random.default_rng(1203)
         expected_centers = np.asarray(((-4.0, 1.0), (0.5, -3.0), (5.0, 2.0)))

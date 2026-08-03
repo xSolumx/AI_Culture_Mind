@@ -398,6 +398,99 @@ def torch_triality_generators(
     return torch.as_tensor(np.stack(arrays), dtype=dtype, device=device)
 
 
+def so8_chart_equivalence_diagnostics(
+    seed: int = 20260803,
+) -> dict[str, object]:
+    """Prove that one chiral chart and a generic SO(8) chart span the same actions.
+
+    The vector generators are the standard elementary skew matrices.  The
+    positive half-spin generators are another orthogonal basis of the complete
+    28-dimensional skew-matrix space.  The returned coefficient map rotates
+    positive-chart coordinates into standard SO(8) coordinates without changing
+    the tangent matrix or its exponential.
+    """
+
+    algebra = build_spin8_triality_algebra()
+    positive = algebra.positive_generators
+    standard = algebra.vector_generators
+    positive_gram = np.einsum("aij,bij->ab", positive, positive)
+    standard_gram = np.einsum("aij,bij->ab", standard, standard)
+    # Both fixed bases have squared Frobenius norm two.
+    coefficient_map = np.einsum("aij,bij->ab", positive, standard) / 2.0
+    reconstructed = np.einsum("ab,bij->aij", coefficient_map, standard)
+    rng = np.random.default_rng(seed)
+    positive_coefficients = rng.normal(scale=0.2, size=(5, SPIN8_BIVECTOR_DIM))
+    standard_coefficients = positive_coefficients @ coefficient_map
+    positive_actions = spin8_actions(
+        torch.from_numpy(positive_coefficients),
+        torch_triality_generators(("positive",), dtype=torch.float64),
+    ).squeeze(-3)
+    standard_actions = spin8_actions(
+        torch.from_numpy(standard_coefficients),
+        torch_triality_generators(("vector",), dtype=torch.float64),
+    ).squeeze(-3)
+    checks = {
+        "positive_basis_is_orthogonal": bool(
+            np.max(np.abs(positive_gram - 2.0 * np.eye(SPIN8_BIVECTOR_DIM)))
+            <= 1e-12
+        ),
+        "standard_basis_is_orthogonal": bool(
+            np.max(np.abs(standard_gram - 2.0 * np.eye(SPIN8_BIVECTOR_DIM)))
+            <= 1e-12
+        ),
+        "basis_change_is_orthogonal": bool(
+            np.max(
+                np.abs(
+                    coefficient_map @ coefficient_map.T
+                    - np.eye(SPIN8_BIVECTOR_DIM)
+                )
+            )
+            <= 1e-12
+        ),
+        "generator_reconstruction": bool(
+            np.max(np.abs(reconstructed - positive)) <= 1e-12
+        ),
+        "random_action_equivalence": bool(
+            float((positive_actions - standard_actions).abs().max()) <= 1e-12
+        ),
+    }
+    return {
+        "experiment": "positive-half-spin versus generic SO8 chart equivalence",
+        "coefficient_map": coefficient_map.tolist(),
+        "coefficient_map_determinant": float(np.linalg.det(coefficient_map)),
+        "coefficient_map_singular_values": np.linalg.svd(
+            coefficient_map, compute_uv=False
+        ).tolist(),
+        "positive_basis_gram_max_abs_error": float(
+            np.max(np.abs(positive_gram - 2.0 * np.eye(SPIN8_BIVECTOR_DIM)))
+        ),
+        "standard_basis_gram_max_abs_error": float(
+            np.max(np.abs(standard_gram - 2.0 * np.eye(SPIN8_BIVECTOR_DIM)))
+        ),
+        "basis_change_orthogonality_max_abs_error": float(
+            np.max(
+                np.abs(
+                    coefficient_map @ coefficient_map.T
+                    - np.eye(SPIN8_BIVECTOR_DIM)
+                )
+            )
+        ),
+        "generator_reconstruction_max_abs_error": float(
+            np.max(np.abs(reconstructed - positive))
+        ),
+        "random_action_equivalence_max_abs_error": float(
+            (positive_actions - standard_actions).abs().max()
+        ),
+        "interpretation": (
+            "a single positive-half-spin 8D recurrence and a generic SO(8) "
+            "exponential have identical transition families; only the chart, "
+            "optimizer geometry, and global group-kernel interpretation differ"
+        ),
+        "checks": checks,
+        "passed": all(checks.values()),
+    }
+
+
 def spin8_actions(coefficients: torch.Tensor, generators: torch.Tensor) -> torch.Tensor:
     """Exponentiate a shared bivector in each selected triality representation.
 

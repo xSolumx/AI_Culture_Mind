@@ -50,6 +50,7 @@ MECHANISM_FAMILIES = (
     "pure_ga_rotor",
     "pure_quaternion_spinor",
     "pure_spin8_positive",
+    "pure_so8_exponential",
     "pure_householder",
     "pure_householder4_shared",
 )
@@ -150,7 +151,7 @@ class PureGroupActionModel(nn.Module):
             self.action_parameters = nn.Parameter(
                 torch.zeros(vocab_size, channels, 3)
             )
-        elif family == "pure_spin8_positive":
+        elif family in ("pure_spin8_positive", "pure_so8_exponential"):
             # Unconstrained tangent updates are exponentiated jointly in the
             # fixed positive half-spin representation.  No token is normalized
             # independently; later family-level retraction must act on the
@@ -158,9 +159,12 @@ class PureGroupActionModel(nn.Module):
             self.action_parameters = nn.Parameter(
                 torch.zeros(vocab_size, channels, 28)
             )
+            representation = (
+                "positive" if family == "pure_spin8_positive" else "vector"
+            )
             self.register_buffer(
                 "spin8_generators",
-                torch_triality_generators(("positive",)),
+                torch_triality_generators((representation,)),
             )
         elif family == "pure_householder":
             # Two reflections express one arbitrary plane rotation.  Identical
@@ -193,7 +197,7 @@ class PureGroupActionModel(nn.Module):
             return unit_quaternion_from_bivector(
                 parameters, self.max_rotor_angle
             )
-        if self.family == "pure_spin8_positive":
+        if self.family in ("pure_spin8_positive", "pure_so8_exponential"):
             generators = self.spin8_generators.to(
                 dtype=parameters.dtype, device=parameters.device
             )
@@ -208,7 +212,7 @@ class PureGroupActionModel(nn.Module):
         if self.family == "pure_quaternion_spinor":
             spinors = state.reshape(*state.shape[:-1], 2, 4)
             return quaternion_product(action.unsqueeze(-2), spinors).reshape_as(state)
-        if self.family == "pure_spin8_positive":
+        if self.family in ("pure_spin8_positive", "pure_so8_exponential"):
             return torch.einsum("...ij,...j->...i", action, state)
         if self.family == "pure_householder4_shared":
             spinors = state.reshape(*state.shape[:-1], 2, 4)
@@ -256,7 +260,7 @@ class PureGroupActionModel(nn.Module):
 
     def action_matrices(self) -> torch.Tensor:
         """Return matrices with shape ``(token, channel, output, input)``."""
-        if self.family == "pure_spin8_positive":
+        if self.family in ("pure_spin8_positive", "pure_so8_exponential"):
             token_ids = torch.arange(
                 self.vocab_size,
                 dtype=torch.long,

@@ -265,18 +265,34 @@ removes decoder labels from discovery. Decoder-labeled table-blind recovery
 passes 9/9 fresh seeds, but the stricter fixed-cardinality state-only compiler
 passes only 7/9 against its frozen 8/9 requirement. The two rejected seeds do
 retain exact eight-state actions; they also expose exact two-state character
-quotients. This reveals a lattice of learned state congruences and motivates a
-prospective cardinality-free rule: select the unique finest replicated action
-only after proving that every other viable action is its homomorphic quotient.
+quotients. This reveals multiple learned state congruences and motivated a
+prospective metric-selection rule: select the largest replicated K-means action
+only when every other action found by that scan is its homomorphic quotient.
 See
 [experiments/SPIN8_TABLE_BLIND_COMPILER_RESULTS.md](experiments/SPIN8_TABLE_BLIND_COMPILER_RESULTS.md),
 [experiments/SPIN8_STATE_ONLY_COMPILER_RESULTS.md](experiments/SPIN8_STATE_ONLY_COMPILER_RESULTS.md),
 [experiments/SPIN8_STATE_CARDINALITY_AUDIT_RESULTS.md](experiments/SPIN8_STATE_CARDINALITY_AUDIT_RESULTS.md),
 and
 [experiments/SPIN8_STATE_QUOTIENT_LATTICE_RESULTS.md](experiments/SPIN8_STATE_QUOTIENT_LATTICE_RESULTS.md).
-That prospective repair now passes: the finest-congruence compiler selects
+That prospective repair passed its frozen behavioral gate: the historically
+named finest-congruence compiler selects
 `k=8` in all nine untouched seeds 49--57 without receiving state cardinality,
 and certifies a nested `Q8/C4 ~= C2` quotient in seven. Three seeds fall below
 the old separation floor but pass every algebraic, dense, and L16384 gate;
 the cohort is 9/9 with recovered-table homomorphism RMS below `7.2e-7`. See
 [experiments/SPIN8_FINEST_CONGRUENCE_RESULTS.md](experiments/SPIN8_FINEST_CONGRUENCE_RESULTS.md).
+An exhaustive post-freeze audit over all 4,140 partitions of each recovered
+eight-state action subsequently corrected the uniqueness interpretation. Every
+seed has the complete Q8 congruence histogram `{1:1, 2:3, 4:1, 8:1}`; the
+metric scan omitted the four-state quotient in all nine seeds and some
+two-state quotients. Transition closure alone cannot select a semantic quotient
+without observations or an explicit prior. See
+[experiments/SPIN8_EXACT_CONGRUENCE_LATTICE_RESULTS.md](experiments/SPIN8_EXACT_CONGRUENCE_LATTICE_RESULTS.md).
+The missing 28-DOF generic SO(8) baseline is also now closed. The positive
+half-spin and standard skew bases are connected by an exact orthogonal
+coefficient map: SGD preserves their actions and logits to float64 roundoff,
+while AdamW breaks the chart equivalence through coordinatewise adaptation. In
+a fresh five-seed Q8 cohort both charts fit the short curriculum in 5/5 and fail
+the raw dense gate in 0/5. See
+[experiments/SPIN8_SO8_OPTIMIZER_EQUIVARIANCE_RESULTS.md](experiments/SPIN8_SO8_OPTIMIZER_EQUIVARIANCE_RESULTS.md)
+and [experiments/SPIN8_SO8_PAIRED_RESULTS.md](experiments/SPIN8_SO8_PAIRED_RESULTS.md).

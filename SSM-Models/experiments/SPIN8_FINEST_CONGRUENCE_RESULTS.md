@@ -2,6 +2,14 @@
 
 Date completed: 2026-08-03.
 
+> **Post-freeze correction, 2026-08-03:** the behavioral 9/9 result below is
+> unchanged, but “unique finest congruence” was too strong. Exhaustive
+> enumeration later found the complete Q8 congruence histogram
+> `{1:1, 2:3, 4:1, 8:1}` in every seed. The K-means scan selected the largest
+> replicated metric candidate; it did not enumerate the full lattice or identify
+> a semantic quotient without a prior. See
+> `SPIN8_EXACT_CONGRUENCE_LATTICE_RESULTS.md`.
+
 ## Result: 9/9, every frozen gate passed
 
 The compiler receives recurrent states, uniformly sampled token strings, and
@@ -85,4 +93,3 @@ Artifacts:
 - `spin8_finest_congruence_validation_seeds49_57_raw.json`
 - `spin8_finest_congruence_validation_seeds49_57_compiled.json`
 - `spin8_finest_congruence_validation_seed49.json` through `seed57.json`
-

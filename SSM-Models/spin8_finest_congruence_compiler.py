@@ -1,4 +1,10 @@
-"""Infer the finest replicated state congruence, then compile it into Spin(8)."""
+"""Select the largest replicated metric action, then compile it into Spin(8).
+
+The historical filename is retained for artifact compatibility. This scan fits
+one Euclidean K-means candidate per cardinality and certifies quotient relations
+only among those discovered candidates; it does not enumerate the complete
+congruence lattice. See ``spin8_exact_congruence_lattice_audit.py``.
+"""
 
 from __future__ import annotations
 
@@ -112,13 +118,16 @@ def discover_finest_congruence(
     )
     if not all_quotients:
         raise ValueError(
-            "viable state actions are incomparable; no unique finest congruence"
+            "discovered viable metric actions are incomparable"
         )
     return {
         "search_cardinalities": list(SEARCH_CARDINALITIES),
         "viable_cardinalities": viable,
         "selected_cardinality": selected,
-        "selection_rule": "unique finest replicated regular congruence",
+        "selection_rule": (
+            "largest replicated regular K-means candidate whose other "
+            "discovered viable candidates are exact quotients"
+        ),
         "quotient_certificates": certificates,
         "all_other_viable_actions_are_quotients": all_quotients,
         "candidate_summaries": summaries,
@@ -156,8 +165,8 @@ def compile_finest_congruence_checkpoint(
         compiler_config_key="spin8_finest_congruence_compiler",
         extra_result={"finest_congruence_discovery": discovery},
         extra_gates={
-            "finest_congruence_identified": True,
-            "all_coarser_viable_actions_are_quotients": bool(
+            "maximal_discovered_metric_candidate_identified": True,
+            "all_other_discovered_viable_actions_are_quotients": bool(
                 discovery["all_other_viable_actions_are_quotients"]
             ),
         },

@@ -82,6 +82,15 @@ vector action. The Q8 center-fidelity gate in
 quaternion conjugation collapses eight elements to four, but left spinor
 multiplication remains faithful.
 
+The generic baseline has now been executed rather than left as a caveat. The
+positive and standard SO(8) generator bases have an exactly orthogonal 28D
+coefficient map. Plain SGD preserves mapped actions to `3.5e-18` and logits to
+`1.1e-16`; AdamW breaks the functional equivalence because its coordinatewise
+moments do not commute with that basis rotation. In fresh seeds 60--64, both
+charts fit the endpoint curriculum in 5/5 and fail the raw dense gate in 0/5.
+This falsifies a single-stream capacity advantage and moves the distinctive
+Spin(8) hypothesis to center kernels and coupled triality.
+
 The affine transition tuple `T=(d,Q,u)` composes as
 
 ```text
@@ -380,18 +389,21 @@ but its prospectively frozen reliability gate fails at 7/9 because two seeds
 fall below an arbitrary Euclidean separation floor. Structural follow-up finds
 that both rejected states still support an exact replicated Q8 action at
 `k=8`, alongside an exact `Q8/C4 ~= C2` quotient at `k=2`. The current frontier
-is therefore no longer table recovery but congruence selection: infer the
-unique finest stable action and certify every coarser candidate as its quotient
+was therefore no longer table recovery but metric action selection: infer the
+largest stable action found by the scan and certify every other candidate as its quotient
 before exposing the observer. See
 `experiments/SPIN8_STATE_ONLY_COMPILER_RESULTS.md` and
 `experiments/SPIN8_STATE_QUOTIENT_LATTICE_RESULTS.md`.
 
-That frontier is now passed prospectively on Q8. The frozen
+That frozen behavioral gate passed prospectively on Q8. The historically named
 finest-congruence compiler scans `k=2..12`, selects `k=8` in all untouched
-seeds 49--57 without receiving state cardinality, and proves every other
-viable action is its exact quotient in two independent corpora. Seven seeds
+seeds 49--57 without passing state cardinality to K-means, and proves every
+other action found by that scan is its exact quotient in two corpora. Seven seeds
 also expose `Q8/C4 ~= C2`; three would fail the old separation floor but pass
 the new algebraic certificate. All nine are 100% through L16384 with
-homomorphism RMS below `7.2e-7`. This is decoder-free, cardinality-free
-compilation from endpoint-supervised states, not unsupervised learning. See
+homomorphism RMS below `7.2e-7`. This is decoder-free, cardinality-selected
+metric compilation from endpoint-supervised states, not unsupervised learning.
+The subsequent exact 4,140-partition audit finds the complete Q8 lattice
+`{1:1, 2:3, 4:1, 8:1}` in all nine seeds and withdraws the earlier uniqueness
+interpretation. See
 `experiments/SPIN8_FINEST_CONGRUENCE_RESULTS.md`.
