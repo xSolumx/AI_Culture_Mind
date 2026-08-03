@@ -44,6 +44,12 @@ The experimental Spin(8) branch now includes:
   action through length 2048 in 10/10 seeds; four mixed-view probes and five
   single-view probes retain an exact three-dimensional stabilizer, while the
   matched independent family retains 55 unconstrained tangent directions.
+- active five-query sensing: local Fisher information is exactly independent
+  of the unknown orthogonal action, and an exhaustive oracle finds a balanced
+  `(2,2,1)` triality sensor with numerical `det(I)=81/1024` and
+  `trace(I^-1)=43`. A hard learned selector finds rank-28 designs in 10/10
+  untouched seeds, reaches the strict D-optimum in 6/10, and passes noisy
+  long-composition recovery in 9/10.
 
 The dynamic-slot stress test matches parallel, recurrent, and symbolic-oracle
 execution below 2.3e-15 in float64. The learned-address gate preserves a
@@ -51,9 +57,10 @@ execution below 2.3e-15 in float64. The learned-address gate preserves a
 has been removed in the controlled alias world, and action/address learning now
 passes jointly. The newest gate replaces supplied matrix columns with only five
 generic state/action pairs per token and constructively proves the four-probe
-ambiguity. Learned probe selection, nonorthogonal capacity stress,
-endpoint-only action discovery, and naturalistic downstream utility remain
-open.
+ambiguity. Learned hard probe selection now works but retains discrete
+allocation traps; joint late query-family retraction, nonorthogonal capacity
+stress, endpoint-only action discovery, and naturalistic downstream utility
+remain open.
 See SPIN8_TRIALITY_EXPERIMENT.md and the Spin8 result files under experiments.
 
 The numbered `GA-SSM-*` scripts are research history. `GA-SSM-3.5.py` is now a

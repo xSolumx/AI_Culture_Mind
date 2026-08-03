@@ -512,8 +512,21 @@ approximately one in every seed. See
 `experiments/SPIN8_FIVE_PROBE_PREREGISTRATION.md` and
 `experiments/SPIN8_FIVE_PROBE_RESULTS.md`.
 
-The next mechanistic gate is active triality sensing: learn to choose the five
-probe views and states under a strict query budget, compare against random
-mixed probes and an oracle D-optimal design, and require the selected evidence
-to retain the sharp rank and long-composition contracts before any language
-integration claim.
+The active triality-sensing gate is now complete. The endpoint information
+matrix is exactly independent of the unknown action under left-invariant
+coordinates, so local adaptive querying offers no advantage over a universal
+design. Exhaustive numerical optimization selects a permutation of `(2,2,1)`
+in every seed, with recurring `det(I)=81/1024` and `trace(I^-1)=43`. A hard
+learned selector finds an identifying multiview sensor in all ten untouched
+seeds but reaches the frozen near-oracle design gate in only 6/10 because four
+seeds freeze into imbalanced allocation basins. It nevertheless beats matched
+random sensing in all ten noisy tests and passes the practical recovery gate in
+9/10; seed 11 misses only the frozen `0.02` oracle-gap threshold. See
+`experiments/SPIN8_ACTIVE_SENSING_PREREGISTRATION.md` and
+`experiments/SPIN8_ACTIVE_SENSING_RESULTS.md`.
+
+The next mechanistic gate is joint query-family continuation: delay hard view
+rounding until the five-query family has acquired well-conditioned information
+geometry, then jointly retract it without supplying an allocation or diversity
+target. This directly tests whether shared late retraction removes the four
+observed discrete allocation traps.

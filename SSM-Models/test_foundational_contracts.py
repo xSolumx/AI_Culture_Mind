@@ -44,6 +44,12 @@ from spin8_blind_alias_action import (
     evaluate_sequences as evaluate_blind_alias_sequences,
     negative_calibration_basis,
 )
+from spin8_active_sensing import (
+    SensorDesign,
+    action_independence_audit,
+    fixed_sensor,
+    information_metrics,
+)
 from spin8_five_probe_identifiability import (
     FIVE_MIXED,
     FIVE_SINGLE,
@@ -482,6 +488,25 @@ class FiveProbeTrialityIdentifiabilityTests(unittest.TestCase):
         self.assertLess(witness["visible_endpoint_max_error"], 1e-12)
         self.assertLess(witness["hidden_negative_mean_cosine"], 0.99)
         self.assertLess(witness["alternative_triality_max_error"], 1e-12)
+
+
+class ActiveTrialitySensingTests(unittest.TestCase):
+    def test_left_invariant_information_is_action_independent(self) -> None:
+        generators = torch_triality_generators(dtype=torch.float64)
+        design = fixed_sensor(31, torch.device("cpu"))
+        actions = sample_teacher(seed=31, generators=generators).actions
+        audit = action_independence_audit(design, generators, actions)
+        self.assertLess(audit["information_max_absolute_error"], 1e-12)
+        self.assertLess(audit["spectrum_max_absolute_error"], 1e-12)
+
+    def test_five_queries_need_multiple_triality_views(self) -> None:
+        generators = torch_triality_generators(dtype=torch.float64)
+        mixed = fixed_sensor(32, torch.device("cpu"))
+        single = SensorDesign(torch.zeros(5, dtype=torch.long), mixed.vectors, "single")
+        mixed_report = information_metrics(mixed, generators)
+        single_report = information_metrics(single, generators)
+        self.assertEqual((mixed_report["rank"], mixed_report["nullity"]), (28, 0))
+        self.assertEqual((single_report["rank"], single_report["nullity"]), (25, 3))
 
 
 if __name__ == "__main__":
