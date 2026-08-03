@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import unittest
+from fractions import Fraction
 
 import jax
 import jax.numpy as jnp
@@ -59,6 +60,12 @@ from spin8_five_probe_identifiability import (
     make_probe_family,
     numerical_rank,
     shared_observation_jacobian,
+)
+from spin8_joint_sensor_retraction import (
+    SoftSensorBank,
+    exact_characteristic_coefficients,
+    joint_retract_sensor,
+    single_query_projector_audit,
 )
 from spin8_learned_address import (
     evaluate_mixed_sequences,
@@ -507,6 +514,39 @@ class ActiveTrialitySensingTests(unittest.TestCase):
         single_report = information_metrics(single, generators)
         self.assertEqual((mixed_report["rank"], mixed_report["nullity"]), (28, 0))
         self.assertEqual((single_report["rank"], single_report["nullity"]), (25, 3))
+
+
+class JointSensorRetractionTests(unittest.TestCase):
+    def test_single_query_information_is_a_rank_seven_projector(self) -> None:
+        generators = torch_triality_generators(dtype=torch.float64)
+        audit = single_query_projector_audit(
+            generators, seed=33, probes_per_representation=10
+        )
+        self.assertTrue(audit["passed"])
+        self.assertEqual((audit["minimum_rank"], audit["maximum_rank"]), (7, 7))
+
+    def test_exact_spectral_polynomial_implies_the_three_invariants(self) -> None:
+        coefficients = exact_characteristic_coefficients()
+        self.assertEqual(coefficients[0], 1)
+        self.assertEqual(-coefficients[1], 35)
+        self.assertEqual(coefficients[-1], Fraction(81, 1024))
+        self.assertEqual(-coefficients[-2] / coefficients[-1], 43)
+
+    def test_joint_retraction_evaluates_the_complete_assignment_family(self) -> None:
+        generators = torch_triality_generators(dtype=torch.float64)
+        cpu_generator = torch.Generator(device="cpu").manual_seed(34)
+        bank = SoftSensorBank(
+            logits=torch.zeros(5, 3, dtype=torch.float64),
+            vectors=nn.functional.normalize(
+                torch.randn(5, 3, 8, generator=cpu_generator, dtype=torch.float64),
+                dim=-1,
+            ),
+            training={},
+        )
+        design, report = joint_retract_sensor(bank, generators)
+        self.assertEqual(report["assignment_count"], 243)
+        self.assertEqual(report["selection_gap"], 0.0)
+        self.assertEqual(information_metrics(design, generators)["rank"], 28)
 
 
 if __name__ == "__main__":

@@ -525,8 +525,41 @@ random sensing in all ten noisy tests and passes the practical recovery gate in
 `experiments/SPIN8_ACTIVE_SENSING_PREREGISTRATION.md` and
 `experiments/SPIN8_ACTIVE_SENSING_RESULTS.md`.
 
-The next mechanistic gate is joint query-family continuation: delay hard view
-rounding until the five-query family has acquired well-conditioned information
-geometry, then jointly retract it without supplying an allocation or diversity
-target. This directly tests whether shared late retraction removes the four
-observed discrete allocation traps.
+The joint query-family continuation gate is now complete on untouched seeds
+20--29. Soft learning followed by exhaustive joint retraction over all 243 view
+assignments and continuous vector polish reaches the balanced optimum in 10/10
+seeds, versus 6/10 for a fresh straight-through hard baseline. The frozen
+conditioning-reliability gate therefore passes. The stricter requirement that
+joint retraction strictly beat independent argmax in 8/10 seeds remains an
+honest 4/10 failure: independent argmax was already optimal in six ceiling
+cases. Joint retraction repaired all four actual opportunities and harmed none,
+but that post-hoc 4/4 decomposition does not replace the preregistered gate.
+
+The invariant audit also separates theorem from numerical recurrence. For any
+unit triality query, `J^T J` is a rank-seven orthogonal projector onto the
+tangent directions that move the queried vector. Consequently every
+five-query information matrix has exact `trace(I)=35`; identifiability and
+conditioning concern how those five fixed-trace projectors cover the 28
+directions. The balanced sensor obeys the prospectively frozen factorization
+
+\[
+\chi_I(\lambda)=\frac{1}{1024}(\lambda-1)^4
+(\lambda^2-3\lambda+1)
+(2\lambda^2-6\lambda+3)^4
+(2\lambda^2-4\lambda+1)^4
+(2\lambda^3-8\lambda^2+6\lambda-1)^2,
+\]
+
+where adjacent factors are multiplied. It replicated in all ten fresh seeds
+and implies `det(I)=81/1024`, `trace(I)=35`, and `trace(I^-1)=43`. The trace
+identity is proved; the exact spectrum and determinant optimum are
+prospectively replicated numerical results pending a symbolic global proof.
+See `experiments/SPIN8_JOINT_SENSOR_RETRACTION_PREREGISTRATION.md` and
+`experiments/SPIN8_JOINT_SENSOR_RETRACTION_RESULTS.md`.
+
+The next mathematical target is that proof: express each query as the
+orthogonal complement of a `Spin(7)` stabilizer, derive the admissible
+principal-angle relations among projector subspaces across the three triality
+views, and prove the balanced `(2,2,1)` family globally maximizes
+`log det(sum P_k)` up to triality permutation and `Spin(8)` gauge. This is the
+remaining boundary between an exact replicated signature and a theorem.
