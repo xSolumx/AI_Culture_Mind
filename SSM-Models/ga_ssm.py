@@ -251,7 +251,12 @@ class SelectiveRotorSSM(nn.Module):
         projected_inputs = GradeLinear(
             self.channels, self.channels, dtype=self.dtype
         )(inputs)
-        injection = jnp.sqrt(jnp.maximum(1.0 - jnp.square(decay), 1e-6))
+        # Compute 1-exp(-2 Delta lambda) without subtracting two nearly equal
+        # floating-point values when the learned half-life is long.
+        injection_variance = -jnp.expm1(-2.0 * step_size * rates)
+        injection = jnp.sqrt(
+            jnp.maximum(injection_variance, jnp.finfo(self.dtype).tiny)
+        )
         drive = injection[..., None] * projected_inputs
         if scan_mode == "parallel":
             return rotor_affine_scan(decay, rotors, drive, initial_state)

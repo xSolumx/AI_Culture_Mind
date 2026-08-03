@@ -16,6 +16,35 @@ The broader selective language-model comparison and invariant triality-coupled
 ablation remain future experiments; the maintained production-scale rotor
 language model still uses Cl(3,0).
 
+The strongest new result is no longer just a supplied algebra check. The
+implemented infinitesimal equivariance system verifies that the triality map in
+Hom(S+ tensor S-, V) is one-dimensional. Under a deliberately rank-16-of-64
+observation design, a one-parameter invariant completion model generalizes at
+cosine 1.0 in 3/3 seeds, while generic 512-parameter bilinear and 608-parameter
+MLP models fit training below 1.2e-6 MSE and fail off-support. This isolates
+symmetry-driven law identification from interpolation. See the corresponding
+triality-identifiability result document under experiments.
+
+The memory claim has also been corrected and strengthened. A single 8D
+triality vector is an exact single-pair store, not a high-capacity VSA.
+Orthogonal multiplicity codes provide exact K-at-most-H retrieval; unit-norm
+tight frames attain the frame-potential lower bound beyond that rank horizon.
+An addressed overwrite recurrence then combines exact slot replacement,
+shared Spin(8) transport, logarithmic-depth affine scanning, and constant 8H
+recurrent state. All float64 mechanism errors are below 2.3e-15. Addresses,
+query keys, and actions remain supplied. See the coded-memory result document
+under experiments.
+
+An exact triangular triality coupling is now implemented in
+`spin8_triality_lift.py`. Two independent chiral-spinor affine streams are
+scanned first, their `S+ x S- -> V` binding is evaluated pointwise, and the
+bound vector drives a second affine scan. A homogeneous 81D lift proves
+single-scan closure, while the practical staged implementation retains only 24
+streaming scalars and matches direct recurrence to `4.27e-14`. Two-way binding
+feedback is not claimed: its generic polynomial degree grows without bound and
+breaks fixed-dimensional affine closure. See
+`experiments/SPIN8_TRIANGULAR_TRIALITY_LIFT_RESULTS.md`.
+
 The first mechanistic endpoint result is also complete. On Q8, unconstrained
 positive-chiral token tangents learn behaviorally correct short paths but have
 large raw homomorphism error and eventually drift. A compiler using only

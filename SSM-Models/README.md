@@ -17,6 +17,22 @@ the same damped-rotor transition and are tested for numerical equivalence.
 than recomputing the context. See [FOUNDATIONS.md](FOUNDATIONS.md) for the
 equations, stability/equivariance arguments, GPU ablation, and open questions.
 
+## Spin(8) triality research core
+
+The experimental Spin(8) branch now includes:
+
+- exact vector and two chiral 8D actions from one shared bivector controller;
+- a triangular two-stage triality scan with a 24-scalar streaming cache;
+- a rank-deficient identifiability gate showing that equivariance reduces the
+  cross-representation completion law to one learned scalar;
+- orthogonal and tight-frame multiplicity codes with measured capacity laws;
+- an exact addressed overwrite recurrence with shared Spin(8) transport.
+
+The dynamic-slot stress test matches parallel, recurrent, and symbolic-oracle
+execution below 2.3e-15 in float64. Addresses, query keys, and group actions
+are supplied; learned routing and downstream utility remain the next gate.
+See SPIN8_TRIALITY_EXPERIMENT.md and the Spin8 result files under experiments.
+
 The numbered `GA-SSM-*` scripts are research history. `GA-SSM-3.5.py` is now a
 compatibility entry point for `ga_ssm.py`; versions 1-3 remain available for
 comparison and old checkpoint investigation, but should not be imported by new
@@ -296,3 +312,16 @@ a fresh five-seed Q8 cohort both charts fit the short curriculum in 5/5 and fail
 the raw dense gate in 0/5. See
 [experiments/SPIN8_SO8_OPTIMIZER_EQUIVARIANCE_RESULTS.md](experiments/SPIN8_SO8_OPTIMIZER_EQUIVARIANCE_RESULTS.md)
 and [experiments/SPIN8_SO8_PAIRED_RESULTS.md](experiments/SPIN8_SO8_PAIRED_RESULTS.md).
+
+The 2026-08-03 foundational re-audit found a lower-level expressivity gap in
+the maintained Cl(3) layers. `GradeLinear` was Spin(3)-equivariant but spanned
+only half of the legal linear commutant because it prohibited mixing scalar
+with pseudoscalar and vector with Hodge-dual bivector. The new
+`Spin3IsotypicLinear` spans the complete repeated-irrep multiplicity space.
+`schur_scan.py` then factors token transitions as multiplicity actions times a
+shared group representation, preserving an exact associative affine scan.
+The frozen audit finds centralizer dimension 8 versus old rank 4, an exact
+capacity witness, and float64 scan/streaming error below `9e-16`; see
+`FOUNDATIONAL_REVIEW_2026-08-03.md` and
+`experiments/SPIN3_ISOTYPIC_SCHUR_SCAN_RESULTS.md`. This is an architectural
+theorem and implementation gate, not yet a language-quality result.

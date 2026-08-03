@@ -250,6 +250,103 @@ class GradeLinear(nn.Module):
         return outputs
 
 
+def pack_spin3_isotypic(multivector: jax.Array) -> tuple[jax.Array, jax.Array]:
+    """Pack Cl(3) as two trivial and two vector-representation copies.
+
+    Bivectors are Hodge-dualized from ``[e12,e13,e23]`` to
+    ``[e23,-e13,e12]``. Under proper rotations this second copy transforms by
+    exactly the same 3D matrix as the vector grade.
+    """
+
+    if multivector.ndim < 2 or multivector.shape[-1] != GA_DIM:
+        raise ValueError("multivectors must have shape (..., channels, 8)")
+    channels = multivector.shape[-2]
+    trivial = jnp.stack(
+        [multivector[..., 0], multivector[..., 7]], axis=-1
+    ).reshape(*multivector.shape[:-2], 2 * channels)
+    dual_bivector = jnp.stack(
+        [multivector[..., 6], -multivector[..., 5], multivector[..., 4]],
+        axis=-1,
+    )
+    active = jnp.stack([multivector[..., 1:4], dual_bivector], axis=-2)
+    active = active.reshape(*multivector.shape[:-2], 2 * channels, 3)
+    return trivial, active
+
+
+def unpack_spin3_isotypic(trivial: jax.Array, active: jax.Array) -> jax.Array:
+    """Invert :func:`pack_spin3_isotypic`."""
+
+    if trivial.shape[:-1] != active.shape[:-2] or active.shape[-1] != 3:
+        raise ValueError("trivial and active isotypic shapes are incompatible")
+    if trivial.shape[-1] != active.shape[-2] or trivial.shape[-1] % 2:
+        raise ValueError("isotypic multiplicities must agree and be even")
+    channels = trivial.shape[-1] // 2
+    trivial = trivial.reshape(*trivial.shape[:-1], channels, 2)
+    active = active.reshape(*active.shape[:-2], channels, 2, 3)
+    vector, dual_bivector = active[..., 0, :], active[..., 1, :]
+    output = jnp.zeros((*trivial.shape[:-1], GA_DIM), dtype=trivial.dtype)
+    output = output.at[..., 0].set(trivial[..., 0])
+    output = output.at[..., 1:4].set(vector)
+    output = output.at[..., 4].set(dual_bivector[..., 2])
+    output = output.at[..., 5].set(-dual_bivector[..., 1])
+    output = output.at[..., 6].set(dual_bivector[..., 0])
+    output = output.at[..., 7].set(trivial[..., 1])
+    return output
+
+
+class Spin3IsotypicLinear(nn.Module):
+    """Complete Spin(3)-equivariant linear mixing of Cl(3) channels.
+
+    Unlike :class:`GradeLinear`, this layer includes every intertwiner between
+    the repeated equivalent irreducible representations: scalar/pseudoscalar
+    and vector/Hodge-dual-bivector.
+    """
+
+    in_channels: int
+    out_channels: int
+    use_bias: bool = True
+    dtype: jnp.dtype = jnp.float32
+    param_dtype: jnp.dtype = jnp.float32
+
+    @nn.compact
+    def __call__(self, inputs: jax.Array) -> jax.Array:
+        if inputs.shape[-2:] != (self.in_channels, GA_DIM):
+            raise ValueError("unexpected Spin3IsotypicLinear input shape")
+        trivial, active = pack_spin3_isotypic(inputs)
+        trivial = trivial.reshape(*trivial.shape[:-1], self.in_channels, 2)
+        active = active.reshape(*active.shape[:-2], self.in_channels, 2, 3)
+        trivial_kernel = self.param(
+            "trivial_kernel",
+            nn.initializers.lecun_normal(),
+            (self.out_channels, 2, self.in_channels, 2),
+            self.param_dtype,
+        ).astype(self.dtype)
+        active_kernel = self.param(
+            "active_kernel",
+            nn.initializers.lecun_normal(),
+            (self.out_channels, 2, self.in_channels, 2),
+            self.param_dtype,
+        ).astype(self.dtype)
+        trivial_output = jnp.einsum(
+            "ocid,...id->...oc", trivial_kernel, trivial.astype(self.dtype)
+        )
+        active_output = jnp.einsum(
+            "ocid,...idk->...ock", active_kernel, active.astype(self.dtype)
+        )
+        if self.use_bias:
+            bias = self.param(
+                "trivial_bias",
+                nn.initializers.zeros,
+                (self.out_channels, 2),
+                self.param_dtype,
+            ).astype(self.dtype)
+            trivial_output = trivial_output + bias
+        return unpack_spin3_isotypic(
+            trivial_output.reshape(*trivial_output.shape[:-2], -1),
+            active_output.reshape(*active_output.shape[:-3], -1, 3),
+        )
+
+
 __all__ = [
     "BASIS_MASKS",
     "GA_DIM",
@@ -258,12 +355,15 @@ __all__ = [
     "GeometricChannelMix",
     "GeometricDense",
     "MULTIPLICATION_TABLE",
+    "Spin3IsotypicLinear",
     "geometric_product",
     "grade_invariants",
     "mv_relu",
     "normalized_rotor",
+    "pack_spin3_isotypic",
     "reversion",
     "rotor_from_bivector",
     "rotor_sandwich",
     "scalar_product",
+    "unpack_spin3_isotypic",
 ]

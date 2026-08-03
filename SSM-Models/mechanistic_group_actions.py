@@ -1318,7 +1318,7 @@ def evaluate(
     device: torch.device,
 ) -> tuple[float, float, float, float]:
     model.eval()
-    losses = []
+    total_loss = 0.0
     prefix_correct = 0
     final_correct = 0
     prefix_examples = 0
@@ -1327,7 +1327,11 @@ def evaluate(
     for tokens, targets in batches:
         tokens, targets = tokens.to(device), targets.to(device)
         logits, state = model(tokens, return_recurrent_state=True)
-        losses.append(float(nn.functional.cross_entropy(logits.flatten(0, 1), targets.flatten())))
+        total_loss += float(
+            nn.functional.cross_entropy(
+                logits.flatten(0, 1), targets.flatten(), reduction="sum"
+            )
+        )
         predictions = logits.argmax(dim=-1)
         prefix_correct += int((predictions == targets).sum())
         final_correct += int((predictions[:, -1] == targets[:, -1]).sum())
@@ -1336,7 +1340,7 @@ def evaluate(
         initial_norm = model.initial_state(tokens.shape[0]).norm(dim=-1)
         norm_errors.append(float((state.norm(dim=-1) - initial_norm).abs().max()))
     return (
-        float(np.mean(losses)),
+        total_loss / prefix_examples,
         prefix_correct / prefix_examples,
         final_correct / final_examples,
         max(norm_errors),

@@ -95,6 +95,42 @@ full SSM block, not only for isolated algebra helpers. This is Spin(3)
 equivariance under proper Euclidean rotations; it is not a claim of reflection,
 Lorentz, or arbitrary Clifford-group equivariance.
 
+### Complete isotypic mixing, not merely grade mixing
+
+The earlier implementation correctly preserved equivariance, but it did not
+span every equivariant linear map. Under proper rotor conjugation,
+
+```text
+Cl(3,0) = 1 + 3 + 3 + 1.
+```
+
+Scalar and pseudoscalar are equivalent trivial representations; vector and
+Hodge-dual bivector are equivalent standard three-dimensional
+representations. `GradeLinear` independently mixed the four grades and omitted
+all intertwiners between these equivalent copies. For `C` input and `D` output
+channels it therefore contained `4CD` weights, while the complete Spin(3)
+commutant contains `8CD`.
+
+`GALib.Spin3IsotypicLinear` and `schur_scan.Spin3IsotypicLinear` now implement
+the complete map. The frozen audit in
+`experiments/SPIN3_ISOTYPIC_SCHUR_SCAN_RESULTS.md` numerically recovers the
+eight-dimensional centralizer, proves the old rank-four restriction, and gives
+an exact Hodge-copy witness that the old family cannot express at any depth.
+
+The same decomposition suggests a representation-factored SSM. For real-type
+irreps, transitions of the form
+
+```text
+direct_sum_lambda (M_t,lambda tensor rho_lambda(g_t))
+```
+
+remain closed under ordered composition, allowing complete multiplicity-space
+mixing, group-valued phase, affine writes, associative training scans, and
+fixed-state streaming simultaneously. `schur_scan.py` implements the Cl(3)
+reference and verifies float64 parallel/recurrent parity below `9e-16`. For
+general real representations, Schur's division algebra may be real, complex,
+or quaternionic; the implemented Cl(3) sectors are real type.
+
 ## Controlled local-GPU evidence
 
 `train_rotor_ssm_torch.py` compares the selective rotor model against an
@@ -301,6 +337,37 @@ but it did not enumerate the complete congruence lattice. Exhaustive enumeration
 of the recovered Q8 action later found block counts `{1:1, 2:3, 4:1, 8:1}` in
 all nine seeds and established the observation-free identifiability boundary.
 
+## Spin(8) triality memory theorem and implementation
+
+The experimental Spin(8) branch uses the unique equivariant map from a
+positive and negative chiral spinor to the vector representation. For a unit
+positive key, the induced map from negative spinor to vector is orthogonal, so
+single-pair binding is exactly invertible.
+
+Raw superposition does not provide high capacity: every wrong-key term has
+full norm. Multiplicity codes expose the exact law. With H channels and K code
+columns, cross terms are weighted only by code inner products. Orthonormal
+columns give exact retrieval for K at most H. Unit-norm tight frames attain the
+classical frame-potential lower bound (K-H)/H on average squared interference
+when K exceeds H.
+
+An addressed dynamic form retains scan closure:
+
+[
+M_t[h] = r_t[h] V_t M_{t-1}[h] + B_t[h].
+]
+
+All retention vectors are diagonal in one fixed multiplicity basis. Transition
+composition multiplies retentions and Spin(8) actions and rotates the earlier
+drive before adding the later drive. The implementation supports exact hard
+slot overwrite, shared Spin(8) transport, logarithmic-depth prefix evaluation,
+and constant 8H recurrent state.
+
+The rank-deficient completion experiment separately verifies the sample-
+efficiency value of symmetry: the full equivariant bilinear tensor space is
+one-dimensional, and that invariant family extrapolates where generic fitted
+tensor and MLP families fail.
+
 ## What remains unproven
 
 - Natural language has no supplied 3D geometric frame. Spin(3) equivariance is
@@ -308,7 +375,12 @@ all nine seeds and established the observation-free identifiability boundary.
   linguistic symmetry.
 - The recurrent linear map is channel-diagonal; channel interaction happens
   in controls, input projections, and feed-forward layers. A structured
-  multi-channel rotor operator is an important future ablation.
+  multi-channel rotor operator is an important future ablation. SchurScan is
+  now the constructive candidate for that ablation.
+- The complementary drive scale `sqrt(1-d^2)` couples long retention to weak
+  writing. It is a stationary-variance convention, not required for BIBO
+  stability. An independently bounded write gate is the next optimization
+  falsifier.
 - Three seeds, 300 updates, and context 64 are far too small for scaling-law,
   long-context retrieval, or downstream-quality claims.
 - The PyTorch reference uses an explicit loop. Production throughput needs a

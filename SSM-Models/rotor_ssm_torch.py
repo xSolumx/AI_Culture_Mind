@@ -201,7 +201,11 @@ class SelectiveRotorSSM(nn.Module):
         rotors = rotor_from_bivector(
             source * rotor_strength.unsqueeze(-1), self.max_rotor_angle
         )
-        injection = (1.0 - decay.square()).clamp_min(1e-6).sqrt()
+        # Stable even when decay rounds close to one in reduced precision.
+        injection_variance = -torch.expm1(-2.0 * step_size * rates)
+        injection = injection_variance.clamp_min(
+            torch.finfo(inputs.dtype).tiny
+        ).sqrt()
         drive = injection.unsqueeze(-1) * self.input_projection(inputs)
         return decay, rotors, drive
 
