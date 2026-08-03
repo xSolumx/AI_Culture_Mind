@@ -197,6 +197,22 @@ The candidate contribution is therefore narrower: integration of unique
 cross-irrep identifiability, optimal multiplicity coding, shared Spin(8)
 transport, exact overwrite, and parallel-recurrent SSM duality.
 
+## Blind latent-address result
+
+The second oracle-removal gate also passes, with an important scope boundary.
+Training contains only single-key episodes. Independent row-softmax routing
+fits those endpoints to below 5.6e-18 but collides in one to four latent slots
+in every seed and fails mixed-key evaluation. Joint Sinkhorn retraction reaches
+a permutation in 10/10 seeds and retrieves exactly across a dense length
+16--2048 sweep; an untrained joint control passes 0/10.
+
+This is the discrete counterpart of the blind shared-action result. Local
+endpoint correctness does not determine relational consistency. Retracting
+the complete family onto a shared manifold removes the slack: the diagonal
+Spin(8) manifold for actions, and the Birkhoff polytope for addresses. The
+same-width direct memory also passes 10/10, so no triality-specific advantage
+is claimed from this task.
+
 ## Best next experimental order
 
 The first item below now has a passed precursor: blind shared-action
@@ -208,11 +224,11 @@ control fits the observations but fails the hidden negative action and long
 composition. This supports moving from supplied actions to learned addressing,
 while retaining direct-slot and delta-rule controls.
 
-1. Freeze a learned-address selective-copy or MQAR task. Compare the exact slot
-   oracle against a same-width direct-slot memory, linear attention or
-   bilinear fast weights, Householder transport, and diagonal complex SSMs.
-2. Learn addresses and query keys without weakening the exact recurrent-state
-   contract; distinguish address discovery from value transport.
+1. Replace supplied logical key IDs with continuous write/query aliases. Hold
+   out query aliases and every mixed-key episode; distinguish address discovery
+   from merely selecting an arbitrary latent permutation.
+2. Run the same-width direct-slot, delta-rule, erase-then-delta, linear-
+   attention, and bilinear-fast-weight controls on that content-addressed task.
 3. Compare SchurScan against grade rotor, dense selective, Householder-product,
    and diagonal real/complex transitions under equal state, decoder, and
    compute budgets.

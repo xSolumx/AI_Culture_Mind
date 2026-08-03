@@ -33,6 +33,12 @@ from spin8_blind_shared_action import (
     joint_shared_retraction,
     observed_action,
 )
+from spin8_learned_address import (
+    evaluate_mixed_sequences,
+    log_sinkhorn,
+    route_statistics,
+    scan_parity as learned_address_scan_parity,
+)
 from spin8_triality import spin8_actions, torch_triality_generators
 from spin8_triality_identifiability import invariant_space_audit
 from spin8_triality_lift import (
@@ -202,6 +208,33 @@ class SchurScanTests(unittest.TestCase):
             1.0 - 1e-9,
         )
         torch.testing.assert_close(recovered, oracle, rtol=0, atol=3e-6)
+
+    def test_joint_address_family_is_globally_not_independently_normalized(self) -> None:
+        torch.manual_seed(10)
+        routes = log_sinkhorn(
+            torch.randn(8, 8, dtype=torch.float64), 0.2, iterations=256
+        )
+        self.assertLess(float((routes.sum(dim=-1) - 1.0).abs().max()), 1e-12)
+        self.assertLess(float((routes.sum(dim=-2) - 1.0).abs().max()), 1e-12)
+
+        collided = torch.eye(8, dtype=torch.float64)
+        collided[1] = collided[0]
+        statistics = route_statistics(collided)
+        self.assertEqual(statistics["rounded_collisions"], 1)
+        self.assertGreater(statistics["maximum_column_sum_residual"], 0.9)
+
+    def test_exact_latent_addresses_retrieve_and_scan_in_both_memories(self) -> None:
+        routes = torch.eye(8, dtype=torch.float64)
+        for kind in ("triality", "direct"):
+            evaluation = evaluate_mixed_sequences(
+                routes, kind=kind, length=32, seed=11, batch_size=48
+            )
+            self.assertGreaterEqual(evaluation["queries"], 256)
+            self.assertGreater(evaluation["minimum_query_cosine"], 1.0 - 1e-12)
+            self.assertLess(evaluation["maximum_relative_squared_error"], 1e-20)
+            parity = learned_address_scan_parity(routes, kind=kind, seed=11)
+            self.assertEqual(parity["streaming_state_scalars"], 64)
+            self.assertLess(parity["parallel_recurrent_max_error"], 1e-12)
 
 
 class EvaluationContractTests(unittest.TestCase):

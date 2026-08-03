@@ -95,5 +95,14 @@ stabilizer slack: its unseen negative cosine is only 0.870--0.907 and its
 length-2048 worst-representation cosine is negative in every seed. This
 isolates shared cross-representation geometry rather than norm stabilization.
 
-The Spin(8) algebra remains supplied. The next gate is learned addressing, not
-language scaling.
+The next address-oracle gate now also passes. A jointly Sinkhorn-retracted
+eight-key/eight-slot family, trained only on single-key endpoints, reaches
+collision-free permutations in 10/10 seeds and remains exact on unseen
+mixed-key sequences through length 2048. Independently normalized rows fit
+training essentially exactly but collide and fail; untrained joint rows fail
+0/10. The same-width direct memory passes at parity, so this establishes
+shared-family address completion rather than a triality advantage.
+
+The Spin(8) algebra and logical key identity remain supplied. The next gate is
+content/alias-derived addressing with delta-rule and fast-weight baselines,
+not language scaling.

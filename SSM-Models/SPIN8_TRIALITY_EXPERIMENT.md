@@ -447,3 +447,20 @@ The subsequent exact 4,140-partition audit finds the complete Q8 lattice
 `{1:1, 2:3, 4:1, 8:1}` in all nine seeds and withdraws the earlier uniqueness
 interpretation. See
 `experiments/SPIN8_FINEST_CONGRUENCE_RESULTS.md`.
+
+Two later oracle-removal gates isolate a broader shared-family principle.
+First, joint diagonal-triality retraction recovers a completely hidden chiral
+action from partial vector/positive endpoints in 10/10 seeds, while separately
+orthogonal actions retain representation-specific slack. Second, joint
+Sinkhorn retraction learns collision-free latent addresses from single-key
+episodes in 10/10 seeds and transfers exactly to unseen mixed-key sequences
+through length 2048. Independently normalized address rows fit training below
+`5.6e-18` yet collide and fail in every seed; untrained joint rows pass 0/10.
+
+The direct-slot joint control also passes 10/10, so the address result supports
+joint relational normalization rather than a triality capacity advantage. The
+next gate must infer key identity from held-out continuous aliases and compare
+against delta-rule, erase-then-delta, fast-weight, and linear-attention memory.
+See `experiments/SPIN8_BLIND_SHARED_ACTION_RESULTS.md`,
+`experiments/SPIN8_LATENT_ADDRESS_THEOREM.md`, and
+`experiments/SPIN8_LEARNED_ADDRESS_RESULTS.md`.
