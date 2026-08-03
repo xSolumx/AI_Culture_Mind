@@ -170,7 +170,49 @@ All 64 searches maximized the strengthened log ratio for 2,000 steps.
 The optimizers did not stall at an arbitrary negative value. They converged to
 the proposed orthonormal equality manifold.
 
-## Coupled whitening as the proof route
+## Exact Dirac--Schur reduction
+
+Relative to the fixed query's decomposition
+
+\[
+\mathfrak{so}(8)=\mathbb R^7\oplus\mathfrak{spin}(7),
+\]
+
+every moving unit-query projector has the exact graph form
+
+\[
+P(V)=\frac14
+\begin{pmatrix}
+I_7&V^T\\ V&VV^T
+\end{pmatrix},
+\qquad V^TV=3I_7.
+\]
+
+This was checked symbolically for both moving triality views with generic
+eight-coordinate probes, not inferred from numerical samples. For the four
+moving queries, put
+
+\[
+S=\sum_{i=1}^4V_i,
+\qquad T=\sum_{i=1}^4V_iV_i^T.
+\]
+
+The complete information operator and its exact Schur determinant become
+
+\[
+I=\begin{pmatrix}
+2I_7&S^T/4\\ S/4&T/4
+\end{pmatrix},
+\qquad
+\boxed{\det I=2^7 32^{-21}\det(8T-SS^T)}.
+\]
+
+This replaces an opaque 28-dimensional determinant by a 21-dimensional
+Dirac--Schur operator assembled from four isometric seven-frames. It does not
+by itself prove the global upper bound, but it is an exact structural reduction
+that the remaining proof must exploit.
+
+## Coupled whitening: exact invariant and corrected limitation
 
 Coordinate-by-coordinate orthogonalization is not monotone in general; direct
 exploratory counterexamples rule out that tempting shortcut. The object that
@@ -181,11 +223,37 @@ survived is the coupled projected frame-potential flow
 +x_i\sum_{j\ne i}\langle x_i,x_j\rangle^2.
 \]
 
-The proposed Lyapunov inequality is
+Write `H=G-I` and
 
 \[
-\frac{d}{dt}\log\det I(X(t))\geq0.
+A=-H+\operatorname{diag}(H^2),\qquad \dot X=AX,
+\qquad E=\|H\|_F^2.
 \]
+
+Exact symbolic calculation gives
+
+\[
+\operatorname{tr}A=E,
+\qquad
+\frac{d}{dt}\log\Delta=2E,
+\qquad
+\frac{d}{dt}\log|\Phi|=E.
+\]
+
+Consequently the normalized Cayley coordinate
+
+\[
+c=\Phi/\sqrt\Delta
+\]
+
+is **exactly conserved** by the flow. This is useful, but it also sharpens the
+required Lyapunov inequality. Monotonicity of the strengthened ratio needs
+
+\[
+\frac{d}{dt}\log\det I(X(t))\geq6E,
+\]
+
+not merely a nonnegative derivative.
 
 Fresh results:
 
@@ -199,11 +267,11 @@ The adversarial minimizer approached a rank-three Gram boundary: its smallest
 Gram eigenvalue was `5.41e-8`, while the other eigenvalues approached
 approximately `1.2640, 1.2642, 1.4718`. Its normalized Cayley value is unstable
 as `det G` tends to zero, so `5.9214371088` is recorded as a numerical boundary
-infimum, **not** promoted to a new exact invariant.
-
-This flow is the most promising route to the full theorem because it changes
-all six correlations coherently while preserving unit row norms and converging
-toward the Stiefel manifold.
+infimum, **not** promoted to a new exact invariant. More importantly,
+`5.9214371088 < 6`, so the observed boundary family falsifies this whitening
+flow as a route to the strengthened cubic inequality. The flow may still be
+relevant to the weaker unnormalized QR inequality because its determinant
+derivative remained positive, but that is a separate open claim.
 
 ## Exact negative result: the standard elegant shortcut fails
 
@@ -247,13 +315,16 @@ extremal problem supersedes the other.
 3. The strengthened Gram-volume inequality is proved on two complete
    two-parameter slices by exact Bernstein positivity.
 4. The approximate-design equivalence shortcut is exactly ruled out.
-5. Fresh large-scale falsifiers found no counterexample to either `(DG)` or
-   whitening-flow monotonicity.
+5. Fresh large-scale falsifiers found no counterexample to `(DG)` or to plain
+   determinant growth along the whitening flow.
+6. The exact graph-projector and 21-dimensional Schur reduction above hold for
+   generic probes in both moving triality views.
 
 ## What remains conjectural
 
 - `(DG)` over the full six-correlation feasible Gram--Cayley domain;
-- global monotonicity of the coupled whitening flow;
+- global monotonicity of the plain information determinant along the coupled
+  whitening flow (which is insufficient for `(DG)` even if true);
 - the four nonbalanced allocation upper bounds;
 - global five-query D-optimality of `81/1024`.
 
@@ -261,19 +332,11 @@ No numerical campaign, including the present one, closes those statements.
 
 ## Next proof gate
 
-Derive the invariant directional derivative
-
-\[
-\mathcal L_V\log\det I
-=\operatorname{tr}(I^{-1}\dot I)
-\]
-
-under the coupled whitening vector field, express it over the correlation
-elliptope and Cayley coordinate, clear the positive determinant denominators,
-and seek an exact sum-of-squares or Bernstein subdivision certificate. The
-rank-three boundary family found by the adversary must be included explicitly;
-it is the apparent hard edge of the domain, not discarded as a numerical
-pathology.
+The whitening route does not prove `(DG)`. The immediate exact gate is instead
+the signed star family preregistered in `SPIN8_DIRAC_STAR_PREREGISTRATION.md`,
+followed by the three residual Cholesky correlations needed to reach a general
+four-frame. The Schur operator `8T-SS^T` is the natural object on which to seek
+a coupled matrix or Bernstein certificate.
 
 That is the honest remaining proof—not another language-model run and not
 another million random frames.

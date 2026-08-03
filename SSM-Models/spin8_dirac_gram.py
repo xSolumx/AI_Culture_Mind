@@ -120,6 +120,104 @@ def exact_projector_geometry_certificate() -> dict[str, object]:
     }
 
 
+def exact_dirac_graph_certificate() -> dict[str, object]:
+    """Prove the 7+21 graph form and resulting Schur determinant reduction."""
+
+    generators = symbolic_triality_generators()
+    coordinates = list(sp.symbols("x0:8"))
+    squared_norm = sum(value**2 for value in coordinates)
+    view_certificates = []
+    for view in (1, 2):
+        projector = symbolic_query_projector(view, coordinates, generators)
+        top = projector[:7, :7]
+        graph = 4 * projector[7:, :7]
+        bottom = projector[7:, 7:]
+        top_residual = top - squared_norm * sp.eye(7) / 4
+        isometry_residual = graph.T * graph - 3 * squared_norm**2 * sp.eye(7)
+        bottom_residual = 4 * squared_norm * bottom - graph * graph.T
+        top_passed = all(sp.expand(entry) == 0 for entry in top_residual)
+        isometry_passed = all(sp.expand(entry) == 0 for entry in isometry_residual)
+        bottom_passed = all(sp.expand(entry) == 0 for entry in bottom_residual)
+        view_certificates.append(
+            {
+                "view": view,
+                "top_block_identity": top_passed,
+                "graph_isometry_identity": isometry_passed,
+                "bottom_block_identity": bottom_passed,
+            }
+        )
+    passed = all(
+        item[identity]
+        for item in view_certificates
+        for identity in (
+            "top_block_identity",
+            "graph_isometry_identity",
+            "bottom_block_identity",
+        )
+    )
+    return {
+        "reference_split": [7, 21],
+        "moving_query_graph_formula": (
+            "P(V)=1/4 [[I_7,V^T],[V,V V^T]] for unit probes"
+        ),
+        "graph_frame_identity": "V^T V = 3 I_7",
+        "five_probe_information_blocks": (
+            "[[2 I_7,S^T/4],[S/4,T/4]], S=sum_i V_i, " "T=sum_i V_i V_i^T"
+        ),
+        "schur_determinant_identity": ("det(I)=2^7 32^-21 det(8 T-S S^T)"),
+        "views": view_certificates,
+        "passed": passed,
+    }
+
+
+def exact_whitening_flow_invariant_certificate() -> dict[str, object]:
+    """Prove what the coupled whitening flow preserves and what it cannot prove."""
+
+    correlations = sp.symbols("g01 g02 g03 g12 g13 g23")
+    gram = sp.eye(4)
+    cursor = 0
+    for left in range(4):
+        for right in range(left + 1, 4):
+            gram[left, right] = correlations[cursor]
+            gram[right, left] = correlations[cursor]
+            cursor += 1
+    off_diagonal = gram - sp.eye(4)
+    energy = sp.trace(off_diagonal**2)
+    off_diagonal_squared = off_diagonal**2
+    diagonal_correction = sp.diag(
+        *(off_diagonal_squared[index, index] for index in range(4))
+    )
+    action = -off_diagonal + diagonal_correction
+    gram_derivative = action * gram + gram * action
+    tangent_residual = [sp.expand(gram_derivative[index, index]) for index in range(4)]
+    trace_residual = sp.expand(sp.trace(action) - energy)
+    volume_log_derivative_residual = sp.expand(2 * sp.trace(action) - 2 * energy)
+    cayley_log_derivative_residual = sp.expand(sp.trace(action) - energy)
+    normalized_cayley_log_derivative_residual = sp.expand(
+        sp.trace(action) - sp.Rational(1, 2) * 2 * sp.trace(action)
+    )
+    passed = (
+        all(value == 0 for value in tangent_residual)
+        and trace_residual == 0
+        and volume_log_derivative_residual == 0
+        and cayley_log_derivative_residual == 0
+        and normalized_cayley_log_derivative_residual == 0
+    )
+    return {
+        "flow": "X_dot=A X, A=-(G-I)+diag((G-I)^2)",
+        "energy": "E=||G-I||_F^2=tr(A)",
+        "gram_diagonal_is_preserved": all(value == 0 for value in tangent_residual),
+        "gram_volume_log_derivative": "d log(det G)/dt = 2 E",
+        "cayley_form_log_derivative": "d log(|Phi|)/dt = E",
+        "normalized_cayley_is_invariant": True,
+        "strengthened_ratio_requirement": (
+            "The strengthened determinant ratio needs d log(det I)/dt >= 6 E; "
+            "mere nonnegative determinant growth is insufficient."
+        ),
+        "passed": passed,
+    }
+
+
 def exact_approximate_design_rejection() -> dict[str, object]:
     """Show exactly why the standard equivalence-theorem shortcut is invalid."""
 

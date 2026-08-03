@@ -66,6 +66,14 @@ The experimental Spin(8) branch now includes:
   10,000 random frames, and 32 adversarial searches found no global
   counterexample; the unrestricted orthonormal-completion inequality remains
   a clearly labelled conjecture rather than a theorem.
+- the Dirac--Gram reduction: every moving query is exactly the graph of a
+  scaled isometric seven-frame over the `7+21` Spin(7) split, reducing the
+  five-query determinant to
+  `2^7 32^-21 det(8 T-S S^T)`. The strengthened Gram-volume bound is proved on
+  two complete correlation slices and on a signed four-parameter star family
+  with three simultaneous correlations, using independently replayed exact
+  rational interpolation and four-dimensional Bernstein positivity. The three
+  remaining Cholesky correlations, and hence the global theorem, remain open.
 
 The dynamic-slot stress test matches parallel, recurrent, and symbolic-oracle
 execution below 2.3e-15 in float64. The learned-address gate preserves a
@@ -76,7 +84,8 @@ generic state/action pairs per token and constructively proves the four-probe
 ambiguity. Learned hard probe selection now works but retains discrete
 allocation traps; joint late query-family retraction removes all four fresh
 allocation failures. The spectrum is now proved on the complete orthonormal
-balanced orbit; the general nonorthogonal completion lemma, cross-allocation
+balanced orbit, and its nonorthogonal extension is now exact on the signed
+star family; the general nonorthogonal completion lemma, cross-allocation
 upper bounds, scalable joint retraction, nonorthogonal capacity stress,
 endpoint-only action discovery, and naturalistic downstream utility remain
 open.

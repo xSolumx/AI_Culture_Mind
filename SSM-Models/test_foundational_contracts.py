@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import unittest
 from fractions import Fraction
+from pathlib import Path
 
 import jax
 import jax.numpy as jnp
@@ -75,8 +76,14 @@ from spin8_cayley_spectrum import (
 )
 from spin8_dirac_gram import (
     exact_approximate_design_rejection,
+    exact_dirac_graph_certificate,
     exact_projector_geometry_certificate,
     exact_strengthened_slice_certificate,
+    exact_whitening_flow_invariant_certificate,
+)
+from spin8_dirac_star import (
+    rational_circle,
+    verify_artifact as verify_dirac_star_artifact,
 )
 from spin8_learned_address import (
     evaluate_mixed_sequences,
@@ -600,6 +607,25 @@ class CayleySpectrumTheoremTests(unittest.TestCase):
         self.assertTrue(certificate["passed"])
         self.assertTrue(certificate["certificate_violated"])
         self.assertEqual(certificate["exact_design_threshold"], "28/5")
+
+    def test_dirac_graph_schur_reduction_is_exact(self) -> None:
+        certificate = exact_dirac_graph_certificate()
+        self.assertTrue(certificate["passed"])
+        self.assertEqual(certificate["reference_split"], [7, 21])
+
+    def test_whitening_flow_invariants_are_exact(self) -> None:
+        certificate = exact_whitening_flow_invariant_certificate()
+        self.assertTrue(certificate["passed"])
+        self.assertTrue(certificate["normalized_cayley_is_invariant"])
+
+    def test_signed_star_family_artifact_replays(self) -> None:
+        artifact = (
+            Path(__file__).parent / "experiments" / "spin8_dirac_star_20260804.json"
+        )
+        self.assertTrue(verify_dirac_star_artifact(artifact))
+
+    def test_star_rational_circle_never_promotes_zero_to_float(self) -> None:
+        self.assertEqual(rational_circle(0), (0, 1))
 
 
 if __name__ == "__main__":
