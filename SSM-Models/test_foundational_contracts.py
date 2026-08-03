@@ -17,7 +17,11 @@ from GALib import (
     rotor_sandwich as jax_rotor_sandwich,
     unpack_spin3_isotypic,
 )
-from compare_recurrences import GROUPS, evaluate as evaluate_recurrence, group_prefix_products
+from compare_recurrences import (
+    GROUPS,
+    evaluate as evaluate_recurrence,
+    group_prefix_products,
+)
 from mechanistic_group_actions import evaluate as evaluate_group_action
 from rotor_ssm_torch import GA_DIM, GradeLinear
 from schur_scan import (
@@ -39,6 +43,16 @@ from spin8_blind_alias_action import (
     combined_design_audit,
     evaluate_sequences as evaluate_blind_alias_sequences,
     negative_calibration_basis,
+)
+from spin8_five_probe_identifiability import (
+    FIVE_MIXED,
+    FIVE_SINGLE,
+    FOUR_MIXED,
+    exact_four_probe_witness,
+    independent_observation_jacobian,
+    make_probe_family,
+    numerical_rank,
+    shared_observation_jacobian,
 )
 from spin8_learned_address import (
     evaluate_mixed_sequences,
@@ -111,9 +125,7 @@ class IsotypicLayerTests(unittest.TestCase):
         grade = GradeLinear(1, 1, use_bias=False)
         # Every GradeLinear parameterization maps a vector-only input to zero
         # bivector output; the Hodge-copy target has a nonzero bivector.
-        self.assertEqual(
-            float(grade(vector_only)[..., 4:7].abs().max().detach()), 0.0
-        )
+        self.assertEqual(float(grade(vector_only)[..., 4:7].abs().max().detach()), 0.0)
         self.assertGreater(
             float(isotypic.float()(vector_only)[..., 4:7].abs().max().detach()), 0.0
         )
@@ -132,7 +144,8 @@ class SchurScanTests(unittest.TestCase):
             active_multiplicity=0.9 * eye_m + 0.01 * torch.randn_like(eye_m),
             rotation=torch.matrix_exp(skew),
             trivial_drive=0.01 * torch.randn(batch, length, multiplicity, dtype=dtype),
-            active_drive=0.01 * torch.randn(batch, length, multiplicity, 3, dtype=dtype),
+            active_drive=0.01
+            * torch.randn(batch, length, multiplicity, 3, dtype=dtype),
         )
         initial = (
             torch.randn(batch, multiplicity, dtype=dtype),
@@ -176,7 +189,9 @@ class SchurScanTests(unittest.TestCase):
         recovered = triality_unbind_negative(positive, vector, rho)
         torch.testing.assert_close(recovered, negative, rtol=1e-12, atol=1e-12)
 
-    def test_triality_is_the_unique_infinitesimal_equivariant_bilinear_map(self) -> None:
+    def test_triality_is_the_unique_infinitesimal_equivariant_bilinear_map(
+        self,
+    ) -> None:
         report = invariant_space_audit()
         self.assertEqual(report["constraint_shape"], [14336, 512])
         self.assertEqual(report["nullity"], 1)
@@ -188,15 +203,11 @@ class SchurScanTests(unittest.TestCase):
     def test_triality_coded_memory_and_dynamic_slot_gates_pass(self) -> None:
         report = triality_memory_diagnostics()
         self.assertTrue(report["passed"])
-        self.assertLess(
-            report["capacity"]["maximum_exact_relative_error"], 1e-10
-        )
+        self.assertLess(report["capacity"]["maximum_exact_relative_error"], 1e-10)
         self.assertTrue(
             report["capacity"]["tight_frame_beats_random_all_overcomplete_cells"]
         )
-        self.assertLess(
-            report["dynamic_slot"]["final_retrieval_max_error"], 1e-10
-        )
+        self.assertLess(report["dynamic_slot"]["final_retrieval_max_error"], 1e-10)
 
     def test_blind_shared_action_mask_is_identifiable_and_retracts(self) -> None:
         dtype = torch.float64
@@ -225,7 +236,9 @@ class SchurScanTests(unittest.TestCase):
         )
         torch.testing.assert_close(recovered, oracle, rtol=0, atol=3e-6)
 
-    def test_joint_address_family_is_globally_not_independently_normalized(self) -> None:
+    def test_joint_address_family_is_globally_not_independently_normalized(
+        self,
+    ) -> None:
         torch.manual_seed(10)
         routes = log_sinkhorn(
             torch.randn(8, 8, dtype=torch.float64), 0.2, iterations=256
@@ -267,9 +280,7 @@ class SchurScanTests(unittest.TestCase):
             self.assertEqual(report["streaming_state_scalars"], 64)
             self.assertLess(report["parallel_recurrent_max_error"], 1e-12)
 
-        world = AliasWorld.create(
-            13, dtype=torch.float64, device=torch.device("cpu")
-        )
+        world = AliasWorld.create(13, dtype=torch.float64, device=torch.device("cpu"))
         key_policy = FrozenKeyPolicy(world.centers, world.centers)
         for update_kind in ("delta", "fast_weight"):
             report = key_scan_parity(
@@ -315,12 +326,16 @@ class EvaluationContractTests(unittest.TestCase):
         all_targets = torch.cat([target.flatten() for _, target in batches])
         expected = float(nn.functional.cross_entropy(all_logits, all_targets))
         self.assertAlmostEqual(
-            evaluate_recurrence(self.DummyRecurrence(), batches, torch.device("cpu"))[0],
+            evaluate_recurrence(self.DummyRecurrence(), batches, torch.device("cpu"))[
+                0
+            ],
             expected,
             places=6,
         )
         self.assertAlmostEqual(
-            evaluate_group_action(self.DummyGroupAction(), batches, torch.device("cpu"))[0],
+            evaluate_group_action(
+                self.DummyGroupAction(), batches, torch.device("cpu")
+            )[0],
             expected,
             places=6,
         )
@@ -357,7 +372,9 @@ class BlindAliasActionDesignTests(unittest.TestCase):
             atol=1e-12,
         )
 
-    def test_shared_family_closes_the_independent_twenty_one_dimensional_slack(self) -> None:
+    def test_shared_family_closes_the_independent_twenty_one_dimensional_slack(
+        self,
+    ) -> None:
         generators = torch_triality_generators(dtype=torch.float64)
         teacher = sample_teacher(seed=18, generators=generators)
         basis = negative_calibration_basis(
@@ -368,7 +385,9 @@ class BlindAliasActionDesignTests(unittest.TestCase):
         self.assertEqual(report["independent_rank_pattern"], [(25, 25, 13)])
         self.assertEqual(report["minimum_independent_slack"], 21)
 
-    def test_binding_bypasses_negative_action_while_direct_memory_consumes_it(self) -> None:
+    def test_binding_bypasses_negative_action_while_direct_memory_consumes_it(
+        self,
+    ) -> None:
         generators = torch_triality_generators(dtype=torch.float64)
         oracle = sample_teacher(seed=19, generators=generators).actions
         perturbed = oracle.clone()
@@ -405,6 +424,64 @@ class BlindAliasActionDesignTests(unittest.TestCase):
             batch_size=32,
         )
         self.assertLess(perturbed_direct["mean_query_cosine"], 0.95)
+
+
+class FiveProbeTrialityIdentifiabilityTests(unittest.TestCase):
+    def setUp(self) -> None:
+        self.generators = torch_triality_generators(dtype=torch.float64)
+        self.probes = make_probe_family(
+            23, dtype=torch.float64, device=torch.device("cpu")
+        )
+        self.zero = torch.zeros(28, dtype=torch.float64)
+
+    def test_five_mixed_probes_are_sharp_for_shared_triality(self) -> None:
+        four = numerical_rank(
+            shared_observation_jacobian(
+                self.zero, self.generators, self.probes, FOUR_MIXED
+            )
+        )
+        five = numerical_rank(
+            shared_observation_jacobian(
+                self.zero, self.generators, self.probes, FIVE_MIXED
+            )
+        )
+        single = numerical_rank(
+            shared_observation_jacobian(
+                self.zero, self.generators, self.probes, FIVE_SINGLE
+            )
+        )
+        self.assertEqual((four["rank"], four["nullity"]), (25, 3))
+        self.assertEqual((five["rank"], five["nullity"]), (28, 0))
+        self.assertEqual((single["rank"], single["nullity"]), (25, 3))
+
+    def test_independent_five_probe_family_retains_fifty_five_slack_directions(
+        self,
+    ) -> None:
+        independent_zero = torch.zeros(3, 28, dtype=torch.float64)
+        report = numerical_rank(
+            independent_observation_jacobian(
+                independent_zero,
+                self.generators,
+                self.probes,
+                FIVE_MIXED,
+            )
+        )
+        self.assertEqual((report["rank"], report["nullity"]), (29, 55))
+
+    def test_four_probe_stabilizer_is_an_exact_hidden_action_witness(self) -> None:
+        rho = triality_tensor(dtype=torch.float64)
+        teacher = sample_teacher(seed=23, generators=self.generators)
+        witness = exact_four_probe_witness(
+            teacher.actions,
+            self.generators,
+            self.probes,
+            rho,
+            seed=23,
+        )
+        self.assertEqual(witness["jacobian"]["nullity"], 3)
+        self.assertLess(witness["visible_endpoint_max_error"], 1e-12)
+        self.assertLess(witness["hidden_negative_mean_cosine"], 0.99)
+        self.assertLess(witness["alternative_triality_max_error"], 1e-12)
 
 
 if __name__ == "__main__":

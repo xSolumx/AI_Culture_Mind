@@ -39,14 +39,21 @@ The experimental Spin(8) branch now includes:
   recovers collision-free routing and the held-out negative-chiral action in
   10/10 seeds, while a parameter-richer independent action family fits every
   supplied endpoint but fails off its rank-2 calibration plane.
+- a sharp five-probe identifiability boundary: five generic transformed-state
+  examples spanning two triality views recover the entirely unobserved third
+  action through length 2048 in 10/10 seeds; four mixed-view probes and five
+  single-view probes retain an exact three-dimensional stabilizer, while the
+  matched independent family retains 55 unconstrained tangent directions.
 
 The dynamic-slot stress test matches parallel, recurrent, and symbolic-oracle
 execution below 2.3e-15 in float64. The learned-address gate preserves a
 64-scalar streaming state and scan parity below 6.7e-16. Logical key identity
 has been removed in the controlled alias world, and action/address learning now
-passes jointly. Partial vector and positive-spinor action columns remain
-supplied; nonorthogonal capacity stress, endpoint-only action discovery, and
-naturalistic downstream utility are the next gates.
+passes jointly. The newest gate replaces supplied matrix columns with only five
+generic state/action pairs per token and constructively proves the four-probe
+ambiguity. Learned probe selection, nonorthogonal capacity stress,
+endpoint-only action discovery, and naturalistic downstream utility remain
+open.
 See SPIN8_TRIALITY_EXPERIMENT.md and the Spin8 result files under experiments.
 
 The numbered `GA-SSM-*` scripts are research history. `GA-SSM-3.5.py` is now a

@@ -496,8 +496,24 @@ certify latent geometric coherence. See
 `experiments/SPIN8_BLIND_ALIAS_ACTION_PREREGISTRATION.md` and
 `experiments/SPIN8_BLIND_ALIAS_ACTION_RESULTS.md`.
 
-The next gate removes the remaining visible-matrix-column oracle by replacing
-it with transformed example pairs and sequence endpoint supervision. It must
-map a rank/noise/imbalance phase diagram and retain equal-state direct,
-delta-rule, Householder, and generic equivariant controls before any language
+The next gate removed the remaining visible-matrix-column oracle. An exhaustive
+differential audit found a sharp boundary: five generic transformed-state
+pairs spanning at least two triality views have rank 28, whereas four such
+pairs or five pairs in a single view have rank 25. The four-probe nullspace was
+exponentiated into an exact alternative shared action that preserves all
+visible endpoints while changing the hidden chiral action. Under the frozen
+`(1 vector, 4 positive, 0 negative)` design, the shared family recovers the
+entire unseen negative action and remains correct through length 2048 in 10/10
+seeds. An independent 84-parameter family fits the same endpoints but retains
+55 tangent directions of slack and collapses under long composition. The
+combined preregistered causal-margin gate remains a documented 0/10 because its
+one-step `0.05` margin was too strong, even though its long-horizon margin is
+approximately one in every seed. See
+`experiments/SPIN8_FIVE_PROBE_PREREGISTRATION.md` and
+`experiments/SPIN8_FIVE_PROBE_RESULTS.md`.
+
+The next mechanistic gate is active triality sensing: learn to choose the five
+probe views and states under a strict query budget, compare against random
+mixed probes and an oracle D-optimal design, and require the selected evidence
+to retain the sharp rank and long-composition contracts before any language
 integration claim.
