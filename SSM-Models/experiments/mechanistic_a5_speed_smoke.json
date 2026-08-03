@@ -1,0 +1,149 @@
+{
+  "experiment": "write-free norm-preserving A5 group-action gate",
+  "device": "NVIDIA GeForce RTX 2070 SUPER",
+  "torch_version": "2.12.0+cu130",
+  "config": {
+    "steps": 100,
+    "batch_size": 256,
+    "sequence_length": 16,
+    "validation_batches": 1,
+    "validation_batch_size": 256,
+    "channels": 4,
+    "learning_rate": 0.003,
+    "seed": 0,
+    "diagnostic_interval": 0,
+    "max_rotor_angle": 3.141592653589793
+  },
+  "group": {
+    "key": "a5",
+    "name": "alternating group A5",
+    "order": 60
+  },
+  "input_alphabet": [
+    {
+      "token_index": 0,
+      "group_index": 15,
+      "element": "23145"
+    },
+    {
+      "token_index": 1,
+      "group_index": 16,
+      "element": "23451"
+    }
+  ],
+  "held_out_transition_pairs": [
+    {
+      "left": "23145",
+      "right": "23451"
+    }
+  ],
+  "data_split_audit": {
+    "training": {
+      "pair_occurrences": 0,
+      "sequences_with_pair": 0,
+      "total_sequences": 25600
+    },
+    "validation": {
+      "pair_occurrences": 1064,
+      "sequences_with_pair": 256,
+      "total_sequences": 256
+    },
+    "generalization": {
+      "2": {
+        "pair_occurrences": 256,
+        "sequences_with_pair": 256,
+        "total_sequences": 256
+      },
+      "16": {
+        "pair_occurrences": 1052,
+        "sequences_with_pair": 256,
+        "total_sequences": 256
+      }
+    }
+  },
+  "evaluation_lengths": [
+    2,
+    16
+  ],
+  "comparison_contract": {
+    "same_training_batches": true,
+    "same_validation_batches": true,
+    "same_state_width": true,
+    "all_actions_norm_preserving": true,
+    "no_affine_writes": true,
+    "parameter_counts_are_reported_not_matched": true
+  },
+  "results": [
+    {
+      "family": "pure_ga_rotor",
+      "parameters": 2037,
+      "parameter_shape_sha256": "4015595681a5cf89a15c28a646b491876f095fffe2e154da483f0556fb6617ba",
+      "initial_parameter_sha256": "ac6ab080dbe06fda0604a44361fe46fe69108453f350ddf1ddd7ba9b7d0843f0",
+      "state_scalars_per_sequence": 32,
+      "has_decay": false,
+      "has_affine_write": false,
+      "has_residual_or_feed_forward_path": false,
+      "initial_validation_loss": 4.090232849121094,
+      "initial_validation_prefix_accuracy": 0.025634765625,
+      "initial_validation_final_position_accuracy": 0.015625,
+      "initial_mechanism_diagnostics": {
+        "canonical_max_word_length": 8,
+        "operator_orthogonality_rms": 0.0,
+        "operator_orthogonality_max": 0.0,
+        "cayley_edge_relation_rms": 0.0,
+        "cayley_edge_relation_max": 0.0,
+        "linear_homomorphism_rms": 0.0,
+        "linear_homomorphism_max": 0.0,
+        "identity_word_state_drift_rms": 0.0,
+        "identity_word_state_drift_max": 0.0,
+        "generator_commutator_separation": 0.0,
+        "prototype_minimum_margin": 0.0,
+        "prototype_median_distance": 0.0,
+        "canonical_prototype_accuracy": 0.01666666753590107
+      },
+      "final_validation_loss": 4.831841945648193,
+      "final_validation_prefix_accuracy": 0.12109375,
+      "final_validation_final_position_accuracy": 0.01953125,
+      "maximum_validation_state_norm_error": 2.0265579223632812e-06,
+      "length_generalization": {
+        "2": {
+          "validation_loss": 4.462608814239502,
+          "prefix_accuracy": 0.5,
+          "final_position_accuracy": 0.0,
+          "maximum_state_norm_error": 1.1920928955078125e-07
+        },
+        "16": {
+          "validation_loss": 4.823031902313232,
+          "prefix_accuracy": 0.120361328125,
+          "final_position_accuracy": 0.01953125,
+          "maximum_state_norm_error": 2.0265579223632812e-06
+        }
+      },
+      "mechanism_diagnostics": {
+        "canonical_max_word_length": 8,
+        "operator_orthogonality_rms": 1.6857721612614754e-07,
+        "operator_orthogonality_max": 3.545389648901636e-07,
+        "cayley_edge_relation_rms": 0.5840353976270731,
+        "cayley_edge_relation_max": 1.4141432530999674,
+        "linear_homomorphism_rms": 0.9629820448355652,
+        "linear_homomorphism_max": 1.414212963209964,
+        "identity_word_state_drift_rms": 1.306716460821658,
+        "identity_word_state_drift_max": 1.6505532340722768,
+        "generator_commutator_separation": 0.01698845220126203,
+        "prototype_minimum_margin": 0.015897590126230893,
+        "prototype_median_distance": 1.7529038693487575,
+        "canonical_prototype_accuracy": 0.0833333358168602
+      },
+      "training_trajectory": {},
+      "streaming_equivalence": {
+        "chunked_logit_max_abs_error": 0.0,
+        "streaming_logit_max_abs_error": 9.5367431640625e-07,
+        "chunked_state_max_abs_error": 0.0,
+        "streaming_state_max_abs_error": 0.0
+      },
+      "elapsed_seconds": 1.8760336000123061,
+      "steps_per_second": 53.30394935322269,
+      "peak_cuda_memory_mib": 38.77099609375
+    }
+  ]
+}

@@ -1,0 +1,451 @@
+{
+  "experiment": "write-free norm-preserving A5 group-action gate",
+  "device": "NVIDIA GeForce RTX 2070 SUPER",
+  "torch_version": "2.12.0+cu130",
+  "config": {
+    "steps": 1500,
+    "batch_size": 256,
+    "sequence_length": 16,
+    "validation_batches": 2,
+    "validation_batch_size": 512,
+    "channels": 4,
+    "learning_rate": 0.003,
+    "final_position_loss_weight": 0.0,
+    "seed": 8,
+    "diagnostic_interval": 0,
+    "max_rotor_angle": 3.141592653589793,
+    "relation_loss_weight": 0.0,
+    "relation_start_step": 0,
+    "relation_ramp_steps": 0,
+    "canonical_orbit_loss_weight": 0.0,
+    "a5_irrep_init": false,
+    "freeze_actions": false
+  },
+  "group": {
+    "key": "a5",
+    "name": "alternating group A5",
+    "order": 60
+  },
+  "input_alphabet": [
+    {
+      "token_index": 0,
+      "group_index": 15,
+      "element": "23145"
+    },
+    {
+      "token_index": 1,
+      "group_index": 24,
+      "element": "31245"
+    },
+    {
+      "token_index": 2,
+      "group_index": 16,
+      "element": "23451"
+    },
+    {
+      "token_index": 3,
+      "group_index": 48,
+      "element": "51234"
+    }
+  ],
+  "held_out_transition_pairs": [
+    {
+      "left": "23145",
+      "right": "23451"
+    }
+  ],
+  "data_split_audit": {
+    "training": {
+      "pair_occurrences": 0,
+      "sequences_with_pair": 0,
+      "total_sequences": 384000
+    },
+    "validation": {
+      "pair_occurrences": 1803,
+      "sequences_with_pair": 1024,
+      "total_sequences": 1024
+    },
+    "generalization": {
+      "2": {
+        "pair_occurrences": 1024,
+        "sequences_with_pair": 1024,
+        "total_sequences": 1024
+      },
+      "16": {
+        "pair_occurrences": 1818,
+        "sequences_with_pair": 1024,
+        "total_sequences": 1024
+      },
+      "64": {
+        "pair_occurrences": 4821,
+        "sequences_with_pair": 1024,
+        "total_sequences": 1024
+      },
+      "128": {
+        "pair_occurrences": 9037,
+        "sequences_with_pair": 1024,
+        "total_sequences": 1024
+      }
+    }
+  },
+  "language_coverage_audit": {
+    "training": {
+      "observed_group_states": 60,
+      "group_state_fraction": 1.0,
+      "missing_group_state_indices": [],
+      "observed_input_pairs": 15,
+      "possible_input_pairs": 16,
+      "input_pair_fraction": 0.9375
+    },
+    "validation": {
+      "observed_group_states": 60,
+      "group_state_fraction": 1.0,
+      "missing_group_state_indices": [],
+      "observed_input_pairs": 16,
+      "possible_input_pairs": 16,
+      "input_pair_fraction": 1.0
+    }
+  },
+  "evaluation_lengths": [
+    2,
+    16,
+    64,
+    128
+  ],
+  "comparison_contract": {
+    "same_training_batches": true,
+    "same_validation_batches": true,
+    "same_state_width": true,
+    "all_actions_norm_preserving": true,
+    "no_affine_writes": true,
+    "parameter_counts_are_reported_not_matched": true
+  },
+  "results": [
+    {
+      "family": "pure_ga_rotor",
+      "parameters": 2061,
+      "parameter_shape_sha256": "8c2b63f8aafc2f8e3aa3c6a4f4d847b828ad1f91db28921e9c5b95bed3acec1f",
+      "initial_parameter_sha256": "9ace8261fe2a40d984c206ffaf22f5c994d002f000b1f20f3e625a5d41b64e0b",
+      "state_scalars_per_sequence": 32,
+      "has_decay": false,
+      "has_affine_write": false,
+      "has_residual_or_feed_forward_path": false,
+      "a5_irrep_initialization": false,
+      "actions_frozen": false,
+      "initial_validation_loss": 4.1129748821258545,
+      "initial_validation_prefix_accuracy": 0.02008056640625,
+      "initial_validation_final_position_accuracy": 0.01953125,
+      "initial_mechanism_diagnostics": {
+        "canonical_max_word_length": 6,
+        "operator_orthogonality_rms": 0.0,
+        "operator_orthogonality_max": 0.0,
+        "cayley_edge_relation_rms": 0.0,
+        "cayley_edge_relation_max": 0.0,
+        "linear_homomorphism_rms": 0.0,
+        "linear_homomorphism_max": 0.0,
+        "identity_word_state_drift_rms": 0.0,
+        "identity_word_state_drift_max": 0.0,
+        "orbit_cayley_edge_rms": 0.0,
+        "orbit_cayley_edge_max": 0.0,
+        "decoded_cayley_edge_accuracy": 0.016666666666666666,
+        "orbit_homomorphism_rms": 0.0,
+        "orbit_homomorphism_max": 0.0,
+        "decoded_homomorphism_accuracy": 0.01666666753590107,
+        "reachable_linear_span_rank": 1,
+        "state_dimension": 32,
+        "reachable_span_homomorphism_rms": 0.0,
+        "reachable_span_homomorphism_max": 0.0,
+        "orthogonal_complement_dimension": 31,
+        "orthogonal_complement_homomorphism_rms": 0.0,
+        "orthogonal_complement_homomorphism_max": 0.0,
+        "orbit_variation_span_rank": 0,
+        "orbit_variation_span_homomorphism_rms": null,
+        "orbit_variation_span_homomorphism_max": null,
+        "common_fixed_subspace_dimension": 32,
+        "common_fixed_subspace_homomorphism_rms": 0.0,
+        "common_fixed_subspace_homomorphism_max": 0.0,
+        "cl3_invariant_grade_dimension": 8,
+        "cl3_invariant_grade_homomorphism_rms": 0.0,
+        "cl3_invariant_grade_homomorphism_max": 0.0,
+        "generator_commutator_separation": 0.0,
+        "mean_generator_pair_commutator_separation": 0.0,
+        "maximum_commutator_token_pair": [
+          0,
+          1
+        ],
+        "prototype_minimum_margin": 0.0,
+        "prototype_median_distance": 0.0,
+        "canonical_prototype_accuracy": 0.01666666753590107,
+        "mean_action_displacement_from_identity": 0.0,
+        "max_action_displacement_from_identity": 0.0,
+        "per_token_mean_action_displacement": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "mean_rotor_angle_radians": 0.0,
+        "max_rotor_angle_radians": 0.0,
+        "per_token_mean_rotor_angle_radians": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "final_validation_loss": 0.0012476565316319466,
+      "final_validation_prefix_accuracy": 1.0,
+      "final_validation_final_position_accuracy": 1.0,
+      "maximum_validation_state_norm_error": 1.5497207641601562e-06,
+      "length_generalization": {
+        "2": {
+          "validation_loss": 0.00011145033204229549,
+          "prefix_accuracy": 1.0,
+          "final_position_accuracy": 1.0,
+          "maximum_state_norm_error": 2.384185791015625e-07
+        },
+        "16": {
+          "validation_loss": 0.001248169457539916,
+          "prefix_accuracy": 1.0,
+          "final_position_accuracy": 1.0,
+          "maximum_state_norm_error": 1.5497207641601562e-06
+        },
+        "64": {
+          "validation_loss": 0.14662207663059235,
+          "prefix_accuracy": 0.948150634765625,
+          "final_position_accuracy": 1.0,
+          "maximum_state_norm_error": 5.245208740234375e-06
+        },
+        "128": {
+          "validation_loss": 0.15004868060350418,
+          "prefix_accuracy": 0.9473342895507812,
+          "final_position_accuracy": 1.0,
+          "maximum_state_norm_error": 9.775161743164062e-06
+        }
+      },
+      "mechanism_diagnostics": {
+        "canonical_max_word_length": 6,
+        "operator_orthogonality_rms": 1.2795398091350146e-07,
+        "operator_orthogonality_max": 2.1296245176897475e-07,
+        "cayley_edge_relation_rms": 0.5197357262357911,
+        "cayley_edge_relation_max": 1.4140587104268787,
+        "linear_homomorphism_rms": 0.7144776638868029,
+        "linear_homomorphism_max": 1.414213927233635,
+        "identity_word_state_drift_rms": 0.6869455172873108,
+        "identity_word_state_drift_max": 1.0334475411444437,
+        "orbit_cayley_edge_rms": 0.529193349859102,
+        "orbit_cayley_edge_max": 1.0188851659831868,
+        "decoded_cayley_edge_accuracy": 1.0,
+        "orbit_homomorphism_rms": 0.7127320832556973,
+        "orbit_homomorphism_max": 1.1179347412233098,
+        "decoded_homomorphism_accuracy": 1.0,
+        "reachable_linear_span_rank": 25,
+        "state_dimension": 32,
+        "reachable_span_homomorphism_rms": 0.808339201825003,
+        "reachable_span_homomorphism_max": 1.2043702040693105,
+        "orthogonal_complement_dimension": 7,
+        "orthogonal_complement_homomorphism_rms": 7.193227694112938e-07,
+        "orthogonal_complement_homomorphism_max": 1.7833843606996314e-06,
+        "orbit_variation_span_rank": 24,
+        "orbit_variation_span_homomorphism_rms": 0.82500774314995,
+        "orbit_variation_span_homomorphism_max": 1.2292051922422662,
+        "common_fixed_subspace_dimension": 8,
+        "common_fixed_subspace_homomorphism_rms": 1.654465466306078e-07,
+        "common_fixed_subspace_homomorphism_max": 5.364838786196691e-07,
+        "cl3_invariant_grade_dimension": 8,
+        "cl3_invariant_grade_homomorphism_rms": 1.6553121385195856e-07,
+        "cl3_invariant_grade_homomorphism_max": 5.364658862472493e-07,
+        "generator_commutator_separation": 0.5608472467091834,
+        "mean_generator_pair_commutator_separation": 0.36235867194982024,
+        "maximum_commutator_token_pair": [
+          1,
+          3
+        ],
+        "prototype_minimum_margin": 1.0358576462681204,
+        "prototype_median_distance": 2.070851072751495,
+        "canonical_prototype_accuracy": 1.0,
+        "mean_action_displacement_from_identity": 0.6114048307061601,
+        "max_action_displacement_from_identity": 1.2249182391551592,
+        "per_token_mean_action_displacement": [
+          0.4978689181884959,
+          0.5727688657921166,
+          0.6829900444641699,
+          0.691991494379858
+        ],
+        "mean_rotor_angle_radians": 0.9615921378135681,
+        "max_rotor_angle_radians": 2.0948853492736816,
+        "per_token_mean_rotor_angle_radians": [
+          0.8044441938400269,
+          0.9326078295707703,
+          1.0478867292404175,
+          1.0614299774169922
+        ]
+      },
+      "training_trajectory": {},
+      "streaming_equivalence": {
+        "chunked_logit_max_abs_error": 0.0,
+        "streaming_logit_max_abs_error": 7.62939453125e-06,
+        "chunked_state_max_abs_error": 0.0,
+        "streaming_state_max_abs_error": 0.0
+      },
+      "elapsed_seconds": 33.75100519997068,
+      "steps_per_second": 44.44312076374256,
+      "peak_cuda_memory_mib": 118.65185546875
+    },
+    {
+      "family": "pure_householder",
+      "parameters": 2269,
+      "parameter_shape_sha256": "35d6169b57895e53a298164b6ace1ad66323c3761f942cd1e48ca0becfb72472",
+      "initial_parameter_sha256": "9a664742ef65307c11486934dcf3c028e0c969f68a7ec17a5de714bbb97a6d72",
+      "state_scalars_per_sequence": 32,
+      "has_decay": false,
+      "has_affine_write": false,
+      "has_residual_or_feed_forward_path": false,
+      "a5_irrep_initialization": false,
+      "actions_frozen": false,
+      "initial_validation_loss": 4.1129748821258545,
+      "initial_validation_prefix_accuracy": 0.02008056640625,
+      "initial_validation_final_position_accuracy": 0.01953125,
+      "initial_mechanism_diagnostics": {
+        "canonical_max_word_length": 6,
+        "operator_orthogonality_rms": 2.6526332275769804e-07,
+        "operator_orthogonality_max": 5.659179864848355e-07,
+        "cayley_edge_relation_rms": 2.4495173380409157e-07,
+        "cayley_edge_relation_max": 8.563656637870018e-07,
+        "linear_homomorphism_rms": 3.757037140418044e-07,
+        "linear_homomorphism_max": 1.4051041802600002e-06,
+        "identity_word_state_drift_rms": 5.367311205092442e-07,
+        "identity_word_state_drift_max": 8.18233770966765e-07,
+        "orbit_cayley_edge_rms": 2.5171966217735094e-07,
+        "orbit_cayley_edge_max": 6.203666060527828e-07,
+        "decoded_cayley_edge_accuracy": 0.016666666666666666,
+        "orbit_homomorphism_rms": 3.901867307933857e-07,
+        "orbit_homomorphism_max": 8.182337709939651e-07,
+        "decoded_homomorphism_accuracy": 0.01666666753590107,
+        "reachable_linear_span_rank": 1,
+        "state_dimension": 32,
+        "reachable_span_homomorphism_rms": 3.901868306003452e-07,
+        "reachable_span_homomorphism_max": 8.182339726388274e-07,
+        "orthogonal_complement_dimension": 31,
+        "orthogonal_complement_homomorphism_rms": 3.752272094950239e-07,
+        "orthogonal_complement_homomorphism_max": 9.601223333995723e-07,
+        "orbit_variation_span_rank": 3,
+        "orbit_variation_span_homomorphism_rms": 7.74476302936732e-07,
+        "orbit_variation_span_homomorphism_max": 1.999920119692343e-06,
+        "common_fixed_subspace_dimension": 32,
+        "common_fixed_subspace_homomorphism_rms": 3.757037140438105e-07,
+        "common_fixed_subspace_homomorphism_max": 9.55943228383534e-07,
+        "cl3_invariant_grade_dimension": 0,
+        "cl3_invariant_grade_homomorphism_rms": null,
+        "cl3_invariant_grade_homomorphism_max": null,
+        "generator_commutator_separation": 2.315269314549208e-14,
+        "mean_generator_pair_commutator_separation": 1.118716304219556e-14,
+        "maximum_commutator_token_pair": [
+          2,
+          3
+        ],
+        "prototype_minimum_margin": 0.0,
+        "prototype_median_distance": 4.786961795153919e-07,
+        "canonical_prototype_accuracy": 0.01666666753590107,
+        "mean_action_displacement_from_identity": 1.0765742128434678e-07,
+        "max_action_displacement_from_identity": 2.8403200983698895e-07,
+        "per_token_mean_action_displacement": [
+          3.724459958804887e-08,
+          1.4527633673022108e-07,
+          1.518642571700575e-07,
+          9.624449164905966e-08
+        ]
+      },
+      "final_validation_loss": 0.0008881039102561772,
+      "final_validation_prefix_accuracy": 1.0,
+      "final_validation_final_position_accuracy": 1.0,
+      "maximum_validation_state_norm_error": 2.0265579223632812e-06,
+      "length_generalization": {
+        "2": {
+          "validation_loss": 0.00012819684343412519,
+          "prefix_accuracy": 1.0,
+          "final_position_accuracy": 1.0,
+          "maximum_state_norm_error": 2.980232238769531e-07
+        },
+        "16": {
+          "validation_loss": 0.0008909999451134354,
+          "prefix_accuracy": 1.0,
+          "final_position_accuracy": 1.0,
+          "maximum_state_norm_error": 2.0265579223632812e-06
+        },
+        "64": {
+          "validation_loss": 0.04032853618264198,
+          "prefix_accuracy": 0.9882354736328125,
+          "final_position_accuracy": 1.0,
+          "maximum_state_norm_error": 6.198883056640625e-06
+        },
+        "128": {
+          "validation_loss": 0.056200094521045685,
+          "prefix_accuracy": 0.9827117919921875,
+          "final_position_accuracy": 0.986328125,
+          "maximum_state_norm_error": 1.1205673217773438e-05
+        }
+      },
+      "mechanism_diagnostics": {
+        "canonical_max_word_length": 6,
+        "operator_orthogonality_rms": 1.732620768007459e-07,
+        "operator_orthogonality_max": 2.641036255210396e-07,
+        "cayley_edge_relation_rms": 0.2371949013035468,
+        "cayley_edge_relation_max": 1.003165989415611,
+        "linear_homomorphism_rms": 0.3736353489399969,
+        "linear_homomorphism_max": 1.328330947332694,
+        "identity_word_state_drift_rms": 0.3408779250407076,
+        "identity_word_state_drift_max": 0.5883611373078275,
+        "orbit_cayley_edge_rms": 0.13475414759018195,
+        "orbit_cayley_edge_max": 0.3057477173603239,
+        "decoded_cayley_edge_accuracy": 1.0,
+        "orbit_homomorphism_rms": 0.2559363842605758,
+        "orbit_homomorphism_max": 0.5883611373078276,
+        "decoded_homomorphism_accuracy": 1.0,
+        "reachable_linear_span_rank": 32,
+        "state_dimension": 32,
+        "reachable_span_homomorphism_rms": 0.37363534893999806,
+        "reachable_span_homomorphism_max": 0.7189707939610461,
+        "orthogonal_complement_dimension": 0,
+        "orthogonal_complement_homomorphism_rms": null,
+        "orthogonal_complement_homomorphism_max": null,
+        "orbit_variation_span_rank": 32,
+        "orbit_variation_span_homomorphism_rms": 0.3736353489399981,
+        "orbit_variation_span_homomorphism_max": 0.7189707939610464,
+        "common_fixed_subspace_dimension": 0,
+        "common_fixed_subspace_homomorphism_rms": null,
+        "common_fixed_subspace_homomorphism_max": null,
+        "cl3_invariant_grade_dimension": 0,
+        "cl3_invariant_grade_homomorphism_rms": null,
+        "cl3_invariant_grade_homomorphism_max": null,
+        "generator_commutator_separation": 0.468763053690766,
+        "mean_generator_pair_commutator_separation": 0.32372839527807973,
+        "maximum_commutator_token_pair": [
+          0,
+          2
+        ],
+        "prototype_minimum_margin": 1.2637360902313286,
+        "prototype_median_distance": 2.1035962563619885,
+        "canonical_prototype_accuracy": 1.0,
+        "mean_action_displacement_from_identity": 0.499773129573255,
+        "max_action_displacement_from_identity": 0.8660978720899434,
+        "per_token_mean_action_displacement": [
+          0.5092769128239505,
+          0.4881696359327385,
+          0.4990903078316581,
+          0.5025556617046731
+        ]
+      },
+      "training_trajectory": {},
+      "streaming_equivalence": {
+        "chunked_logit_max_abs_error": 0.0,
+        "streaming_logit_max_abs_error": 3.814697265625e-06,
+        "chunked_state_max_abs_error": 0.0,
+        "streaming_state_max_abs_error": 0.0
+      },
+      "elapsed_seconds": 25.564070799970068,
+      "steps_per_second": 58.67610099099539,
+      "peak_cuda_memory_mib": 118.78173828125
+    }
+  ]
+}

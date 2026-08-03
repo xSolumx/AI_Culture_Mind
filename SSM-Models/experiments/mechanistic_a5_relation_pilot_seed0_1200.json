@@ -1,0 +1,331 @@
+{
+  "experiment": "write-free norm-preserving A5 group-action gate",
+  "device": "NVIDIA GeForce RTX 2070 SUPER",
+  "torch_version": "2.12.0+cu130",
+  "config": {
+    "steps": 1200,
+    "batch_size": 256,
+    "sequence_length": 16,
+    "validation_batches": 2,
+    "validation_batch_size": 512,
+    "channels": 4,
+    "learning_rate": 0.003,
+    "seed": 0,
+    "diagnostic_interval": 200,
+    "max_rotor_angle": 3.141592653589793,
+    "relation_loss_weight": 5.0,
+    "relation_start_step": 250,
+    "relation_ramp_steps": 250
+  },
+  "group": {
+    "key": "a5",
+    "name": "alternating group A5",
+    "order": 60
+  },
+  "input_alphabet": [
+    {
+      "token_index": 0,
+      "group_index": 15,
+      "element": "23145"
+    },
+    {
+      "token_index": 1,
+      "group_index": 16,
+      "element": "23451"
+    }
+  ],
+  "held_out_transition_pairs": [
+    {
+      "left": "23145",
+      "right": "23451"
+    }
+  ],
+  "data_split_audit": {
+    "training": {
+      "pair_occurrences": 0,
+      "sequences_with_pair": 0,
+      "total_sequences": 307200
+    },
+    "validation": {
+      "pair_occurrences": 4175,
+      "sequences_with_pair": 1024,
+      "total_sequences": 1024
+    },
+    "generalization": {
+      "2": {
+        "pair_occurrences": 1024,
+        "sequences_with_pair": 1024,
+        "total_sequences": 1024
+      },
+      "16": {
+        "pair_occurrences": 4148,
+        "sequences_with_pair": 1024,
+        "total_sequences": 1024
+      },
+      "64": {
+        "pair_occurrences": 16369,
+        "sequences_with_pair": 1024,
+        "total_sequences": 1024
+      },
+      "128": {
+        "pair_occurrences": 32922,
+        "sequences_with_pair": 1024,
+        "total_sequences": 1024
+      }
+    }
+  },
+  "evaluation_lengths": [
+    2,
+    16,
+    64,
+    128
+  ],
+  "comparison_contract": {
+    "same_training_batches": true,
+    "same_validation_batches": true,
+    "same_state_width": true,
+    "all_actions_norm_preserving": true,
+    "no_affine_writes": true,
+    "parameter_counts_are_reported_not_matched": true
+  },
+  "results": [
+    {
+      "family": "pure_ga_rotor",
+      "parameters": 2037,
+      "parameter_shape_sha256": "4015595681a5cf89a15c28a646b491876f095fffe2e154da483f0556fb6617ba",
+      "initial_parameter_sha256": "ac6ab080dbe06fda0604a44361fe46fe69108453f350ddf1ddd7ba9b7d0843f0",
+      "state_scalars_per_sequence": 32,
+      "has_decay": false,
+      "has_affine_write": false,
+      "has_residual_or_feed_forward_path": false,
+      "initial_validation_loss": 4.097545623779297,
+      "initial_validation_prefix_accuracy": 0.0250244140625,
+      "initial_validation_final_position_accuracy": 0.013671875,
+      "initial_mechanism_diagnostics": {
+        "canonical_max_word_length": 8,
+        "operator_orthogonality_rms": 0.0,
+        "operator_orthogonality_max": 0.0,
+        "cayley_edge_relation_rms": 0.0,
+        "cayley_edge_relation_max": 0.0,
+        "linear_homomorphism_rms": 0.0,
+        "linear_homomorphism_max": 0.0,
+        "identity_word_state_drift_rms": 0.0,
+        "identity_word_state_drift_max": 0.0,
+        "generator_commutator_separation": 0.0,
+        "prototype_minimum_margin": 0.0,
+        "prototype_median_distance": 0.0,
+        "canonical_prototype_accuracy": 0.01666666753590107
+      },
+      "final_validation_loss": 9.4228835105896,
+      "final_validation_prefix_accuracy": 0.125,
+      "final_validation_final_position_accuracy": 0.0146484375,
+      "maximum_validation_state_norm_error": 1.0132789611816406e-06,
+      "length_generalization": {
+        "2": {
+          "validation_loss": 7.544820785522461,
+          "prefix_accuracy": 0.5,
+          "final_position_accuracy": 0.0,
+          "maximum_state_norm_error": 1.7881393432617188e-07
+        },
+        "16": {
+          "validation_loss": 9.72920036315918,
+          "prefix_accuracy": 0.1148681640625,
+          "final_position_accuracy": 0.0078125,
+          "maximum_state_norm_error": 1.0132789611816406e-06
+        },
+        "64": {
+          "validation_loss": 9.851445198059082,
+          "prefix_accuracy": 0.04327392578125,
+          "final_position_accuracy": 0.0166015625,
+          "maximum_state_norm_error": 3.2782554626464844e-06
+        },
+        "128": {
+          "validation_loss": 10.33869743347168,
+          "prefix_accuracy": 0.030670166015625,
+          "final_position_accuracy": 0.017578125,
+          "maximum_state_norm_error": 6.258487701416016e-06
+        }
+      },
+      "mechanism_diagnostics": {
+        "canonical_max_word_length": 8,
+        "operator_orthogonality_rms": 8.517672277900585e-08,
+        "operator_orthogonality_max": 1.5337458223511075e-07,
+        "cayley_edge_relation_rms": 0.4661902848517243,
+        "cayley_edge_relation_max": 1.413008395300958,
+        "linear_homomorphism_rms": 0.8002574684713266,
+        "linear_homomorphism_max": 1.4141615126821026,
+        "identity_word_state_drift_rms": 1.2587204747441278,
+        "identity_word_state_drift_max": 1.6395341686340221,
+        "generator_commutator_separation": 0.004177310328160577,
+        "prototype_minimum_margin": 0.007804369214063485,
+        "prototype_median_distance": 1.7595302790971843,
+        "canonical_prototype_accuracy": 0.06666667014360428
+      },
+      "training_trajectory": {
+        "1": {
+          "loss": 4.0213470458984375,
+          "task_loss": 4.0213470458984375,
+          "relation_loss": 0.0,
+          "effective_relation_weight": 0.0,
+          "preclip_gradient_norm": 2.4088797569274902,
+          "mechanism": {
+            "canonical_max_word_length": 8,
+            "operator_orthogonality_rms": 8.268148909191821e-08,
+            "operator_orthogonality_max": 8.287798259454394e-08,
+            "cayley_edge_relation_rms": 0.02432252304340318,
+            "cayley_edge_relation_max": 0.05769818418962889,
+            "linear_homomorphism_rms": 0.04410629877484612,
+            "linear_homomorphism_max": 0.15050762639407736,
+            "identity_word_state_drift_rms": 0.07455871928307002,
+            "identity_word_state_drift_max": 0.12106111899926664,
+            "generator_commutator_separation": 8.882280437534109e-05,
+            "prototype_minimum_margin": 1.0585237850839706e-05,
+            "prototype_median_distance": 0.053837333095138155,
+            "canonical_prototype_accuracy": 0.01666666753590107
+          }
+        },
+        "200": {
+          "loss": 1.1328015327453613,
+          "task_loss": 1.1328015327453613,
+          "relation_loss": 0.0,
+          "effective_relation_weight": 0.0,
+          "preclip_gradient_norm": 0.38380610942840576,
+          "mechanism": {
+            "canonical_max_word_length": 8,
+            "operator_orthogonality_rms": 1.389020124963509e-07,
+            "operator_orthogonality_max": 2.0049056697947232e-07,
+            "cayley_edge_relation_rms": 0.6046867528862242,
+            "cayley_edge_relation_max": 1.414180901334582,
+            "linear_homomorphism_rms": 0.914012593384329,
+            "linear_homomorphism_max": 1.4142143173794022,
+            "identity_word_state_drift_rms": 1.25340491612212,
+            "identity_word_state_drift_max": 1.827905026682535,
+            "generator_commutator_separation": 0.02102852767379739,
+            "prototype_minimum_margin": 0.028743876671413468,
+            "prototype_median_distance": 2.2055775425214956,
+            "canonical_prototype_accuracy": 0.0833333358168602
+          }
+        },
+        "400": {
+          "loss": 2.1581735610961914,
+          "task_loss": 1.0950913429260254,
+          "relation_loss": 0.3543607294559479,
+          "effective_relation_weight": 3.0,
+          "preclip_gradient_norm": 0.12559591233730316,
+          "mechanism": {
+            "canonical_max_word_length": 8,
+            "operator_orthogonality_rms": 1.3716280588464307e-07,
+            "operator_orthogonality_max": 2.0272164683986953e-07,
+            "cayley_edge_relation_rms": 0.5950870240097617,
+            "cayley_edge_relation_max": 1.4025329069402073,
+            "linear_homomorphism_rms": 0.9103950385115238,
+            "linear_homomorphism_max": 1.4142115619075168,
+            "identity_word_state_drift_rms": 1.3233125647742836,
+            "identity_word_state_drift_max": 1.9472693204403138,
+            "generator_commutator_separation": 0.012726636183200874,
+            "prototype_minimum_margin": 0.00862119562253957,
+            "prototype_median_distance": 2.222183646467652,
+            "canonical_prototype_accuracy": 0.0833333358168602
+          }
+        },
+        "600": {
+          "loss": 2.848701000213623,
+          "task_loss": 1.0975189208984375,
+          "relation_loss": 0.3502364158630371,
+          "effective_relation_weight": 5.0,
+          "preclip_gradient_norm": 1.120599389076233,
+          "mechanism": {
+            "canonical_max_word_length": 8,
+            "operator_orthogonality_rms": 1.0883249751630602e-07,
+            "operator_orthogonality_max": 2.3692259121569203e-07,
+            "cayley_edge_relation_rms": 0.5921931068518753,
+            "cayley_edge_relation_max": 1.407885827060113,
+            "linear_homomorphism_rms": 0.9120573210760259,
+            "linear_homomorphism_max": 1.414199719101785,
+            "identity_word_state_drift_rms": 1.3338075451380313,
+            "identity_word_state_drift_max": 1.9620870603917853,
+            "generator_commutator_separation": 0.011494952974340951,
+            "prototype_minimum_margin": 0.008236630970284148,
+            "prototype_median_distance": 2.253697223317947,
+            "canonical_prototype_accuracy": 0.0833333358168602
+          }
+        },
+        "800": {
+          "loss": 2.840667486190796,
+          "task_loss": 1.0907032489776611,
+          "relation_loss": 0.3499928414821625,
+          "effective_relation_weight": 5.0,
+          "preclip_gradient_norm": 0.6356139779090881,
+          "mechanism": {
+            "canonical_max_word_length": 8,
+            "operator_orthogonality_rms": 1.6931570260634479e-07,
+            "operator_orthogonality_max": 2.2337030370417794e-07,
+            "cayley_edge_relation_rms": 0.592037057953063,
+            "cayley_edge_relation_max": 1.4141585265645906,
+            "linear_homomorphism_rms": 0.9079570041347151,
+            "linear_homomorphism_max": 1.4142089998206748,
+            "identity_word_state_drift_rms": 1.2776418524471767,
+            "identity_word_state_drift_max": 1.9174092708139134,
+            "generator_commutator_separation": 0.015224813332780182,
+            "prototype_minimum_margin": 0.013760530428040561,
+            "prototype_median_distance": 2.2437481694713264,
+            "canonical_prototype_accuracy": 0.0833333358168602
+          }
+        },
+        "1000": {
+          "loss": 2.813638210296631,
+          "task_loss": 1.0794912576675415,
+          "relation_loss": 0.346829354763031,
+          "effective_relation_weight": 5.0,
+          "preclip_gradient_norm": 0.7868322730064392,
+          "mechanism": {
+            "canonical_max_word_length": 8,
+            "operator_orthogonality_rms": 1.3210924099398682e-07,
+            "operator_orthogonality_max": 2.3630665005355705e-07,
+            "cayley_edge_relation_rms": 0.5887878056812965,
+            "cayley_edge_relation_max": 1.4136417088352489,
+            "linear_homomorphism_rms": 0.9235008540701827,
+            "linear_homomorphism_max": 1.4142004581732561,
+            "identity_word_state_drift_rms": 1.2942895098387206,
+            "identity_word_state_drift_max": 1.8633546483174857,
+            "generator_commutator_separation": 0.009826909070823463,
+            "prototype_minimum_margin": 0.006714493581916077,
+            "prototype_median_distance": 2.1915920690795443,
+            "canonical_prototype_accuracy": 0.0833333358168602
+          }
+        },
+        "1200": {
+          "loss": 2.2201764583587646,
+          "task_loss": 1.10184645652771,
+          "relation_loss": 0.2236659973859787,
+          "effective_relation_weight": 5.0,
+          "preclip_gradient_norm": 1.7144191265106201,
+          "mechanism": {
+            "canonical_max_word_length": 8,
+            "operator_orthogonality_rms": 8.517672277900585e-08,
+            "operator_orthogonality_max": 1.5337458223511075e-07,
+            "cayley_edge_relation_rms": 0.4661902848517243,
+            "cayley_edge_relation_max": 1.413008395300958,
+            "linear_homomorphism_rms": 0.8002574684713266,
+            "linear_homomorphism_max": 1.4141615126821026,
+            "identity_word_state_drift_rms": 1.2587204747441278,
+            "identity_word_state_drift_max": 1.6395341686340221,
+            "generator_commutator_separation": 0.004177310328160577,
+            "prototype_minimum_margin": 0.007804369214063485,
+            "prototype_median_distance": 1.7595302790971843,
+            "canonical_prototype_accuracy": 0.06666667014360428
+          }
+        }
+      },
+      "streaming_equivalence": {
+        "chunked_logit_max_abs_error": 0.0,
+        "streaming_logit_max_abs_error": 2.86102294921875e-06,
+        "chunked_state_max_abs_error": 0.0,
+        "streaming_state_max_abs_error": 0.0
+      },
+      "elapsed_seconds": 89.70243470004061,
+      "steps_per_second": 13.377563318239083,
+      "peak_cuda_memory_mib": 82.361328125
+    }
+  ]
+}

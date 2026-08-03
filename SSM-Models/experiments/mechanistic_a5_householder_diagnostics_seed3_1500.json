@@ -1,0 +1,1179 @@
+{
+  "experiment": "write-free norm-preserving A5 group-action gate",
+  "device": "NVIDIA GeForce RTX 2070 SUPER",
+  "torch_version": "2.12.0+cu130",
+  "config": {
+    "steps": 1500,
+    "batch_size": 256,
+    "sequence_length": 16,
+    "validation_batches": 2,
+    "validation_batch_size": 512,
+    "channels": 4,
+    "learning_rate": 0.003,
+    "seed": 3,
+    "diagnostic_interval": 50,
+    "max_rotor_angle": 3.141592653589793,
+    "relation_loss_weight": 0.0,
+    "relation_start_step": 0,
+    "relation_ramp_steps": 0,
+    "canonical_orbit_loss_weight": 0.0,
+    "a5_irrep_init": false,
+    "freeze_actions": false
+  },
+  "group": {
+    "key": "a5",
+    "name": "alternating group A5",
+    "order": 60
+  },
+  "input_alphabet": [
+    {
+      "token_index": 0,
+      "group_index": 15,
+      "element": "23145"
+    },
+    {
+      "token_index": 1,
+      "group_index": 24,
+      "element": "31245"
+    },
+    {
+      "token_index": 2,
+      "group_index": 16,
+      "element": "23451"
+    },
+    {
+      "token_index": 3,
+      "group_index": 48,
+      "element": "51234"
+    }
+  ],
+  "held_out_transition_pairs": [
+    {
+      "left": "23145",
+      "right": "23451"
+    }
+  ],
+  "data_split_audit": {
+    "training": {
+      "pair_occurrences": 0,
+      "sequences_with_pair": 0,
+      "total_sequences": 384000
+    },
+    "validation": {
+      "pair_occurrences": 1803,
+      "sequences_with_pair": 1024,
+      "total_sequences": 1024
+    },
+    "generalization": {
+      "2": {
+        "pair_occurrences": 1024,
+        "sequences_with_pair": 1024,
+        "total_sequences": 1024
+      },
+      "16": {
+        "pair_occurrences": 1818,
+        "sequences_with_pair": 1024,
+        "total_sequences": 1024
+      },
+      "64": {
+        "pair_occurrences": 4821,
+        "sequences_with_pair": 1024,
+        "total_sequences": 1024
+      },
+      "128": {
+        "pair_occurrences": 9037,
+        "sequences_with_pair": 1024,
+        "total_sequences": 1024
+      }
+    }
+  },
+  "language_coverage_audit": {
+    "training": {
+      "observed_group_states": 60,
+      "group_state_fraction": 1.0,
+      "missing_group_state_indices": [],
+      "observed_input_pairs": 15,
+      "possible_input_pairs": 16,
+      "input_pair_fraction": 0.9375
+    },
+    "validation": {
+      "observed_group_states": 60,
+      "group_state_fraction": 1.0,
+      "missing_group_state_indices": [],
+      "observed_input_pairs": 16,
+      "possible_input_pairs": 16,
+      "input_pair_fraction": 1.0
+    }
+  },
+  "evaluation_lengths": [
+    2,
+    16,
+    64,
+    128
+  ],
+  "comparison_contract": {
+    "same_training_batches": true,
+    "same_validation_batches": true,
+    "same_state_width": true,
+    "all_actions_norm_preserving": true,
+    "no_affine_writes": true,
+    "parameter_counts_are_reported_not_matched": true
+  },
+  "results": [
+    {
+      "family": "pure_householder",
+      "parameters": 2269,
+      "parameter_shape_sha256": "35d6169b57895e53a298164b6ace1ad66323c3761f942cd1e48ca0becfb72472",
+      "initial_parameter_sha256": "77e3af30b0c671fec2a8e7f62981a48a224737221c99c7e6785de86f833fe269",
+      "state_scalars_per_sequence": 32,
+      "has_decay": false,
+      "has_affine_write": false,
+      "has_residual_or_feed_forward_path": false,
+      "a5_irrep_initialization": false,
+      "actions_frozen": false,
+      "initial_validation_loss": 4.0932276248931885,
+      "initial_validation_prefix_accuracy": 0.04608154296875,
+      "initial_validation_final_position_accuracy": 0.0185546875,
+      "initial_mechanism_diagnostics": {
+        "canonical_max_word_length": 6,
+        "operator_orthogonality_rms": 2.511472243008249e-07,
+        "operator_orthogonality_max": 4.2211032793308994e-07,
+        "cayley_edge_relation_rms": 2.3692785264124347e-07,
+        "cayley_edge_relation_max": 7.277330434094347e-07,
+        "linear_homomorphism_rms": 3.5732499537503314e-07,
+        "linear_homomorphism_max": 9.845514152651718e-07,
+        "identity_word_state_drift_rms": 3.855917309269099e-07,
+        "identity_word_state_drift_max": 6.143556251943271e-07,
+        "orbit_cayley_edge_rms": 2.1122960388078388e-07,
+        "orbit_cayley_edge_max": 5.271328251093758e-07,
+        "decoded_cayley_edge_accuracy": 0.016666666666666666,
+        "orbit_homomorphism_rms": 3.047531132892687e-07,
+        "orbit_homomorphism_max": 6.846659167597222e-07,
+        "decoded_homomorphism_accuracy": 0.01666666753590107,
+        "reachable_linear_span_rank": 1,
+        "state_dimension": 32,
+        "reachable_span_homomorphism_rms": 3.047531762457851e-07,
+        "reachable_span_homomorphism_max": 6.846660930698024e-07,
+        "orthogonal_complement_dimension": 31,
+        "orthogonal_complement_homomorphism_rms": 3.588926686428713e-07,
+        "orthogonal_complement_homomorphism_max": 7.942147866887121e-07,
+        "orbit_variation_span_rank": 2,
+        "orbit_variation_span_homomorphism_rms": 6.644266081147427e-07,
+        "orbit_variation_span_homomorphism_max": 1.5070486320584937e-06,
+        "common_fixed_subspace_dimension": 32,
+        "common_fixed_subspace_homomorphism_rms": 3.5732499537385127e-07,
+        "common_fixed_subspace_homomorphism_max": 7.910210689404124e-07,
+        "cl3_invariant_grade_dimension": 0,
+        "cl3_invariant_grade_homomorphism_rms": null,
+        "cl3_invariant_grade_homomorphism_max": null,
+        "generator_commutator_separation": 2.513041915062987e-14,
+        "mean_generator_pair_commutator_separation": 1.3734196490362192e-14,
+        "maximum_commutator_token_pair": [
+          1,
+          2
+        ],
+        "prototype_minimum_margin": 0.0,
+        "prototype_median_distance": 3.9649411128908605e-07,
+        "canonical_prototype_accuracy": 0.01666666753590107,
+        "mean_action_displacement_from_identity": 1.1194808905519933e-07,
+        "max_action_displacement_from_identity": 2.126088021817465e-07,
+        "per_token_mean_action_displacement": [
+          5.297228747236436e-08,
+          1.3215286865604354e-07,
+          1.379952587992008e-07,
+          1.2467194129318867e-07
+        ]
+      },
+      "final_validation_loss": 0.003859431715682149,
+      "final_validation_prefix_accuracy": 1.0,
+      "final_validation_final_position_accuracy": 1.0,
+      "maximum_validation_state_norm_error": 1.6093254089355469e-06,
+      "length_generalization": {
+        "2": {
+          "validation_loss": 0.0007214904180727899,
+          "prefix_accuracy": 1.0,
+          "final_position_accuracy": 1.0,
+          "maximum_state_norm_error": 0.0
+        },
+        "16": {
+          "validation_loss": 0.0038777876179665327,
+          "prefix_accuracy": 1.0,
+          "final_position_accuracy": 1.0,
+          "maximum_state_norm_error": 1.4901161193847656e-06
+        },
+        "64": {
+          "validation_loss": 0.11353661864995956,
+          "prefix_accuracy": 0.9675750732421875,
+          "final_position_accuracy": 0.83203125,
+          "maximum_state_norm_error": 4.5299530029296875e-06
+        },
+        "128": {
+          "validation_loss": 0.7684647738933563,
+          "prefix_accuracy": 0.8260574340820312,
+          "final_position_accuracy": 0.5908203125,
+          "maximum_state_norm_error": 8.165836334228516e-06
+        }
+      },
+      "mechanism_diagnostics": {
+        "canonical_max_word_length": 6,
+        "operator_orthogonality_rms": 1.4898979628050096e-07,
+        "operator_orthogonality_max": 2.3470231718456707e-07,
+        "cayley_edge_relation_rms": 0.43897485104246653,
+        "cayley_edge_relation_max": 1.2126886767655896,
+        "linear_homomorphism_rms": 0.6222509571298109,
+        "linear_homomorphism_max": 1.3868160215059127,
+        "identity_word_state_drift_rms": 0.12999041830279578,
+        "identity_word_state_drift_max": 0.2670850031468067,
+        "orbit_cayley_edge_rms": 0.10925925444401267,
+        "orbit_cayley_edge_max": 0.26111042442926075,
+        "decoded_cayley_edge_accuracy": 1.0,
+        "orbit_homomorphism_rms": 0.16790097076062666,
+        "orbit_homomorphism_max": 0.2953536227568175,
+        "decoded_homomorphism_accuracy": 1.0,
+        "reachable_linear_span_rank": 32,
+        "state_dimension": 32,
+        "reachable_span_homomorphism_rms": 0.6222509571298126,
+        "reachable_span_homomorphism_max": 0.9881939237048043,
+        "orthogonal_complement_dimension": 0,
+        "orthogonal_complement_homomorphism_rms": null,
+        "orthogonal_complement_homomorphism_max": null,
+        "orbit_variation_span_rank": 32,
+        "orbit_variation_span_homomorphism_rms": 0.6222509571298127,
+        "orbit_variation_span_homomorphism_max": 0.9881939237048044,
+        "common_fixed_subspace_dimension": 0,
+        "common_fixed_subspace_homomorphism_rms": null,
+        "common_fixed_subspace_homomorphism_max": null,
+        "cl3_invariant_grade_dimension": 0,
+        "cl3_invariant_grade_homomorphism_rms": null,
+        "cl3_invariant_grade_homomorphism_max": null,
+        "generator_commutator_separation": 0.5348398125190508,
+        "mean_generator_pair_commutator_separation": 0.3784253375759663,
+        "maximum_commutator_token_pair": [
+          1,
+          2
+        ],
+        "prototype_minimum_margin": 0.4626712984698883,
+        "prototype_median_distance": 1.4847420722673066,
+        "canonical_prototype_accuracy": 1.0,
+        "mean_action_displacement_from_identity": 0.558442559302488,
+        "max_action_displacement_from_identity": 0.952694197294301,
+        "per_token_mean_action_displacement": [
+          0.4676686659304288,
+          0.540131089718822,
+          0.6448219087649608,
+          0.5811485727957404
+        ]
+      },
+      "training_trajectory": {
+        "1": {
+          "loss": 4.0837788581848145,
+          "task_loss": 4.0837788581848145,
+          "relation_loss": 0.0,
+          "canonical_orbit_loss": 0.0,
+          "effective_relation_weight": 0.0,
+          "preclip_gradient_norm": 0.281898558139801,
+          "training_prefix_accuracy": 0.056640625,
+          "training_final_position_accuracy": 0.01171875,
+          "training_median_correct_class_margin": -0.387420117855072,
+          "training_final_position_median_correct_class_margin": -0.39921414852142334,
+          "action_gradient_norm": 0.18478865921497345,
+          "initial_state_gradient_norm": 0.047357216477394104,
+          "decoder_gradient_norm": 0.20736806094646454,
+          "logit_scale_gradient_abs": 0.008702817372977734,
+          "mechanism": {
+            "mean_action_displacement_from_identity": 0.016504339245316614,
+            "max_action_displacement_from_identity": 0.016967910547989615,
+            "mean_initial_state_displacement": 0.022434863358788637,
+            "max_initial_state_displacement": 0.027258687350411818,
+            "maximum_token_commutator": 0.0004801924106974911,
+            "per_token_mean_action_displacement": [
+              0.016403316340627548,
+              0.01686030657903654,
+              0.016536451978073848,
+              0.016217282083528524
+            ]
+          }
+        },
+        "50": {
+          "loss": 3.7223494052886963,
+          "task_loss": 3.7223494052886963,
+          "relation_loss": 0.0,
+          "canonical_orbit_loss": 0.0,
+          "effective_relation_weight": 0.0,
+          "preclip_gradient_norm": 0.2312462478876114,
+          "training_prefix_accuracy": 0.086669921875,
+          "training_final_position_accuracy": 0.0234375,
+          "training_median_correct_class_margin": -0.6974924802780151,
+          "training_final_position_median_correct_class_margin": -0.649276614189148,
+          "action_gradient_norm": 0.17457498610019684,
+          "initial_state_gradient_norm": 0.021403346210718155,
+          "decoder_gradient_norm": 0.08499622344970703,
+          "logit_scale_gradient_abs": 0.12375760078430176,
+          "mechanism": {
+            "mean_action_displacement_from_identity": 0.25507295501107274,
+            "max_action_displacement_from_identity": 0.4213378252851658,
+            "mean_initial_state_displacement": 0.34886919004852296,
+            "max_initial_state_displacement": 0.7762141919983099,
+            "maximum_token_commutator": 0.18155390965816828,
+            "per_token_mean_action_displacement": [
+              0.1490941233447041,
+              0.2161984240748773,
+              0.31191086094733905,
+              0.34308841167737036
+            ]
+          }
+        },
+        "100": {
+          "loss": 3.2431533336639404,
+          "task_loss": 3.2431533336639404,
+          "relation_loss": 0.0,
+          "canonical_orbit_loss": 0.0,
+          "effective_relation_weight": 0.0,
+          "preclip_gradient_norm": 0.4092237949371338,
+          "training_prefix_accuracy": 0.18701171875,
+          "training_final_position_accuracy": 0.03515625,
+          "training_median_correct_class_margin": -0.7360043525695801,
+          "training_final_position_median_correct_class_margin": -1.0424779653549194,
+          "action_gradient_norm": 0.308510959148407,
+          "initial_state_gradient_norm": 0.05246478691697121,
+          "decoder_gradient_norm": 0.10039019584655762,
+          "logit_scale_gradient_abs": 0.24383264780044556,
+          "mechanism": {
+            "mean_action_displacement_from_identity": 0.40197035831977246,
+            "max_action_displacement_from_identity": 0.802253107872799,
+            "mean_initial_state_displacement": 0.609904762756487,
+            "max_initial_state_displacement": 1.3891651053246168,
+            "maximum_token_commutator": 0.3827999677792769,
+            "per_token_mean_action_displacement": [
+              0.15892560065635325,
+              0.30953196778960795,
+              0.5503935494728907,
+              0.5890303153602379
+            ]
+          }
+        },
+        "150": {
+          "loss": 3.15726375579834,
+          "task_loss": 3.15726375579834,
+          "relation_loss": 0.0,
+          "canonical_orbit_loss": 0.0,
+          "effective_relation_weight": 0.0,
+          "preclip_gradient_norm": 0.40542691946029663,
+          "training_prefix_accuracy": 0.185546875,
+          "training_final_position_accuracy": 0.04296875,
+          "training_median_correct_class_margin": -0.8823258876800537,
+          "training_final_position_median_correct_class_margin": -1.5279566049575806,
+          "action_gradient_norm": 0.38929134607315063,
+          "initial_state_gradient_norm": 0.045112889260053635,
+          "decoder_gradient_norm": 0.0777091309428215,
+          "logit_scale_gradient_abs": 0.06891558319330215,
+          "mechanism": {
+            "mean_action_displacement_from_identity": 0.45975794458903707,
+            "max_action_displacement_from_identity": 0.9063255845968641,
+            "mean_initial_state_displacement": 0.6712506154370317,
+            "max_initial_state_displacement": 1.5911491060036242,
+            "maximum_token_commutator": 0.27932508836433856,
+            "per_token_mean_action_displacement": [
+              0.2115668975645697,
+              0.3693122547228457,
+              0.6349951295419218,
+              0.6231574965268111
+            ]
+          }
+        },
+        "200": {
+          "loss": 3.0548722743988037,
+          "task_loss": 3.0548722743988037,
+          "relation_loss": 0.0,
+          "canonical_orbit_loss": 0.0,
+          "effective_relation_weight": 0.0,
+          "preclip_gradient_norm": 0.32132193446159363,
+          "training_prefix_accuracy": 0.207763671875,
+          "training_final_position_accuracy": 0.0390625,
+          "training_median_correct_class_margin": -0.9601845741271973,
+          "training_final_position_median_correct_class_margin": -1.5779132843017578,
+          "action_gradient_norm": 0.30403953790664673,
+          "initial_state_gradient_norm": 0.05105778947472572,
+          "decoder_gradient_norm": 0.07485059648752213,
+          "logit_scale_gradient_abs": 0.05097287520766258,
+          "mechanism": {
+            "mean_action_displacement_from_identity": 0.5173454046543798,
+            "max_action_displacement_from_identity": 0.9276011979621354,
+            "mean_initial_state_displacement": 0.7150004703074373,
+            "max_initial_state_displacement": 1.6660113375433059,
+            "maximum_token_commutator": 0.3262081445643396,
+            "per_token_mean_action_displacement": [
+              0.3021000992946765,
+              0.4656382745266978,
+              0.6646391679662996,
+              0.6370040768298452
+            ]
+          }
+        },
+        "250": {
+          "loss": 2.706299066543579,
+          "task_loss": 2.706299066543579,
+          "relation_loss": 0.0,
+          "canonical_orbit_loss": 0.0,
+          "effective_relation_weight": 0.0,
+          "preclip_gradient_norm": 0.6307151317596436,
+          "training_prefix_accuracy": 0.36474609375,
+          "training_final_position_accuracy": 0.09375,
+          "training_median_correct_class_margin": -0.5587073564529419,
+          "training_final_position_median_correct_class_margin": -1.6647313833236694,
+          "action_gradient_norm": 0.5581085681915283,
+          "initial_state_gradient_norm": 0.06578594446182251,
+          "decoder_gradient_norm": 0.12476105242967606,
+          "logit_scale_gradient_abs": 0.2577272355556488,
+          "mechanism": {
+            "mean_action_displacement_from_identity": 0.5693254113105448,
+            "max_action_displacement_from_identity": 0.9193590234035881,
+            "mean_initial_state_displacement": 0.7876177943089925,
+            "max_initial_state_displacement": 1.7195400435165251,
+            "maximum_token_commutator": 0.42309182388768146,
+            "per_token_mean_action_displacement": [
+              0.45076515104618164,
+              0.5709294070778446,
+              0.6425125429967389,
+              0.6130945441214146
+            ]
+          }
+        },
+        "300": {
+          "loss": 1.538740873336792,
+          "task_loss": 1.538740873336792,
+          "relation_loss": 0.0,
+          "canonical_orbit_loss": 0.0,
+          "effective_relation_weight": 0.0,
+          "preclip_gradient_norm": 0.84947669506073,
+          "training_prefix_accuracy": 0.64306640625,
+          "training_final_position_accuracy": 0.2890625,
+          "training_median_correct_class_margin": 1.268815040588379,
+          "training_final_position_median_correct_class_margin": -0.98512864112854,
+          "action_gradient_norm": 0.710442066192627,
+          "initial_state_gradient_norm": 0.08303575962781906,
+          "decoder_gradient_norm": 0.1353732794523239,
+          "logit_scale_gradient_abs": 0.4377920627593994,
+          "mechanism": {
+            "mean_action_displacement_from_identity": 0.5739413760401719,
+            "max_action_displacement_from_identity": 0.9414839327932427,
+            "mean_initial_state_displacement": 0.8252098391141984,
+            "max_initial_state_displacement": 1.7091192009714844,
+            "maximum_token_commutator": 0.5009855002575964,
+            "per_token_mean_action_displacement": [
+              0.49963730096914527,
+              0.5499780035616133,
+              0.6435660527631769,
+              0.6025841468667522
+            ]
+          }
+        },
+        "350": {
+          "loss": 1.0211384296417236,
+          "task_loss": 1.0211384296417236,
+          "relation_loss": 0.0,
+          "canonical_orbit_loss": 0.0,
+          "effective_relation_weight": 0.0,
+          "preclip_gradient_norm": 0.7463319301605225,
+          "training_prefix_accuracy": 0.7333984375,
+          "training_final_position_accuracy": 0.4375,
+          "training_median_correct_class_margin": 1.8624849319458008,
+          "training_final_position_median_correct_class_margin": -0.3329319953918457,
+          "action_gradient_norm": 0.5914132595062256,
+          "initial_state_gradient_norm": 0.09383805841207504,
+          "decoder_gradient_norm": 0.12432561814785004,
+          "logit_scale_gradient_abs": 0.4277608096599579,
+          "mechanism": {
+            "mean_action_displacement_from_identity": 0.5715659053674328,
+            "max_action_displacement_from_identity": 0.9527448496991523,
+            "mean_initial_state_displacement": 0.7731514317603362,
+            "max_initial_state_displacement": 1.6222706200574348,
+            "maximum_token_commutator": 0.5262936232797482,
+            "per_token_mean_action_displacement": [
+              0.4988983197076206,
+              0.5498319442696632,
+              0.6377381560111495,
+              0.599795201481298
+            ]
+          }
+        },
+        "400": {
+          "loss": 0.8647338151931763,
+          "task_loss": 0.8647338151931763,
+          "relation_loss": 0.0,
+          "canonical_orbit_loss": 0.0,
+          "effective_relation_weight": 0.0,
+          "preclip_gradient_norm": 0.8190458416938782,
+          "training_prefix_accuracy": 0.779541015625,
+          "training_final_position_accuracy": 0.51953125,
+          "training_median_correct_class_margin": 1.9468450546264648,
+          "training_final_position_median_correct_class_margin": 0.09224891662597656,
+          "action_gradient_norm": 0.6930608749389648,
+          "initial_state_gradient_norm": 0.07772297412157059,
+          "decoder_gradient_norm": 0.13777481019496918,
+          "logit_scale_gradient_abs": 0.40679222345352173,
+          "mechanism": {
+            "mean_action_displacement_from_identity": 0.5713792190936561,
+            "max_action_displacement_from_identity": 0.952750627903362,
+            "mean_initial_state_displacement": 0.6992937297803058,
+            "max_initial_state_displacement": 1.3648407588123763,
+            "maximum_token_commutator": 0.5371833867922168,
+            "per_token_mean_action_displacement": [
+              0.492637167290778,
+              0.551173243151135,
+              0.6473946961613141,
+              0.5943117697713972
+            ]
+          }
+        },
+        "450": {
+          "loss": 0.6245433688163757,
+          "task_loss": 0.6245433688163757,
+          "relation_loss": 0.0,
+          "canonical_orbit_loss": 0.0,
+          "effective_relation_weight": 0.0,
+          "preclip_gradient_norm": 0.7963628768920898,
+          "training_prefix_accuracy": 0.838134765625,
+          "training_final_position_accuracy": 0.61328125,
+          "training_median_correct_class_margin": 2.508474349975586,
+          "training_final_position_median_correct_class_margin": 0.5390968322753906,
+          "action_gradient_norm": 0.6508567333221436,
+          "initial_state_gradient_norm": 0.09293507039546967,
+          "decoder_gradient_norm": 0.12815310060977936,
+          "logit_scale_gradient_abs": 0.43071937561035156,
+          "mechanism": {
+            "mean_action_displacement_from_identity": 0.5684807174567188,
+            "max_action_displacement_from_identity": 0.9525668323454093,
+            "mean_initial_state_displacement": 0.6387560154299174,
+            "max_initial_state_displacement": 1.4385775396139628,
+            "maximum_token_commutator": 0.5393183615109697,
+            "per_token_mean_action_displacement": [
+              0.48893876707833245,
+              0.54281402978744,
+              0.6417939647438661,
+              0.6003761082172365
+            ]
+          }
+        },
+        "500": {
+          "loss": 0.43345287442207336,
+          "task_loss": 0.43345287442207336,
+          "relation_loss": 0.0,
+          "canonical_orbit_loss": 0.0,
+          "effective_relation_weight": 0.0,
+          "preclip_gradient_norm": 1.1743546724319458,
+          "training_prefix_accuracy": 0.911865234375,
+          "training_final_position_accuracy": 0.76171875,
+          "training_median_correct_class_margin": 2.867950439453125,
+          "training_final_position_median_correct_class_margin": 1.0120515823364258,
+          "action_gradient_norm": 1.0757347345352173,
+          "initial_state_gradient_norm": 0.12927962839603424,
+          "decoder_gradient_norm": 0.14721360802650452,
+          "logit_scale_gradient_abs": 0.42839062213897705,
+          "mechanism": {
+            "mean_action_displacement_from_identity": 0.5684041482886132,
+            "max_action_displacement_from_identity": 0.9518146713987499,
+            "mean_initial_state_displacement": 0.6122562418533172,
+            "max_initial_state_displacement": 1.465839094860387,
+            "maximum_token_commutator": 0.5341904870930223,
+            "per_token_mean_action_displacement": [
+              0.483197205159587,
+              0.547001529518819,
+              0.6493553658574073,
+              0.5940624926186395
+            ]
+          }
+        },
+        "550": {
+          "loss": 0.3316636085510254,
+          "task_loss": 0.3316636085510254,
+          "relation_loss": 0.0,
+          "canonical_orbit_loss": 0.0,
+          "effective_relation_weight": 0.0,
+          "preclip_gradient_norm": 1.175549030303955,
+          "training_prefix_accuracy": 0.931640625,
+          "training_final_position_accuracy": 0.8359375,
+          "training_median_correct_class_margin": 3.251999855041504,
+          "training_final_position_median_correct_class_margin": 1.3150615692138672,
+          "action_gradient_norm": 1.08617103099823,
+          "initial_state_gradient_norm": 0.1688392609357834,
+          "decoder_gradient_norm": 0.18827107548713684,
+          "logit_scale_gradient_abs": 0.3717464208602905,
+          "mechanism": {
+            "mean_action_displacement_from_identity": 0.5640359963609821,
+            "max_action_displacement_from_identity": 0.9522026461866298,
+            "mean_initial_state_displacement": 0.5705227026631043,
+            "max_initial_state_displacement": 1.4723719085362896,
+            "maximum_token_commutator": 0.531869187464653,
+            "per_token_mean_action_displacement": [
+              0.47999943239652787,
+              0.5438827667292079,
+              0.640613850518698,
+              0.5916479357994946
+            ]
+          }
+        },
+        "600": {
+          "loss": 0.24417370557785034,
+          "task_loss": 0.24417370557785034,
+          "relation_loss": 0.0,
+          "canonical_orbit_loss": 0.0,
+          "effective_relation_weight": 0.0,
+          "preclip_gradient_norm": 1.1939364671707153,
+          "training_prefix_accuracy": 0.960693359375,
+          "training_final_position_accuracy": 0.8984375,
+          "training_median_correct_class_margin": 3.4102134704589844,
+          "training_final_position_median_correct_class_margin": 1.7659721374511719,
+          "action_gradient_norm": 1.1073808670043945,
+          "initial_state_gradient_norm": 0.169626384973526,
+          "decoder_gradient_norm": 0.2241748571395874,
+          "logit_scale_gradient_abs": 0.3466472029685974,
+          "mechanism": {
+            "mean_action_displacement_from_identity": 0.5647662118945093,
+            "max_action_displacement_from_identity": 0.9527758693874145,
+            "mean_initial_state_displacement": 0.5397082546565241,
+            "max_initial_state_displacement": 1.470673886949879,
+            "maximum_token_commutator": 0.5301638015265459,
+            "per_token_mean_action_displacement": [
+              0.48049881777097536,
+              0.5420278974443524,
+              0.646968954691487,
+              0.5895691776712223
+            ]
+          }
+        },
+        "650": {
+          "loss": 0.15738677978515625,
+          "task_loss": 0.15738677978515625,
+          "relation_loss": 0.0,
+          "canonical_orbit_loss": 0.0,
+          "effective_relation_weight": 0.0,
+          "preclip_gradient_norm": 0.9716797471046448,
+          "training_prefix_accuracy": 0.988037109375,
+          "training_final_position_accuracy": 0.9453125,
+          "training_median_correct_class_margin": 3.8351898193359375,
+          "training_final_position_median_correct_class_margin": 2.2594738006591797,
+          "action_gradient_norm": 0.9061086773872375,
+          "initial_state_gradient_norm": 0.08270463347434998,
+          "decoder_gradient_norm": 0.13540209829807281,
+          "logit_scale_gradient_abs": 0.3129773437976837,
+          "mechanism": {
+            "mean_action_displacement_from_identity": 0.5617626866755987,
+            "max_action_displacement_from_identity": 0.9545804876834942,
+            "mean_initial_state_displacement": 0.5033660363103052,
+            "max_initial_state_displacement": 1.471281341333913,
+            "maximum_token_commutator": 0.5293027841638485,
+            "per_token_mean_action_displacement": [
+              0.4767158191240945,
+              0.5383589266175329,
+              0.6449313810129903,
+              0.5870446199477768
+            ]
+          }
+        },
+        "700": {
+          "loss": 0.10371720790863037,
+          "task_loss": 0.10371720790863037,
+          "relation_loss": 0.0,
+          "canonical_orbit_loss": 0.0,
+          "effective_relation_weight": 0.0,
+          "preclip_gradient_norm": 0.6907854080200195,
+          "training_prefix_accuracy": 0.99560546875,
+          "training_final_position_accuracy": 0.98046875,
+          "training_median_correct_class_margin": 4.110818862915039,
+          "training_final_position_median_correct_class_margin": 2.786975860595703,
+          "action_gradient_norm": 0.6274362206459045,
+          "initial_state_gradient_norm": 0.056796763092279434,
+          "decoder_gradient_norm": 0.09572668373584747,
+          "logit_scale_gradient_abs": 0.2666810154914856,
+          "mechanism": {
+            "mean_action_displacement_from_identity": 0.5624654462316497,
+            "max_action_displacement_from_identity": 0.9524684125776791,
+            "mean_initial_state_displacement": 0.4799894973880854,
+            "max_initial_state_displacement": 1.4752244341342127,
+            "maximum_token_commutator": 0.5308203352291394,
+            "per_token_mean_action_displacement": [
+              0.4761738723414869,
+              0.5411346087662207,
+              0.647256630877765,
+              0.5852966729411262
+            ]
+          }
+        },
+        "750": {
+          "loss": 0.06501556932926178,
+          "task_loss": 0.06501556932926178,
+          "relation_loss": 0.0,
+          "canonical_orbit_loss": 0.0,
+          "effective_relation_weight": 0.0,
+          "preclip_gradient_norm": 0.5101235508918762,
+          "training_prefix_accuracy": 0.999755859375,
+          "training_final_position_accuracy": 0.99609375,
+          "training_median_correct_class_margin": 4.736991882324219,
+          "training_final_position_median_correct_class_margin": 3.137746810913086,
+          "action_gradient_norm": 0.45321565866470337,
+          "initial_state_gradient_norm": 0.07939837127923965,
+          "decoder_gradient_norm": 0.08333214372396469,
+          "logit_scale_gradient_abs": 0.20389524102210999,
+          "mechanism": {
+            "mean_action_displacement_from_identity": 0.5617018195488668,
+            "max_action_displacement_from_identity": 0.9543355911104001,
+            "mean_initial_state_displacement": 0.46553994600480825,
+            "max_initial_state_displacement": 1.4741046312568638,
+            "maximum_token_commutator": 0.5328855347084684,
+            "per_token_mean_action_displacement": [
+              0.4746308854243493,
+              0.539699994525288,
+              0.6464918843250688,
+              0.5859845139207611
+            ]
+          }
+        },
+        "800": {
+          "loss": 0.048528093844652176,
+          "task_loss": 0.048528093844652176,
+          "relation_loss": 0.0,
+          "canonical_orbit_loss": 0.0,
+          "effective_relation_weight": 0.0,
+          "preclip_gradient_norm": 0.41153693199157715,
+          "training_prefix_accuracy": 1.0,
+          "training_final_position_accuracy": 1.0,
+          "training_median_correct_class_margin": 4.789604187011719,
+          "training_final_position_median_correct_class_margin": 3.5480918884277344,
+          "action_gradient_norm": 0.36267754435539246,
+          "initial_state_gradient_norm": 0.04815318062901497,
+          "decoder_gradient_norm": 0.07182314246892929,
+          "logit_scale_gradient_abs": 0.1742134541273117,
+          "mechanism": {
+            "mean_action_displacement_from_identity": 0.5609858031760255,
+            "max_action_displacement_from_identity": 0.9525859720990777,
+            "mean_initial_state_displacement": 0.45031172783822526,
+            "max_initial_state_displacement": 1.4747931723213346,
+            "maximum_token_commutator": 0.5329491356055267,
+            "per_token_mean_action_displacement": [
+              0.4735390955247586,
+              0.5414018366796163,
+              0.6438026718096104,
+              0.585199608690117
+            ]
+          }
+        },
+        "850": {
+          "loss": 0.0337526798248291,
+          "task_loss": 0.0337526798248291,
+          "relation_loss": 0.0,
+          "canonical_orbit_loss": 0.0,
+          "effective_relation_weight": 0.0,
+          "preclip_gradient_norm": 0.26507481932640076,
+          "training_prefix_accuracy": 1.0,
+          "training_final_position_accuracy": 1.0,
+          "training_median_correct_class_margin": 5.330974578857422,
+          "training_final_position_median_correct_class_margin": 4.032142639160156,
+          "action_gradient_norm": 0.22367379069328308,
+          "initial_state_gradient_norm": 0.03196454048156738,
+          "decoder_gradient_norm": 0.045506320893764496,
+          "logit_scale_gradient_abs": 0.13092797994613647,
+          "mechanism": {
+            "mean_action_displacement_from_identity": 0.5604792390851309,
+            "max_action_displacement_from_identity": 0.9534311175454712,
+            "mean_initial_state_displacement": 0.440590391264844,
+            "max_initial_state_displacement": 1.4762840264413284,
+            "maximum_token_commutator": 0.5318800213808843,
+            "per_token_mean_action_displacement": [
+              0.4728536456875337,
+              0.5397983459858007,
+              0.6462833909981878,
+              0.5829815736690012
+            ]
+          }
+        },
+        "900": {
+          "loss": 0.021901633590459824,
+          "task_loss": 0.021901633590459824,
+          "relation_loss": 0.0,
+          "canonical_orbit_loss": 0.0,
+          "effective_relation_weight": 0.0,
+          "preclip_gradient_norm": 0.20278245210647583,
+          "training_prefix_accuracy": 1.0,
+          "training_final_position_accuracy": 1.0,
+          "training_median_correct_class_margin": 5.696353912353516,
+          "training_final_position_median_correct_class_margin": 4.447578430175781,
+          "action_gradient_norm": 0.17232412099838257,
+          "initial_state_gradient_norm": 0.02449510060250759,
+          "decoder_gradient_norm": 0.035968899726867676,
+          "logit_scale_gradient_abs": 0.0976286306977272,
+          "mechanism": {
+            "mean_action_displacement_from_identity": 0.5597760873227281,
+            "max_action_displacement_from_identity": 0.9526142479629123,
+            "mean_initial_state_displacement": 0.43396434924764493,
+            "max_initial_state_displacement": 1.4766012368565242,
+            "maximum_token_commutator": 0.5319521812926105,
+            "per_token_mean_action_displacement": [
+              0.4706396067158535,
+              0.5394211315161247,
+              0.6449830130420439,
+              0.5840605980168903
+            ]
+          }
+        },
+        "950": {
+          "loss": 0.018967583775520325,
+          "task_loss": 0.018967583775520325,
+          "relation_loss": 0.0,
+          "canonical_orbit_loss": 0.0,
+          "effective_relation_weight": 0.0,
+          "preclip_gradient_norm": 0.17914439737796783,
+          "training_prefix_accuracy": 1.0,
+          "training_final_position_accuracy": 1.0,
+          "training_median_correct_class_margin": 5.865516662597656,
+          "training_final_position_median_correct_class_margin": 4.689258575439453,
+          "action_gradient_norm": 0.15254339575767517,
+          "initial_state_gradient_norm": 0.01818668842315674,
+          "decoder_gradient_norm": 0.03140091150999069,
+          "logit_scale_gradient_abs": 0.08663977682590485,
+          "mechanism": {
+            "mean_action_displacement_from_identity": 0.5596032266119837,
+            "max_action_displacement_from_identity": 0.951994481744798,
+            "mean_initial_state_displacement": 0.4271111313861409,
+            "max_initial_state_displacement": 1.4764705657926653,
+            "maximum_token_commutator": 0.53288060591023,
+            "per_token_mean_action_displacement": [
+              0.4701385575734812,
+              0.5399319126309661,
+              0.6451995645084652,
+              0.583142871735022
+            ]
+          }
+        },
+        "1000": {
+          "loss": 0.013754917308688164,
+          "task_loss": 0.013754917308688164,
+          "relation_loss": 0.0,
+          "canonical_orbit_loss": 0.0,
+          "effective_relation_weight": 0.0,
+          "preclip_gradient_norm": 0.12289553880691528,
+          "training_prefix_accuracy": 1.0,
+          "training_final_position_accuracy": 1.0,
+          "training_median_correct_class_margin": 6.112251281738281,
+          "training_final_position_median_correct_class_margin": 4.8441162109375,
+          "action_gradient_norm": 0.09795894473791122,
+          "initial_state_gradient_norm": 0.01760038174688816,
+          "decoder_gradient_norm": 0.02148016355931759,
+          "logit_scale_gradient_abs": 0.06881997734308243,
+          "mechanism": {
+            "mean_action_displacement_from_identity": 0.5594842481459295,
+            "max_action_displacement_from_identity": 0.9518863508759691,
+            "mean_initial_state_displacement": 0.42491880890832345,
+            "max_initial_state_displacement": 1.478539003384631,
+            "maximum_token_commutator": 0.5331093130523117,
+            "per_token_mean_action_displacement": [
+              0.4700146911235804,
+              0.5400823454807591,
+              0.644858472038449,
+              0.5829814839409291
+            ]
+          }
+        },
+        "1050": {
+          "loss": 0.011357495561242104,
+          "task_loss": 0.011357495561242104,
+          "relation_loss": 0.0,
+          "canonical_orbit_loss": 0.0,
+          "effective_relation_weight": 0.0,
+          "preclip_gradient_norm": 0.13170339167118073,
+          "training_prefix_accuracy": 1.0,
+          "training_final_position_accuracy": 1.0,
+          "training_median_correct_class_margin": 6.310344696044922,
+          "training_final_position_median_correct_class_margin": 5.100944519042969,
+          "action_gradient_norm": 0.11368429660797119,
+          "initial_state_gradient_norm": 0.019775552675127983,
+          "decoder_gradient_norm": 0.022339142858982086,
+          "logit_scale_gradient_abs": 0.059426892548799515,
+          "mechanism": {
+            "mean_action_displacement_from_identity": 0.559084365163643,
+            "max_action_displacement_from_identity": 0.9526586955859272,
+            "mean_initial_state_displacement": 0.419984110080193,
+            "max_initial_state_displacement": 1.4788127579568582,
+            "maximum_token_commutator": 0.533928251193633,
+            "per_token_mean_action_displacement": [
+              0.4695436032812527,
+              0.5398797925849517,
+              0.6446770515137897,
+              0.5822370132745778
+            ]
+          }
+        },
+        "1100": {
+          "loss": 0.008533457294106483,
+          "task_loss": 0.008533457294106483,
+          "relation_loss": 0.0,
+          "canonical_orbit_loss": 0.0,
+          "effective_relation_weight": 0.0,
+          "preclip_gradient_norm": 0.07614155858755112,
+          "training_prefix_accuracy": 1.0,
+          "training_final_position_accuracy": 1.0,
+          "training_median_correct_class_margin": 6.5685882568359375,
+          "training_final_position_median_correct_class_margin": 5.314342498779297,
+          "action_gradient_norm": 0.05597783625125885,
+          "initial_state_gradient_norm": 0.012682417407631874,
+          "decoder_gradient_norm": 0.016257787123322487,
+          "logit_scale_gradient_abs": 0.047316595911979675,
+          "mechanism": {
+            "mean_action_displacement_from_identity": 0.5589705872658568,
+            "max_action_displacement_from_identity": 0.952512569985286,
+            "mean_initial_state_displacement": 0.4191867886004192,
+            "max_initial_state_displacement": 1.4788355619193176,
+            "maximum_token_commutator": 0.5335885692173192,
+            "per_token_mean_action_displacement": [
+              0.4690679824803572,
+              0.539825273209379,
+              0.6445506310644173,
+              0.5824384623092733
+            ]
+          }
+        },
+        "1150": {
+          "loss": 0.007253899239003658,
+          "task_loss": 0.007253899239003658,
+          "relation_loss": 0.0,
+          "canonical_orbit_loss": 0.0,
+          "effective_relation_weight": 0.0,
+          "preclip_gradient_norm": 0.07751478254795074,
+          "training_prefix_accuracy": 1.0,
+          "training_final_position_accuracy": 1.0,
+          "training_median_correct_class_margin": 6.651699066162109,
+          "training_final_position_median_correct_class_margin": 5.564449310302734,
+          "action_gradient_norm": 0.06385428458452225,
+          "initial_state_gradient_norm": 0.009742195717990398,
+          "decoder_gradient_norm": 0.01113035622984171,
+          "logit_scale_gradient_abs": 0.0413808710873127,
+          "mechanism": {
+            "mean_action_displacement_from_identity": 0.5587116194545652,
+            "max_action_displacement_from_identity": 0.9520142643792789,
+            "mean_initial_state_displacement": 0.4176213541133963,
+            "max_initial_state_displacement": 1.4788750357412461,
+            "maximum_token_commutator": 0.5337096250792719,
+            "per_token_mean_action_displacement": [
+              0.4687989870329785,
+              0.5396819696313445,
+              0.6447483001321217,
+              0.5816172210218156
+            ]
+          }
+        },
+        "1200": {
+          "loss": 0.006526379380375147,
+          "task_loss": 0.006526379380375147,
+          "relation_loss": 0.0,
+          "canonical_orbit_loss": 0.0,
+          "effective_relation_weight": 0.0,
+          "preclip_gradient_norm": 0.05781364068388939,
+          "training_prefix_accuracy": 1.0,
+          "training_final_position_accuracy": 1.0,
+          "training_median_correct_class_margin": 6.769474029541016,
+          "training_final_position_median_correct_class_margin": 5.729732513427734,
+          "action_gradient_norm": 0.04192106053233147,
+          "initial_state_gradient_norm": 0.005972197744995356,
+          "decoder_gradient_norm": 0.009990568272769451,
+          "logit_scale_gradient_abs": 0.03807312622666359,
+          "mechanism": {
+            "mean_action_displacement_from_identity": 0.5590702433617469,
+            "max_action_displacement_from_identity": 0.9525434526359438,
+            "mean_initial_state_displacement": 0.41490909686347466,
+            "max_initial_state_displacement": 1.480393561473706,
+            "maximum_token_commutator": 0.5340623994625469,
+            "per_token_mean_action_displacement": [
+              0.4690573026497625,
+              0.5403489212031227,
+              0.6447364432451821,
+              0.5821383063489205
+            ]
+          }
+        },
+        "1250": {
+          "loss": 0.0051356153562664986,
+          "task_loss": 0.0051356153562664986,
+          "relation_loss": 0.0,
+          "canonical_orbit_loss": 0.0,
+          "effective_relation_weight": 0.0,
+          "preclip_gradient_norm": 0.049550458788871765,
+          "training_prefix_accuracy": 1.0,
+          "training_final_position_accuracy": 1.0,
+          "training_median_correct_class_margin": 7.041511535644531,
+          "training_final_position_median_correct_class_margin": 5.864971160888672,
+          "action_gradient_norm": 0.036608703434467316,
+          "initial_state_gradient_norm": 0.006893934682011604,
+          "decoder_gradient_norm": 0.010306521318852901,
+          "logit_scale_gradient_abs": 0.03100484237074852,
+          "mechanism": {
+            "mean_action_displacement_from_identity": 0.5590013941369305,
+            "max_action_displacement_from_identity": 0.9524590908051787,
+            "mean_initial_state_displacement": 0.41233227455234567,
+            "max_initial_state_displacement": 1.4797286621991996,
+            "maximum_token_commutator": 0.5345320752220095,
+            "per_token_mean_action_displacement": [
+              0.46829226298187754,
+              0.5407021033789371,
+              0.6448256161521543,
+              0.5821855940347535
+            ]
+          }
+        },
+        "1300": {
+          "loss": 0.005017557181417942,
+          "task_loss": 0.005017557181417942,
+          "relation_loss": 0.0,
+          "canonical_orbit_loss": 0.0,
+          "effective_relation_weight": 0.0,
+          "preclip_gradient_norm": 0.05760407820343971,
+          "training_prefix_accuracy": 1.0,
+          "training_final_position_accuracy": 1.0,
+          "training_median_correct_class_margin": 7.184558868408203,
+          "training_final_position_median_correct_class_margin": 5.979038238525391,
+          "action_gradient_norm": 0.04776694253087044,
+          "initial_state_gradient_norm": 0.006223481148481369,
+          "decoder_gradient_norm": 0.009654360823333263,
+          "logit_scale_gradient_abs": 0.03007674589753151,
+          "mechanism": {
+            "mean_action_displacement_from_identity": 0.5588447670957907,
+            "max_action_displacement_from_identity": 0.9525767515447991,
+            "mean_initial_state_displacement": 0.4121087867513234,
+            "max_initial_state_displacement": 1.4805265483856918,
+            "maximum_token_commutator": 0.5343910871338221,
+            "per_token_mean_action_displacement": [
+              0.4684897398696625,
+              0.5401968376773342,
+              0.6449805415856502,
+              0.5817119492505158
+            ]
+          }
+        },
+        "1350": {
+          "loss": 0.003708988195285201,
+          "task_loss": 0.003708988195285201,
+          "relation_loss": 0.0,
+          "canonical_orbit_loss": 0.0,
+          "effective_relation_weight": 0.0,
+          "preclip_gradient_norm": 0.03638128191232681,
+          "training_prefix_accuracy": 1.0,
+          "training_final_position_accuracy": 1.0,
+          "training_median_correct_class_margin": 7.34124755859375,
+          "training_final_position_median_correct_class_margin": 6.066276550292969,
+          "action_gradient_norm": 0.02587643824517727,
+          "initial_state_gradient_norm": 0.005284115672111511,
+          "decoder_gradient_norm": 0.0075371237471699715,
+          "logit_scale_gradient_abs": 0.02385953813791275,
+          "mechanism": {
+            "mean_action_displacement_from_identity": 0.5587313579732069,
+            "max_action_displacement_from_identity": 0.9526789480789318,
+            "mean_initial_state_displacement": 0.40952089819059767,
+            "max_initial_state_displacement": 1.4808607253438788,
+            "maximum_token_commutator": 0.5345928295381052,
+            "per_token_mean_action_displacement": [
+              0.46799702235218443,
+              0.540366567971106,
+              0.6451464927253086,
+              0.5814153488442285
+            ]
+          }
+        },
+        "1400": {
+          "loss": 0.0035317009314894676,
+          "task_loss": 0.0035317009314894676,
+          "relation_loss": 0.0,
+          "canonical_orbit_loss": 0.0,
+          "effective_relation_weight": 0.0,
+          "preclip_gradient_norm": 0.033968470990657806,
+          "training_prefix_accuracy": 1.0,
+          "training_final_position_accuracy": 1.0,
+          "training_median_correct_class_margin": 7.410011291503906,
+          "training_final_position_median_correct_class_margin": 6.2595977783203125,
+          "action_gradient_norm": 0.0233977809548378,
+          "initial_state_gradient_norm": 0.004595923237502575,
+          "decoder_gradient_norm": 0.008071504533290863,
+          "logit_scale_gradient_abs": 0.02280634269118309,
+          "mechanism": {
+            "mean_action_displacement_from_identity": 0.558889521461648,
+            "max_action_displacement_from_identity": 0.952702096784125,
+            "mean_initial_state_displacement": 0.40775353118703356,
+            "max_initial_state_displacement": 1.4809539950382644,
+            "maximum_token_commutator": 0.5345176808354791,
+            "per_token_mean_action_displacement": [
+              0.4681526924886805,
+              0.5404016357352748,
+              0.6451612629693405,
+              0.5818424946532961
+            ]
+          }
+        },
+        "1450": {
+          "loss": 0.0031614420004189014,
+          "task_loss": 0.0031614420004189014,
+          "relation_loss": 0.0,
+          "canonical_orbit_loss": 0.0,
+          "effective_relation_weight": 0.0,
+          "preclip_gradient_norm": 0.03777583688497543,
+          "training_prefix_accuracy": 1.0,
+          "training_final_position_accuracy": 1.0,
+          "training_median_correct_class_margin": 7.6260986328125,
+          "training_final_position_median_correct_class_margin": 6.4244232177734375,
+          "action_gradient_norm": 0.030876945704221725,
+          "initial_state_gradient_norm": 0.005106592085212469,
+          "decoder_gradient_norm": 0.005920832976698875,
+          "logit_scale_gradient_abs": 0.020309964194893837,
+          "mechanism": {
+            "mean_action_displacement_from_identity": 0.5587027122989645,
+            "max_action_displacement_from_identity": 0.9526282713913031,
+            "mean_initial_state_displacement": 0.40708181827073825,
+            "max_initial_state_displacement": 1.4813162572790153,
+            "maximum_token_commutator": 0.5347169007963406,
+            "per_token_mean_action_displacement": [
+              0.46799526977282924,
+              0.5402844076383122,
+              0.6451390678435218,
+              0.5813921039411947
+            ]
+          }
+        },
+        "1500": {
+          "loss": 0.002846288029104471,
+          "task_loss": 0.002846288029104471,
+          "relation_loss": 0.0,
+          "canonical_orbit_loss": 0.0,
+          "effective_relation_weight": 0.0,
+          "preclip_gradient_norm": 0.052443038672208786,
+          "training_prefix_accuracy": 1.0,
+          "training_final_position_accuracy": 1.0,
+          "training_median_correct_class_margin": 7.786746978759766,
+          "training_final_position_median_correct_class_margin": 6.602298736572266,
+          "action_gradient_norm": 0.04736333712935448,
+          "initial_state_gradient_norm": 0.008643854409456253,
+          "decoder_gradient_norm": 0.009311254136264324,
+          "logit_scale_gradient_abs": 0.01858954317867756,
+          "mechanism": {
+            "mean_action_displacement_from_identity": 0.558442559302488,
+            "max_action_displacement_from_identity": 0.952694197294301,
+            "mean_initial_state_displacement": 0.40674527150458206,
+            "max_initial_state_displacement": 1.4812699114455872,
+            "maximum_token_commutator": 0.5348398125190508,
+            "per_token_mean_action_displacement": [
+              0.4676686659304288,
+              0.540131089718822,
+              0.6448219087649608,
+              0.5811485727957404
+            ]
+          }
+        }
+      },
+      "streaming_equivalence": {
+        "chunked_logit_max_abs_error": 0.0,
+        "streaming_logit_max_abs_error": 1.52587890625e-05,
+        "chunked_state_max_abs_error": 0.0,
+        "streaming_state_max_abs_error": 0.0
+      },
+      "elapsed_seconds": 25.976761400001124,
+      "steps_per_second": 57.74391876271132,
+      "peak_cuda_memory_mib": 119.78076171875
+    }
+  ]
+}

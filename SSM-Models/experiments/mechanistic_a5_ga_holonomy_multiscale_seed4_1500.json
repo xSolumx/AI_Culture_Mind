@@ -1,0 +1,474 @@
+{
+  "experiment": "write-free norm-preserving A5 group-action gate",
+  "device": "NVIDIA GeForce RTX 2070 SUPER",
+  "torch_version": "2.12.0+cu130",
+  "config": {
+    "steps": 1500,
+    "batch_size": 256,
+    "sequence_length": 16,
+    "validation_batches": 2,
+    "validation_batch_size": 512,
+    "channels": 4,
+    "learning_rate": 0.003,
+    "final_position_loss_weight": 0.0,
+    "seed": 4,
+    "diagnostic_interval": 0,
+    "max_rotor_angle": 2.2,
+    "relation_loss_weight": 0.0,
+    "relation_loss_power": 2.0,
+    "relation_start_step": 0,
+    "relation_ramp_steps": 0,
+    "canonical_orbit_loss_weight": 0.0,
+    "holonomy_loss_weight": 0.01,
+    "holonomy_loss_power": 8.0,
+    "holonomy_margin_weight": 0.1,
+    "holonomy_margin_target": 0.5,
+    "holonomy_start_step": 750,
+    "holonomy_ramp_steps": 500,
+    "holonomy_word_multiplier": 4,
+    "holonomy_word_multipliers": [
+      2,
+      3,
+      4,
+      5
+    ],
+    "holonomy_batch_size": 64,
+    "a5_irrep_init": false,
+    "freeze_actions": false
+  },
+  "group": {
+    "key": "a5",
+    "name": "alternating group A5",
+    "order": 60
+  },
+  "input_alphabet": [
+    {
+      "token_index": 0,
+      "group_index": 15,
+      "element": "23145"
+    },
+    {
+      "token_index": 1,
+      "group_index": 24,
+      "element": "31245"
+    },
+    {
+      "token_index": 2,
+      "group_index": 16,
+      "element": "23451"
+    },
+    {
+      "token_index": 3,
+      "group_index": 48,
+      "element": "51234"
+    }
+  ],
+  "held_out_transition_pairs": [
+    {
+      "left": "23145",
+      "right": "23451"
+    }
+  ],
+  "data_split_audit": {
+    "training": {
+      "pair_occurrences": 0,
+      "sequences_with_pair": 0,
+      "total_sequences": 384000
+    },
+    "validation": {
+      "pair_occurrences": 1803,
+      "sequences_with_pair": 1024,
+      "total_sequences": 1024
+    },
+    "generalization": {
+      "16": {
+        "pair_occurrences": 1818,
+        "sequences_with_pair": 1024,
+        "total_sequences": 1024
+      },
+      "32": {
+        "pair_occurrences": 2883,
+        "sequences_with_pair": 1024,
+        "total_sequences": 1024
+      },
+      "48": {
+        "pair_occurrences": 3851,
+        "sequences_with_pair": 1024,
+        "total_sequences": 1024
+      },
+      "64": {
+        "pair_occurrences": 4821,
+        "sequences_with_pair": 1024,
+        "total_sequences": 1024
+      },
+      "80": {
+        "pair_occurrences": 5912,
+        "sequences_with_pair": 1024,
+        "total_sequences": 1024
+      },
+      "96": {
+        "pair_occurrences": 6877,
+        "sequences_with_pair": 1024,
+        "total_sequences": 1024
+      },
+      "112": {
+        "pair_occurrences": 7954,
+        "sequences_with_pair": 1024,
+        "total_sequences": 1024
+      },
+      "128": {
+        "pair_occurrences": 9037,
+        "sequences_with_pair": 1024,
+        "total_sequences": 1024
+      },
+      "144": {
+        "pair_occurrences": 10203,
+        "sequences_with_pair": 1024,
+        "total_sequences": 1024
+      },
+      "160": {
+        "pair_occurrences": 10969,
+        "sequences_with_pair": 1024,
+        "total_sequences": 1024
+      },
+      "192": {
+        "pair_occurrences": 13044,
+        "sequences_with_pair": 1024,
+        "total_sequences": 1024
+      },
+      "224": {
+        "pair_occurrences": 15085,
+        "sequences_with_pair": 1024,
+        "total_sequences": 1024
+      },
+      "256": {
+        "pair_occurrences": 17282,
+        "sequences_with_pair": 1024,
+        "total_sequences": 1024
+      }
+    }
+  },
+  "language_coverage_audit": {
+    "training": {
+      "observed_group_states": 60,
+      "group_state_fraction": 1.0,
+      "missing_group_state_indices": [],
+      "observed_input_pairs": 15,
+      "possible_input_pairs": 16,
+      "input_pair_fraction": 0.9375
+    },
+    "validation": {
+      "observed_group_states": 60,
+      "group_state_fraction": 1.0,
+      "missing_group_state_indices": [],
+      "observed_input_pairs": 16,
+      "possible_input_pairs": 16,
+      "input_pair_fraction": 1.0
+    }
+  },
+  "evaluation_lengths": [
+    16,
+    32,
+    48,
+    64,
+    80,
+    96,
+    112,
+    128,
+    144,
+    160,
+    192,
+    224,
+    256
+  ],
+  "comparison_contract": {
+    "same_training_batches": true,
+    "same_validation_batches": true,
+    "same_state_width": true,
+    "all_actions_norm_preserving": true,
+    "no_affine_writes": true,
+    "parameter_counts_are_reported_not_matched": true
+  },
+  "results": [
+    {
+      "family": "pure_ga_rotor",
+      "parameters": 2061,
+      "parameter_shape_sha256": "8c2b63f8aafc2f8e3aa3c6a4f4d847b828ad1f91db28921e9c5b95bed3acec1f",
+      "initial_parameter_sha256": "bf2f454054d18550670574c3f49253c59cf2ac926b1533d684f61575b9de85b3",
+      "state_scalars_per_sequence": 32,
+      "has_decay": false,
+      "has_affine_write": false,
+      "has_residual_or_feed_forward_path": false,
+      "a5_irrep_initialization": false,
+      "actions_frozen": false,
+      "initial_validation_loss": 4.1205854415893555,
+      "initial_validation_prefix_accuracy": 0.01861572265625,
+      "initial_validation_final_position_accuracy": 0.0205078125,
+      "initial_mechanism_diagnostics": {
+        "canonical_max_word_length": 6,
+        "operator_orthogonality_rms": 0.0,
+        "operator_orthogonality_max": 0.0,
+        "cayley_edge_relation_rms": 0.0,
+        "cayley_edge_relation_max": 0.0,
+        "linear_homomorphism_rms": 0.0,
+        "linear_homomorphism_max": 0.0,
+        "identity_word_state_drift_rms": 0.0,
+        "identity_word_state_drift_max": 0.0,
+        "orbit_cayley_edge_rms": 0.0,
+        "orbit_cayley_edge_max": 0.0,
+        "decoded_cayley_edge_accuracy": 0.016666666666666666,
+        "orbit_homomorphism_rms": 0.0,
+        "orbit_homomorphism_max": 0.0,
+        "canonical_orbit_directional_homomorphism_rms": 0.0,
+        "canonical_orbit_directional_homomorphism_max": 0.0,
+        "decoded_homomorphism_accuracy": 0.01666666753590107,
+        "reachable_linear_span_rank": 1,
+        "state_dimension": 32,
+        "reachable_span_homomorphism_rms": 0.0,
+        "reachable_span_homomorphism_max": 0.0,
+        "orthogonal_complement_dimension": 31,
+        "orthogonal_complement_homomorphism_rms": 0.0,
+        "orthogonal_complement_homomorphism_max": 0.0,
+        "orbit_variation_span_rank": 0,
+        "orbit_variation_span_homomorphism_rms": null,
+        "orbit_variation_span_homomorphism_max": null,
+        "common_fixed_subspace_dimension": 32,
+        "common_fixed_constraint_min_singular_value": 0.0,
+        "common_fixed_constraint_rank_tolerance": 1e-06,
+        "common_fixed_subspace_homomorphism_rms": 0.0,
+        "common_fixed_subspace_homomorphism_max": 0.0,
+        "cl3_invariant_grade_dimension": 8,
+        "cl3_invariant_grade_homomorphism_rms": 0.0,
+        "cl3_invariant_grade_homomorphism_max": 0.0,
+        "generator_commutator_separation": 0.0,
+        "mean_generator_pair_commutator_separation": 0.0,
+        "maximum_commutator_token_pair": [
+          0,
+          1
+        ],
+        "prototype_minimum_margin": 0.0,
+        "prototype_median_distance": 0.0,
+        "canonical_prototype_accuracy": 0.01666666753590107,
+        "mean_action_displacement_from_identity": 0.0,
+        "max_action_displacement_from_identity": 0.0,
+        "per_token_mean_action_displacement": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "mean_rotor_angle_radians": 0.0,
+        "max_rotor_angle_radians": 0.0,
+        "per_token_mean_rotor_angle_radians": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "final_validation_loss": 0.001195395365357399,
+      "final_validation_prefix_accuracy": 1.0,
+      "final_validation_final_position_accuracy": 1.0,
+      "maximum_validation_state_norm_error": 1.3709068298339844e-06,
+      "length_generalization": {
+        "16": {
+          "validation_loss": 0.0011820156360045075,
+          "prefix_accuracy": 1.0,
+          "final_position_accuracy": 1.0,
+          "maximum_state_norm_error": 1.2516975402832031e-06
+        },
+        "32": {
+          "validation_loss": 0.011146173346787691,
+          "prefix_accuracy": 0.99908447265625,
+          "final_position_accuracy": 1.0,
+          "maximum_state_norm_error": 2.3245811462402344e-06
+        },
+        "48": {
+          "validation_loss": 0.009679992217570543,
+          "prefix_accuracy": 0.9988810221354166,
+          "final_position_accuracy": 1.0,
+          "maximum_state_norm_error": 3.159046173095703e-06
+        },
+        "64": {
+          "validation_loss": 0.009972146712243557,
+          "prefix_accuracy": 0.9993438720703125,
+          "final_position_accuracy": 1.0,
+          "maximum_state_norm_error": 3.993511199951172e-06
+        },
+        "80": {
+          "validation_loss": 0.0106044327840209,
+          "prefix_accuracy": 0.9992431640625,
+          "final_position_accuracy": 1.0,
+          "maximum_state_norm_error": 5.0067901611328125e-06
+        },
+        "96": {
+          "validation_loss": 0.009978862013667822,
+          "prefix_accuracy": 0.9995218912760416,
+          "final_position_accuracy": 1.0,
+          "maximum_state_norm_error": 5.841255187988281e-06
+        },
+        "112": {
+          "validation_loss": 0.012225572019815445,
+          "prefix_accuracy": 0.9991455078125,
+          "final_position_accuracy": 1.0,
+          "maximum_state_norm_error": 6.377696990966797e-06
+        },
+        "128": {
+          "validation_loss": 0.01111805159598589,
+          "prefix_accuracy": 0.99908447265625,
+          "final_position_accuracy": 1.0,
+          "maximum_state_norm_error": 7.212162017822266e-06
+        },
+        "144": {
+          "validation_loss": 0.013317939825356007,
+          "prefix_accuracy": 0.99884033203125,
+          "final_position_accuracy": 1.0,
+          "maximum_state_norm_error": 8.046627044677734e-06
+        },
+        "160": {
+          "validation_loss": 0.012863889336585999,
+          "prefix_accuracy": 0.998834228515625,
+          "final_position_accuracy": 0.998046875,
+          "maximum_state_norm_error": 8.881092071533203e-06
+        },
+        "192": {
+          "validation_loss": 0.013516947627067566,
+          "prefix_accuracy": 0.9989573160807291,
+          "final_position_accuracy": 1.0,
+          "maximum_state_norm_error": 1.0669231414794922e-05
+        },
+        "224": {
+          "validation_loss": 0.014357685577124357,
+          "prefix_accuracy": 0.998809814453125,
+          "final_position_accuracy": 1.0,
+          "maximum_state_norm_error": 1.233816146850586e-05
+        },
+        "256": {
+          "validation_loss": 0.01523941708728671,
+          "prefix_accuracy": 0.9984321594238281,
+          "final_position_accuracy": 1.0,
+          "maximum_state_norm_error": 1.4126300811767578e-05
+        }
+      },
+      "mechanism_diagnostics": {
+        "canonical_max_word_length": 6,
+        "operator_orthogonality_rms": 1.2359174011561975e-07,
+        "operator_orthogonality_max": 2.5277976691741563e-07,
+        "cayley_edge_relation_rms": 0.3307858399030514,
+        "cayley_edge_relation_max": 1.4050021692826276,
+        "linear_homomorphism_rms": 0.671076622198234,
+        "linear_homomorphism_max": 1.4141125769406182,
+        "identity_word_state_drift_rms": 0.3603368012217136,
+        "identity_word_state_drift_max": 0.4713834807779481,
+        "orbit_cayley_edge_rms": 0.11601058674379654,
+        "orbit_cayley_edge_max": 0.23592466953920566,
+        "decoded_cayley_edge_accuracy": 1.0,
+        "orbit_homomorphism_rms": 0.25967828861878234,
+        "orbit_homomorphism_max": 0.4716627746411495,
+        "canonical_orbit_directional_homomorphism_rms": 0.25967828861878234,
+        "canonical_orbit_directional_homomorphism_max": 0.4716627746411495,
+        "decoded_homomorphism_accuracy": 1.0,
+        "reachable_linear_span_rank": 25,
+        "state_dimension": 32,
+        "reachable_span_homomorphism_rms": 0.7592365284028333,
+        "reachable_span_homomorphism_max": 1.3049401893014645,
+        "orthogonal_complement_dimension": 7,
+        "orthogonal_complement_homomorphism_rms": 1.7793512807028395e-06,
+        "orthogonal_complement_homomorphism_max": 3.923591892827046e-06,
+        "orbit_variation_span_rank": 24,
+        "orbit_variation_span_homomorphism_rms": 0.774892536941514,
+        "orbit_variation_span_homomorphism_max": 1.3318490035909951,
+        "common_fixed_subspace_dimension": 8,
+        "common_fixed_constraint_min_singular_value": 5.963421978998901e-08,
+        "common_fixed_constraint_rank_tolerance": 2.952585054933383e-06,
+        "common_fixed_subspace_homomorphism_rms": 1.921377967659474e-07,
+        "common_fixed_subspace_homomorphism_max": 5.463215431927574e-07,
+        "cl3_invariant_grade_dimension": 8,
+        "cl3_invariant_grade_homomorphism_rms": 1.921397343220276e-07,
+        "cl3_invariant_grade_homomorphism_max": 5.463217507611248e-07,
+        "generator_commutator_separation": 0.3096237769843262,
+        "mean_generator_pair_commutator_separation": 0.2068905805456144,
+        "maximum_commutator_token_pair": [
+          1,
+          2
+        ],
+        "prototype_minimum_margin": 0.8668005628284635,
+        "prototype_median_distance": 1.4671805055962803,
+        "canonical_prototype_accuracy": 1.0,
+        "mean_action_displacement_from_identity": 0.5042127986612494,
+        "max_action_displacement_from_identity": 1.2212150467945175,
+        "per_token_mean_action_displacement": [
+          0.41876656014433744,
+          0.4303321089079397,
+          0.5793298438343348,
+          0.5884226817583854
+        ],
+        "mean_rotor_angle_radians": 0.7926551103591919,
+        "max_rotor_angle_radians": 2.084453821182251,
+        "per_token_mean_rotor_angle_radians": [
+          0.6819785833358765,
+          0.6988454461097717,
+          0.8883518576622009,
+          0.901444673538208
+        ]
+      },
+      "path_holonomy_diagnostics": {
+        "loss": 1.5206716060638428,
+        "separation_loss": 0.0,
+        "path_holonomy_rms": 0.8733332753181458,
+        "path_holonomy_max": 1.6329909563064575,
+        "canonical_minimum_margin": 0.8668003082275391,
+        "alternate_mean_target_distance": 0.6533085703849792,
+        "alternate_minimum_nearest_negative_margin": 0.3628246784210205
+      },
+      "path_holonomy_diagnostics_by_multiplier": {
+        "2": {
+          "loss": 1.360887050628662,
+          "separation_loss": 0.0,
+          "path_holonomy_rms": 0.6997610330581665,
+          "path_holonomy_max": 1.6320520639419556,
+          "canonical_minimum_margin": 0.8668003082275391,
+          "alternate_mean_target_distance": 0.41763150691986084,
+          "alternate_minimum_nearest_negative_margin": 0.5056372284889221
+        },
+        "3": {
+          "loss": 1.7156683206558228,
+          "separation_loss": 0.0,
+          "path_holonomy_rms": 0.9727919697761536,
+          "path_holonomy_max": 1.6329318284988403,
+          "canonical_minimum_margin": 0.8668003082275391,
+          "alternate_mean_target_distance": 0.7709267735481262,
+          "alternate_minimum_nearest_negative_margin": 0.3339858055114746
+        },
+        "4": {
+          "loss": 1.5206716060638428,
+          "separation_loss": 0.0,
+          "path_holonomy_rms": 0.8733332753181458,
+          "path_holonomy_max": 1.6329909563064575,
+          "canonical_minimum_margin": 0.8668003082275391,
+          "alternate_mean_target_distance": 0.6533085703849792,
+          "alternate_minimum_nearest_negative_margin": 0.3628246784210205
+        },
+        "5": {
+          "loss": 1.4115879535675049,
+          "separation_loss": 0.0,
+          "path_holonomy_rms": 0.7481564283370972,
+          "path_holonomy_max": 1.6329926252365112,
+          "canonical_minimum_margin": 0.8668003082275391,
+          "alternate_mean_target_distance": 0.5120033621788025,
+          "alternate_minimum_nearest_negative_margin": 0.3896884620189667
+        }
+      },
+      "training_trajectory": {},
+      "streaming_equivalence": {
+        "chunked_logit_max_abs_error": 0.0,
+        "streaming_logit_max_abs_error": 5.7220458984375e-06,
+        "chunked_state_max_abs_error": 0.0,
+        "streaming_state_max_abs_error": 0.0
+      },
+      "elapsed_seconds": 99.14868699997896,
+      "steps_per_second": 15.128793384831392,
+      "peak_cuda_memory_mib": 142.88818359375
+    }
+  ]
+}

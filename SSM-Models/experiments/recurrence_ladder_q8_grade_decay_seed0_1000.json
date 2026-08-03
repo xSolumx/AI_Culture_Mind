@@ -1,0 +1,219 @@
+{
+  "experiment": "ordered Q8 prefix-product state tracking",
+  "device": "NVIDIA GeForce RTX 2070 SUPER",
+  "torch_version": "2.12.0+cu130",
+  "config": {
+    "steps": 1000,
+    "batch_size": 256,
+    "sequence_length": 16,
+    "validation_batches": 8,
+    "validation_batch_size": 512,
+    "channels": 4,
+    "layers": 2,
+    "expansion": 2,
+    "learning_rate": 0.003,
+    "seed": 0
+  },
+  "group": {
+    "key": "q8",
+    "name": "quaternion group Q8",
+    "order": 8,
+    "element_order": [
+      "1",
+      "i",
+      "j",
+      "k",
+      "-1",
+      "-i",
+      "-j",
+      "-k"
+    ],
+    "multiplication_table": [
+      [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      [
+        1,
+        4,
+        3,
+        6,
+        5,
+        0,
+        7,
+        2
+      ],
+      [
+        2,
+        7,
+        4,
+        1,
+        6,
+        3,
+        0,
+        5
+      ],
+      [
+        3,
+        2,
+        5,
+        4,
+        7,
+        6,
+        1,
+        0
+      ],
+      [
+        4,
+        5,
+        6,
+        7,
+        0,
+        1,
+        2,
+        3
+      ],
+      [
+        5,
+        0,
+        7,
+        2,
+        1,
+        4,
+        3,
+        6
+      ],
+      [
+        6,
+        3,
+        0,
+        5,
+        2,
+        7,
+        4,
+        1
+      ],
+      [
+        7,
+        6,
+        1,
+        0,
+        3,
+        2,
+        5,
+        4
+      ]
+    ]
+  },
+  "evaluation_lengths": [
+    2,
+    4,
+    8,
+    16,
+    32
+  ],
+  "fairness_contract": {
+    "identical_parameter_count": true,
+    "identical_parameter_shapes": true,
+    "identical_initial_parameters": true,
+    "identical_initial_function": true,
+    "same_training_batches": true,
+    "same_validation_batches": true,
+    "same_real_state_width_per_channel": 8
+  },
+  "results": [
+    {
+      "family": "ga_rotor_grade_decay",
+      "parameters": 13512,
+      "parameter_shape_sha256": "762058e35747657be602e4b95667582d47300ee4a4cd194beff7bba8213c89c5",
+      "initial_parameter_sha256": "e2d25669b0726a4ae66fb4862e7000e6e28556dd3c6047bfa3b6b3913557a0f0",
+      "state_scalars_per_sequence": 64,
+      "initial_validation_loss": 2.1855100989341736,
+      "initial_validation_prefix_accuracy": 0.1401214599609375,
+      "initial_validation_final_position_accuracy": 0.122314453125,
+      "final_validation_loss": 0.5743380784988403,
+      "final_validation_prefix_accuracy": 0.6238861083984375,
+      "final_validation_final_position_accuracy": 0.4716796875,
+      "length_generalization": {
+        "2": {
+          "validation_loss": 0.007928598497528583,
+          "prefix_accuracy": 1.0,
+          "final_position_accuracy": 1.0
+        },
+        "4": {
+          "validation_loss": 0.1412748396396637,
+          "prefix_accuracy": 0.93609619140625,
+          "final_position_accuracy": 0.781494140625
+        },
+        "8": {
+          "validation_loss": 0.4048444852232933,
+          "prefix_accuracy": 0.745361328125,
+          "final_position_accuracy": 0.50927734375
+        },
+        "16": {
+          "validation_loss": 0.5781201496720314,
+          "prefix_accuracy": 0.6176605224609375,
+          "final_position_accuracy": 0.470703125
+        },
+        "32": {
+          "validation_loss": 1.065633311867714,
+          "prefix_accuracy": 0.47344970703125,
+          "final_position_accuracy": 0.181640625
+        }
+      },
+      "elapsed_seconds": 73.34833270002855,
+      "steps_per_second": 13.633575068293418,
+      "peak_cuda_memory_mib": 39.1962890625,
+      "loss_samples": {
+        "1": 2.1886236667633057,
+        "50": 1.988523006439209,
+        "100": 1.9189460277557373,
+        "150": 1.7828768491744995,
+        "200": 1.6056132316589355,
+        "250": 1.431771993637085,
+        "300": 1.1358779668807983,
+        "350": 0.9368330240249634,
+        "400": 0.8222146034240723,
+        "450": 0.8050061464309692,
+        "500": 0.7980412244796753,
+        "550": 0.6532838940620422,
+        "600": 0.6543121337890625,
+        "650": 0.7037703990936279,
+        "700": 0.7066187858581543,
+        "750": 0.5820433497428894,
+        "800": 0.5929972529411316,
+        "850": 0.5974338054656982,
+        "900": 0.6179574131965637,
+        "950": 0.5479578971862793,
+        "1000": 0.5553728342056274
+      },
+      "streaming_equivalence": {
+        "chunked_logit_max_abs_error": 0.0,
+        "streaming_logit_max_abs_error": 2.0623207092285156e-05,
+        "streaming_state_max_abs_error": 6.198883056640625e-06
+      },
+      "transition_diagnostics": [
+        {
+          "action": "selective Cl(3,0) rotor with grade decay",
+          "mean_decay": 0.934825599193573,
+          "min_decay": 0.4550567865371704,
+          "max_decay": 0.9999584555625916,
+          "mean_action_magnitude_radians": 1.188071370124817
+        },
+        {
+          "action": "selective Cl(3,0) rotor with grade decay",
+          "mean_decay": 0.9265040755271912,
+          "min_decay": 0.43223199248313904,
+          "max_decay": 0.9999426007270813,
+          "mean_action_magnitude_radians": 0.9834244847297668
+        }
+      ]
+    }
+  ]
+}
