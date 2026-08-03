@@ -67,6 +67,12 @@ from spin8_joint_sensor_retraction import (
     joint_retract_sensor,
     single_query_projector_audit,
 )
+from spin8_cayley_spectrum import (
+    cayley_invariance_audit,
+    exact_cayley_spectrum_certificate,
+    exact_partition_representatives,
+    exact_restricted_orthogonalization_certificate,
+)
 from spin8_learned_address import (
     evaluate_mixed_sequences,
     log_sinkhorn,
@@ -547,6 +553,31 @@ class JointSensorRetractionTests(unittest.TestCase):
         self.assertEqual(report["assignment_count"], 243)
         self.assertEqual(report["selection_gap"], 0.0)
         self.assertEqual(information_metrics(design, generators)["rank"], 28)
+
+
+class CayleySpectrumTheoremTests(unittest.TestCase):
+    def test_cayley_form_is_exactly_spin7_invariant(self) -> None:
+        audit = cayley_invariance_audit()
+        self.assertTrue(audit["passed"])
+        self.assertEqual(audit["stabilizer_generator_count"], 21)
+        self.assertEqual(audit["maximum_infinitesimal_invariance_error"], 0.0)
+
+    def test_balanced_characteristic_law_is_exact(self) -> None:
+        certificate = exact_cayley_spectrum_certificate()
+        self.assertTrue(certificate["passed"])
+        self.assertEqual(certificate["balanced_determinant"], "81/1024")
+        self.assertEqual(certificate["balanced_rank"], 28)
+        self.assertEqual(certificate["calibrated_rank"], 25)
+
+    def test_two_orthogonalization_slices_are_exact(self) -> None:
+        certificate = exact_restricted_orthogonalization_certificate()
+        self.assertTrue(certificate["same_view_correlation_identity"])
+        self.assertTrue(certificate["cross_view_correlation_identity"])
+
+    def test_allocation_targets_have_exact_representatives(self) -> None:
+        certificate = exact_partition_representatives()
+        self.assertTrue(certificate["passed"])
+        self.assertEqual(len(certificate["rows"]), 5)
 
 
 if __name__ == "__main__":

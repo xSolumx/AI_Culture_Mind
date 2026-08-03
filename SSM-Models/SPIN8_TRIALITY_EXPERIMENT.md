@@ -557,9 +557,42 @@ prospectively replicated numerical results pending a symbolic global proof.
 See `experiments/SPIN8_JOINT_SENSOR_RETRACTION_PREREGISTRATION.md` and
 `experiments/SPIN8_JOINT_SENSOR_RETRACTION_RESULTS.md`.
 
-The next mathematical target is that proof: express each query as the
-orthogonal complement of a `Spin(7)` stabilizer, derive the admissible
-principal-angle relations among projector subspaces across the three triality
-views, and prove the balanced `(2,2,1)` family globally maximizes
-`log det(sum P_k)` up to triality permutation and `Spin(8)` gauge. This is the
-remaining boundary between an exact replicated signature and a theorem.
+The first part of that proof is now complete. Fixing the singleton query by
+`Spin(8)` gauge identifies the other four probes with a four-frame in the common
+eight-real representation of its `Spin(7)` stabilizer. The unique invariant
+Cayley four-form supplies the remaining orbit coordinate `c` after the Gram
+matrix is fixed. Exact symbolic elimination over the unit circle gives
+
+\[
+\det I_c=\frac{(1-c^2)^3(9-c^2)^2}{1024}.
+\]
+
+The derivative with respect to `c^2` is strictly negative on `[0,1)`. Hence the
+Cayley-null orbit `c=0` is globally D-optimal among orthonormal balanced
+sensors, with determinant `81/1024`; the calibrated Cayley endpoints
+`c=+/-1` have rank 25. The maintained certificate proves the complete
+one-parameter characteristic polynomial in exact rational arithmetic and
+checks infinitesimal invariance under all 21 `Spin(7)` stabilizer generators.
+This exceptional-geometric interpretation is consistent with the Cayley form's
+unit comass and `Spin(7)` stabilizer established through triality by
+[Katz and Shnider](https://arxiv.org/abs/0801.0283).
+
+The global extension was attacked rather than assumed. Fresh seeds 30--39
+reproduced the exact partition values `1/32`, `1/16`, `135/2048`, and
+`81/1024` in every seed, with single-view rank 25. Across 10,000 random
+balanced frames, none beat its row-orthonormal QR completion. Thirty-two
+gradient adversaries explicitly maximizing the nonorthogonal advantage all
+converged to equality, with maximum residual determinant advantage `5.42e-16`.
+Two load-bearing one-correlation slices of the QR inequality are additionally
+proved by exact factorization. These results do not turn the unrestricted QR
+inequality into a theorem: a general invariant-polynomial or sum-of-squares
+certificate is still required. See
+`experiments/SPIN8_CAYLEY_SPECTRUM_PREREGISTRATION.md` and
+`experiments/SPIN8_CAYLEY_SPECTRUM_RESULTS.md`.
+
+The next mathematical target is therefore sharply isolated: write the balanced
+determinant in terms of the four-frame Gram matrix and Cayley invariant, prove
+that row-orthonormal completion cannot reduce it, then establish the exact
+upper bounds for the other four allocation partitions. Only those two steps
+would promote `81/1024` from an orthonormal-orbit theorem plus exhaustive
+falsification to a global five-query theorem.

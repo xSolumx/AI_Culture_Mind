@@ -57,6 +57,15 @@ The experimental Spin(8) branch now includes:
   `trace(I)=35` for every five-query design. The balanced optimum additionally
   obeys one prospectively replicated exact degree-28 characteristic polynomial
   that implies `det(I)=81/1024` and `trace(I^-1)=43`.
+- the Cayley-spectrum theorem: after fixing the singleton triality view, the
+  remaining four probes form a `Spin(7)` four-frame. On the orthonormal orbit,
+  the determinant is exactly
+  `(1-c^2)^3(9-c^2)^2/1024`, where `c` is its Cayley calibration. Thus the
+  information optimum is the Cayley-null orbit `c=0`, while calibrated Cayley
+  planes `c=+/-1` are precisely rank-25 failures. Ten fresh allocation sweeps,
+  10,000 random frames, and 32 adversarial searches found no global
+  counterexample; the unrestricted orthonormal-completion inequality remains
+  a clearly labelled conjecture rather than a theorem.
 
 The dynamic-slot stress test matches parallel, recurrent, and symbolic-oracle
 execution below 2.3e-15 in float64. The learned-address gate preserves a
@@ -66,9 +75,11 @@ passes jointly. The newest gate replaces supplied matrix columns with only five
 generic state/action pairs per token and constructively proves the four-probe
 ambiguity. Learned hard probe selection now works but retains discrete
 allocation traps; joint late query-family retraction removes all four fresh
-allocation failures. An analytic proof of the balanced spectrum, scalable
-joint retraction, nonorthogonal capacity stress, endpoint-only action
-discovery, and naturalistic downstream utility remain open.
+allocation failures. The spectrum is now proved on the complete orthonormal
+balanced orbit; the general nonorthogonal completion lemma, cross-allocation
+upper bounds, scalable joint retraction, nonorthogonal capacity stress,
+endpoint-only action discovery, and naturalistic downstream utility remain
+open.
 See SPIN8_TRIALITY_EXPERIMENT.md and the Spin8 result files under experiments.
 
 The numbered `GA-SSM-*` scripts are research history. `GA-SSM-3.5.py` is now a
