@@ -39,6 +39,15 @@ from spin8_learned_address import (
     route_statistics,
     scan_parity as learned_address_scan_parity,
 )
+from spin8_continuous_alias import (
+    AliasWorld,
+    FrozenKeyPolicy,
+    FrozenSlotPolicy,
+    alias_world_audit,
+    key_scan_parity,
+    slot_endpoint_loss,
+    slot_scan_parity,
+)
 from spin8_triality import spin8_actions, torch_triality_generators
 from spin8_triality_identifiability import invariant_space_audit
 from spin8_triality_lift import (
@@ -235,6 +244,39 @@ class SchurScanTests(unittest.TestCase):
             parity = learned_address_scan_parity(routes, kind=kind, seed=11)
             self.assertEqual(parity["streaming_state_scalars"], 64)
             self.assertLess(parity["parallel_recurrent_max_error"], 1e-12)
+
+    def test_continuous_alias_world_has_device_independent_exact_radius(self) -> None:
+        report = alias_world_audit(12)
+        self.assertLess(report["center_gram_max_error"], 1e-12)
+        self.assertLess(report["radius_cosine_max_error"], 1e-12)
+        self.assertLess(report["cross_device_center_max_error"], 1e-12)
+
+    def test_alias_routes_and_delta_keys_remain_scan_compatible(self) -> None:
+        slot_policy = FrozenSlotPolicy("oracle_both", None, None)
+        for memory_kind in ("triality", "direct"):
+            report = slot_scan_parity(
+                slot_policy, memory_kind=memory_kind, seed=13, radius=0.35
+            )
+            self.assertEqual(report["streaming_state_scalars"], 64)
+            self.assertLess(report["parallel_recurrent_max_error"], 1e-12)
+
+        world = AliasWorld.create(
+            13, dtype=torch.float64, device=torch.device("cpu")
+        )
+        key_policy = FrozenKeyPolicy(world.centers, world.centers)
+        for update_kind in ("delta", "fast_weight"):
+            report = key_scan_parity(
+                key_policy, update_kind=update_kind, seed=13, radius=0.35
+            )
+            self.assertEqual(report["streaming_state_scalars"], 64)
+            self.assertLess(report["parallel_recurrent_max_error"], 1e-12)
+
+    def test_cross_encoder_endpoint_rules_out_independent_gauges(self) -> None:
+        routes = torch.eye(8, dtype=torch.float64)
+        aligned, _ = slot_endpoint_loss(routes, routes, joint=True)
+        shifted, _ = slot_endpoint_loss(routes, routes.roll(1, dims=0), joint=True)
+        self.assertEqual(float(aligned), 0.0)
+        self.assertGreater(float(shifted), 0.9)
 
 
 class EvaluationContractTests(unittest.TestCase):

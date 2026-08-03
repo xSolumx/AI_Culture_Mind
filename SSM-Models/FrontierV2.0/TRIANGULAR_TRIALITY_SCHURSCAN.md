@@ -103,6 +103,14 @@ training essentially exactly but collide and fail; untrained joint rows fail
 0/10. The same-width direct memory passes at parity, so this establishes
 shared-family address completion rather than a triality advantage.
 
-The Spin(8) algebra and logical key identity remain supplied. The next gate is
-content/alias-derived addressing with delta-rule and fast-weight baselines,
-not language scaling.
+The logical key identity has now been removed in a controlled 24D continuous-
+alias world. Separate write/query encoders with unlabeled marginal balance pass
+10/10 on noisier untouched aliases and unseen mixed-key sequences through
+length 2048. Independent encoders fit locally yet collide in every seed.
+Same-width direct slots pass at parity; oracle-projected delta passes while
+learned delta does not, isolating content-key robustness rather than recurrent
+capacity.
+
+The Spin(8) action remains supplied. The next gate is joint blind action and
+alias recovery, followed by nonorthogonal/unbalanced capacity stress and
+naturalistic selective-copy/MQAR—not language scaling yet.

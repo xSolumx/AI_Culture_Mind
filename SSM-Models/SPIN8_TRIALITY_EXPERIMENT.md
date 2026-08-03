@@ -464,3 +464,14 @@ against delta-rule, erase-then-delta, fast-weight, and linear-attention memory.
 See `experiments/SPIN8_BLIND_SHARED_ACTION_RESULTS.md`,
 `experiments/SPIN8_LATENT_ADDRESS_THEOREM.md`, and
 `experiments/SPIN8_LEARNED_ADDRESS_RESULTS.md`.
+
+The subsequent continuous-alias gate removes the logical key ID. Separate
+linear write/query encoders see only fresh 24D aliases; training contains no
+mixed-key recurrence. Joint unlabeled marginal balance passes 10/10 seeds on
+untouched radius-0.35 aliases through length 2048, whereas independently
+perfect encoders collide and fail 0/10. Direct slots again match triality
+exactly. Oracle-projected delta memory passes 10/10, but learned delta keys and
+additive fast weights pass 0/10 for distinct reasons (key-geometry error versus
+missing overwrite correction). See
+`experiments/SPIN8_CONTINUOUS_ALIAS_THEOREM.md` and
+`experiments/SPIN8_CONTINUOUS_ALIAS_RESULTS.md`.

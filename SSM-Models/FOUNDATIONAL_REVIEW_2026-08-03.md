@@ -215,6 +215,15 @@ is claimed from this task.
 
 ## Best next experimental order
 
+The logical-ID oracle has now also been removed in a controlled continuous
+alias world. Jointly balanced write/query encoders pass 10/10 at unseen alias
+radius 0.35 and all dense lengths through 2048. Independently trained encoders
+fit and align locally to floating-point zero and classify every unseen alias
+consistently, but collide across semantic classes in every seed. The matched
+direct-slot control is exact; learned delta keys fail 0/10 while an oracle
+semantic projector makes the same delta recurrence exact 10/10. This supports
+slot quantization robustness, not a Spin(8)-specific advantage.
+
 The first item below now has a passed precursor: blind shared-action
 completion from incomplete endpoints. Five vector/positive columns have
 full rank 28 jointly but leave completion slack independently. Joint
@@ -224,11 +233,12 @@ control fits the observations but fails the hidden negative action and long
 composition. This supports moving from supplied actions to learned addressing,
 while retaining direct-slot and delta-rule controls.
 
-1. Replace supplied logical key IDs with continuous write/query aliases. Hold
-   out query aliases and every mixed-key episode; distinguish address discovery
-   from merely selecting an arbitrary latent permutation.
-2. Run the same-width direct-slot, delta-rule, erase-then-delta, linear-
-   attention, and bilinear-fast-weight controls on that content-addressed task.
+1. Combine blind shared-action recovery and continuous-alias routing in one
+   model; neither action matrices nor key IDs may be supplied.
+2. Relax orthogonal centers and balanced frequency, then test over-capacity
+   `K>H` behavior with explicit eviction and rank accounting.
+3. Run full Gated DeltaNet, erase-then-delta, linear-attention, and fast-weight
+   baselines on naturalistic selective-copy/MQAR data.
 3. Compare SchurScan against grade rotor, dense selective, Householder-product,
    and diagonal real/complex transitions under equal state, decoder, and
    compute budgets.

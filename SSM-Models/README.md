@@ -32,12 +32,16 @@ The experimental Spin(8) branch now includes:
 - blind latent-slot completion: a jointly Sinkhorn-retracted address family
   learns collision-free routing from single-key episodes and transfers exactly
   to unseen mixed-key sequences through length 2048 in 10/10 seeds.
+- continuous-alias routing without logical key IDs: separate write/query
+  encoders plus unlabeled marginal balance pass 10/10 noisier-alias cohorts,
+  while independently perfect encoders collide in every seed.
 
 The dynamic-slot stress test matches parallel, recurrent, and symbolic-oracle
 execution below 2.3e-15 in float64. The learned-address gate preserves a
 64-scalar streaming state and scan parity below 5.6e-16. Logical key identity,
-query features, and group actions remain supplied; content-derived routing and
-downstream utility are the next gate.
+group actions remain supplied; continuous content routing now passes under an
+orthogonal balanced-cluster model. Joint action+address learning, nonorthogonal
+capacity stress, and naturalistic downstream utility remain the next gates.
 See SPIN8_TRIALITY_EXPERIMENT.md and the Spin8 result files under experiments.
 
 The numbered `GA-SSM-*` scripts are research history. `GA-SSM-3.5.py` is now a
