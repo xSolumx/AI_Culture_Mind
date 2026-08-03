@@ -87,6 +87,11 @@ Therefore:
 - the information-optimal four-plane is **Cayley-null**, not
   Cayley-calibrated.
 
+This does not contradict classical calibrated geometry. Cayley calibration
+and information-determinant maximization are different extremal problems: the
+calibrated endpoints are geometrically distinguished but informationally
+rank-deficient here.
+
 This is a theorem over the full orthonormal balanced orbit, not a numerical
 fit.
 
@@ -187,3 +192,7 @@ four-frame Gram matrix and Cayley four-form. The desired certificate is either:
 
 After that lemma, the same machinery must prove the exact upper bounds for
 the `(4,1,0)`, `(3,2,0)`, and `(3,1,1)` allocation families.
+
+The strengthened follow-up, including two exact Bernstein-positive slices and
+the coupled whitening-flow route, is documented in
+`SPIN8_DIRAC_GRAM_RESULTS.md`.

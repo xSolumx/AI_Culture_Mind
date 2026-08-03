@@ -73,6 +73,11 @@ from spin8_cayley_spectrum import (
     exact_partition_representatives,
     exact_restricted_orthogonalization_certificate,
 )
+from spin8_dirac_gram import (
+    exact_approximate_design_rejection,
+    exact_projector_geometry_certificate,
+    exact_strengthened_slice_certificate,
+)
 from spin8_learned_address import (
     evaluate_mixed_sequences,
     log_sinkhorn,
@@ -578,6 +583,23 @@ class CayleySpectrumTheoremTests(unittest.TestCase):
         certificate = exact_partition_representatives()
         self.assertTrue(certificate["passed"])
         self.assertEqual(len(certificate["rows"]), 5)
+
+    def test_dirac_projector_geometry_is_exact(self) -> None:
+        certificate = exact_projector_geometry_certificate()
+        self.assertTrue(certificate["passed"])
+        self.assertEqual(certificate["single_query_rank"], 7)
+        self.assertEqual(certificate["single_query_trace"], "7")
+
+    def test_strengthened_gram_bound_has_two_exact_slices(self) -> None:
+        certificate = exact_strengthened_slice_certificate()
+        self.assertTrue(certificate["passed"])
+        self.assertTrue(certificate["all_bernstein_coefficients_strictly_positive"])
+
+    def test_approximate_design_shortcut_is_exactly_rejected(self) -> None:
+        certificate = exact_approximate_design_rejection()
+        self.assertTrue(certificate["passed"])
+        self.assertTrue(certificate["certificate_violated"])
+        self.assertEqual(certificate["exact_design_threshold"], "28/5")
 
 
 if __name__ == "__main__":
