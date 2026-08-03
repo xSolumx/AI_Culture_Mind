@@ -28,6 +28,12 @@ from schur_scan import (
     pack_cl3_isotypic,
     unpack_cl3_isotypic,
 )
+from spin8_blind_shared_action import (
+    action_design_audit,
+    joint_shared_retraction,
+    observed_action,
+)
+from spin8_triality import spin8_actions, torch_triality_generators
 from spin8_triality_identifiability import invariant_space_audit
 from spin8_triality_lift import (
     diagnostics as triality_lift_diagnostics,
@@ -169,6 +175,33 @@ class SchurScanTests(unittest.TestCase):
         self.assertLess(
             report["dynamic_slot"]["final_retrieval_max_error"], 1e-10
         )
+
+    def test_blind_shared_action_mask_is_identifiable_and_retracts(self) -> None:
+        dtype = torch.float64
+        generators = torch_triality_generators(dtype=dtype)
+        random = torch.Generator().manual_seed(9)
+        hidden = 0.12 * torch.randn(4, 28, generator=random, dtype=dtype)
+        oracle = spin8_actions(hidden, generators)
+        design = action_design_audit(hidden[:1], generators)
+        self.assertEqual(design["minimum_rank"], 28)
+
+        recovered, coordinates, report = joint_shared_retraction(
+            observed_action(oracle),
+            seed=9,
+            generators=generators,
+            adam_steps=200,
+            lbfgs_steps=50,
+        )
+        self.assertLess(report["final_observed_mse"], 1e-10)
+        self.assertGreater(
+            float(
+                nn.functional.cosine_similarity(
+                    coordinates.flatten(), hidden.flatten(), dim=0
+                )
+            ),
+            1.0 - 1e-9,
+        )
+        torch.testing.assert_close(recovered, oracle, rtol=0, atol=3e-6)
 
 
 class EvaluationContractTests(unittest.TestCase):

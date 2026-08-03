@@ -35,6 +35,17 @@ recurrent state. All float64 mechanism errors are below 2.3e-15. Addresses,
 query keys, and actions remain supplied. See the coded-memory result document
 under experiments.
 
+The supplied-action limitation has now been removed in a controlled synthetic
+gate. Ten hidden noncommuting four-token Spin(8) families were observed only
+through five columns of their vector and positive-chiral actions; the complete
+negative action and three columns of each visible action were withheld.
+Unconstrained and independently optimized SO(8) controls fit every visible
+endpoint but fail the hidden representation and long composition. Joint
+diagonal-triality retraction passes 10/10 seeds, recovers hidden tangent
+coordinates above 0.999999999996 cosine, and retains at least 0.999999995
+cosine through length 2048. See the blind-shared-action result document under
+experiments.
+
 An exact triangular triality coupling is now implemented in
 `spin8_triality_lift.py`. Two independent chiral-spinor affine streams are
 scanned first, their `S+ x S- -> V` binding is evaluated pointwise, and the

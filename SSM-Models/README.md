@@ -27,6 +27,8 @@ The experimental Spin(8) branch now includes:
   cross-representation completion law to one learned scalar;
 - orthogonal and tight-frame multiplicity codes with measured capacity laws;
 - an exact addressed overwrite recurrence with shared Spin(8) transport.
+- blind shared-action completion from partial vector/positive endpoints, with
+  ten-seed recovery of the entirely hidden negative-chiral action.
 
 The dynamic-slot stress test matches parallel, recurrent, and symbolic-oracle
 execution below 2.3e-15 in float64. Addresses, query keys, and group actions

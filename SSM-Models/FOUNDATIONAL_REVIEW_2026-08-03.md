@@ -199,6 +199,15 @@ transport, exact overwrite, and parallel-recurrent SSM duality.
 
 ## Best next experimental order
 
+The first item below now has a passed precursor: blind shared-action
+completion from incomplete endpoints. Five vector/positive columns have
+full rank 28 jointly but leave completion slack independently. Joint
+triality retraction passes 10/10 hidden action families and remains above
+0.999999995 cosine through length 2048; an independently optimized orthogonal
+control fits the observations but fails the hidden negative action and long
+composition. This supports moving from supplied actions to learned addressing,
+while retaining direct-slot and delta-rule controls.
+
 1. Freeze a learned-address selective-copy or MQAR task. Compare the exact slot
    oracle against a same-width direct-slot memory, linear attention or
    bilinear fast weights, Householder transport, and diagonal complex SSMs.

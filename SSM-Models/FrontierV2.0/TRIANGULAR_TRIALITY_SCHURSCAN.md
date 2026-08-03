@@ -79,3 +79,21 @@ then compare against:
 
 The exact rows should be used as mechanism oracles, not mixed into a claim
 that attention has already been replaced.
+
+## Blind shared-action result
+
+The first oracle-removal gate now passes. Training exposes only five columns of
+the vector and positive-chiral token actions; three columns and the complete
+negative-chiral action remain hidden. The paired observation Jacobian has rank
+28. A joint shared-tangent retraction recovers the hidden family in 10/10
+seeds, preserves triality to 1.67e-15, and remains above 0.999999995 cosine at
+length 2048.
+
+An independently optimized Lie control is exactly orthogonal and fits the
+visible endpoints below 7.6e-14, yet cannot resolve the representation-specific
+stabilizer slack: its unseen negative cosine is only 0.870--0.907 and its
+length-2048 worst-representation cosine is negative in every seed. This
+isolates shared cross-representation geometry rather than norm stabilization.
+
+The Spin(8) algebra remains supplied. The next gate is learned addressing, not
+language scaling.
