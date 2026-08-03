@@ -46,6 +46,17 @@ coordinates above 0.999999999996 cosine, and retains at least 0.999999995
 cosine through length 2048. See the blind-shared-action result document under
 experiments.
 
+The action and address compilers have subsequently been trained together. A
+single run receives partial vector/positive action columns, rank-2 negative
+endpoints, and fresh continuous aliases without logical key IDs. Joint
+triality and balanced routing pass all dense L16--2048 gates in 10/10 seeds.
+An independent 84-coordinate action family fits the same supplied evidence but
+retains exactly 21 unobserved tangent dimensions: held-out negative-action
+cosine is only 0.864--0.930 and direct L2048 retrieval is 0.408--0.546. The
+shared 28-coordinate family recovers the hidden tangent above
+0.999999999999995 cosine. This is a partial-observation relational-completion
+advantage, not a generic memory advantage over a direct oracle.
+
 An exact triangular triality coupling is now implemented in
 `spin8_triality_lift.py`. Two independent chiral-spinor affine streams are
 scanned first, their `S+ x S- -> V` binding is evaluated pointwise, and the
@@ -458,9 +469,7 @@ through length 2048. Independently normalized address rows fit training below
 `5.6e-18` yet collide and fail in every seed; untrained joint rows pass 0/10.
 
 The direct-slot joint control also passes 10/10, so the address result supports
-joint relational normalization rather than a triality capacity advantage. The
-next gate must infer key identity from held-out continuous aliases and compare
-against delta-rule, erase-then-delta, fast-weight, and linear-attention memory.
+joint relational normalization rather than a triality capacity advantage.
 See `experiments/SPIN8_BLIND_SHARED_ACTION_RESULTS.md`,
 `experiments/SPIN8_LATENT_ADDRESS_THEOREM.md`, and
 `experiments/SPIN8_LEARNED_ADDRESS_RESULTS.md`.
@@ -475,3 +484,20 @@ additive fast weights pass 0/10 for distinct reasons (key-geometry error versus
 missing overwrite correction). See
 `experiments/SPIN8_CONTINUOUS_ALIAS_THEOREM.md` and
 `experiments/SPIN8_CONTINUOUS_ALIAS_RESULTS.md`.
+
+The combined blind-action/continuous-alias gate then trains both mechanisms in
+one optimization run. The shared family passes 10/10; a parameter-richer
+independent family fits all visible columns and calibration endpoints but fails
+on the held-out negative subspace and direct long-horizon retrieval in 10/10.
+The binding-mode independent control remains behaviorally exact because it
+bypasses its learned negative action, while its triality residual reaches
+0.721. This is retained as an explicit warning that retrieval alone cannot
+certify latent geometric coherence. See
+`experiments/SPIN8_BLIND_ALIAS_ACTION_PREREGISTRATION.md` and
+`experiments/SPIN8_BLIND_ALIAS_ACTION_RESULTS.md`.
+
+The next gate removes the remaining visible-matrix-column oracle by replacing
+it with transformed example pairs and sequence endpoint supervision. It must
+map a rank/noise/imbalance phase diagram and retain equal-state direct,
+delta-rule, Householder, and generic equivariant controls before any language
+integration claim.

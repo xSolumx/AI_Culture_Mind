@@ -35,13 +35,18 @@ The experimental Spin(8) branch now includes:
 - continuous-alias routing without logical key IDs: separate write/query
   encoders plus unlabeled marginal balance pass 10/10 noisier-alias cohorts,
   while independently perfect encoders collide in every seed.
+- joint blind-action and continuous-alias completion: one optimization run
+  recovers collision-free routing and the held-out negative-chiral action in
+  10/10 seeds, while a parameter-richer independent action family fits every
+  supplied endpoint but fails off its rank-2 calibration plane.
 
 The dynamic-slot stress test matches parallel, recurrent, and symbolic-oracle
 execution below 2.3e-15 in float64. The learned-address gate preserves a
-64-scalar streaming state and scan parity below 5.6e-16. Logical key identity,
-group actions remain supplied; continuous content routing now passes under an
-orthogonal balanced-cluster model. Joint action+address learning, nonorthogonal
-capacity stress, and naturalistic downstream utility remain the next gates.
+64-scalar streaming state and scan parity below 6.7e-16. Logical key identity
+has been removed in the controlled alias world, and action/address learning now
+passes jointly. Partial vector and positive-spinor action columns remain
+supplied; nonorthogonal capacity stress, endpoint-only action discovery, and
+naturalistic downstream utility are the next gates.
 See SPIN8_TRIALITY_EXPERIMENT.md and the Spin8 result files under experiments.
 
 The numbered `GA-SSM-*` scripts are research history. `GA-SSM-3.5.py` is now a

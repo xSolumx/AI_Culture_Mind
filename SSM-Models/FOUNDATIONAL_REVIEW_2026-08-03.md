@@ -213,6 +213,34 @@ Spin(8) manifold for actions, and the Birkhoff polytope for addresses. The
 same-width direct memory also passes 10/10, so no triality-specific advantage
 is claimed from this task.
 
+## Joint blind-action and continuous-alias result
+
+The two oracle-removal mechanisms have now been optimized together rather than
+only composed after separate training. In 10/10 seeds, one shared Spin(8)
+family plus jointly balanced write/query alias encoders recovers the held-out
+negative action and retrieves exactly through the dense L16--2048 sweep.
+
+The observation design makes the mechanism falsifiable. Five vector and five
+positive-spinor columns identify the shared 28-coordinate tangent, while
+independent actions have ranks 25, 25, and 13 in 84 coordinates after adding
+rank-2 negative endpoints. The independent family therefore retains 21
+unobserved tangent dimensions. It fits every supplied term below 1.92e-14 but
+reaches only 0.864--0.930 cosine on the held-out negative complement and
+0.408--0.546 mean direct retrieval cosine at L2048. The joint family recovers
+the hidden coordinates above 0.999999999999995 cosine and remains exact at the
+displayed retrieval precision.
+
+An important bypass was caught prospectively after seed 0. Binding-mode
+retrieval can remain exact using only the fitted vector and positive actions;
+it never consumes the independently learned negative action. Across all ten
+seeds that behavioral path succeeds while triality error reaches 0.721. The
+direct negative-action path is therefore the causal extrapolation control.
+
+This is the first controlled result in this branch where triality wins over a
+parameter-richer direct action completion under missing relational evidence.
+It is not a generic memory win: a direct memory supplied with the correct
+negative action is exact in 10/10 seeds.
+
 ## Best next experimental order
 
 The logical-ID oracle has now also been removed in a controlled continuous
@@ -224,24 +252,23 @@ direct-slot control is exact; learned delta keys fail 0/10 while an oracle
 semantic projector makes the same delta recurrence exact 10/10. This supports
 slot quantization robustness, not a Spin(8)-specific advantage.
 
-The first item below now has a passed precursor: blind shared-action
-completion from incomplete endpoints. Five vector/positive columns have
-full rank 28 jointly but leave completion slack independently. Joint
-triality retraction passes 10/10 hidden action families and remains above
-0.999999995 cosine through length 2048; an independently optimized orthogonal
-control fits the observations but fails the hidden negative action and long
-composition. This supports moving from supplied actions to learned addressing,
-while retaining direct-slot and delta-rule controls.
+The first item in the earlier roadmap has now passed under partial action
+observations and without logical key IDs. The remaining action oracle is the
+set of visible vector/positive matrix columns; calling the current result
+"label-free action discovery" would therefore be wrong.
 
-1. Combine blind shared-action recovery and continuous-alias routing in one
-   model; neither action matrices nor key IDs may be supplied.
-2. Relax orthogonal centers and balanced frequency, then test over-capacity
+1. Replace visible action columns with paired transformed examples and learn
+   action, address, and readout from sequence endpoints. Preserve the current
+   independent/direct controls and rank audit.
+2. Map the identifiability phase diagram over observation rank, calibration
+   rank, noise, and missing views rather than testing one favorable mask.
+3. Relax orthogonal centers and balanced frequency, then test over-capacity
    `K>H` behavior with explicit eviction and rank accounting.
-3. Run full Gated DeltaNet, erase-then-delta, linear-attention, and fast-weight
+4. Run full Gated DeltaNet, erase-then-delta, linear-attention, and fast-weight
    baselines on naturalistic selective-copy/MQAR data.
-3. Compare SchurScan against grade rotor, dense selective, Householder-product,
+5. Compare SchurScan against grade rotor, dense selective, Householder-product,
    and diagonal real/complex transitions under equal state, decoder, and
    compute budgets.
-4. Orthogonally ablate complementary versus independent writes and nonlinear
+6. Orthogonally ablate complementary versus independent writes and nonlinear
    cleanup outside the scan.
-5. Only after those gates, integrate the mechanism into the language model.
+7. Only after those gates, integrate the mechanism into the language model.

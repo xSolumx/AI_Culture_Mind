@@ -32,6 +32,13 @@ from spin8_blind_shared_action import (
     action_design_audit,
     joint_shared_retraction,
     observed_action,
+    sample_teacher,
+)
+from spin8_blind_alias_action import (
+    calibration_complement,
+    combined_design_audit,
+    evaluate_sequences as evaluate_blind_alias_sequences,
+    negative_calibration_basis,
 )
 from spin8_learned_address import (
     evaluate_mixed_sequences,
@@ -326,6 +333,78 @@ class EvaluationContractTests(unittest.TestCase):
         second = group.table[first, tokens[0, 1]]
         third = group.table[second, tokens[0, 2]]
         np.testing.assert_array_equal(targets[0], np.asarray([first, second, third]))
+
+
+class BlindAliasActionDesignTests(unittest.TestCase):
+    def test_rank_two_calibration_split_is_orthogonal_and_complete(self) -> None:
+        basis = negative_calibration_basis(
+            17, dtype=torch.float64, device=torch.device("cpu")
+        )
+        complement = calibration_complement(basis)
+        torch.testing.assert_close(
+            basis.T @ basis, torch.eye(2, dtype=torch.float64), rtol=0, atol=1e-12
+        )
+        torch.testing.assert_close(
+            complement.T @ complement,
+            torch.eye(6, dtype=torch.float64),
+            rtol=0,
+            atol=1e-12,
+        )
+        torch.testing.assert_close(
+            basis @ basis.T + complement @ complement.T,
+            torch.eye(8, dtype=torch.float64),
+            rtol=0,
+            atol=1e-12,
+        )
+
+    def test_shared_family_closes_the_independent_twenty_one_dimensional_slack(self) -> None:
+        generators = torch_triality_generators(dtype=torch.float64)
+        teacher = sample_teacher(seed=18, generators=generators)
+        basis = negative_calibration_basis(
+            18, dtype=torch.float64, device=torch.device("cpu")
+        )
+        report = combined_design_audit(teacher.coefficients, generators, basis)
+        self.assertEqual(report["minimum_shared_rank"], 28)
+        self.assertEqual(report["independent_rank_pattern"], [(25, 25, 13)])
+        self.assertEqual(report["minimum_independent_slack"], 21)
+
+    def test_binding_bypasses_negative_action_while_direct_memory_consumes_it(self) -> None:
+        generators = torch_triality_generators(dtype=torch.float64)
+        oracle = sample_teacher(seed=19, generators=generators).actions
+        perturbed = oracle.clone()
+        perturbed[:, 2] = torch.eye(8, dtype=torch.float64)
+        policy = FrozenSlotPolicy("oracle_both", None, None)
+
+        oracle_binding = evaluate_blind_alias_sequences(
+            oracle,
+            oracle,
+            policy,
+            mode="binding",
+            seed=19,
+            length=128,
+            batch_size=32,
+        )
+        perturbed_binding = evaluate_blind_alias_sequences(
+            perturbed,
+            oracle,
+            policy,
+            mode="binding",
+            seed=19,
+            length=128,
+            batch_size=32,
+        )
+        self.assertEqual(perturbed_binding, oracle_binding)
+
+        perturbed_direct = evaluate_blind_alias_sequences(
+            perturbed,
+            oracle,
+            policy,
+            mode="direct",
+            seed=19,
+            length=128,
+            batch_size=32,
+        )
+        self.assertLess(perturbed_direct["mean_query_cosine"], 0.95)
 
 
 if __name__ == "__main__":
