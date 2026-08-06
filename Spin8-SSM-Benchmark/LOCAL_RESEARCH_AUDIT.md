@@ -1,0 +1,87 @@
+# Local research audit and architecture decisions
+
+This file records which local results were used in the isolated benchmark and
+which claims were deliberately rejected. It is a research audit, not a claim
+that every historical prototype has been re-derived line by line.
+
+## Sources reviewed
+
+### Spin8-Triality-Research
+
+- `docs/experiments/RESEARCH_REVIEW_2026-08-02.md`
+- `docs/experiments/RESEARCH_PHASE_2_RESULTS.md`
+- `docs/experiments/RECURRENCE_LADDER_RESULTS.md`
+- `docs/experiments/SPIN3_ISOTYPIC_SCHUR_SCAN_RESULTS.md`
+- `docs/experiments/MECHANISM_GATE_RESULTS.md`
+- `docs/experiments/SELF_COMPILING_RETRACTION_RESULTS.md`
+- `docs/experiments/ROBUST_CHANNEL_GATING_RESULTS.md`
+- `docs/experiments/Q8_SPINOR_QUALITY_GATE_VALIDATION_RESULTS.md`
+- `docs/experiments/SPIN8_SO8_PAIRED_RESULTS.md`
+- `docs/experiments/SPIN8_ACTIVE_SENSING_RESULTS.md`
+- the variable-Cayley/Dirac theorem results and counterexample documents;
+  these remain mathematical work, not language-model evidence.
+
+Relevant source implementations were checked in `src/schur_scan.py`,
+`src/rotor_ssm_torch.py`, the recurrence harnesses, and the triality/Q8
+audits.
+
+### SSM-Models and SpinorModel
+
+- `SSM-Models/ga_ssm.py` and `GALib.py` for the original stable rotor-affine
+  scan and JAX parallel/recurrent parity;
+- `SSM-Models/rotor_ssm_torch.py`, `mechanistic_group_actions.py`,
+  `robust_channel_gating.py`, and `pdssm_group_actions.py` for controls and
+  negative results;
+- `SpinorModel/overhauled/model.py` and `algebra.py` for the independent write
+  gate, retention bounds, streaming interface, and scan backend split.
+
+## Strong findings retained
+
+1. Rotor transport is norm preserving; bounded affine innovation gives a
+   useful stability/BIBO invariant.
+2. The recurrence is an associative affine monoid, so an exact differentiable
+   logarithmic-depth scan is valid for training and a recurrent step is valid
+   for streaming.
+3. `GradeLinear` is not the complete Spin(3) equivariant family. The validated
+   Schur/isotypic construction mixes scalar/pseudoscalar and
+   vector/Hodge-bivector copies and has twice the commutant dimension.
+4. Independent write and erase controls are the justified next ablation; tying
+   write magnitude to retention is not a theorem and hurt the recorded Q8 run.
+5. Exact/retracted group actions and quality-gated decoders can solve the
+   controlled A5/Q8 mechanism tests, but raw SGD, long-horizon language
+   behavior, and Spin(8)-specific superiority remain unproved.
+
+## Claims rejected or kept as controls
+
+- Spin(8) triality is not assumed to improve WikiText. The paired positive
+  half-spin versus generic SO(8) audit found no stable raw advantage.
+- Static rotors, hybrid complex+GA direct sums, grade-specific decay, and
+  unconstrained raw learned actions are controls, not default improvements.
+- Exact reconstruction, interpolation, and positivity in the theorem archive
+  are separate proof layers and are not converted into a neural-language
+  claim.
+- Synthetic mechanism accuracy does not substitute for a matched language
+  benchmark.
+
+## Benchmark integrity corrections
+
+The original harness instantiated models before setting the requested seed.
+That invalidated its initialization control and any future multi-seed claim.
+The current harness accepts model factories, seeds Python/NumPy/PyTorch/CUDA,
+and constructs each model only after seeding. Earlier JSON results must not be
+used as multi-seed evidence.
+
+The matched run uses a 42-channel state (336 scalars) and a 20-channel
+equivariant decoder bottleneck (160 scalars), giving 674,322 Spinor parameters
+versus 688,220 for the four-layer Mamba-2 control. The bottleneck is explicit so
+the vocabulary projection is compute-comparable rather than silently paying
+for a 352-wide tied decoder.
+
+## Open falsifiers
+
+- parameter-matched five-seed WikiText runs with the corrected RNG harness;
+- A5/Q8 and copy/MQAR-style synthetic tasks alongside WikiText;
+- recurrent streaming parity after checkpoint loading;
+- a Linux fused-kernel comparison, since the current Windows run uses pure
+  PyTorch Mamba-2 fallback and tensor-only rotor CUDA execution;
+- a deeper prior-art review before claiming a novel architecture result.
