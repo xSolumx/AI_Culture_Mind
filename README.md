@@ -11,7 +11,6 @@ models, and controlled neural-network experiments.
   experimental evidence.
 - `SpinorModel` — original compact geometric-algebra model prototype.
 - `Spin8-SSM-Benchmark` — matched-path empirical benchmarks and baselines.
-- `LLMModels` — separate exploratory model notebooks and utilities.
 
 Large model weights, downloaded datasets, generated caches, and raw process logs
 are intentionally excluded from Git. Reproducible research outputs should be
