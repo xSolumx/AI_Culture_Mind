@@ -16,7 +16,7 @@ evaluation, both models fit the restricted training language but fail the
 unseen pair. The rotor has learned a much better long-horizon representation
 under complete local-transition coverage, but not an exact group homomorphism.
 
-That is real progress. It is not yet a general sequence-model breakthrough.
+That is real progress. It does not yet establish a general sequence-model result.
 
 ## Corrections to the Gemini interpretation
 

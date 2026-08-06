@@ -28,7 +28,7 @@ every other viable action is certified as its exact homomorphic quotient.
 The prospective reliability requirement was at least 8/9. Uniform 9/9 is a
 stronger observed result, not a changed gate.
 
-## The actual breakthrough
+## The actual result
 
 The preceding fixed-cardinality compiler failed its untouched gate at 7/9.
 Its Euclidean separation threshold rejected state geometries that still

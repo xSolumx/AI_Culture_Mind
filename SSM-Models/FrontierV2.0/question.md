@@ -1,6 +1,128 @@
-1. Spontaneous Gauge Discovery in Standard LLMs(From "We built a Spin(8) model" to "We discovered hidden non-abelian group actions inside Llama/Mamba.")Instead of enforcing an explicit $\mathrm{Spin}(8)$ or $\mathrm{SO}(8)$ architecture from scratch, what if you apply your decoder-blind compiler directly to the unconstrained intermediate activations of standard pretrained LLMs (e.g., Mamba-2, Llama-3, or DeepSeek) during multi-step algorithmic tasks?The Discovery: Demonstrating that standard transformers and SSMs—despite having no explicit group-theoretic constraints—spontaneously organize their continuous state space into low-dimensional compact Lie group orbits (e.g., localized $S_n$ or $D_n$ gauge symmetries) when executing compositional subroutines like code execution, entity tracking, or bracket matching.Why it Matters: It would prove that non-commutative group dynamics are not an artificial inductive bias we have to force onto networks, but an emergent, universal attractor structure of sequence learning.2. The Syntactic Monoid Duality Theorem for Recurrent Dynamics(A theoretical bridge between continuous Lie groups and formal language theory.)Current neural-to-symbolic extraction treats neural networks as empirical black boxes. A profound theoretical breakthrough would mathematically link continuous state-space trajectories directly to the algebraic machinery of automata theory.The Discovery: Proving that for any continuous recurrence $h_t = f(h_{t-1}, x_t)$ trained to minimal loss on a formal language $L$:The continuous state manifold $\mathcal{M}$ canonicalizes into a homogeneous space $G/H$ under the action of the transition Lie algebra $\mathfrak{g}$.The discrete quotient lattice extracted by bisimulation refinement is provably isomorphic to the Syntactic Monoid $M(L)$ of the formal language.Why it Matters: It solves the decades-old open problem of neural interpretability for sequence models by establishing a rigorous duality: Continuous Lie Group Holonomy $\leftrightarrow$ Discrete Syntactic Monoid.3. Infinite-Group Compilers (Braid Groups & Topological Memory)(Moving beyond finite groups like $Q_8, A_4, S_4$.)Finite group actions ($Q_8$) have bounded state spaces. Real-world computation (like open-ended stack evaluation, topological knotting, or theorem proving) requires infinite, non-abelian group structures like the Free Group $F_n$ or the Braid Group $B_n$.Finite Group Action (Q8, S4):
-   Bounded Orbit (S^7) ──► Retracts to Finite State Automaton (DFA)
+# Four Research Frontiers Beyond the Current Gates
 
-Infinite Group Action (Braid Group B_n / Free Group F_n):
-Unbounded Path Trajectory ──► Retracts to Pushdown Automaton / Topological Invariant
-The Discovery: Showing that a token-selective orthogonal recurrence can maintain unbounded, path-dependent topological memory (e.g., braid word equivalences or pushdown stack states) by drifting along a compact subgroup slice—and that the compiler can extract an exact topological invariant calculator without state explosion.Why it Matters: It proves that continuous recurrences can represent infinite-state formal machines without running out of dynamic range or suffering numerical overflow.4. Triality as an Activation-Free Dynamic Binding Mechanism(Proving $\mathrm{Spin}(8)$ solves the attention bottleneck strictly via linear geometry.)Standard transformers require non-linear activations (Softmax, GELU, SwiGLU) to perform dynamic variable binding (e.g., key-value lookup).The Discovery: Proving that the invariant, non-associative trilinear map of $\mathrm{Spin}(8)$:$$\mathbf{8}_s \otimes \mathbf{8}_c \longrightarrow \mathbf{8}_v$$allows two independent recurrent state streams ($\mathbf{8}_s$ and $\mathbf{8}_c$) to execute context-dependent key-value binding and dynamic routing strictly through linear multivector products, completely eliminating the need for MLP activation functions or quadratic attention.Why it Matters: It yields a model that combines the exact symbolic routing of attention with the $O(1)$ inference memory and parallel associative scan of linear SSMs—built entirely on $D_4$ Lie algebra geometry.Summary Comparison of Potential FrontiersDiscovery CandidateCore Metric / ArtifactPrimary Impact Area1. Unsupervised Gauge DiscoveryExtraction of zero-drift $S_n/D_n$ subgroups from LLM hidden statesMech Interpretability / Alignment2. Syntactic Monoid DualityFormal proof + exact isomorphism certificateMathematical Learning Theory3. Infinite Topological CompilersExact Braid word / $F_n$ reduction over $L > 100,000$ tokensLong-Context / Formal Verification4. Triality Binding MechanismActivation-free KV-routing reaching 100% on multi-hop associative recallNext-Gen SSM / LLM Architecture
+These are research questions, not established results. Each proposal is stated
+with an explicit mechanism, a decisive test, and a boundary on what a positive
+result would justify.
+
+## 1. Spontaneous gauge discovery in standard sequence models
+
+### Question
+
+Do unconstrained transformers or state-space models organize intermediate
+activations into low-dimensional noncommutative group orbits while solving
+compositional tasks?
+
+The experiment would apply the decoder-blind compiler to hidden states from a
+fixed pretrained model during tasks such as entity tracking, bracket matching,
+or short program execution. No group structure would be inserted into the
+model.
+
+### Decisive evidence
+
+A convincing result would require all of the following:
+
+- a compact action extracted without task labels at the compiler stage;
+- stable group relations on held-out trajectories and longer compositions;
+- a noncommutative signal that survives matched linear, permutation, and
+  clustering baselines;
+- causal evidence that intervening on the extracted orbit changes the relevant
+  computation.
+
+Such a result would show that a particular trained network discovered a useful
+group-like mechanism. It would not, by itself, prove that Lie-group structure
+is a universal attractor of sequence learning.
+
+## 2. Continuous dynamics and syntactic monoids
+
+### Question
+
+When does a continuous recurrence admit a finite behavioral quotient equal to
+the syntactic monoid of a formal language?
+
+For a language \(L\subseteq\Sigma^*\), the syntactic congruence identifies two
+prefixes \(u,v\in\Sigma^*\) when no continuation can distinguish them:
+
+\[
+u\equiv_L v
+\quad\Longleftrightarrow\quad
+\forall p,q\in\Sigma^*,
+\;puq\in L\iff pvq\in L.
+\]
+
+The quotient \(M(L)=\Sigma^*/{\equiv_L}\) is the syntactic monoid. The research
+goal is not to assume that every neural state manifold is a homogeneous space
+\(G/H\). It is to find verifiable conditions under which a learned continuous
+transition system has a stable finite quotient, and then prove that this
+quotient is isomorphic to \(M(L)\).
+
+### Decisive evidence
+
+The first theorem should cover a tightly controlled class of deterministic,
+continuous recurrences. It must state observability, robustness, and minimality
+assumptions explicitly and supply both positive examples and counterexamples
+when those assumptions are removed.
+
+## 3. Infinite-group compilers and topological memory
+
+### Question
+
+Can a constant-state recurrence represent and expose useful invariants of an
+infinite noncommutative group over lengths far beyond training?
+
+Candidate tasks include word reduction in a free group \(F_n\), braid-group
+relations in \(B_n\), and bounded-depth stack languages. Compact orthogonal
+dynamics alone cannot encode an unbounded discrete state injectively: compact
+state spaces necessarily admit arbitrarily close recurrent configurations.
+The plausible target is therefore narrower—stable computation of a selected
+invariant or quotient, not lossless storage of every group element.
+
+### Decisive evidence
+
+Require exact or tolerance-certified relation checks, dense length sweeps well
+beyond training, adversarial near-collision searches, and comparison with
+automata-, stack-, and fast-weight baselines. A compiler must recover a stated
+invariant without silently receiving the relation table it is meant to
+discover.
+
+## 4. Triality as a scan-compatible binding primitive
+
+### Question
+
+Can the invariant triality map provide useful dynamic binding inside a
+constant-state, parallel-scan architecture?
+
+The algebra supplies a bilinear map
+
+\[
+\rho:\mathbf 8_{+}\otimes\mathbf 8_{-}\longrightarrow\mathbf 8_v,
+\]
+
+where \(\mathbf 8_v\), \(\mathbf 8_{+}\), and \(\mathbf 8_{-}\) are the vector
+and two chiral eight-dimensional representations of
+\(\operatorname{Spin}(8)\). For a single unit key, the induced bind/unbind map
+is an exact isometry. Multiple pairs superposed in one eight-dimensional
+channel, however, suffer severe crosstalk. Capacity must therefore come from
+explicit multiplicity slots, temporal structure, or a decoder outside the
+recurrent scan—not from vague high-dimensional-memory claims.
+
+### Decisive evidence
+
+Compare the triality recurrence against a same-width direct slot memory,
+delta-rule memory, bilinear fast weights, Householder transport, and diagonal
+complex recurrence. Triality earns architectural credit only if it improves
+state efficiency, extrapolation, optimization reliability, or throughput at a
+matched task and budget.
+
+## Comparison table
+
+| Candidate | Primary gate | Legitimate positive claim |
+|---|---|---|
+| Spontaneous gauge discovery | Causal, held-out group-action extraction | A trained model uses an emergent group-like mechanism |
+| Syntactic-monoid quotient | Exact quotient isomorphism | The recurrence realizes the minimal language quotient |
+| Infinite-group compiler | Adversarial long-horizon recovery | Constant state computes a selected group invariant |
+| Triality binding | Matched-baseline retrieval and streaming efficiency | Triality is useful for a specified binding regime |
+
+The immediate priority remains the last row because its algebraic contracts and
+matched baselines already exist locally. The other three are valuable only if
+their first experiments are designed to falsify the strongest interpretation,
+not to decorate it.

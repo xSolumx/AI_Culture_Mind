@@ -182,7 +182,7 @@ and excludes the exact 144-degree token action of the other branch. The
 compiler reconstructs and compares both representations, but the architecture
 still biases which one SGD can approach.
 
-## Breakthrough statement
+## Result statement
 
 > A recurrent rotor model can discover an approximate noncommutative action by
 > ordinary SGD, automatically compile the nearest exact irrep from a supplied

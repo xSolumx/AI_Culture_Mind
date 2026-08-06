@@ -163,7 +163,7 @@ dense; the state count is known; and the tokens generate a finite regular
 group. Under those conditions Cayley recovery is exact automata extraction.
 The next gate must weaken supervision rather than merely extend length again.
 
-## Breakthrough statement
+## Result statement
 
 > Dense exact prefix-equivalence data mechanically determines a latent finite
 > transition group. A rotor recurrence can compile exact irreducible representations

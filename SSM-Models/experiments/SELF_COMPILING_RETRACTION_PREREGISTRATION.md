@@ -89,7 +89,7 @@ homomorphism and mixed-relator residuals, state-norm error, and accuracy.
 
 ## Gates
 
-The experiment is a major breakthrough only if:
+The major claim is supported only if:
 
 1. all ten seeds trigger without manual branch or channel selection;
 2. all ten compiled models have vector homomorphism RMS at most `1e-5` and
@@ -101,4 +101,3 @@ The experiment is a major breakthrough only if:
 
 No threshold, compiler seed, training hyperparameter, or evaluation batch is
 changed after the first cohort result is read.
-

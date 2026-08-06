@@ -60,7 +60,7 @@ slot labeling is not required.
 
 Both learned routers receive the same initialization scale, temperature,
 optimizer, training batches, loss, and discreteness penalty.  The direct
-baseline is mandatory: parity means the breakthrough is joint latent-slot
+baseline is mandatory: parity means the contribution is joint latent-slot
 identifiability, not a Spin(8)-specific memory advantage.
 
 ## Recurrent contract

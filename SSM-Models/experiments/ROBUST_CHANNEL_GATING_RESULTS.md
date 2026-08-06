@@ -148,7 +148,7 @@ measure how much credit belongs to robust optimization versus a universal
 half-residual heuristic.
 
 Only after that should gating be integrated into recurrence training. Spin(8)
-remains deferred: the current breakthrough is calibrated observability around
+remains deferred: the current result is calibrated observability around
 a small faithful channel, not larger transition dimension.
 
 ## Artifact

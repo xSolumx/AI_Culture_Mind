@@ -2,7 +2,7 @@
 
 ## Result
 
-The preregistered breakthrough gate passed.
+The preregistered success gate passed.
 
 Across all ten deterministic GA checkpoints, replacing only the dominant
 anchor channel by one globally aligned exact A5 action:
@@ -136,7 +136,7 @@ of `97.27%` and `99.61%` respectively. On the more stringent untouched class
    Replacing one anchor channel jointly repairs the failure, identifying the
    approximate group action as the cause.
 
-## Breakthrough statement
+## Result statement
 
 The strongest justified claim is:
 
@@ -147,8 +147,8 @@ The strongest justified claim is:
 > rounding—then converts near-perfect finite-horizon behavior into uniform
 > 10-seed L4096 composition on an untouched changed-generator alphabet.
 
-This is a mechanistic breakthrough, not yet a general sequence-model
-breakthrough. It gives a concrete architectural target: learn in the tangent
+This is a mechanistic result, not yet a general sequence-model
+result. It gives a concrete architectural target: learn in the tangent
 space, but periodically or finally retract a whole token-action family onto a
 shared representation manifold. The constraint must be joint across tokens;
 per-token normalization cannot enforce the mixed relations.

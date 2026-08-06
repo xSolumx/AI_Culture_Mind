@@ -2,7 +2,7 @@
 
 Date completed: 2026-08-03.
 
-## Breakthrough
+## Gate outcome
 
 A deterministic, label-free post-training retraction converts the learned
 seed-0 quaternion-spinor recurrence into an exact faithful Q8 mechanism while

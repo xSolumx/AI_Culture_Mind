@@ -81,7 +81,7 @@ For all ten seeds, report:
 - untouched class-33 L16384 accuracy, batch 256, plus sequential-versus-direct
   canonical state drift.
 
-## Breakthrough gates
+## Claim gates
 
 All must pass without changing the protocol:
 
@@ -97,4 +97,3 @@ All must pass without changing the protocol:
 The experiment may be called table-blind because the compiler never receives
 the true table. It may not be called unsupervised: prefix state labels provide
 strong transition-equivalence supervision.
-

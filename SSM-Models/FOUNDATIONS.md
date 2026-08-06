@@ -6,38 +6,55 @@ from hypotheses that still require empirical validation.
 
 ## State transition
 
-For channel `c`, the state at token `t` is a multivector
-`h[t,c]` in the Euclidean Clifford algebra `Cl(3, 0)`. The layer computes
+For channel \(c\), the state \(h_{t,c}\) after token \(t\) is a multivector in
+the Euclidean Clifford algebra \(\mathrm{Cl}(3,0)\). Given token features
+\(x_t\), the layer computes
 
-```text
-g_t       = invariant_features(x_t)
-Delta_t   = Delta_min + softplus(W_delta g_t + b_delta)
-lambda_c  = lambda_min + softplus(rho_c)
-d_t,c     = exp(-Delta_t,c lambda_c)
-B_t,c     = equivariant_bivector(x_t,c) tanh(W_R g_t + b_R)
-q_t,c     = exp(-bounded(B_t,c) / 2)
-u_t,c     = sqrt(1 - d_t,c^2) GradeLinear(x_t)_c
-h_t,c     = d_t,c q_t,c h_(t-1,c) reverse(q_t,c) + u_t,c
-```
+\[
+\begin{aligned}
+g_t &= \operatorname{InvariantFeatures}(x_t),\\
+\Delta_{t,c} &= \Delta_{\min}
+  +\operatorname{softplus}((W_\Delta g_t+b_\Delta)_c),\\
+\lambda_c &= \lambda_{\min}+\operatorname{softplus}(\rho_c),\\
+d_{t,c} &= \exp(-\Delta_{t,c}\lambda_c),\\
+B_{t,c} &= \operatorname{EquivariantBivector}(x_t,c)
+  \tanh((W_Rg_t+b_R)_c),\\
+q_{t,c} &= \exp\!\left(-\frac12
+  \operatorname{Bounded}(B_{t,c})\right),\\
+u_{t,c} &= \sqrt{1-d_{t,c}^2}\,
+  \operatorname{GradeLinear}(x_t)_c,\\
+h_{t,c} &= d_{t,c}q_{t,c}h_{t-1,c}\widetilde{q}_{t,c}+u_{t,c}.
+\end{aligned}
+\]
 
-`q` is a unit even multivector (a rotor), so conjugation by `q` rotates a
-multivector without changing its coefficient norm. `Delta_min > 0` and
-`lambda_min > 0` imply the uniform bound
+Here \(\widetilde q\) denotes Clifford reversal. Because \(q_{t,c}\) is a unit
+even multivector—a rotor—the sandwich map
+\(h\mapsto q_{t,c}h\widetilde{q}_{t,c}\) preserves the Euclidean coefficient
+norm. The strict floors \(\Delta_{\min}>0\) and \(\lambda_{\min}>0\) imply
 
-```text
-0 < d_t,c <= exp(-Delta_min lambda_min) < 1.
-```
+\[
+0<d_{t,c}\leq
+d_{\max}:=\exp(-\Delta_{\min}\lambda_{\min})<1.
+\]
 
-Consequently, with `d_max = exp(-Delta_min lambda_min)`,
+Consequently,
 
-```text
-||h_t|| <= d_max ||h_(t-1)|| + ||u_t||.
-```
+\[
+\lVert h_{t,c}\rVert
+\leq d_{\max}\lVert h_{t-1,c}\rVert+\lVert u_{t,c}\rVert.
+\]
 
-For bounded drives this gives a bounded state by the geometric-series bound
-`sup ||h|| <= ||h_0|| + sup ||u|| / (1 - d_max)`. This is a real stability
-guarantee, although a bound close to one can still produce a very long and
-numerically demanding memory.
+If the drive is uniformly bounded by \(U\), iteration of this inequality gives
+
+\[
+\lVert h_{t,c}\rVert
+\leq d_{\max}^{\,t}\lVert h_{0,c}\rVert
++\frac{1-d_{\max}^{\,t}}{1-d_{\max}}U.
+\]
+
+This is a genuine bounded-state guarantee. It does not promise easy numerical
+conditioning when \(d_{\max}\) is extremely close to one; in that regime the
+model deliberately retains a very long memory.
 
 The decay controller and rotor controller are initialized to zero. Decay
 rates are chosen so zero-control channels have log-spaced half-lives from 4 to
@@ -47,21 +64,23 @@ gradient at initialization.
 
 ## Why parallel training and recurrent streaming are the same model
 
-Represent a token transition by the triple `T = (d, q, u)` acting as
+Represent a token transition by \(T=(d,q,u)\), acting on a state as
 
-```text
-T(h) = d q h reverse(q) + u.
-```
+\[
+T(h)=dqh\widetilde{q}+u.
+\]
 
-Applying `T_a` and then `T_b` gives the closed composition
+Applying \(T_a\) first and \(T_b\) second gives another transition of the same
+form:
 
-```text
-T_b compose T_a = (
-    d_b d_a,
-    q_b q_a,
-    u_b + d_b q_b u_a reverse(q_b)
-).
-```
+\[
+T_b\circ T_a=
+\left(
+d_bd_a,
+q_bq_a,
+u_b+d_bq_bu_a\widetilde{q}_b
+\right).
+\]
 
 This operation is associative because it is ordinary function composition
 and rotor multiplication is associative. JAX therefore computes every prefix
@@ -70,8 +89,9 @@ equation with one fixed-size state per layer. Tests compare full parallel,
 arbitrarily chunked, and token-by-token execution at both state and logit
 level.
 
-For a model with `L` layers and `C` multivector channels, streaming cache size
-is exactly `L * C * 8` scalars per sequence, independent of context length.
+For a model with \(L\) layers and \(C\) multivector channels, the streaming
+cache contains exactly \(8LC\) scalars per sequence, independent of context
+length.
 The current implementation still performs ordinary vocabulary decoding, so
 generation cost is constant in past context length but not constant in
 vocabulary size.
@@ -152,7 +172,7 @@ Rotors win two of three seeds; seed 0 is a narrow loss. Learned mean rotor
 angles are nonzero and controller weight norms move away from zero, confirming
 that the winning models actually use the transition. These short runs are a
 promising mechanism-level result, not evidence of state-of-the-art language
-modeling or a statistically established breakthrough.
+modeling or a statistically established advance.
 
 The exact reports, including dataset SHA-256 hashes, loss samples, timings,
 memory use, and transition diagnostics, are in `experiments/final_seed*_300.json`.

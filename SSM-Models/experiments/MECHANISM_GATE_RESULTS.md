@@ -308,7 +308,7 @@ uniformly reliable: seed 4 scores `96.0%/75.6%`, seed 6 scores
 `49.3%/100%`, and functionally perfect seed 7 has a slightly negative
 alternate-path margin. The fixed length-64 objective has therefore exposed a
 new, narrower failure: length-selective phase aliasing. This is a replicated
-functional breakthrough, not a claim of exact representation learning.
+functional result, not a claim of exact representation learning.
 
 ## What the learned state actually represents
 

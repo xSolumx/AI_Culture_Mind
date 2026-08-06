@@ -24,7 +24,7 @@ Use (H) vector multiplicity channels and a unit code column (c_k\in
 \mathbb R^H) for association (k):
 
 [
-m_h=\sum_k c_{hk}M(p_k)n_k,qquad
+m_h=\sum_k c_{hk}M(p_k)n_k,\qquad
 \widehat n_q=\sum_h c_{hq}M(p_q)^Tm_h.
 ]
 

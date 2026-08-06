@@ -55,11 +55,10 @@ The primary class-11 behavioral gate is at least 90% accuracy at every dense
 length and at L4096. The exact-mechanism gate for `joint_exact` is vector-grade
 homomorphism RMS at most `1e-5` and maximum at most `1e-4` in float32 execution.
 
-The result is a breakthrough only if `joint_exact` passes both gates in all ten
-seeds without reducing any seed's class-11 dense floor by more than one
+The result clears the claim gate only if `joint_exact` passes both gates in all
+ten seeds without reducing any seed's class-11 dense floor by more than one
 percentage point relative to `learned`. Independent angle rounding is expected
 to pass cyclic relations but is not credited unless it also passes mixed and
 homomorphism gates.
 
 No hyperparameter is adjusted after class-11 evaluation.
-

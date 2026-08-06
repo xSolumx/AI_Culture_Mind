@@ -24,7 +24,7 @@ Since ({\rm rank}(G)\le H) and ({\rm tr}(G)=K),
 
 [
 \lVert G\rVert_F^2\ge K^2/H,
-qquad
+\qquad
 \mathbb E[\mathrm{relative\ squared\ error}]
 \ge \max(0,(K-H)/H).
 ]
