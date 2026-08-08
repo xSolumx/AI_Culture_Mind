@@ -47,4 +47,6 @@ The defensible description is now:
 Artifacts:
 
 - `spin8_exact_congruence_lattice_seeds49_57.json`
-- `spin8_exact_congruence_lattice_seeds49_57.stdout.log`
+
+The raw process stream is retained locally but intentionally excluded from the
+public repository; the structured JSON is the publication artifact.

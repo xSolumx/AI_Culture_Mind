@@ -19,6 +19,7 @@ from ga_ssm import (
     GASSMBlock,
     GASSMLanguageModel,
     GATransformerLM,
+    SelectiveRotorSSM,
     create_train_state,
     data_generator,
     rotor_affine_scan,
@@ -63,6 +64,33 @@ class GeometricAlgebraTests(unittest.TestCase):
         expected = jnp.broadcast_to(basis(0), products.shape)
         np.testing.assert_allclose(products, expected, rtol=1e-5, atol=1e-5)
 
+    def test_rotor_sandwich_preserves_full_multivector_norm(self) -> None:
+        multivectors = jax.random.normal(jax.random.PRNGKey(41), (3, 7, GA_DIM))
+        rotors = rotor_from_bivector(
+            jax.random.normal(jax.random.PRNGKey(42), (3, 7, 3))
+        )
+        transformed = rotor_sandwich(rotors, multivectors)
+        np.testing.assert_allclose(
+            jnp.linalg.norm(transformed, axis=-1),
+            jnp.linalg.norm(multivectors, axis=-1),
+            rtol=2e-5,
+            atol=2e-5,
+        )
+
+    def test_zero_rotor_parameters_fall_back_to_identity(self) -> None:
+        rotors = normalized_rotor(jnp.zeros((3, 4), dtype=jnp.float32))
+        expected = jnp.broadcast_to(basis(0), rotors.shape)
+        np.testing.assert_array_equal(rotors, expected)
+
+    def test_bivector_exponential_has_finite_small_angle_jacobian(self) -> None:
+        jacobian = jax.jacfwd(rotor_from_bivector)(
+            jnp.zeros((3,), dtype=jnp.float32)
+        )
+        self.assertTrue(bool(jnp.all(jnp.isfinite(jacobian))))
+        expected = jnp.zeros((GA_DIM, 3), dtype=jnp.float32)
+        expected = expected.at[4:7].set(-jnp.eye(3) * (jnp.pi / 2))
+        np.testing.assert_allclose(jacobian, expected, rtol=1e-6, atol=1e-6)
+
     def test_grade_linear_commutes_with_rotor_action(self) -> None:
         inputs = jax.random.normal(jax.random.PRNGKey(5), (2, 4, 3, GA_DIM))
         frame_rotor = rotor_from_bivector(jnp.asarray([0.3, -0.2, 0.1]))
@@ -78,6 +106,22 @@ class GeometricAlgebraTests(unittest.TestCase):
 
 
 class ModelSmokeTests(unittest.TestCase):
+    def test_initialized_jax_rotor_controller_has_finite_gradient(self) -> None:
+        inputs = jax.random.normal(jax.random.PRNGKey(43), (1, 6, 2, GA_DIM))
+        layer = SelectiveRotorSSM(channels=2)
+        variables = layer.init(jax.random.PRNGKey(44), inputs)
+
+        def loss_fn(parameters):
+            sequence, _ = layer.apply(
+                {"params": parameters}, inputs, scan_mode="recurrent"
+            )
+            return jnp.sum(jnp.square(sequence[:, 1:]))
+
+        gradients = jax.grad(loss_fn)(variables["params"])["rotor_control"]
+        leaves = jax.tree_util.tree_leaves(gradients)
+        self.assertTrue(all(bool(jnp.all(jnp.isfinite(leaf))) for leaf in leaves))
+        self.assertGreater(sum(float(jnp.abs(leaf).sum()) for leaf in leaves), 0.0)
+
     def test_forward_and_training_step(self) -> None:
         model = GATransformerLM(
             vocab_size=16,
@@ -141,6 +185,14 @@ class ModelSmokeTests(unittest.TestCase):
         np.testing.assert_allclose(
             final_state, recurrent_final, rtol=2e-5, atol=2e-5
         )
+
+    def test_scans_reject_empty_sequences(self) -> None:
+        decay = jnp.empty((1, 0, 2), dtype=jnp.float32)
+        rotors = jnp.empty((1, 0, 2, GA_DIM), dtype=jnp.float32)
+        with self.assertRaisesRegex(ValueError, "empty sequence"):
+            rotor_affine_scan(decay, rotors, rotors)
+        with self.assertRaisesRegex(ValueError, "empty sequence"):
+            rotor_recurrent_scan(decay, rotors, rotors)
 
     def test_long_parallel_scan_remains_close_to_recurrence(self) -> None:
         length = 2048

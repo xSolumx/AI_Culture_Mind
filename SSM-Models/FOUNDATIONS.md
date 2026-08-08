@@ -1,10 +1,117 @@
 # Selective rotor SSM: mathematical contract
 
-This note defines the maintained model in `ga_ssm.py` and
-`rotor_ssm_torch.py`. It separates properties that follow from the equations
-from hypotheses that still require empirical validation.
+This note begins with the contract for the maintained model in
+`pure_rotor_ssm/jax_backend.py` and `pure_rotor_ssm/torch_backend.py`.
+`ga_ssm.py` and `rotor_ssm_torch.py` remain compatibility/training entry points
+and resolve their maintained model names to that package. Later sections
+preserve the broader experimental research ledger and the superseded pre-pure
+contract; they are historical evidence, not claims about the rewritten model.
 
-## State transition
+In the recurrence sections, an "exact" statement means finite real arithmetic
+with a unit rotor and finite inputs/parameters. Floating-point implementations
+approximate that contract and have the explicit qualifications below.
+
+## Canonical pure state transition
+
+Each layer state is a full multivector (h_{t,c}\in\mathrm{Cl}(3,0)), stored in
+the coefficient order `[1,e1,e2,e3,e12,e13,e23,e123]`. For channel (c),
+
+\[
+\begin{aligned}
+g_t &= [s,p,\lVert v\rVert^2,\lVert *B\rVert^2,v\mathbin{\cdot} *B](x_t),\\
+\Delta_{t,c} &= \Delta_{\min}+\operatorname{softplus}((W_\Delta g_t+b_\Delta)_c),\\
+\lambda_c &= \lambda_{\min}+\operatorname{softplus}(\rho_c),\\
+d_{t,c} &= \exp(-\Delta_{t,c}\lambda_c),\\
+q_{t,c} &= \operatorname{RotorChart}(x_t,g_t,c),\\
+w_{t,c} &= \operatorname{sigmoid}((W_wg_t+b_w)_c),\\
+z_{t,c} &= \frac{P(x_t)_c}{\sqrt{1+\lVert P(x_t)_c\rVert^2}},\\
+h_{t,c} &= d_{t,c}q_{t,c}h_{t-1,c}\widetilde q_{t,c}
+ +(1-d_{t,c})w_{t,c}z_{t,c}.
+\end{aligned}
+\]
+
+`P` and the rotor source are complete Spin(3)-isotypic linear maps. They mix
+scalar with pseudoscalar and vector with Hodge-dual bivector, spanning the full
+linear commutant rather than the old grade-diagonal half-family. The five
+control features are polynomial invariants with finite derivatives at zero.
+The rotor chart radially maps a predicted bivector of norm (r) to angle
+`max_rotor_angle * tanh(r)` and evaluates its zero limit analytically.
+
+For finite real controls and positive floors, (0<d_{t,c}<1),
+(0<w_{t,c}<1), (\lVert z_{t,c}\rVert<1), and (q_{t,c}) is unit. Rotor
+conjugation is orthogonal on the complete eight-dimensional coefficient
+space. Hence
+
+\[
+\lVert h_{t,c}\rVert
+\le d_{t,c}\lVert h_{t-1,c}\rVert+(1-d_{t,c}),
+\qquad
+\lVert h_{t,c}\rVert\le\max(\lVert h_{0,c}\rVert,1).
+\]
+
+This is a hard input-independent state bound in real arithmetic, not a
+stationary-variance heuristic. It holds for arbitrarily large finite additive
+input features because the projected candidate is smoothly bounded before it
+is written. It does not bound residual block activations or parameter
+gradients, and floating-point roundoff can exceed the unit ball by tolerance.
+
+## Associative training and recurrent streaming
+
+Write a transition as (T=(d,q,b)), where
+(T(h)=dqh\widetilde q+b). Chronological composition is
+
+\[
+T_b\circ T_a=(d_bd_a,q_bq_a,b_b+d_bq_bb_a\widetilde q_b).
+\]
+
+It is associative over exact multivector arithmetic because it is function
+composition. JAX uses `lax.associative_scan`; PyTorch uses an autograd-safe,
+vectorized Hillis--Steele scan with logarithmic launch depth. Both retain a
+sequential scan as the semantic oracle and token-streaming path. Floating-point
+grouping makes the two orders numerically close rather than bitwise identical.
+
+One layer caches exactly `(batch, channels, 8)` numbers, so an (L)-layer,
+(C)-channel model stores (8LC) recurrent numbers per sequence regardless
+of context length. A false/padded token is the exact identity transition
+`(1, identity_rotor, 0)` and leaves the cache unchanged. PyTorch training
+caches retain autograd history unless detached; the constant-state statement
+describes inference state, not an untruncated training graph.
+
+## Equivariance, full-GA closure, and numerical boundary
+
+The complete deterministic block commutes with simultaneous conjugation by a
+fixed Spin(3) rotor. Complete isotypic maps are intertwiners, controls use only
+invariants, normalization has one scalar gain per multivector channel, and the
+rotor source transforms covariantly. Training dropout uses one Bernoulli mask
+per complete multivector, shared across its eight blade coordinates, so it too
+commutes with the action for a coupled mask. The claim is proper-rotation
+Spin(3) equivariance, not reflection, Lorentz, or arbitrary Clifford-group
+equivariance.
+
+Rotors and their products remain in the four-dimensional even subalgebra, but
+states and drives occupy the full eight-dimensional algebra. An even state is
+preserved only when every drive is even. JAX's algebraically specialized
+sandwich rotates the vector and Hodge-dual-bivector copies directly. PyTorch
+keeps that implementation as an oracle but dispatches CUDA to two dense
+geometric products because they benchmark faster there. Tests compare both on
+arbitrary full-GA values.
+
+The strict inequalities and exact associativity above are real-arithmetic
+statements. Finite precision introduces rotor norm drift, possible decay
+rounding to zero or one, and scan-order differences. Nonfinite values
+propagate. The state Jacobian with respect to the previous state has operator
+norm (d_t), so pure recurrent gradients can vanish over long horizons even
+while forward states remain bounded. JAX and PyTorch use the same equations,
+basis order, optimized rotor formulas, mask semantics, and cache contract, but
+their RNGs and default initializers differ; independently initialized models
+are not expected to have equal logits.
+
+## Superseded pre-pure state transition (historical)
+
+The following three sections record the model audited on 2026-08-06 before the
+pure rewrite. They are retained so the audit and frozen artifacts remain
+interpretable. Their `sqrt(1-d^2)` write rule, grade-only maps, nonsmooth norm
+features, and coordinatewise dropout no longer describe the maintained model.
 
 For channel \(c\), the state \(h_{t,c}\) after token \(t\) is a multivector in
 the Euclidean Clifford algebra \(\mathrm{Cl}(3,0)\). Given token features
@@ -27,10 +134,15 @@ h_{t,c} &= d_{t,c}q_{t,c}h_{t-1,c}\widetilde{q}_{t,c}+u_{t,c}.
 \end{aligned}
 \]
 
-Here \(\widetilde q\) denotes Clifford reversal. Because \(q_{t,c}\) is a unit
-even multivector—a rotor—the sandwich map
+Here `Bounded` is the radial chart implemented by `rotor_from_bivector`: for
+\(r=\lVert B\rVert\), it replaces \(B\) by
+\(\theta_{\max}\tanh(r)B/r\), with value zero at \(r=0\).
+
+Here \(\widetilde q\) denotes Clifford reversal. In exact arithmetic,
+\(q_{t,c}\) is a unit even multivector—a rotor—so the sandwich map
 \(h\mapsto q_{t,c}h\widetilde{q}_{t,c}\) preserves the Euclidean coefficient
-norm. The strict floors \(\Delta_{\min}>0\) and \(\lambda_{\min}>0\) imply
+norm on the full algebra. The strict floors \(\Delta_{\min}>0\) and
+\(\lambda_{\min}>0\) imply, for finite real controls,
 
 \[
 0<d_{t,c}\leq
@@ -52,17 +164,28 @@ If the drive is uniformly bounded by \(U\), iteration of this inequality gives
 +\frac{1-d_{\max}^{\,t}}{1-d_{\max}}U.
 \]
 
-This is a genuine bounded-state guarantee. It does not promise easy numerical
-conditioning when \(d_{\max}\) is extremely close to one; in that regime the
-model deliberately retains a very long memory.
+This is a genuine bounded-state guarantee for a bound \(U\) on the actual drive
+\(u_{t,c}\), not merely on the raw token features. Bounded features imply such a
+bound only after fixing finite projection weights. The guarantee does not
+promise easy numerical conditioning when \(d_{\max}\) is extremely close to
+one; in that regime the model deliberately retains a very long memory.
+
+In floating point, exponentiation can underflow to zero or round to one, and
+composed rotors drift slightly from unit norm. The default float32 floors keep
+the one-step upper bound representably below one, but reduced precision need
+not. The displayed strict inequalities and norm preservation are therefore
+mathematical guarantees, with numerical error measured rather than assumed.
 
 The decay controller and rotor controller are initialized to zero. Decay
 rates are chosen so zero-control channels have log-spaced half-lives from 4 to
 2,048 tokens. Rotors start exactly at identity, but the bivector exponential
-uses its correct small-angle limit, so the rotor controller has a nonzero
-gradient at initialization.
+uses its correct analytic small-angle limit, so the rotor controller has a
+finite, generically nonzero gradient at initialization. The separately
+exported raw quaternion normalizer is singular at a zero parameter vector; the
+implementations use an identity fallback there, not a continuous extension of
+normalization.
 
-## Why parallel training and recurrent streaming are the same model
+## Superseded scan discussion (historical)
 
 Represent a token transition by \(T=(d,q,u)\), acting on a state as
 
@@ -82,24 +205,28 @@ u_b+d_bq_bu_a\widetilde{q}_b
 \right).
 \]
 
-This operation is associative because it is ordinary function composition
-and rotor multiplication is associative. JAX therefore computes every prefix
-with `lax.associative_scan` during training. Recurrent inference uses the same
-equation with one fixed-size state per layer. Tests compare full parallel,
-arbitrarily chunked, and token-by-token execution at both state and logit
-level.
+This operation is associative in exact arithmetic because it is ordinary
+function composition and rotor multiplication is associative. JAX therefore
+computes every prefix with `lax.associative_scan` during training. Recurrent
+inference uses the same equation with one fixed-size state per layer. Tests
+compare full parallel, arbitrarily chunked, and token-by-token execution at
+both state and logit level in deterministic/evaluation mode. Different
+floating-point grouping produces close, not identical, values.
 
 For a model with \(L\) layers and \(C\) multivector channels, the streaming
-cache contains exactly \(8LC\) scalars per sequence, independent of context
-length.
+cache contains exactly \(8LC\) stored numeric state scalars per sequence,
+independent of context length. In PyTorch training, retaining a cache with its
+autograd history is not constant-memory; inference must use `no_grad` or a
+detached cache for the storage claim to describe the complete live state.
 The current implementation still performs ordinary vocabulary decoding, so
 generation cost is constant in past context length but not constant in
 vocabulary size.
 
-## Spin(3) equivariance
+## Superseded equivariance discussion (historical)
 
 For a fixed frame rotor `s`, transform every multivector as
-`x' = s x reverse(s)`. The maintained block commutes with this action:
+`x' = s x reverse(s)`. With dropout disabled (or in evaluation mode), the
+then-maintained block commuted with this action:
 
 - `GradeLinear` preserves grades and shares scalar channel weights across all
   coordinates within a grade;
@@ -108,6 +235,11 @@ For a fixed frame rotor `s`, transform every multivector as
 - the predicted bivector and its exponential transform by conjugation;
 - RMS normalization, residual addition, and invariant gating commute with the
   same action.
+
+That implementation's elementwise training dropout was not equivariant: a coordinatewise
+mask does not commute with a general rotation. The numerical block test runs
+with dropout disabled and establishes deterministic block equivariance, not
+training-time stochastic equivariance.
 
 Induction through the recurrence therefore gives
 `h'_t = s h_t reverse(s)`. The test suite verifies this numerically for the
@@ -135,7 +267,12 @@ commutant contains `8CD`.
 the complete map. The frozen audit in
 `experiments/SPIN3_ISOTYPIC_SCHUR_SCAN_RESULTS.md` numerically recovers the
 eight-dimensional centralizer, proves the old rank-four restriction, and gives
-an exact Hodge-copy witness that the old family cannot express at any depth.
+an exact Hodge-copy witness that a stack of the old *linear* family cannot
+express at any depth.
+
+This limitation is historical. The canonical v2 package uses
+`Spin3IsotypicLinear` throughout its transition and feed-forward paths;
+`GradeLinear` is now only a compatibility alias for that complete map.
 
 The same decomposition suggests a representation-factored SSM. For real-type
 irreps, transitions of the form
@@ -151,10 +288,70 @@ reference and verifies float64 parallel/recurrent parity below `9e-16`. For
 general real representations, Schur's division algebra may be real, complex,
 or quaternionic; the implemented Cl(3) sectors are real type.
 
-## Controlled local-GPU evidence
+## Pure v2.0.0 implementation evidence
+
+This section is now historical. The maintained v2.1.0 model preserves the same
+bounded recurrence but expands the default physical rotor chart from `pi/2` to
+the full open `pi` range. The change was frozen before the transport-ablation
+cohort because every v2.0 layer's p95 angle saturated the old cap.
+
+The first rewritten checkpoint used 32 channels, four layers, context 256,
+batch 60, and 407,840 parameters. On an RTX 2070 SUPER, 500 steps took 309.7
+seconds and peaked at 4,109 MiB of allocated CUDA tensor memory. Fixed-window
+validation loss fell from 5.5430 to 1.7616 nats (2.5414 bits/byte). The
+checkpoint reloads strictly, and all four rotor controllers are active.
+
+At batch eight and context 256, the parallel path measured 67.29 ms inference
+and 198.26 ms forward/backward versus 752.40 ms and 1,689.22 ms for the
+recurrent oracle. This is single-device systems and trainability evidence, not
+a matched quality comparison. The full protocol, hashes, checkpoint digest,
+timings, and limitations are in
+`experiments/PURE_ROTOR_SSM_V2_RESULTS.md`.
+
+## Pure v2.1.0 transport evidence
+
+The v2.1 large-model seed-0 retrain used the same 407,840-parameter, C32/L4,
+context-256 configuration and changed only the physical rotor chart limit from
+`pi/2` to `pi`. It reached 1.760117 validation nats versus 1.761575 for v2.0,
+with the same 4,109 MiB peak allocation. The 0.001458-nat difference is one
+seed and is not an established quality improvement. All four p95 rotor angles
+again approached the chart boundary (3.136--3.140 radians), so the expanded
+range is used but does not remove saturation.
+
+The preregistered v2.1 transport ladder then ran 105 prediction trainings and
+70 memory trainings over five paired seeds. At C8/L2, rotor confirmation loss
+was 2.430973 nats versus 2.451324 for retrained identity, a paired improvement
+of 0.020351 nats with five wins. Clamping the trained rotor to identity raised
+loss by 0.153236 nats on average and time-shuffling actions raised it by
+0.177262, establishing that the learned ordered action matters to this model.
+
+That result is not a unique noncommutative or Clifford advantage. At the same
+state size, commuting complex phases reached 2.422885 and quaternion left
+action reached 2.406740; generic SO(8) reached 2.324552 using substantially
+more parameters. At the nearest effective-parameter match, quaternion and
+complex phases remained better than the rotor. At matched measured CUDA time,
+a launch-efficient C60 identity model reached 2.023329 versus the C8 rotor's
+2.430973, so rotor compute efficiency fails on this eager PyTorch/RTX 2070
+SUPER implementation.
+
+Memory claims also fail. Rotor associative-recall means were below identity at
+every registered length and decayed toward chance at length 512. The Q8 task
+remained at chance-scale accuracy for every family, with no consistent rotor
+extrapolation benefit. Consequently v2.1 supports a narrow prediction benefit
+over identity, not better memory, not better compute efficiency, and not a
+claim that Cl(3,0) rotors are the best stable transition. See
+`experiments/PURE_V2_1_TRANSPORT_ABLATION_RESULTS.md` and the raw aggregate
+`experiments/pure_v2.1.0_transport_ablation.json`.
+
+## Controlled local-GPU evidence (superseded architecture)
+
+> **Legacy evidence only.** These frozen runs evaluated the pre-pure
+> `sqrt(1-d^2)`/grade-linear architecture. Their observations remain valid for
+> those artifacts but do not measure the rewritten bounded-write,
+> complete-isotypic model. New quality comparisons are required.
 
 `train_rotor_ssm_torch.py` compares the selective rotor model against an
-identity-rotation ablation. Both variants have 22,968 parameters, the same
+identity-rotation ablation. Both variants have 22,968 nominal parameters, the same
 initialization seed, byte data, batches, optimizer, sequence length, and
 training budget. Only `max_rotor_angle` changes. The final protocol used an
 RTX 2070 SUPER, WikiText-2 UTF-8 bytes, 300 steps, context 64, batch 32, and
@@ -170,9 +367,13 @@ three seeds.
 The mean advantage is 0.09777 bits/byte, or 2.40% of mean identity loss.
 Rotors win two of three seeds; seed 0 is a narrow loss. Learned mean rotor
 angles are nonzero and controller weight norms move away from zero, confirming
-that the winning models actually use the transition. These short runs are a
-promising mechanism-level result, not evidence of state-of-the-art language
-modeling or a statistically established advance.
+that the rotor path is active. This is not a causal attribution of the loss
+difference; that would require post-training interventions or a stronger
+ablation. The identity variant also contains nominally counted rotor parameters
+whose functional gradients are zero when `max_rotor_angle=0`, so equal raw
+parameter count is not equal effective transition capacity. These short runs
+are a promising mechanism-level result, not evidence of state-of-the-art
+language modeling or a statistically established advance.
 
 The exact reports, including dataset SHA-256 hashes, loss samples, timings,
 memory use, and transition diagnostics, are in `experiments/final_seed*_300.json`.
@@ -196,10 +397,13 @@ can accumulate indefinitely while every individual rotor remains unit length.
    actions through one shared conjugation tangent. This preserves the complete
    relation table, rather than normalizing tokens independently.
 
-For a known finite group, the compiler needs no character table or supplied
-low-dimensional representation matrices. A generic symmetric right-regular
-operator commutes with the left-regular group action, so each of its generic
-dimension-`d` eigenspaces supplies an exact invariant `d`-dimensional action.
+For the real-type finite-group irreps used in these experiments, the compiler
+needs no character table or supplied low-dimensional representation matrices.
+A generic symmetric right-regular operator commutes with the left-regular group
+action, so each appropriately split dimension-`d` eigenspace supplies an exact
+invariant `d`-dimensional action. Complex- and quaternionic-type real irreps
+have additional Schur degeneracies and are not covered by that unqualified
+eigenspace statement.
 The learned family selects among these discrete candidates and fixes the
 global basis.
 
@@ -282,8 +486,9 @@ For the A5 sampler, mean information between one token position and the final
 state falls from 2 bits at L1 to 0.00128 bits at L16. Batch action gradients at
 identity remain nonzero but become directionally incoherent. A frozen
 short-to-long endpoint curriculum restores coherent early signal and passes
-the complete dense/long gate in all ten seeds. This is a first-order
-optimization barrier, not an impossibility theorem for endpoint learning.
+the complete dense/long gate in all ten seeds. Together these controls are
+evidence for a first-order optimization barrier, not an impossibility theorem
+for endpoint learning or proof that no other mechanism contributes.
 The causal control is sharper than “show short examples”: an
 `L8 -> L1 -> L16 -> L2 -> L4` permutation fits the isolated short blocks but
 never forms a faithful representation. The supported mechanism is incremental
@@ -359,10 +564,12 @@ all nine seeds and established the observation-free identifiability boundary.
 
 ## Spin(8) triality memory theorem and implementation
 
-The experimental Spin(8) branch uses the unique equivariant map from a
-positive and negative chiral spinor to the vector representation. For a unit
-positive key, the induced map from negative spinor to vector is orthogonal, so
-single-pair binding is exactly invertible.
+The experimental Spin(8) branch uses the equivariant map from a positive and
+negative chiral spinor to the vector representation, unique up to an overall
+scalar (then fixed by the implementation's normalization). For a unit positive
+key, the induced map from negative spinor to vector is orthogonal, so
+single-pair binding is exactly invertible when that key and normalization are
+known.
 
 Raw superposition does not provide high capacity: every wrong-key term has
 full norm. Multiplicity codes expose the exact law. With H channels and K code
@@ -373,9 +580,9 @@ when K exceeds H.
 
 An addressed dynamic form retains scan closure:
 
-[
+\[
 M_t[h] = r_t[h] V_t M_{t-1}[h] + B_t[h].
-]
+\]
 
 All retention vectors are diagonal in one fixed multiplicity basis. Transition
 composition multiplies retentions and Spin(8) actions and rotates the earlier
@@ -383,10 +590,35 @@ drive before adding the later drive. The implementation supports exact hard
 slot overwrite, shared Spin(8) transport, logarithmic-depth prefix evaluation,
 and constant 8H recurrent state.
 
-The rank-deficient completion experiment separately verifies the sample-
+The rank-deficient completion experiment separately provides controlled
+numerical evidence for the sample-
 efficiency value of symmetry: the full equivariant bilinear tensor space is
 one-dimensional, and that invariant family extrapolates where generic fitted
 tensor and MLP families fail.
+
+## Implementation edge conditions and backend boundary
+
+- Empty sequences are outside the maintained scan API. The scan functions and
+  PyTorch recurrent layer reject them; callers must supply at least one token.
+- The per-token rotor is even, but the state and drive are full
+  \(\mathrm{Cl}(3,0)\) multivectors. Even-subalgebra closure holds only when the
+  initial state and every drive are even. Learned language embeddings are not
+  restricted to that subalgebra.
+- The maintained controls use squared vector norm, squared dual-bivector norm,
+  and their dot product. These polynomial features have finite derivatives at
+  zero. `grade_invariants` remains exported only as a compatibility helper and
+  retains the old norm nondifferentiability.
+- The state-to-state Jacobian of one recurrence step has operator norm \(d_t\)
+  in exact arithmetic, so gradients through a long pure state path contract by
+  at most the product of decays and may vanish. Residual paths mitigate this at
+  block level. BIBO state stability is not a general bound on gradients with
+  respect to every learned parameter.
+- JAX and PyTorch implement the same algebra and recurrence, but use different
+  parameter initializers, execution groupings, RNG systems, and some output
+  dtype conventions. Mathematical/core-primitive parity does not imply that
+  separately initialized full models have equal logits.
+- Nonfinite features or parameters propagate; the guarantees assume finite
+  quantities and do not constitute NaN/Inf recovery behavior.
 
 ## What remains unproven
 
@@ -397,17 +629,18 @@ tensor and MLP families fail.
   in controls, input projections, and feed-forward layers. A structured
   multi-channel rotor operator is an important future ablation. SchurScan is
   now the constructive candidate for that ablation.
-- The complementary drive scale `sqrt(1-d^2)` couples long retention to weak
-  writing. It is a stationary-variance convention, not required for BIBO
-  stability. An independently bounded write gate is the next optimization
-  falsifier.
+- The new `(1-d) * sigmoid(write) * bounded(candidate)` rule proves a hard
+  state bound but couples fast writing to forgetting. Whether that tradeoff is
+  better than an independently gated bounded drive is an empirical question.
 - Three seeds, 300 updates, and context 64 are far too small for scaling-law,
   long-context retrieval, or downstream-quality claims.
-- The PyTorch reference uses an explicit loop. Production throughput needs a
-  fused or compiled selective scan and long-sequence numerical testing.
-- Floating-point prefix trees and sequential scans are mathematically equal
-  but cannot be bitwise equal because floating-point arithmetic is not
-  associative.
+- The PyTorch training path uses a differentiable Hillis--Steele scan with
+  logarithmic launch depth and `O(L log L)` work. A fused `O(L)` work-efficient
+  CUDA kernel remains an optimization opportunity; correctness does not depend
+  on an experimental compiler-only scan primitive.
+- Floating-point prefix trees and sequential scans implement the same exact
+  recurrence but are not guaranteed, and generally should not be expected, to
+  be bitwise equal because floating-point arithmetic is not associative.
 
 This architecture should be treated as a falsifiable research program: retain
 the identity, scalar selective-SSM, parameter-matched non-geometric, and

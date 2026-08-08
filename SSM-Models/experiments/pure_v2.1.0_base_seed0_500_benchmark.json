@@ -1,0 +1,173 @@
+{
+  "model_version": "2.1.0",
+  "checkpoint": {
+    "path": "checkpoints\\pure_rotor_ssm_v2.1.0_selective_rotor_seed0_c32_l4_ctx256_step500.pt",
+    "model_version": "2.1.0",
+    "variant": "selective_rotor"
+  },
+  "device": "NVIDIA GeForce RTX 2070 SUPER",
+  "torch_version": "2.12.0+cu130",
+  "cuda_version": "13.0",
+  "model_config": {
+    "vocab_size": 256,
+    "channels": 32,
+    "num_layers": 4,
+    "expansion": 2,
+    "dropout_rate": 0.0,
+    "max_rotor_angle": 3.141592653589793
+  },
+  "parameter_count": 407840,
+  "warmup": 3,
+  "iterations": 10,
+  "model_results": [
+    {
+      "batch_size": 8,
+      "sequence_length": 64,
+      "scan_mode": "parallel",
+      "inference": {
+        "median_ms": 54.07953643798828,
+        "p95_ms": 56.36064147949219,
+        "tokens_per_second": 9467.536774970293,
+        "peak_memory_mib": 21.24267578125
+      },
+      "forward_backward": {
+        "median_ms": 183.0445098876953,
+        "p95_ms": 263.5625305175781,
+        "tokens_per_second": 2797.133879153935,
+        "peak_memory_mib": 130.67724609375
+      }
+    },
+    {
+      "batch_size": 8,
+      "sequence_length": 64,
+      "scan_mode": "recurrent",
+      "inference": {
+        "median_ms": 224.92416381835938,
+        "p95_ms": 244.5148162841797,
+        "tokens_per_second": 2276.322789460152,
+        "peak_memory_mib": 26.4521484375
+      },
+      "forward_backward": {
+        "median_ms": 526.3516235351562,
+        "p95_ms": 565.7564697265625,
+        "tokens_per_second": 972.7337716966352,
+        "peak_memory_mib": 76.92529296875
+      }
+    },
+    {
+      "batch_size": 8,
+      "sequence_length": 128,
+      "scan_mode": "parallel",
+      "inference": {
+        "median_ms": 72.29363250732422,
+        "p95_ms": 79.90064239501953,
+        "tokens_per_second": 14164.456321879474,
+        "peak_memory_mib": 42.693359375
+      },
+      "forward_backward": {
+        "median_ms": 214.97748565673828,
+        "p95_ms": 235.11439514160156,
+        "tokens_per_second": 4763.289499231817,
+        "peak_memory_mib": 265.24560546875
+      }
+    },
+    {
+      "batch_size": 8,
+      "sequence_length": 128,
+      "scan_mode": "recurrent",
+      "inference": {
+        "median_ms": 419.1700897216797,
+        "p95_ms": 454.1664123535156,
+        "tokens_per_second": 2442.9223962041638,
+        "peak_memory_mib": 33.9560546875
+      },
+      "forward_backward": {
+        "median_ms": 949.4564208984375,
+        "p95_ms": 1031.6619873046875,
+        "tokens_per_second": 1078.5118489493436,
+        "peak_memory_mib": 136.49169921875
+      }
+    },
+    {
+      "batch_size": 8,
+      "sequence_length": 256,
+      "scan_mode": "parallel",
+      "inference": {
+        "median_ms": 70.8150405883789,
+        "p95_ms": 72.525634765625,
+        "tokens_per_second": 28920.409887275935,
+        "peak_memory_mib": 68.0458984375
+      },
+      "forward_backward": {
+        "median_ms": 200.96497344970703,
+        "p95_ms": 250.48240661621094,
+        "tokens_per_second": 10190.830595225725,
+        "peak_memory_mib": 579.73388671875
+      }
+    },
+    {
+      "batch_size": 8,
+      "sequence_length": 256,
+      "scan_mode": "recurrent",
+      "inference": {
+        "median_ms": 808.7415161132812,
+        "p95_ms": 900.833251953125,
+        "tokens_per_second": 2532.329501077739,
+        "peak_memory_mib": 49.2138671875
+      },
+      "forward_backward": {
+        "median_ms": 1857.801513671875,
+        "p95_ms": 1933.2080078125,
+        "tokens_per_second": 1102.3782599639533,
+        "peak_memory_mib": 257.59423828125
+      }
+    },
+    {
+      "batch_size": 8,
+      "sequence_length": 512,
+      "scan_mode": "parallel",
+      "inference": {
+        "median_ms": 87.57336044311523,
+        "p95_ms": 94.71590423583984,
+        "tokens_per_second": 46772.214509920814,
+        "peak_memory_mib": 113.416015625
+      },
+      "forward_backward": {
+        "median_ms": 245.66718292236328,
+        "p95_ms": 286.45965576171875,
+        "tokens_per_second": 16672.96360578382,
+        "peak_memory_mib": 1223.81787109375
+      }
+    },
+    {
+      "batch_size": 8,
+      "sequence_length": 512,
+      "scan_mode": "recurrent",
+      "inference": {
+        "median_ms": 1603.59619140625,
+        "p95_ms": 1687.5506591796875,
+        "tokens_per_second": 2554.258997340268,
+        "peak_memory_mib": 77.4560546875
+      },
+      "forward_backward": {
+        "median_ms": 3546.0758056640625,
+        "p95_ms": 3756.241455078125,
+        "tokens_per_second": 1155.0796498646635,
+        "peak_memory_mib": 493.89013671875
+      }
+    }
+  ],
+  "rotor_kernel": {
+    "shape": [
+      16,
+      512,
+      8,
+      8
+    ],
+    "selected_cuda_path": "dense_geometric_product",
+    "specialized_median_ms": 0.9943040013313293,
+    "dense_median_ms": 0.9144479930400848,
+    "dense_speedup_over_specialized": 1.0873270091891865,
+    "max_absolute_error": 9.5367431640625e-07
+  }
+}

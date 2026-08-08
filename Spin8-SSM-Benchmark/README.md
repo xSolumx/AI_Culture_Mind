@@ -11,15 +11,20 @@ in the local Spin(8) research archive:
   projection has the same width as the Mamba-2 control;
 - exact scan/recurrent equivalence in the underlying rotor-affine update;
 - separate erase/decay and write gates inspired by gated delta-rule memory;
+- an untied decoder with explicit logit-temperature control (v2 uses unit
+  scaling after the quality audit);
+- an optional identity-initialized depthwise causal mixer with exact streaming
+  history, retained as an ablation until it clears the quality gate;
+- an optional zero-initialized direct decoder ensemble, retained only for
+  ablation because its short quality screen did not beat v2;
 - an exact differentiable logarithmic-depth associative scan for the affine
   recurrence.
 
-The model is compared with Hugging Face Transformers' pure-PyTorch
-`Mamba2ForCausalLM`, using the same byte vocabulary, WikiText-2 bytes, nearly
-identical parameter counts (674,322 versus 688,220 by default), optimizer,
-sequence length, steps, and seeds. The benchmark does not claim that
-geometric structure improves language modeling until the matched experiment
-demonstrates it.
+The model is compared with Hugging Face Transformers' `Mamba2ForCausalLM` and a
+local pure-PyTorch Mamba-3 reference, using the same byte vocabulary, WikiText-2
+bytes, nearly identical parameter counts, optimizer, sequence length, steps,
+and seeds. The benchmark does not claim that geometric structure improves
+language modeling until a matched experiment demonstrates it.
 
 ## Run
 
@@ -42,6 +47,40 @@ the Linux fused `mamba_ssm` kernel.
 The default trace is static at the requested batch/sequence shape and is used
 only for throughput measurement. Pass `--no-jit` when testing arbitrary shapes
 or when you need the untraced eager execution path.
+
+The completed three-way short run is documented in
+[`RESULTS_THREE_WAY_100.md`](RESULTS_THREE_WAY_100.md), with raw data in
+[`results/benchmark_three_way_100.json`](results/benchmark_three_way_100.json).
+The Mamba-3 reference uses an exact affine scan for its trapezoidal recurrence;
+it is intentionally labeled separately from the official fused implementation.
+
+The decoder-scaling quality iteration is documented in
+[`RESULTS_QUALITY_V2_300.md`](RESULTS_QUALITY_V2_300.md), with the validated
+artifact in [`results/quality_v2_300.json`](results/quality_v2_300.json). Use
+`quality_benchmark.py` when you want to measure the local model without
+starting competing baselines. Validate a saved report before interpreting its
+aggregate with `python validate_quality.py results/quality_v2_300.json`; this
+rejects duplicate seeds, malformed hashes, metric/formula mismatches, and
+configuration drift.
+
+## Vision benchmark
+
+`vision_benchmark.py` compares the local rotor model with Transformers'
+`Mamba2Model` and the pure-PyTorch Mamba-3 reference on identical continuous
+4x4 image-patch sequences. It supports CIFAR-100, CIFAR-10, and padded MNIST;
+all models use the same class-token pooling, AdamW schedule, deterministic
+batch order, and test protocol. The Mamba-2 vocabulary embedding is removed
+because continuous patch inputs bypass it, so parameter counts and gradients
+describe the actual classifier.
+
+Example screening run:
+
+```powershell
+python vision_benchmark.py --datasets cifar100,cifar10,mnist --steps 100 --seeds 0,1 --output results/vision_100.json
+```
+
+This is a short matched screen, not a converged image-classification claim;
+use more steps and independent seeds for publication-quality comparisons.
 
 The scan is an exact Hillis--Steele reference with `O(L log L)` work. The local
 overhaul identifies a work-efficient fused scan as the production optimization

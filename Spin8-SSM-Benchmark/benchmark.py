@@ -1,4 +1,4 @@
-"""Matched byte-level WikiText-2 benchmark for SpinorDeltaLM and Mamba-2."""
+"""Matched byte-level WikiText-2 benchmark for SpinorDeltaLM and Mamba baselines."""
 
 from __future__ import annotations
 
@@ -16,6 +16,7 @@ import torch
 from datasets import load_dataset
 from transformers import Mamba2Config, Mamba2ForCausalLM
 
+from mamba3_reference import Mamba3ReferenceLM
 from spinor_delta_ssm import SpinorDeltaLM
 
 
@@ -28,6 +29,11 @@ class Config:
     # this keeps both parameter count and dominant logits FLOPs near Mamba-2.
     channels: int = 42
     decoder_channels: int = 20
+    # Keep the geometric recurrent path as the default.  The causal mixer is
+    # available as an explicit ablation, but the short validation sweep did
+    # not justify making it the quality default.
+    local_kernel: int = 0
+    decoder_scale: float | None = 1.0
     layers: int = 4
     expansion: int = 2
     learning_rate: float = 3e-3
@@ -64,21 +70,21 @@ def random_batch(tokens: torch.Tensor, config: Config, generator: torch.Generato
 
 
 class CausalLogitsWrapper(torch.nn.Module):
-    def __init__(self, model, is_mamba: bool):
+    def __init__(self, model, backend: str):
         super().__init__()
         self.model = model
-        self.is_mamba = is_mamba
+        self.backend = backend
 
     def forward(self, inputs: torch.Tensor) -> torch.Tensor:
-        if self.is_mamba:
+        if self.backend == "hf":
             return self.model(input_ids=inputs).logits
         return self.model(inputs)
 
 
 def prepare_execution(
-    model, is_mamba: bool, config: Config, device: torch.device, jit: bool
+    model, backend: str, config: Config, device: torch.device, jit: bool
 ):
-    execution = CausalLogitsWrapper(model, is_mamba).to(device)
+    execution = CausalLogitsWrapper(model, backend).to(device)
     if not jit:
         return execution
     example = torch.zeros(
@@ -126,9 +132,22 @@ def make_mamba(config: Config) -> Mamba2ForCausalLM:
     )
 
 
-def train_one(
-    name, make_model, train_tokens, validation, config, device, is_mamba, jit
-):
+def make_mamba3(config: Config) -> Mamba3ReferenceLM:
+    # d_model=152, headdim=38, rank=2 with an untied LM head gives roughly
+    # 696k parameters, closely matching both controls without an identity-copy
+    # shortcut from tying a randomly initialized recurrent stack.
+    return Mamba3ReferenceLM(
+        vocab_size=256,
+        d_model=152,
+        layers=config.layers,
+        d_state=16,
+        headdim=38,
+        mimo_rank=2,
+        tie_embeddings=False,
+    )
+
+
+def train_one(name, make_model, train_tokens, validation, config, device, backend, jit):
     # Construct the model only after seeding.  Constructing it in the caller
     # made the advertised seed fail to control initialization, and Mamba then
     # inherited RNG state from the preceding Spinor model.
@@ -140,7 +159,7 @@ def train_one(
     model = make_model()
     print(f"starting {name} seed={config.seed}", flush=True)
     model = model.to(device)
-    execution = prepare_execution(model, is_mamba, config, device, jit)
+    execution = prepare_execution(model, backend, config, device, jit)
     optimizer = torch.optim.AdamW(
         model.parameters(), lr=config.learning_rate, weight_decay=config.weight_decay
     )
@@ -199,6 +218,7 @@ def main() -> None:
     parser.add_argument("--steps", type=int, default=300)
     parser.add_argument("--batch-size", type=int, default=16)
     parser.add_argument("--seq-len", type=int, default=256)
+    parser.add_argument("--local-kernel", type=int, default=0)
     parser.add_argument("--seeds", default="0,1")
     parser.add_argument("--device", default="cuda")
     parser.add_argument("--no-jit", action="store_true")
@@ -207,7 +227,12 @@ def main() -> None:
     if args.device.startswith("cuda") and not torch.cuda.is_available():
         raise RuntimeError("CUDA requested but unavailable")
     device = torch.device(args.device)
-    config = Config(steps=args.steps, batch_size=args.batch_size, seq_len=args.seq_len)
+    config = Config(
+        steps=args.steps,
+        batch_size=args.batch_size,
+        seq_len=args.seq_len,
+        local_kernel=args.local_kernel,
+    )
     train_array = wiki_bytes("train")
     valid_array = wiki_bytes("validation")
     train_tokens = torch.from_numpy(train_array)
@@ -224,12 +249,14 @@ def main() -> None:
                     run_config.layers,
                     run_config.expansion,
                     decoder_channels=run_config.decoder_channels,
+                    local_kernel=run_config.local_kernel,
+                    decoder_scale=run_config.decoder_scale,
                 ),
                 train_tokens,
                 validation,
                 run_config,
                 device,
-                False,
+                "native",
                 not args.no_jit,
             )
         )
@@ -241,7 +268,19 @@ def main() -> None:
                 validation,
                 run_config,
                 device,
-                True,
+                "hf",
+                not args.no_jit,
+            )
+        )
+        results.append(
+            train_one(
+                "mamba3_reference",
+                lambda: make_mamba3(run_config),
+                train_tokens,
+                validation,
+                run_config,
+                device,
+                "native",
                 not args.no_jit,
             )
         )
@@ -257,6 +296,7 @@ def main() -> None:
             "model_initialized_after_seed": True,
             "python_numpy_torch_cuda_seeded": True,
             "mamba_fused_extension_available": False,
+            "mamba3_backend": "pure_pytorch_reference",
             "rotor_execution": "tensor_cuda_associative_scan",
         },
         "data": {

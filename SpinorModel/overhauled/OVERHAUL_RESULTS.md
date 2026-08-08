@@ -2,6 +2,11 @@
 
 Date: 2026-08-03.
 
+> **Historical result.** This report describes the 2026-08-03 overhaul. The
+> maintained successor is the pure v2.1 model under `SSM-Models`; later
+> transport-ablation evidence supersedes the "next gates" below without
+> rewriting this dated outcome.
+
 The overhaul is additive. No historical file in the parent `SpinorModel`
 directory was modified.
 
@@ -34,18 +39,19 @@ The untouched original suite continues to pass its three tests.
 
 Each recurrent step is
 
-```text
-h_t = a_t Ad(r_t, h_(t-1)) + (1-a_t) w_t u_t,
-0 < a_t < 1,  0 < w_t < 1.
-```
+\[
+h_t=a_t\operatorname{Ad}_{r_t}(h_{t-1})+(1-a_t)w_tu_t,
+\qquad 0<a_t<1,\quad 0<w_t<1.
+\]
 
-`Ad(r, h) = r h reverse(r)` is isometric within each grade. Therefore, for a
-zero initial state and bounded effective candidates `w_t u_t`, repeated use of
-the triangle inequality gives
+Here \(\operatorname{Ad}_{r}(h)=rh\widetilde r\) is isometric within each
+grade. Therefore, for a zero initial state and bounded effective candidates
+\(w_tu_t\), repeated use of the triangle inequality gives
 
-```text
-norm(h_t) <= max_(s<=t) norm(w_s u_s).
-```
+\[
+\lVert h_t\rVert\leq
+\max_{s\leq t}\lVert w_su_s\rVert.
+\]
 
 The test evaluates this bound at every prefix rather than checking only a
 final state. Token-selective step size controls retention/erasure while leaving
@@ -54,10 +60,11 @@ at identity and uses an analytic sinc tangent, so it receives gradients there.
 
 Transition composition is closed and chronological:
 
-```text
-(a2,r2,b2) o (a1,r1,b1)
-  = (a2*a1, r2*r1, a2*Ad(r2,b1)+b2).
-```
+\[
+(a_2,r_2,b_2)\circ(a_1,r_1,b_1)
+=\left(a_2a_1,\ r_2r_1,
+a_2\operatorname{Ad}_{r_2}(b_1)+b_2\right).
+\]
 
 The parallel and recurrent paths implement this same operator.
 
@@ -77,13 +84,13 @@ Hardware: NVIDIA GeForce RTX 2070 SUPER. Dtype: float32. Seed: 0.
 | original reference throughput, B2 x L512 | 82,052 tokens/s |
 | overhaul reference parallel throughput, B2 x L512 | 34,388 tokens/s |
 
-Throughput is the median-free result of one synchronized five-repeat run after
-two warmups, so it is a diagnostic rather than a stable benchmark estimate.
-The conclusion is nevertheless unambiguous: the Python/Torch
-Hillis--Steele reference does not beat the original attention implementation
-on this hardware. It has logarithmic dependency depth but `O(L log L)` work
-and many unfused geometric products. A work-efficient fused scan is required
-before any speed claim.
+Throughput comes from one synchronized five-repeat run after two warmups; no
+median or uncertainty interval was reported. It is therefore a diagnostic, not
+a stable benchmark estimate. In that measured configuration, the Python/Torch
+Hillis--Steele reference was slower than the original attention implementation
+on this hardware. It has logarithmic dependency depth but \(O(L\log L)\) work
+and many unfused geometric products. A work-efficient fused scan and a fuller
+benchmark protocol are required before any general speed claim.
 
 ## End-to-end smoke
 

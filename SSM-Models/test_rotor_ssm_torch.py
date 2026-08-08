@@ -13,6 +13,7 @@ if torch is not None:
         GASSMLanguageModel,
         SelectiveRotorSSM,
         geometric_product,
+        normalized_rotor,
         reversion,
         rotor_from_bivector,
     )
@@ -36,6 +37,10 @@ class TorchRotorSSMTests(unittest.TestCase):
             rtol=1e-5,
             atol=1e-5,
         )
+
+    def test_zero_rotor_parameters_fall_back_to_identity(self) -> None:
+        rotors = normalized_rotor(torch.zeros(3, 4))
+        torch.testing.assert_close(rotors, self.basis(0).expand_as(rotors))
 
     def test_sequence_chunk_and_token_streaming_match(self) -> None:
         torch.manual_seed(0)
@@ -108,6 +113,11 @@ class TorchRotorSSMTests(unittest.TestCase):
         )
         torch.testing.assert_close(decay[0, 0], expected, rtol=1e-5, atol=1e-6)
         self.assertTrue(bool(torch.all(decay < 1.0)))
+
+    def test_recurrent_layer_rejects_empty_sequences(self) -> None:
+        layer = SelectiveRotorSSM(channels=2)
+        with self.assertRaisesRegex(ValueError, "empty sequence"):
+            layer(torch.empty(1, 0, 2, GA_DIM))
 
 
 if __name__ == "__main__":

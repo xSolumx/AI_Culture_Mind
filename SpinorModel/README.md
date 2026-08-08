@@ -1,6 +1,17 @@
 # SpinorModel experiments
 
-`spinor_llm.py` and `geometric_layers.py` are the maintained implementation.
+> **Lineage note.** The files directly under this directory are the preserved
+> first tensor-based SpinorModel baseline. The additive
+> [`overhauled`](overhauled/README.md) implementation is the 2026-08-03
+> persistent-state reference that closed the original systems gaps. The
+> maintained cross-backend successor is now
+> [`../SSM-Models/pure_rotor_ssm`](../SSM-Models/pure_rotor_ssm/CONTRACT.md),
+> with its v2.1 transport falsification ladder in `SSM-Models/experiments`.
+> Commands below reproduce the historical baseline; they should not be read as
+> the current architectural frontier.
+
+`spinor_llm.py` and `geometric_layers.py` are the maintained historical
+baseline.
 They represent every GA(3, 0) multivector as a PyTorch tensor with final-axis
 basis order `[1, e1, e2, e3, e12, e13, e23, e123]`. This removes the original
 mix of raw tensors and version-sensitive Kingdon `MultiVector` objects.

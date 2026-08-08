@@ -1,5 +1,12 @@
 # Overhauled SpinorModel
 
+> **Historical reference.** This implementation remains reproducible and its
+> tests remain useful, but it is no longer the maintained model frontier. The
+> canonical JAX/PyTorch v2.1 implementation, hard mathematical contract, and
+> transport-ablation runner live under
+> [`../../SSM-Models/pure_rotor_ssm`](../../SSM-Models/pure_rotor_ssm/CONTRACT.md)
+> and `../../SSM-Models/run_transport_ablation_v2.py`.
+
 This is a new implementation. The historical files in the parent
 `SpinorModel` directory are intentionally untouched so the original experiment
 and old checkpoints remain reproducible.
@@ -8,24 +15,27 @@ and old checkpoints remain reproducible.
 
 The model is a causal selective state-space language model over tensor-valued
 Cl(3, 0) states. Each layer and multiplicity channel stores one eight-component
-multivector. For token step `t`, the recurrent core applies
+multivector. At token step \(t\), the recurrent core applies
 
-```text
-h_t = a_t * (r_t h_(t-1) reverse(r_t)) + b_t
-```
+\[
+h_t=a_t r_t h_{t-1}\widetilde r_t+b_t,
+\qquad 0<a_t<1,
+\]
 
-where `0 < a_t < 1`, `r_t` is a unit even rotor generated from the current
-input, and `b_t` is a bounded selective-write innovation. The controller uses
+where \(\widetilde r_t\) denotes Clifford reversal, \(r_t\) is a unit even
+rotor generated from the current input, and \(b_t\) is a bounded
+selective-write innovation. The controller uses
 grade invariants for scalar gates and an equivariant bivector source for rotor
 direction. Rotation, retention/erasure, and writing are distinct controls.
 
 Two transition tuples compose associatively:
 
-```text
-a_21 = a_2 a_1
-r_21 = r_2 r_1
-b_21 = a_2 * Ad(r_2, b_1) + b_2
-```
+\[
+(a_2,r_2,b_2)\circ(a_1,r_1,b_1)
+=\left(a_2a_1,\ r_2r_1,\ a_2\operatorname{Ad}_{r_2}(b_1)+b_2\right),
+\]
+
+where \(\operatorname{Ad}_{r}(h)=rh\widetilde r\).
 
 The reference parallel backend uses an inclusive Hillis--Steele scan with
 logarithmic dependency depth. Streaming inference retains exactly
@@ -35,15 +45,17 @@ the same operator into a work-efficient kernel.
 
 The retention/write parameterization uses
 
-```text
-a_t = exp(-delta_t lambda)
-b_t = (1 - a_t) * write_t * candidate_t
-```
+\[
+a_t=\exp(-\delta_t\lambda),
+\qquad
+b_t=(1-a_t)w_tu_t,
+\]
 
-with a positive token-selective step size and sigmoid write gate. Large learned
+where \(w_t\) is a sigmoid write gate and \(\delta_t\) is a positive,
+token-selective step size. Large learned
 step sizes implement erasure without silently shortening the initialized
 half-life schedule. Since rotor transport is isometric and the innovation
-coefficient is at most `1-a_t`, bounded candidates imply the usual
+coefficient is at most \(1-a_t\), bounded candidates imply the usual
 convex-recursion BIBO bound.
 
 ## Contracts

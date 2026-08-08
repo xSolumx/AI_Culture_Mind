@@ -308,6 +308,60 @@ class GeometricRMSNorm(nn.Module):
         return inputs * torch.rsqrt(rms + self.epsilon) * self.gain
 
 
+class DepthwiseCausalMix(nn.Module):
+    """Identity-initialized temporal mixing that commutes with Cl(3) actions.
+
+    The same depthwise filter is applied independently to every multivector
+    coordinate.  It therefore cannot distinguish a rotated state from the
+    rotated result, while supplying the short-range context that byte language
+    modeling usually learns with a causal convolution.  The final kernel tap
+    starts as the identity, so enabling the mixer does not change the initial
+    recurrent model or its stability contract.
+    """
+
+    def __init__(self, channels: int, kernel_size: int = 4):
+        super().__init__()
+        if kernel_size < 1:
+            raise ValueError("kernel_size must be positive")
+        self.channels = channels
+        self.kernel_size = kernel_size
+        features = channels * GA_DIM
+        self.conv = nn.Conv1d(
+            features,
+            features,
+            kernel_size,
+            groups=features,
+            bias=False,
+        )
+        with torch.no_grad():
+            self.conv.weight.zero_()
+            self.conv.weight[:, 0, -1] = 1
+
+    def forward(
+        self,
+        inputs: torch.Tensor,
+        history: torch.Tensor | None = None,
+    ) -> tuple[torch.Tensor, torch.Tensor]:
+        if inputs.ndim != 4 or inputs.shape[-2:] != (self.channels, GA_DIM):
+            raise ValueError("inputs must have shape (batch, length, channels, 8)")
+        batch, length = inputs.shape[:2]
+        features = self.channels * GA_DIM
+        flat = inputs.reshape(batch, length, features).transpose(1, 2)
+        history_width = self.kernel_size - 1
+        if history is None:
+            history = inputs.new_zeros(batch, history_width, self.channels, GA_DIM)
+        if history.shape != (batch, history_width, self.channels, GA_DIM):
+            raise ValueError("causal history has incompatible shape")
+        prefix = history.reshape(batch, history_width, features).transpose(1, 2)
+        mixed = self.conv(torch.cat((prefix, flat), dim=-1))
+        mixed = mixed.transpose(1, 2).reshape(batch, length, self.channels, GA_DIM)
+        if history_width:
+            new_history = torch.cat((history, inputs), dim=1)[:, -history_width:]
+        else:
+            new_history = history
+        return mixed, new_history
+
+
 class SelectiveRotorDeltaSSM(nn.Module):
     """Stable selective rotor transport plus an independently gated write.
 
@@ -391,19 +445,42 @@ class GeometricGatedFFN(nn.Module):
 
 
 class SpinorDeltaBlock(nn.Module):
-    def __init__(self, channels: int, expansion: int = 2, dropout: float = 0.0):
+    def __init__(
+        self,
+        channels: int,
+        expansion: int = 2,
+        dropout: float = 0.0,
+        local_kernel: int = 0,
+    ):
         super().__init__()
         self.norm1 = GeometricRMSNorm(channels)
+        self.local_mixer = (
+            DepthwiseCausalMix(channels, local_kernel) if local_kernel else None
+        )
         self.ssm = SelectiveRotorDeltaSSM(channels)
         self.norm2 = GeometricRMSNorm(channels)
         self.ffn = GeometricGatedFFN(channels, expansion)
         self.dropout = nn.Dropout(dropout)
 
-    def forward(self, inputs: torch.Tensor, initial_state: torch.Tensor | None = None):
-        sequence, state = self.ssm(self.norm1(inputs), initial_state)
+    def forward(
+        self,
+        inputs: torch.Tensor,
+        initial_state: torch.Tensor | tuple[torch.Tensor, torch.Tensor] | None = None,
+    ):
+        if self.local_mixer is None:
+            ssm_state = initial_state
+            mixed = inputs
+            history = None
+        else:
+            if isinstance(initial_state, tuple):
+                ssm_state, history = initial_state
+            else:
+                ssm_state, history = initial_state, None
+            mixed, history = self.local_mixer(inputs, history)
+        sequence, state = self.ssm(self.norm1(mixed), ssm_state)
         outputs = inputs + self.dropout(sequence)
         outputs = outputs + self.dropout(self.ffn(self.norm2(outputs)))
-        return outputs, state
+        return outputs, (state, history) if self.local_mixer is not None else state
 
 
 class SpinorDeltaLM(nn.Module):
@@ -415,16 +492,28 @@ class SpinorDeltaLM(nn.Module):
         expansion: int = 2,
         dropout: float = 0.0,
         decoder_channels: int | None = None,
+        local_kernel: int = 0,
+        decoder_scale: float | None = None,
+        direct_decoder_channels: int = 0,
     ):
         super().__init__()
         self.vocab_size = vocab_size
         self.channels = channels
         self.layers = layers
         self.decoder_channels = decoder_channels
+        self.local_kernel = local_kernel
+        self.decoder_scale = decoder_scale
+        self.direct_decoder_channels = direct_decoder_channels
         self.token_embeddings = nn.Parameter(torch.empty(vocab_size, channels, GA_DIM))
         nn.init.normal_(self.token_embeddings, std=0.02)
         self.blocks = nn.ModuleList(
-            SpinorDeltaBlock(channels, expansion, dropout) for _ in range(layers)
+            SpinorDeltaBlock(
+                channels,
+                expansion,
+                dropout,
+                local_kernel=local_kernel,
+            )
+            for _ in range(layers)
         )
         self.final_norm = GeometricRMSNorm(channels)
         self.vocabulary_bias = nn.Parameter(torch.zeros(vocab_size))
@@ -439,6 +528,20 @@ class SpinorDeltaLM(nn.Module):
             self.output_projection = nn.Linear(
                 decoder_channels * GA_DIM, vocab_size, bias=False
             )
+        if direct_decoder_channels < 0:
+            raise ValueError("direct_decoder_channels must be nonnegative")
+        if direct_decoder_channels:
+            self.direct_decoder = nn.Sequential(
+                nn.Linear(channels * GA_DIM, direct_decoder_channels, bias=False),
+                nn.Linear(direct_decoder_channels, vocab_size, bias=False),
+            )
+            # Start as a neutral residual head; its gradients can still learn
+            # a complementary coordinate-sensitive decoder immediately.
+            nn.init.zeros_(self.direct_decoder[-1].weight)
+            self.direct_decoder_gate = nn.Parameter(torch.tensor(-2.0))
+        else:
+            self.direct_decoder = None
+            self.direct_decoder_gate = None
 
     def forward(
         self,
@@ -466,7 +569,14 @@ class SpinorDeltaLM(nn.Module):
             logits = logits / math.sqrt(self.channels * GA_DIM)
         else:
             decoded = self.decoder_projection(outputs).flatten(-2)
-            logits = self.output_projection(decoded) / math.sqrt(decoded.shape[-1])
+            logits = self.output_projection(decoded)
+            if self.decoder_scale is None:
+                logits = logits / math.sqrt(decoded.shape[-1])
+            else:
+                logits = logits / self.decoder_scale
+        if self.direct_decoder is not None:
+            direct = self.direct_decoder(outputs.flatten(-2))
+            logits = logits + self.direct_decoder_gate.sigmoid() * direct
         logits = logits + self.vocabulary_bias
         if return_states:
             return logits, tuple(states)
@@ -477,6 +587,7 @@ __all__ = [
     "SpinorDeltaLM",
     "SpinorDeltaBlock",
     "SelectiveRotorDeltaSSM",
+    "DepthwiseCausalMix",
     "Spin3IsotypicLinear",
     "GradeLinear",
     "pack_cl3_isotypic",

@@ -105,6 +105,8 @@ def rotor_affine_scan(
         raise ValueError("decay, rotors, and drive have incompatible shapes")
     if rotors.shape[-1] != GA_DIM:
         raise ValueError(f"rotors and drive must end in {GA_DIM} components")
+    if decay.shape[1] == 0:
+        raise ValueError("cannot scan an empty sequence")
 
     def compose(left, right):
         left_decay, left_rotor, left_drive = left
@@ -136,6 +138,8 @@ def rotor_recurrent_scan(
     """Sequential scan used for streaming and as the parallel-scan oracle."""
     if rotors.shape != drive.shape or rotors.shape[:-1] != decay.shape:
         raise ValueError("decay, rotors, and drive have incompatible shapes")
+    if decay.shape[1] == 0:
+        raise ValueError("cannot scan an empty sequence")
     if initial_state is None:
         initial_state = jnp.zeros_like(drive[:, 0])
 
@@ -359,6 +363,30 @@ class GASSMLanguageModel(nn.Module):
         if return_recurrent_states:
             return logits, tuple(final_states)
         return logits
+
+
+# Keep this experiment/training module import-compatible while making the
+# pure package the single maintained SSM implementation.  Historical classes
+# above remain in the file for provenance but are intentionally shadowed.
+from pure_rotor_ssm.jax_backend import (  # noqa: E402
+    GASSMBlock as PureGASSMBlock,
+    GASSMLanguageModel as PureGASSMLanguageModel,
+    GeometricGatedFFN as PureGeometricGatedFFN,
+    GeometricRMSNorm as PureGeometricRMSNorm,
+    SelectiveRotorSSM as PureSelectiveRotorSSM,
+    rotor_affine_scan as pure_rotor_affine_scan,
+    rotor_recurrent_scan as pure_rotor_recurrent_scan,
+    rotor_transition_step as pure_rotor_transition_step,
+)
+
+GeometricRMSNorm = PureGeometricRMSNorm
+GeometricGatedFFN = PureGeometricGatedFFN
+SelectiveRotorSSM = PureSelectiveRotorSSM
+GASSMBlock = PureGASSMBlock
+GASSMLanguageModel = PureGASSMLanguageModel
+rotor_transition_step = pure_rotor_transition_step
+rotor_affine_scan = pure_rotor_affine_scan
+rotor_recurrent_scan = pure_rotor_recurrent_scan
 
 
 def initialize_recurrent_states(

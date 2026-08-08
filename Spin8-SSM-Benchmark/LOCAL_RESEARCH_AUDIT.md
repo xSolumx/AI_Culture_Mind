@@ -4,10 +4,49 @@ This file records which local results were used in the isolated benchmark and
 which claims were deliberately rejected. It is a research audit, not a claim
 that every historical prototype has been re-derived line by line.
 
+## 2026-08-06 refresh: newer theorem results and model consequences
+
+The newer archive was read read-only while the benchmark model was changed
+only in this isolated folder. The conclusions below are deliberately narrower
+than the archive's strongest mathematical statements:
+
+- The balanced Cayley information family now has an exact invariant-coordinate
+  split of `8 + 8 + 8 + 4`; the repeated determinants are explained by an
+  exact signed-permutation conjugacy. This supports structured state design and
+  debugging, but it does not imply a language-model advantage.
+- The variable-Cayley one-edge Dirac--Gram inequality is an exact theorem on
+  its frozen five-variable family, backed by the two Duffy charts, exact
+  Bernstein boundary identities, and 256 direct rational holdouts. The global
+  seven-invariant inequality and global D-optimality remain open.
+- The two-edge bridge has an exact eight-sector sign quotient, a proved
+  `Delta^3` common factor, conservative degree bounds, and a complete
+  reconstruction of sector `110101` with exact off-grid holdouts. The other
+  sectors' positivity is not proved, so this is a structural guide rather than
+  a loss or architecture claim.
+- The strongest transferable ML findings are joint-family retraction,
+  multiplicity-aware/gauge-aware parameterization, and triangular bilinear
+  scans. A single chiral eight-dimensional view is only an SO(8)-type chart;
+  triality-specific language superiority remains an explicit falsifier.
+
+These findings motivated retaining the stable isotypic rotor-affine core and
+avoiding a speculative Spin(8) claim. The isolated quality iteration promoted
+one falsifiable change: unit scaling for the untied vocabulary head. An
+identity-initialized causal mixer and a coordinate-sensitive direct decoder
+ensemble were implemented as opt-in controls, but short matched screens were
+worse than or indistinguishable from the promoted path and therefore remain
+off by default.
+
 ## Sources reviewed
 
 ### Spin8-Triality-Research
 
+- `docs/RESEARCH_AUDIT_AND_NEXT_STRATEGY_2026-08-06.md` and
+  `docs/ITERATION_NOTE_2026-08-06.md`;
+- `docs/experiments/SPIN8_CAYLEY_BLOCK_THEOREM.md`;
+- `docs/experiments/SPIN8_DIRAC_ONE_EDGE_RESULTS.md`;
+- `docs/experiments/SPIN8_DIRAC_TWO_EDGE_GATE_RESULTS.md`;
+- `docs/experiments/SPIN8_DIRAC_TWO_EDGE_SECTOR_110101_RESULTS.md` and
+  `docs/SPIN8_TWO_EDGE_AMPLITUDE_THEOREM.md`;
 - `docs/experiments/RESEARCH_REVIEW_2026-08-02.md`
 - `docs/experiments/RESEARCH_PHASE_2_RESULTS.md`
 - `docs/experiments/RECURRENCE_LADDER_RESULTS.md`

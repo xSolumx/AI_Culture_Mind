@@ -1,4 +1,4 @@
-"""Train rotor and identity-transition SSMs on WikiText-2 bytes with CUDA."""
+"""Train a versioned pure rotor SSM on WikiText-2 bytes with CUDA."""
 
 from __future__ import annotations
 
@@ -14,6 +14,7 @@ import numpy as np
 import torch
 from datasets import load_dataset
 
+from pure_rotor_ssm import __version__ as MODEL_VERSION
 from rotor_ssm_torch import GASSMLanguageModel
 
 
@@ -89,6 +90,8 @@ def run_variant(
     validation: list[tuple[torch.Tensor, torch.Tensor]],
     config: ExperimentConfig,
     device: torch.device,
+    data_provenance: dict,
+    checkpoint_dir: Path | None = None,
 ) -> dict:
     torch.manual_seed(config.seed)
     torch.cuda.manual_seed_all(config.seed)
@@ -146,7 +149,7 @@ def run_variant(
                 }
             )
             outputs, _ = block(outputs)
-    return {
+    result = {
         "name": name,
         "parameters": sum(parameter.numel() for parameter in model.parameters()),
         "initial_validation_loss": initial_loss,
@@ -160,6 +163,39 @@ def run_variant(
         "loss_samples": loss_samples,
         "transition_diagnostics": transition_diagnostics,
     }
+    if checkpoint_dir is not None:
+        checkpoint_dir.mkdir(parents=True, exist_ok=True)
+        checkpoint_path = checkpoint_dir / (
+            f"pure_rotor_ssm_v{MODEL_VERSION}_{name}_seed{config.seed}_"
+            f"c{config.channels}_l{config.layers}_ctx{config.seq_len}_"
+            f"step{config.steps}.pt"
+        )
+        checkpoint = {
+            "format_version": 1,
+            "model_version": MODEL_VERSION,
+            "architecture": "pure_rotor_ssm.GASSMLanguageModel",
+            "model_config": {
+                "vocab_size": 256,
+                "channels": config.channels,
+                "num_layers": config.layers,
+                "expansion": config.expansion,
+                "dropout_rate": 0.0,
+                "max_rotor_angle": max_rotor_angle,
+            },
+            "training_config": asdict(config),
+            "data": data_provenance,
+            "variant": name,
+            "state_dict": {
+                key: value.detach().cpu() for key, value in model.state_dict().items()
+            },
+            "metrics": result,
+        }
+        torch.save(checkpoint, checkpoint_path)
+        result["checkpoint"] = str(checkpoint_path)
+        result["checkpoint_sha256"] = hashlib.sha256(
+            checkpoint_path.read_bytes()
+        ).hexdigest()
+    return result
 
 
 def main() -> None:
@@ -170,7 +206,13 @@ def main() -> None:
     parser.add_argument("--channels", type=int, default=8)
     parser.add_argument("--layers", type=int, default=2)
     parser.add_argument("--seed", type=int, default=0)
+    parser.add_argument(
+        "--variant",
+        choices=("selective_rotor", "identity_rotation_ablation", "both"),
+        default="both",
+    )
     parser.add_argument("--output", type=Path)
+    parser.add_argument("--checkpoint-dir", type=Path)
     args = parser.parse_args()
     if not torch.cuda.is_available():
         raise RuntimeError("CUDA is required for this controlled local experiment")
@@ -185,38 +227,43 @@ def main() -> None:
     )
     train_array = wiki_bytes("train")
     validation_array = wiki_bytes("validation")
+    data_provenance = {
+        "dataset": "wikitext/wikitext-2-raw-v1",
+        "encoding": "UTF-8 bytes",
+        "train_bytes": int(train_array.size),
+        "validation_bytes": int(validation_array.size),
+        "train_sha256": hashlib.sha256(train_array.tobytes()).hexdigest(),
+        "validation_sha256": hashlib.sha256(
+            validation_array.tobytes()
+        ).hexdigest(),
+    }
     train_tokens = torch.from_numpy(train_array)
     validation = fixed_validation_batches(validation_array, config)
+    variants = {
+        "selective_rotor": math.pi,
+        "identity_rotation_ablation": 0.0,
+    }
+    selected = tuple(variants) if args.variant == "both" else (args.variant,)
     results = [
         run_variant(
-            "selective_rotor",
-            math.pi / 2,
+            name,
+            variants[name],
             train_tokens,
             validation,
             config,
             device,
-        ),
-        run_variant(
-            "identity_rotation_ablation",
-            0.0,
-            train_tokens,
-            validation,
-            config,
-            device,
-        ),
+            data_provenance,
+            args.checkpoint_dir,
+        )
+        for name in selected
     ]
     report = {
+        "model_version": MODEL_VERSION,
+        "architecture": "pure_rotor_ssm.GASSMLanguageModel",
         "device": torch.cuda.get_device_name(device),
         "torch_version": torch.__version__,
         "config": asdict(config),
-        "data": {
-            "dataset": "wikitext/wikitext-2-raw-v1",
-            "encoding": "UTF-8 bytes",
-            "train_bytes": int(train_array.size),
-            "validation_bytes": int(validation_array.size),
-            "train_sha256": hashlib.sha256(train_array.tobytes()).hexdigest(),
-            "validation_sha256": hashlib.sha256(validation_array.tobytes()).hexdigest(),
-        },
+        "data": data_provenance,
         "results": results,
     }
     rendered = json.dumps(report, indent=2)

@@ -154,9 +154,15 @@ class IsotypicLayerTests(unittest.TestCase):
         vector_only = torch.zeros(4, 1, GA_DIM)
         vector_only[..., 1:4] = torch.randn(4, 1, 3)
         grade = GradeLinear(1, 1, use_bias=False)
-        # Every GradeLinear parameterization maps a vector-only input to zero
-        # bivector output; the Hodge-copy target has a nonzero bivector.
-        self.assertEqual(float(grade(vector_only)[..., 4:7].abs().max().detach()), 0.0)
+        with torch.no_grad():
+            grade.trivial_kernel.zero_()
+            grade.active_kernel.zero_()
+            grade.active_kernel[0, 1, 0, 0] = 1.0
+        # The canonical layer now spans the complete commutant and can map the
+        # vector copy into its Hodge-dual bivector copy equivariantly.
+        self.assertGreater(
+            float(grade(vector_only)[..., 4:7].abs().max().detach()), 0.0
+        )
         self.assertGreater(
             float(isotypic.float()(vector_only)[..., 4:7].abs().max().detach()), 0.0
         )

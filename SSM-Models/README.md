@@ -1,10 +1,43 @@
 # GA-SSM experiments
 
-`ga_ssm.py` is the maintained JAX/Flax implementation. Its primary model is
-`GASSMLanguageModel`, built from input-selective damped-rotor state transitions
-that compose through an associative parallel scan. It contains the model,
-deterministic batch generation, train/evaluation steps, checkpoint handling,
-and CLI without performing network or profiler work when imported.
+> **Archive status.** This folder preserves the development lineage of the
+> selective rotor and triality experiments. Dated reports and preregistrations
+> state what was known when they were written; later results may supersede their
+> interpretation without changing their recorded observations. The canonical
+> present-day theorem ledger, correction history, and publication manuscripts
+> live in the sibling `Spin8-Triality-Research` repository. The maintained
+> Cl(3,0) implementation described below remains in this folder.
+
+`pure_rotor_ssm/` is the canonical, model-only implementation in matched
+JAX/Flax and PyTorch backends. It contains algebra, complete Spin(3)-isotypic
+maps, bounded selective transitions, associative/recurrent scans, equivariant
+dropout, fixed-state streaming, and the decoder—nothing related to datasets,
+optimization, checkpoints, profiling, or result reporting. Its hard recurrence
+bound and exact scope are in
+[pure_rotor_ssm/CONTRACT.md](pure_rotor_ssm/CONTRACT.md).
+
+`ga_ssm.py` is the JAX experiment/training shell and `rotor_ssm_torch.py` is an
+import-compatibility shell. Both expose the canonical pure model names. The
+remaining trainer and historical classes stay outside the pure package.
+
+The pure architecture is version **2.1.0**. Version 2 introduced the bounded
+write law and complete isotypic parameterization; v2.1 expands the default
+rotor chart to the full open 180-degree physical range after every v2.0 layer
+saturated the old 90-degree cap. The preserved first approximately-4-GiB v2.0
+checkpoint and deliberately narrow single-run report are in
+[experiments/PURE_ROTOR_SSM_V2_RESULTS.md](experiments/PURE_ROTOR_SSM_V2_RESULTS.md).
+
+The completed preregistered v2.1 ladder gives a qualified answer. At equal
+state size and at the nearest live-parameter match, selective rotors beat a
+retrained identity transition in all five seeds, and identity-clamping or
+time-shuffling trained rotor actions causes substantial confirmation damage.
+However, quaternion left action and even commuting complex phases predict
+better; identity wins decisively when widths are matched to measured eager-CUDA
+time; and rotors do not improve associative recall or Q8 extrapolation. Thus
+the current evidence is **prediction benefit versus identity, but no superior
+memory or compute efficiency and no Cl(3,0)-specific advantage**. Full paired
+tables, confidence intervals, system curves, and limitations are in
+[`experiments/PURE_V2_1_TRANSPORT_ABLATION_RESULTS.md`](experiments/PURE_V2_1_TRANSPORT_ABLATION_RESULTS.md).
 
 `GALib.py` is the shared GA(3, 0) algebra layer. Multivectors use the basis
 order `[1, e1, e2, e3, e12, e13, e23, e123]` and always occupy the final array
@@ -120,10 +153,41 @@ python SSM-Models\train_rotor_ssm_torch.py --steps 300 --seed 0 `
   --output SSM-Models\experiments\my_run.json
 ```
 
+The trainer accepts `--checkpoint-dir` and `--variant selective_rotor` for a
+versioned reloadable checkpoint. Benchmark one with
+`benchmark_pure_rotor_ssm.py --checkpoint <path> --output <report.json>`.
+
+The maintained v2-native falsification ladder is frozen in
+[`experiments/PURE_V2_1_TRANSPORT_ABLATION_PREREGISTRATION.md`](experiments/PURE_V2_1_TRANSPORT_ABLATION_PREREGISTRATION.md).
+It exchanges only the state transport among identity, real diagonal, four
+commuting complex phases, quaternion left action, selective rotor, fixed
+rotor, and generic SO(8), then runs state-, effective-parameter-, and measured
+CUDA-matched prediction views plus associative-recall and Q8 memory tasks.
+Every family/seed is an atomic resumable shard:
+
+```powershell
+python SSM-Models\run_transport_ablation_v2.py --phase all
+```
+
+The checked-in aggregate is
+`experiments/pure_v2.1.0_transport_ablation.json`; regenerate the Markdown
+tables with `summarize_transport_ablation_v2.py`.
+
+`transport_ablation_v2.py` deliberately stays outside the pure package: its
+non-rotor families are experimental falsification controls, not parts of the
+canonical model API.
+
 The checked-in `experiments/final_seed*_300.json` reports and
-`experiments/final_summary.json` record the final three-seed local-GPU result.
+`experiments/final_summary.json` record the final three-seed local-GPU result
+for the superseded pre-pure architecture. They are preserved evidence, not a
+quality evaluation of the rewritten model.
 
 ## Recurrence-family harness
+
+> **Legacy protocol.** This harness uses the superseded `sqrt(1-d^2)` write
+> law, older projections, and tokenwise recurrence. Preserve it for its dated
+> group-action artifacts; use `run_transport_ablation_v2.py` for claims about
+> the v2 bounded-write architecture.
 
 `recurrence_families_torch.py` and `compare_recurrences.py` implement a
 parameter-aligned experimental ladder over real, complex, quaternion, full
