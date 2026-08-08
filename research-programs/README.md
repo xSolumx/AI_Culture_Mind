@@ -5,6 +5,9 @@ It separates lines of enquiry by object, decisive evidence, and open gate.
 Canonical code and artifacts remain in their source repositories; these
 charters prevent results from drifting between unrelated papers.
 
+For the cross-program adversarial review, see the
+[foundational claim and logic audit](../FOUNDATIONAL_CLAIM_AUDIT_2026-08-08.md).
+
 | Program | Central question | Current boundary |
 |---|---|---|
 | [01 — Rotor state-space models](01-rotor-state-space-models/README.md) | Can selective noncommutative transport improve recurrent sequence models? | Transport is causally active, but present state-, memory-, and compute-matched evidence does not establish superiority |

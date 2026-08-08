@@ -13,12 +13,14 @@ approximate that contract and have the explicit qualifications below.
 
 ## Canonical pure state transition
 
-Each layer state is a full multivector (h_{t,c}\in\mathrm{Cl}(3,0)), stored in
-the coefficient order `[1,e1,e2,e3,e12,e13,e23,e123]`. For channel (c),
+Each layer state is a full multivector
+\(h_{t,c}\in\mathrm{Cl}(3,0)\), stored in the coefficient order
+`[1,e1,e2,e3,e12,e13,e23,e123]`. For channel \(c\),
 
 \[
 \begin{aligned}
-g_t &= [s,p,\lVert v\rVert^2,\lVert *B\rVert^2,v\mathbin{\cdot} *B](x_t),\\
+g_t &= \bigl[s,p,\lVert v\rVert^2,\lVert *B\rVert^2,
+v\mathbin{\cdot} *B\bigr](x_t),\\
 \Delta_{t,c} &= \Delta_{\min}+\operatorname{softplus}((W_\Delta g_t+b_\Delta)_c),\\
 \lambda_c &= \lambda_{\min}+\operatorname{softplus}(\rho_c),\\
 d_{t,c} &= \exp(-\Delta_{t,c}\lambda_c),\\
@@ -57,8 +59,8 @@ gradients, and floating-point roundoff can exceed the unit ball by tolerance.
 
 ## Associative training and recurrent streaming
 
-Write a transition as (T=(d,q,b)), where
-(T(h)=dqh\widetilde q+b). Chronological composition is
+Write a transition as \(T=(d,q,b)\), where
+\(T(h)=dqh\widetilde q+b\). Chronological composition is
 
 \[
 T_b\circ T_a=(d_bd_a,q_bq_a,b_b+d_bq_bb_a\widetilde q_b).
@@ -571,12 +573,16 @@ key, the induced map from negative spinor to vector is orthogonal, so
 single-pair binding is exactly invertible when that key and normalization are
 known.
 
-Raw superposition does not provide high capacity: every wrong-key term has
-full norm. Multiplicity codes expose the exact law. With H channels and K code
-columns, cross terms are weighted only by code inner products. Orthonormal
-columns give exact retrieval for K at most H. Unit-norm tight frames attain the
-classical frame-potential lower bound (K-H)/H on average squared interference
-when K exceeds H.
+Raw superposition does not provide high capacity: before multiplicity
+weighting, every wrong-key bind--unbind map preserves the norm of the stored
+value rather than attenuating it by a factor such as \(1/8\). Multiplicity
+codes expose the exact law. With \(H\) channels and \(K\) code columns, cross
+terms are weighted only by code inner products. Orthonormal columns give exact
+retrieval for \(K\leq H\). For \(K>H\), unit-norm tight frames attain the
+classical frame-potential lower bound \((K-H)/H\) on average squared code
+correlation. This equals expected retrieval MSE for independent, zero-mean
+isotropic values; it is not a deterministic minimum for every correlated or
+adversarial collection of stored values.
 
 An addressed dynamic form retains scan closure:
 

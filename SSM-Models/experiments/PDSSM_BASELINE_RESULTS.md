@@ -33,7 +33,9 @@ the rotor's 32 real scalars. Hiding that difference would misstate the theorem.
 
 All learned pilots use seed 0 and 1,500 update steps. The scheduled pilots use
 LR 0.002, 10% warmup, cosine decay, and final LR `1e-5`. The exact and learned
-models all have exact recurrent streaming parity to floating precision.
+models use the same recurrent streaming contract. Any agreement between
+differently evaluated floating-point paths is a measured tolerance statement,
+not exact numerical associativity.
 
 ## Interpretation
 

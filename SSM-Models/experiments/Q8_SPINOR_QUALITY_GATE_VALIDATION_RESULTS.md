@@ -64,17 +64,19 @@ Across all ten retracted validation checkpoints:
 | Generator anticommutator RMS | `9.84e-8`--`1.24e-7` |
 
 Thus this is not merely a decoder-level long-sequence pass. The persistent
-state transition is an exact faithful Q8 spinor action to floating-point
-precision, and the decoder uses only channels that SGD placed near that shared
-manifold before retraction.
+state transition is numerically faithful to the Q8 spinor relations within the
+reported float32 residuals, and the decoder uses only channels that SGD placed
+near that shared manifold before retraction. “Exact” refers to the abstract
+compiled group action, not to zero residual in its floating-point evaluation.
 
 ## What is proved—and what is not
 
 The result validates a reliable controlled pipeline for discovering, compiling,
 and using noncommutative center-faithful recurrent actions from endpoint-only
-supervision. It also proves that raw SGD alone is not 10/10 reliable; the exact
-compiler and representation-quality gate are essential components of the
-validated mechanism.
+supervision. In this ten-seed cohort, raw SGD alone was not 10/10 reliable; the
+exact compiler and representation-quality gate were essential components of
+the validated pipeline. This finite cohort is evidence about the tested
+protocol, not a theorem about every optimizer or budget.
 
 This does not yet prove a language-model advantage, a Spin(8) triality benefit,
 or superiority to a fully optimized generic orthogonal baseline across seeds.

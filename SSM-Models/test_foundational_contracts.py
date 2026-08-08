@@ -25,6 +25,7 @@ from compare_recurrences import (
     group_prefix_products,
 )
 from mechanistic_group_actions import evaluate as evaluate_group_action
+from pdssm_group_actions import evaluate as evaluate_pdssm
 from rotor_ssm_torch import GA_DIM, GradeLinear
 from schur_scan import (
     SchurAffineTransition,
@@ -373,6 +374,13 @@ class EvaluationContractTests(unittest.TestCase):
             evaluate_group_action(
                 self.DummyGroupAction(), batches, torch.device("cpu")
             )[0],
+            expected,
+            places=6,
+        )
+        self.assertAlmostEqual(
+            evaluate_pdssm(self.DummyGroupAction(), batches, torch.device("cpu"))[
+                "validation_loss"
+            ],
             expected,
             places=6,
         )

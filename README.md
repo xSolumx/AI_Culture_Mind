@@ -16,6 +16,11 @@ distinguishes:
 7. controlled model benchmarks;
 8. the historical SpinorModel prototype.
 
+The [foundational claim and logic audit](FOUNDATIONAL_CLAIM_AUDIT_2026-08-08.md)
+records which mathematical and empirical claims survived an adversarial
+definition--domain--evidence review, the corrections made, and the gates that
+remain open.
+
 No result in one program is evidence for another unless an explicit bridge
 experiment or theorem is cited. In particular, the maintained language model
 uses `Cl(3,0)`/`Spin(3)`, whereas the triality mathematics concerns three

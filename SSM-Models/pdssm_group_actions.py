@@ -19,8 +19,6 @@ import time
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
-import numpy as np
-
 os.environ.setdefault("CUBLAS_WORKSPACE_CONFIG", ":4096:8")
 
 import torch
@@ -204,13 +202,15 @@ def evaluate(
     device: torch.device,
 ) -> dict[str, float]:
     model.eval()
-    losses = []
+    total_loss = 0.0
     prefix_correct = final_correct = examples = prefix_examples = 0
     maximum_norm_error = 0.0
     for tokens, targets in batches:
         tokens, targets = tokens.to(device), targets.to(device)
         logits, final_state = model(tokens, return_recurrent_state=True)
-        losses.append(float(F.cross_entropy(logits.flatten(0, 1), targets.flatten())))
+        total_loss += float(
+            F.cross_entropy(logits.flatten(0, 1), targets.flatten(), reduction="sum")
+        )
         predictions = logits.argmax(dim=-1)
         prefix_correct += int((predictions == targets).sum())
         final_correct += int((predictions[:, -1] == targets[:, -1]).sum())
@@ -221,7 +221,7 @@ def evaluate(
             float((final_state.norm(dim=-1) - 1.0).abs().max()),
         )
     return {
-        "validation_loss": float(np.mean(losses)),
+        "validation_loss": total_loss / prefix_examples,
         "prefix_accuracy": prefix_correct / prefix_examples,
         "final_position_accuracy": final_correct / examples,
         "maximum_final_state_norm_error": maximum_norm_error,

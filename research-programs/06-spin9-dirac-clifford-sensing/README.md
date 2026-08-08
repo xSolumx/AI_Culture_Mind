@@ -15,8 +15,12 @@ module, and the information geometry of one, two, or three spinor probes.
 - an exact negative-definite quotient Hessian proving strict local
   D-optimality of the symmetric rank-three candidate modulo Spin(9).
 
-The local theorem is internally replayed; independent external review is still
-pending.
+The local theorem is internally replayed and now has a separate full-chart
+float64 autodiff path that rederives the \(11\)-negative/\(33\)-zero signature
+without importing the exact Hessian code. It shares the foundational Spin(9)
+generator constructor, so it reduces one important class of shared-code risk
+without becoming an independent base-algebra implementation or external peer
+review. External review remains pending.
 
 ## Open gate
 
