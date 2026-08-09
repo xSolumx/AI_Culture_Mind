@@ -1,5 +1,7 @@
 # AI Culture Mind
 
+Enjoy this, learn from this, and then step outside and touch grass ;)
+
 AI Culture Mind is the latter third of a machine learning and topology research workspace and it's progress, not one monolithic model claim. Its
 work is separated into independently falsifiable programs with different
 mathematical objects, evidence standards, and publication paths.
