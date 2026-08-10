@@ -11,6 +11,12 @@ In the recurrence sections, an "exact" statement means finite real arithmetic
 with a unit rotor and finite inputs/parameters. Floating-point implementations
 approximate that contract and have the explicit qualifications below.
 
+> **Cross-program boundary, 2026-08-10.** The transported hierarchical-memory
+> result in `Spin8-Triality-Research` is not an implementation claim about this
+> selective Cl(3,0) rotor SSM. Its co-moving compiler applies to a separate
+> invertible value-transport recurrence; integrating it here would require a
+> new equivalence proof and matched model experiment.
+
 ## Canonical pure state transition
 
 Each layer state is a full multivector

@@ -21,7 +21,27 @@ distinguishes:
 The [foundational claim and logic audit](FOUNDATIONAL_CLAIM_AUDIT_2026-08-08.md)
 records which mathematical and empirical claims survived an adversarial
 definition--domain--evidence review, the corrections made, and the gates that
-remain open.
+remain open. The
+[2026-08-10 repository-wide documentation refresh](DOCUMENTATION_REFRESH_2026-08-10.md)
+records the current cross-program interpretation and validation scope.
+
+## Current research frontier (2026-08-10)
+
+The triality-memory programme now has a completed matched memory-core campaign.
+Under identical routers, direct slots and triality-coded slots have the same
+ordinary overwrite capacity; the defensible Spin(8) contribution is a shared
+cross-view action/routing prior, not extra same-state storage. A hierarchical
+coarse-to-block router improves learned retrieval for both direct and delta
+memories, and a co-moving change of coordinates maps general invertible value
+transport to a standard gated-delta recurrence. On the recorded RTX 2070 SUPER
+benchmark, the official FLA chunk implementation is about `5.20x` faster in
+forward time and `5.30x` faster in combined forward/backward time than the
+matched direct transported reference at length 4096, with the declared
+`128`- versus `64`-scalar recurrent-state caveat. These are memory-core and
+systems results, not language-model results or a proof of triality-specific
+capacity. See the
+[canonical result](Spin8-Triality-Research/docs/experiments/SPIN8_SPIN9_HIERARCHICAL_MEMORY_RESULTS.md)
+and [Program 03](research-programs/03-triality-memory-and-intertwiner-scans/README.md).
 
 No result in one program is evidence for another unless an explicit bridge
 experiment or theorem is cited. In particular, the maintained language model

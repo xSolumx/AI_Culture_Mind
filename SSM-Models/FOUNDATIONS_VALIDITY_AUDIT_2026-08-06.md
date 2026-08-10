@@ -9,6 +9,11 @@ Date: 2026-08-06
 > contract and its new tests are documented in `FOUNDATIONS.md` and
 > `pure_rotor_ssm/CONTRACT.md`.
 
+> **Later status.** The 2026-08-10 Spin(8)/Spin(9) hierarchical-memory report
+> closes separate routing and delta-transport engineering gates. It neither
+> changes this historical validity verdict nor establishes that the maintained
+> rotor model implements the new memory compiler.
+
 ## Verdict
 
 The central mathematical object is valid: `ga_ssm.py` and

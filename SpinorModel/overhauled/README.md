@@ -7,6 +7,10 @@
 > [`../../SSM-Models/pure_rotor_ssm`](../../SSM-Models/pure_rotor_ssm/CONTRACT.md)
 > and `../../SSM-Models/run_transport_ablation_v2.py`.
 
+> A later co-moving FLA memory compiler and hierarchical router are documented
+> in the theorem repository, but are not implemented here. Their memory-core
+> timings are not model-level results for this historical reference.
+
 This is a new implementation. The historical files in the parent
 `SpinorModel` directory are intentionally untouched so the original experiment
 and old checkpoints remain reproducible.

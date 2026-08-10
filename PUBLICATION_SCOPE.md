@@ -25,3 +25,18 @@ artifacts, and documents whose evidence boundary is explicit.
   are the appropriate public objects.
 
 Local exclusion is intentional. It does not strengthen any public claim.
+
+## Benchmark publication contract
+
+A systems number is publishable only with a frozen selection rule, complete
+machine-readable artifact, validation path, software and hardware metadata,
+warm-up policy, sample counts, and peak-memory method. Kernel timing must be
+measured in fresh processes after tuning, and ideal payload bytes must not be
+reported as measured CUDA allocation. State-, parameter-, token-, and
+measured-compute matching answer different questions and must be labelled
+separately.
+
+The 2026-08-10 hierarchical-memory campaign follows this boundary. It reports
+an official FLA chunk-kernel speed result for the co-moving delta formulation,
+but does not promote that result to language-model quality, triality capacity,
+or a production sparse-router latency claim.

@@ -1,5 +1,9 @@
 # Spin(8) learned-address gate results
 
+> **Archived copy.** The current hierarchical-routing and same-router boundary
+> is maintained in `Spin8-Triality-Research`; this file preserves the original
+> learned-address cohort.
+
 Date: 2026-08-03.
 
 Protocol: `SPIN8_LEARNED_ADDRESS_PREREGISTRATION.md`.

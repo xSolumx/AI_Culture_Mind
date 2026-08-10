@@ -7,6 +7,14 @@ ledgers
 **Standard:** a claim survives only when its definitions, domain, inference,
 certificate, and falsifier all support the same conclusion
 
+> **2026-08-10 addendum.** The later matched memory-core campaign closes two
+> empirical gates that were open at this audit date: hierarchical learned
+> routing and fused full-transport delta execution. It does **not** change the
+> global Dirac--Gram, global sensing, or language-model verdicts below. Direct
+> and triality-coded slots remain capacity-equivalent under the same router;
+> Spin(8)'s supported role is cross-view action/routing completion. See
+> [`SPIN8_SPIN9_HIERARCHICAL_MEMORY_RESULTS.md`](Spin8-Triality-Research/docs/experiments/SPIN8_SPIN9_HIERARCHICAL_MEMORY_RESULTS.md).
+
 ## Executive verdict
 
 The maintained archive does not support a single claim that

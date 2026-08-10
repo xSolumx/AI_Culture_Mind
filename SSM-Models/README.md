@@ -8,6 +8,14 @@
 > live in the sibling `Spin8-Triality-Research` repository. The maintained
 > Cl(3,0) implementation described below remains in this folder.
 
+> **2026-08-10 programme boundary.** The sibling theorem repository now has a
+> completed hierarchical memory-core campaign and an official FLA chunk-kernel
+> benchmark for a co-moving transported delta recurrence. The campaign finds
+> no extra ordinary overwrite capacity from triality at equal routing and does
+> not test this Cl(3,0) language model. `pure_rotor_ssm` does not silently
+> inherit that compiler or its approximately fivefold systems result. See the
+> [canonical memory report](../Spin8-Triality-Research/docs/experiments/SPIN8_SPIN9_HIERARCHICAL_MEMORY_RESULTS.md).
+
 `pure_rotor_ssm/` is the canonical, model-only implementation in matched
 JAX/Flax and PyTorch backends. It contains algebra, complete Spin(3)-isotypic
 maps, bounded selective transitions, associative/recurrent scans, equivariant
@@ -51,6 +59,12 @@ than recomputing the context. See [FOUNDATIONS.md](FOUNDATIONS.md) for the
 equations, stability/equivariance arguments, GPU ablation, and open questions.
 
 ## Spin(8) triality research core
+
+The bullets below record the broader research lineage. For present-day memory
+status, the canonical conclusion is: direct and triality-coded slots tie under
+the same router; hierarchical routing improves both direct and delta retrieval;
+and Spin(8)'s surviving advantage is relational cross-view completion, not a
+same-state storage theorem.
 
 The experimental Spin(8) branch now includes:
 

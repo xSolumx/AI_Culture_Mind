@@ -1,5 +1,9 @@
 # Spin(8) continuous-alias address results
 
+> **Archived copy.** The current adversarial routing frontier and transported
+> FLA result are maintained in `Spin8-Triality-Research`; this file preserves
+> the original continuous-alias cohort.
+
 Date: 2026-08-03.
 
 Protocol: `SPIN8_CONTINUOUS_ALIAS_PREREGISTRATION.md`.

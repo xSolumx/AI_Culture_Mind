@@ -109,3 +109,10 @@ found no stable raw positive-spin advantage over generic SO(8), while the
 Q8/A5 studies support exact/retracted noncommutative actions, quality-gated
 decoding, and long-horizon controls. Those findings motivate this architecture
 and its ablations; they do not transfer automatically to WikiText.
+
+The later 2026-08-10 memory-core campaign is also adjacent evidence only. It
+finds no same-router overwrite-capacity advantage for triality slots, but does
+find better learned retrieval from hierarchical routing and a roughly fivefold
+full-transport CUDA speedup after a co-moving compiler to the official FLA
+chunk recurrence. This benchmark does not yet contain that memory architecture,
+so none of those systems numbers are SpinorModel quality or throughput results.

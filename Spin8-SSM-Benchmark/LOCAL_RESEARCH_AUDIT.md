@@ -4,6 +4,12 @@ This file records which local results were used in the isolated benchmark and
 which claims were deliberately rejected. It is a research audit, not a claim
 that every historical prototype has been re-derived line by line.
 
+> **2026-08-10 status note.** A later, separate memory-core campaign completed
+> hierarchical learned-routing and co-moving FLA transport benchmarks. It did
+> not modify this model and found no same-router triality capacity advantage.
+> Treat it as a candidate component and control design for a future model-level
+> benchmark, not as evidence for the results recorded here.
+
 ## 2026-08-06 refresh: newer theorem results and model consequences
 
 The newer archive was read read-only while the benchmark model was changed

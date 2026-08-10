@@ -22,6 +22,11 @@ delta-rule, Mamba-family, and other appropriate baselines.
 
 ## Next publishable question
 
-Complete one small, reproducible benchmark matrix with fully validated JSON,
-explicit hardware/runtime metadata, and parameter/state/compute tables before
-adding new datasets or architectures.
+The memory-core matrix is complete: frozen ten-seed routing cohorts and fresh-
+process CUDA measurements now compare dense, block, and hard routing plus
+direct, native delta, co-moving FLA chunk, and recurrent transported memory.
+The next publishable question is the **model-level** transfer: insert the
+hierarchical co-moving memory into one controlled sequence model and compare it
+against strong attention/delta/SSM baselines with fully validated artifacts,
+identical tokens, and separate state/parameter/compute tables. The completed
+memory-core benchmark must not be described as that model result.
