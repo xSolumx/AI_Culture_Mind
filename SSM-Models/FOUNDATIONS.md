@@ -12,7 +12,7 @@ with a unit rotor and finite inputs/parameters. Floating-point implementations
 approximate that contract and have the explicit qualifications below.
 
 > **Cross-program boundary, 2026-08-10.** The transported hierarchical-memory
-> result in `Spin8-Triality-Research` is not an implementation claim about this
+> result in `Spin-Space-Research` is not an implementation claim about this
 > selective Cl(3,0) rotor SSM. Its co-moving compiler applies to a separate
 > invertible value-transport recurrence; integrating it here would require a
 > new equivalence proof and matched model experiment.
@@ -294,7 +294,26 @@ mixing, group-valued phase, affine writes, associative training scans, and
 fixed-state streaming simultaneously. `schur_scan.py` implements the Cl(3)
 reference and verifies float64 parallel/recurrent parity below `9e-16`. For
 general real representations, Schur's division algebra may be real, complex,
-or quaternionic; the implemented Cl(3) sectors are real type.
+or quaternionic; the implemented Cl(3) sectors are real type. Canonical
+complex- and quaternionic-type affine blocks are now implemented and audited
+in the theorem repository's
+[`division_schur_scan.py`](../Spin-Space-Research/src/division_schur_scan.py)
+and [dated result](../Spin-Space-Research/docs/experiments/DIVISION_SCHUR_SCAN_RESULTS.md).
+The later
+[exact detector](../Spin-Space-Research/docs/experiments/SCHUR_TYPE_DETECTION_RESULTS.md)
+now extracts the real/complex/quaternionic type and multiplication basis from
+supplied rational generators under complete reducibility. The subsequent
+[reducible isotypic compiler](../Spin-Space-Research/docs/experiments/REDUCIBLE_ISOTYPIC_DECOMPOSITION_RESULTS.md)
+recovers exact rational projectors and aligned repeated blocks; its
+`Cl(3,0) = 2V0 + 2V1` fixture recovers the maintained model's complete
+commutant. The subsequent declared-field layer extends exact compilation to
+\(\mathbb Q(\sqrt2)\), and the companion signature theorem embeds the
+coefficient algebra exactly as
+\(\mathrm{Cl}(3,0)\hookrightarrow\mathrm{Cl}^0(1,4)\). Generic number
+fields and noisy detection remain open. These are algebra/representation
+results only: they are not wired into the maintained Pure Rotor model, do not
+replace its eight-coordinate state by a 16- or 32-coordinate object, and do
+not establish Lorentz equivariance.
 
 ## Pure v2.0.0 implementation evidence
 

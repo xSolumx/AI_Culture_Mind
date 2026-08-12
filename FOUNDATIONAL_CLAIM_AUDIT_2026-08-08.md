@@ -13,7 +13,20 @@ certificate, and falsifier all support the same conclusion
 > global Dirac--Gram, global sensing, or language-model verdicts below. Direct
 > and triality-coded slots remain capacity-equivalent under the same router;
 > Spin(8)'s supported role is cross-view action/routing completion. See
-> [`SPIN8_SPIN9_HIERARCHICAL_MEMORY_RESULTS.md`](Spin8-Triality-Research/docs/experiments/SPIN8_SPIN9_HIERARCHICAL_MEMORY_RESULTS.md).
+> [`SPIN8_SPIN9_HIERARCHICAL_MEMORY_RESULTS.md`](Spin-Space-Research/docs/experiments/SPIN8_SPIN9_HIERARCHICAL_MEMORY_RESULTS.md).
+> A further prospective seeds 20--29 replication closes the remaining Task B
+> action row without changing that capacity boundary: shared actions pass,
+> independently fitted actions fail, and direct/delta parity is exact. See
+> [`TASK_B_PAIRED_ACTION_REPLICATION_RESULTS.md`](Spin-Space-Research/docs/experiments/TASK_B_PAIRED_ACTION_REPLICATION_RESULTS.md).
+> A still later 64-slot campaign closes the then-open measured sparse-gather
+> gate: supplied-frame shared routing and hierarchy pass `10/10`, while a
+> fused gathered-state inference kernel beats both eager controls on the named
+> GPU. It does not change the global or capacity verdicts. See
+> [`LARGE_SLOT_SEMANTIC_HIERARCHY_RESULTS.md`](Spin-Space-Research/docs/experiments/LARGE_SLOT_SEMANTIC_HIERARCHY_RESULTS.md).
+> The current [research-programme index](research-programs/README.md) now splits
+> this audit's former combined headings into scan/compiler algebra,
+> equivariant identification, memory systems, and exceptional-representation
+> dynamics. The verdicts below are preserved; only their taxonomy has changed.
 
 ## Executive verdict
 

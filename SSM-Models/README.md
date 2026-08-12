@@ -5,16 +5,18 @@
 > state what was known when they were written; later results may supersede their
 > interpretation without changing their recorded observations. The canonical
 > present-day theorem ledger, correction history, and publication manuscripts
-> live in the sibling `Spin8-Triality-Research` repository. The maintained
+> live in the sibling `Spin-Space-Research` repository. The maintained
 > Cl(3,0) implementation described below remains in this folder.
 
 > **2026-08-10 programme boundary.** The sibling theorem repository now has a
 > completed hierarchical memory-core campaign and an official FLA chunk-kernel
 > benchmark for a co-moving transported delta recurrence. The campaign finds
 > no extra ordinary overwrite capacity from triality at equal routing and does
-> not test this Cl(3,0) language model. `pure_rotor_ssm` does not silently
-> inherit that compiler or its approximately fivefold systems result. See the
-> [canonical memory report](../Spin8-Triality-Research/docs/experiments/SPIN8_SPIN9_HIERARCHICAL_MEMORY_RESULTS.md).
+> not test this Cl(3,0) language model. A later 64-slot campaign adds a
+> standalone fused gathered-state inference kernel, still without model-level
+> training. `pure_rotor_ssm` does not silently inherit either compiler or
+> kernel result. See the
+> [memory benchmark atlas](../Spin-Space-Research/docs/experiments/MEMORY_BENCHMARK_ATLAS.md).
 
 `pure_rotor_ssm/` is the canonical, model-only implementation in matched
 JAX/Flax and PyTorch backends. It contains algebra, complete Spin(3)-isotypic

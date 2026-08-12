@@ -5,7 +5,7 @@
 > nondeterministic across Python processes because it uses the randomized
 > built-in `hash`. The “Category Engine” is an undeveloped placeholder. For the
 > tested recurrence use [FOUNDATIONS.md](../FOUNDATIONS.md); for the current
-> theorem ledger use the canonical `Spin8-Triality-Research` repository.
+> theorem ledger use the canonical `Spin-Space-Research` repository.
 
 Input (text, image, signal, symbol)
      ↓

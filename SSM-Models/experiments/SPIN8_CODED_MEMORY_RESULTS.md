@@ -1,7 +1,7 @@
 # Spin(8) coded, tight-frame, and dynamic-slot memory results
 
 > **Archived copy.** Current interpretation lives in
-> `Spin8-Triality-Research/docs/experiments/SPIN8_SPIN9_HIERARCHICAL_MEMORY_RESULTS.md`:
+> `Spin-Space-Research/docs/experiments/SPIN8_SPIN9_HIERARCHICAL_MEMORY_RESULTS.md`:
 > same-router direct and triality slots are capacity-equivalent, and the
 > supported triality benefit is cross-view completion.
 
