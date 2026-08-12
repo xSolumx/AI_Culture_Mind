@@ -4,11 +4,12 @@ This file records which local results were used in the isolated benchmark and
 which claims were deliberately rejected. It is a research audit, not a claim
 that every historical prototype has been re-derived line by line.
 
-> **2026-08-10 status note.** A later, separate memory-core campaign completed
-> hierarchical learned-routing and co-moving FLA transport benchmarks. It did
-> not modify this model and found no same-router triality capacity advantage.
-> Treat it as a candidate component and control design for a future model-level
-> benchmark, not as evidence for the results recorded here.
+> **2026-08-10 status note.** Later, separate memory-core campaigns completed
+> hierarchical learned-routing, co-moving FLA transport, and a 64-slot fused
+> gathered-state inference benchmark. They did not modify this model and found
+> no same-router triality capacity advantage. Treat the selected-block system
+> as a candidate component for a future FLA-compatible model-level benchmark,
+> not as evidence for the results recorded here.
 
 ## 2026-08-06 refresh: newer theorem results and model consequences
 
@@ -44,7 +45,7 @@ off by default.
 
 ## Sources reviewed
 
-### Spin8-Triality-Research
+### Spin-Space-Research
 
 - `docs/RESEARCH_AUDIT_AND_NEXT_STRATEGY_2026-08-06.md` and
   `docs/ITERATION_NOTE_2026-08-06.md`;

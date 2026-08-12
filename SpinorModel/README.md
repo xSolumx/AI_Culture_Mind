@@ -10,9 +10,10 @@
 > Commands below reproduce the historical baseline; they should not be read as
 > the current architectural frontier.
 
-> The 2026-08-10 hierarchical Spin(8)/Spin(9) memory result is likewise a
-> separate memory-core programme. It has not been integrated into this
-> historical model and must not be used to upgrade its claims.
+> The 2026-08-10 hierarchical Spin(8)/Spin(9), 64-slot semantic hierarchy, and
+> fused gathered-state results are likewise a separate memory-core programme.
+> They have not been integrated into this historical model and must not be used
+> to upgrade its claims.
 
 `spinor_llm.py` and `geometric_layers.py` are the maintained historical
 baseline.

@@ -1,0 +1,366 @@
+{
+  "experiment": "write-free norm-preserving A5 group-action gate",
+  "device": "NVIDIA GeForce RTX 2070 SUPER",
+  "torch_version": "2.12.0+cu130",
+  "config": {
+    "steps": 1500,
+    "batch_size": 256,
+    "sequence_length": 16,
+    "validation_batches": 2,
+    "validation_batch_size": 512,
+    "channels": 4,
+    "learning_rate": 0.003,
+    "final_position_loss_weight": 0.0,
+    "seed": 0,
+    "diagnostic_interval": 0,
+    "max_rotor_angle": 2.2,
+    "relation_loss_weight": 0.0,
+    "relation_loss_power": 2.0,
+    "relation_start_step": 0,
+    "relation_ramp_steps": 0,
+    "canonical_orbit_loss_weight": 0.0,
+    "holonomy_loss_weight": 0.01,
+    "holonomy_loss_power": 8.0,
+    "holonomy_margin_weight": 0.1,
+    "holonomy_margin_target": 0.5,
+    "holonomy_start_step": 750,
+    "holonomy_ramp_steps": 500,
+    "holonomy_word_multiplier": 4,
+    "holonomy_word_multipliers": [
+      2,
+      3,
+      4,
+      5
+    ],
+    "holonomy_batch_size": 64,
+    "a5_irrep_init": false,
+    "freeze_actions": false
+  },
+  "group": {
+    "key": "a5",
+    "name": "alternating group A5",
+    "order": 60
+  },
+  "input_alphabet": [
+    {
+      "token_index": 0,
+      "group_index": 15,
+      "element": "23145"
+    },
+    {
+      "token_index": 1,
+      "group_index": 24,
+      "element": "31245"
+    },
+    {
+      "token_index": 2,
+      "group_index": 16,
+      "element": "23451"
+    },
+    {
+      "token_index": 3,
+      "group_index": 48,
+      "element": "51234"
+    }
+  ],
+  "held_out_transition_pairs": [
+    {
+      "left": "23145",
+      "right": "23451"
+    }
+  ],
+  "data_split_audit": {
+    "training": {
+      "pair_occurrences": 0,
+      "sequences_with_pair": 0,
+      "total_sequences": 384000
+    },
+    "validation": {
+      "pair_occurrences": 1803,
+      "sequences_with_pair": 1024,
+      "total_sequences": 1024
+    },
+    "generalization": {
+      "2": {
+        "pair_occurrences": 1024,
+        "sequences_with_pair": 1024,
+        "total_sequences": 1024
+      },
+      "16": {
+        "pair_occurrences": 1818,
+        "sequences_with_pair": 1024,
+        "total_sequences": 1024
+      },
+      "64": {
+        "pair_occurrences": 4821,
+        "sequences_with_pair": 1024,
+        "total_sequences": 1024
+      },
+      "128": {
+        "pair_occurrences": 9037,
+        "sequences_with_pair": 1024,
+        "total_sequences": 1024
+      }
+    }
+  },
+  "language_coverage_audit": {
+    "training": {
+      "observed_group_states": 60,
+      "group_state_fraction": 1.0,
+      "missing_group_state_indices": [],
+      "observed_input_pairs": 15,
+      "possible_input_pairs": 16,
+      "input_pair_fraction": 0.9375
+    },
+    "validation": {
+      "observed_group_states": 60,
+      "group_state_fraction": 1.0,
+      "missing_group_state_indices": [],
+      "observed_input_pairs": 16,
+      "possible_input_pairs": 16,
+      "input_pair_fraction": 1.0
+    }
+  },
+  "evaluation_lengths": [
+    2,
+    16,
+    64,
+    128
+  ],
+  "comparison_contract": {
+    "same_training_batches": true,
+    "same_validation_batches": true,
+    "same_state_width": true,
+    "all_actions_norm_preserving": true,
+    "no_affine_writes": true,
+    "parameter_counts_are_reported_not_matched": true
+  },
+  "results": [
+    {
+      "family": "pure_ga_rotor",
+      "parameters": 2061,
+      "parameter_shape_sha256": "8c2b63f8aafc2f8e3aa3c6a4f4d847b828ad1f91db28921e9c5b95bed3acec1f",
+      "initial_parameter_sha256": "d548caaa6c052204ac506cca00a08af02f89c7a0db66ad95cdd58f937194732d",
+      "state_scalars_per_sequence": 32,
+      "has_decay": false,
+      "has_affine_write": false,
+      "has_residual_or_feed_forward_path": false,
+      "a5_irrep_initialization": false,
+      "actions_frozen": false,
+      "initial_validation_loss": 4.094603776931763,
+      "initial_validation_prefix_accuracy": 0.0421142578125,
+      "initial_validation_final_position_accuracy": 0.015625,
+      "initial_mechanism_diagnostics": {
+        "canonical_max_word_length": 6,
+        "operator_orthogonality_rms": 0.0,
+        "operator_orthogonality_max": 0.0,
+        "cayley_edge_relation_rms": 0.0,
+        "cayley_edge_relation_max": 0.0,
+        "linear_homomorphism_rms": 0.0,
+        "linear_homomorphism_max": 0.0,
+        "identity_word_state_drift_rms": 0.0,
+        "identity_word_state_drift_max": 0.0,
+        "orbit_cayley_edge_rms": 0.0,
+        "orbit_cayley_edge_max": 0.0,
+        "decoded_cayley_edge_accuracy": 0.016666666666666666,
+        "orbit_homomorphism_rms": 0.0,
+        "orbit_homomorphism_max": 0.0,
+        "canonical_orbit_directional_homomorphism_rms": 0.0,
+        "canonical_orbit_directional_homomorphism_max": 0.0,
+        "decoded_homomorphism_accuracy": 0.01666666753590107,
+        "reachable_linear_span_rank": 1,
+        "state_dimension": 32,
+        "reachable_span_homomorphism_rms": 0.0,
+        "reachable_span_homomorphism_max": 0.0,
+        "orthogonal_complement_dimension": 31,
+        "orthogonal_complement_homomorphism_rms": 0.0,
+        "orthogonal_complement_homomorphism_max": 0.0,
+        "orbit_variation_span_rank": 0,
+        "orbit_variation_span_homomorphism_rms": null,
+        "orbit_variation_span_homomorphism_max": null,
+        "common_fixed_subspace_dimension": 32,
+        "common_fixed_constraint_min_singular_value": 0.0,
+        "common_fixed_constraint_rank_tolerance": 1e-06,
+        "common_fixed_subspace_homomorphism_rms": 0.0,
+        "common_fixed_subspace_homomorphism_max": 0.0,
+        "cl3_invariant_grade_dimension": 8,
+        "cl3_invariant_grade_homomorphism_rms": 0.0,
+        "cl3_invariant_grade_homomorphism_max": 0.0,
+        "generator_commutator_separation": 0.0,
+        "mean_generator_pair_commutator_separation": 0.0,
+        "maximum_commutator_token_pair": [
+          0,
+          1
+        ],
+        "prototype_minimum_margin": 0.0,
+        "prototype_median_distance": 0.0,
+        "canonical_prototype_accuracy": 0.01666666753590107,
+        "mean_action_displacement_from_identity": 0.0,
+        "max_action_displacement_from_identity": 0.0,
+        "per_token_mean_action_displacement": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "mean_rotor_angle_radians": 0.0,
+        "max_rotor_angle_radians": 0.0,
+        "per_token_mean_rotor_angle_radians": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "final_validation_loss": 0.0015513963880948722,
+      "final_validation_prefix_accuracy": 1.0,
+      "final_validation_final_position_accuracy": 1.0,
+      "maximum_validation_state_norm_error": 1.9669532775878906e-06,
+      "length_generalization": {
+        "2": {
+          "validation_loss": 0.00027894441154785454,
+          "prefix_accuracy": 1.0,
+          "final_position_accuracy": 1.0,
+          "maximum_state_norm_error": 2.980232238769531e-07
+        },
+        "16": {
+          "validation_loss": 0.0015730811865068972,
+          "prefix_accuracy": 1.0,
+          "final_position_accuracy": 1.0,
+          "maximum_state_norm_error": 1.9669532775878906e-06
+        },
+        "64": {
+          "validation_loss": 0.006576069863513112,
+          "prefix_accuracy": 1.0,
+          "final_position_accuracy": 1.0,
+          "maximum_state_norm_error": 7.033348083496094e-06
+        },
+        "128": {
+          "validation_loss": 0.008942585438489914,
+          "prefix_accuracy": 0.9999771118164062,
+          "final_position_accuracy": 1.0,
+          "maximum_state_norm_error": 1.33514404296875e-05
+        }
+      },
+      "mechanism_diagnostics": {
+        "canonical_max_word_length": 6,
+        "operator_orthogonality_rms": 1.7884519559452467e-07,
+        "operator_orthogonality_max": 3.7678249000444565e-07,
+        "cayley_edge_relation_rms": 0.39820650090134296,
+        "cayley_edge_relation_max": 1.3747468135396619,
+        "linear_homomorphism_rms": 0.6365827802424251,
+        "linear_homomorphism_max": 1.3977112691593254,
+        "identity_word_state_drift_rms": 0.21779595370859364,
+        "identity_word_state_drift_max": 0.39628020378938955,
+        "orbit_cayley_edge_rms": 0.11560612988423336,
+        "orbit_cayley_edge_max": 0.25369344752680373,
+        "decoded_cayley_edge_accuracy": 1.0,
+        "orbit_homomorphism_rms": 0.19785943430719774,
+        "orbit_homomorphism_max": 0.39628020378938955,
+        "canonical_orbit_directional_homomorphism_rms": 0.19785943430719774,
+        "canonical_orbit_directional_homomorphism_max": 0.39628020378938955,
+        "decoded_homomorphism_accuracy": 1.0,
+        "reachable_linear_span_rank": 25,
+        "state_dimension": 32,
+        "reachable_span_homomorphism_rms": 0.7202112010975235,
+        "reachable_span_homomorphism_max": 1.2744645643305434,
+        "orthogonal_complement_dimension": 7,
+        "orthogonal_complement_homomorphism_rms": 9.096949362931705e-06,
+        "orthogonal_complement_homomorphism_max": 1.6302407146029843e-05,
+        "orbit_variation_span_rank": 24,
+        "orbit_variation_span_homomorphism_rms": 0.7350624790522914,
+        "orbit_variation_span_homomorphism_max": 1.3007449491113408,
+        "common_fixed_subspace_dimension": 8,
+        "common_fixed_constraint_min_singular_value": 1.6859908686407645e-07,
+        "common_fixed_constraint_rank_tolerance": 2.950380870057779e-06,
+        "common_fixed_subspace_homomorphism_rms": 3.5202630859347084e-07,
+        "common_fixed_subspace_homomorphism_max": 9.466342940330645e-07,
+        "cl3_invariant_grade_dimension": 8,
+        "cl3_invariant_grade_homomorphism_rms": 3.521103583504389e-07,
+        "cl3_invariant_grade_homomorphism_max": 9.467212432917084e-07,
+        "generator_commutator_separation": 0.31318687513042603,
+        "mean_generator_pair_commutator_separation": 0.21397554229463994,
+        "maximum_commutator_token_pair": [
+          1,
+          2
+        ],
+        "prototype_minimum_margin": 0.8584448896308059,
+        "prototype_median_distance": 1.4756917216425474,
+        "canonical_prototype_accuracy": 1.0,
+        "mean_action_displacement_from_identity": 0.550844446187337,
+        "max_action_displacement_from_identity": 1.2195432653794462,
+        "per_token_mean_action_displacement": [
+          0.34337962952037465,
+          0.3457578043418921,
+          0.7564921477698141,
+          0.757748203117267
+        ],
+        "mean_rotor_angle_radians": 0.8866277933120728,
+        "max_rotor_angle_radians": 2.079774856567383,
+        "per_token_mean_rotor_angle_radians": [
+          0.5741451382637024,
+          0.5777994394302368,
+          1.19693922996521,
+          1.197627305984497
+        ]
+      },
+      "path_holonomy_diagnostics": {
+        "loss": 1.7869194746017456,
+        "separation_loss": 0.0,
+        "path_holonomy_rms": 1.0725798606872559,
+        "path_holonomy_max": 1.631919503211975,
+        "canonical_minimum_margin": 0.8584445714950562,
+        "alternate_mean_target_distance": 0.7001893520355225,
+        "alternate_minimum_nearest_negative_margin": 0.3025602102279663
+      },
+      "path_holonomy_diagnostics_by_multiplier": {
+        "2": {
+          "loss": 1.5220974683761597,
+          "separation_loss": 0.0,
+          "path_holonomy_rms": 0.8968247175216675,
+          "path_holonomy_max": 1.623720407485962,
+          "canonical_minimum_margin": 0.8584445714950562,
+          "alternate_mean_target_distance": 0.5451642274856567,
+          "alternate_minimum_nearest_negative_margin": 0.3485797047615051
+        },
+        "3": {
+          "loss": 1.7498936653137207,
+          "separation_loss": 0.0,
+          "path_holonomy_rms": 1.0521008968353271,
+          "path_holonomy_max": 1.6325297355651855,
+          "canonical_minimum_margin": 0.8584445714950562,
+          "alternate_mean_target_distance": 0.662537157535553,
+          "alternate_minimum_nearest_negative_margin": 0.3399958610534668
+        },
+        "4": {
+          "loss": 1.7869194746017456,
+          "separation_loss": 0.0,
+          "path_holonomy_rms": 1.0725798606872559,
+          "path_holonomy_max": 1.631919503211975,
+          "canonical_minimum_margin": 0.8584445714950562,
+          "alternate_mean_target_distance": 0.7001893520355225,
+          "alternate_minimum_nearest_negative_margin": 0.3025602102279663
+        },
+        "5": {
+          "loss": 1.6237800121307373,
+          "separation_loss": 0.0,
+          "path_holonomy_rms": 0.9166901707649231,
+          "path_holonomy_max": 1.6325736045837402,
+          "canonical_minimum_margin": 0.8584445714950562,
+          "alternate_mean_target_distance": 0.5409831404685974,
+          "alternate_minimum_nearest_negative_margin": 0.28082185983657837
+        }
+      },
+      "training_trajectory": {},
+      "streaming_equivalence": {
+        "chunked_logit_max_abs_error": 0.0,
+        "streaming_logit_max_abs_error": 7.62939453125e-06,
+        "chunked_state_max_abs_error": 0.0,
+        "streaming_state_max_abs_error": 0.0
+      },
+      "elapsed_seconds": 101.03116040001623,
+      "steps_per_second": 14.846904599145423,
+      "peak_cuda_memory_mib": 118.6787109375
+    }
+  ]
+}

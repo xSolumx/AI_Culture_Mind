@@ -1,0 +1,333 @@
+\ifdefined\XeTeXrevision
+\else
+  \pdfoutput=1
+\fi
+\documentclass[11pt]{amsart}
+
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{booktabs}
+\usepackage[hidelinks]{hyperref}
+\usepackage[nameinlink,capitalize,noabbrev]{cleveref}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\DeclareMathOperator{\Spin}{Spin}
+\DeclareMathOperator{\tr}{tr}
+\DeclareMathOperator{\rank}{rank}
+\DeclareMathOperator{\Gr}{Gr}
+
+\title[Balanced Cayley information spectra]{Balanced Cayley Information Spectra for $\Spin(8)$ Triality Sensors}
+\author{Hayden Austin}
+\date{August 2026}
+\keywords{$\Spin(8)$, triality, Cayley four-form, optimal design, information Gram operator}
+\hypersetup{
+  pdftitle={Balanced Cayley Information Spectra for Spin(8) Triality Sensors},
+  pdfauthor={Hayden Austin},
+  pdfsubject={Exact information spectra for orthonormal balanced Spin(8) triality sensors},
+  pdfkeywords={Spin(8), triality, Cayley four-form, optimal design, information Gram operator}
+}
+
+\begin{document}
+
+\begin{abstract}
+Five infinitesimal observations of a shared $\Spin(8)$ action define a
+$28\times28$ information Gram operator.  For the balanced allocation of one
+vector, two positive-chiral, and two negative-chiral probes, the orthonormal
+design space reduces to one Cayley parameter $c\in[-1,1]$.  We give an exact
+block decomposition of the complete information family into fixed coordinate
+subspaces of dimensions $8+8+8+4$ and prove
+\[
+  \det I_c=\frac{(1-c^2)^3(9-c^2)^2}{1024}.
+\]
+The direct spectral moments $\tr I_c=35$ and $\tr(I_c^2)=67$ are constant,
+whereas $\tr(I_c^{-1})$ and $\tr(I_c^{-2})$ increase strictly with $c^2$.
+Consequently the Cayley-null orbit is simultaneously D-optimal, A-optimal,
+and inverse-Frobenius optimal within the complete orthonormal balanced family.
+At the calibrated endpoints the rank is $25$ and the three lost eigenvalues
+vanish at the common rate $(1-c^2)/8$.  The result is exact on the stated
+orbit; it does not assert global optimality among nonorthogonal designs or
+other allocations.
+\end{abstract}
+
+\maketitle
+
+\section{Introduction}
+
+Triality permutes the vector and two real chiral-spinor representations of
+$\Spin(8)$, all of dimension eight.  This exceptional symmetry has long been
+central to the geometry of the Cayley four-form and its $\Spin(7)$ stabilizer
+\cite{HarveyLawson1982,KatzShnider2010}.  Here it is used as an information
+geometry: a collection of probes observes one shared infinitesimal
+$\mathfrak{spin}(8)$ action through the three triality-related views.
+
+The resulting design problem is finite-dimensional but unusually rigid.  A
+unit probe contributes a rank-seven orthogonal projector on the action
+parameter space, which has dimension $28$.  Five probes are therefore the
+first cardinality at which full local identifiability is possible.  The
+balanced allocation studied here places one probe in the vector representation
+and two in each chiral representation.
+
+The main result is not only the determinant formula in the abstract.  A fixed
+$8+8+8+4$ decomposition explains every determinant factor, proves an exact
+duplication between two eight-dimensional blocks, and exposes a family whose
+first two direct spectral moments remain fixed while its inverse moments
+deteriorate monotonically.  This supplies three aligned design criteria and a
+precise conditioning law at the singular endpoint.
+
+The proof has two layers.  The standard cohomogeneity-one orbit description
+for the $\Spin(7)$ action on oriented four-planes supplies the global orbit
+parameter; it is recalled explicitly in the Cayley-hyperbolic-plane discussion
+of \cite[Section~4]{BerndtTamaru2007}.  Exact rational calculations then verify
+the internal $2+2$ flag quotient, construct the information operator, and
+prove the block and spectral identities.  The computer-assisted portion is a
+finite collection of exact symbolic identities, not a floating-point search.
+
+\section{Triality information operators}
+
+Let $V,S^+,S^-\cong\mathbb R^8$ denote the vector and two real chiral-spinor
+representations.  Fix a bivector basis $E_1,\dots,E_{28}$ of
+$\mathfrak{so}(8)$, and let $G_r^{(\alpha)}$ be the corresponding
+skew-symmetric generator matrices in view $\alpha\in\{V,+,-\}$.
+
+For a unit probe $x\in\mathbb R^8$, define
+\[
+ J_\alpha(x)
+ =\begin{bmatrix}G_1^{(\alpha)}x&\cdots&G_{28}^{(\alpha)}x\end{bmatrix}
+ \in\mathbb R^{8\times28},
+ \qquad
+ P_\alpha(x)=J_\alpha(x)^{\mathsf T}J_\alpha(x).
+\]
+The stabilizer of a unit vector is $\Spin(7)$, hence $P_\alpha(x)$ has rank
+seven.  For a balanced design $(v;p_1,p_2;n_1,n_2)$, set
+\[
+ I=P_V(v)+P_+(p_1)+P_+(p_2)+P_-(n_1)+P_-(n_2).
+\]
+
+\begin{lemma}[same-view basis invariance]\label{lem:basis-invariance}
+For an orthonormal pair $(x,y)$ in one triality view and
+$\bigl(\begin{smallmatrix}r&t\\-t&r\end{smallmatrix}\bigr)\in O(2)$,
+\[
+ P_\alpha(rx+ty)+P_\alpha(-tx+ry)
+ =P_\alpha(x)+P_\alpha(y).
+\]
+\end{lemma}
+
+\begin{proof}
+The Jacobian is linear in the probe.  Expanding both quadratic contributions
+cancels the mixed terms and uses $r^2+t^2=1$.
+\end{proof}
+
+\section{The one-parameter balanced orbit}
+
+The $\Spin(8)$ action first fixes $v=e_0$, leaving a $\Spin(7)$ stabilizer.
+Clifford multiplication by $e_0$ identifies the two restricted chiral modules,
+so the remaining probes determine an orthonormal four-frame in a common
+$\mathbb R^8$.  The associated oriented four-plane is classified by its Cayley
+coordinate $c\in[-1,1]$ under the cohomogeneity-one $\Spin(7)$ action; see the
+explicit orbit description in \cite[Section~4]{BerndtTamaru2007} and the
+triality/Cayley background in \cite{KatzShnider2010}.
+
+The information operator retains a $2+2$ split of this four-plane.  The
+following proposition records the additional flag statement required to show
+that no second continuous invariant survives.
+
+\begin{proposition}[balanced-flag normal form]\label{prop:normal-form}
+Every orthonormal balanced design is information-spectrally equivalent to
+\[
+ (e_0;e_0,e_1;e_2,ce_3+se_4),
+ \qquad c^2+s^2=1.
+\]
+After the independent $O(2)$ basis freedoms from
+\cref{lem:basis-invariance}, the spectrum depends only on $z=c^2\in[0,1]$.
+\end{proposition}
+
+\begin{proof}
+The classical orbit classification reduces the oriented four-plane to the
+Cayley coordinate.  At an exact rational principal representative, the
+four-plane stabilizer has dimension six and its restriction spans all of
+$\mathfrak{so}(4)$.  Principal isotropy conjugacy propagates this statement
+through the principal stratum.  Thus the stabilizer is transitive on oriented
+orthogonal $2+2$ splittings, with stabilizer
+$SO(2)\times SO(2)$.  Exact endpoint calculations give the same full
+$\mathfrak{so}(4)$ restricted image on both singular orbits.  Finally,
+reflecting one same-view pair changes $c$ to $-c$ while leaving its summed
+information contribution unchanged.  The exact rational rank and restriction
+identities are included in the accompanying certificate.
+\end{proof}
+
+\begin{remark}
+The proposition deliberately separates the cited global four-plane orbit
+classification from the exact internal flag calculation.  A local rank count
+alone would not establish the global interval normal form.
+\end{remark}
+
+\section{Exact invariant blocks}
+
+Let $I(c,s)$ denote the information operator of the representative in
+\cref{prop:normal-form}.  All polynomial identities below are taken in
+\(\mathbb Q[c,s]/(c^2+s^2-1)\).
+
+\begin{theorem}[block characteristic laws]\label{thm:blocks}
+A fixed permutation of the bivector coordinates gives
+\[
+ I(c,s)=I_8^{(0)}\oplus I_8^{(1)}\oplus I_8^{(2)}\oplus I_4.
+\]
+Writing $\lambda$ for the spectral variable, the monic block polynomials are
+\begin{align*}
+\chi_0(\lambda)
+={}&-\frac14(\lambda-1)^2
+ (2c\lambda-c-2\lambda^3+8\lambda^2-6\lambda+1)\\
+&\hspace{37mm}\cdot
+ (2c\lambda-c+2\lambda^3-8\lambda^2+6\lambda-1),\\
+\chi_1(\lambda)=\chi_2(\lambda)
+={}&\frac1{16}(c-2\lambda^2+4\lambda-1)
+ (c-2\lambda^2+6\lambda-3)\\
+&\hspace{20mm}\cdot(c+2\lambda^2-6\lambda+3)
+ (c+2\lambda^2-4\lambda+1),\\
+\chi_3(\lambda)={}&(\lambda-1)^2(\lambda^2-3\lambda+1).
+\end{align*}
+Moreover, $I_8^{(1)}$ and $I_8^{(2)}$ are conjugate by a fixed signed
+permutation matrix.
+\end{theorem}
+
+\begin{proof}
+The support graph of the exact $28\times28$ information matrix has four fixed
+connected components.  Direct determinant calculation in the circle quotient
+gives the displayed characteristic polynomials.  Substitution into the
+expanded matrices leaves zero remainder.  A stored signed permutation $U$
+satisfies $UI_8^{(1)}=I_8^{(2)}U$ and $U^{\mathsf T}U=I_8$ entrywise.
+\end{proof}
+
+\section{Determinant and aligned design criteria}
+
+\begin{theorem}[balanced Cayley spectrum]\label{thm:main}
+For $z=c^2\in[0,1]$,
+\[
+ \det I_c=\frac{(1-z)^3(9-z)^2}{1024}.
+\]
+The Cayley-null orbit $z=0$ is the unique D-optimum on the orthonormal balanced
+family, with $\det I_0=81/1024$.  The endpoint $z=1$ has rank $25$.
+\end{theorem}
+
+\begin{proof}
+Evaluating the block polynomials of \cref{thm:blocks} at zero gives
+\[
+ \det I_8^{(0)}=\frac{1-z}{4},\qquad
+ \det I_8^{(1)}=\det I_8^{(2)}=\frac{(1-z)(9-z)}{16},
+ \qquad \det I_4=1.
+\]
+Their product is the stated determinant.  Its derivative is
+\[
+ -\frac{(1-z)^2(9-z)(29-5z)}{1024},
+\]
+which is strictly negative for $0\le z<1$.  The exact endpoint block ranks
+sum to $25$.
+\end{proof}
+
+\begin{theorem}[direct and inverse spectral moments]\label{thm:moments}
+For every $z\in[0,1]$,
+\[
+ \tr I_c=35,
+ \qquad
+ \tr(I_c^2)=67.
+\]
+For $0\le z<1$,
+\begin{align*}
+ \tr(I_c^{-1})
+ &=\frac{11z^2-206z+387}{(1-z)(9-z)},\\
+ \tr(I_c^{-2})
+ &=\frac{19z^4-76z^3+786z^2+2676z+8883}
+ {(1-z)^2(9-z)^2}.
+\end{align*}
+Both inverse moments increase strictly with $z$.
+\end{theorem}
+
+\begin{proof}
+The direct moments follow from the first coefficients of the block
+characteristic polynomials.  For the inverse moments, logarithmic
+differentiation of $p(\lambda)=\det(\lambda I-I_c)$ at zero gives the displayed
+rational functions.  Their derivatives reduce respectively to
+\[
+ \frac{96(z^2-6z+21)}{(9-z)^2(1-z)^2}
+\]
+and
+\[
+ \frac{16(12609+336z-630z^2-8z^3-19z^4)}
+ {(9-z)^3(1-z)^3}.
+\]
+The first numerator equals $96((z-3)^2+12)$.  On $[0,1]$, the second
+polynomial is at least $12609-630-8-19>0$.
+\end{proof}
+
+\begin{corollary}
+On this family, the Cayley-null orbit uniquely maximizes $\det I$ and uniquely
+minimizes $\tr(I^{-1})$ and
+$\tr(I^{-2})=\lVert I^{-1}\rVert_F^2$.
+\end{corollary}
+
+\section{Equal-rate loss of identifiability}
+
+\begin{theorem}[endpoint asymptotics]\label{thm:endpoint}
+As $z\uparrow1$, exactly three eigenvalues vanish and
+\[
+ \lambda_j(z)=\frac{1-z}{8}+O((1-z)^2),\qquad j=1,2,3.
+\]
+\end{theorem}
+
+\begin{proof}
+At $c=1$, each eight-dimensional block polynomial has a simple zero root.
+Exact implicit differentiation gives $d\lambda_j/dc=-1/4$ for all three
+blocks.  Since $1-c^2=-2(c-1)+O((c-1)^2)$, the common slope in $1-z$ is
+$1/8$.
+\end{proof}
+
+\begin{corollary}[conditioning law]\label{cor:conditioning}
+The largest surviving endpoint eigenvalue is $2+\sqrt2$, and
+\begin{align*}
+ \kappa_2(I_c)&=\frac{8(2+\sqrt2)}{1-z}+O(1),\\
+ \tr(I_c^{-1})&=\frac{24}{1-z}+O(1),\\
+ \tr(I_c^{-2})&=\frac{192}{(1-z)^2}+O((1-z)^{-1}).
+\end{align*}
+\end{corollary}
+
+\begin{proof}
+Factor the surviving endpoint polynomials in \cref{thm:blocks}, then invert
+the three expansions from \cref{thm:endpoint}.
+\end{proof}
+
+\section{Proof objects and scope}
+
+The accompanying repository constructs the three rational triality generator
+families, checks their Lie brackets and common equivariance tensor, computes
+the principal and endpoint flag stabilizers, builds the exact information
+family, and verifies every block identity in the circle quotient.  Independent
+SymPy and FLINT calculations replay selected derivative and Bernstein
+identities \cite{Farouki2012}.  Artifact hashes establish byte provenance;
+they do not replace the algebraic replay.
+
+The theorem is confined to the complete orthonormal balanced orbit.  It does
+not prove that orthonormalization improves every correlated frame, does not
+compare all five-probe allocations, and does not establish any advantage for
+sequence models.  Exact signed-star and residual-edge results address separate
+nonorthogonal subfamilies, while the unrestricted Dirac--Gram inequality
+remains open.
+
+\section*{Data and code availability}
+
+The exact source, tests, and machine-readable proof artifacts are included in
+the associated repository.  The source archive records the Python and
+python-flint versions, bounded thread settings, and SHA-256 manifest required
+for replay.
+
+\bibliographystyle{amsplain}
+\bibliography{references}
+
+\end{document}

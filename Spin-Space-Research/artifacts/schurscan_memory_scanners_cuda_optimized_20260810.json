@@ -1,0 +1,763 @@
+{
+  "experiment": "SchurScan structured-slot memory scanner benchmark",
+  "device_metadata": {
+    "device": "cuda",
+    "torch": "2.12.0+cu130",
+    "python": "3.12.10",
+    "platform": "Windows-11-10.0.22631-SP0",
+    "cpu_logical_count": 8,
+    "torch_cpu_threads": 6,
+    "torch_interop_threads": 8,
+    "cuda_available": true,
+    "cuda_runtime": "13.0",
+    "cuda_matmul_allow_tf32": false,
+    "gpu_name": "NVIDIA GeForce RTX 2070 SUPER",
+    "gpu_compute_capability": [
+      7,
+      5
+    ],
+    "gpu_total_memory_bytes": 8589606912
+  },
+  "protocol": {
+    "dtype": "float32",
+    "batch": 2,
+    "slots": 8,
+    "coordinates_per_slot": 8,
+    "state_scalars": 64,
+    "lengths": [
+      64,
+      256,
+      1024,
+      2048,
+      4096
+    ],
+    "warmup": 5,
+    "repeats": 15,
+    "seed": 20260810,
+    "input_generation_timed": false,
+    "dense_materialization_in_scan_only_rows": false,
+    "dense_materialization_in_end_to_end_rows": true,
+    "tf32_disabled": true
+  },
+  "rows": [
+    {
+      "length": 64,
+      "batch": 2,
+      "timing_order": [
+        "slot_hillis_scan_only",
+        "slot_work_efficient_scan_only",
+        "slot_local_homogeneous_hillis_scan_only",
+        "slot_local_homogeneous_work_efficient_scan_only",
+        "dense_affine_work_efficient_scan_only",
+        "dense_homogeneous_work_efficient_scan_only",
+        "slot_local_homogeneous_hillis_end_to_end",
+        "slot_local_homogeneous_work_efficient_end_to_end",
+        "dense_affine_work_efficient_end_to_end",
+        "dense_homogeneous_work_efficient_end_to_end"
+      ],
+      "maximum_relative_errors": {
+        "slot_hillis_scan_only": 4.115330660234021e-07,
+        "slot_work_efficient_scan_only": 2.469198396140412e-07,
+        "slot_local_homogeneous_hillis_scan_only": 3.2922645281872165e-07,
+        "slot_local_homogeneous_work_efficient_scan_only": 2.8807314621638144e-07,
+        "dense_affine_work_efficient_scan_only": 3.7037975942106186e-07,
+        "dense_homogeneous_work_efficient_scan_only": 3.7037975942106186e-07,
+        "slot_local_homogeneous_hillis_end_to_end": 3.2922645281872165e-07,
+        "slot_local_homogeneous_work_efficient_end_to_end": 2.8807314621638144e-07,
+        "dense_affine_work_efficient_end_to_end": 3.7037975942106186e-07,
+        "dense_homogeneous_work_efficient_end_to_end": 3.7037975942106186e-07
+      },
+      "correctness_passed": true,
+      "timings_ms": {
+        "slot_hillis_scan_only": {
+          "median_ms": 2.3508799076080322,
+          "minimum_ms": 2.330656051635742,
+          "p20_ms": 2.3407231330871583,
+          "p80_ms": 2.3876287937164307,
+          "mean_ms": 2.3621333122253416,
+          "stdev_ms": 0.02373896743029016,
+          "repeats": 15
+        },
+        "slot_work_efficient_scan_only": {
+          "median_ms": 3.2765119075775146,
+          "minimum_ms": 3.2103679180145264,
+          "p20_ms": 3.2646015644073487,
+          "p80_ms": 3.299596738815308,
+          "mean_ms": 3.2805930455525716,
+          "stdev_ms": 0.031933677850532916,
+          "repeats": 15
+        },
+        "slot_local_homogeneous_hillis_scan_only": {
+          "median_ms": 0.9602879881858826,
+          "minimum_ms": 0.9499840140342712,
+          "p20_ms": 0.9554496169090271,
+          "p80_ms": 0.9907968163490295,
+          "mean_ms": 0.9741311987241109,
+          "stdev_ms": 0.023605451067772565,
+          "repeats": 15
+        },
+        "slot_local_homogeneous_work_efficient_scan_only": {
+          "median_ms": 1.1100159883499146,
+          "minimum_ms": 1.0357760190963745,
+          "p20_ms": 1.0724287748336792,
+          "p80_ms": 1.138809585571289,
+          "mean_ms": 1.100106676419576,
+          "stdev_ms": 0.037268072123345555,
+          "repeats": 15
+        },
+        "dense_affine_work_efficient_scan_only": {
+          "median_ms": 2.3681600093841553,
+          "minimum_ms": 2.292799949645996,
+          "p20_ms": 2.3172608375549317,
+          "p80_ms": 2.435187292098999,
+          "mean_ms": 2.388366937637329,
+          "stdev_ms": 0.0887276430233466,
+          "repeats": 15
+        },
+        "dense_homogeneous_work_efficient_scan_only": {
+          "median_ms": 1.0071359872817993,
+          "minimum_ms": 1.0014400482177734,
+          "p20_ms": 1.0032768249511719,
+          "p80_ms": 1.0125056266784669,
+          "mean_ms": 1.008567468325297,
+          "stdev_ms": 0.005435844236587157,
+          "repeats": 15
+        },
+        "slot_local_homogeneous_hillis_end_to_end": {
+          "median_ms": 1.119104027748108,
+          "minimum_ms": 1.109887957572937,
+          "p20_ms": 1.1152127981185913,
+          "p80_ms": 1.1246655702590942,
+          "mean_ms": 1.119490122795105,
+          "stdev_ms": 0.006135151436619986,
+          "repeats": 15
+        },
+        "slot_local_homogeneous_work_efficient_end_to_end": {
+          "median_ms": 1.2053120136260986,
+          "minimum_ms": 1.1981439590454102,
+          "p20_ms": 1.2005248069763184,
+          "p80_ms": 1.2103296279907227,
+          "mean_ms": 1.2056511958440146,
+          "stdev_ms": 0.005529625417844197,
+          "repeats": 15
+        },
+        "dense_affine_work_efficient_end_to_end": {
+          "median_ms": 2.6078720092773438,
+          "minimum_ms": 2.5844480991363525,
+          "p20_ms": 2.6019968032836918,
+          "p80_ms": 2.6228479862213137,
+          "mean_ms": 2.6113792101542157,
+          "stdev_ms": 0.014052755427608334,
+          "repeats": 15
+        },
+        "dense_homogeneous_work_efficient_end_to_end": {
+          "median_ms": 1.3946880102157593,
+          "minimum_ms": 1.375872015953064,
+          "p20_ms": 1.3787200450897217,
+          "p80_ms": 1.4084160327911377,
+          "mean_ms": 1.3977386792500814,
+          "stdev_ms": 0.021307777498034725,
+          "repeats": 15
+        }
+      },
+      "incremental_cuda_memory_bytes": {
+        "slot_hillis_scan_only": 269312,
+        "slot_work_efficient_scan_only": 309248,
+        "slot_local_homogeneous_hillis_scan_only": 1954816,
+        "slot_local_homogeneous_work_efficient_scan_only": 1489408,
+        "dense_affine_work_efficient_scan_only": 7470592,
+        "dense_homogeneous_work_efficient_scan_only": 8177152,
+        "slot_local_homogeneous_hillis_end_to_end": 2286592,
+        "slot_local_homogeneous_work_efficient_end_to_end": 1821184,
+        "dense_affine_work_efficient_end_to_end": 9567744,
+        "dense_homogeneous_work_efficient_end_to_end": 12503552
+      },
+      "fastest_median_backend": "slot_local_homogeneous_hillis_scan_only",
+      "composition_counts": {
+        "hillis_steele": 321,
+        "work_efficient": 190
+      },
+      "dependency_depths": {
+        "hillis_steele": 6,
+        "work_efficient": 13
+      }
+    },
+    {
+      "length": 256,
+      "batch": 2,
+      "timing_order": [
+        "slot_work_efficient_scan_only",
+        "slot_local_homogeneous_hillis_scan_only",
+        "slot_local_homogeneous_work_efficient_scan_only",
+        "dense_affine_work_efficient_scan_only",
+        "dense_homogeneous_work_efficient_scan_only",
+        "slot_local_homogeneous_hillis_end_to_end",
+        "slot_local_homogeneous_work_efficient_end_to_end",
+        "dense_affine_work_efficient_end_to_end",
+        "dense_homogeneous_work_efficient_end_to_end",
+        "slot_hillis_scan_only"
+      ],
+      "maximum_relative_errors": {
+        "slot_hillis_scan_only": 4.502428215817143e-07,
+        "slot_work_efficient_scan_only": 3.9396246888400003e-07,
+        "slot_local_homogeneous_hillis_scan_only": 3.376821161862857e-07,
+        "slot_local_homogeneous_work_efficient_scan_only": 3.9396246888400003e-07,
+        "dense_affine_work_efficient_scan_only": 3.9396246888400003e-07,
+        "dense_homogeneous_work_efficient_scan_only": 3.9396246888400003e-07,
+        "slot_local_homogeneous_hillis_end_to_end": 3.376821161862857e-07,
+        "slot_local_homogeneous_work_efficient_end_to_end": 3.9396246888400003e-07,
+        "dense_affine_work_efficient_end_to_end": 3.9396246888400003e-07,
+        "dense_homogeneous_work_efficient_end_to_end": 3.9396246888400003e-07
+      },
+      "correctness_passed": true,
+      "timings_ms": {
+        "slot_work_efficient_scan_only": {
+          "median_ms": 4.219679832458496,
+          "minimum_ms": 4.178944110870361,
+          "p20_ms": 4.200166416168213,
+          "p80_ms": 4.2487743377685545,
+          "mean_ms": 4.2315797487894695,
+          "stdev_ms": 0.045282551354726946,
+          "repeats": 15
+        },
+        "slot_local_homogeneous_hillis_scan_only": {
+          "median_ms": 1.1772799491882324,
+          "minimum_ms": 1.1607999801635742,
+          "p20_ms": 1.1661183595657347,
+          "p80_ms": 1.1829439878463746,
+          "mean_ms": 1.1780927817026774,
+          "stdev_ms": 0.014149358489768721,
+          "repeats": 15
+        },
+        "slot_local_homogeneous_work_efficient_scan_only": {
+          "median_ms": 1.2924480438232422,
+          "minimum_ms": 1.286784052848816,
+          "p20_ms": 1.2902080059051513,
+          "p80_ms": 1.2972031831741333,
+          "mean_ms": 1.295304544766744,
+          "stdev_ms": 0.009373789665120391,
+          "repeats": 15
+        },
+        "dense_affine_work_efficient_scan_only": {
+          "median_ms": 2.987839937210083,
+          "minimum_ms": 2.961728096008301,
+          "p20_ms": 2.982732820510864,
+          "p80_ms": 3.012006425857544,
+          "mean_ms": 3.001092274983724,
+          "stdev_ms": 0.03923704496646255,
+          "repeats": 15
+        },
+        "dense_homogeneous_work_efficient_scan_only": {
+          "median_ms": 1.3789119720458984,
+          "minimum_ms": 1.3680319786071777,
+          "p20_ms": 1.375545597076416,
+          "p80_ms": 1.3886208295822144,
+          "mean_ms": 1.3814122676849365,
+          "stdev_ms": 0.008567108987665321,
+          "repeats": 15
+        },
+        "slot_local_homogeneous_hillis_end_to_end": {
+          "median_ms": 1.319424033164978,
+          "minimum_ms": 1.302880048751831,
+          "p20_ms": 1.3074432134628298,
+          "p80_ms": 1.3482239484786989,
+          "mean_ms": 1.326801077524821,
+          "stdev_ms": 0.023701291979847373,
+          "repeats": 15
+        },
+        "slot_local_homogeneous_work_efficient_end_to_end": {
+          "median_ms": 1.4420160055160522,
+          "minimum_ms": 1.432479977607727,
+          "p20_ms": 1.4358272075653078,
+          "p80_ms": 1.444812846183777,
+          "mean_ms": 1.4420010646184285,
+          "stdev_ms": 0.006696545799446802,
+          "repeats": 15
+        },
+        "dense_affine_work_efficient_end_to_end": {
+          "median_ms": 3.238368034362793,
+          "minimum_ms": 3.110368013381958,
+          "p20_ms": 3.1150081157684326,
+          "p80_ms": 3.249395179748535,
+          "mean_ms": 3.2175467173258463,
+          "stdev_ms": 0.06931249150366528,
+          "repeats": 15
+        },
+        "dense_homogeneous_work_efficient_end_to_end": {
+          "median_ms": 1.7322880029678345,
+          "minimum_ms": 1.726464033126831,
+          "p20_ms": 1.7286912441253661,
+          "p80_ms": 1.7386752367019653,
+          "mean_ms": 1.7329280058542886,
+          "stdev_ms": 0.004760228199932027,
+          "repeats": 15
+        },
+        "slot_hillis_scan_only": {
+          "median_ms": 3.174783945083618,
+          "minimum_ms": 3.124959945678711,
+          "p20_ms": 3.164691209793091,
+          "p80_ms": 3.1819072723388673,
+          "mean_ms": 3.1722453276316327,
+          "stdev_ms": 0.01945697725801908,
+          "repeats": 15
+        }
+      },
+      "incremental_cuda_memory_bytes": {
+        "slot_work_efficient_scan_only": 1236992,
+        "slot_local_homogeneous_hillis_scan_only": 8221184,
+        "slot_local_homogeneous_work_efficient_scan_only": 5968384,
+        "dense_affine_work_efficient_scan_only": 30504960,
+        "dense_homogeneous_work_efficient_scan_only": 30710784,
+        "slot_local_homogeneous_hillis_end_to_end": 9543168,
+        "slot_local_homogeneous_work_efficient_end_to_end": 7574528,
+        "dense_affine_work_efficient_end_to_end": 38893568,
+        "dense_homogeneous_work_efficient_end_to_end": 47752192,
+        "slot_hillis_scan_only": 1092608
+      },
+      "fastest_median_backend": "slot_local_homogeneous_hillis_scan_only",
+      "composition_counts": {
+        "hillis_steele": 1793,
+        "work_efficient": 766
+      },
+      "dependency_depths": {
+        "hillis_steele": 8,
+        "work_efficient": 17
+      }
+    },
+    {
+      "length": 1024,
+      "batch": 2,
+      "timing_order": [
+        "slot_local_homogeneous_hillis_scan_only",
+        "slot_local_homogeneous_work_efficient_scan_only",
+        "dense_affine_work_efficient_scan_only",
+        "dense_homogeneous_work_efficient_scan_only",
+        "slot_local_homogeneous_hillis_end_to_end",
+        "slot_local_homogeneous_work_efficient_end_to_end",
+        "dense_affine_work_efficient_end_to_end",
+        "dense_homogeneous_work_efficient_end_to_end",
+        "slot_hillis_scan_only",
+        "slot_work_efficient_scan_only"
+      ],
+      "maximum_relative_errors": {
+        "slot_hillis_scan_only": 4.389725272458054e-07,
+        "slot_work_efficient_scan_only": 5.365219777448732e-07,
+        "slot_local_homogeneous_hillis_scan_only": 3.901978019962715e-07,
+        "slot_local_homogeneous_work_efficient_scan_only": 4.389725272458054e-07,
+        "dense_affine_work_efficient_scan_only": 4.877472524953394e-07,
+        "dense_homogeneous_work_efficient_scan_only": 4.877472524953394e-07,
+        "slot_local_homogeneous_hillis_end_to_end": 3.901978019962715e-07,
+        "slot_local_homogeneous_work_efficient_end_to_end": 4.389725272458054e-07,
+        "dense_affine_work_efficient_end_to_end": 4.877472524953394e-07,
+        "dense_homogeneous_work_efficient_end_to_end": 4.877472524953394e-07
+      },
+      "correctness_passed": true,
+      "timings_ms": {
+        "slot_local_homogeneous_hillis_scan_only": {
+          "median_ms": 3.825279951095581,
+          "minimum_ms": 3.8214080333709717,
+          "p20_ms": 3.8223999977111816,
+          "p80_ms": 3.8335872173309324,
+          "mean_ms": 3.8273109277089437,
+          "stdev_ms": 0.0051220225127737076,
+          "repeats": 15
+        },
+        "slot_local_homogeneous_work_efficient_scan_only": {
+          "median_ms": 1.7941440343856812,
+          "minimum_ms": 1.7884479761123657,
+          "p20_ms": 1.7905920267105104,
+          "p80_ms": 1.7960959672927856,
+          "mean_ms": 1.794653868675232,
+          "stdev_ms": 0.005258231290022953,
+          "repeats": 15
+        },
+        "dense_affine_work_efficient_scan_only": {
+          "median_ms": 3.989504098892212,
+          "minimum_ms": 3.971328020095825,
+          "p20_ms": 3.9846014976501465,
+          "p80_ms": 4.011705780029297,
+          "mean_ms": 3.996704037984212,
+          "stdev_ms": 0.019153956692746308,
+          "repeats": 15
+        },
+        "dense_homogeneous_work_efficient_scan_only": {
+          "median_ms": 2.683135986328125,
+          "minimum_ms": 2.652031898498535,
+          "p20_ms": 2.670182466506958,
+          "p80_ms": 2.7168128490448,
+          "mean_ms": 2.723910395304362,
+          "stdev_ms": 0.11249636715732386,
+          "repeats": 15
+        },
+        "slot_local_homogeneous_hillis_end_to_end": {
+          "median_ms": 3.4743359088897705,
+          "minimum_ms": 3.4615039825439453,
+          "p20_ms": 3.46426887512207,
+          "p80_ms": 3.5245823383331296,
+          "mean_ms": 3.5036351680755615,
+          "stdev_ms": 0.065965596586277,
+          "repeats": 15
+        },
+        "slot_local_homogeneous_work_efficient_end_to_end": {
+          "median_ms": 1.8367040157318115,
+          "minimum_ms": 1.820512056350708,
+          "p20_ms": 1.8268288135528563,
+          "p80_ms": 1.8733888149261475,
+          "mean_ms": 1.8467541456222534,
+          "stdev_ms": 0.023626914592927695,
+          "repeats": 15
+        },
+        "dense_affine_work_efficient_end_to_end": {
+          "median_ms": 4.266272068023682,
+          "minimum_ms": 4.23689603805542,
+          "p20_ms": 4.2566910743713375,
+          "p80_ms": 4.28327693939209,
+          "mean_ms": 4.285484822591146,
+          "stdev_ms": 0.06321722262328781,
+          "repeats": 15
+        },
+        "dense_homogeneous_work_efficient_end_to_end": {
+          "median_ms": 3.2456319332122803,
+          "minimum_ms": 3.223615884780884,
+          "p20_ms": 3.232672023773193,
+          "p80_ms": 3.285183906555176,
+          "mean_ms": 3.259549856185913,
+          "stdev_ms": 0.029547055011053962,
+          "repeats": 15
+        },
+        "slot_hillis_scan_only": {
+          "median_ms": 3.8641281127929688,
+          "minimum_ms": 3.850559949874878,
+          "p20_ms": 3.851577568054199,
+          "p80_ms": 3.907520055770874,
+          "mean_ms": 3.879460255304972,
+          "stdev_ms": 0.031159887412140003,
+          "repeats": 15
+        },
+        "slot_work_efficient_scan_only": {
+          "median_ms": 5.140063762664795,
+          "minimum_ms": 5.125504016876221,
+          "p20_ms": 5.1295294761657715,
+          "p80_ms": 5.16517744064331,
+          "mean_ms": 5.149196783701579,
+          "stdev_ms": 0.021439170903769365,
+          "repeats": 15
+        }
+      },
+      "incremental_cuda_memory_bytes": {
+        "slot_local_homogeneous_hillis_scan_only": 31824896,
+        "slot_local_homogeneous_work_efficient_scan_only": 24113152,
+        "dense_affine_work_efficient_scan_only": 120634880,
+        "dense_homogeneous_work_efficient_scan_only": 124412928,
+        "slot_local_homogeneous_hillis_end_to_end": 37128192,
+        "slot_local_homogeneous_work_efficient_end_to_end": 29421568,
+        "dense_affine_work_efficient_end_to_end": 154189312,
+        "dense_homogeneous_work_efficient_end_to_end": 193618944,
+        "slot_hillis_scan_only": 4385792,
+        "slot_work_efficient_scan_only": 4947968
+      },
+      "fastest_median_backend": "slot_local_homogeneous_work_efficient_scan_only",
+      "composition_counts": {
+        "hillis_steele": 9217,
+        "work_efficient": 3070
+      },
+      "dependency_depths": {
+        "hillis_steele": 10,
+        "work_efficient": 21
+      }
+    },
+    {
+      "length": 2048,
+      "batch": 2,
+      "timing_order": [
+        "slot_local_homogeneous_work_efficient_scan_only",
+        "dense_affine_work_efficient_scan_only",
+        "dense_homogeneous_work_efficient_scan_only",
+        "slot_local_homogeneous_hillis_end_to_end",
+        "slot_local_homogeneous_work_efficient_end_to_end",
+        "dense_affine_work_efficient_end_to_end",
+        "dense_homogeneous_work_efficient_end_to_end",
+        "slot_hillis_scan_only",
+        "slot_work_efficient_scan_only",
+        "slot_local_homogeneous_hillis_scan_only"
+      ],
+      "maximum_relative_errors": {
+        "slot_hillis_scan_only": 2.428451976487922e-07,
+        "slot_work_efficient_scan_only": 2.914142371785507e-07,
+        "slot_local_homogeneous_hillis_scan_only": 3.399832767083091e-07,
+        "slot_local_homogeneous_work_efficient_scan_only": 2.671297174136714e-07,
+        "dense_affine_work_efficient_scan_only": 3.399832767083091e-07,
+        "dense_homogeneous_work_efficient_scan_only": 3.8855231623806756e-07,
+        "slot_local_homogeneous_hillis_end_to_end": 3.399832767083091e-07,
+        "slot_local_homogeneous_work_efficient_end_to_end": 2.671297174136714e-07,
+        "dense_affine_work_efficient_end_to_end": 3.399832767083091e-07,
+        "dense_homogeneous_work_efficient_end_to_end": 3.8855231623806756e-07
+      },
+      "correctness_passed": true,
+      "timings_ms": {
+        "slot_local_homogeneous_work_efficient_scan_only": {
+          "median_ms": 2.3519039154052734,
+          "minimum_ms": 2.3327040672302246,
+          "p20_ms": 2.341593551635742,
+          "p80_ms": 2.3782528400421143,
+          "mean_ms": 2.3604607899983723,
+          "stdev_ms": 0.020629909841569753,
+          "repeats": 15
+        },
+        "dense_affine_work_efficient_scan_only": {
+          "median_ms": 5.228544235229492,
+          "minimum_ms": 5.215839862823486,
+          "p20_ms": 5.222995185852051,
+          "p80_ms": 5.293580818176269,
+          "mean_ms": 5.2519850730896,
+          "stdev_ms": 0.03706316347913401,
+          "repeats": 15
+        },
+        "dense_homogeneous_work_efficient_scan_only": {
+          "median_ms": 4.970335960388184,
+          "minimum_ms": 4.957920074462891,
+          "p20_ms": 4.9611008644104,
+          "p80_ms": 4.998175811767578,
+          "mean_ms": 4.980927975972493,
+          "stdev_ms": 0.022824921346644086,
+          "repeats": 15
+        },
+        "slot_local_homogeneous_hillis_end_to_end": {
+          "median_ms": 7.4069437980651855,
+          "minimum_ms": 7.393983840942383,
+          "p20_ms": 7.398495960235596,
+          "p80_ms": 7.425203132629394,
+          "mean_ms": 7.416074657440186,
+          "stdev_ms": 0.025825199201156206,
+          "repeats": 15
+        },
+        "slot_local_homogeneous_work_efficient_end_to_end": {
+          "median_ms": 2.5007998943328857,
+          "minimum_ms": 2.4482879638671875,
+          "p20_ms": 2.4818560123443603,
+          "p80_ms": 2.527129554748535,
+          "mean_ms": 2.508686908086141,
+          "stdev_ms": 0.038874747921894756,
+          "repeats": 15
+        },
+        "dense_affine_work_efficient_end_to_end": {
+          "median_ms": 5.475039958953857,
+          "minimum_ms": 5.43609619140625,
+          "p20_ms": 5.447679901123047,
+          "p80_ms": 5.604582500457764,
+          "mean_ms": 5.647562662760417,
+          "stdev_ms": 0.4483876580809688,
+          "repeats": 15
+        },
+        "dense_homogeneous_work_efficient_end_to_end": {
+          "median_ms": 6.181663990020752,
+          "minimum_ms": 6.118527889251709,
+          "p20_ms": 6.159999847412109,
+          "p80_ms": 6.276665496826172,
+          "mean_ms": 6.229785601298015,
+          "stdev_ms": 0.11061409202010584,
+          "repeats": 15
+        },
+        "slot_hillis_scan_only": {
+          "median_ms": 4.186079978942871,
+          "minimum_ms": 4.111455917358398,
+          "p20_ms": 4.138918399810791,
+          "p80_ms": 4.215123271942138,
+          "mean_ms": 4.2053141593933105,
+          "stdev_ms": 0.10230550650624358,
+          "repeats": 15
+        },
+        "slot_work_efficient_scan_only": {
+          "median_ms": 5.796000003814697,
+          "minimum_ms": 5.780416011810303,
+          "p20_ms": 5.788742351531983,
+          "p80_ms": 5.8207296371459964,
+          "mean_ms": 5.817326895395914,
+          "stdev_ms": 0.053050756818372374,
+          "repeats": 15
+        },
+        "slot_local_homogeneous_hillis_scan_only": {
+          "median_ms": 7.212416172027588,
+          "minimum_ms": 7.184671878814697,
+          "p20_ms": 7.20198392868042,
+          "p80_ms": 7.221446323394775,
+          "mean_ms": 7.232930119832357,
+          "stdev_ms": 0.08533370185596095,
+          "repeats": 15
+        }
+      },
+      "incremental_cuda_memory_bytes": {
+        "slot_local_homogeneous_work_efficient_scan_only": 48754688,
+        "dense_affine_work_efficient_scan_only": 239648768,
+        "dense_homogeneous_work_efficient_scan_only": 244569088,
+        "slot_local_homogeneous_hillis_end_to_end": 74281984,
+        "slot_local_homogeneous_work_efficient_end_to_end": 58994688,
+        "dense_affine_work_efficient_end_to_end": 306757632,
+        "dense_homogeneous_work_efficient_end_to_end": 380900352,
+        "slot_hillis_scan_only": 8776704,
+        "slot_work_efficient_scan_only": 9895936,
+        "slot_local_homogeneous_hillis_scan_only": 63665152
+      },
+      "fastest_median_backend": "slot_local_homogeneous_work_efficient_scan_only",
+      "composition_counts": {
+        "hillis_steele": 20481,
+        "work_efficient": 6142
+      },
+      "dependency_depths": {
+        "hillis_steele": 11,
+        "work_efficient": 23
+      }
+    },
+    {
+      "length": 4096,
+      "batch": 2,
+      "timing_order": [
+        "dense_affine_work_efficient_scan_only",
+        "dense_homogeneous_work_efficient_scan_only",
+        "slot_local_homogeneous_hillis_end_to_end",
+        "slot_local_homogeneous_work_efficient_end_to_end",
+        "dense_affine_work_efficient_end_to_end",
+        "dense_homogeneous_work_efficient_end_to_end",
+        "slot_hillis_scan_only",
+        "slot_work_efficient_scan_only",
+        "slot_local_homogeneous_hillis_scan_only",
+        "slot_local_homogeneous_work_efficient_scan_only"
+      ],
+      "maximum_relative_errors": {
+        "slot_hillis_scan_only": 3.5964411775971207e-07,
+        "slot_work_efficient_scan_only": 3.5964411775971207e-07,
+        "slot_local_homogeneous_hillis_scan_only": 3.5964411775971207e-07,
+        "slot_local_homogeneous_work_efficient_scan_only": 4.045996324796761e-07,
+        "dense_affine_work_efficient_scan_only": 4.045996324796761e-07,
+        "dense_homogeneous_work_efficient_scan_only": 4.045996324796761e-07,
+        "slot_local_homogeneous_hillis_end_to_end": 3.5964411775971207e-07,
+        "slot_local_homogeneous_work_efficient_end_to_end": 4.045996324796761e-07,
+        "dense_affine_work_efficient_end_to_end": 4.045996324796761e-07,
+        "dense_homogeneous_work_efficient_end_to_end": 4.045996324796761e-07
+      },
+      "correctness_passed": true,
+      "timings_ms": {
+        "dense_affine_work_efficient_scan_only": {
+          "median_ms": 7.687327861785889,
+          "minimum_ms": 7.6221442222595215,
+          "p20_ms": 7.659916687011719,
+          "p80_ms": 7.750355243682861,
+          "mean_ms": 7.703302383422852,
+          "stdev_ms": 0.05269504059658684,
+          "repeats": 15
+        },
+        "dense_homogeneous_work_efficient_scan_only": {
+          "median_ms": 9.811391830444336,
+          "minimum_ms": 9.754464149475098,
+          "p20_ms": 9.776665878295898,
+          "p80_ms": 9.873407745361328,
+          "mean_ms": 9.828162129720052,
+          "stdev_ms": 0.05232147375693766,
+          "repeats": 15
+        },
+        "slot_local_homogeneous_hillis_end_to_end": {
+          "median_ms": 16.127744674682617,
+          "minimum_ms": 16.072895050048828,
+          "p20_ms": 16.09012565612793,
+          "p80_ms": 16.220876312255857,
+          "mean_ms": 16.21262524922689,
+          "stdev_ms": 0.25147020018478516,
+          "repeats": 15
+        },
+        "slot_local_homogeneous_work_efficient_end_to_end": {
+          "median_ms": 4.131711959838867,
+          "minimum_ms": 4.122464179992676,
+          "p20_ms": 4.125913429260254,
+          "p80_ms": 4.144972801208496,
+          "mean_ms": 4.136678409576416,
+          "stdev_ms": 0.013429449466787823,
+          "repeats": 15
+        },
+        "dense_affine_work_efficient_end_to_end": {
+          "median_ms": 7.7903361320495605,
+          "minimum_ms": 7.699423789978027,
+          "p20_ms": 7.733817386627197,
+          "p80_ms": 7.908966445922852,
+          "mean_ms": 7.822056484222412,
+          "stdev_ms": 0.10665560832345924,
+          "repeats": 15
+        },
+        "dense_homogeneous_work_efficient_end_to_end": {
+          "median_ms": 11.871935844421387,
+          "minimum_ms": 11.816927909851074,
+          "p20_ms": 11.846630668640136,
+          "p80_ms": 11.932754898071288,
+          "mean_ms": 11.894448979695637,
+          "stdev_ms": 0.05938486458526912,
+          "repeats": 15
+        },
+        "slot_hillis_scan_only": {
+          "median_ms": 4.4133758544921875,
+          "minimum_ms": 4.382336139678955,
+          "p20_ms": 4.403135776519775,
+          "p80_ms": 4.474886512756347,
+          "mean_ms": 4.43287893931071,
+          "stdev_ms": 0.03784722224100472,
+          "repeats": 15
+        },
+        "slot_work_efficient_scan_only": {
+          "median_ms": 6.293056011199951,
+          "minimum_ms": 6.262784004211426,
+          "p20_ms": 6.280492687225342,
+          "p80_ms": 6.306975936889648,
+          "mean_ms": 6.297386678059896,
+          "stdev_ms": 0.026558941907025294,
+          "repeats": 15
+        },
+        "slot_local_homogeneous_hillis_scan_only": {
+          "median_ms": 15.713824272155762,
+          "minimum_ms": 15.646719932556152,
+          "p20_ms": 15.659410858154297,
+          "p80_ms": 15.77482204437256,
+          "mean_ms": 15.715831311543782,
+          "stdev_ms": 0.054893679309098324,
+          "repeats": 15
+        },
+        "slot_local_homogeneous_work_efficient_scan_only": {
+          "median_ms": 3.748863935470581,
+          "minimum_ms": 3.733247995376587,
+          "p20_ms": 3.7409087181091305,
+          "p80_ms": 3.7544703483581543,
+          "mean_ms": 3.749732255935669,
+          "stdev_ms": 0.010910238614756772,
+          "repeats": 15
+        }
+      },
+      "incremental_cuda_memory_bytes": {
+        "dense_affine_work_efficient_scan_only": 479313408,
+        "dense_homogeneous_work_efficient_scan_only": 486070272,
+        "slot_local_homogeneous_hillis_end_to_end": 148599808,
+        "slot_local_homogeneous_work_efficient_end_to_end": 117944320,
+        "dense_affine_work_efficient_end_to_end": 613531136,
+        "dense_homogeneous_work_efficient_end_to_end": 758732800,
+        "slot_hillis_scan_only": 17693184,
+        "slot_work_efficient_scan_only": 19791872,
+        "slot_local_homogeneous_hillis_scan_only": 127366144,
+        "slot_local_homogeneous_work_efficient_scan_only": 96710656
+      },
+      "fastest_median_backend": "slot_local_homogeneous_work_efficient_scan_only",
+      "composition_counts": {
+        "hillis_steele": 45057,
+        "work_efficient": 12286
+      },
+      "dependency_depths": {
+        "hillis_steele": 12,
+        "work_efficient": 25
+      }
+    }
+  ],
+  "global_local_winner_at_lengths_ge_256": null,
+  "claim_boundary": {
+    "identical_slot_recurrence_all_rows": true,
+    "triality_bind_unbind_timed": false,
+    "fused_kernel_comparison": false,
+    "faithful_modern_delta_kernel_comparison": false,
+    "absolute_memory_architecture_winner_established": false
+  },
+  "passed": true
+}

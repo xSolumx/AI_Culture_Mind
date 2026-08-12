@@ -110,9 +110,11 @@ Q8/A5 studies support exact/retracted noncommutative actions, quality-gated
 decoding, and long-horizon controls. Those findings motivate this architecture
 and its ablations; they do not transfer automatically to WikiText.
 
-The later 2026-08-10 memory-core campaign is also adjacent evidence only. It
-finds no same-router overwrite-capacity advantage for triality slots, but does
-find better learned retrieval from hierarchical routing and a roughly fivefold
-full-transport CUDA speedup after a co-moving compiler to the official FLA
-chunk recurrence. This benchmark does not yet contain that memory architecture,
-so none of those systems numbers are SpinorModel quality or throughput results.
+The later 2026-08-10 memory-core campaigns are also adjacent evidence only.
+They find no same-router overwrite-capacity advantage for triality slots, but
+do find better learned retrieval from hierarchical routing, a roughly
+fivefold full-transport CUDA speedup after a co-moving compiler to official
+FLA, and a separate 64-slot fused gathered-state inference result. This
+benchmark contains neither that selected-block memory nor an FLA-compatible
+adapter, so none of those systems numbers are `SpinorDeltaLM` quality or
+throughput results.

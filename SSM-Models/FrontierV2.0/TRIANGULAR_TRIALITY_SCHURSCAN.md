@@ -2,7 +2,7 @@
 
 > **Archived review.** The maintained version and current 2026-08-10
 > hierarchical-routing/co-moving-FLA status live in the sibling
-> `Spin8-Triality-Research` repository. Statements below about the “next gate”
+> `Spin-Space-Research` repository. Statements below about the “next gate”
 > describe this preserved FrontierV2 snapshot.
 
 ## Core architecture

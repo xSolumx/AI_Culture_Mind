@@ -1,0 +1,186 @@
+{
+  "experiment": "ordered Q8 group-product classification",
+  "device": "NVIDIA GeForce RTX 2070 SUPER",
+  "torch_version": "2.12.0+cu130",
+  "config": {
+    "steps": 5,
+    "batch_size": 32,
+    "sequence_length": 8,
+    "validation_batches": 2,
+    "validation_batch_size": 64,
+    "channels": 2,
+    "layers": 1,
+    "expansion": 2,
+    "learning_rate": 0.003,
+    "seed": 0
+  },
+  "q8_element_order": [
+    "1",
+    "i",
+    "j",
+    "k",
+    "-1",
+    "-i",
+    "-j",
+    "-k"
+  ],
+  "fairness_contract": {
+    "identical_parameter_shapes": true,
+    "identical_initial_function": true,
+    "same_training_batches": true,
+    "same_validation_batches": true,
+    "same_real_state_width_per_channel": 8
+  },
+  "results": [
+    {
+      "family": "real_selective",
+      "parameters": 1992,
+      "state_scalars_per_sequence": 16,
+      "initial_validation_loss": 2.2994680404663086,
+      "initial_validation_accuracy": 0.078125,
+      "final_validation_loss": 2.260778307914734,
+      "final_validation_accuracy": 0.109375,
+      "elapsed_seconds": 0.14097860001493245,
+      "steps_per_second": 35.46637574405193,
+      "peak_cuda_memory_mib": 16.61669921875,
+      "loss_samples": {
+        "1": 2.2616682052612305,
+        "5": 2.108670234680176
+      },
+      "streaming_equivalence": {
+        "chunked_logit_max_abs_error": 2.384185791015625e-07,
+        "streaming_logit_max_abs_error": 2.384185791015625e-07,
+        "streaming_state_max_abs_error": 1.4901161193847656e-07
+      },
+      "transition_diagnostics": [
+        {
+          "action": "positive real diagonal",
+          "mean_decay": 0.9210827350616455,
+          "min_decay": 0.8306969404220581,
+          "max_decay": 0.9996954202651978,
+          "mean_action_magnitude_radians": 0.0
+        }
+      ]
+    },
+    {
+      "family": "complex_unitary",
+      "parameters": 1992,
+      "state_scalars_per_sequence": 16,
+      "initial_validation_loss": 2.2994680404663086,
+      "initial_validation_accuracy": 0.078125,
+      "final_validation_loss": 2.2587019205093384,
+      "final_validation_accuracy": 0.1171875,
+      "elapsed_seconds": 0.07010189996799454,
+      "steps_per_second": 71.32474301385243,
+      "peak_cuda_memory_mib": 16.640625,
+      "loss_samples": {
+        "1": 2.2616682052612305,
+        "5": 2.11041259765625
+      },
+      "streaming_equivalence": {
+        "chunked_logit_max_abs_error": 2.384185791015625e-07,
+        "streaming_logit_max_abs_error": 2.384185791015625e-07,
+        "streaming_state_max_abs_error": 1.7881393432617188e-07
+      },
+      "transition_diagnostics": [
+        {
+          "action": "U(1)^4 phase",
+          "mean_decay": 0.9216940402984619,
+          "min_decay": 0.8333163857460022,
+          "max_decay": 0.9996887445449829,
+          "mean_action_magnitude_radians": 0.06556666642427444
+        }
+      ]
+    },
+    {
+      "family": "quaternion_even",
+      "parameters": 1992,
+      "state_scalars_per_sequence": 16,
+      "initial_validation_loss": 2.2994680404663086,
+      "initial_validation_accuracy": 0.078125,
+      "final_validation_loss": 2.26366651058197,
+      "final_validation_accuracy": 0.109375,
+      "elapsed_seconds": 0.11937999998917803,
+      "steps_per_second": 41.883062493325994,
+      "peak_cuda_memory_mib": 16.6708984375,
+      "loss_samples": {
+        "1": 2.2616682052612305,
+        "5": 2.1090593338012695
+      },
+      "streaming_equivalence": {
+        "chunked_logit_max_abs_error": 2.384185791015625e-07,
+        "streaming_logit_max_abs_error": 2.384185791015625e-07,
+        "streaming_state_max_abs_error": 1.7881393432617188e-07
+      },
+      "transition_diagnostics": [
+        {
+          "action": "unit quaternion left action",
+          "mean_decay": 0.9220155477523804,
+          "min_decay": 0.8351074457168579,
+          "max_decay": 0.9996855854988098,
+          "mean_action_magnitude_radians": 0.1296434998512268
+        }
+      ]
+    },
+    {
+      "family": "ga_rotor_selective",
+      "parameters": 1992,
+      "state_scalars_per_sequence": 16,
+      "initial_validation_loss": 2.2994680404663086,
+      "initial_validation_accuracy": 0.078125,
+      "final_validation_loss": 2.2608935832977295,
+      "final_validation_accuracy": 0.125,
+      "elapsed_seconds": 0.10007869999390095,
+      "steps_per_second": 49.960680947141725,
+      "peak_cuda_memory_mib": 16.69189453125,
+      "loss_samples": {
+        "1": 2.2616682052612305,
+        "5": 2.1065332889556885
+      },
+      "streaming_equivalence": {
+        "chunked_logit_max_abs_error": 3.5762786865234375e-07,
+        "streaming_logit_max_abs_error": 3.5762786865234375e-07,
+        "streaming_state_max_abs_error": 1.7881393432617188e-07
+      },
+      "transition_diagnostics": [
+        {
+          "action": "selective Cl(3,0) rotor sandwich",
+          "mean_decay": 0.9222701787948608,
+          "min_decay": 0.8386396169662476,
+          "max_decay": 0.9996833801269531,
+          "mean_action_magnitude_radians": 0.15233178436756134
+        }
+      ]
+    },
+    {
+      "family": "ga_rotor_static",
+      "parameters": 1992,
+      "state_scalars_per_sequence": 16,
+      "initial_validation_loss": 2.2994680404663086,
+      "initial_validation_accuracy": 0.078125,
+      "final_validation_loss": 2.2596044540405273,
+      "final_validation_accuracy": 0.1171875,
+      "elapsed_seconds": 0.09511330001987517,
+      "steps_per_second": 52.56888362568836,
+      "peak_cuda_memory_mib": 16.69189453125,
+      "loss_samples": {
+        "1": 2.2616682052612305,
+        "5": 2.1094017028808594
+      },
+      "streaming_equivalence": {
+        "chunked_logit_max_abs_error": 2.384185791015625e-07,
+        "streaming_logit_max_abs_error": 2.384185791015625e-07,
+        "streaming_state_max_abs_error": 2.384185791015625e-07
+      },
+      "transition_diagnostics": [
+        {
+          "action": "static Cl(3,0) rotor sandwich",
+          "mean_decay": 0.9223315715789795,
+          "min_decay": 0.8386092782020569,
+          "max_decay": 0.999683678150177,
+          "mean_action_magnitude_radians": 0.027378864586353302
+        }
+      ]
+    }
+  ]
+}

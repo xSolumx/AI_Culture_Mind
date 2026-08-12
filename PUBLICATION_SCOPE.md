@@ -7,7 +7,7 @@ artifacts, and documents whose evidence boundary is explicit.
 
 - source and tests needed to reproduce a maintained implementation;
 - complete JSON or Markdown result artifacts with a validation path;
-- exact theorem code delegated to the pinned theorem submodule;
+- exact theorem code and tests under the root-owned `Spin-Space-Research/` layer;
 - negative or inconclusive results when their protocol and limitations are
   preserved;
 - program charters that separate claims which require different evidence.
