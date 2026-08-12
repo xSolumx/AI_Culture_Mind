@@ -599,6 +599,60 @@ GATES: tuple[GateContract, ...] = (
         replay_tier="expensive_exact",
     ),
     GateContract(
+        gate_id="endpoint_octet_determinant_tangent",
+        claim=(
+            "After the exact descent t=y^2, the adjacent-octet determinant "
+            "has an order-eight nonnegative tangent form at its remaining "
+            "equality corner."
+        ),
+        status="proved_exact",
+        evidence_layers=(
+            "exact_arithmetic",
+            "exact_reconstruction",
+            "symbolic_identity",
+            "positivity_certificate",
+        ),
+        test_suites=("tests/test_spin8_endpoint_octet_determinant.py",),
+        artifacts=(
+            "artifacts/spin8_dirac_endpoint_octet_determinant_tangent_20260812.json",
+        ),
+        boundary_obligations=(
+            "Every power of y must be even before the exact substitution t=y^2 is made.",
+            "The first nonzero Taylor form at ud=ue=ug=ui=0, t=1 must be extracted without floating-point truncation.",
+            "The order-eight form must equal 2^48 times the square of the manifest radical-factor quartic.",
+        ),
+        limitations=(
+            "This proves the exceptional divisor only; a finite-radius punctured-neighbourhood certificate and the rest of the determinant interior remain open.",
+        ),
+        replay_tier="expensive_exact",
+    ),
+    GateContract(
+        gate_id="endpoint_octet_degree_matched_selector_route",
+        claim=(
+            "The degree-matched two-endpoint quotient Q24 in "
+            "D=D0(1-t)^24+D1*t^24+t(1-t)Q24 is nonnegative."
+        ),
+        status="exact_negative",
+        evidence_layers=(
+            "exact_arithmetic",
+            "symbolic_identity",
+            "exact_counterexample",
+        ),
+        test_suites=("tests/test_spin8_endpoint_octet_determinant.py",),
+        artifacts=(
+            "artifacts/spin8_dirac_endpoint_octet_determinant_tangent_20260812.json",
+        ),
+        boundary_obligations=(
+            "The selector identity and zero division remainder must be checked exactly.",
+            "The rational witness must lie in the five-cube and evaluate Q24 to a strictly negative exact numerator.",
+            "The negative quotient value must not be reported as a negative determinant value.",
+        ),
+        limitations=(
+            "Only this over-strong sufficient decomposition is disproved; determinant nonnegativity remains open.",
+        ),
+        replay_tier="expensive_exact",
+    ),
+    GateContract(
         gate_id="global_five_query_exact_design",
         claim="The balanced equal-five allocation is globally D-optimal among all exact five-query allocations and nonorthogonal probes.",
         status="open",

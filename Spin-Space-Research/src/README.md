@@ -68,6 +68,11 @@ module name. Editable installation adds this directory to the Python path.
   holdouts and a lightweight stored-artifact verifier.
 - `spin8_dirac_one_edge_positivity.py`: staged, crash-resilient integer
   Bernstein/Duffy proof of the final determinant gate.
+- `spin8_dirac_endpoint_octet_determinant.py`: exact radical-free fourth-order
+  Schur determinant reconstruction and both endpoint-face certificates.
+- `spin8_dirac_endpoint_octet_determinant_tangent.py`: exact descent
+  `t=y^2`, rational rejection of the degree-matched endpoint-selector route,
+  and the order-eight squared tangent theorem at the remaining equality corner.
 - `spin8_dirac_two_edge.py`: exact common-symmetry and two-anchor sector audit
   for the preregistered `h=0`, residual-`i` bridge.
 - `spin8_dirac_two_edge_attack.py`: uniform, boundary-biased, and optimized

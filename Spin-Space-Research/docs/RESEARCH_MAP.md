@@ -267,16 +267,22 @@ identity coefficient of \(Z=X^2-(1-y^2)R^2\) nonnegative by reducing it to the
 global Fourier-energy polynomial plus explicit squares. Exact dyadic atlases
 and characteristic-zero assemblies now prove all three quadratic minors and
 the cubic minor of \(Z\) on the five-cube. The determinant is reconstructed
-exactly and both \(y\)-endpoint faces are proved; its open interior remains
+exactly and both \(y\)-endpoint faces are proved. Its exact descent (t=y^2)
+also yields an order-eight squared nonnegative tangent form at the sole
+persistent equality corner. The natural degree-matched two-endpoint quotient
+is exactly negative at a rational feasible point, rejecting that proof route
+without disproving the determinant. The finite-radius interior remains
 unresolved. Neither the complete adjacent face nor the unrestricted theorem
 has been promoted.
 
 The resulting proof architecture is boundary-adapted: endpoint selectors,
 finite dyadic atlases away from equality, and exact max-coordinate blow-ups at
 the persistent equality corner. Native Bernstein failures are retained as
-negative certificate-basis results, not counterexamples. The next gate is the
-two-endpoint interior quotient of the fourth-order determinant, the sole
-remaining Schur-minor obstruction on this adjacent endpoint face.
+negative certificate-basis results, not counterexamples. The determinant
+selector quotient is retained as an exact negative proof-route result. The next
+gate is a finite-radius determinant blow-up around its proved squared tangent
+cone, the sole remaining Schur-minor obstruction on this adjacent endpoint
+face.
 
 The local gate is now exact: the new edge cannot leave the one-edge equality
 set with a harmful first-order sign, and its sole quadratic endpoint kernel is

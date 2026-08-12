@@ -824,13 +824,19 @@ $env:PYTHONPATH = "src"
 python -m spin8_dirac_endpoint_octet_determinant `
   --flint-threads 6 `
   --output runtime/spin8_dirac_endpoint_octet_determinant_replay.json
+python -m spin8_dirac_endpoint_octet_determinant_tangent `
+  --flint-threads 6 `
+  --output runtime/spin8_dirac_endpoint_octet_determinant_tangent_replay.json
 python -m pytest tests/test_spin8_endpoint_octet_determinant.py -q
 ```
 
 The source command recomputes the 6,082,148-term determinant and all 31 exact
 leaf transforms. The test is a compact replay that checks the generic
-determinant identity, dependency hashes, complete covers, and stored leaf sign
-counts. Positivity for \(0<y<1\) remains open.
+determinant identity, dependency hashes, complete covers, stored leaf sign
+counts, the exact selector rejection witness, and the order-eight squared
+tangent certificate. Positivity for \(0<y<1\) remains open; the tangent command
+proves only the local exceptional divisor and rejects only the named
+degree-matched selector route.
 
 ### Endpoint-octet twenty-output replay
 

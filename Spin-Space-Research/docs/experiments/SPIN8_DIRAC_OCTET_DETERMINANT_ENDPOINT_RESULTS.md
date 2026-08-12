@@ -11,6 +11,10 @@
 **Artifact:**
 [spin8_dirac_endpoint_octet_determinant_20260812.json](../../artifacts/spin8_dirac_endpoint_octet_determinant_20260812.json)
 
+**Local continuation:**
+[spin8_dirac_endpoint_octet_determinant_tangent.py](../../src/spin8_dirac_endpoint_octet_determinant_tangent.py),
+[spin8_dirac_endpoint_octet_determinant_tangent_20260812.json](../../artifacts/spin8_dirac_endpoint_octet_determinant_tangent_20260812.json)
+
 ## Exact reconstruction
 
 For the Klein-four circulant second Schur block, write
@@ -73,11 +77,61 @@ dependency hashes, the exact 16-cell coarse cover, the exact 16-child delegated
 cover, and every stored leaf sign count. It explicitly trusts the stored exact
 Bernstein summaries; rerunning the source harness is the full transform replay.
 
+## Exact interior-route audit
+
+The determinant contains only even powers of (y), so the exact substitution
+(t=y^2) reduces its multidegree to ((24,24,24,24,24)). The frozen
+degree-matched endpoint decomposition was then formed exactly:
+
+\[
+D=D_0(1-t)^{24}+D_1t^{24}+t(1-t)Q_{24}.
+\]
+
+The division remainder is zero, but the desired sufficient condition
+(Q_{24}\geq0) is false. On the exact feasible point
+
+\[
+(u_d,u_e,u_g,u_i,t)=\left(\frac1{100},0,0,0,\frac{99}{100}\right)
+\]
+
+the restricted quotient has a strictly negative integer numerator after one
+positive common denominator is cleared. This is an exact rejection of that
+selector proof route, **not** a counterexample to (D\geq0).
+
+The determinant itself has better local geometry. In deviation coordinates
+((d,e,g,i,r)=(u_d,u_e,u_g,u_i,1-t)), its first nonzero homogeneous form has
+order eight and factors exactly as
+
+\[
+T_8=2^{48}F_4^2\geq0.
+\]
+
+Here
+
+\[
+F_4=F_2^2-64egL^2,
+\qquad
+L=2d+2e+2g+5i+2r,
+\]
+
+and (F_2=L^2+16eg-16dr). Writing
+(a=4\sqrt{eg}) and (b=4\sqrt{dr}) gives
+
+\[
+F_4=(L-a-b)(L-a+b)(L+a-b)(L+a+b).
+\]
+
+The AM--GM bounds (2e+2g\geq a) and (2d+2r\geq b) imply
+(L\geq a+b) on the nonnegative deviation cone. Thus every radical factor
+is nonnegative. This proves the exceptional-divisor tangent gate exactly.
+
 ## Nonclaims and next gate
 
 This theorem closes the frozen reconstruction and endpoint stages. It does not
 prove \(D\geq0\) for \(0<y<1\), the complete adjacent endpoint octet, the
 unrestricted seven-variable Dirac--Gram inequality, or global five-query
-optimality. The next exact object is the two-endpoint interior quotient from
-the frozen selector decomposition, followed by tangent analysis only if its
-negative Bernstein support localizes at an equality stratum.
+optimality. The degree-matched two-endpoint quotient has now been exactly
+rejected, while the determinant's order-eight tangent cone is proved
+nonnegative. The next exact object is therefore a finite-radius
+max-coordinate blow-up for (D) itself, retaining (2^{48}F_4^2) as its
+exceptional divisor rather than subtracting the entire (t=1) endpoint.

@@ -1,8 +1,12 @@
 # Selective rotor SSM: mathematical contract
 
-This note defines the maintained model in `ga_ssm.py` and
-`rotor_ssm_torch.py`. It separates properties that follow from the equations
-from hypotheses that still require empirical validation.
+> **Historical architecture note.** This file documents the original
+> `ga_ssm.py` and `rotor_ssm_torch.py` recurrence. The maintained canonical
+> trainable model is now `SSM-Models/pure_rotor_ssm/`, whose current contract is
+> [`SSM-Models/FOUNDATIONS.md`](../../SSM-Models/FOUNDATIONS.md). In particular,
+> the maintained bounded write is ((1-d)wz), not the historical
+> \(\sqrt{1-d^2}\) write below. The remainder of this file is preserved as the
+> authority for the older recurrence and related research components.
 
 ## State transition
 

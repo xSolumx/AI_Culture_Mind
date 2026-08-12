@@ -35,7 +35,7 @@ proof-search products and private working notes are intentionally absent.
 | Review exact algebraic scalar extension | [Design rationale](ALGEBRAIC_EXTENSION_DESIGN.md) | [Quadratic-field result](experiments/ALGEBRAIC_ISOTYPIC_DECOMPOSITION_RESULTS.md) |
 | Review the Clifford signature chain | [Clifford signature theorem](manuscripts/CLIFFORD_SIGNATURE_EXTENSION.md) | [Spin(9) ledger](../../research-programs/05-information-geometry-and-dirac-gram-sensing/SPIN9_DIRAC_CLIFFORD_LEDGER.md) |
 | Referee one compact theorem | [Cayley-spectrum referee package](../referee/cayley-information-spectrum/README.md) | [LaTeX paper](../papers/cayley-information-spectrum/README.md) |
-| Review the sequence-model architecture | [Foundations](FOUNDATIONS.md) | [Triality experiment](SPIN8_TRIALITY_EXPERIMENT.md) |
+| Review the maintained sequence-model architecture | [Canonical Pure Rotor foundations](../../SSM-Models/FOUNDATIONS.md) | [Historical Spin-Space foundations](FOUNDATIONS.md) and [Triality experiment](SPIN8_TRIALITY_EXPERIMENT.md) |
 | Review memory scanning and hierarchical retrieval | [Memory benchmark atlas and FLA fit](experiments/MEMORY_BENCHMARK_ATLAS.md) | [Large-slot semantic hierarchy and fused gather](experiments/LARGE_SLOT_SEMANTIC_HIERARCHY_RESULTS.md) |
 | Review the completed Task B action control | [Prospective paired-action replication](experiments/TASK_B_PAIRED_ACTION_REPLICATION_RESULTS.md) | [Failed historical replay](experiments/TASK_B_DELTA_ACTION_REPLAY_RESULTS.md) |
 | Reproduce a result | [Reproducibility](REPRODUCIBILITY.md) | [Experiment Index](EXPERIMENT_INDEX.md) |

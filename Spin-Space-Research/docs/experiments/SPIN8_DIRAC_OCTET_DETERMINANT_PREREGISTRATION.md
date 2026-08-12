@@ -2,9 +2,12 @@
 
 **Frozen before reconstructing the determinant polynomial — 2026-08-11**
 
-**Execution update — 2026-08-12:** frozen stages 1--4 are complete. The exact
-reconstruction and both \(y\)-endpoint faces are proved; the interior quotient
-and the global determinant acceptance gate remain open. See
+**Execution update — 2026-08-12:** frozen stages 1--6 have now been executed.
+The exact reconstruction and both \(y\)-endpoint faces are proved. The
+degree-matched two-endpoint quotient was exactly constructed and rejected by a
+rational negative witness, while the determinant itself has a proved
+order-eight squared nonnegative tangent form at the remaining equality corner.
+The finite-radius interior and global determinant acceptance gate remain open. See
 [`SPIN8_DIRAC_OCTET_DETERMINANT_ENDPOINT_RESULTS.md`](SPIN8_DIRAC_OCTET_DETERMINANT_ENDPOINT_RESULTS.md).
 
 ## Scope

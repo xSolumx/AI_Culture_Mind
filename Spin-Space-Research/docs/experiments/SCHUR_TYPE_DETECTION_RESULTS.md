@@ -10,8 +10,10 @@
 **Exact implementation audit — 2026-08-11**
 
 **Status:** real, complex, and quaternionic Schur types detected from supplied
-exact generators under an explicit complete-reducibility assumption; general
-reducible isotypic decomposition remains open
+exact generators under an explicit complete-reducibility assumption. The
+general reducible isotypic layer named by the original report was later closed
+over the maintained exact splitting domains; arbitrary number fields, absent
+splitting fields, and noisy approximate decomposition remain open.
 
 **Code:** [`schur_type_detector.py`](../../src/schur_type_detector.py)
 
