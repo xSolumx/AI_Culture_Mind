@@ -1,0 +1,103 @@
+{
+  "experiment": "fused gathered-block recurrent trajectory diagnostic",
+  "status": "post-preregistered strengthening check",
+  "passed": true,
+  "device": "cuda",
+  "dtype": "torch.float32",
+  "hardware": {
+    "platform": "Windows-11-10.0.22631-SP0",
+    "torch": "2.12.0+cu130",
+    "cuda": "13.0",
+    "triton_windows": "3.7.1.post27",
+    "nvidia_smi": {
+      "name": "NVIDIA GeForce RTX 2070 SUPER",
+      "driver": "595.97",
+      "memory_total": "8192 MiB"
+    }
+  },
+  "grid": {
+    "slots": [
+      64,
+      1024,
+      4096
+    ],
+    "batch": 16,
+    "steps": 257,
+    "seed": 1090257
+  },
+  "rows": [
+    {
+      "slots": 64,
+      "batch": 16,
+      "correctness": {
+        "passed": true,
+        "rows": {
+          "direct": {
+            "steps": 257,
+            "maximum_state_error": 3.159046173095703e-06,
+            "maximum_prediction_error": 2.2351741790771484e-08,
+            "all_finite": true
+          },
+          "delta": {
+            "steps": 257,
+            "maximum_state_error": 1.1920928955078125e-07,
+            "maximum_prediction_error": 4.470348358154297e-08,
+            "all_finite": true
+          }
+        }
+      }
+    },
+    {
+      "slots": 1024,
+      "batch": 16,
+      "correctness": {
+        "passed": true,
+        "rows": {
+          "direct": {
+            "steps": 257,
+            "maximum_state_error": 1.6093254089355469e-06,
+            "maximum_prediction_error": 1.4901161193847656e-08,
+            "all_finite": true
+          },
+          "delta": {
+            "steps": 257,
+            "maximum_state_error": 8.940696716308594e-08,
+            "maximum_prediction_error": 4.470348358154297e-08,
+            "all_finite": true
+          }
+        }
+      }
+    },
+    {
+      "slots": 4096,
+      "batch": 16,
+      "correctness": {
+        "passed": true,
+        "rows": {
+          "direct": {
+            "steps": 257,
+            "maximum_state_error": 1.3709068298339844e-06,
+            "maximum_prediction_error": 2.60770320892334e-08,
+            "all_finite": true
+          },
+          "delta": {
+            "steps": 257,
+            "maximum_state_error": 1.1920928955078125e-07,
+            "maximum_prediction_error": 4.470348358154297e-08,
+            "all_finite": true
+          }
+        }
+      }
+    }
+  ],
+  "thresholds": {
+    "maximum_state_error": 1e-05,
+    "maximum_prediction_error": 1e-05,
+    "all_finite": true
+  },
+  "claim_boundary": {
+    "not_a_frozen_decision_gate": true,
+    "tests_repeated_identical_inputs": true,
+    "tests_training_or_gradients": false
+  }
+}

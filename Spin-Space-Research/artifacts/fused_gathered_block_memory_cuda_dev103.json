@@ -1,0 +1,643 @@
+{
+  "experiment": "fused gathered-block recurrent memory benchmark",
+  "protocol": "FUSED_GATHERED_BLOCK_MEMORY_PREREGISTRATION.md",
+  "passed": true,
+  "device": "cuda",
+  "dtype": "torch.float32",
+  "hardware": {
+    "platform": "Windows-11-10.0.22631-SP0",
+    "torch": "2.12.0+cu130",
+    "cuda": "13.0",
+    "triton_windows": "3.7.1.post27",
+    "nvidia_smi": {
+      "name": "NVIDIA GeForce RTX 2070 SUPER",
+      "driver": "595.97",
+      "memory_total": "8192 MiB"
+    }
+  },
+  "grid": {
+    "slots": [
+      64,
+      1024
+    ],
+    "batches": [
+      1,
+      16
+    ],
+    "slots_per_block": 8,
+    "alias_dimension": 8,
+    "value_dimension": 8,
+    "warmup": 10,
+    "timing_blocks": 5,
+    "inner_calls": 100
+  },
+  "rows": [
+    {
+      "slots": 64,
+      "batch": 1,
+      "logical_state_scalars": 512,
+      "correctness": {
+        "passed": true,
+        "rows": {
+          "direct": {
+            "maximum_state_error": 1.4901161193847656e-08,
+            "maximum_prediction_error": 9.313225746154785e-09,
+            "all_finite": true
+          },
+          "delta": {
+            "maximum_state_error": 5.960464477539063e-08,
+            "maximum_prediction_error": 1.6763806343078613e-08,
+            "all_finite": true
+          }
+        }
+      },
+      "timing_order": [
+        "direct_eager_dense",
+        "direct_eager_gathered",
+        "direct_triton_fused_gathered",
+        "delta_eager_dense",
+        "delta_eager_gathered",
+        "delta_triton_fused_gathered"
+      ],
+      "timing_block_orders": [
+        [
+          "direct_eager_dense",
+          "direct_eager_gathered",
+          "direct_triton_fused_gathered",
+          "delta_eager_dense",
+          "delta_eager_gathered",
+          "delta_triton_fused_gathered"
+        ],
+        [
+          "direct_eager_gathered",
+          "direct_triton_fused_gathered",
+          "delta_eager_dense",
+          "delta_eager_gathered",
+          "delta_triton_fused_gathered",
+          "direct_eager_dense"
+        ],
+        [
+          "direct_triton_fused_gathered",
+          "delta_eager_dense",
+          "delta_eager_gathered",
+          "delta_triton_fused_gathered",
+          "direct_eager_dense",
+          "direct_eager_gathered"
+        ],
+        [
+          "delta_eager_dense",
+          "delta_eager_gathered",
+          "delta_triton_fused_gathered",
+          "direct_eager_dense",
+          "direct_eager_gathered",
+          "direct_triton_fused_gathered"
+        ],
+        [
+          "delta_eager_gathered",
+          "delta_triton_fused_gathered",
+          "direct_eager_dense",
+          "direct_eager_gathered",
+          "direct_triton_fused_gathered",
+          "delta_eager_dense"
+        ]
+      ],
+      "timing": {
+        "direct_eager_dense": {
+          "median_ms": 0.3890879821777344,
+          "minimum_ms": 0.37518753051757814,
+          "maximum_ms": 0.45334529876708984,
+          "raw_ms": [
+            0.3890879821777344,
+            0.37518753051757814,
+            0.45334529876708984,
+            0.42979423522949217,
+            0.37908607482910156
+          ],
+          "incremental_peak_bytes": 3072
+        },
+        "direct_eager_gathered": {
+          "median_ms": 0.7858930969238281,
+          "minimum_ms": 0.7680818939208984,
+          "maximum_ms": 0.8341072082519532,
+          "raw_ms": [
+            0.8341072082519532,
+            0.8143436431884765,
+            0.7704621124267578,
+            0.7858930969238281,
+            0.7680818939208984
+          ],
+          "incremental_peak_bytes": 4608
+        },
+        "direct_triton_fused_gathered": {
+          "median_ms": 0.05172959804534912,
+          "minimum_ms": 0.04872032165527344,
+          "maximum_ms": 0.05416863918304443,
+          "raw_ms": [
+            0.05367584228515625,
+            0.04872032165527344,
+            0.051286082267761234,
+            0.05416863918304443,
+            0.05172959804534912
+          ],
+          "incremental_peak_bytes": 512
+        },
+        "delta_eager_dense": {
+          "median_ms": 0.6703343963623047,
+          "minimum_ms": 0.6444873809814453,
+          "maximum_ms": 0.6938191986083985,
+          "raw_ms": [
+            0.6853171539306641,
+            0.6938191986083985,
+            0.6444873809814453,
+            0.6702121734619141,
+            0.6703343963623047
+          ],
+          "incremental_peak_bytes": 4608
+        },
+        "delta_eager_gathered": {
+          "median_ms": 1.0551821136474608,
+          "minimum_ms": 0.9808662414550782,
+          "maximum_ms": 1.298467254638672,
+          "raw_ms": [
+            1.068015365600586,
+            1.298467254638672,
+            1.0357107543945312,
+            0.9808662414550782,
+            1.0551821136474608
+          ],
+          "incremental_peak_bytes": 5120
+        },
+        "delta_triton_fused_gathered": {
+          "median_ms": 0.0535756778717041,
+          "minimum_ms": 0.05126272201538086,
+          "maximum_ms": 0.06634367942810059,
+          "raw_ms": [
+            0.05697696208953858,
+            0.05126272201538086,
+            0.06634367942810059,
+            0.05315584182739258,
+            0.0535756778717041
+          ],
+          "incremental_peak_bytes": 512
+        }
+      }
+    },
+    {
+      "slots": 64,
+      "batch": 16,
+      "logical_state_scalars": 8192,
+      "correctness": {
+        "passed": true,
+        "rows": {
+          "direct": {
+            "maximum_state_error": 5.960464477539063e-08,
+            "maximum_prediction_error": 2.2351741790771484e-08,
+            "all_finite": true
+          },
+          "delta": {
+            "maximum_state_error": 1.1920928955078125e-07,
+            "maximum_prediction_error": 3.725290298461914e-08,
+            "all_finite": true
+          }
+        }
+      },
+      "timing_order": [
+        "delta_eager_dense",
+        "delta_eager_gathered",
+        "delta_triton_fused_gathered",
+        "direct_eager_dense",
+        "direct_eager_gathered",
+        "direct_triton_fused_gathered"
+      ],
+      "timing_block_orders": [
+        [
+          "delta_eager_dense",
+          "delta_eager_gathered",
+          "delta_triton_fused_gathered",
+          "direct_eager_dense",
+          "direct_eager_gathered",
+          "direct_triton_fused_gathered"
+        ],
+        [
+          "delta_eager_gathered",
+          "delta_triton_fused_gathered",
+          "direct_eager_dense",
+          "direct_eager_gathered",
+          "direct_triton_fused_gathered",
+          "delta_eager_dense"
+        ],
+        [
+          "delta_triton_fused_gathered",
+          "direct_eager_dense",
+          "direct_eager_gathered",
+          "direct_triton_fused_gathered",
+          "delta_eager_dense",
+          "delta_eager_gathered"
+        ],
+        [
+          "direct_eager_dense",
+          "direct_eager_gathered",
+          "direct_triton_fused_gathered",
+          "delta_eager_dense",
+          "delta_eager_gathered",
+          "delta_triton_fused_gathered"
+        ],
+        [
+          "direct_eager_gathered",
+          "direct_triton_fused_gathered",
+          "delta_eager_dense",
+          "delta_eager_gathered",
+          "delta_triton_fused_gathered",
+          "direct_eager_dense"
+        ]
+      ],
+      "timing": {
+        "direct_eager_dense": {
+          "median_ms": 0.4168726348876953,
+          "minimum_ms": 0.3777004623413086,
+          "maximum_ms": 0.44820030212402345,
+          "raw_ms": [
+            0.3867510223388672,
+            0.4168726348876953,
+            0.43660545349121094,
+            0.3777004623413086,
+            0.44820030212402345
+          ],
+          "incremental_peak_bytes": 40960
+        },
+        "direct_eager_gathered": {
+          "median_ms": 0.7867574310302734,
+          "minimum_ms": 0.7784950256347656,
+          "maximum_ms": 0.8990150451660156,
+          "raw_ms": [
+            0.7822518157958984,
+            0.7867574310302734,
+            0.8990150451660156,
+            0.8019545745849609,
+            0.7784950256347656
+          ],
+          "incremental_peak_bytes": 18944
+        },
+        "direct_triton_fused_gathered": {
+          "median_ms": 0.05071775913238526,
+          "minimum_ms": 0.049289278984069824,
+          "maximum_ms": 0.07495327949523926,
+          "raw_ms": [
+            0.05071775913238526,
+            0.049289278984069824,
+            0.049508161544799804,
+            0.050875520706176756,
+            0.07495327949523926
+          ],
+          "incremental_peak_bytes": 512
+        },
+        "delta_eager_dense": {
+          "median_ms": 0.6977078247070313,
+          "minimum_ms": 0.6037011337280274,
+          "maximum_ms": 0.7140576171875,
+          "raw_ms": [
+            0.6977078247070313,
+            0.6384579086303711,
+            0.7140576171875,
+            0.7063983917236328,
+            0.6037011337280274
+          ],
+          "incremental_peak_bytes": 46080
+        },
+        "delta_eager_gathered": {
+          "median_ms": 1.0226966094970704,
+          "minimum_ms": 1.0129961395263671,
+          "maximum_ms": 1.094660186767578,
+          "raw_ms": [
+            1.0675091552734375,
+            1.0129961395263671,
+            1.0226966094970704,
+            1.094660186767578,
+            1.0132173156738282
+          ],
+          "incremental_peak_bytes": 15872
+        },
+        "delta_triton_fused_gathered": {
+          "median_ms": 0.051009597778320315,
+          "minimum_ms": 0.04992671966552734,
+          "maximum_ms": 0.07538496017456055,
+          "raw_ms": [
+            0.04992671966552734,
+            0.05022655963897705,
+            0.07538496017456055,
+            0.05271552085876465,
+            0.051009597778320315
+          ],
+          "incremental_peak_bytes": 512
+        }
+      }
+    },
+    {
+      "slots": 1024,
+      "batch": 1,
+      "logical_state_scalars": 8192,
+      "correctness": {
+        "passed": true,
+        "rows": {
+          "direct": {
+            "maximum_state_error": 2.9802322387695312e-08,
+            "maximum_prediction_error": 1.4901161193847656e-08,
+            "all_finite": true
+          },
+          "delta": {
+            "maximum_state_error": 1.1920928955078125e-07,
+            "maximum_prediction_error": 2.2351741790771484e-08,
+            "all_finite": true
+          }
+        }
+      },
+      "timing_order": [
+        "direct_eager_dense",
+        "direct_eager_gathered",
+        "direct_triton_fused_gathered",
+        "delta_eager_dense",
+        "delta_eager_gathered",
+        "delta_triton_fused_gathered"
+      ],
+      "timing_block_orders": [
+        [
+          "direct_eager_dense",
+          "direct_eager_gathered",
+          "direct_triton_fused_gathered",
+          "delta_eager_dense",
+          "delta_eager_gathered",
+          "delta_triton_fused_gathered"
+        ],
+        [
+          "direct_eager_gathered",
+          "direct_triton_fused_gathered",
+          "delta_eager_dense",
+          "delta_eager_gathered",
+          "delta_triton_fused_gathered",
+          "direct_eager_dense"
+        ],
+        [
+          "direct_triton_fused_gathered",
+          "delta_eager_dense",
+          "delta_eager_gathered",
+          "delta_triton_fused_gathered",
+          "direct_eager_dense",
+          "direct_eager_gathered"
+        ],
+        [
+          "delta_eager_dense",
+          "delta_eager_gathered",
+          "delta_triton_fused_gathered",
+          "direct_eager_dense",
+          "direct_eager_gathered",
+          "direct_triton_fused_gathered"
+        ],
+        [
+          "delta_eager_gathered",
+          "delta_triton_fused_gathered",
+          "direct_eager_dense",
+          "direct_eager_gathered",
+          "direct_triton_fused_gathered",
+          "delta_eager_dense"
+        ]
+      ],
+      "timing": {
+        "direct_eager_dense": {
+          "median_ms": 0.4187475204467773,
+          "minimum_ms": 0.38894657135009764,
+          "maximum_ms": 0.4625174331665039,
+          "raw_ms": [
+            0.38894657135009764,
+            0.42594207763671876,
+            0.4187475204467773,
+            0.40079742431640625,
+            0.4625174331665039
+          ],
+          "incremental_peak_bytes": 40960
+        },
+        "direct_eager_gathered": {
+          "median_ms": 0.8103024291992188,
+          "minimum_ms": 0.7649212646484375,
+          "maximum_ms": 0.9754319763183594,
+          "raw_ms": [
+            0.9754319763183594,
+            0.8411564636230469,
+            0.8103024291992188,
+            0.794985580444336,
+            0.7649212646484375
+          ],
+          "incremental_peak_bytes": 4608
+        },
+        "direct_triton_fused_gathered": {
+          "median_ms": 0.05503776073455811,
+          "minimum_ms": 0.050930237770080565,
+          "maximum_ms": 0.07204607963562011,
+          "raw_ms": [
+            0.05503776073455811,
+            0.05321951866149902,
+            0.050930237770080565,
+            0.061411199569702146,
+            0.07204607963562011
+          ],
+          "incremental_peak_bytes": 512
+        },
+        "delta_eager_dense": {
+          "median_ms": 0.6552812957763672,
+          "minimum_ms": 0.6259107208251953,
+          "maximum_ms": 0.7685523223876953,
+          "raw_ms": [
+            0.6552812957763672,
+            0.6259107208251953,
+            0.7685523223876953,
+            0.6396451187133789,
+            0.6874534606933593
+          ],
+          "incremental_peak_bytes": 46080
+        },
+        "delta_eager_gathered": {
+          "median_ms": 1.0418278503417968,
+          "minimum_ms": 0.9998384094238282,
+          "maximum_ms": 1.2131203460693358,
+          "raw_ms": [
+            1.1109603118896485,
+            1.0418278503417968,
+            0.9998384094238282,
+            1.012051544189453,
+            1.2131203460693358
+          ],
+          "incremental_peak_bytes": 5120
+        },
+        "delta_triton_fused_gathered": {
+          "median_ms": 0.0542409610748291,
+          "minimum_ms": 0.05183167934417725,
+          "maximum_ms": 0.06391551971435547,
+          "raw_ms": [
+            0.054360637664794924,
+            0.06391551971435547,
+            0.0526310396194458,
+            0.05183167934417725,
+            0.0542409610748291
+          ],
+          "incremental_peak_bytes": 512
+        }
+      }
+    },
+    {
+      "slots": 1024,
+      "batch": 16,
+      "logical_state_scalars": 131072,
+      "correctness": {
+        "passed": true,
+        "rows": {
+          "direct": {
+            "maximum_state_error": 5.960464477539063e-08,
+            "maximum_prediction_error": 2.9802322387695312e-08,
+            "all_finite": true
+          },
+          "delta": {
+            "maximum_state_error": 1.7881393432617188e-07,
+            "maximum_prediction_error": 6.705522537231445e-08,
+            "all_finite": true
+          }
+        }
+      },
+      "timing_order": [
+        "delta_eager_dense",
+        "delta_eager_gathered",
+        "delta_triton_fused_gathered",
+        "direct_eager_dense",
+        "direct_eager_gathered",
+        "direct_triton_fused_gathered"
+      ],
+      "timing_block_orders": [
+        [
+          "delta_eager_dense",
+          "delta_eager_gathered",
+          "delta_triton_fused_gathered",
+          "direct_eager_dense",
+          "direct_eager_gathered",
+          "direct_triton_fused_gathered"
+        ],
+        [
+          "delta_eager_gathered",
+          "delta_triton_fused_gathered",
+          "direct_eager_dense",
+          "direct_eager_gathered",
+          "direct_triton_fused_gathered",
+          "delta_eager_dense"
+        ],
+        [
+          "delta_triton_fused_gathered",
+          "direct_eager_dense",
+          "direct_eager_gathered",
+          "direct_triton_fused_gathered",
+          "delta_eager_dense",
+          "delta_eager_gathered"
+        ],
+        [
+          "direct_eager_dense",
+          "direct_eager_gathered",
+          "direct_triton_fused_gathered",
+          "delta_eager_dense",
+          "delta_eager_gathered",
+          "delta_triton_fused_gathered"
+        ],
+        [
+          "direct_eager_gathered",
+          "direct_triton_fused_gathered",
+          "delta_eager_dense",
+          "delta_eager_gathered",
+          "delta_triton_fused_gathered",
+          "direct_eager_dense"
+        ]
+      ],
+      "timing": {
+        "direct_eager_dense": {
+          "median_ms": 0.3855036926269531,
+          "minimum_ms": 0.37903072357177736,
+          "maximum_ms": 0.46553089141845705,
+          "raw_ms": [
+            0.3855036926269531,
+            0.37903072357177736,
+            0.46553089141845705,
+            0.39006336212158205,
+            0.37920734405517575
+          ],
+          "incremental_peak_bytes": 655360
+        },
+        "direct_eager_gathered": {
+          "median_ms": 0.8596611022949219,
+          "minimum_ms": 0.7988998413085937,
+          "maximum_ms": 0.8935033416748047,
+          "raw_ms": [
+            0.7988998413085937,
+            0.8808697509765625,
+            0.8935033416748047,
+            0.7994461059570312,
+            0.8596611022949219
+          ],
+          "incremental_peak_bytes": 18944
+        },
+        "direct_triton_fused_gathered": {
+          "median_ms": 0.0520249605178833,
+          "minimum_ms": 0.05160672187805176,
+          "maximum_ms": 0.05856863975524902,
+          "raw_ms": [
+            0.05187712192535401,
+            0.053498239517211915,
+            0.05856863975524902,
+            0.0520249605178833,
+            0.05160672187805176
+          ],
+          "incremental_peak_bytes": 512
+        },
+        "delta_eager_dense": {
+          "median_ms": 0.6470022583007813,
+          "minimum_ms": 0.6052460861206055,
+          "maximum_ms": 0.6542546844482422,
+          "raw_ms": [
+            0.6542546844482422,
+            0.623818244934082,
+            0.6052460861206055,
+            0.6470022583007813,
+            0.6479190063476562
+          ],
+          "incremental_peak_bytes": 721920
+        },
+        "delta_eager_gathered": {
+          "median_ms": 1.057708511352539,
+          "minimum_ms": 1.016500473022461,
+          "maximum_ms": 1.1048873901367187,
+          "raw_ms": [
+            1.016500473022461,
+            1.057708511352539,
+            1.0546221160888671,
+            1.1048873901367187,
+            1.092613754272461
+          ],
+          "incremental_peak_bytes": 15872
+        },
+        "delta_triton_fused_gathered": {
+          "median_ms": 0.05178912162780762,
+          "minimum_ms": 0.05145792007446289,
+          "maximum_ms": 0.05384416103363037,
+          "raw_ms": [
+            0.05145792007446289,
+            0.05178912162780762,
+            0.05171199798583984,
+            0.05236159801483154,
+            0.05384416103363037
+          ],
+          "incremental_peak_bytes": 512
+        }
+      }
+    }
+  ],
+  "claim_boundary": {
+    "inference_only": true,
+    "training_kernel": false,
+    "model_level_quality": false,
+    "hardware_general": false,
+    "triality_specific_capacity": false
+  }
+}
