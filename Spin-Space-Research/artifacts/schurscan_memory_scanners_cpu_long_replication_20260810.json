@@ -1,0 +1,232 @@
+{
+  "experiment": "SchurScan structured-slot memory scanner benchmark",
+  "device_metadata": {
+    "device": "cpu",
+    "torch": "2.12.0+cu130",
+    "python": "3.12.10",
+    "platform": "Windows-11-10.0.22631-SP0",
+    "cpu_logical_count": 8,
+    "torch_cpu_threads": 6,
+    "torch_interop_threads": 8,
+    "cuda_available": true,
+    "cuda_runtime": "13.0",
+    "cuda_matmul_allow_tf32": false
+  },
+  "protocol": {
+    "dtype": "float64",
+    "batch": 1,
+    "slots": 8,
+    "coordinates_per_slot": 8,
+    "state_scalars": 64,
+    "lengths": [
+      2048,
+      1024
+    ],
+    "warmup": 5,
+    "repeats": 20,
+    "seed": 20260810,
+    "input_generation_timed": false,
+    "dense_materialization_in_scan_only_rows": false,
+    "dense_materialization_in_end_to_end_rows": true,
+    "tf32_disabled": true
+  },
+  "rows": [
+    {
+      "length": 2048,
+      "batch": 1,
+      "timing_order": [
+        "slot_hillis_scan_only",
+        "slot_work_efficient_scan_only",
+        "dense_affine_work_efficient_scan_only",
+        "dense_homogeneous_work_efficient_scan_only",
+        "dense_affine_work_efficient_end_to_end",
+        "dense_homogeneous_work_efficient_end_to_end"
+      ],
+      "maximum_relative_errors": {
+        "slot_hillis_scan_only": 6.780155094965588e-16,
+        "slot_work_efficient_scan_only": 4.9310218872477e-16,
+        "dense_affine_work_efficient_scan_only": 6.163777359059626e-16,
+        "dense_homogeneous_work_efficient_scan_only": 4.9310218872477e-16,
+        "dense_affine_work_efficient_end_to_end": 6.163777359059626e-16,
+        "dense_homogeneous_work_efficient_end_to_end": 4.9310218872477e-16
+      },
+      "correctness_passed": true,
+      "timings_ms": {
+        "slot_hillis_scan_only": {
+          "median_ms": 4.14755,
+          "minimum_ms": 3.8329,
+          "p20_ms": 3.97072,
+          "p80_ms": 4.38186,
+          "mean_ms": 4.24709,
+          "stdev_ms": 0.4085024502986488,
+          "repeats": 20
+        },
+        "slot_work_efficient_scan_only": {
+          "median_ms": 3.5791000000000004,
+          "minimum_ms": 3.4064,
+          "p20_ms": 3.48074,
+          "p80_ms": 3.70252,
+          "mean_ms": 3.583815,
+          "stdev_ms": 0.11188194794067541,
+          "repeats": 20
+        },
+        "dense_affine_work_efficient_scan_only": {
+          "median_ms": 56.98125,
+          "minimum_ms": 55.4637,
+          "p20_ms": 55.82874,
+          "p80_ms": 60.41518,
+          "mean_ms": 57.92782,
+          "stdev_ms": 2.0779651160690835,
+          "repeats": 20
+        },
+        "dense_homogeneous_work_efficient_scan_only": {
+          "median_ms": 49.161649999999995,
+          "minimum_ms": 47.0551,
+          "p20_ms": 47.3382,
+          "p80_ms": 50.61880000000001,
+          "mean_ms": 50.450935,
+          "stdev_ms": 5.017285593852018,
+          "repeats": 20
+        },
+        "dense_affine_work_efficient_end_to_end": {
+          "median_ms": 62.1807,
+          "minimum_ms": 58.6726,
+          "p20_ms": 60.88226,
+          "p80_ms": 63.0293,
+          "mean_ms": 61.876,
+          "stdev_ms": 1.4965700528207824,
+          "repeats": 20
+        },
+        "dense_homogeneous_work_efficient_end_to_end": {
+          "median_ms": 63.87365,
+          "minimum_ms": 62.3559,
+          "p20_ms": 62.86766,
+          "p80_ms": 64.85484000000001,
+          "mean_ms": 63.913405,
+          "stdev_ms": 1.071924996198428,
+          "repeats": 20
+        }
+      },
+      "incremental_cuda_memory_bytes": {
+        "slot_hillis_scan_only": null,
+        "slot_work_efficient_scan_only": null,
+        "dense_affine_work_efficient_scan_only": null,
+        "dense_homogeneous_work_efficient_scan_only": null,
+        "dense_affine_work_efficient_end_to_end": null,
+        "dense_homogeneous_work_efficient_end_to_end": null
+      },
+      "fastest_median_backend": "slot_work_efficient_scan_only",
+      "composition_counts": {
+        "hillis_steele": 20481,
+        "work_efficient": 6142
+      },
+      "dependency_depths": {
+        "hillis_steele": 11,
+        "work_efficient": 23
+      }
+    },
+    {
+      "length": 1024,
+      "batch": 1,
+      "timing_order": [
+        "slot_work_efficient_scan_only",
+        "dense_affine_work_efficient_scan_only",
+        "dense_homogeneous_work_efficient_scan_only",
+        "dense_affine_work_efficient_end_to_end",
+        "dense_homogeneous_work_efficient_end_to_end",
+        "slot_hillis_scan_only"
+      ],
+      "maximum_relative_errors": {
+        "slot_hillis_scan_only": 5.958256487771781e-16,
+        "slot_work_efficient_scan_only": 7.9443419836957075e-16,
+        "dense_affine_work_efficient_scan_only": 5.958256487771781e-16,
+        "dense_homogeneous_work_efficient_scan_only": 5.958256487771781e-16,
+        "dense_affine_work_efficient_end_to_end": 5.958256487771781e-16,
+        "dense_homogeneous_work_efficient_end_to_end": 5.958256487771781e-16
+      },
+      "correctness_passed": true,
+      "timings_ms": {
+        "slot_work_efficient_scan_only": {
+          "median_ms": 2.6254,
+          "minimum_ms": 2.4247,
+          "p20_ms": 2.4914400000000003,
+          "p80_ms": 2.74234,
+          "mean_ms": 2.669755,
+          "stdev_ms": 0.2624769179851821,
+          "repeats": 20
+        },
+        "dense_affine_work_efficient_scan_only": {
+          "median_ms": 27.82895,
+          "minimum_ms": 25.7915,
+          "p20_ms": 26.44616,
+          "p80_ms": 28.14136,
+          "mean_ms": 27.502075,
+          "stdev_ms": 0.9508161935279605,
+          "repeats": 20
+        },
+        "dense_homogeneous_work_efficient_scan_only": {
+          "median_ms": 23.2224,
+          "minimum_ms": 22.6731,
+          "p20_ms": 22.97814,
+          "p80_ms": 23.52364,
+          "mean_ms": 23.46636,
+          "stdev_ms": 0.8854695332985768,
+          "repeats": 20
+        },
+        "dense_affine_work_efficient_end_to_end": {
+          "median_ms": 30.162300000000002,
+          "minimum_ms": 29.0938,
+          "p20_ms": 29.40512,
+          "p80_ms": 31.44534,
+          "mean_ms": 30.416125,
+          "stdev_ms": 1.1062675444371484,
+          "repeats": 20
+        },
+        "dense_homogeneous_work_efficient_end_to_end": {
+          "median_ms": 32.35705,
+          "minimum_ms": 31.6976,
+          "p20_ms": 31.920920000000002,
+          "p80_ms": 33.226299999999995,
+          "mean_ms": 32.568615,
+          "stdev_ms": 0.766172454004319,
+          "repeats": 20
+        },
+        "slot_hillis_scan_only": {
+          "median_ms": 2.5279,
+          "minimum_ms": 2.4309,
+          "p20_ms": 2.48008,
+          "p80_ms": 2.5766400000000003,
+          "mean_ms": 2.5417549999999998,
+          "stdev_ms": 0.08595706180995251,
+          "repeats": 20
+        }
+      },
+      "incremental_cuda_memory_bytes": {
+        "slot_work_efficient_scan_only": null,
+        "dense_affine_work_efficient_scan_only": null,
+        "dense_homogeneous_work_efficient_scan_only": null,
+        "dense_affine_work_efficient_end_to_end": null,
+        "dense_homogeneous_work_efficient_end_to_end": null,
+        "slot_hillis_scan_only": null
+      },
+      "fastest_median_backend": "slot_hillis_scan_only",
+      "composition_counts": {
+        "hillis_steele": 9217,
+        "work_efficient": 3070
+      },
+      "dependency_depths": {
+        "hillis_steele": 10,
+        "work_efficient": 21
+      }
+    }
+  ],
+  "global_local_winner_at_lengths_ge_256": null,
+  "claim_boundary": {
+    "identical_slot_recurrence_all_rows": true,
+    "triality_bind_unbind_timed": false,
+    "fused_kernel_comparison": false,
+    "faithful_modern_delta_kernel_comparison": false,
+    "absolute_memory_architecture_winner_established": false
+  },
+  "passed": true
+}

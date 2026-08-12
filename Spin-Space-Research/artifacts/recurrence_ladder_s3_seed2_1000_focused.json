@@ -1,0 +1,272 @@
+{
+  "experiment": "ordered S3 prefix-product state tracking",
+  "device": "NVIDIA GeForce RTX 2070 SUPER",
+  "torch_version": "2.12.0+cu130",
+  "config": {
+    "steps": 1000,
+    "batch_size": 256,
+    "sequence_length": 16,
+    "validation_batches": 8,
+    "validation_batch_size": 512,
+    "channels": 4,
+    "layers": 2,
+    "expansion": 2,
+    "learning_rate": 0.003,
+    "seed": 2
+  },
+  "group": {
+    "key": "s3",
+    "name": "symmetric group S3",
+    "order": 6,
+    "element_order": [
+      "123",
+      "132",
+      "213",
+      "231",
+      "312",
+      "321"
+    ],
+    "multiplication_table": [
+      [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      [
+        1,
+        0,
+        4,
+        5,
+        2,
+        3
+      ],
+      [
+        2,
+        3,
+        0,
+        1,
+        5,
+        4
+      ],
+      [
+        3,
+        2,
+        5,
+        4,
+        0,
+        1
+      ],
+      [
+        4,
+        5,
+        1,
+        0,
+        3,
+        2
+      ],
+      [
+        5,
+        4,
+        3,
+        2,
+        1,
+        0
+      ]
+    ]
+  },
+  "evaluation_lengths": [
+    2,
+    4,
+    8,
+    16,
+    32
+  ],
+  "fairness_contract": {
+    "identical_parameter_count": true,
+    "identical_parameter_shapes": true,
+    "identical_initial_parameters": true,
+    "identical_initial_function": true,
+    "same_training_batches": true,
+    "same_validation_batches": true,
+    "same_real_state_width_per_channel": 8
+  },
+  "results": [
+    {
+      "family": "complex_unitary",
+      "parameters": 13382,
+      "parameter_shape_sha256": "9ffbaa8d86f972c8268a07617fd7694a630831053de0946bf182a152d7cbc1fb",
+      "initial_parameter_sha256": "9cdda67cfeae77bcff4f80625a84746e231d96751d84d77d2b13523aadc88fa5",
+      "state_scalars_per_sequence": 64,
+      "initial_validation_loss": 1.989645779132843,
+      "initial_validation_prefix_accuracy": 0.1572113037109375,
+      "initial_validation_final_position_accuracy": 0.16943359375,
+      "final_validation_loss": 0.8205325528979301,
+      "final_validation_prefix_accuracy": 0.5208587646484375,
+      "final_validation_final_position_accuracy": 0.329345703125,
+      "length_generalization": {
+        "2": {
+          "validation_loss": 0.0021555710991378874,
+          "prefix_accuracy": 1.0,
+          "final_position_accuracy": 1.0
+        },
+        "4": {
+          "validation_loss": 0.08688259776681662,
+          "prefix_accuracy": 0.9649658203125,
+          "final_position_accuracy": 0.85986328125
+        },
+        "8": {
+          "validation_loss": 0.5194685831665993,
+          "prefix_accuracy": 0.70843505859375,
+          "final_position_accuracy": 0.347900390625
+        },
+        "16": {
+          "validation_loss": 0.8177147135138512,
+          "prefix_accuracy": 0.5211944580078125,
+          "final_position_accuracy": 0.330078125
+        },
+        "32": {
+          "validation_loss": 1.3048182725906372,
+          "prefix_accuracy": 0.38765716552734375,
+          "final_position_accuracy": 0.18603515625
+        }
+      },
+      "elapsed_seconds": 41.00049890001537,
+      "steps_per_second": 24.38994711841482,
+      "peak_cuda_memory_mib": 36.2744140625,
+      "loss_samples": {
+        "1": 1.9855836629867554,
+        "50": 1.7172292470932007,
+        "100": 1.6367616653442383,
+        "150": 1.487632393836975,
+        "200": 1.38141930103302,
+        "250": 1.3135188817977905,
+        "300": 1.143398642539978,
+        "350": 1.089390516281128,
+        "400": 1.0315210819244385,
+        "450": 1.0474023818969727,
+        "500": 0.9902725219726562,
+        "550": 1.0435826778411865,
+        "600": 0.9294223785400391,
+        "650": 0.9126560688018799,
+        "700": 0.892289400100708,
+        "750": 1.0060137510299683,
+        "800": 0.8650158643722534,
+        "850": 0.8615735769271851,
+        "900": 0.8475843667984009,
+        "950": 0.8276737928390503,
+        "1000": 0.8160962462425232
+      },
+      "streaming_equivalence": {
+        "chunked_logit_max_abs_error": 0.0,
+        "streaming_logit_max_abs_error": 9.5367431640625e-06,
+        "streaming_state_max_abs_error": 1.430511474609375e-06
+      },
+      "transition_diagnostics": [
+        {
+          "action": "U(1)^4 phase",
+          "mean_decay": 0.9526658058166504,
+          "min_decay": 0.6685351133346558,
+          "max_decay": 0.9999294877052307,
+          "mean_action_magnitude_radians": 0.6433889865875244
+        },
+        {
+          "action": "U(1)^4 phase",
+          "mean_decay": 0.8963832259178162,
+          "min_decay": 0.23275716602802277,
+          "max_decay": 0.9999626874923706,
+          "mean_action_magnitude_radians": 0.938957929611206
+        }
+      ]
+    },
+    {
+      "family": "ga_rotor_selective",
+      "parameters": 13382,
+      "parameter_shape_sha256": "9ffbaa8d86f972c8268a07617fd7694a630831053de0946bf182a152d7cbc1fb",
+      "initial_parameter_sha256": "9cdda67cfeae77bcff4f80625a84746e231d96751d84d77d2b13523aadc88fa5",
+      "state_scalars_per_sequence": 64,
+      "initial_validation_loss": 1.989645779132843,
+      "initial_validation_prefix_accuracy": 0.1572113037109375,
+      "initial_validation_final_position_accuracy": 0.16943359375,
+      "final_validation_loss": 0.3273945748806,
+      "final_validation_prefix_accuracy": 0.8502197265625,
+      "final_validation_final_position_accuracy": 0.611328125,
+      "length_generalization": {
+        "2": {
+          "validation_loss": 0.0012079356238245964,
+          "prefix_accuracy": 1.0,
+          "final_position_accuracy": 1.0
+        },
+        "4": {
+          "validation_loss": 0.005477724887896329,
+          "prefix_accuracy": 0.99951171875,
+          "final_position_accuracy": 0.998046875
+        },
+        "8": {
+          "validation_loss": 0.07615587301552296,
+          "prefix_accuracy": 0.96875,
+          "final_position_accuracy": 0.8916015625
+        },
+        "16": {
+          "validation_loss": 0.3172517903149128,
+          "prefix_accuracy": 0.8564910888671875,
+          "final_position_accuracy": 0.617919921875
+        },
+        "32": {
+          "validation_loss": 0.954530693590641,
+          "prefix_accuracy": 0.6090774536132812,
+          "final_position_accuracy": 0.20166015625
+        }
+      },
+      "elapsed_seconds": 62.493516199989244,
+      "steps_per_second": 16.001660025015077,
+      "peak_cuda_memory_mib": 37.3837890625,
+      "loss_samples": {
+        "1": 1.9855836629867554,
+        "50": 1.717921257019043,
+        "100": 1.6146254539489746,
+        "150": 1.4664011001586914,
+        "200": 1.1917908191680908,
+        "250": 1.0019261837005615,
+        "300": 0.8206112384796143,
+        "350": 0.6895495057106018,
+        "400": 0.6406933069229126,
+        "450": 0.5730252265930176,
+        "500": 0.5165692567825317,
+        "550": 0.5383719205856323,
+        "600": 0.5218318700790405,
+        "650": 0.5055592060089111,
+        "700": 0.4426558315753937,
+        "750": 0.41652947664260864,
+        "800": 0.4224461317062378,
+        "850": 0.40770262479782104,
+        "900": 0.4065018892288208,
+        "950": 0.3599633276462555,
+        "1000": 0.35719871520996094
+      },
+      "streaming_equivalence": {
+        "chunked_logit_max_abs_error": 0.0,
+        "streaming_logit_max_abs_error": 9.059906005859375e-06,
+        "streaming_state_max_abs_error": 1.7285346984863281e-06
+      },
+      "transition_diagnostics": [
+        {
+          "action": "selective Cl(3,0) rotor sandwich",
+          "mean_decay": 0.9841809272766113,
+          "min_decay": 0.9495523571968079,
+          "max_decay": 0.9997649788856506,
+          "mean_action_magnitude_radians": 0.9014519453048706
+        },
+        {
+          "action": "selective Cl(3,0) rotor sandwich",
+          "mean_decay": 0.9928573966026306,
+          "min_decay": 0.7405825853347778,
+          "max_decay": 0.9998140335083008,
+          "mean_action_magnitude_radians": 1.2372779846191406
+        }
+      ]
+    }
+  ]
+}
