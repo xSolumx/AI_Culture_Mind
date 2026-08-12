@@ -456,12 +456,15 @@ python -m spin9_v1_v5_char0 `
   --output artifacts/spin9_v1_v5_char0_20260812.json
 python -m spin9_v1_v5_theorem `
   --output artifacts/spin9_v1_v5_theorem_20260812.json
+python -m spin9_v1_candidate_line `
+  --output runtime/spin9_v1_candidate_line_replay.json
 python -m pytest tests/test_spin9_v1_v5_reconstruction.py `
   tests/test_spin9_v1_v5_boundary_char0.py `
   tests/test_spin9_v1_v5_blowup.py `
   tests/test_spin9_v1_v5_global.py `
   tests/test_spin9_v1_v5_char0.py `
-  tests/test_spin9_v1_v5_theorem.py -q
+  tests/test_spin9_v1_v5_theorem.py `
+  tests/test_spin9_v1_candidate_line.py -q
 ```
 
 The recorded reconstruction took 394 seconds. The test replays the unused
@@ -481,8 +484,10 @@ has 312 positive leaves and eight handoff boxes; the eight local charts have
 determinants under both square-root embeddings and uses a 175-digit prime
 product exceeding twice the exact residual coefficient bound. The combined
 artifact proves the \(21/20\) bound on the complete coupled finite-radius
-slice. It does not prove exact candidate optimality or the unrestricted
-quotient. See the
+slice. The follow-on pure-\(V_1\) certificate proves exact candidate optimality
+on the complete scalar graph line and classifies its four graph-coordinate
+preimages. Candidate optimality in the genuinely mixed (p>0) region and the
+unrestricted quotient remain open. See the
 [reconstruction note](manuscripts/SPIN9_V1_V5_RECONSTRUCTION.md).
 The screen is a deterministic float64 falsifier, not part of the exact proof
 layer.

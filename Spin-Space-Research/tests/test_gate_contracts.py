@@ -45,6 +45,14 @@ class GateContractTests(unittest.TestCase):
         )
         self.assertTrue(any("second supported V5" in row for row in gate.limitations))
 
+    def test_spin9_pure_v1_candidate_line_is_promoted_separately(self) -> None:
+        gate = next(
+            item for item in GATES if item.gate_id == "spin9_pure_v1_candidate_line"
+        )
+        self.assertEqual(gate.status, "proved_exact")
+        self.assertIn("positivity_certificate", gate.evidence_layers)
+        self.assertTrue(any("p>0" in row for row in gate.limitations))
+
     def test_hybrid_cayley_gate_names_its_nonlocal_proof_input(self) -> None:
         gate = next(
             item

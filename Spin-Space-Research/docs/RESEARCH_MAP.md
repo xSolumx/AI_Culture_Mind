@@ -292,3 +292,18 @@ when a degree-six polynomial \(L\) and a degree-twelve polynomial \(S\) are
 both nonnegative on \(0\leq y\leq1\). The reduction is proved, and the complete
 triangular atlas now certifies the resulting eight physical margins on their
 six-dimensional domain. The seventh invariant remains open.
+
+On the Spin(9) coupled normal slice, the complete pure-\(V_1\) graph line is now
+also exact. Its rational coordinate
+
+\[
+c(x)=-\frac{4x(x-1)(2x+1)}{(1+2x^2)^2}
+\]
+
+maps the real line into \([-1/2,1]\), and the graph determinant is exactly the
+symmetric equiangular determinant evaluated at (c(x)). Hence the algebraic
+candidate is globally optimal on this line. The four real roots of the
+stationary octic are exactly four graph-coordinate representatives of the same
+maximizing symmetric-curve parameter. The remaining candidate-gap gate begins at mixed radius
+(p>0); the second (V_5) and unrestricted quotient remain independent open
+problems.

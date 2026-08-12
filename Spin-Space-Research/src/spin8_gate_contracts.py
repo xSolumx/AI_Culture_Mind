@@ -1221,6 +1221,33 @@ GATES: tuple[GateContract, ...] = (
         replay_tier="expensive_exact",
     ),
     GateContract(
+        gate_id="spin9_pure_v1_candidate_line",
+        claim=(
+            "The algebraic symmetric candidate is the global determinant "
+            "maximum on the complete real pure-V1 graph line, with its four "
+            "finite graph-coordinate preimages classified exactly."
+        ),
+        status="proved_exact",
+        evidence_layers=(
+            "exact_arithmetic",
+            "symbolic_identity",
+            "positivity_certificate",
+        ),
+        test_suites=("tests/test_spin9_v1_candidate_line.py",),
+        artifacts=("artifacts/spin9_v1_candidate_line_20260812.json",),
+        boundary_obligations=(
+            "The pure-V1 determinant formula must be identified exactly as a rational composition with the symmetric equiangular curve.",
+            "The rational coordinate map must send the complete real graph line into -1/2<=c<=1.",
+            "Derivative signs must prove the unique curve maximum at c*=(-17+sqrt(241))/24.",
+            "All real roots of the stationary octic must be isolated and identified as the four graph preimages of c*.",
+        ),
+        limitations=(
+            "This closes p=0 only; exact candidate optimality in the genuinely mixed p>0 region remains open.",
+            "The second supported V5, the nonpolar quotient, and unrestricted rank-three optimality remain open.",
+        ),
+        replay_tier="bounded_full",
+    ),
+    GateContract(
         gate_id="spin9_global_three_spinor_design",
         claim="A bounded multistart numerical search found no three-spinor frame with larger determinant than the symmetric candidate.",
         status="numerical_only",

@@ -146,6 +146,9 @@ module name. Editable installation adds this directory to the Python path.
 - `spin9_v1_v5_theorem.py`: claim-boundary assembler promoting the complete
   finite-radius coupled-slice theorem while keeping candidate optimality, the
   second \(V_5\), and the unrestricted quotient open.
+- `spin9_v1_candidate_line.py`: exact rational pullback of the symmetric
+  equiangular determinant curve by the complete pure-\(V_1\) graph line, proving global
+  candidate optimality there and classifying its four graph preimages.
 - `spin9_v1_v5_screen.py`: reproducible float64 multistart, compactified
   random, and projective-boundary falsification screen. It finds no candidate
   counterexample but exactly rejects pointwise monotonicity in the \(V_5\)
