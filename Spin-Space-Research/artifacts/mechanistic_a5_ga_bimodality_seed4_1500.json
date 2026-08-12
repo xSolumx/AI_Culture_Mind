@@ -1,0 +1,1443 @@
+{
+  "experiment": "write-free norm-preserving A5 group-action gate",
+  "device": "NVIDIA GeForce RTX 2070 SUPER",
+  "torch_version": "2.12.0+cu130",
+  "config": {
+    "steps": 1500,
+    "batch_size": 256,
+    "sequence_length": 16,
+    "validation_batches": 2,
+    "validation_batch_size": 512,
+    "channels": 4,
+    "learning_rate": 0.003,
+    "seed": 4,
+    "diagnostic_interval": 50,
+    "max_rotor_angle": 3.141592653589793,
+    "relation_loss_weight": 0.0,
+    "relation_start_step": 0,
+    "relation_ramp_steps": 0,
+    "canonical_orbit_loss_weight": 0.0,
+    "a5_irrep_init": false,
+    "freeze_actions": false
+  },
+  "group": {
+    "key": "a5",
+    "name": "alternating group A5",
+    "order": 60
+  },
+  "input_alphabet": [
+    {
+      "token_index": 0,
+      "group_index": 15,
+      "element": "23145"
+    },
+    {
+      "token_index": 1,
+      "group_index": 24,
+      "element": "31245"
+    },
+    {
+      "token_index": 2,
+      "group_index": 16,
+      "element": "23451"
+    },
+    {
+      "token_index": 3,
+      "group_index": 48,
+      "element": "51234"
+    }
+  ],
+  "held_out_transition_pairs": [
+    {
+      "left": "23145",
+      "right": "23451"
+    }
+  ],
+  "data_split_audit": {
+    "training": {
+      "pair_occurrences": 0,
+      "sequences_with_pair": 0,
+      "total_sequences": 384000
+    },
+    "validation": {
+      "pair_occurrences": 1803,
+      "sequences_with_pair": 1024,
+      "total_sequences": 1024
+    },
+    "generalization": {
+      "2": {
+        "pair_occurrences": 1024,
+        "sequences_with_pair": 1024,
+        "total_sequences": 1024
+      },
+      "16": {
+        "pair_occurrences": 1818,
+        "sequences_with_pair": 1024,
+        "total_sequences": 1024
+      },
+      "64": {
+        "pair_occurrences": 4821,
+        "sequences_with_pair": 1024,
+        "total_sequences": 1024
+      },
+      "128": {
+        "pair_occurrences": 9037,
+        "sequences_with_pair": 1024,
+        "total_sequences": 1024
+      }
+    }
+  },
+  "language_coverage_audit": {
+    "training": {
+      "observed_group_states": 60,
+      "group_state_fraction": 1.0,
+      "missing_group_state_indices": [],
+      "observed_input_pairs": 15,
+      "possible_input_pairs": 16,
+      "input_pair_fraction": 0.9375
+    },
+    "validation": {
+      "observed_group_states": 60,
+      "group_state_fraction": 1.0,
+      "missing_group_state_indices": [],
+      "observed_input_pairs": 16,
+      "possible_input_pairs": 16,
+      "input_pair_fraction": 1.0
+    }
+  },
+  "evaluation_lengths": [
+    2,
+    16,
+    64,
+    128
+  ],
+  "comparison_contract": {
+    "same_training_batches": true,
+    "same_validation_batches": true,
+    "same_state_width": true,
+    "all_actions_norm_preserving": true,
+    "no_affine_writes": true,
+    "parameter_counts_are_reported_not_matched": true
+  },
+  "results": [
+    {
+      "family": "pure_ga_rotor",
+      "parameters": 2061,
+      "parameter_shape_sha256": "8c2b63f8aafc2f8e3aa3c6a4f4d847b828ad1f91db28921e9c5b95bed3acec1f",
+      "initial_parameter_sha256": "bf2f454054d18550670574c3f49253c59cf2ac926b1533d684f61575b9de85b3",
+      "state_scalars_per_sequence": 32,
+      "has_decay": false,
+      "has_affine_write": false,
+      "has_residual_or_feed_forward_path": false,
+      "a5_irrep_initialization": false,
+      "actions_frozen": false,
+      "initial_validation_loss": 4.1205854415893555,
+      "initial_validation_prefix_accuracy": 0.01861572265625,
+      "initial_validation_final_position_accuracy": 0.0205078125,
+      "initial_mechanism_diagnostics": {
+        "canonical_max_word_length": 6,
+        "operator_orthogonality_rms": 0.0,
+        "operator_orthogonality_max": 0.0,
+        "cayley_edge_relation_rms": 0.0,
+        "cayley_edge_relation_max": 0.0,
+        "linear_homomorphism_rms": 0.0,
+        "linear_homomorphism_max": 0.0,
+        "identity_word_state_drift_rms": 0.0,
+        "identity_word_state_drift_max": 0.0,
+        "orbit_cayley_edge_rms": 0.0,
+        "orbit_cayley_edge_max": 0.0,
+        "decoded_cayley_edge_accuracy": 0.016666666666666666,
+        "orbit_homomorphism_rms": 0.0,
+        "orbit_homomorphism_max": 0.0,
+        "decoded_homomorphism_accuracy": 0.01666666753590107,
+        "reachable_linear_span_rank": 1,
+        "state_dimension": 32,
+        "reachable_span_homomorphism_rms": 0.0,
+        "reachable_span_homomorphism_max": 0.0,
+        "orthogonal_complement_dimension": 31,
+        "orthogonal_complement_homomorphism_rms": 0.0,
+        "orthogonal_complement_homomorphism_max": 0.0,
+        "orbit_variation_span_rank": 0,
+        "orbit_variation_span_homomorphism_rms": null,
+        "orbit_variation_span_homomorphism_max": null,
+        "common_fixed_subspace_dimension": 32,
+        "common_fixed_subspace_homomorphism_rms": 0.0,
+        "common_fixed_subspace_homomorphism_max": 0.0,
+        "cl3_invariant_grade_dimension": 8,
+        "cl3_invariant_grade_homomorphism_rms": 0.0,
+        "cl3_invariant_grade_homomorphism_max": 0.0,
+        "generator_commutator_separation": 0.0,
+        "mean_generator_pair_commutator_separation": 0.0,
+        "maximum_commutator_token_pair": [
+          0,
+          1
+        ],
+        "prototype_minimum_margin": 0.0,
+        "prototype_median_distance": 0.0,
+        "canonical_prototype_accuracy": 0.01666666753590107,
+        "mean_action_displacement_from_identity": 0.0,
+        "max_action_displacement_from_identity": 0.0,
+        "per_token_mean_action_displacement": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "mean_rotor_angle_radians": 0.0,
+        "max_rotor_angle_radians": 0.0,
+        "per_token_mean_rotor_angle_radians": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "final_validation_loss": 2.6530396938323975,
+      "final_validation_prefix_accuracy": 0.33709716796875,
+      "final_validation_final_position_accuracy": 0.0888671875,
+      "maximum_validation_state_norm_error": 1.9669532775878906e-06,
+      "length_generalization": {
+        "2": {
+          "validation_loss": 1.2174206972122192,
+          "prefix_accuracy": 0.5,
+          "final_position_accuracy": 0.0,
+          "maximum_state_norm_error": 2.980232238769531e-07
+        },
+        "16": {
+          "validation_loss": 2.6146236658096313,
+          "prefix_accuracy": 0.35235595703125,
+          "final_position_accuracy": 0.07421875,
+          "maximum_state_norm_error": 1.9669532775878906e-06
+        },
+        "64": {
+          "validation_loss": 4.662916898727417,
+          "prefix_accuracy": 0.1077117919921875,
+          "final_position_accuracy": 0.0234375,
+          "maximum_state_norm_error": 6.973743438720703e-06
+        },
+        "128": {
+          "validation_loss": 5.1022047996521,
+          "prefix_accuracy": 0.06573486328125,
+          "final_position_accuracy": 0.0166015625,
+          "maximum_state_norm_error": 1.2695789337158203e-05
+        }
+      },
+      "mechanism_diagnostics": {
+        "canonical_max_word_length": 6,
+        "operator_orthogonality_rms": 1.6565296087856155e-07,
+        "operator_orthogonality_max": 3.24610867137204e-07,
+        "cayley_edge_relation_rms": 0.557065413770571,
+        "cayley_edge_relation_max": 1.4109523379337634,
+        "linear_homomorphism_rms": 0.7951120978978392,
+        "linear_homomorphism_max": 1.4141782886956251,
+        "identity_word_state_drift_rms": 0.7649229082864034,
+        "identity_word_state_drift_max": 1.383444358843933,
+        "orbit_cayley_edge_rms": 0.6592948672603273,
+        "orbit_cayley_edge_max": 1.3130251660046148,
+        "decoded_cayley_edge_accuracy": 0.42916666666666664,
+        "orbit_homomorphism_rms": 0.9589370493249305,
+        "orbit_homomorphism_max": 1.4975167903479116,
+        "decoded_homomorphism_accuracy": 0.23527778685092926,
+        "reachable_linear_span_rank": 25,
+        "state_dimension": 32,
+        "reachable_span_homomorphism_rms": 0.8995666499632209,
+        "reachable_span_homomorphism_max": 1.3994644932433147,
+        "orthogonal_complement_dimension": 7,
+        "orthogonal_complement_homomorphism_rms": 3.578641552197583e-07,
+        "orthogonal_complement_homomorphism_max": 9.594510511022516e-07,
+        "orbit_variation_span_rank": 24,
+        "orbit_variation_span_homomorphism_rms": 0.9181163675144713,
+        "orbit_variation_span_homomorphism_max": 1.4283224673286465,
+        "common_fixed_subspace_dimension": 8,
+        "common_fixed_subspace_homomorphism_rms": 3.115630779501754e-07,
+        "common_fixed_subspace_homomorphism_max": 8.611647385114693e-07,
+        "cl3_invariant_grade_dimension": 8,
+        "cl3_invariant_grade_homomorphism_rms": 3.122066983303243e-07,
+        "cl3_invariant_grade_homomorphism_max": 8.614799837852807e-07,
+        "generator_commutator_separation": 0.4494969089924948,
+        "mean_generator_pair_commutator_separation": 0.32236477770272415,
+        "maximum_commutator_token_pair": [
+          1,
+          3
+        ],
+        "prototype_minimum_margin": 0.3068151868550624,
+        "prototype_median_distance": 2.4291538737172993,
+        "canonical_prototype_accuracy": 0.6000000238418579,
+        "mean_action_displacement_from_identity": 0.6145723469074043,
+        "max_action_displacement_from_identity": 1.414209756583357,
+        "per_token_mean_action_displacement": [
+          0.3921625575255106,
+          0.47899716411528426,
+          0.7986238224813721,
+          0.78850584350745
+        ],
+        "mean_rotor_angle_radians": 1.0497636795043945,
+        "max_rotor_angle_radians": 3.1369364261627197,
+        "per_token_mean_rotor_angle_radians": [
+          0.6858033537864685,
+          0.9621983766555786,
+          1.2829293012619019,
+          1.2681235074996948
+        ]
+      },
+      "training_trajectory": {
+        "1": {
+          "loss": 4.115862846374512,
+          "task_loss": 4.115862846374512,
+          "relation_loss": 0.0,
+          "canonical_orbit_loss": 0.0,
+          "effective_relation_weight": 0.0,
+          "preclip_gradient_norm": 0.33089178800582886,
+          "training_prefix_accuracy": 0.021240234375,
+          "training_final_position_accuracy": 0.03515625,
+          "training_median_correct_class_margin": -0.47515469789505005,
+          "training_final_position_median_correct_class_margin": -0.47654756903648376,
+          "action_gradient_norm": 0.24584177136421204,
+          "initial_state_gradient_norm": 0.04769747704267502,
+          "decoder_gradient_norm": 0.2120899260044098,
+          "logit_scale_gradient_abs": 0.042355988174676895,
+          "mechanism": {
+            "mean_action_displacement_from_identity": 0.011542706817094992,
+            "max_action_displacement_from_identity": 0.011542714681880105,
+            "mean_initial_state_displacement": 0.014816360249845041,
+            "max_initial_state_displacement": 0.016072742243830047,
+            "maximum_token_commutator": 8.882272246794368e-05,
+            "per_token_mean_action_displacement": [
+              0.011542710500596359,
+              0.011542703942190344,
+              0.011542704131384019,
+              0.011542708694209244
+            ],
+            "mean_rotor_angle_radians": 0.01632646471261978,
+            "max_rotor_angle_radians": 0.01632646471261978,
+            "per_token_mean_rotor_angle_radians": [
+              0.01632646471261978,
+              0.01632646471261978,
+              0.01632646471261978,
+              0.01632646471261978
+            ]
+          }
+        },
+        "50": {
+          "loss": 3.75091290473938,
+          "task_loss": 3.75091290473938,
+          "relation_loss": 0.0,
+          "canonical_orbit_loss": 0.0,
+          "effective_relation_weight": 0.0,
+          "preclip_gradient_norm": 0.23572227358818054,
+          "training_prefix_accuracy": 0.0771484375,
+          "training_final_position_accuracy": 0.01171875,
+          "training_median_correct_class_margin": -0.5448009967803955,
+          "training_final_position_median_correct_class_margin": -0.5387649536132812,
+          "action_gradient_norm": 0.1903582364320755,
+          "initial_state_gradient_norm": 0.03438977897167206,
+          "decoder_gradient_norm": 0.07850398123264313,
+          "logit_scale_gradient_abs": 0.10946781188249588,
+          "mechanism": {
+            "mean_action_displacement_from_identity": 0.18184231215786473,
+            "max_action_displacement_from_identity": 0.3474827890909644,
+            "mean_initial_state_displacement": 0.22674893082902675,
+            "max_initial_state_displacement": 0.47303347070612756,
+            "maximum_token_commutator": 0.038602351165512035,
+            "per_token_mean_action_displacement": [
+              0.11048779277103114,
+              0.1662478580249875,
+              0.19465333511238816,
+              0.2559802627230521
+            ],
+            "mean_rotor_angle_radians": 0.2583892047405243,
+            "max_rotor_angle_radians": 0.4964989721775055,
+            "per_token_mean_rotor_angle_radians": [
+              0.1565079689025879,
+              0.23595334589481354,
+              0.2767435312271118,
+              0.3643519878387451
+            ]
+          }
+        },
+        "100": {
+          "loss": 3.4924850463867188,
+          "task_loss": 3.4924850463867188,
+          "relation_loss": 0.0,
+          "canonical_orbit_loss": 0.0,
+          "effective_relation_weight": 0.0,
+          "preclip_gradient_norm": 0.4706382751464844,
+          "training_prefix_accuracy": 0.13671875,
+          "training_final_position_accuracy": 0.0234375,
+          "training_median_correct_class_margin": -0.732234001159668,
+          "training_final_position_median_correct_class_margin": -1.0231313705444336,
+          "action_gradient_norm": 0.42455384135246277,
+          "initial_state_gradient_norm": 0.03466939181089401,
+          "decoder_gradient_norm": 0.10321196168661118,
+          "logit_scale_gradient_abs": 0.17146342992782593,
+          "mechanism": {
+            "mean_action_displacement_from_identity": 0.32443925064300816,
+            "max_action_displacement_from_identity": 0.8080317295045806,
+            "mean_initial_state_displacement": 0.4063550875968594,
+            "max_initial_state_displacement": 1.1138641104229012,
+            "maximum_token_commutator": 0.13898213443875332,
+            "per_token_mean_action_displacement": [
+              0.10392511612301417,
+              0.16790329629232845,
+              0.5112008784616571,
+              0.514727711695033
+            ],
+            "mean_rotor_angle_radians": 0.4727253317832947,
+            "max_rotor_angle_radians": 1.216335415840149,
+            "per_token_mean_rotor_angle_radians": [
+              0.14715944230556488,
+              0.23839879035949707,
+              0.7480469346046448,
+              0.7572962045669556
+            ]
+          }
+        },
+        "150": {
+          "loss": 3.2469334602355957,
+          "task_loss": 3.2469334602355957,
+          "relation_loss": 0.0,
+          "canonical_orbit_loss": 0.0,
+          "effective_relation_weight": 0.0,
+          "preclip_gradient_norm": 0.4121769070625305,
+          "training_prefix_accuracy": 0.18115234375,
+          "training_final_position_accuracy": 0.03515625,
+          "training_median_correct_class_margin": -0.9082363843917847,
+          "training_final_position_median_correct_class_margin": -1.381788969039917,
+          "action_gradient_norm": 0.3951490819454193,
+          "initial_state_gradient_norm": 0.028762318193912506,
+          "decoder_gradient_norm": 0.07237488031387329,
+          "logit_scale_gradient_abs": 0.08764483034610748,
+          "mechanism": {
+            "mean_action_displacement_from_identity": 0.4019810481864613,
+            "max_action_displacement_from_identity": 1.0712158801220812,
+            "mean_initial_state_displacement": 0.5217438222771875,
+            "max_initial_state_displacement": 1.5137965666832305,
+            "maximum_token_commutator": 0.1275679334650197,
+            "per_token_mean_action_displacement": [
+              0.1388138657015528,
+              0.19195111318248664,
+              0.637731081941703,
+              0.6394281319201027
+            ],
+            "mean_rotor_angle_radians": 0.6037324666976929,
+            "max_rotor_angle_radians": 1.7188397645950317,
+            "per_token_mean_rotor_angle_radians": [
+              0.1967204213142395,
+              0.2736150324344635,
+              0.9718046188354492,
+              0.9727898240089417
+            ]
+          }
+        },
+        "200": {
+          "loss": 3.096459150314331,
+          "task_loss": 3.096459150314331,
+          "relation_loss": 0.0,
+          "canonical_orbit_loss": 0.0,
+          "effective_relation_weight": 0.0,
+          "preclip_gradient_norm": 0.5222471356391907,
+          "training_prefix_accuracy": 0.185302734375,
+          "training_final_position_accuracy": 0.04296875,
+          "training_median_correct_class_margin": -0.8358985781669617,
+          "training_final_position_median_correct_class_margin": -1.6775556802749634,
+          "action_gradient_norm": 0.5124337673187256,
+          "initial_state_gradient_norm": 0.04093388095498085,
+          "decoder_gradient_norm": 0.07516738027334213,
+          "logit_scale_gradient_abs": 0.05317871645092964,
+          "mechanism": {
+            "mean_action_displacement_from_identity": 0.43298016770993497,
+            "max_action_displacement_from_identity": 1.1581202285763679,
+            "mean_initial_state_displacement": 0.5519356314498519,
+            "max_initial_state_displacement": 1.6362375182138058,
+            "maximum_token_commutator": 0.18176426680608515,
+            "per_token_mean_action_displacement": [
+              0.11709629023734247,
+              0.23400808522517413,
+              0.6836732257301048,
+              0.6971430696471185
+            ],
+            "mean_rotor_angle_radians": 0.6612132787704468,
+            "max_rotor_angle_radians": 1.919034719467163,
+            "per_token_mean_rotor_angle_radians": [
+              0.166048064827919,
+              0.33680737018585205,
+              1.0593798160552979,
+              1.082617998123169
+            ]
+          }
+        },
+        "250": {
+          "loss": 3.0180697441101074,
+          "task_loss": 3.0180697441101074,
+          "relation_loss": 0.0,
+          "canonical_orbit_loss": 0.0,
+          "effective_relation_weight": 0.0,
+          "preclip_gradient_norm": 0.8466572165489197,
+          "training_prefix_accuracy": 0.199462890625,
+          "training_final_position_accuracy": 0.04296875,
+          "training_median_correct_class_margin": -0.8231844902038574,
+          "training_final_position_median_correct_class_margin": -1.4300901889801025,
+          "action_gradient_norm": 0.8391623497009277,
+          "initial_state_gradient_norm": 0.05941138043999672,
+          "decoder_gradient_norm": 0.07833410799503326,
+          "logit_scale_gradient_abs": 0.05448881909251213,
+          "mechanism": {
+            "mean_action_displacement_from_identity": 0.48260482274850247,
+            "max_action_displacement_from_identity": 1.1852721275460634,
+            "mean_initial_state_displacement": 0.6075476499900122,
+            "max_initial_state_displacement": 1.662468541537713,
+            "maximum_token_commutator": 0.30106799155887515,
+            "per_token_mean_action_displacement": [
+              0.1229343068478353,
+              0.31758356415486,
+              0.7330791844298311,
+              0.7568222355614835
+            ],
+            "mean_rotor_angle_radians": 0.7435117959976196,
+            "max_rotor_angle_radians": 1.9876328706741333,
+            "per_token_mean_rotor_angle_radians": [
+              0.17446421086788177,
+              0.46756017208099365,
+              1.1461044549942017,
+              1.1859182119369507
+            ]
+          }
+        },
+        "300": {
+          "loss": 3.06126070022583,
+          "task_loss": 3.06126070022583,
+          "relation_loss": 0.0,
+          "canonical_orbit_loss": 0.0,
+          "effective_relation_weight": 0.0,
+          "preclip_gradient_norm": 1.1226317882537842,
+          "training_prefix_accuracy": 0.17138671875,
+          "training_final_position_accuracy": 0.0546875,
+          "training_median_correct_class_margin": -0.8998411893844604,
+          "training_final_position_median_correct_class_margin": -1.9452420473098755,
+          "action_gradient_norm": 1.1165350675582886,
+          "initial_state_gradient_norm": 0.08322685956954956,
+          "decoder_gradient_norm": 0.08181954175233841,
+          "logit_scale_gradient_abs": 0.005508380010724068,
+          "mechanism": {
+            "mean_action_displacement_from_identity": 0.5160867725697746,
+            "max_action_displacement_from_identity": 1.2250961392673096,
+            "mean_initial_state_displacement": 0.6428474998056667,
+            "max_initial_state_displacement": 1.7184158331073252,
+            "maximum_token_commutator": 0.35850468182551,
+            "per_token_mean_action_displacement": [
+              0.14566874597146978,
+              0.37516388624866537,
+              0.7642158685060285,
+              0.7792985895529347
+            ],
+            "mean_rotor_angle_radians": 0.8059213161468506,
+            "max_rotor_angle_radians": 2.095388889312744,
+            "per_token_mean_rotor_angle_radians": [
+              0.2071085274219513,
+              0.5770846605300903,
+              1.2110098600387573,
+              1.2284821271896362
+            ]
+          }
+        },
+        "350": {
+          "loss": 3.048412322998047,
+          "task_loss": 3.048412322998047,
+          "relation_loss": 0.0,
+          "canonical_orbit_loss": 0.0,
+          "effective_relation_weight": 0.0,
+          "preclip_gradient_norm": 0.5735234022140503,
+          "training_prefix_accuracy": 0.1767578125,
+          "training_final_position_accuracy": 0.04296875,
+          "training_median_correct_class_margin": -1.0054547786712646,
+          "training_final_position_median_correct_class_margin": -1.7763186693191528,
+          "action_gradient_norm": 0.5635591149330139,
+          "initial_state_gradient_norm": 0.06575243920087814,
+          "decoder_gradient_norm": 0.0784282460808754,
+          "logit_scale_gradient_abs": 0.0292546097189188,
+          "mechanism": {
+            "mean_action_displacement_from_identity": 0.5235652367708669,
+            "max_action_displacement_from_identity": 1.2415213378977823,
+            "mean_initial_state_displacement": 0.6504387116213675,
+            "max_initial_state_displacement": 1.736932406362294,
+            "maximum_token_commutator": 0.389845950728222,
+            "per_token_mean_action_displacement": [
+              0.14909862819660807,
+              0.4038460526174176,
+              0.7659280274688797,
+              0.7753882388005622
+            ],
+            "mean_rotor_angle_radians": 0.822913646697998,
+            "max_rotor_angle_radians": 2.1428682804107666,
+            "per_token_mean_rotor_angle_radians": [
+              0.212275892496109,
+              0.6318256855010986,
+              1.2222799062728882,
+              1.2252730131149292
+            ]
+          }
+        },
+        "400": {
+          "loss": 2.9368185997009277,
+          "task_loss": 2.9368185997009277,
+          "relation_loss": 0.0,
+          "canonical_orbit_loss": 0.0,
+          "effective_relation_weight": 0.0,
+          "preclip_gradient_norm": 0.8446977734565735,
+          "training_prefix_accuracy": 0.2255859375,
+          "training_final_position_accuracy": 0.04296875,
+          "training_median_correct_class_margin": -0.939582109451294,
+          "training_final_position_median_correct_class_margin": -1.6578316688537598,
+          "action_gradient_norm": 0.8379725217819214,
+          "initial_state_gradient_norm": 0.07015898078680038,
+          "decoder_gradient_norm": 0.07133403420448303,
+          "logit_scale_gradient_abs": 0.03613441437482834,
+          "mechanism": {
+            "mean_action_displacement_from_identity": 0.546431079049379,
+            "max_action_displacement_from_identity": 1.259045481058074,
+            "mean_initial_state_displacement": 0.6732983989876442,
+            "max_initial_state_displacement": 1.7559274221424637,
+            "maximum_token_commutator": 0.4134944596864201,
+            "per_token_mean_action_displacement": [
+              0.21618795773966565,
+              0.42553312770160073,
+              0.7624031985313218,
+              0.781600032224928
+            ],
+            "mean_rotor_angle_radians": 0.8657252788543701,
+            "max_rotor_angle_radians": 2.1959171295166016,
+            "per_token_mean_rotor_angle_radians": [
+              0.31376492977142334,
+              0.6839382648468018,
+              1.2233598232269287,
+              1.241837978363037
+            ]
+          }
+        },
+        "450": {
+          "loss": 2.949458122253418,
+          "task_loss": 2.949458122253418,
+          "relation_loss": 0.0,
+          "canonical_orbit_loss": 0.0,
+          "effective_relation_weight": 0.0,
+          "preclip_gradient_norm": 0.8055570721626282,
+          "training_prefix_accuracy": 0.220947265625,
+          "training_final_position_accuracy": 0.03125,
+          "training_median_correct_class_margin": -0.9264678359031677,
+          "training_final_position_median_correct_class_margin": -1.7442026138305664,
+          "action_gradient_norm": 0.7989928722381592,
+          "initial_state_gradient_norm": 0.07037854939699173,
+          "decoder_gradient_norm": 0.07433967292308807,
+          "logit_scale_gradient_abs": 0.007286176551133394,
+          "mechanism": {
+            "mean_action_displacement_from_identity": 0.5743652759815251,
+            "max_action_displacement_from_identity": 1.2671687096281117,
+            "mean_initial_state_displacement": 0.7020557577177262,
+            "max_initial_state_displacement": 1.7694216214233423,
+            "maximum_token_commutator": 0.4300296446444392,
+            "per_token_mean_action_displacement": [
+              0.3039923131534456,
+              0.44285290052770776,
+              0.7700307962843457,
+              0.7805850939606013
+            ],
+            "mean_rotor_angle_radians": 0.9196600317955017,
+            "max_rotor_angle_radians": 2.2214624881744385,
+            "per_token_mean_rotor_angle_radians": [
+              0.4640010595321655,
+              0.7313188314437866,
+              1.2398688793182373,
+              1.2434512376785278
+            ]
+          }
+        },
+        "500": {
+          "loss": 2.7728044986724854,
+          "task_loss": 2.7728044986724854,
+          "relation_loss": 0.0,
+          "canonical_orbit_loss": 0.0,
+          "effective_relation_weight": 0.0,
+          "preclip_gradient_norm": 0.8981353640556335,
+          "training_prefix_accuracy": 0.289306640625,
+          "training_final_position_accuracy": 0.05859375,
+          "training_median_correct_class_margin": -0.8398387432098389,
+          "training_final_position_median_correct_class_margin": -1.8478999137878418,
+          "action_gradient_norm": 0.8888243436813354,
+          "initial_state_gradient_norm": 0.09209629148244858,
+          "decoder_gradient_norm": 0.08454833179712296,
+          "logit_scale_gradient_abs": 0.0317535437643528,
+          "mechanism": {
+            "mean_action_displacement_from_identity": 0.602010835779486,
+            "max_action_displacement_from_identity": 1.3537113166542578,
+            "mean_initial_state_displacement": 0.7324860212982109,
+            "max_initial_state_displacement": 1.7601585844439538,
+            "maximum_token_commutator": 0.4532857809018024,
+            "per_token_mean_action_displacement": [
+              0.38128172440952807,
+              0.4738747940673131,
+              0.7717658512648735,
+              0.7811209733762297
+            ],
+            "mean_rotor_angle_radians": 0.9904226660728455,
+            "max_rotor_angle_radians": 2.5544629096984863,
+            "per_token_mean_rotor_angle_radians": [
+              0.6454158425331116,
+              0.8307530879974365,
+              1.2386510372161865,
+              1.2468708753585815
+            ]
+          }
+        },
+        "550": {
+          "loss": 2.6304521560668945,
+          "task_loss": 2.6304521560668945,
+          "relation_loss": 0.0,
+          "canonical_orbit_loss": 0.0,
+          "effective_relation_weight": 0.0,
+          "preclip_gradient_norm": 0.624575138092041,
+          "training_prefix_accuracy": 0.318359375,
+          "training_final_position_accuracy": 0.08203125,
+          "training_median_correct_class_margin": -0.7254352569580078,
+          "training_final_position_median_correct_class_margin": -1.8760627508163452,
+          "action_gradient_norm": 0.6086219549179077,
+          "initial_state_gradient_norm": 0.08522160351276398,
+          "decoder_gradient_norm": 0.09348975121974945,
+          "logit_scale_gradient_abs": 0.06058361381292343,
+          "mechanism": {
+            "mean_action_displacement_from_identity": 0.6066592084232323,
+            "max_action_displacement_from_identity": 1.3975180642999812,
+            "mean_initial_state_displacement": 0.7433323653337367,
+            "max_initial_state_displacement": 1.7641869093917484,
+            "maximum_token_commutator": 0.4464333261600003,
+            "per_token_mean_action_displacement": [
+              0.4002239261749018,
+              0.4699897459271076,
+              0.7778616857087298,
+              0.7785614758821899
+            ],
+            "mean_rotor_angle_radians": 1.0234074592590332,
+            "max_rotor_angle_radians": 2.8339715003967285,
+            "per_token_mean_rotor_angle_radians": [
+              0.717418909072876,
+              0.8794770240783691,
+              1.2534507513046265,
+              1.2432833909988403
+            ]
+          }
+        },
+        "600": {
+          "loss": 2.5603699684143066,
+          "task_loss": 2.5603699684143066,
+          "relation_loss": 0.0,
+          "canonical_orbit_loss": 0.0,
+          "effective_relation_weight": 0.0,
+          "preclip_gradient_norm": 0.7602554559707642,
+          "training_prefix_accuracy": 0.349853515625,
+          "training_final_position_accuracy": 0.07421875,
+          "training_median_correct_class_margin": -0.7184584140777588,
+          "training_final_position_median_correct_class_margin": -2.126354932785034,
+          "action_gradient_norm": 0.7493712902069092,
+          "initial_state_gradient_norm": 0.06999471038579941,
+          "decoder_gradient_norm": 0.09569140523672104,
+          "logit_scale_gradient_abs": 0.04873310774564743,
+          "mechanism": {
+            "mean_action_displacement_from_identity": 0.6074414822534286,
+            "max_action_displacement_from_identity": 1.4094258864178923,
+            "mean_initial_state_displacement": 0.7416258721690614,
+            "max_initial_state_displacement": 1.7665279255851218,
+            "maximum_token_commutator": 0.44260222409288574,
+            "per_token_mean_action_displacement": [
+              0.3999938561511964,
+              0.4698903269298659,
+              0.781311992413782,
+              0.7785697535188704
+            ],
+            "mean_rotor_angle_radians": 1.0332890748977661,
+            "max_rotor_angle_radians": 2.9769766330718994,
+            "per_token_mean_rotor_angle_radians": [
+              0.7173205018043518,
+              0.9108505249023438,
+              1.2614715099334717,
+              1.243513584136963
+            ]
+          }
+        },
+        "650": {
+          "loss": 2.518725872039795,
+          "task_loss": 2.518725872039795,
+          "relation_loss": 0.0,
+          "canonical_orbit_loss": 0.0,
+          "effective_relation_weight": 0.0,
+          "preclip_gradient_norm": 0.6817212700843811,
+          "training_prefix_accuracy": 0.371337890625,
+          "training_final_position_accuracy": 0.07421875,
+          "training_median_correct_class_margin": -0.808211088180542,
+          "training_final_position_median_correct_class_margin": -2.2648377418518066,
+          "action_gradient_norm": 0.6706925630569458,
+          "initial_state_gradient_norm": 0.06504713743925095,
+          "decoder_gradient_norm": 0.09915409237146378,
+          "logit_scale_gradient_abs": 0.029200727120041847,
+          "mechanism": {
+            "mean_action_displacement_from_identity": 0.6096875237180595,
+            "max_action_displacement_from_identity": 1.4128493964209448,
+            "mean_initial_state_displacement": 0.745123275787088,
+            "max_initial_state_displacement": 1.753320364362563,
+            "maximum_token_commutator": 0.45309623819185535,
+            "per_token_mean_action_displacement": [
+              0.39629592851737055,
+              0.4827247657919281,
+              0.7777461850333952,
+              0.7819832155295439
+            ],
+            "mean_rotor_angle_radians": 1.0381214618682861,
+            "max_rotor_angle_radians": 3.0537383556365967,
+            "per_token_mean_rotor_angle_radians": [
+              0.6984682679176331,
+              0.9471216201782227,
+              1.2558586597442627,
+              1.25103759765625
+            ]
+          }
+        },
+        "700": {
+          "loss": 2.4415853023529053,
+          "task_loss": 2.4415853023529053,
+          "relation_loss": 0.0,
+          "canonical_orbit_loss": 0.0,
+          "effective_relation_weight": 0.0,
+          "preclip_gradient_norm": 0.62054842710495,
+          "training_prefix_accuracy": 0.389404296875,
+          "training_final_position_accuracy": 0.1171875,
+          "training_median_correct_class_margin": -0.6776697635650635,
+          "training_final_position_median_correct_class_margin": -2.461414098739624,
+          "action_gradient_norm": 0.6066049933433533,
+          "initial_state_gradient_norm": 0.07365827262401581,
+          "decoder_gradient_norm": 0.10010731965303421,
+          "logit_scale_gradient_abs": 0.040787409991025925,
+          "mechanism": {
+            "mean_action_displacement_from_identity": 0.6094557629493167,
+            "max_action_displacement_from_identity": 1.4137217555664268,
+            "mean_initial_state_displacement": 0.7376639372374807,
+            "max_initial_state_displacement": 1.7365651412242427,
+            "maximum_token_commutator": 0.4510500408866622,
+            "per_token_mean_action_displacement": [
+              0.39240469011193785,
+              0.4853332286746541,
+              0.7825429563212771,
+              0.7775421766893974
+            ],
+            "mean_rotor_angle_radians": 1.0391476154327393,
+            "max_rotor_angle_radians": 3.0888466835021973,
+            "per_token_mean_rotor_angle_radians": [
+              0.6890251636505127,
+              0.9593209624290466,
+              1.2625999450683594,
+              1.2456445693969727
+            ]
+          }
+        },
+        "750": {
+          "loss": 2.5459394454956055,
+          "task_loss": 2.5459394454956055,
+          "relation_loss": 0.0,
+          "canonical_orbit_loss": 0.0,
+          "effective_relation_weight": 0.0,
+          "preclip_gradient_norm": 0.7200994491577148,
+          "training_prefix_accuracy": 0.3759765625,
+          "training_final_position_accuracy": 0.1015625,
+          "training_median_correct_class_margin": -0.8061873912811279,
+          "training_final_position_median_correct_class_margin": -2.3191699981689453,
+          "action_gradient_norm": 0.7004589438438416,
+          "initial_state_gradient_norm": 0.11913979798555374,
+          "decoder_gradient_norm": 0.10335534811019897,
+          "logit_scale_gradient_abs": 0.05499006062746048,
+          "mechanism": {
+            "mean_action_displacement_from_identity": 0.6061523929662018,
+            "max_action_displacement_from_identity": 1.4139831651889863,
+            "mean_initial_state_displacement": 0.7448996679002453,
+            "max_initial_state_displacement": 1.7134329358031963,
+            "maximum_token_commutator": 0.4537433853713276,
+            "per_token_mean_action_displacement": [
+              0.3836890095566919,
+              0.4793031542492854,
+              0.7818993952918062,
+              0.7797180127670238
+            ],
+            "mean_rotor_angle_radians": 1.0336625576019287,
+            "max_rotor_angle_radians": 3.1054883003234863,
+            "per_token_mean_rotor_angle_radians": [
+              0.6746158003807068,
+              0.9547498226165771,
+              1.2562693357467651,
+              1.2490155696868896
+            ]
+          }
+        },
+        "800": {
+          "loss": 2.563894748687744,
+          "task_loss": 2.563894748687744,
+          "relation_loss": 0.0,
+          "canonical_orbit_loss": 0.0,
+          "effective_relation_weight": 0.0,
+          "preclip_gradient_norm": 0.8107314109802246,
+          "training_prefix_accuracy": 0.380859375,
+          "training_final_position_accuracy": 0.10546875,
+          "training_median_correct_class_margin": -0.9168269634246826,
+          "training_final_position_median_correct_class_margin": -2.4302399158477783,
+          "action_gradient_norm": 0.773362934589386,
+          "initial_state_gradient_norm": 0.14153236150741577,
+          "decoder_gradient_norm": 0.12478217482566833,
+          "logit_scale_gradient_abs": 0.153600811958313,
+          "mechanism": {
+            "mean_action_displacement_from_identity": 0.6084389346486234,
+            "max_action_displacement_from_identity": 1.414084667154755,
+            "mean_initial_state_displacement": 0.7460986372994186,
+            "max_initial_state_displacement": 1.7116655613495104,
+            "maximum_token_commutator": 0.45223345052816927,
+            "per_token_mean_action_displacement": [
+              0.3906618391181996,
+              0.4811869659029562,
+              0.7821143366494061,
+              0.7797925969239321
+            ],
+            "mean_rotor_angle_radians": 1.0380399227142334,
+            "max_rotor_angle_radians": 3.1145849227905273,
+            "per_token_mean_rotor_angle_radians": [
+              0.6838505864143372,
+              0.9597011208534241,
+              1.2578749656677246,
+              1.2507327795028687
+            ]
+          }
+        },
+        "850": {
+          "loss": 2.3733177185058594,
+          "task_loss": 2.3733177185058594,
+          "relation_loss": 0.0,
+          "canonical_orbit_loss": 0.0,
+          "effective_relation_weight": 0.0,
+          "preclip_gradient_norm": 0.781728208065033,
+          "training_prefix_accuracy": 0.4130859375,
+          "training_final_position_accuracy": 0.0859375,
+          "training_median_correct_class_margin": -0.5807902812957764,
+          "training_final_position_median_correct_class_margin": -2.3883938789367676,
+          "action_gradient_norm": 0.7613474726676941,
+          "initial_state_gradient_norm": 0.1322200447320938,
+          "decoder_gradient_norm": 0.11639473587274551,
+          "logit_scale_gradient_abs": 0.020472541451454163,
+          "mechanism": {
+            "mean_action_displacement_from_identity": 0.6138271461750505,
+            "max_action_displacement_from_identity": 1.4141333195910772,
+            "mean_initial_state_displacement": 0.7477511007028144,
+            "max_initial_state_displacement": 1.6988964017455888,
+            "maximum_token_commutator": 0.46731021563509917,
+            "per_token_mean_action_displacement": [
+              0.39309788910671234,
+              0.4932719550839778,
+              0.7883021473898782,
+              0.7806365931196335
+            ],
+            "mean_rotor_angle_radians": 1.0459779500961304,
+            "max_rotor_angle_radians": 3.120277166366577,
+            "per_token_mean_rotor_angle_radians": [
+              0.6877446174621582,
+              0.9783229827880859,
+              1.2673909664154053,
+              1.250453233718872
+            ]
+          }
+        },
+        "900": {
+          "loss": 2.490161180496216,
+          "task_loss": 2.490161180496216,
+          "relation_loss": 0.0,
+          "canonical_orbit_loss": 0.0,
+          "effective_relation_weight": 0.0,
+          "preclip_gradient_norm": 1.0737743377685547,
+          "training_prefix_accuracy": 0.397705078125,
+          "training_final_position_accuracy": 0.09765625,
+          "training_median_correct_class_margin": -0.7233371734619141,
+          "training_final_position_median_correct_class_margin": -2.456219434738159,
+          "action_gradient_norm": 1.0607966184616089,
+          "initial_state_gradient_norm": 0.12937170267105103,
+          "decoder_gradient_norm": 0.10142046213150024,
+          "logit_scale_gradient_abs": 0.02605126053094864,
+          "mechanism": {
+            "mean_action_displacement_from_identity": 0.6117304208029251,
+            "max_action_displacement_from_identity": 1.4141600306717983,
+            "mean_initial_state_displacement": 0.7499130704169946,
+            "max_initial_state_displacement": 1.6778099481262754,
+            "maximum_token_commutator": 0.4575000492602083,
+            "per_token_mean_action_displacement": [
+              0.3900231188355368,
+              0.4871297481800386,
+              0.7909982275754796,
+              0.7787705886206455
+            ],
+            "mean_rotor_angle_radians": 1.0443999767303467,
+            "max_rotor_angle_radians": 3.1241934299468994,
+            "per_token_mean_rotor_angle_radians": [
+              0.6832541823387146,
+              0.9705695509910583,
+              1.2730467319488525,
+              1.2507293224334717
+            ]
+          }
+        },
+        "950": {
+          "loss": 2.46388840675354,
+          "task_loss": 2.46388840675354,
+          "relation_loss": 0.0,
+          "canonical_orbit_loss": 0.0,
+          "effective_relation_weight": 0.0,
+          "preclip_gradient_norm": 0.8617494702339172,
+          "training_prefix_accuracy": 0.3818359375,
+          "training_final_position_accuracy": 0.0625,
+          "training_median_correct_class_margin": -0.6834487915039062,
+          "training_final_position_median_correct_class_margin": -2.406733989715576,
+          "action_gradient_norm": 0.8398757576942444,
+          "initial_state_gradient_norm": 0.14387951791286469,
+          "decoder_gradient_norm": 0.1198495551943779,
+          "logit_scale_gradient_abs": 0.046430185437202454,
+          "mechanism": {
+            "mean_action_displacement_from_identity": 0.6107369836692649,
+            "max_action_displacement_from_identity": 1.414175776155726,
+            "mean_initial_state_displacement": 0.7460648636940325,
+            "max_initial_state_displacement": 1.667213363909356,
+            "maximum_token_commutator": 0.443734260083283,
+            "per_token_mean_action_displacement": [
+              0.39165657978401497,
+              0.4749346305703085,
+              0.7928358604769008,
+              0.7835208638458352
+            ],
+            "mean_rotor_angle_radians": 1.0437411069869995,
+            "max_rotor_angle_radians": 3.1269683837890625,
+            "per_token_mean_rotor_angle_radians": [
+              0.6878986358642578,
+              0.9538967609405518,
+              1.2745983600616455,
+              1.2585707902908325
+            ]
+          }
+        },
+        "1000": {
+          "loss": 2.377242088317871,
+          "task_loss": 2.377242088317871,
+          "relation_loss": 0.0,
+          "canonical_orbit_loss": 0.0,
+          "effective_relation_weight": 0.0,
+          "preclip_gradient_norm": 0.8036719560623169,
+          "training_prefix_accuracy": 0.3984375,
+          "training_final_position_accuracy": 0.078125,
+          "training_median_correct_class_margin": -0.5924639701843262,
+          "training_final_position_median_correct_class_margin": -2.237739086151123,
+          "action_gradient_norm": 0.778595507144928,
+          "initial_state_gradient_norm": 0.16104531288146973,
+          "decoder_gradient_norm": 0.09995599091053009,
+          "logit_scale_gradient_abs": 0.06124412640929222,
+          "mechanism": {
+            "mean_action_displacement_from_identity": 0.6117156383343405,
+            "max_action_displacement_from_identity": 1.4141858244437921,
+            "mean_initial_state_displacement": 0.7447802004420347,
+            "max_initial_state_displacement": 1.6512832795388193,
+            "maximum_token_commutator": 0.4571050474407907,
+            "per_token_mean_action_displacement": [
+              0.3865996974530861,
+              0.48450286920404984,
+              0.790649042543784,
+              0.7851109441364421
+            ],
+            "mean_rotor_angle_radians": 1.0430216789245605,
+            "max_rotor_angle_radians": 3.1290581226348877,
+            "per_token_mean_rotor_angle_radians": [
+              0.6746242642402649,
+              0.9680371284484863,
+              1.2696548700332642,
+              1.2597705125808716
+            ]
+          }
+        },
+        "1050": {
+          "loss": 2.4795889854431152,
+          "task_loss": 2.4795889854431152,
+          "relation_loss": 0.0,
+          "canonical_orbit_loss": 0.0,
+          "effective_relation_weight": 0.0,
+          "preclip_gradient_norm": 0.785420298576355,
+          "training_prefix_accuracy": 0.391357421875,
+          "training_final_position_accuracy": 0.078125,
+          "training_median_correct_class_margin": -0.7388300895690918,
+          "training_final_position_median_correct_class_margin": -2.450232744216919,
+          "action_gradient_norm": 0.7731228470802307,
+          "initial_state_gradient_norm": 0.10247647017240524,
+          "decoder_gradient_norm": 0.09120108932256699,
+          "logit_scale_gradient_abs": 0.018630189821124077,
+          "mechanism": {
+            "mean_action_displacement_from_identity": 0.6123699813361996,
+            "max_action_displacement_from_identity": 1.4141922530233673,
+            "mean_initial_state_displacement": 0.7435044758598492,
+            "max_initial_state_displacement": 1.6297016076479252,
+            "maximum_token_commutator": 0.44752465885910525,
+            "per_token_mean_action_displacement": [
+              0.3947952301848824,
+              0.48003170121765193,
+              0.7918532090294781,
+              0.7827997849127859
+            ],
+            "mean_rotor_angle_radians": 1.0455269813537598,
+            "max_rotor_angle_radians": 3.130610704421997,
+            "per_token_mean_rotor_angle_radians": [
+              0.6921525001525879,
+              0.9620498418807983,
+              1.2720820903778076,
+              1.2558233737945557
+            ]
+          }
+        },
+        "1100": {
+          "loss": 2.4784903526306152,
+          "task_loss": 2.4784903526306152,
+          "relation_loss": 0.0,
+          "canonical_orbit_loss": 0.0,
+          "effective_relation_weight": 0.0,
+          "preclip_gradient_norm": 0.6849066019058228,
+          "training_prefix_accuracy": 0.397705078125,
+          "training_final_position_accuracy": 0.1015625,
+          "training_median_correct_class_margin": -0.6728715896606445,
+          "training_final_position_median_correct_class_margin": -2.2672929763793945,
+          "action_gradient_norm": 0.6571632027626038,
+          "initial_state_gradient_norm": 0.14068055152893066,
+          "decoder_gradient_norm": 0.12660209834575653,
+          "logit_scale_gradient_abs": 0.03760896995663643,
+          "mechanism": {
+            "mean_action_displacement_from_identity": 0.6099295844573787,
+            "max_action_displacement_from_identity": 1.414197130987922,
+            "mean_initial_state_displacement": 0.7376400094071205,
+            "max_initial_state_displacement": 1.619227559186683,
+            "maximum_token_commutator": 0.452785953179871,
+            "per_token_mean_action_displacement": [
+              0.3896829877612768,
+              0.47953261507301204,
+              0.7885001805834413,
+              0.7820025544117846
+            ],
+            "mean_rotor_angle_radians": 1.0409818887710571,
+            "max_rotor_angle_radians": 3.1319215297698975,
+            "per_token_mean_rotor_angle_radians": [
+              0.6806695461273193,
+              0.9616448283195496,
+              1.2653440237045288,
+              1.2562692165374756
+            ]
+          }
+        },
+        "1150": {
+          "loss": 2.4851887226104736,
+          "task_loss": 2.4851887226104736,
+          "relation_loss": 0.0,
+          "canonical_orbit_loss": 0.0,
+          "effective_relation_weight": 0.0,
+          "preclip_gradient_norm": 0.6788511276245117,
+          "training_prefix_accuracy": 0.384765625,
+          "training_final_position_accuracy": 0.109375,
+          "training_median_correct_class_margin": -0.7299835681915283,
+          "training_final_position_median_correct_class_margin": -2.498814105987549,
+          "action_gradient_norm": 0.6538442969322205,
+          "initial_state_gradient_norm": 0.12361282110214233,
+          "decoder_gradient_norm": 0.12259481847286224,
+          "logit_scale_gradient_abs": 0.054926689714193344,
+          "mechanism": {
+            "mean_action_displacement_from_identity": 0.6112424667088334,
+            "max_action_displacement_from_identity": 1.414200497561723,
+            "mean_initial_state_displacement": 0.7411392594447819,
+            "max_initial_state_displacement": 1.6108303034103955,
+            "maximum_token_commutator": 0.4492203669492469,
+            "per_token_mean_action_displacement": [
+              0.39118505916464597,
+              0.48029154236014443,
+              0.7958005525372932,
+              0.7776927127732497
+            ],
+            "mean_rotor_angle_radians": 1.0428953170776367,
+            "max_rotor_angle_radians": 3.132960557937622,
+            "per_token_mean_rotor_angle_radians": [
+              0.6830992102622986,
+              0.9630124568939209,
+              1.279507040977478,
+              1.2459628582000732
+            ]
+          }
+        },
+        "1200": {
+          "loss": 2.4591808319091797,
+          "task_loss": 2.4591808319091797,
+          "relation_loss": 0.0,
+          "canonical_orbit_loss": 0.0,
+          "effective_relation_weight": 0.0,
+          "preclip_gradient_norm": 0.7299298644065857,
+          "training_prefix_accuracy": 0.391357421875,
+          "training_final_position_accuracy": 0.078125,
+          "training_median_correct_class_margin": -0.6856784820556641,
+          "training_final_position_median_correct_class_margin": -2.532021999359131,
+          "action_gradient_norm": 0.7103695273399353,
+          "initial_state_gradient_norm": 0.13460606336593628,
+          "decoder_gradient_norm": 0.10018186271190643,
+          "logit_scale_gradient_abs": 0.004196218680590391,
+          "mechanism": {
+            "mean_action_displacement_from_identity": 0.61446975576549,
+            "max_action_displacement_from_identity": 1.41420298430297,
+            "mean_initial_state_displacement": 0.7442981710513293,
+            "max_initial_state_displacement": 1.600522161283718,
+            "maximum_token_commutator": 0.4527960334260628,
+            "per_token_mean_action_displacement": [
+              0.3951340962423371,
+              0.4831568100107213,
+              0.7962930634705994,
+              0.7832950533383021
+            ],
+            "mean_rotor_angle_radians": 1.0487550497055054,
+            "max_rotor_angle_radians": 3.133843421936035,
+            "per_token_mean_rotor_angle_radians": [
+              0.6899725794792175,
+              0.9673376679420471,
+              1.2801194190979004,
+              1.257590651512146
+            ]
+          }
+        },
+        "1250": {
+          "loss": 2.4166266918182373,
+          "task_loss": 2.4166266918182373,
+          "relation_loss": 0.0,
+          "canonical_orbit_loss": 0.0,
+          "effective_relation_weight": 0.0,
+          "preclip_gradient_norm": 1.1787095069885254,
+          "training_prefix_accuracy": 0.40478515625,
+          "training_final_position_accuracy": 0.078125,
+          "training_median_correct_class_margin": -0.6281404495239258,
+          "training_final_position_median_correct_class_margin": -2.2976458072662354,
+          "action_gradient_norm": 1.1603409051895142,
+          "initial_state_gradient_norm": 0.1654474288225174,
+          "decoder_gradient_norm": 0.12458235025405884,
+          "logit_scale_gradient_abs": 0.008456794545054436,
+          "mechanism": {
+            "mean_action_displacement_from_identity": 0.6149180487980129,
+            "max_action_displacement_from_identity": 1.414204821545588,
+            "mean_initial_state_displacement": 0.7413558062750987,
+            "max_initial_state_displacement": 1.598296198928757,
+            "maximum_token_commutator": 0.4615403361675974,
+            "per_token_mean_action_displacement": [
+              0.3895969801656397,
+              0.4890060290814673,
+              0.794290701504538,
+              0.7867784844404067
+            ],
+            "mean_rotor_angle_radians": 1.0496339797973633,
+            "max_rotor_angle_radians": 3.1345510482788086,
+            "per_token_mean_rotor_angle_radians": [
+              0.6811480522155762,
+              0.9758898615837097,
+              1.275946021080017,
+              1.2655519247055054
+            ]
+          }
+        },
+        "1300": {
+          "loss": 2.3697938919067383,
+          "task_loss": 2.3697938919067383,
+          "relation_loss": 0.0,
+          "canonical_orbit_loss": 0.0,
+          "effective_relation_weight": 0.0,
+          "preclip_gradient_norm": 0.6790478229522705,
+          "training_prefix_accuracy": 0.40234375,
+          "training_final_position_accuracy": 0.09765625,
+          "training_median_correct_class_margin": -0.6178551912307739,
+          "training_final_position_median_correct_class_margin": -2.357779026031494,
+          "action_gradient_norm": 0.6557633280754089,
+          "initial_state_gradient_norm": 0.1194104254245758,
+          "decoder_gradient_norm": 0.0996619388461113,
+          "logit_scale_gradient_abs": 0.08300035446882248,
+          "mechanism": {
+            "mean_action_displacement_from_identity": 0.6147571051361189,
+            "max_action_displacement_from_identity": 1.4142062780253695,
+            "mean_initial_state_displacement": 0.7402476843987151,
+            "max_initial_state_displacement": 1.5785713886157584,
+            "maximum_token_commutator": 0.4579125545892331,
+            "per_token_mean_action_displacement": [
+              0.39799739270021073,
+              0.48177284759104266,
+              0.7922193481453452,
+              0.787038832107877
+            ],
+            "mean_rotor_angle_radians": 1.050199270248413,
+            "max_rotor_angle_radians": 3.1351537704467773,
+            "per_token_mean_rotor_angle_radians": [
+              0.6944918632507324,
+              0.9656844735145569,
+              1.2740871906280518,
+              1.2665331363677979
+            ]
+          }
+        },
+        "1350": {
+          "loss": 2.333613395690918,
+          "task_loss": 2.333613395690918,
+          "relation_loss": 0.0,
+          "canonical_orbit_loss": 0.0,
+          "effective_relation_weight": 0.0,
+          "preclip_gradient_norm": 0.6566023826599121,
+          "training_prefix_accuracy": 0.41943359375,
+          "training_final_position_accuracy": 0.12109375,
+          "training_median_correct_class_margin": -0.4924623966217041,
+          "training_final_position_median_correct_class_margin": -2.341085195541382,
+          "action_gradient_norm": 0.6346415877342224,
+          "initial_state_gradient_norm": 0.09233441203832626,
+          "decoder_gradient_norm": 0.10837189108133316,
+          "logit_scale_gradient_abs": 0.08992577344179153,
+          "mechanism": {
+            "mean_action_displacement_from_identity": 0.6150070286022111,
+            "max_action_displacement_from_identity": 1.414207491733333,
+            "mean_initial_state_displacement": 0.7435680910521902,
+            "max_initial_state_displacement": 1.5792105055371288,
+            "maximum_token_commutator": 0.4505633593953436,
+            "per_token_mean_action_displacement": [
+              0.3945009267142889,
+              0.4781954139020367,
+              0.8015062374246014,
+              0.7858255363679174
+            ],
+            "mean_rotor_angle_radians": 1.049880027770996,
+            "max_rotor_angle_radians": 3.1357181072235107,
+            "per_token_mean_rotor_angle_radians": [
+              0.688742995262146,
+              0.9607746601104736,
+              1.2873469591140747,
+              1.2626559734344482
+            ]
+          }
+        },
+        "1400": {
+          "loss": 2.4387316703796387,
+          "task_loss": 2.4387316703796387,
+          "relation_loss": 0.0,
+          "canonical_orbit_loss": 0.0,
+          "effective_relation_weight": 0.0,
+          "preclip_gradient_norm": 0.5348957180976868,
+          "training_prefix_accuracy": 0.380126953125,
+          "training_final_position_accuracy": 0.07421875,
+          "training_median_correct_class_margin": -0.7506301403045654,
+          "training_final_position_median_correct_class_margin": -2.3374245166778564,
+          "action_gradient_norm": 0.5116754174232483,
+          "initial_state_gradient_norm": 0.10938389599323273,
+          "decoder_gradient_norm": 0.10458628088235855,
+          "logit_scale_gradient_abs": 0.0373968780040741,
+          "mechanism": {
+            "mean_action_displacement_from_identity": 0.6132974702451655,
+            "max_action_displacement_from_identity": 1.414208388422579,
+            "mean_initial_state_displacement": 0.7396125703128767,
+            "max_initial_state_displacement": 1.574550378543779,
+            "maximum_token_commutator": 0.4452933162821976,
+            "per_token_mean_action_displacement": [
+              0.3936149717674539,
+              0.4726065584542478,
+              0.8032549448687809,
+              0.7837134058901791
+            ],
+            "mean_rotor_angle_radians": 1.0481619834899902,
+            "max_rotor_angle_radians": 3.136176109313965,
+            "per_token_mean_rotor_angle_radians": [
+              0.6868270635604858,
+              0.9528766870498657,
+              1.292654037475586,
+              1.2602901458740234
+            ]
+          }
+        },
+        "1450": {
+          "loss": 2.4237618446350098,
+          "task_loss": 2.4237618446350098,
+          "relation_loss": 0.0,
+          "canonical_orbit_loss": 0.0,
+          "effective_relation_weight": 0.0,
+          "preclip_gradient_norm": 0.8292497396469116,
+          "training_prefix_accuracy": 0.40478515625,
+          "training_final_position_accuracy": 0.09375,
+          "training_median_correct_class_margin": -0.5661048889160156,
+          "training_final_position_median_correct_class_margin": -2.1981747150421143,
+          "action_gradient_norm": 0.8129398226737976,
+          "initial_state_gradient_norm": 0.11058705300092697,
+          "decoder_gradient_norm": 0.11369550228118896,
+          "logit_scale_gradient_abs": 0.04034661129117012,
+          "mechanism": {
+            "mean_action_displacement_from_identity": 0.6119471551303075,
+            "max_action_displacement_from_identity": 1.4142091221418711,
+            "mean_initial_state_displacement": 0.734365620912151,
+            "max_initial_state_displacement": 1.5525889961775663,
+            "maximum_token_commutator": 0.44754308296797235,
+            "per_token_mean_action_displacement": [
+              0.390728772425677,
+              0.47700205266785756,
+              0.7932327088401434,
+              0.786825086587552
+            ],
+            "mean_rotor_angle_radians": 1.0445678234100342,
+            "max_rotor_angle_radians": 3.1365885734558105,
+            "per_token_mean_rotor_angle_radians": [
+              0.6819220781326294,
+              0.9592381715774536,
+              1.2728018760681152,
+              1.264309048652649
+            ]
+          }
+        },
+        "1500": {
+          "loss": 2.412503957748413,
+          "task_loss": 2.412503957748413,
+          "relation_loss": 0.0,
+          "canonical_orbit_loss": 0.0,
+          "effective_relation_weight": 0.0,
+          "preclip_gradient_norm": 0.5705288648605347,
+          "training_prefix_accuracy": 0.41259765625,
+          "training_final_position_accuracy": 0.08984375,
+          "training_median_correct_class_margin": -0.6340615749359131,
+          "training_final_position_median_correct_class_margin": -2.439222574234009,
+          "action_gradient_norm": 0.5533297657966614,
+          "initial_state_gradient_norm": 0.09874722361564636,
+          "decoder_gradient_norm": 0.09667427092790604,
+          "logit_scale_gradient_abs": 0.015245269984006882,
+          "mechanism": {
+            "mean_action_displacement_from_identity": 0.6145723469074043,
+            "max_action_displacement_from_identity": 1.414209756583357,
+            "mean_initial_state_displacement": 0.7395890088174083,
+            "max_initial_state_displacement": 1.5513461497965733,
+            "maximum_token_commutator": 0.4494969089924948,
+            "per_token_mean_action_displacement": [
+              0.3921625575255106,
+              0.47899716411528426,
+              0.7986238224813721,
+              0.78850584350745
+            ],
+            "mean_rotor_angle_radians": 1.0497636795043945,
+            "max_rotor_angle_radians": 3.1369364261627197,
+            "per_token_mean_rotor_angle_radians": [
+              0.6858033537864685,
+              0.9621983766555786,
+              1.2829293012619019,
+              1.2681235074996948
+            ]
+          }
+        }
+      },
+      "streaming_equivalence": {
+        "chunked_logit_max_abs_error": 0.0,
+        "streaming_logit_max_abs_error": 1.430511474609375e-06,
+        "chunked_state_max_abs_error": 0.0,
+        "streaming_state_max_abs_error": 0.0
+      },
+      "elapsed_seconds": 33.88829329999862,
+      "steps_per_second": 44.26307299459253,
+      "peak_cuda_memory_mib": 119.65087890625
+    }
+  ]
+}

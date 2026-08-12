@@ -1,0 +1,539 @@
+{
+  "experiment": "actual gathered-block recurrent memory benchmark",
+  "protocol": "GATHERED_BLOCK_MEMORY_BENCHMARK_PREREGISTRATION.md",
+  "passed": true,
+  "device": "cuda",
+  "dtype": "torch.float32",
+  "hardware": {
+    "platform": "Windows-11-10.0.22631-SP0",
+    "torch": "2.12.0+cu130",
+    "cuda": "13.0",
+    "nvidia_smi": {
+      "name": "NVIDIA GeForce RTX 2070 SUPER",
+      "driver": "595.97",
+      "memory_total": "8192 MiB"
+    }
+  },
+  "grid": {
+    "slots": [
+      64,
+      256
+    ],
+    "batches": [
+      1,
+      16
+    ],
+    "slots_per_block": 8,
+    "alias_dimension": 8,
+    "value_dimension": 8,
+    "warmup": 3,
+    "timing_blocks": 3,
+    "inner_calls": 10
+  },
+  "router_parameters_at_max_slots": {
+    "shared": 2304,
+    "three_independent": 6912,
+    "shared_float32_bytes": 9216,
+    "three_independent_float32_bytes": 27648
+  },
+  "rows": [
+    {
+      "slots": 64,
+      "blocks": 8,
+      "batch": 1,
+      "logical_state_scalars": 512,
+      "correctness": {
+        "passed": true,
+        "rows": {
+          "direct": {
+            "maximum_state_error": 0.0,
+            "maximum_prediction_error": 3.725290298461914e-09,
+            "all_finite": true
+          },
+          "delta": {
+            "maximum_state_error": 7.450580596923828e-09,
+            "maximum_prediction_error": 7.450580596923828e-09,
+            "all_finite": true
+          }
+        }
+      },
+      "timing_order": [
+        "direct_dense_full",
+        "direct_block_masked_full",
+        "direct_block_gathered",
+        "delta_dense_full",
+        "delta_block_masked_full",
+        "delta_block_gathered"
+      ],
+      "timing_block_orders": [
+        [
+          "direct_dense_full",
+          "direct_block_masked_full",
+          "direct_block_gathered",
+          "delta_dense_full",
+          "delta_block_masked_full",
+          "delta_block_gathered"
+        ],
+        [
+          "direct_block_masked_full",
+          "direct_block_gathered",
+          "delta_dense_full",
+          "delta_block_masked_full",
+          "delta_block_gathered",
+          "direct_dense_full"
+        ],
+        [
+          "direct_block_gathered",
+          "delta_dense_full",
+          "delta_block_masked_full",
+          "delta_block_gathered",
+          "direct_dense_full",
+          "direct_block_masked_full"
+        ]
+      ],
+      "timing": {
+        "direct_dense_full": {
+          "median_ms": 0.3951744079589844,
+          "minimum_ms": 0.3877055883407593,
+          "maximum_ms": 0.4868095874786377,
+          "raw_ms": [
+            0.4868095874786377,
+            0.3877055883407593,
+            0.3951744079589844
+          ],
+          "incremental_peak_bytes": 3072
+        },
+        "direct_block_masked_full": {
+          "median_ms": 0.9767071723937988,
+          "minimum_ms": 0.9615360260009765,
+          "maximum_ms": 0.9838496208190918,
+          "raw_ms": [
+            0.9615360260009765,
+            0.9767071723937988,
+            0.9838496208190918
+          ],
+          "incremental_peak_bytes": 5120
+        },
+        "direct_block_gathered": {
+          "median_ms": 0.7844480037689209,
+          "minimum_ms": 0.7807583808898926,
+          "maximum_ms": 0.7885216236114502,
+          "raw_ms": [
+            0.7844480037689209,
+            0.7885216236114502,
+            0.7807583808898926
+          ],
+          "incremental_peak_bytes": 4608
+        },
+        "delta_dense_full": {
+          "median_ms": 0.6181471824645997,
+          "minimum_ms": 0.6176415920257569,
+          "maximum_ms": 0.6198495864868164,
+          "raw_ms": [
+            0.6181471824645997,
+            0.6176415920257569,
+            0.6198495864868164
+          ],
+          "incremental_peak_bytes": 4608
+        },
+        "delta_block_masked_full": {
+          "median_ms": 1.2021344184875489,
+          "minimum_ms": 1.1968511581420898,
+          "maximum_ms": 1.2191231727600098,
+          "raw_ms": [
+            1.1968511581420898,
+            1.2021344184875489,
+            1.2191231727600098
+          ],
+          "incremental_peak_bytes": 6656
+        },
+        "delta_block_gathered": {
+          "median_ms": 1.0097439765930176,
+          "minimum_ms": 1.0051551818847657,
+          "maximum_ms": 1.0425408363342286,
+          "raw_ms": [
+            1.0097439765930176,
+            1.0051551818847657,
+            1.0425408363342286
+          ],
+          "incremental_peak_bytes": 5120
+        }
+      }
+    },
+    {
+      "slots": 64,
+      "blocks": 8,
+      "batch": 16,
+      "logical_state_scalars": 8192,
+      "correctness": {
+        "passed": true,
+        "rows": {
+          "direct": {
+            "maximum_state_error": 0.0,
+            "maximum_prediction_error": 1.4901161193847656e-08,
+            "all_finite": true
+          },
+          "delta": {
+            "maximum_state_error": 5.960464477539063e-08,
+            "maximum_prediction_error": 2.9802322387695312e-08,
+            "all_finite": true
+          }
+        }
+      },
+      "timing_order": [
+        "delta_dense_full",
+        "delta_block_masked_full",
+        "delta_block_gathered",
+        "direct_dense_full",
+        "direct_block_masked_full",
+        "direct_block_gathered"
+      ],
+      "timing_block_orders": [
+        [
+          "delta_dense_full",
+          "delta_block_masked_full",
+          "delta_block_gathered",
+          "direct_dense_full",
+          "direct_block_masked_full",
+          "direct_block_gathered"
+        ],
+        [
+          "delta_block_masked_full",
+          "delta_block_gathered",
+          "direct_dense_full",
+          "direct_block_masked_full",
+          "direct_block_gathered",
+          "delta_dense_full"
+        ],
+        [
+          "delta_block_gathered",
+          "direct_dense_full",
+          "direct_block_masked_full",
+          "direct_block_gathered",
+          "delta_dense_full",
+          "delta_block_masked_full"
+        ]
+      ],
+      "timing": {
+        "direct_dense_full": {
+          "median_ms": 0.39330239295959474,
+          "minimum_ms": 0.3769727945327759,
+          "maximum_ms": 0.400054407119751,
+          "raw_ms": [
+            0.400054407119751,
+            0.39330239295959474,
+            0.3769727945327759
+          ],
+          "incremental_peak_bytes": 40960
+        },
+        "direct_block_masked_full": {
+          "median_ms": 0.9616031646728516,
+          "minimum_ms": 0.9564319610595703,
+          "maximum_ms": 1.0008992195129394,
+          "raw_ms": [
+            1.0008992195129394,
+            0.9564319610595703,
+            0.9616031646728516
+          ],
+          "incremental_peak_bytes": 43008
+        },
+        "direct_block_gathered": {
+          "median_ms": 0.7680960178375245,
+          "minimum_ms": 0.7652128219604493,
+          "maximum_ms": 0.8027392387390136,
+          "raw_ms": [
+            0.8027392387390136,
+            0.7680960178375245,
+            0.7652128219604493
+          ],
+          "incremental_peak_bytes": 18944
+        },
+        "delta_dense_full": {
+          "median_ms": 0.6008927822113037,
+          "minimum_ms": 0.5981440067291259,
+          "maximum_ms": 0.6270592212677002,
+          "raw_ms": [
+            0.6270592212677002,
+            0.5981440067291259,
+            0.6008927822113037
+          ],
+          "incremental_peak_bytes": 46080
+        },
+        "delta_block_masked_full": {
+          "median_ms": 1.2406847953796387,
+          "minimum_ms": 1.1776448249816895,
+          "maximum_ms": 1.3060416221618651,
+          "raw_ms": [
+            1.2406847953796387,
+            1.3060416221618651,
+            1.1776448249816895
+          ],
+          "incremental_peak_bytes": 48128
+        },
+        "delta_block_gathered": {
+          "median_ms": 1.0174304008483888,
+          "minimum_ms": 0.9934464454650879,
+          "maximum_ms": 1.037923240661621,
+          "raw_ms": [
+            1.037923240661621,
+            1.0174304008483888,
+            0.9934464454650879
+          ],
+          "incremental_peak_bytes": 15872
+        }
+      }
+    },
+    {
+      "slots": 256,
+      "blocks": 32,
+      "batch": 1,
+      "logical_state_scalars": 2048,
+      "correctness": {
+        "passed": true,
+        "rows": {
+          "direct": {
+            "maximum_state_error": 0.0,
+            "maximum_prediction_error": 3.725290298461914e-09,
+            "all_finite": true
+          },
+          "delta": {
+            "maximum_state_error": 5.960464477539063e-08,
+            "maximum_prediction_error": 7.450580596923828e-09,
+            "all_finite": true
+          }
+        }
+      },
+      "timing_order": [
+        "direct_dense_full",
+        "direct_block_masked_full",
+        "direct_block_gathered",
+        "delta_dense_full",
+        "delta_block_masked_full",
+        "delta_block_gathered"
+      ],
+      "timing_block_orders": [
+        [
+          "direct_dense_full",
+          "direct_block_masked_full",
+          "direct_block_gathered",
+          "delta_dense_full",
+          "delta_block_masked_full",
+          "delta_block_gathered"
+        ],
+        [
+          "direct_block_masked_full",
+          "direct_block_gathered",
+          "delta_dense_full",
+          "delta_block_masked_full",
+          "delta_block_gathered",
+          "direct_dense_full"
+        ],
+        [
+          "direct_block_gathered",
+          "delta_dense_full",
+          "delta_block_masked_full",
+          "delta_block_gathered",
+          "direct_dense_full",
+          "direct_block_masked_full"
+        ]
+      ],
+      "timing": {
+        "direct_dense_full": {
+          "median_ms": 0.38417279720306396,
+          "minimum_ms": 0.382092809677124,
+          "maximum_ms": 0.40414719581604003,
+          "raw_ms": [
+            0.382092809677124,
+            0.40414719581604003,
+            0.38417279720306396
+          ],
+          "incremental_peak_bytes": 10240
+        },
+        "direct_block_masked_full": {
+          "median_ms": 0.9618592262268066,
+          "minimum_ms": 0.9451264381408692,
+          "maximum_ms": 0.9835840225219726,
+          "raw_ms": [
+            0.9451264381408692,
+            0.9835840225219726,
+            0.9618592262268066
+          ],
+          "incremental_peak_bytes": 12288
+        },
+        "direct_block_gathered": {
+          "median_ms": 0.7952288150787353,
+          "minimum_ms": 0.7884352207183838,
+          "maximum_ms": 0.7966944217681885,
+          "raw_ms": [
+            0.7966944217681885,
+            0.7952288150787353,
+            0.7884352207183838
+          ],
+          "incremental_peak_bytes": 4608
+        },
+        "delta_dense_full": {
+          "median_ms": 0.6426368236541748,
+          "minimum_ms": 0.613478422164917,
+          "maximum_ms": 0.6463071823120117,
+          "raw_ms": [
+            0.6426368236541748,
+            0.6463071823120117,
+            0.613478422164917
+          ],
+          "incremental_peak_bytes": 12288
+        },
+        "delta_block_masked_full": {
+          "median_ms": 1.2296799659729003,
+          "minimum_ms": 1.1917728424072265,
+          "maximum_ms": 1.2368895530700683,
+          "raw_ms": [
+            1.2368895530700683,
+            1.2296799659729003,
+            1.1917728424072265
+          ],
+          "incremental_peak_bytes": 14336
+        },
+        "delta_block_gathered": {
+          "median_ms": 1.0161312103271485,
+          "minimum_ms": 0.9958720207214355,
+          "maximum_ms": 1.019472026824951,
+          "raw_ms": [
+            1.019472026824951,
+            1.0161312103271485,
+            0.9958720207214355
+          ],
+          "incremental_peak_bytes": 5120
+        }
+      }
+    },
+    {
+      "slots": 256,
+      "blocks": 32,
+      "batch": 16,
+      "logical_state_scalars": 32768,
+      "correctness": {
+        "passed": true,
+        "rows": {
+          "direct": {
+            "maximum_state_error": 0.0,
+            "maximum_prediction_error": 7.450580596923828e-09,
+            "all_finite": true
+          },
+          "delta": {
+            "maximum_state_error": 5.960464477539063e-08,
+            "maximum_prediction_error": 2.9802322387695312e-08,
+            "all_finite": true
+          }
+        }
+      },
+      "timing_order": [
+        "delta_dense_full",
+        "delta_block_masked_full",
+        "delta_block_gathered",
+        "direct_dense_full",
+        "direct_block_masked_full",
+        "direct_block_gathered"
+      ],
+      "timing_block_orders": [
+        [
+          "delta_dense_full",
+          "delta_block_masked_full",
+          "delta_block_gathered",
+          "direct_dense_full",
+          "direct_block_masked_full",
+          "direct_block_gathered"
+        ],
+        [
+          "delta_block_masked_full",
+          "delta_block_gathered",
+          "direct_dense_full",
+          "direct_block_masked_full",
+          "direct_block_gathered",
+          "delta_dense_full"
+        ],
+        [
+          "delta_block_gathered",
+          "direct_dense_full",
+          "direct_block_masked_full",
+          "direct_block_gathered",
+          "delta_dense_full",
+          "delta_block_masked_full"
+        ]
+      ],
+      "timing": {
+        "direct_dense_full": {
+          "median_ms": 0.39301118850708006,
+          "minimum_ms": 0.3740447998046875,
+          "maximum_ms": 0.39399359226226804,
+          "raw_ms": [
+            0.39301118850708006,
+            0.39399359226226804,
+            0.3740447998046875
+          ],
+          "incremental_peak_bytes": 163840
+        },
+        "direct_block_masked_full": {
+          "median_ms": 0.987007999420166,
+          "minimum_ms": 0.942585563659668,
+          "maximum_ms": 0.9875167846679688,
+          "raw_ms": [
+            0.9875167846679688,
+            0.987007999420166,
+            0.942585563659668
+          ],
+          "incremental_peak_bytes": 165888
+        },
+        "direct_block_gathered": {
+          "median_ms": 0.7938367843627929,
+          "minimum_ms": 0.7560927867889404,
+          "maximum_ms": 0.8024224281311035,
+          "raw_ms": [
+            0.8024224281311035,
+            0.7938367843627929,
+            0.7560927867889404
+          ],
+          "incremental_peak_bytes": 18944
+        },
+        "delta_dense_full": {
+          "median_ms": 0.6307744026184082,
+          "minimum_ms": 0.6003967761993408,
+          "maximum_ms": 0.9618080139160157,
+          "raw_ms": [
+            0.9618080139160157,
+            0.6307744026184082,
+            0.6003967761993408
+          ],
+          "incremental_peak_bytes": 181248
+        },
+        "delta_block_masked_full": {
+          "median_ms": 1.23307523727417,
+          "minimum_ms": 1.171827220916748,
+          "maximum_ms": 2.1909887313842775,
+          "raw_ms": [
+            2.1909887313842775,
+            1.23307523727417,
+            1.171827220916748
+          ],
+          "incremental_peak_bytes": 183296
+        },
+        "delta_block_gathered": {
+          "median_ms": 1.0220159530639648,
+          "minimum_ms": 0.9875231742858886,
+          "maximum_ms": 1.5345824241638184,
+          "raw_ms": [
+            1.5345824241638184,
+            1.0220159530639648,
+            0.9875231742858886
+          ],
+          "incremental_peak_bytes": 15872
+        }
+      }
+    }
+  ],
+  "claim_boundary": {
+    "inference_only": true,
+    "fused_training_kernel": false,
+    "model_level_quality": false,
+    "triality_specific_capacity": false
+  }
+}
