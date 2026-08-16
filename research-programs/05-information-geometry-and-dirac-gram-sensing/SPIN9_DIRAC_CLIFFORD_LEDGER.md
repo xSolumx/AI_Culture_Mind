@@ -36,7 +36,8 @@ in shared-action sensing and exact design.
 | Strict local rank-three optimum | [`SPIN9_STRICT_LOCAL_D_OPTIMALITY.md`](../../Spin-Space-Research/docs/manuscripts/SPIN9_STRICT_LOCAL_D_OPTIMALITY.md) | Exact internally replayed local theorem modulo Spin(9); independent external review remains pending |
 | Complete spin-two ray bounds | [`SPIN9_V5_RAY_CERTIFICATE.md`](../../Spin-Space-Research/docs/manuscripts/SPIN9_V5_RAY_CERTIFICATE.md) | Exact zero-cubic and axisymmetric all-parameter graph-ray bounds; retained as the independently factored boundary theorem and Cayley-null radial counterexample |
 | Full spin-two Cartan bound | [`SPIN9_V5_CARTAN_CERTIFICATE.md`](../../Spin-Space-Research/docs/manuscripts/SPIN9_V5_CARTAN_CERTIFICATE.md) | Exact all-shape pure-\(V_5\) graph theorem below \(101/100\) of Cayley-null |
-| Coupled \(V_1\oplus V_5\) finite-radius theorem | [`SPIN9_V1_V5_RECONSTRUCTION.md`](../../Spin-Space-Research/docs/manuscripts/SPIN9_V1_V5_RECONSTRUCTION.md) | Exact characteristic-zero identity and global \(21/20\) bound on the complete coupled graph slice; exact candidate optimality, the second \(V_5\), and the unrestricted quotient remain open |
+| Coupled \(V_1\oplus V_5\) finite-radius theorem | [`SPIN9_V1_V5_RECONSTRUCTION.md`](../../Spin-Space-Research/docs/manuscripts/SPIN9_V1_V5_RECONSTRUCTION.md) | Exact characteristic-zero identity and global \(21/20\) bound on the complete coupled graph slice |
+| Pure-\(V_1\) algebraic candidate line | [`SPIN9_V1_V5_RECONSTRUCTION.md`](../../Spin-Space-Research/docs/manuscripts/SPIN9_V1_V5_RECONSTRUCTION.md) | Exact rational covering of the symmetric curve; global candidate optimality on the complete scalar graph line; four equality preimages classified; genuinely mixed (p>0) region remains open |
 | Clifford memory boundary | [`SPIN8_SPIN9_HIERARCHICAL_MEMORY_RESULTS.md`](../../Spin-Space-Research/docs/experiments/SPIN8_SPIN9_HIERARCHICAL_MEMORY_RESULTS.md) | Exact 9-to-16 bind/unbind and Hopf coarse index; width expansion, not a same-state capacity advantage |
 
 ## Nonclaims and open gates
@@ -45,7 +46,8 @@ in shared-action sensing and exact design.
 - The full pure-\(V_5\) graph family and the complete coupled
   \(V_1\oplus V_5\) finite-radius graph slice are now certified. The latter has
   a raw characteristic-zero identity and a global \(21/20\) bound. Exact
-  optimality of the algebraic candidate, the second supported \(V_5\), and the
+  candidate optimality is now proved on the complete pure-(V_1) graph line;
+  the genuinely mixed (p>0) region, the second supported (V_5), and the
   nonpolar global quotient remain open.
 - The numerical search cannot replace a global proof.
 - No matched experiment shows a same-state Spin(9) memory or sequence-model
@@ -74,6 +76,7 @@ python -m spin9_v1_v5_boundary_char0 --workers 4 --output artifacts/spin9_v1_v5_
 python -m spin9_v1_v5_blowup --output artifacts/spin9_v1_v5_blowup_20260811.json
 python -m spin9_v1_v5_char0 --workers 4 --output artifacts/spin9_v1_v5_char0_20260812.json
 python -m spin9_v1_v5_theorem --output artifacts/spin9_v1_v5_theorem_20260812.json
+python -m spin9_v1_candidate_line --output artifacts/spin9_v1_candidate_line_20260812.json
 python -m spin9_clifford_memory --output artifacts/spin9_clifford_memory_boundary_20260810.json
-python -m pytest -q tests/test_spin9_dirac_clifford.py tests/test_spin9_frame_operator.py tests/test_spin9_grassmann_slice.py tests/test_spin9_slice_isotypic_bridge.py tests/test_algebraic_isotypic_decomposition.py tests/test_clifford_signature_extension.py tests/test_spin9_local_hessian.py tests/test_spin9_v5_ray_certificate.py tests/test_spin9_v5_cartan_certificate.py tests/test_spin9_v1_v5_reconstruction.py tests/test_spin9_v1_v5_boundary_char0.py tests/test_spin9_v1_v5_blowup.py tests/test_spin9_v1_v5_global.py tests/test_spin9_v1_v5_char0.py tests/test_spin9_v1_v5_theorem.py tests/test_spin9_clifford_memory.py
+python -m pytest -q tests/test_spin9_dirac_clifford.py tests/test_spin9_frame_operator.py tests/test_spin9_grassmann_slice.py tests/test_spin9_slice_isotypic_bridge.py tests/test_algebraic_isotypic_decomposition.py tests/test_clifford_signature_extension.py tests/test_spin9_local_hessian.py tests/test_spin9_v5_ray_certificate.py tests/test_spin9_v5_cartan_certificate.py tests/test_spin9_v1_v5_reconstruction.py tests/test_spin9_v1_v5_boundary_char0.py tests/test_spin9_v1_v5_blowup.py tests/test_spin9_v1_v5_global.py tests/test_spin9_v1_v5_char0.py tests/test_spin9_v1_v5_theorem.py tests/test_spin9_v1_candidate_line.py tests/test_spin9_clifford_memory.py
 ```

@@ -336,7 +336,13 @@ That statement has **not** yet been established. In particular:
 - this five-variable face does not settle the unrestricted seven-variable
   Dirac--Gram inequality.
 
-The next exact target is therefore the two-endpoint interior quotient of
-\(\det Z\). It remains an independent positivity problem: the two endpoint
-theorems and nonnegativity of every proper principal minor do not by themselves
-imply the fourth-order determinant inequality on \(0<y<1\).
+The degree-matched two-endpoint quotient has now been constructed and exactly
+rejected as an over-strong sufficient condition: it is negative at the
+rational feasible point
+\((u_d,u_e,u_g,u_i,t)=(1/100,0,0,0,99/100)\), where (t=y^2). This is not a
+negative determinant value. In contrast, the determinant itself has exact
+order-eight leading form (2^{48}F_4^2\geq0) at the remaining equality
+corner. The next exact target is therefore a finite-radius max-coordinate
+blow-up of (D) itself that retains this nonnegative exceptional divisor. The
+two endpoint theorems, proper-minor theorems, and local tangent theorem still
+do not by themselves imply the determinant inequality on (0<y<1).

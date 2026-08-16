@@ -155,11 +155,17 @@ Canonical evidence:
 | 02 — Equivariant identification | Identification from less structured or noisy observations | Requires a new frozen empirical protocol and matched controls |
 | 03 — Structured memory and retrieval | End-to-end selected-block FLA and broader systems validation | Requires model integration, training, and systems experiments |
 | 04 — Triality/Clifford dynamics | Exact Spin(8)/Spin(9) restriction and signature hierarchy, then matched representation-dynamics tasks | **Exact algebraic layer completed**; empirical benefit still requires new matched datasets and baselines |
-| 05 — Information geometry and Dirac--Gram sensing | Uniform exact Spin(9) `21/20` determinant certificate | Existing dense exact splitter is the immediate bottleneck; see below |
+| 05 — Information geometry and Dirac--Gram sensing | Exact Spin(9) candidate optimality, second \(V_5\), and the Spin(8) octet determinant finite-radius interior | **The former Spin(9) `21/20` bottleneck was closed on 2026-08-12** by the complete coupled finite-radius certificate; the remaining gates are narrower and independent |
 | 06 — Rotor noncommutative SSMs | Rotor-specific quality/compute evidence and fused kernels | Maintained recurrence gates already pass; remaining claims need substantial baselines or kernel work |
 | 07 — Collatz inverse frontier | Resumable compact large scans, literature comparison, or asymptotic proof | Finite engineering is separable; asymptotic claims are not locally low-hanging |
 
-## Spin(9) route not promoted
+## Historical Spin(9) route diagnosis — superseded 2026-08-12
+
+> The diagnostic below remains an accurate record of the failed dense route.
+> It is no longer the current theorem boundary. The sparse projective atlas and
+> characteristic-zero lift in
+> [`SPIN9_V1_V5_RECONSTRUCTION.md`](../Spin-Space-Research/docs/manuscripts/SPIN9_V1_V5_RECONSTRUCTION.md)
+> subsequently proved the complete (21/20) finite-radius coupled-slice bound.
 
 Programme 05 initially appeared equally local because
 `spin9_v1_v5_gap.py` already contains an exact degree-84 control tensor on an

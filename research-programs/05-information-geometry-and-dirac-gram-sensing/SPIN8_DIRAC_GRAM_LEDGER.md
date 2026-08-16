@@ -27,6 +27,7 @@ distinct from probe identifiability and from sequence modelling.
 | Global octet quadratics | [`SPIN8_DIRAC_OCTET_QUADRATIC_RESULTS.md`](../../Spin-Space-Research/docs/experiments/SPIN8_DIRAC_OCTET_QUADRATIC_RESULTS.md) | Complete exact five-cube quadratic gate for modes `0011001`, `0101010`, and `0110011` |
 | Global octet cubic | [`SPIN8_DIRAC_OCTET_CUBIC_RESULTS.md`](../../Spin-Space-Research/docs/experiments/SPIN8_DIRAC_OCTET_CUBIC_RESULTS.md) | Complete exact five-cube cubic gate by endpoint assembly and a 32-box quotient atlas; determinant interior remains open |
 | Octet determinant endpoints | [`SPIN8_DIRAC_OCTET_DETERMINANT_ENDPOINT_RESULTS.md`](../../Spin-Space-Research/docs/experiments/SPIN8_DIRAC_OCTET_DETERMINANT_ENDPOINT_RESULTS.md) | Exact 6,082,148-term reconstruction; \(y=0\) proved by a 31-leaf atlas and \(y=1\) by \(Z=X^2\); open interior remains |
+| Octet determinant equality tangent | [`SPIN8_DIRAC_OCTET_DETERMINANT_ENDPOINT_RESULTS.md`](../../Spin-Space-Research/docs/experiments/SPIN8_DIRAC_OCTET_DETERMINANT_ENDPOINT_RESULTS.md) | Exact descent (t=y^2); order-eight leading form (2^{48}F_4^2\geq0); degree-matched endpoint-selector quotient exactly rejected by a rational negative witness; finite-radius interior remains open |
 
 ## Open claims
 

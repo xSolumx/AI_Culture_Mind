@@ -68,6 +68,11 @@ module name. Editable installation adds this directory to the Python path.
   holdouts and a lightweight stored-artifact verifier.
 - `spin8_dirac_one_edge_positivity.py`: staged, crash-resilient integer
   Bernstein/Duffy proof of the final determinant gate.
+- `spin8_dirac_endpoint_octet_determinant.py`: exact radical-free fourth-order
+  Schur determinant reconstruction and both endpoint-face certificates.
+- `spin8_dirac_endpoint_octet_determinant_tangent.py`: exact descent
+  `t=y^2`, rational rejection of the degree-matched endpoint-selector route,
+  and the order-eight squared tangent theorem at the remaining equality corner.
 - `spin8_dirac_two_edge.py`: exact common-symmetry and two-anchor sector audit
   for the preregistered `h=0`, residual-`i` bridge.
 - `spin8_dirac_two_edge_attack.py`: uniform, boundary-biased, and optimized
@@ -141,6 +146,9 @@ module name. Editable installation adds this directory to the Python path.
 - `spin9_v1_v5_theorem.py`: claim-boundary assembler promoting the complete
   finite-radius coupled-slice theorem while keeping candidate optimality, the
   second \(V_5\), and the unrestricted quotient open.
+- `spin9_v1_candidate_line.py`: exact rational pullback of the symmetric
+  equiangular determinant curve by the complete pure-\(V_1\) graph line, proving global
+  candidate optimality there and classifying its four graph preimages.
 - `spin9_v1_v5_screen.py`: reproducible float64 multistart, compactified
   random, and projective-boundary falsification screen. It finds no candidate
   counterexample but exactly rejects pointwise monotonicity in the \(V_5\)

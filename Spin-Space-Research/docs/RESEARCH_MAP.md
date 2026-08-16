@@ -267,16 +267,22 @@ identity coefficient of \(Z=X^2-(1-y^2)R^2\) nonnegative by reducing it to the
 global Fourier-energy polynomial plus explicit squares. Exact dyadic atlases
 and characteristic-zero assemblies now prove all three quadratic minors and
 the cubic minor of \(Z\) on the five-cube. The determinant is reconstructed
-exactly and both \(y\)-endpoint faces are proved; its open interior remains
+exactly and both \(y\)-endpoint faces are proved. Its exact descent (t=y^2)
+also yields an order-eight squared nonnegative tangent form at the sole
+persistent equality corner. The natural degree-matched two-endpoint quotient
+is exactly negative at a rational feasible point, rejecting that proof route
+without disproving the determinant. The finite-radius interior remains
 unresolved. Neither the complete adjacent face nor the unrestricted theorem
 has been promoted.
 
 The resulting proof architecture is boundary-adapted: endpoint selectors,
 finite dyadic atlases away from equality, and exact max-coordinate blow-ups at
 the persistent equality corner. Native Bernstein failures are retained as
-negative certificate-basis results, not counterexamples. The next gate is the
-two-endpoint interior quotient of the fourth-order determinant, the sole
-remaining Schur-minor obstruction on this adjacent endpoint face.
+negative certificate-basis results, not counterexamples. The determinant
+selector quotient is retained as an exact negative proof-route result. The next
+gate is a finite-radius determinant blow-up around its proved squared tangent
+cone, the sole remaining Schur-minor obstruction on this adjacent endpoint
+face.
 
 The local gate is now exact: the new edge cannot leave the one-edge equality
 set with a harmful first-order sign, and its sole quadratic endpoint kernel is
@@ -286,3 +292,18 @@ when a degree-six polynomial \(L\) and a degree-twelve polynomial \(S\) are
 both nonnegative on \(0\leq y\leq1\). The reduction is proved, and the complete
 triangular atlas now certifies the resulting eight physical margins on their
 six-dimensional domain. The seventh invariant remains open.
+
+On the Spin(9) coupled normal slice, the complete pure-\(V_1\) graph line is now
+also exact. Its rational coordinate
+
+\[
+c(x)=-\frac{4x(x-1)(2x+1)}{(1+2x^2)^2}
+\]
+
+maps the real line into \([-1/2,1]\), and the graph determinant is exactly the
+symmetric equiangular determinant evaluated at (c(x)). Hence the algebraic
+candidate is globally optimal on this line. The four real roots of the
+stationary octic are exactly four graph-coordinate representatives of the same
+maximizing symmetric-curve parameter. The remaining candidate-gap gate begins at mixed radius
+(p>0); the second (V_5) and unrestricted quotient remain independent open
+problems.

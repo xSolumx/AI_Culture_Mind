@@ -517,18 +517,44 @@ Not established here:
 - control of the second supported \(V_5\), the nonpolar Grassmann quotient, or
   unrestricted rank-three frames.
 
-The pure-\(V_1\) stationary equation exposes the next exact gate. Besides
-lower-degree factors, its derivative contains
+The pure-\(V_1\) stationary equation initially exposed the next exact gate.
+Besides lower-degree factors, its derivative contains
 
 \[
 16x^8-544x^7+1072x^6-1040x^5-280x^4+520x^3+268x^2+68x+1.
 \]
 
-The candidate is the real root \(x=31.968279\ldots\). Over
-\(\mathbb Q(\sqrt{241})\) the octic splits into two quartics. Proving that the
-resulting algebraic candidate gap is nonnegative on the coupled orbit domain,
-with equality classified at that root, is strictly stronger than the rational
-\(21/20\) theorem proved here and remains open.
+The follow-on exact certificate
+[`spin9_v1_candidate_line.py`](../../src/spin9_v1_candidate_line.py) proves that
+this octic is the graph-coordinate pullback of the symmetric-curve stationary
+quadratic. Explicitly,
+
+\[
+c(x)=\frac{-4x(x-1)(2x+1)}{(1+2x^2)^2},
+\]
+
+and
+
+\[
+c(x)+\frac12=\frac{(2x^2-4x-1)^2}{2(1+2x^2)^2},
+\qquad
+1-c(x)=\frac{(2x^2+2x-1)^2}{(1+2x^2)^2}.
+\]
+
+Thus the complete real graph line maps into \([-1/2,1]\), and its determinant
+ratio is exactly the symmetric-curve ratio evaluated at \(c(x)\). The unique
+curve maximum at \(c_\star=(-17+\sqrt{241})/24\) therefore proves global
+candidate optimality on the pure-\(V_1\) line. The octic has exactly four real
+roots; four disjoint rational isolating intervals show they are precisely the
+four graph-coordinate preimages of the same maximizing symmetric-curve
+parameter. This certificate does not separately reconstruct group elements
+between those four graph frames.
+
+The remaining candidate-gap problem is now genuinely mixed: prove the
+algebraic candidate gap for \(p>0\) on the coupled orbit domain, with equality
+excluded away from the pure-\(V_1\) fiber. That statement is strictly stronger
+than both the pure-line theorem and the rational \(21/20\) theorem and remains
+open.
 
 ## 9. Reproduction
 

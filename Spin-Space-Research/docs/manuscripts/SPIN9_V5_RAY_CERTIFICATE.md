@@ -7,7 +7,11 @@
 > **Scope update, 2026-08-11.** This boundary-ray theorem remains valid, but
 > its statement that intermediate cubic shapes are open has been superseded by
 > the [full \(V_5\) Cartan certificate](SPIN9_V5_CARTAN_CERTIFICATE.md).
-> Coupling to \(V_1\) and the global Grassmann quotient remain open.
+> The first complete finite-radius coupled (V_1\oplus V_5) slice has since
+> been proved in
+> [the coupled reconstruction theorem](SPIN9_V1_V5_RECONSTRUCTION.md).
+> Exact candidate optimality, the second supported (V_5), and the global
+> Grassmann quotient remain open.
 
 ## Abstract
 
