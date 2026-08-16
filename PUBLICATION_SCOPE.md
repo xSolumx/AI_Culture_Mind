@@ -26,6 +26,18 @@ artifacts, and documents whose evidence boundary is explicit.
 
 Local exclusion is intentional. It does not strengthen any public claim.
 
+## Deliberate 2026-08-16 checkpoint distribution
+
+The compact checkpoints under `SSM-Models/checkpoints/` are deliberately
+distributed with the 2026-08-16 research release. They total approximately
+13.6 MB across 169 PyTorch files, contain state/configuration/evaluation
+metadata and no detected machine-local absolute paths, and are bound to the
+structured artifacts by SHA-256. This explicit exception makes the frozen
+reload/rehash tests reproducible from a clean clone. It does not apply to future
+large checkpoints, third-party weights, datasets, optimizer caches, or raw
+process logs; those remain excluded unless a new distribution decision is
+recorded.
+
 ## Benchmark publication contract
 
 A systems number is publishable only with a frozen selection rule, complete

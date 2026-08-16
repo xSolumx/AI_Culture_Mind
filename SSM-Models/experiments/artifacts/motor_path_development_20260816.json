@@ -1,0 +1,161 @@
+{
+  "experiment": "dual-quaternion Spin(3) semidirect R3 path-development audit",
+  "status": "completed numerical gate",
+  "started_at": "2026-08-16T19:43:29.070981+02:00",
+  "finished_at": "2026-08-16T19:44:30.792811+02:00",
+  "torch_version": "2.12.0+cu130",
+  "config": {
+    "lengths": [
+      16,
+      128,
+      1024,
+      4096
+    ],
+    "batch_size": 4,
+    "lanes": 4,
+    "rotation_angle_scale": 0.35,
+    "translation_scale": 0.05,
+    "seed": 20260816,
+    "timing_length": 1024,
+    "timing_batch_size": 8,
+    "timing_warmups": 5,
+    "timing_repeats": 20
+  },
+  "conventions": {
+    "motor": "q_real + epsilon q_dual, scalar-first quaternions",
+    "rigid_action": "x -> R(q_real) x + translation",
+    "composition": "left product matches left homogeneous-matrix product",
+    "prefix_update": "state_next = state * token_motor",
+    "unit_constraints": "norm(q_real)=1 and dot(q_real,q_dual)=0",
+    "central_element": "simultaneous negation of real and dual parts"
+  },
+  "tolerances": {
+    "tree_recurrence": 2e-09,
+    "chunk_cache": 2e-09,
+    "motor_matrix": 2e-09,
+    "unit_and_study": 2e-12,
+    "rigid_matrix": 2e-10,
+    "central_action": 2e-12
+  },
+  "checks": {
+    "parallel_recurrent": true,
+    "chunk_cache": true,
+    "homogeneous_matrix_equivalence": true,
+    "unit_motor_constraints": true,
+    "rigid_matrix_constraints": true,
+    "central_sign_state_and_action": true,
+    "translation_nontrivial": true,
+    "finite": true
+  },
+  "length_results": [
+    {
+      "length": 16,
+      "input_sha256": "e277c8e533eeb2872aa3617bf3dbc21a48dad2a12d1d2a282da95d7a6b748061",
+      "motor_parallel_recurrent_max_abs_error": 3.3306690738754696e-16,
+      "motor_final_parallel_recurrent_max_abs_error": 2.220446049250313e-16,
+      "motor_chunked_full_max_abs_error": 2.220446049250313e-16,
+      "motor_chunked_final_max_abs_error": 1.3183898417423734e-16,
+      "matrix_parallel_recurrent_max_abs_error": 6.661338147750939e-16,
+      "matrix_final_parallel_recurrent_max_abs_error": 6.661338147750939e-16,
+      "motor_matrix_prefix_max_abs_error": 5.551115123125783e-16,
+      "motor_matrix_final_max_abs_error": 4.440892098500626e-16,
+      "maximum_rotation_norm_error": 1.1102230246251565e-16,
+      "maximum_study_condition_error": 1.3877787807814457e-17,
+      "maximum_rotation_orthogonality_error": 4.440892098500626e-16,
+      "maximum_rotation_determinant_error": 4.440892098500626e-16,
+      "maximum_absolute_translation": 0.49492126629912475,
+      "central_negation_state_antipode_max_abs_error": 0.0,
+      "central_negation_physical_matrix_max_abs_error": 0.0,
+      "all_outputs_finite": true
+    },
+    {
+      "length": 128,
+      "input_sha256": "fdee568d9b48723c89f8ce1e9a2ab554e7313d3b1b6364d6b72ad6a0483d3f0e",
+      "motor_parallel_recurrent_max_abs_error": 1.4432899320127035e-15,
+      "motor_final_parallel_recurrent_max_abs_error": 1.2073675392798577e-15,
+      "motor_chunked_full_max_abs_error": 6.106226635438361e-16,
+      "motor_chunked_final_max_abs_error": 4.440892098500626e-16,
+      "matrix_parallel_recurrent_max_abs_error": 2.3314683517128287e-15,
+      "matrix_final_parallel_recurrent_max_abs_error": 1.887379141862766e-15,
+      "motor_matrix_prefix_max_abs_error": 2.6645352591003757e-15,
+      "motor_matrix_final_max_abs_error": 1.9984014443252818e-15,
+      "maximum_rotation_norm_error": 2.220446049250313e-16,
+      "maximum_study_condition_error": 6.521476067500309e-17,
+      "maximum_rotation_orthogonality_error": 1.3322676295501878e-15,
+      "maximum_rotation_determinant_error": 1.3322676295501878e-15,
+      "maximum_absolute_translation": 1.2585262214925024,
+      "central_negation_state_antipode_max_abs_error": 0.0,
+      "central_negation_physical_matrix_max_abs_error": 0.0,
+      "all_outputs_finite": true
+    },
+    {
+      "length": 1024,
+      "input_sha256": "b665550e377bee1c768e93f7d504b9e60eeeed5df433a53ef7875bcbf96143c6",
+      "motor_parallel_recurrent_max_abs_error": 8.43769498715119e-15,
+      "motor_final_parallel_recurrent_max_abs_error": 7.438494264988549e-15,
+      "motor_chunked_full_max_abs_error": 3.885780586188048e-15,
+      "motor_chunked_final_max_abs_error": 1.4432899320127035e-15,
+      "matrix_parallel_recurrent_max_abs_error": 1.4210854715202004e-14,
+      "matrix_final_parallel_recurrent_max_abs_error": 8.881784197001252e-15,
+      "motor_matrix_prefix_max_abs_error": 1.4210854715202004e-14,
+      "motor_matrix_final_max_abs_error": 1.1102230246251565e-14,
+      "maximum_rotation_norm_error": 2.220446049250313e-16,
+      "maximum_study_condition_error": 2.220446049250313e-16,
+      "maximum_rotation_orthogonality_error": 1.5543122344752192e-15,
+      "maximum_rotation_determinant_error": 1.7763568394002505e-15,
+      "maximum_absolute_translation": 4.271973612168481,
+      "central_negation_state_antipode_max_abs_error": 0.0,
+      "central_negation_physical_matrix_max_abs_error": 0.0,
+      "all_outputs_finite": true
+    },
+    {
+      "length": 4096,
+      "input_sha256": "274d07b8f3ff9afd20e43e0133457c3152e8f133afe76afc3c15302e02b2c942",
+      "motor_parallel_recurrent_max_abs_error": 3.6193270602780103e-14,
+      "motor_final_parallel_recurrent_max_abs_error": 2.2648549702353193e-14,
+      "motor_chunked_full_max_abs_error": 1.2545520178264269e-14,
+      "motor_chunked_final_max_abs_error": 6.5503158452884236e-15,
+      "matrix_parallel_recurrent_max_abs_error": 8.348877145181177e-14,
+      "matrix_final_parallel_recurrent_max_abs_error": 3.907985046680551e-14,
+      "motor_matrix_prefix_max_abs_error": 5.81756864903582e-14,
+      "motor_matrix_final_max_abs_error": 3.4638958368304884e-14,
+      "maximum_rotation_norm_error": 2.220446049250313e-16,
+      "maximum_study_condition_error": 6.661338147750939e-16,
+      "maximum_rotation_orthogonality_error": 1.7763568394002505e-15,
+      "maximum_rotation_determinant_error": 1.7763568394002505e-15,
+      "maximum_absolute_translation": 7.578947371511346,
+      "central_negation_state_antipode_max_abs_error": 0.0,
+      "central_negation_physical_matrix_max_abs_error": 0.0,
+      "all_outputs_finite": true
+    }
+  ],
+  "cuda_timing": {
+    "available": true,
+    "device": "NVIDIA GeForce RTX 2070 SUPER",
+    "length": 1024,
+    "batch_size": 8,
+    "lanes": 4,
+    "warmups": 5,
+    "repeats": 20,
+    "motor_parallel_ms": 24.133074999554083,
+    "motor_recurrent_ms": 2207.4722299992573,
+    "matrix_parallel_ms": 2.81912500213366,
+    "matrix_recurrent_ms": 90.50373499921989,
+    "motor_parallel_million_lane_tokens_per_second": 1.3578045897841642,
+    "matrix_parallel_million_lane_tokens_per_second": 11.623464718733464,
+    "fused_kernel_claimed": false
+  },
+  "claim_scope": {
+    "established": [
+      "numerical equivalence to homogeneous SE(3) prefix composition",
+      "center-sensitive state with center-blind physical action",
+      "parallel/recurrent and chunk/cache parity within recorded tolerances"
+    ],
+    "not_established": [
+      "learned rigid-motion superiority",
+      "bounded translation state",
+      "fused-kernel performance",
+      "a general conformal or noncompact Lie-group scan theorem"
+    ]
+  }
+}

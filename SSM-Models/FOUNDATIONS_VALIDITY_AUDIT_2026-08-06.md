@@ -9,10 +9,22 @@ Date: 2026-08-06
 > contract and its new tests are documented in `FOUNDATIONS.md` and
 > `pure_rotor_ssm/CONTRACT.md`.
 
+> **Documentation reconciliation, 2026-08-16T16:05:27+02:00.** This historical
+> verdict and its frozen measurements were retained unchanged. Current work
+> adds a tested PyTorch-only Schur execution path and a one-step Pure Rotor /
+> identity / Mamba-2 smoke artifact; neither updates the audit's empirical
+> verdict or establishes model superiority. See
+> `experiments/PURE_ROTOR_VS_MAMBA2_BENCHMARK.md`.
+
 > **Later status.** The 2026-08-10 Spin(8)/Spin(9) hierarchical-memory report
 > closes separate routing and delta-transport engineering gates. It neither
 > changes this historical validity verdict nor establishes that the maintained
 > rotor model implements the new memory compiler.
+
+> **Separate later model.** `pure_spin8_ssm/` v1.0 was added on 2026-08-16
+> alongside Pure Rotor, with independent tests and checkpoints. It was not the
+> subject of this historical audit. Its current boundary is recorded in
+> `pure_spin8_ssm/CONTRACT.md`.
 
 ## Verdict
 

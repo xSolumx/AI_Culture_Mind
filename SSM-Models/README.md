@@ -5,10 +5,10 @@
 > state what was known when they were written; later results may supersede their
 > interpretation without changing their recorded observations. The canonical
 > present-day theorem ledger, correction history, and publication manuscripts
-> live in the sibling `Spin-Space-Research` repository. The maintained
+> live in the root-owned `Spin-Space-Research` tree. The maintained
 > Cl(3,0) implementation described below remains in this folder.
 
-> **2026-08-10 programme boundary.** The sibling theorem repository now has a
+> **2026-08-10 programme boundary.** The theorem tree now has a
 > completed hierarchical memory-core campaign and an official FLA chunk-kernel
 > benchmark for a co-moving transported delta recurrence. The campaign finds
 > no extra ordinary overwrite capacity from triality at equal routing and does
@@ -18,12 +18,203 @@
 > kernel result. See the
 > [memory benchmark atlas](../Spin-Space-Research/docs/experiments/MEMORY_BENCHMARK_ATLAS.md).
 
-`pure_rotor_ssm/` is the canonical, model-only implementation in matched
-JAX/Flax and PyTorch backends. It contains algebra, complete Spin(3)-isotypic
-maps, bounded selective transitions, associative/recurrent scans, equivariant
-dropout, fixed-state streaming, and the decoder—nothing related to datasets,
-optimization, checkpoints, profiling, or result reporting. Its hard recurrence
-bound and exact scope are in
+> **2026-08-16 maintained-model update.** PyTorch additionally offers the
+> opt-in `schur_parallel` scan path; its direct-transport, gradient, padding,
+> cache, and CUDA parity checks pass, but it has no production-kernel claim.
+> The direct maintained-model comparison runner is
+> [`benchmark_pure_rotor_vs_mamba2.py`](benchmark_pure_rotor_vs_mamba2.py).
+> Its checked-in one-step artifact is a smoke test, not a quality or systems
+> result; this Windows checkout uses Transformers' unfused Mamba-2 path.
+> The complementary, preregistered A5 mechanism screen is
+> [`benchmark_pure_rotor_a5.py`](benchmark_pure_rotor_a5.py): it compares the
+> canonical model, identity transport, and Mamba-2 on a missing-bigram
+> non-commutative prefix task. Its completed three-seed 200-update screen
+> finds a non-replicated seed-0 short-pair event and chance-level long-word
+> behavior, so it is a negative/diagnostic pilot rather than a model claim;
+> see [`experiments/PURE_ROTOR_A5_MAMBA2_PILOT200_RESULTS.md`](experiments/PURE_ROTOR_A5_MAMBA2_PILOT200_RESULTS.md).
+> The follow-up three-seed 1,000-update screen has a variable short-pair
+> signal but still fails L64/L128 retention; see
+> [`experiments/PURE_ROTOR_A5_MAMBA2_BUDGET1000_RESULTS.md`](experiments/PURE_ROTOR_A5_MAMBA2_BUDGET1000_RESULTS.md).
+> Its execution status, including the completed one-step smoke and invalidated
+> full-batch Mamba fallback attempt, is recorded in
+> [`experiments/PURE_ROTOR_A5_MAMBA2_EXECUTION_LOG.md`](experiments/PURE_ROTOR_A5_MAMBA2_EXECUTION_LOG.md).
+
+> **2026-08-16 maintained Pure Spin(8) v1.0.**
+> [`pure_spin8_ssm/`](pure_spin8_ssm/) is a second maintained family with a
+> separate checkpoint schema; it does not rewrite or supersede Pure Rotor
+> v2.1. One shared 28-coordinate controller drives the vector, positive-chiral,
+> and negative-chiral eight-real actions. The resulting 24-scalar triality
+> cache distinguishes every Spin(8) center signature and uses an associative,
+> work-efficient affine scan with recurrent streaming. Its model, gradient,
+> stability, mask, cache, CUDA, exact-center factorized chart, and checkpoint
+> contracts pass. In a frozen three-seed triality-transport cohort, it reaches
+> L128 MSE `5.81e-5`--`6.68e-5` and 100% central-sign classification; unfused
+> Transformers Mamba-2 scores `0.132`--`0.135` and 50%. This approximately
+> 2,000x task-specific MSE gap is an algebra-matched synthetic result, not a
+> broad claim that the model beats Mamba. See
+> [`PURE_SPIN8_VS_MAMBA2_RESULTS.md`](experiments/PURE_SPIN8_VS_MAMBA2_RESULTS.md)
+> and the [`v1.0 contract`](pure_spin8_ssm/CONTRACT.md).
+
+> **2026-08-16 center-sensitive `2.A5` result.** The frozen three-seed runner
+> [`benchmark_pure_rotor_2a5.py`](benchmark_pure_rotor_2a5.py) holds the
+> projected A5 trajectory fixed while paired binary targets differ by the
+> central element. The explicit Spin quaternion product scan passes the
+> preregistered center-margin gate at L16/L64/L128 in all seeds and reaches
+> `62.20 ± 2.36%` mean exact 120-state accuracy at L128. Pure Rotor v2.1,
+> identity, and Transformers Mamba-2 reach `2.29%`, `1.89%`, and `4.56%`
+> respectively and are near chance on center metrics. This is a bounded
+> mechanism result, not a general sequence-model theorem. See
+> [`PURE_ROTOR_2A5_CENTER_PILOT300_RESULTS.md`](experiments/PURE_ROTOR_2A5_CENTER_PILOT300_RESULTS.md).
+> The successful primitive is now reusable in
+> [`pure_rotor_ssm/spin_scan.py`](pure_rotor_ssm/spin_scan.py), but remains an
+> explicit experiment rather than a silent change to v2.1.
+> A no-retraining exploratory follow-up selects the shortest cancellation-
+> reduced identity/center word pair absent from all three training schedules.
+> The same Spin checkpoints retain 100% center margin through L128 and 59.68%
+> mean exact L128 accuracy; see
+> [`PURE_ROTOR_2A5_UNSEEN_RELATION_RESULTS.md`](experiments/PURE_ROTOR_2A5_UNSEEN_RELATION_RESULTS.md).
+
+> **2026-08-16 multi-relation and external-baseline result.** The separately
+> frozen runner
+> [`benchmark_spin_multirelation_2a5.py`](benchmark_spin_multirelation_2a5.py)
+> excludes `a^2`, `b^3`, and `(ab)^5` simultaneously, adds an identity token,
+> and repeats identical token schedules under three inner-conjugate generating
+> sets. It compares the existing four candidates with the tested unfused
+> [`delta_product_reference.py`](delta_product_reference.py) and an exact
+> regular-action PD oracle. Spin's worst registered early-L64/L128 central
+> margin is 99.50%, and it uniquely wins exact accuracy in all 18 long splits;
+> every other learned candidate fails the center gate. DeltaProduct has the
+> strongest non-Spin long exact accuracy but chance-like center retention.
+> This is a one-initialization coordinate pilot, not replicated multi-seed or
+> fused-kernel evidence. See
+> [`SPIN_2A5_MULTIRELATION_RESULTS.md`](experiments/SPIN_2A5_MULTIRELATION_RESULTS.md).
+
+> **2026-08-16 rigid-motor implementation gate.** The separate experimental
+> [`pure_rotor_ssm/motor_scan.py`](pure_rotor_ssm/motor_scan.py) lifts the
+> sign-sensitive quaternion product to unit dual quaternions, an eight-scalar
+> double cover of `SE(3)`. Exact-structure tests and the frozen numerical audit
+> establish homogeneous-matrix equivalence, central-state/physical-action
+> separation, parallel/recurrent/cache/gradient parity, and valid Study
+> constraints through L4096. Translation remains unbounded. On the recorded
+> eager CUDA diagnostic, 4 by 4 matrix parallel scan is about 8.6 times faster,
+> so no motor-kernel advantage is claimed. See
+> [`MOTOR_PATH_DEVELOPMENT_RESULTS.md`](experiments/MOTOR_PATH_DEVELOPMENT_RESULTS.md).
+
+> **2026-08-16 learned rigid-motion and identification result.** The frozen
+> [`benchmark_spin_motor_rigid_2a5.py`](benchmark_spin_motor_rigid_2a5.py)
+> crosses the three held-out central `2.A5` relations with non-commuting
+> body-frame translations and compares parameter-near quaternion, motor,
+> Transformers Mamba-2, and DeltaProduct candidates. All four 300-step learned
+> readout models fail the strict long-context joint-pose gate; the result is
+> negative, including for the motor classifier. A matched 49-parameter direct-
+> product state retains the center sign but fails translation. The follow-up
+> [`identify_spin_motor_rigid_2a5.py`](identify_spin_motor_rigid_2a5.py)
+> instead identifies each token motor from legal supervised prefix differences,
+> using no evaluation relation. That 8-scalar state reaches 100% joint signed
+> pose and paired double-cover pose accuracy in all 9 coordinate-by-seed runs
+> and all 162 splits through L128. This establishes finite deterministic
+> identifiability under every-prefix pose supervision, not end-to-end model
+> superiority or a continuous-data theorem. A frozen 4-tier by 5-seed noise
+> audit then keeps 100% joint/paired accuracy through the 5-degree/0.05 tier;
+> at 15 degrees/0.15, all five runs retain the center sign but fall to a worst
+> joint/paired accuracy of 46.875%. The noise preserves the signed quaternion,
+> so this does not infer an unobserved lift from `SO(3)` poses. See
+> [`SPIN_MOTOR_RIGID_2A5_RESULTS.md`](experiments/SPIN_MOTOR_RIGID_2A5_RESULTS.md).
+
+> **2026-08-16 associative octonion-operator lift.** The experimental
+> [`pure_rotor_ssm/octonion_operator_scan.py`](pure_rotor_ssm/octonion_operator_scan.py)
+> does not scan raw nonassociative octonions. It maps each unit octonion to an
+> `8 by 8` multiplication operator, composes those maps with an ordered work-
+> efficient tree, and uses the raw parenthesized product only for compact
+> eight-scalar streaming. The norm-2 associator remains explicit, and the
+> exact seven-generator/21-commutator determinant `-2^49` certifies full
+> `so(8)` Lie closure. The bounded layer passes its algebra, scan, gradient,
+> cache, CUDA, and L4096 gates. The optional WSL/Triton backend adds a fused
+> differentiable recurrence: its L4096 forward median is 1.805 ms versus
+> 8.951 ms for the work-efficient operator path, and its L1024 forward/backward
+> median is 1.691 ms versus 11.628 ms. This is outside Pure Rotor v2.1 and has
+> one separately frozen synthetic task result: at L128 its 72-parameter
+> algebra-matched encoder reaches MSE `1.85e-12`, while the invalid collapsed
+> octonion, unfused DeltaProduct, and unfused Transformers Mamba-2 controls
+> score `0.216`, `0.124`, and `0.125`. This is one-seed coordinate-aligned
+> realizability, not generic model superiority. In the three-Haar-basis
+> successor, a 28-parameter learned `SO(8)` gauge reaches L128 MSE
+> `1.54e-9`--`8.74e-8` and satisfies the recovered `G2` automorphism equation
+> to at most `2.17e-4`. The overall frozen cohort remains failed because the
+> dense AdamW control misses its registered gate and one oracle crosses its
+> strict float32 threshold; post-protocol least squares proves the dense map is
+> realizable. See
+> [`OCTONION_OPERATOR_SCAN_RESULTS.md`](experiments/OCTONION_OPERATOR_SCAN_RESULTS.md).
+> A harder final-only L16 cohort initially recovers only 3/9 structured laws.
+> The frozen L2/L4/L8/L16 curriculum recovers 9/9 structured and 9/9 dense
+> laws, but its even-only targets identify `G2 union -G2`: an odd L17 audit
+> finds four positive- and five negative-coset gauges and verifies the predicted
+> sign in all runs. The original unsigned-`G2` audit is retained as failed.
+> See
+> [`OCTONION_FINAL_ONLY_RESULTS.md`](experiments/OCTONION_FINAL_ONLY_RESULTS.md).
+
+> **2026-08-16 Spin--Dirac ladder.** The separate algebraic gate
+> [`spin_dirac_a5_ladder.py`](spin_dirac_a5_ladder.py) now extends the maintained
+> Spin(8) gamma system through Spin(9)--Spin(12), while restricting every rung
+> to the same embedded Spin(3). It distinguishes vector `A5` from its
+> 120-element binary spin lift `2.A5`, verifies the central sign, and records
+> the exceptional Spin(8) triality dimension match without extending a
+> triality claim to higher dimensions. See
+> [`SPIN_DIRAC_A5_LADDER_RESULTS.md`](experiments/SPIN_DIRAC_A5_LADDER_RESULTS.md).
+> This is an exact-matrix/numerical-algebra gate, not a trained SSM or model
+> benchmark.
+
+> **2026-08-16 exact rigidity upgrade.** The companion
+> [`spin_dirac_a5_rigidity.py`](spin_dirac_a5_rigidity.py) replaces the
+> float64 binary-group and tangent-rank evidence with exact `Q(sqrt(5))`
+> certificates. It enumerates `2.A5`/`A5` as 120/60 elements exactly and proves
+> that the `(2,3,5)` relation kernel equals infinitesimal conjugacy for every
+> listed rung, hence `H1=0` at the fixed embedding. See
+> [`SPIN_DIRAC_A5_RIGIDITY_RESULTS.md`](experiments/SPIN_DIRAC_A5_RIGIDITY_RESULTS.md).
+> Global classification and ML consequences remain open. The degree-two status
+> from this rigidity stage is superseded by the exact closure immediately below.
+
+> **2026-08-16 cohomology closure.** The exact table-level gate
+> [`spin_dirac_a5_cohomology.py`](spin_dirac_a5_cohomology.py) verifies the
+> universal low-degree averaging homotopy at all 120 degree-one and 14,400
+> degree-two output tuples. It proves `H1=H2=0` for every
+> `Q(sqrt(5))`-linear `2.A5` module and shows that the raw presentation
+> cokernel is relator-syzygy redundancy, not `H2`. See
+> [`SPIN_DIRAC_A5_COHOMOLOGY_RESULTS.md`](experiments/SPIN_DIRAC_A5_COHOMOLOGY_RESULTS.md).
+> The global representation-component status from this stage is superseded by
+> the exact atlas immediately below.
+
+> **2026-08-16 global component atlas.**
+> [`spin_dirac_a5_components.py`](spin_dirac_a5_components.py) reconstructs the
+> complete nine-character table from the exact quaternion group, verifies all
+> 81 tensor products and Frobenius--Schur types, then enumerates every
+> `2.A5 -> Spin(n)` conjugacy component for `n=3,8,9,10,11,12`. The standard
+> universal-cover theorem for `2.A5` is explicitly separated from the exact
+> table certificate. The result finds 3, 32, 32, 42, 59, and 98 Spin components
+> respectively; see
+> [`SPIN_DIRAC_A5_COMPONENT_ATLAS_RESULTS.md`](experiments/SPIN_DIRAC_A5_COMPONENT_ATLAS_RESULTS.md).
+> This closes the stated global compact-real classification gate through
+> dimension 12, but makes no model-quality or triality-beyond-Spin(8) claim.
+
+> **2026-08-16 exact spinor branching.**
+> [`spin_dirac_a5_spinors.py`](spin_dirac_a5_spinors.py) derives the spinor or
+> half-spinor restriction for all 245 orthogonal types in the global atlas.
+> Quaternionic base blocks come from explicit SU(2) weight parity, and every
+> result is independently checked against Newton-reconstructed exterior
+> characters. All 21 orientation splits exchange distinct chiral characters;
+> see
+> [`SPIN_DIRAC_A5_SPINOR_BRANCHING_RESULTS.md`](experiments/SPIN_DIRAC_A5_SPINOR_BRANCHING_RESULTS.md).
+> “Invariant spinor” is representation-theoretic here, not a geometric Dirac
+> zero-mode claim.
+
+`pure_rotor_ssm/` contains the canonical implementation in matched JAX/Flax and
+PyTorch backends: algebra, complete Spin(3)-isotypic maps, bounded selective
+transitions, associative/recurrent scans, equivariant dropout, fixed-state
+streaming, and the decoder. The separate PyTorch-only `spin_scan.py` is an
+experimental sign-sensitive composition layer motivated by the completed
+`2.A5` screen; it is not part of the v2.1 model contract. The package contains
+nothing related to datasets, optimization, checkpoints, profiling, or result
+reporting. The canonical recurrence's hard bound and exact scope are in
 [pure_rotor_ssm/CONTRACT.md](pure_rotor_ssm/CONTRACT.md).
 
 `ga_ssm.py` is the JAX experiment/training shell and `rotor_ssm_torch.py` is an
@@ -172,6 +363,20 @@ python SSM-Models\train_rotor_ssm_torch.py --steps 300 --seed 0 `
 The trainer accepts `--checkpoint-dir` and `--variant selective_rotor` for a
 versioned reloadable checkpoint. Benchmark one with
 `benchmark_pure_rotor_ssm.py --checkpoint <path> --output <report.json>`.
+
+The independent model-quality comparison is intentionally separate from that
+single-model systems benchmark:
+
+```powershell
+python -m pytest SSM-Models\test_pure_rotor_vs_mamba2_benchmark.py -q
+python SSM-Models\benchmark_pure_rotor_vs_mamba2.py --steps 20 `
+  --validation-batches 1 --seeds 0 --offline `
+  --output SSM-Models\experiments\artifacts\pure_rotor_vs_mamba2_smoke.json
+```
+
+For a result rather than a smoke test, use independent seeds and retain the
+report's state, raw/effective-parameter, decoder-tying, Mamba-backend, memory,
+and data-hash fields.
 
 The maintained v2-native falsification ladder is frozen in
 [`experiments/PURE_V2_1_TRANSPORT_ABLATION_PREREGISTRATION.md`](experiments/PURE_V2_1_TRANSPORT_ABLATION_PREREGISTRATION.md).

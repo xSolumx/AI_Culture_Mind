@@ -26,6 +26,12 @@ bytes, nearly identical parameter counts, optimizer, sequence length, steps,
 and seeds. The benchmark does not claim that geometric structure improves
 language modeling until a matched experiment demonstrates it.
 
+> **Scope separation, reviewed 2026-08-16.** This directory benchmarks
+> `SpinorDeltaLM`, not the maintained `pure_rotor_ssm` model. The latter now
+> has its own [Pure Rotor versus Mamba-2 runner](../SSM-Models/experiments/PURE_ROTOR_VS_MAMBA2_BENCHMARK.md).
+> Its one-step smoke artifact must not be combined with, or used to reinterpret,
+> this benchmark's completed three-way artifacts.
+
 ## Run
 
 From this directory:

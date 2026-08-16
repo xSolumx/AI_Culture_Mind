@@ -1,0 +1,333 @@
+{
+  "experiment": "Pure Rotor v2.1 versus Mamba-2 A5 held-out-pair tracking",
+  "status": "completed empirical screen; no exact-representation, diagonal-SSM, or language-model superiority claim",
+  "pure_rotor_model_version": "2.1.0",
+  "device": "NVIDIA GeForce RTX 2070 SUPER",
+  "torch_version": "2.12.0+cu130",
+  "transformers_version": "5.9.0",
+  "config": {
+    "steps": 200,
+    "batch_size": 16,
+    "training_length": 16,
+    "validation_batches": 4,
+    "validation_batch_size": 64,
+    "evaluation_microbatch_size": 16,
+    "evaluation_lengths": [
+      2,
+      16,
+      64,
+      128
+    ],
+    "enforce_training_state_coverage": true,
+    "learning_rate": 0.003,
+    "weight_decay": 0.01,
+    "gradient_clip": 1.0,
+    "rotor_channels": 9,
+    "rotor_layers": 3,
+    "rotor_expansion": 2,
+    "mamba_hidden_size": 32,
+    "mamba_layers": 3,
+    "mamba_heads": 4,
+    "mamba_head_dim": 16,
+    "mamba_state_size": 16,
+    "seed": 0
+  },
+  "seeds": [
+    0
+  ],
+  "rotor_scan_mode": "parallel",
+  "task": {
+    "group": {
+      "key": "a5",
+      "name": "alternating group A5",
+      "order": 60
+    },
+    "presentation": {
+      "a_symbol": "13254",
+      "b_symbol": "24315",
+      "a_index": 3,
+      "b_index": 19,
+      "b_inverse_index": 37,
+      "a_squared_is_identity": true,
+      "b_cubed_is_identity": true,
+      "ab_to_fifth_is_identity": true,
+      "generated_subgroup_order": 60
+    },
+    "target": "every ordered A5 prefix product",
+    "split": {
+      "0": {
+        "input_symbols": [
+          "a",
+          "b",
+          "b_inverse"
+        ],
+        "input_group_element_indices": [
+          3,
+          19,
+          37
+        ],
+        "held_out_input_pair": [
+          0,
+          1
+        ],
+        "held_out_symbol_pair": [
+          "a",
+          "b"
+        ],
+        "training_pair_audit": {
+          "pair_occurrences": 0,
+          "sequences_with_pair": 0,
+          "total_sequences": 3200
+        },
+        "training_coverage": {
+          "observed_group_states": 60,
+          "group_state_fraction": 1.0,
+          "missing_group_state_indices": [],
+          "observed_input_pairs": 8,
+          "possible_input_pairs": 9,
+          "input_pair_fraction": 0.8888888888888888
+        },
+        "exact_training_language_coverage": {
+          "reachable_group_states": 60,
+          "maximum_shortest_witness_length": 12,
+          "all_group_states_reachable_within_training_length": true
+        },
+        "training_schedule_sha256": "3580b9553ab103e4cf2c3c163ff83ba5cf4e94076f7992d6f7fada208837503a",
+        "evaluation_pair_audits": {
+          "2": {
+            "pair_occurrences": 256,
+            "sequences_with_pair": 256,
+            "total_sequences": 256
+          },
+          "16": {
+            "pair_occurrences": 566,
+            "sequences_with_pair": 256,
+            "total_sequences": 256
+          },
+          "64": {
+            "pair_occurrences": 1985,
+            "sequences_with_pair": 256,
+            "total_sequences": 256
+          },
+          "128": {
+            "pair_occurrences": 3796,
+            "sequences_with_pair": 256,
+            "total_sequences": 256
+          }
+        }
+      }
+    }
+  },
+  "integrity": {
+    "same_precomputed_training_batches_per_seed": true,
+    "same_precomputed_evaluation_batches_per_seed": true,
+    "candidate_initialized_after_seed": true,
+    "pure_rotor_vs_identity_initial_function_identical": true,
+    "cross_architecture_initial_function_identical": false,
+    "mamba2_backend": "huggingface_transformers",
+    "mamba_ssm_extension_importable": false,
+    "mamba2_fused_kernel_claimed": false,
+    "parameter_matching": {
+      "parameter_counts": {
+        "pure_rotor": 24990,
+        "identity_rotation_ablation": 24990,
+        "mamba2_transformers": 25604
+      },
+      "relative_pure_rotor_mamba2_gap": 0.0239806280268708,
+      "state_size_matched": false,
+      "state_matching_note": "Pure Rotor has fixed Cl(3,0) layer state; Transformers Mamba-2 has architecture-specific SSM and convolution caches. This is a parameter-near comparison, not a matched-state comparison."
+    },
+    "identity_rotation_ablation": {
+      "raw_parameter_count": 24990,
+      "disabled_rotor_controller_parameter_count": 1242,
+      "effective_parameter_count_if_rotation_is_fixed_identity": 23748,
+      "raw_parameter_match_is_not_effective_capacity_match": true
+    },
+    "decoder_tying": {
+      "pure_rotor_input_output_embeddings_tied": true,
+      "mamba2_input_output_embeddings_tied": true
+    }
+  },
+  "results": [
+    {
+      "name": "pure_rotor",
+      "parameters": 24990,
+      "initial_held_out_pair_metrics": {
+        "2": {
+          "prefix_nll": 4.097386837005615,
+          "all_prefix_accuracy": 0.0,
+          "final_position_accuracy": 0.0
+        },
+        "16": {
+          "prefix_nll": 4.092456609010696,
+          "all_prefix_accuracy": 0.022216796875,
+          "final_position_accuracy": 0.0078125
+        },
+        "64": {
+          "prefix_nll": 4.094041168689728,
+          "all_prefix_accuracy": 0.01806640625,
+          "final_position_accuracy": 0.0078125
+        },
+        "128": {
+          "prefix_nll": 4.093844056129456,
+          "all_prefix_accuracy": 0.01904296875,
+          "final_position_accuracy": 0.01171875
+        }
+      },
+      "final_held_out_pair_metrics": {
+        "2": {
+          "prefix_nll": 1.6043027639389038,
+          "all_prefix_accuracy": 1.0,
+          "final_position_accuracy": 1.0
+        },
+        "16": {
+          "prefix_nll": 2.2632206454873085,
+          "all_prefix_accuracy": 0.327392578125,
+          "final_position_accuracy": 0.1953125
+        },
+        "64": {
+          "prefix_nll": 3.24471253156662,
+          "all_prefix_accuracy": 0.14276123046875,
+          "final_position_accuracy": 0.0234375
+        },
+        "128": {
+          "prefix_nll": 3.7815809100866318,
+          "all_prefix_accuracy": 0.078369140625,
+          "final_position_accuracy": 0.03125
+        }
+      },
+      "final_train_loss": 1.8374135494232178,
+      "loss_samples": {
+        "1": 4.092695236206055,
+        "100": 2.8434853553771973,
+        "200": 1.8374135494232178
+      },
+      "last_preclip_gradient_norm": 4.320728778839111,
+      "elapsed_seconds": 21.985391700000037,
+      "tokens_per_second": 2328.8190949083664,
+      "peak_cuda_memory_mib": 29.85791015625,
+      "checkpoint": "SSM-Models\\checkpoints\\pure_rotor_a5_mamba2_pilot200_coverage_batch16\\pure_rotor_seed0_step200.pt",
+      "checkpoint_sha256": "9151f4a60afecb7bb36da2d8e19f1674f4466642b75babb942d98bcff07f1388"
+    },
+    {
+      "name": "identity_rotation_ablation",
+      "parameters": 24990,
+      "initial_held_out_pair_metrics": {
+        "2": {
+          "prefix_nll": 4.097386837005615,
+          "all_prefix_accuracy": 0.0,
+          "final_position_accuracy": 0.0
+        },
+        "16": {
+          "prefix_nll": 4.092456609010696,
+          "all_prefix_accuracy": 0.022216796875,
+          "final_position_accuracy": 0.0078125
+        },
+        "64": {
+          "prefix_nll": 4.094041168689728,
+          "all_prefix_accuracy": 0.01806640625,
+          "final_position_accuracy": 0.0078125
+        },
+        "128": {
+          "prefix_nll": 4.093844056129456,
+          "all_prefix_accuracy": 0.01904296875,
+          "final_position_accuracy": 0.01171875
+        }
+      },
+      "final_held_out_pair_metrics": {
+        "2": {
+          "prefix_nll": 2.62312388420105,
+          "all_prefix_accuracy": 0.5,
+          "final_position_accuracy": 0.0
+        },
+        "16": {
+          "prefix_nll": 3.479434162378311,
+          "all_prefix_accuracy": 0.158935546875,
+          "final_position_accuracy": 0.0390625
+        },
+        "64": {
+          "prefix_nll": 4.1891167759895325,
+          "all_prefix_accuracy": 0.0631103515625,
+          "final_position_accuracy": 0.01953125
+        },
+        "128": {
+          "prefix_nll": 4.325481623411179,
+          "all_prefix_accuracy": 0.041168212890625,
+          "final_position_accuracy": 0.0234375
+        }
+      },
+      "final_train_loss": 2.4569873809814453,
+      "loss_samples": {
+        "1": 4.092695236206055,
+        "100": 3.0950851440429688,
+        "200": 2.4569873809814453
+      },
+      "last_preclip_gradient_norm": 2.3135321140289307,
+      "elapsed_seconds": 21.81056399998488,
+      "tokens_per_second": 2347.4862915069734,
+      "peak_cuda_memory_mib": 29.85791015625,
+      "checkpoint": "SSM-Models\\checkpoints\\pure_rotor_a5_mamba2_pilot200_coverage_batch16\\identity_rotation_ablation_seed0_step200.pt",
+      "checkpoint_sha256": "424b65ca4e5abf157af35fb71af79727521c0613ebe45cca26f98898e3c4979f"
+    },
+    {
+      "name": "mamba2_transformers",
+      "parameters": 25604,
+      "initial_held_out_pair_metrics": {
+        "2": {
+          "prefix_nll": 4.448700904846191,
+          "all_prefix_accuracy": 0.0,
+          "final_position_accuracy": 0.0
+        },
+        "16": {
+          "prefix_nll": 4.266577988862991,
+          "all_prefix_accuracy": 0.02734375,
+          "final_position_accuracy": 0.0390625
+        },
+        "64": {
+          "prefix_nll": 4.257087290287018,
+          "all_prefix_accuracy": 0.0191650390625,
+          "final_position_accuracy": 0.015625
+        },
+        "128": {
+          "prefix_nll": 4.258687615394592,
+          "all_prefix_accuracy": 0.017974853515625,
+          "final_position_accuracy": 0.015625
+        }
+      },
+      "final_held_out_pair_metrics": {
+        "2": {
+          "prefix_nll": 3.9200761318206787,
+          "all_prefix_accuracy": 0.5,
+          "final_position_accuracy": 0.0
+        },
+        "16": {
+          "prefix_nll": 3.388079434633255,
+          "all_prefix_accuracy": 0.307373046875,
+          "final_position_accuracy": 0.0546875
+        },
+        "64": {
+          "prefix_nll": 4.4549208879470825,
+          "all_prefix_accuracy": 0.117919921875,
+          "final_position_accuracy": 0.015625
+        },
+        "128": {
+          "prefix_nll": 4.758167415857315,
+          "all_prefix_accuracy": 0.066192626953125,
+          "final_position_accuracy": 0.02734375
+        }
+      },
+      "final_train_loss": 1.295644760131836,
+      "loss_samples": {
+        "1": 4.336399078369141,
+        "100": 1.9166826009750366,
+        "200": 1.295644760131836
+      },
+      "last_preclip_gradient_norm": 2.684828996658325,
+      "elapsed_seconds": 11.075560199969914,
+      "tokens_per_second": 4622.790998882303,
+      "peak_cuda_memory_mib": 713.8486328125,
+      "checkpoint": "SSM-Models\\checkpoints\\pure_rotor_a5_mamba2_pilot200_coverage_batch16\\mamba2_transformers_seed0_step200.pt",
+      "checkpoint_sha256": "a3a43bd263fc657a6044a75c2f48be982a9a9eb587a56acf84953aa5de700a3a"
+    }
+  ]
+}

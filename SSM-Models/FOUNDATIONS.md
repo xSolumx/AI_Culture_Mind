@@ -17,6 +17,13 @@ approximate that contract and have the explicit qualifications below.
 > invertible value-transport recurrence; integrating it here would require a
 > new equivalence proof and matched model experiment.
 
+> **Maintained-family boundary, 2026-08-16.** This document remains the
+> contract for Pure Rotor v2.1. The new `pure_spin8_ssm/` v1.0 family has a
+> separate 24-scalar faithful triality cache, implementation contract, and
+> checkpoint schema. Its addition does not alter the equations or load format
+> below. See `pure_spin8_ssm/CONTRACT.md` and
+> `experiments/PURE_SPIN8_VS_MAMBA2_RESULTS.md`.
+
 ## Canonical pure state transition
 
 Each layer state is a full multivector
@@ -77,6 +84,17 @@ composition. JAX uses `lax.associative_scan`; PyTorch uses an autograd-safe,
 vectorized Hillis--Steele scan with logarithmic launch depth. Both retain a
 sequential scan as the semantic oracle and token-streaming path. Floating-point
 grouping makes the two orders numerically close rather than bitwise identical.
+
+### PyTorch Schur-factored execution path (2026-08-16)
+
+`scan_mode="schur_parallel"` expresses the same per-channel transition in the
+two trivial plus two standard three-dimensional Spin(3) isotypic coordinates.
+It composes the trivial scales, active scales, and active `3 x 3` maps in the
+same chronological affine order as the direct rotor scan, then unpacks full-GA
+states. The mode is opt-in and PyTorch-only: direct sandwich, scan/recurrent,
+cache, CUDA, and first-order-gradient float64 checks establish semantic parity,
+not bitwise equality or a throughput guarantee. It does not introduce
+cross-channel transport; state transport remains channel-diagonal.
 
 One layer caches exactly `(batch, channels, 8)` numbers, so an (L)-layer,
 (C)-channel model stores (8LC) recurrent numbers per sequence regardless
@@ -561,6 +579,76 @@ operators remain below `1.7e-7` homomorphism RMS. This separates representation
 discovery, algebraic compilation, and decoder observability into explicit,
 falsifiable stages.
 
+The later frozen `2.A5` pilot tests the same center issue without the Q8 word-
+parity confound. Training omits `a,a`, while paired evaluation contrasts
+`a,a=z` against `b,b^-1=e` inside shared contexts whose post-relation A5
+projections agree. Across seeds 0--2, the direct Spin quaternion product scan
+has 100% target-versus-central-partner margin at L16, L64, and L128. Its mean
+exact binary accuracy is 99.76%, 79.60%, and 62.20%; Pure Rotor v2.1,
+identity transport, and Transformers Mamba-2 all approach chance on the long
+center metrics. The exact-table and float64 quaternion oracles are perfect,
+while the projective oracle is exactly 50% on the binary center.
+
+This is empirical evidence that direct Spin composition supplies information
+discarded by sandwich transport. It is not a theorem about Mamba-2, a broad
+model-quality result, or a reason to rewrite the maintained v2.1 recurrence.
+The reusable PyTorch primitive therefore lives in the explicitly experimental
+`pure_rotor_ssm/spin_scan.py`; the authoritative measurements and artifact hash
+are in `experiments/PURE_ROTOR_2A5_CENTER_PILOT300_RESULTS.md`.
+
+An evaluation-only follow-up then applies a deterministic input-only selector
+to the frozen schedules. The shortest locally reduced identity/center pair
+absent from every seed has length 11. Without retraining, the same Spin
+checkpoints remain 100% exact at L16, retain 100% central margin through L128,
+and average 59.68% exact L128 accuracy. The other candidates remain near chance
+on long center metrics. This reduces the local-`a,a`-memorization explanation,
+but is post-pilot exploratory evidence rather than a preregistered relation-
+family result; see `experiments/PURE_ROTOR_2A5_UNSEEN_RELATION_RESULTS.md`.
+
+### Signed rigid path development and local transition identification
+
+The experimental `pure_rotor_ssm/motor_scan.py` replaces a single quaternion
+state by a unit dual quaternion `m=q_r+epsilon q_d`. The unit/Study constraints
+are `||q_r||=1` and `<q_r,q_d>=0`; the translation is
+`2 q_d conjugate(q_r)`. Multiplication is associative and gives the semidirect
+law
+
+```text
+(q,t) (r,u) = (q r, t + R(q) u).
+```
+
+Thus `m` and `-m` preserve distinct recurrent states while inducing the same
+physical `SE(3)` action. The direct-product ablation
+`Spin(3) x (R^3,+)` preserves the same central sign but omits the `R(q)u`
+coupling. The numerical implementation audit establishes matrix equivalence,
+Study constraints, scan/cache/gradient parity, and central action blindness
+through L4096. It does not establish a speed advantage; eager 4 by 4 matrices
+are faster on the recorded GPU.
+
+The rigid `2.A5` task adds body-frame translation tokens while withholding
+`a^2`, `b^3`, and `(ab)^5`. Its quotient oracle is physically perfect but
+exactly loses the paired sign bit. Blind 300-step training fails for the motor
+classifier and all parameter-near learned controls. A 49-parameter direct-
+product scan retains sign but fails translation, confirming that center
+tracking alone is not enough.
+
+With every-prefix signed pose supervision, however, a right-composed token
+increment is observable locally:
+
+```text
+q_delta = conjugate(q_prev) q_next,
+t_delta = R(q_prev)^T (t_next - t_prev).
+```
+
+Averaging these legal prefix differences by token identifies the seven motors
+without reading a held-out relation. Across three conjugated generator
+coordinates and three independently sampled legal schedules, all nine runs
+recover 100% joint signed pose and paired double-cover pose on all 162 splits
+through L128. This is an exact formula plus a replicated finite empirical
+identification result. It is not end-to-end learning, and it depends on dense
+adjacent pose targets; noisy, continuous, and final-only identification remain
+open. See `experiments/SPIN_MOTOR_RIGID_2A5_RESULTS.md`.
+
 ### State geometry determines a congruence lattice, not one cardinality
 
 A decoder-free recurrent-state corpus can support several exact finite actions
@@ -658,8 +746,9 @@ tensor and MLP families fail.
   linguistic symmetry.
 - The recurrent linear map is channel-diagonal; channel interaction happens
   in controls, input projections, and feed-forward layers. A structured
-  multi-channel rotor operator is an important future ablation. SchurScan is
-  now the constructive candidate for that ablation.
+  multi-channel rotor operator is an important future ablation. The current
+  `schur_parallel` implementation is only a per-channel coordinate
+  factorization of the existing transport, not that multi-channel operator.
 - The new `(1-d) * sigmoid(write) * bounded(candidate)` rule proves a hard
   state bound but couples fast writing to forgetting. Whether that tradeoff is
   better than an independently gated bounded drive is an empirical question.

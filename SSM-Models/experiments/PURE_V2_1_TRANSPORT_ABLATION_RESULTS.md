@@ -2,6 +2,12 @@
 
 Date: 2026-08-06.
 
+> **Current-status pointer, reconciled 2026-08-16T16:05:27+02:00.** This
+> completed five-seed transport cohort remains the current local evidence for
+> the claims below. A direct Pure Rotor / Mamba-2 runner now exists, but its
+> one-step smoke artifact is operational validation only and changes none of
+> these quality, memory, or compute conclusions.
+
 This is the outcome report for the prospectively frozen transport ladder. The raw JSON retains every run, seed, timing, intervention, hash, and numerical-parity measurement.
 
 ## Refined-model retrain
