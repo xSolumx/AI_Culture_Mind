@@ -1,6 +1,6 @@
 # Group and Number-Structure Catalogue
 
-**Last audited:** 2026-08-17T00:20:13+02:00
+**Last audited:** 2026-08-17T00:43:30+02:00
 **Scope:** claim-bearing groups, loops, and additive finite structures actually
 defined, generated, or used as experimental targets in this repository. Casual
 literature mentions are excluded unless code or a theorem depends on them.
@@ -44,11 +44,15 @@ not distinct groups.
 | Left octonion operators \(E\) | 128 | \(2_+^{1+6}\) | Newly classified here by center, derived subgroup, Clifford quotient, and Arf count |
 | Signed Fano automorphisms \(A\) | 1,344 | non-split \(2^3.\operatorname{PSL}(2,7)\) | Exhaustive signed-basis automorphism and lift-complement search |
 | Operator/Fano closure \(N\) | 21,504 | split \(2_+^{1+6}:\operatorname{PSL}(2,7)\) | Perfect orientation-preserving matrix group with center \(C_2\) |
+| Triality closure of `2.A5` | 864,000 | \(((2.A_5\times2.A_5)/C_{2,\mathrm{diag}})\times2.A_5\) | Exact reducible \(4+4\) closure; perfect, with independent block-sign center \(C_2^2\) |
 
-The last three rows are proved by the
+The three octonion-operator rows are proved by the
 [operator-group certificate](../../Spin-Space-Research/docs/experiments/OCTONION_OPERATOR_GROUP_RESULTS.md).
+The final row is proved by the
+[binary-icosahedral triality-closure certificate](../../Spin-Space-Research/docs/experiments/SPIN8_TRIALITY_2A5_CLOSURE_RESULTS.md).
 Their abstract structures are known externally. What was previously unknown in
-this repository was which structures its fixed Fano convention generated.
+this repository was which structures its fixed Fano and common-carrier
+triality conventions generated.
 
 ## Continuous groups and representation families actually used
 
@@ -86,9 +90,6 @@ rather than calling both `G2`.
 - The union of the three \(D_4\) minuscule weight orbits is the 24-cell. The
   code proves the order-three triality map but does not yet enumerate the
   generated \(W(D_4):C_3\) subgroup or the full \(W(F_4)\) automorphism group.
-- The three triality-conjugate images of a fixed `2.A5` embedding have not been
-  closed together. Their generated subgroup could be finite or infinite; no
-  order is asserted.
 - The subgroup generated jointly by the 21,504-element monomial group and an
   exact golden-field `2.A5` embedding has not been classified. A spectral
   root-of-unity test must precede any finite-closure attempt.
@@ -97,14 +98,17 @@ rather than calling both `G2`.
 
 ## Strongest next novelty test
 
-The best unresolved candidate is the **triality closure of `2.A5`**:
+The best unresolved candidate is now the **mixed monomial/golden closure**:
 
-1. embed the same binary icosahedral generators in `8v`, `8s+`, and `8s-`;
-2. place all three actions in one exact common field representation;
-3. generate the subgroup formed by their triality-conjugate images;
-4. use characteristic polynomials to reject finiteness immediately when a
-   generator product has an eigenvalue that is not a root of unity;
-5. if closure is finite, compute order, center, derived series, conjugacy
+1. place the 21,504-element signed-monomial group and the exact
+   golden-field `2.A5` matrices in one fixed eight-dimensional basis;
+2. search short mixed words for a characteristic polynomial with a
+   non-cyclotomic rational norm, which would prove the closure infinite;
+3. check whether either 120-point \(H_4\) orbit, an \(E_8\)-type lattice, or
+   another finite spanning configuration is preserved;
+4. only if every spectral gate remains cyclotomic, construct a faithful
+   permutation action before attempting a closure;
+5. if the closure is finite, compute order, center, derived series, conjugacy
    classes, and GAP/ATLAS identifiers before making a novelty claim.
 
 This is a search for an unclassified **embedding-generated subgroup**, not a

@@ -339,6 +339,38 @@ GATES: tuple[GateContract, ...] = (
         ),
     ),
     GateContract(
+        gate_id="spin8_triality_binary_icosahedral_closure",
+        claim=(
+            "The common-carrier vector and two half-spin images of the fixed "
+            "binary-icosahedral embedding generate the perfect order-864,000 "
+            "group ((2.A5 x 2.A5)/C2_diagonal) x 2.A5, with independent "
+            "block-sign center C2 x C2."
+        ),
+        status="proved_hybrid",
+        evidence_layers=(
+            "exact_arithmetic",
+            "symbolic_identity",
+            "exact_reconstruction",
+            "external_theorem",
+        ),
+        test_suites=("tests/test_spin8_triality_2a5_closure.py",),
+        artifacts=("artifacts/spin8_triality_2a5_closure_20260817.json",),
+        boundary_obligations=(
+            "All six matrices are reconstructed over Q(sqrt(5)) from the maintained Spin(8) gamma convention.",
+            "The degree-240 permutation action is faithful because each exact 120-point orbit spans its four-dimensional block.",
+            "The direct-product conclusion uses equality between the full order and the product of the two surjective block-image orders.",
+            "The H4 and 600-cell labels are external nomenclature; the orbit, order, center, and factor calculations are replayed exactly.",
+        ),
+        limitations=(
+            "The closure is reducible as 4+4 and is not a new abstract finite group or a classification of all 2.A5 embeddings in Spin(8).",
+            "The group theorem establishes no sequence-model quality, capacity, or kernel-speed advantage.",
+        ),
+        replay_tier="bounded_full",
+        external_inputs=(
+            "The binary icosahedral quaternion set is the H4 root system / 600-cell vertex set, whose rotation group is (2I x 2I)/C2_diagonal.",
+        ),
+    ),
+    GateContract(
         gate_id="signed_star_dirac_gram",
         claim="The strengthened Dirac--Gram inequality and its complete equality classification hold on the full four-parameter signed-star ansatz.",
         status="proved_exact",

@@ -1,7 +1,7 @@
 # Documentation reconciliation — 2026-08-16
 
 Reconciliation opened at **2026-08-16T16:05:27+02:00** and latest
-research status reconciliation completed at **2026-08-17T00:20:13+02:00**
+research status reconciliation completed at **2026-08-17T00:43:30+02:00**
 (`Africa/Johannesburg`, UTC+02:00).
 
 ## Scope and method
@@ -480,3 +480,25 @@ generating pair: 192 have product order seven and 64 also have commutator
 order four; at least one of the latter generates an explicit split complement.
 The artifact SHA-256 is
 `835d0535d7827834ecd6b707984a7f3ae0eeac651f6fec4c3ff6f4ba74796a92`.
+
+## Exact binary-icosahedral triality closure
+
+At **2026-08-17T00:43:30+02:00**, the previously open closure of the vector
+and two half-spin views of the fixed `2.A5` embedding was classified exactly.
+The six common-carrier matrices preserve two four-dimensional blocks and two
+spanning 120-point `H4` root orbits. Their faithful degree-240 permutation
+action has order 864,000 and structure
+`((2.A5 x 2.A5)/C2_diagonal) x 2.A5`.
+
+The first block image is the order-7,200 orientation-preserving 600-cell
+symmetry group; the second is one order-120 binary-icosahedral image. Equality
+between the full order and the product of the two projection orders proves the
+direct-product conclusion. The group is perfect, and its center is exactly the
+Klein four-group of independent signs on the two blocks.
+
+This proves that the fixed triality closure is finite but reducible. It is not
+a new abstract finite group, an irreducible eight-dimensional exceptional
+group, or evidence of sequence-model advantage. The authoritative report is
+[`SPIN8_TRIALITY_2A5_CLOSURE_RESULTS.md`](Spin-Space-Research/docs/experiments/SPIN8_TRIALITY_2A5_CLOSURE_RESULTS.md),
+and the artifact SHA-256 is
+`ff238d047c94362136d70a9c57ae41c832d63bf15fb6263d0019456a9351cfc9`.

@@ -949,6 +949,25 @@ The source enumerates all signed Fano-basis automorphisms and all relevant
 generator lifts. Acceptance is exact integer closure and invariant equality.
 The stored artifact is a reproducibility target, not an input to the proof.
 
+### Exact binary-icosahedral triality closure
+
+This replay uses exact \(\mathbb Q(\sqrt5)\) arithmetic to build the six
+common-carrier matrices and deterministic Schreier--Sims arithmetic on their
+two 120-point spanning orbits:
+
+```powershell
+$env:PYTHONPATH = "src"
+python -m spin8_triality_2a5_closure `
+  --output artifacts/spin8_triality_2a5_closure_20260817.json
+python -m pytest -q tests/test_spin8_triality_2a5_closure.py
+```
+
+The faithful permutation reduction avoids dense enumeration of the 864,000
+matrix elements. Its exact acceptance gates include both block images, the
+central-product factor, the full direct-product order, perfectness, and the
+independent block-sign center. Numerical spectral discovery is excluded from
+acceptance.
+
 ### Enforced workstation envelope
 
 For any expensive stage on the reference i7-9700K, use the bounded runner:
