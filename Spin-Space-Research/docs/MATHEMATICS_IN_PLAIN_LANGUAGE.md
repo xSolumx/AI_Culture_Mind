@@ -631,7 +631,7 @@ the global nonpolar quotient.
 | Signed star Dirac--Gram inequality | Proved |
 | Cayley-null four-correlation edge inequality | Proved |
 | Complete \(u_a=u_h=0,c^2=1\) endpoint face | Proved by an exact Klein-four matrix principal-minor certificate |
-| Adjacent \(u_a=0,c^2=1\) endpoint face | Exact eight-sector reduction; first Schur block and scalar, quadratic, and cubic second-block minors proved; determinant reconstructed with both \(y\)-endpoint faces proved and interior open |
+| Adjacent \(u_a=0,c^2=1\) endpoint face | Exact eight-sector reduction; first Schur block and scalar, quadratic, and cubic second-block minors proved; determinant coordinate boundary complete; all margins strictly positive on the extended core \([1/8,7/8]^5\) by a 2,140-leaf atlas; width-\(1/8\) collars remain open |
 | Removing residual correlations is always helpful | Disproved |
 | Variable-Cayley one-edge inequality | Proved |
 | Repeated-view covariance gauge | Proved by symbolic identity |

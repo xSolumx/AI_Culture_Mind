@@ -65,6 +65,16 @@ proof-search products and private working notes are intentionally absent.
   — exact all-sector second-moment theorem on the complete seven-cube.
 - [Cayley-Endpoint Klein-Four Positivity](manuscripts/UNRESTRICTED_ENDPOINT_KLEIN_FACE.md)
   — exact principal-minor theorem on a complete four-variable endpoint face.
+- [Adjacent-Octet Complete Determinant Boundary](experiments/SPIN8_DIRAC_OCTET_DETERMINANT_BOUNDARY_RESULTS.md)
+  — exact ten-face theorem by nine one-mode perfect squares and the
+  hash-bound \(Z=X^2\) endpoint; strict interior remains open.
+- [Adjacent-Octet Central-Core Diagonal Dominance](experiments/SPIN8_DIRAC_OCTET_CORE_DOMINANCE_RESULTS.md)
+  — exact 32-box theorem on \([1/4,3/4]^5\), proving every unique physical
+  margin strictly positive by a rational Bernstein and outward-radical bound.
+- [Adjacent-Octet Extended-Core Dominance Atlas](experiments/SPIN8_DIRAC_OCTET_EXTENDED_CORE_DOMINANCE_RESULTS.md)
+  — exact adaptive 2,140-leaf extension to \([1/8,7/8]^5\), with no
+  unresolved branch and an explicit full-transform versus compact-replay
+  boundary.
 - [Spin(9) Full Spin-Two Cartan Bound](manuscripts/SPIN9_V5_CARTAN_CERTIFICATE.md)
   — exact finite-radius bound on every pure \(V_5\) graph over the Cayley-null
   plane.

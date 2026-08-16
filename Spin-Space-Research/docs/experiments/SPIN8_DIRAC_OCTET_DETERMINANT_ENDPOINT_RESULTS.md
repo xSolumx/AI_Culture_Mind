@@ -3,7 +3,9 @@
 **Computer-assisted exact theorem — 2026-08-12**
 
 **Status:** exact reconstruction complete; \(D\geq0\) proved on the complete
-\(y=0\) and \(y=1\) faces. Positivity for \(0<y<1\) remains open.
+\(y=0\) and \(y=1\) faces. A later exact support-collapse theorem proves all
+ten coordinate faces. Positivity with all five coordinates strictly interior
+remains open.
 
 **Source:**
 [spin8_dirac_endpoint_octet_determinant.py](../../src/spin8_dirac_endpoint_octet_determinant.py)
@@ -67,6 +69,17 @@ cells. The sole rejected cell is '0001', meaning
 All sixteen dyadic children of that complete cell certify independently. Thus
 the 15 retained coarse cells plus those 16 children form a finite 31-leaf
 cover of the entire four-cube, proving \(D|_{y=0}\geq0\).
+
+## 2026-08-16 complete-boundary continuation
+
+The later
+[complete coordinate-boundary theorem](SPIN8_DIRAC_OCTET_DETERMINANT_BOUNDARY_RESULTS.md)
+shows that this \(y=0\) polynomial is also exactly the square of a single
+quadratic mode. More generally, all nine coordinate faces other than
+\(y=1\) have the same one-mode square mechanism, while \(y=1\) retains the
+exact \(Z=X^2\) proof. The 31-leaf atlas above remains an independent valid
+certificate; the new theorem explains its sign structurally and extends the
+determinant result to the complete coordinate boundary.
 
 ## Replay boundary
 

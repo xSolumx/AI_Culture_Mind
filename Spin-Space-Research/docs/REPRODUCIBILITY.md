@@ -843,6 +843,54 @@ tangent certificate. Positivity for \(0<y<1\) remains open; the tangent command
 proves only the local exceptional divisor and rejects only the named
 degree-matched selector route.
 
+A later bounded exact replay proves the complete coordinate boundary. Nine
+faces have \(\tau=0\) and at most one surviving nontrivial radical mode, so
+the determinant is a perfect square; the tenth face reuses the hash-bound
+\(y=1\) identity \(Z=X^2\):
+
+```powershell
+$env:PYTHONPATH = "src"
+python -m spin8_dirac_endpoint_octet_determinant_boundary `
+  --flint-threads 6 `
+  --output artifacts/spin8_dirac_endpoint_octet_determinant_boundary_20260816.json
+python -m pytest tests/test_spin8_endpoint_octet_determinant_boundary.py -q
+```
+
+This replay rebuilds every support collapse and dependency hash in a few
+seconds. It proves all ten coordinate faces, not the all-five-coordinate
+strict interior.
+
+The disjoint central core has a stronger exact certificate. A 32-box dyadic
+partition proves that the trivial Walsh amplitude strictly dominates the
+absolute sum of all seven nontrivial amplitudes:
+
+```powershell
+$env:PYTHONPATH = "src"
+python -m spin8_dirac_endpoint_octet_core_dominance `
+  --flint-threads 6 `
+  --output artifacts/spin8_dirac_endpoint_octet_core_dominance_20260816.json
+python -m pytest tests/test_spin8_endpoint_octet_core_dominance.py -q
+```
+
+The replay recomputes all exact Bernstein bounds and all 224 outward dyadic
+square-root ceilings. It proves strict positivity on \([1/4,3/4]^5\), not the
+intervening boundary collars.
+
+The larger \([1/8,7/8]^5\) theorem uses an adaptive full replay. It certifies
+2,140 leaves and refines 68 parent boxes through depth four:
+
+```powershell
+$env:PYTHONPATH = "src"
+python -m spin8_dirac_endpoint_octet_core_dominance_atlas `
+  --flint-threads 6 `
+  --output artifacts/spin8_dirac_endpoint_octet_core_dominance_atlas_20260816.json
+python -m pytest tests/test_spin8_endpoint_octet_core_dominance_atlas.py -q
+```
+
+The source command is the full several-minute Bernstein replay. The compact
+test verifies coefficient hashes, every exact stored gap, and the complete
+prefix-tree cover; it intentionally does not recompute all 2,208 transforms.
+
 ### Endpoint-octet twenty-output replay
 
 Nineteen historical `2026-08-10` watchdog records describe the expensive

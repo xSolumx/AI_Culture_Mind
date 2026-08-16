@@ -602,6 +602,13 @@ Proved:
   degree-twelve polynomial gates;
 - a complete 34-leaf exact positivity atlas for every physical margin on the
   frozen `h=0` two-edge family.
+- the adjacent endpoint-octet first block and scalar, quadratic, and cubic
+  second-block gates, plus the complete ten-face coordinate boundary of the
+  final determinant by nine one-mode perfect squares and the \(Z=X^2\)
+  endpoint;
+- strict positivity of every unique adjacent-octet physical margin on the
+  extended core \([1/8,7/8]^5\) by a 2,140-leaf adaptive exact
+  diagonal-dominance certificate.
 
 Numerical evidence:
 
@@ -612,6 +619,8 @@ Numerical evidence:
 Open:
 
 - the final residual and unrestricted Dirac--Gram inequality;
+- the width-\(1/8\) collars between the adjacent endpoint-octet coordinate
+  boundary and its proved extended core;
 - nonbalanced allocation upper bounds and global five-query D-optimality;
 - superiority of the resulting learned memory over matched modern baselines.
 
