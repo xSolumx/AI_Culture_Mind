@@ -1,15 +1,14 @@
 # Documentation reconciliation — 2026-08-16
 
 Reconciliation opened at **2026-08-16T16:05:27+02:00** and latest
-research status reconciliation completed at **2026-08-17T00:43:30+02:00**
+research status reconciliation completed at **2026-08-16T22:15:19+02:00**
 (`Africa/Johannesburg`, UTC+02:00).
 
 ## Scope and method
 
 This pass inventories the documentation visible in this checkout, rather than
-retroactively rewriting historical reports. After integration with the
-flattened theorem tree, the latest `rg --files` inventory is 429 Markdown/RST
-files, including this timestamped ledger. It covers the
+retroactively rewriting historical reports. The latest `rg --files` inventory
+is 186 Markdown/RST files, including this timestamped ledger. It covers the
 maintained Pure Rotor and Pure Spin(8) sources and tests, frozen comparison
 artifacts, exact representation programmes, and the public programme front
 doors.
@@ -56,11 +55,8 @@ relevant, they now receive a dated pointer instead of an edited result table.
 ## Documentation changed in this reconciliation
 
 - Root research map: `README.md`.
-- Programme status maps:
-  `research-programs/01-associative-scan-algebra-and-compilers/`,
-  `research-programs/04-triality-clifford-representation-dynamics/`, and
-  `research-programs/06-rotor-noncommutative-state-space-models/`, plus
-  `research-programs/SUPPORTING_TRACKS.md` for controlled benchmarks.
+- Programme status maps: `research-programs/01-rotor-state-space-models/` and
+  `research-programs/07-controlled-model-benchmarks/`.
 - Maintained-model contract and foundations: `SSM-Models/README.md`,
   `SSM-Models/FOUNDATIONS.md`, and `SSM-Models/pure_rotor_ssm/CONTRACT.md`.
 - Historical/context boundaries: `SSM-Models/FOUNDATIONS_VALIDITY_AUDIT_2026-08-06.md`,
@@ -75,7 +71,7 @@ unless they were a front door or directly named the maintained Pure Rotor,
 Schur, or Mamba comparison. Their original date and result interpretation are
 part of the provenance record.
 
-## Initial verification and later topology reconciliation
+## Verification and remaining checkout limitation
 
 - `python -m pytest SSM-Models/test_pure_rotor_ssm.py -k schur -q`: passed
   (2 tests).
@@ -84,12 +80,18 @@ part of the provenance record.
 - `ruff check SSM-Models/benchmark_pure_rotor_vs_mamba2.py
   SSM-Models/test_pure_rotor_vs_mamba2_benchmark.py` and Python compilation:
   passed.
-- The first local Markdown scan was run before the 2026-08-11 topology commits
-  reached this branch and therefore reported 16 missing submodule-relative
-  paths plus the LaTeX `x_t` false positive. Integration with current `main`
-  vendors the theorem tree as `Spin-Space-Research/`, removes the submodule,
-  and updates the canonical programme taxonomy. The initial missing-link count
-  is historical, not the final checkout status.
+- A local Markdown link scan found 16 real unresolved links, all targeting the
+  `Spin8-Triality-Research` Git submodule. In this checkout that directory is
+  present but empty, so the links cannot resolve locally. They are preserved as
+  submodule-relative provenance links; initialize the declared submodule before
+  treating that subtree as locally verified:
+
+  ```powershell
+  git submodule update --init --recursive
+  ```
+
+  The scan's other apparent missing target, `x_t` in `SSM-Models/FOUNDATIONS.md`,
+  is a LaTex delimiter false positive, not a documentation link.
 
 This reconciliation does not establish any new mathematical theorem, trained
 model quality, or production-kernel throughput result.
@@ -363,8 +365,8 @@ Verification completed at **2026-08-16T19:03:06+02:00**:
   conversion warnings;
 - a repository Markdown scan checked 221 local links. No new-scope link is
   missing. The 17 reported entries remain the 16 known paths into the
-  then-uninitialized theorem submodule plus the known LaTeX `x_t` false
-  positive in `FOUNDATIONS.md`; this predates the flattening integration.
+  uninitialized `Spin8-Triality-Research` submodule plus the known LaTeX `x_t`
+  false positive in `FOUNDATIONS.md`.
 
 ## Multi-relation and motor verification
 
@@ -381,7 +383,8 @@ The later research additions were verified at
 - both new authoritative artifact hashes replay exactly;
 - 170 local links in the changed/current-status documentation were checked.
   The only two unresolved targets are the already-known links into the
-  then-uninitialized theorem submodule; this is a pre-flattening snapshot.
+  uninitialized `Spin8-Triality-Research` submodule; no new-scope link is
+  missing.
 
 ## Rigid learned/identification verification
 
@@ -399,106 +402,28 @@ Verification completed at **2026-08-16T20:25:40+02:00**:
   passed for the new runner/identifier/replicator, layers, and tests; Git emitted
   only the existing LF-to-CRLF warnings;
 - 12 current/front-door documents were link-checked. The only unresolved links
-  were two then-unavailable theorem-tree paths and the known LaTeX `x_t` false
-  positive in `FOUNDATIONS.md`; this is a pre-flattening snapshot.
+  are the two known paths into the uninitialized `Spin8-Triality-Research`
+  submodule and the known LaTeX `x_t` false positive in `FOUNDATIONS.md`; no
+  new-scope link is missing.
 
 ## Whole-SSM and final Spin(8) verification
 
-Final integrated verification completed at **2026-08-16T22:37:10+02:00**:
+Verification completed at **2026-08-16T22:15:19+02:00**:
 
 - `python -m pytest -q SSM-Models`: 262 tests and 79 subtests passed in
-  274.59 seconds on the release-integration tree; the two warnings are an
-  upstream `pytz` deprecation and a
+  271.73 seconds; the two warnings are an upstream `pytz` deprecation and a
   recorded JAX future dtype-cast warning;
 - the Ubuntu WSL custom-CUDA shard passed 5/5 Triton operator and benchmark
-  tests against the same release commit in 7.43 seconds;
+  tests in 5.55 seconds;
 - Ruff formatting and checks passed across all 59 changed/new Python files;
 - Python compilation and `git diff --check` passed; Git emitted only the
   checkout's existing LF-to-CRLF conversion warnings;
-- a detached fresh checkout reproduced the frozen WSL Triton, Pure Spin(8)
-  comparison, and octonion parity-audit SHA-256 values exactly and passed their
-  10/10 focused evidence tests; `.gitattributes` now pins the intended JSON
-  line endings and treats PyTorch checkpoints as binary;
 - the maintained Pure Spin(8), frozen comparison, final-only, and parity-audit
   tests rehash and reload their committed artifacts/checkpoints; and
 - all 169 compact PyTorch checkpoints (approximately 13.6 MB) were inspected
   for machine-local path strings before the explicit distribution decision in
   `PUBLICATION_SCOPE.md`; no such path was found; and
-- after integration with current `main`, a repository-wide scan checked 1,168
-  local Markdown targets. Its only reports are the intentionally non-public
-  `.private/` directory named by `REPOSITORY_MAP.md` and the known LaTeX `x_t`
-  false positive in `FOUNDATIONS.md`; no real local link is missing.
-
-## Exact adjacent-octet determinant continuation
-
-At **2026-08-17T00:02:40+02:00**, the maintained Spin-Space theorem tree was
-reconciled with three new exact computer-assisted results:
-
-- all ten coordinate faces of the five-variable adjacent endpoint-octet
-  determinant are nonnegative; nine reduce to one-mode perfect squares and
-  the tenth replays the hash-bound `Z=X^2` endpoint identity;
-- strict Walsh diagonal dominance holds on the complete central cube
-  `[1/4,3/4]^5`; and
-- an adaptive 2,140-leaf exact atlas extends that strict result to
-  `[1/8,7/8]^5`, with no unresolved leaf and exact minimum physical margin
-  `320281275533252594456507202812099057 /
-  5316911983139663491615228241121378304`.
-
-The corresponding artifact SHA-256 values are, respectively,
-`9a8988673ce4c5af4e0dca4b822b818b0f14e58364656bcc5e884e6f7edcbbec`,
-`26611845fd3f5a5b5e63be145c04ede664e4ed033091fc74284381cb9c308fe2`, and
-`cab3e87fb0c0c0ff9abb1c21cf2ea32bec9a92edc6364e225a5a66720486f762`.
-The authoritative reports are
-[`SPIN8_DIRAC_OCTET_DETERMINANT_BOUNDARY_RESULTS.md`](Spin-Space-Research/docs/experiments/SPIN8_DIRAC_OCTET_DETERMINANT_BOUNDARY_RESULTS.md)
-and
-[`SPIN8_DIRAC_OCTET_EXTENDED_CORE_DOMINANCE_RESULTS.md`](Spin-Space-Research/docs/experiments/SPIN8_DIRAC_OCTET_EXTENDED_CORE_DOMINANCE_RESULTS.md).
-
-The complete `Spin-Space-Research/tests` suite passed **398 tests, 224
-subtests, and one expected skip** in 2,165.47 seconds. Targeted theorem-chain,
-artifact, gate-contract, Ruff, compilation, and documentation audits also
-passed. These results do not cover the remaining width-`1/8` collars, the
-unrestricted seven-variable Dirac--Gram inequality, or global five-query
-D-optimality.
-
-## Exact octonion-operator group classification
-
-At **2026-08-17T00:20:13+02:00**, the finite groups implicit in the maintained
-associative octonion-operator lift were classified. The seven imaginary-basis
-left operators generate the plus-extraspecial group `2_+^(1+6)` of order 128.
-All signed Fano-basis automorphisms form the non-split group
-`2^3.PSL(2,7)` of order 1,344. Their order-eight intersection yields a split,
-perfect, orientation-preserving group `2_+^(1+6):PSL(2,7)` of order 21,504.
-
-The result is an exact identification of the repository's fixed matrix
-embedding, not discovery of a new abstract finite group. The authoritative
-report is
-[`OCTONION_OPERATOR_GROUP_RESULTS.md`](Spin-Space-Research/docs/experiments/OCTONION_OPERATOR_GROUP_RESULTS.md),
-and the broader inventory is
-[`GROUP_AND_NUMBER_STRUCTURE_CATALOGUE.md`](research-programs/04-triality-clifford-representation-dynamics/GROUP_AND_NUMBER_STRUCTURE_CATALOGUE.md).
-The exact replay additionally exhausts all 384 lifts of a fixed quotient
-generating pair: 192 have product order seven and 64 also have commutator
-order four; at least one of the latter generates an explicit split complement.
-The artifact SHA-256 is
-`835d0535d7827834ecd6b707984a7f3ae0eeac651f6fec4c3ff6f4ba74796a92`.
-
-## Exact binary-icosahedral triality closure
-
-At **2026-08-17T00:43:30+02:00**, the previously open closure of the vector
-and two half-spin views of the fixed `2.A5` embedding was classified exactly.
-The six common-carrier matrices preserve two four-dimensional blocks and two
-spanning 120-point `H4` root orbits. Their faithful degree-240 permutation
-action has order 864,000 and structure
-`((2.A5 x 2.A5)/C2_diagonal) x 2.A5`.
-
-The first block image is the order-7,200 orientation-preserving 600-cell
-symmetry group; the second is one order-120 binary-icosahedral image. Equality
-between the full order and the product of the two projection orders proves the
-direct-product conclusion. The group is perfect, and its center is exactly the
-Klein four-group of independent signs on the two blocks.
-
-This proves that the fixed triality closure is finite but reducible. It is not
-a new abstract finite group, an irreducible eight-dimensional exceptional
-group, or evidence of sequence-model advantage. The authoritative report is
-[`SPIN8_TRIALITY_2A5_CLOSURE_RESULTS.md`](Spin-Space-Research/docs/experiments/SPIN8_TRIALITY_2A5_CLOSURE_RESULTS.md),
-and the artifact SHA-256 is
-`ff238d047c94362136d70a9c57ae41c832d63bf15fb6263d0019456a9351cfc9`.
+- a repository-wide scan checked 300 local Markdown targets. The 17 unresolved
+  entries are exactly the 16 known links into the uninitialized
+  `Spin8-Triality-Research` submodule plus the known LaTeX `x_t` false positive;
+  no new-scope link is missing.
