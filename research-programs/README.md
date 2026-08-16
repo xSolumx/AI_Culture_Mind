@@ -16,6 +16,9 @@ be read through the map below.
 
 The current lowest-obligation selection and its rejected alternatives are
 recorded in the [2026-08-11 local research triage](RESEARCH_TRIAGE_2026-08-11.md).
+The [2026-08-16 reconciliation](../DOCUMENTATION_REFRESH_2026-08-16.md)
+records the later maintained Pure Spin(8), binary-center, motor, octonion-
+operator, benchmark, and validation status.
 
 ## Active Programmes
 
@@ -26,7 +29,7 @@ recorded in the [2026-08-11 local research triage](RESEARCH_TRIAGE_2026-08-11.md
 | [03 — Learned structured memory and retrieval systems](03-structured-memory-and-retrieval/README.md) | Direct/delta memories, learned and hierarchical routing, large-slot state, gathered access, and fused kernels | Frozen memory-core quality and local systems results; no end-to-end model or universal update-law winner |
 | [04 — Triality and Clifford representation dynamics](04-triality-clifford-representation-dynamics/README.md) | Spin(8) shared `8v/8+/8-` actions, triality binding, Spin(9) Clifford binding, and cross-view representation transport | Exact identities and controlled prior results; no matched-state storage advantage |
 | [05 — Information geometry and Dirac--Gram sensing](05-information-geometry-and-dirac-gram-sensing/README.md) | Probe identifiability, Cayley information spectra, Gram-normalized determinant inequalities, and Spin(9) exact design | Exact/local/constrained theorems with explicit domains; unrestricted Spin(8) positivity and global exact design remain open |
-| [06 — Rotor and noncommutative state-space models](06-rotor-noncommutative-state-space-models/README.md) | Persistent `Cl(3,0)` state with selective noncommuting transport | Stable maintained recurrence and causal transport evidence; no rotor-specific memory, compute, or language-model superiority |
+| [06 — Rotor and noncommutative state-space models](06-rotor-noncommutative-state-space-models/README.md) | Persistent `Cl(3,0)`, Spin(8), quaternion/motor, and associative operator-lift states with selective noncommuting transport | Pure Spin(8) passes one synthetic signed-transport cohort; broader natural-task, matched-compute, and language-model superiority remain open |
 | [07 — Collatz inverse-frontier dynamics](07-collatz-inverse-frontier-dynamics/README.md) | Standalone inverse odd-Collatz cylinders, hard-record envelope, affine word semigroup, and the `32/9` frontier | Exact bounded path-merged scanner and 10,000-step control reproduced locally; no external scan or finite-cover proof imported; asymptotic and eventual `(1,4)` claims remain open |
 
 Every active programme README contains the same status contract: **Scope**,
@@ -57,6 +60,10 @@ being forced into a single bucket:
 | Large-slot semantic hierarchy and fused gather | Programme 03 for routing, physical gathering, and kernel measurements; Programme 02 for shared-router completion | The Spin(8) frame is supplied, the kernel is inference-only, and no extra storage is shown |
 | Memory benchmark atlas and FLA hybrid fit | Programme 03 for the visual systems/quality synthesis; Programmes 01, 02, and 04 retain their source claims | Derived figures only; protocols remain separate and the custom FLA mixer is still open |
 | Rotor transport ablations | Programme 06 for model conclusions; Programme 01 for affine-scan support | Algebraic validity does not transfer the empirical verdict |
+| Pure Spin(8) v1.0 and signed-transport cohort | Programme 06 for maintained-model and benchmark claims; Programme 04 for representation identities; Programme 01 for scan closure | Supplying the 28D Lie coordinates makes the frozen win algebra-aligned; it is not generic Mamba superiority |
+| Spin/`2.A5` and dual-quaternion motor cohorts | Programme 06 for tracking and identification claims; Programme 01 for associative group/motor scans; Programme 04 for binary-center representation facts | Every-prefix signed-pose identification is not end-to-end learning from unsigned physical poses |
+| Octonion multiplication-operator lift | Programme 01 for associative operator scan and Triton execution; Programme 06 for synthetic model tasks; Programme 04 for `G2`/triality context | Raw octonion multiplication is not associative; even-only terminal data identifies `G2 union -G2`, not a unique law |
+| Spin(3)-to-Spin(12) `2.A5` ladder and branching atlas | Programme 04 for finite-subgroup and spinor representation claims | Triality remains confined to Spin(8); exact branching does not imply model quality |
 | Collatz inverse cylinders | Programme 07; Programme 01 may supply reusable affine tooling | A methodological analogy is not evidence for the number-theory conjectures |
 | HRT/Gabor configuration controls | Programme 02 for a new Heisenberg structured-prior domain | Sampled Gaussian/real/ultimately-positive rank checks are not the arbitrary-`L2` HRT theorem |
 | Gaussian phase-lattice/Machin audit | Programme 01 for exact norm-one-torus arithmetic, Gaussian divisor cancellation, and the tangent-update identity | The corrected phase map is \(z/\bar z\), not generally \(z/|z|\); no global Alferov termination, Lehmer-height descent, LLL equivalence, or Spin transfer is proved |

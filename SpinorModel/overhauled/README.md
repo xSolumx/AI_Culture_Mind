@@ -11,6 +11,10 @@
 > in the theorem repository, but are not implemented here. Their memory-core
 > timings are not model-level results for this historical reference.
 
+> **2026-08-16 clarification.** The maintained Pure Rotor / Mamba-2 runner is
+> a separate experiment under `SSM-Models`; its one-step smoke artifact is not
+> evidence for this reference implementation.
+
 This is a new implementation. The historical files in the parent
 `SpinorModel` directory are intentionally untouched so the original experiment
 and old checkpoints remain reproducible.

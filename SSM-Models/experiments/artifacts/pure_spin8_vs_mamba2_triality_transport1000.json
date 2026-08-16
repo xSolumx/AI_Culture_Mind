@@ -1,0 +1,562 @@
+{
+  "all_required_checks_passed": true,
+  "claim_boundary": "Algebra-matched center-sensitive synthetic transport result; not generic language-model or fused-kernel superiority.",
+  "environment": {
+    "device": "cuda",
+    "device_name": "NVIDIA GeForce RTX 2070 SUPER",
+    "python": "3.12.10",
+    "torch": "2.12.0+cu130",
+    "transformers": "5.9.0"
+  },
+  "experiment": "Pure Spin8 center-sensitive triality transport versus Mamba2",
+  "finished_at": "2026-08-16T22:00:42.052566+02:00",
+  "protocol_frozen_at": "2026-08-16T21:54:00+02:00",
+  "pure_spin8_version": "1.0.0",
+  "schema_version": 1,
+  "seed_reports": [
+    {
+      "all_required_checks_passed": true,
+      "checks": {
+        "all_metrics_finite": true,
+        "pure_spin8_beats_delta_l128": true,
+        "pure_spin8_beats_mamba2_l128": true,
+        "pure_spin8_center_accuracy_above_0_99": true,
+        "pure_spin8_l128_below_1e_4": true,
+        "teacher_center_signature_is_exact": true,
+        "teacher_self_replay_below_1e_12": true
+      },
+      "config": {
+        "batch_size": 32,
+        "center_probability": 0.1,
+        "coordinate_std": 0.15,
+        "delta_heads": 4,
+        "delta_hidden_size": 32,
+        "delta_householder": 4,
+        "evaluation_batch_size": 128,
+        "evaluation_lengths": [
+          16,
+          64,
+          128
+        ],
+        "gradient_clip": 1.0,
+        "learning_rate": 0.003,
+        "mamba_head_dim": 16,
+        "mamba_heads": 4,
+        "mamba_hidden_size": 32,
+        "mamba_state_size": 16,
+        "seed": 0,
+        "steps": 1000,
+        "weight_decay": 0.0001
+      },
+      "results": {
+        "delta_product_reference": {
+          "center_pair_evaluation": {
+            "center_classification_accuracy": 0.5234375,
+            "paired_mse": 0.15261349081993103,
+            "predicted_spinor_negation_rmse": 0.17399883270263672,
+            "teacher_spinor_negation_residual": 4.76837158203125e-07,
+            "teacher_vector_identity_residual": 2.980232238769531e-07
+          },
+          "checkpoint": "checkpoints\\pure_spin8_vs_mamba2_triality_transport1000\\delta_product_reference_seed0.pt",
+          "checkpoint_sha256": "4d8029125baeabcff582dd5c30532b85fdcce167726a4759efc7c125a0f45a58",
+          "evaluation": {
+            "128": {
+              "maximum_absolute_error": 1.3000051975250244,
+              "mean_relative_error": 1.1096887588500977,
+              "mse": 0.15483616292476654
+            },
+            "16": {
+              "maximum_absolute_error": 0.9099644422531128,
+              "mean_relative_error": 0.8955365419387817,
+              "mse": 0.10124167054891586
+            },
+            "64": {
+              "maximum_absolute_error": 1.2757611274719238,
+              "mean_relative_error": 1.1031482219696045,
+              "mse": 0.1531955599784851
+            }
+          },
+          "loss_samples": {
+            "1": 0.16080312430858612,
+            "100": 0.01777311973273754,
+            "1000": 0.09346448630094528,
+            "250": 0.009907659143209457,
+            "500": 0.026208840310573578,
+            "750": 0.06424261629581451
+          },
+          "parameters": 12512,
+          "peak_cuda_memory_bytes": 197443072,
+          "recurrent_state_scalars": 256,
+          "training_wall_seconds": 18.25278109998908
+        },
+        "maintained_pure_spin8": {
+          "center_pair_evaluation": {
+            "center_classification_accuracy": 1.0,
+            "paired_mse": 5.559651253861375e-05,
+            "predicted_spinor_negation_rmse": 0.00046602022484876215,
+            "teacher_spinor_negation_residual": 4.76837158203125e-07,
+            "teacher_vector_identity_residual": 2.980232238769531e-07
+          },
+          "checkpoint": "checkpoints\\pure_spin8_vs_mamba2_triality_transport1000\\maintained_pure_spin8_seed0.pt",
+          "checkpoint_sha256": "959579ff670ca02883ff5cbaa20deae76c779325017465ce2d9b9cfd711ca209",
+          "evaluation": {
+            "128": {
+              "maximum_absolute_error": 0.035393714904785156,
+              "mean_relative_error": 0.021189752966165543,
+              "mse": 5.810389848193154e-05
+            },
+            "16": {
+              "maximum_absolute_error": 0.00878220796585083,
+              "mean_relative_error": 0.006895983591675758,
+              "mse": 6.125609615992289e-06
+            },
+            "64": {
+              "maximum_absolute_error": 0.019897282123565674,
+              "mean_relative_error": 0.014720316976308823,
+              "mse": 2.8089742045267485e-05
+            }
+          },
+          "loss_samples": {
+            "1": 0.01525953970849514,
+            "100": 0.0002418654621578753,
+            "1000": 6.0769152696593665e-06,
+            "250": 2.867880539270118e-05,
+            "500": 2.2479825645405072e-07,
+            "750": 1.999332380364649e-05
+          },
+          "parameters": 836,
+          "peak_cuda_memory_bytes": 174571520,
+          "recurrent_state_scalars": 24,
+          "training_wall_seconds": 11.468092199997045
+        },
+        "transformers_mamba2": {
+          "center_pair_evaluation": {
+            "center_classification_accuracy": 0.5,
+            "paired_mse": 0.13142083585262299,
+            "predicted_spinor_negation_rmse": 0.09572965651750565,
+            "teacher_spinor_negation_residual": 4.76837158203125e-07,
+            "teacher_vector_identity_residual": 2.980232238769531e-07
+          },
+          "checkpoint": "checkpoints\\pure_spin8_vs_mamba2_triality_transport1000\\transformers_mamba2_seed0.pt",
+          "checkpoint_sha256": "122ecdb25eda718a5ffa0244626caebec6a8cf00f9851f2ede6b0b5961bfe35d",
+          "evaluation": {
+            "128": {
+              "maximum_absolute_error": 1.1618160009384155,
+              "mean_relative_error": 1.0295031070709229,
+              "mse": 0.13277266919612885
+            },
+            "16": {
+              "maximum_absolute_error": 1.1056338548660278,
+              "mean_relative_error": 0.9664133787155151,
+              "mse": 0.11721523851156235
+            },
+            "64": {
+              "maximum_absolute_error": 1.044888973236084,
+              "mean_relative_error": 1.029865026473999,
+              "mse": 0.13288816809654236
+            }
+          },
+          "loss_samples": {
+            "1": 0.41558799147605896,
+            "100": 0.02993646264076233,
+            "1000": 0.11732956767082214,
+            "250": 0.015285596251487732,
+            "500": 0.041089754551649094,
+            "750": 0.08195389807224274
+          },
+          "parameters": 10380,
+          "peak_cuda_memory_bytes": 4917079040,
+          "recurrent_state_scalars": 1408,
+          "training_wall_seconds": 36.849496299983
+        }
+      },
+      "schedules": {
+        "center_pair_schedule_sha256": "26af1e6aa30ef4fe8e0d11328272659072083e0308181227e3188c528ff0813d",
+        "evaluation_schedule_sha256": "d8b167ce9d442c4ce4a54ec77bfe4ad06514149cd07e12859e4f1491726f3f53",
+        "teacher_initial_state_sha256": "49936b2e1a6ef7ca141e021f3a53bbf4f308aa908c3afbacc71dac83de98b9ab",
+        "training_schedule_sha256": "8afa776ee974b3249837e2d0f8215fa7f7c3ee322b7b041c0c535cd000c05c5b"
+      },
+      "seed": 0,
+      "teacher_self_replay": {
+        "128": {
+          "maximum_absolute_error": 0.0,
+          "mean_relative_error": 0.0,
+          "mse": 0.0
+        },
+        "16": {
+          "maximum_absolute_error": 0.0,
+          "mean_relative_error": 0.0,
+          "mse": 0.0
+        },
+        "64": {
+          "maximum_absolute_error": 0.0,
+          "mean_relative_error": 0.0,
+          "mse": 0.0
+        }
+      }
+    },
+    {
+      "all_required_checks_passed": true,
+      "checks": {
+        "all_metrics_finite": true,
+        "pure_spin8_beats_delta_l128": true,
+        "pure_spin8_beats_mamba2_l128": true,
+        "pure_spin8_center_accuracy_above_0_99": true,
+        "pure_spin8_l128_below_1e_4": true,
+        "teacher_center_signature_is_exact": true,
+        "teacher_self_replay_below_1e_12": true
+      },
+      "config": {
+        "batch_size": 32,
+        "center_probability": 0.1,
+        "coordinate_std": 0.15,
+        "delta_heads": 4,
+        "delta_hidden_size": 32,
+        "delta_householder": 4,
+        "evaluation_batch_size": 128,
+        "evaluation_lengths": [
+          16,
+          64,
+          128
+        ],
+        "gradient_clip": 1.0,
+        "learning_rate": 0.003,
+        "mamba_head_dim": 16,
+        "mamba_heads": 4,
+        "mamba_hidden_size": 32,
+        "mamba_state_size": 16,
+        "seed": 1,
+        "steps": 1000,
+        "weight_decay": 0.0001
+      },
+      "results": {
+        "delta_product_reference": {
+          "center_pair_evaluation": {
+            "center_classification_accuracy": 0.47265625,
+            "paired_mse": 0.14940951764583588,
+            "predicted_spinor_negation_rmse": 0.17758724093437195,
+            "teacher_spinor_negation_residual": 4.76837158203125e-07,
+            "teacher_vector_identity_residual": 2.682209014892578e-07
+          },
+          "checkpoint": "checkpoints\\pure_spin8_vs_mamba2_triality_transport1000\\delta_product_reference_seed1.pt",
+          "checkpoint_sha256": "465ce745b284bd3b7ae66f0d76a3f9666d6d9301cf0636101f1bc1eb37ef10d3",
+          "evaluation": {
+            "128": {
+              "maximum_absolute_error": 1.4309316873550415,
+              "mean_relative_error": 1.0769071578979492,
+              "mse": 0.14592783153057098
+            },
+            "16": {
+              "maximum_absolute_error": 0.9255156517028809,
+              "mean_relative_error": 0.8670929074287415,
+              "mse": 0.09491579234600067
+            },
+            "64": {
+              "maximum_absolute_error": 1.18174409866333,
+              "mean_relative_error": 1.0978577136993408,
+              "mse": 0.15162156522274017
+            }
+          },
+          "loss_samples": {
+            "1": 0.18564102053642273,
+            "100": 0.018239019438624382,
+            "1000": 0.10596001148223877,
+            "250": 0.010724717751145363,
+            "500": 0.024548053741455078,
+            "750": 0.06482519954442978
+          },
+          "parameters": 12512,
+          "peak_cuda_memory_bytes": 197443072,
+          "recurrent_state_scalars": 256,
+          "training_wall_seconds": 17.71698580001248
+        },
+        "maintained_pure_spin8": {
+          "center_pair_evaluation": {
+            "center_classification_accuracy": 1.0,
+            "paired_mse": 6.500333256553859e-05,
+            "predicted_spinor_negation_rmse": 0.0008567608892917633,
+            "teacher_spinor_negation_residual": 4.76837158203125e-07,
+            "teacher_vector_identity_residual": 2.682209014892578e-07
+          },
+          "checkpoint": "checkpoints\\pure_spin8_vs_mamba2_triality_transport1000\\maintained_pure_spin8_seed1.pt",
+          "checkpoint_sha256": "d41432877a5b1806143348a9e9765f2ed503ff75e686b4dad99a2262ba056c2e",
+          "evaluation": {
+            "128": {
+              "maximum_absolute_error": 0.028732948005199432,
+              "mean_relative_error": 0.02237839810550213,
+              "mse": 6.47782435407862e-05
+            },
+            "16": {
+              "maximum_absolute_error": 0.009353972971439362,
+              "mean_relative_error": 0.007411607075482607,
+              "mse": 7.162253950809827e-06
+            },
+            "64": {
+              "maximum_absolute_error": 0.022730857133865356,
+              "mean_relative_error": 0.015576992183923721,
+              "mse": 3.1200725061353296e-05
+            }
+          },
+          "loss_samples": {
+            "1": 0.009656166657805443,
+            "100": 6.584201764781028e-05,
+            "1000": 6.8435128923738375e-06,
+            "250": 1.025015353661729e-05,
+            "500": 2.9698412618017755e-08,
+            "750": 2.2766360416426323e-05
+          },
+          "parameters": 836,
+          "peak_cuda_memory_bytes": 174571520,
+          "recurrent_state_scalars": 24,
+          "training_wall_seconds": 10.663814800034743
+        },
+        "transformers_mamba2": {
+          "center_pair_evaluation": {
+            "center_classification_accuracy": 0.5,
+            "paired_mse": 0.13354980945587158,
+            "predicted_spinor_negation_rmse": 0.08214878290891647,
+            "teacher_spinor_negation_residual": 4.76837158203125e-07,
+            "teacher_vector_identity_residual": 2.682209014892578e-07
+          },
+          "checkpoint": "checkpoints\\pure_spin8_vs_mamba2_triality_transport1000\\transformers_mamba2_seed1.pt",
+          "checkpoint_sha256": "b67e545f48c517028ca520e795ee7fa7388c0130dd629ef5162b45cbf817e43f",
+          "evaluation": {
+            "128": {
+              "maximum_absolute_error": 1.1886543035507202,
+              "mean_relative_error": 1.0259244441986084,
+              "mse": 0.1319567859172821
+            },
+            "16": {
+              "maximum_absolute_error": 0.9717056155204773,
+              "mean_relative_error": 0.9624106884002686,
+              "mse": 0.1161816343665123
+            },
+            "64": {
+              "maximum_absolute_error": 1.0954419374465942,
+              "mean_relative_error": 1.033469557762146,
+              "mse": 0.1338668316602707
+            }
+          },
+          "loss_samples": {
+            "1": 0.49111151695251465,
+            "100": 0.028637830168008804,
+            "1000": 0.11838307976722717,
+            "250": 0.01467469334602356,
+            "500": 0.043156664818525314,
+            "750": 0.08734433352947235
+          },
+          "parameters": 10380,
+          "peak_cuda_memory_bytes": 4917079040,
+          "recurrent_state_scalars": 1408,
+          "training_wall_seconds": 35.170519799983595
+        }
+      },
+      "schedules": {
+        "center_pair_schedule_sha256": "b682ec9ef6ff7741cfbe0aaee92920be8b98f62a1bc8e8b8674a09045c805fbb",
+        "evaluation_schedule_sha256": "a177610545e3ef5869669e2dfdf4914c8036163bb5f233e93d4ef6ff3a9a4e0c",
+        "teacher_initial_state_sha256": "49936b2e1a6ef7ca141e021f3a53bbf4f308aa908c3afbacc71dac83de98b9ab",
+        "training_schedule_sha256": "0aea9f566110fbfee012450798a279a814808c1845f47401014913a93cc92603"
+      },
+      "seed": 1,
+      "teacher_self_replay": {
+        "128": {
+          "maximum_absolute_error": 0.0,
+          "mean_relative_error": 0.0,
+          "mse": 0.0
+        },
+        "16": {
+          "maximum_absolute_error": 0.0,
+          "mean_relative_error": 0.0,
+          "mse": 0.0
+        },
+        "64": {
+          "maximum_absolute_error": 0.0,
+          "mean_relative_error": 0.0,
+          "mse": 0.0
+        }
+      }
+    },
+    {
+      "all_required_checks_passed": true,
+      "checks": {
+        "all_metrics_finite": true,
+        "pure_spin8_beats_delta_l128": true,
+        "pure_spin8_beats_mamba2_l128": true,
+        "pure_spin8_center_accuracy_above_0_99": true,
+        "pure_spin8_l128_below_1e_4": true,
+        "teacher_center_signature_is_exact": true,
+        "teacher_self_replay_below_1e_12": true
+      },
+      "config": {
+        "batch_size": 32,
+        "center_probability": 0.1,
+        "coordinate_std": 0.15,
+        "delta_heads": 4,
+        "delta_hidden_size": 32,
+        "delta_householder": 4,
+        "evaluation_batch_size": 128,
+        "evaluation_lengths": [
+          16,
+          64,
+          128
+        ],
+        "gradient_clip": 1.0,
+        "learning_rate": 0.003,
+        "mamba_head_dim": 16,
+        "mamba_heads": 4,
+        "mamba_hidden_size": 32,
+        "mamba_state_size": 16,
+        "seed": 2,
+        "steps": 1000,
+        "weight_decay": 0.0001
+      },
+      "results": {
+        "delta_product_reference": {
+          "center_pair_evaluation": {
+            "center_classification_accuracy": 0.5,
+            "paired_mse": 0.14333213865756989,
+            "predicted_spinor_negation_rmse": 0.13224545121192932,
+            "teacher_spinor_negation_residual": 4.172325134277344e-07,
+            "teacher_vector_identity_residual": 2.980232238769531e-07
+          },
+          "checkpoint": "checkpoints\\pure_spin8_vs_mamba2_triality_transport1000\\delta_product_reference_seed2.pt",
+          "checkpoint_sha256": "37d2f66ebe645a7bccaf4dd26dd87af91e8c367725e0b1f984b9e019ac895299",
+          "evaluation": {
+            "128": {
+              "maximum_absolute_error": 1.3756139278411865,
+              "mean_relative_error": 1.069164752960205,
+              "mse": 0.14366136491298676
+            },
+            "16": {
+              "maximum_absolute_error": 1.0351991653442383,
+              "mean_relative_error": 0.895799994468689,
+              "mse": 0.10150586813688278
+            },
+            "64": {
+              "maximum_absolute_error": 1.4182348251342773,
+              "mean_relative_error": 1.0939421653747559,
+              "mse": 0.15050318837165833
+            }
+          },
+          "loss_samples": {
+            "1": 0.16299501061439514,
+            "100": 0.017719920724630356,
+            "1000": 0.09978698194026947,
+            "250": 0.014235581271350384,
+            "500": 0.03815919905900955,
+            "750": 0.059315215796232224
+          },
+          "parameters": 12512,
+          "peak_cuda_memory_bytes": 197443072,
+          "recurrent_state_scalars": 256,
+          "training_wall_seconds": 18.8564368999796
+        },
+        "maintained_pure_spin8": {
+          "center_pair_evaluation": {
+            "center_classification_accuracy": 1.0,
+            "paired_mse": 6.381911225616932e-05,
+            "predicted_spinor_negation_rmse": 0.0004371388640720397,
+            "teacher_spinor_negation_residual": 4.172325134277344e-07,
+            "teacher_vector_identity_residual": 2.980232238769531e-07
+          },
+          "checkpoint": "checkpoints\\pure_spin8_vs_mamba2_triality_transport1000\\maintained_pure_spin8_seed2.pt",
+          "checkpoint_sha256": "21f9b3cde0d21da09fd0849f11cf8581eae2fc938a4a37043cad1d34248dfd0a",
+          "evaluation": {
+            "128": {
+              "maximum_absolute_error": 0.028950661420822144,
+              "mean_relative_error": 0.02271808125078678,
+              "mse": 6.676968041574582e-05
+            },
+            "16": {
+              "maximum_absolute_error": 0.009843144565820694,
+              "mean_relative_error": 0.007156758569180965,
+              "mse": 6.712011781928595e-06
+            },
+            "64": {
+              "maximum_absolute_error": 0.020907282829284668,
+              "mean_relative_error": 0.015821708366274834,
+              "mse": 3.2129319151863456e-05
+            }
+          },
+          "loss_samples": {
+            "1": 0.006605552043765783,
+            "100": 5.987441909383051e-05,
+            "1000": 7.613012257934315e-06,
+            "250": 1.333103409706382e-05,
+            "500": 6.28918073175555e-08,
+            "750": 3.8688544009346515e-05
+          },
+          "parameters": 836,
+          "peak_cuda_memory_bytes": 174571520,
+          "recurrent_state_scalars": 24,
+          "training_wall_seconds": 10.630150799988769
+        },
+        "transformers_mamba2": {
+          "center_pair_evaluation": {
+            "center_classification_accuracy": 0.5,
+            "paired_mse": 0.13205546140670776,
+            "predicted_spinor_negation_rmse": 0.08785621076822281,
+            "teacher_spinor_negation_residual": 4.172325134277344e-07,
+            "teacher_vector_identity_residual": 2.980232238769531e-07
+          },
+          "checkpoint": "checkpoints\\pure_spin8_vs_mamba2_triality_transport1000\\transformers_mamba2_seed2.pt",
+          "checkpoint_sha256": "134ce9979692bb45ee0e1755b3eaea2137894a71fcb2f8028bb784a361ece507",
+          "evaluation": {
+            "128": {
+              "maximum_absolute_error": 1.2188546657562256,
+              "mean_relative_error": 1.0359735488891602,
+              "mse": 0.13451123237609863
+            },
+            "16": {
+              "maximum_absolute_error": 1.1439359188079834,
+              "mean_relative_error": 0.9604398608207703,
+              "mse": 0.11586707830429077
+            },
+            "64": {
+              "maximum_absolute_error": 1.383871078491211,
+              "mean_relative_error": 1.040600299835205,
+              "mse": 0.13581272959709167
+            }
+          },
+          "loss_samples": {
+            "1": 0.41777050495147705,
+            "100": 0.023384325206279755,
+            "1000": 0.11560039222240448,
+            "250": 0.015713129192590714,
+            "500": 0.04383554682135582,
+            "750": 0.0825100988149643
+          },
+          "parameters": 10380,
+          "peak_cuda_memory_bytes": 4917079040,
+          "recurrent_state_scalars": 1408,
+          "training_wall_seconds": 36.34317520004697
+        }
+      },
+      "schedules": {
+        "center_pair_schedule_sha256": "8d6daf8b9483e3cb8ab55d99fd6d07328a83e73993fa62056cef4b5e60255a65",
+        "evaluation_schedule_sha256": "0aed331f96e35580ceb621e53517cdc2cb98aa4c3b8510a232a8de0b8c334131",
+        "teacher_initial_state_sha256": "49936b2e1a6ef7ca141e021f3a53bbf4f308aa908c3afbacc71dac83de98b9ab",
+        "training_schedule_sha256": "dc84ae37ebf796aa170ee760e25059d7b46688bedafaa96ca7625bc48f6640a2"
+      },
+      "seed": 2,
+      "teacher_self_replay": {
+        "128": {
+          "maximum_absolute_error": 0.0,
+          "mean_relative_error": 0.0,
+          "mse": 0.0
+        },
+        "16": {
+          "maximum_absolute_error": 0.0,
+          "mean_relative_error": 0.0,
+          "mse": 0.0
+        },
+        "64": {
+          "maximum_absolute_error": 0.0,
+          "mean_relative_error": 0.0,
+          "mse": 0.0
+        }
+      }
+    }
+  ],
+  "started_at": "2026-08-16T21:57:06.785485+02:00"
+}

@@ -26,9 +26,12 @@ records which mathematical and empirical claims survived an adversarial
 definition--domain--evidence review, the corrections made, and the gates that
 remain open. The
 [2026-08-10 repository-wide documentation refresh](DOCUMENTATION_REFRESH_2026-08-10.md)
-records the current cross-program interpretation and validation scope.
+records the previous cross-program interpretation and validation scope. The
+[2026-08-16 documentation reconciliation](DOCUMENTATION_REFRESH_2026-08-16.md)
+records the maintained-model, Spin/2.A5, motor, octonion-operator, and final
+validation status added after the repository was flattened.
 
-## Current research frontier (2026-08-11)
+## Current research frontier (reviewed 2026-08-16)
 
 The triality-memory programme now has a completed matched memory-core campaign.
 Under identical routers, direct slots and triality-coded slots have the same
@@ -86,6 +89,31 @@ experiment or theorem is cited. In particular, the maintained language model
 uses `Cl(3,0)`/`Spin(3)`, whereas the triality mathematics concerns three
 eight-dimensional representations of `Spin(8)`.
 
+Pure Rotor remains the stable v2.1.0 `Cl(3,0)` family. Its PyTorch backend now
+also has a tested opt-in Schur-factored scan, but no fused-kernel claim. A
+separate maintained [`pure_spin8_ssm`](SSM-Models/pure_spin8_ssm/) v1.0 family
+was added without changing the Pure Rotor checkpoint contract. One shared
+28-coordinate controller drives `8v`, `8s+`, and `8s-`, giving a faithful
+24-scalar triality cache. On its frozen supplied-coordinate transport task,
+all three checkpoints reach L128 MSE `5.81e-5`--`6.68e-5` and 100% center
+classification, versus unfused Transformers Mamba-2 at `0.132`--`0.135` and
+50%. This is an algebra-matched synthetic result, not generic language-model
+superiority. See
+[`PURE_SPIN8_VS_MAMBA2_RESULTS.md`](SSM-Models/experiments/PURE_SPIN8_VS_MAMBA2_RESULTS.md).
+
+The broader noncommutative continuation now contains three separately bounded
+claims. A Spin quaternion scan retains the binary center on frozen `2.A5`
+relations where conjugation-based Pure Rotor cannot. An eight-scalar unit-dual-
+quaternion motor implements the double cover of `SE(3)` and becomes exact on
+the rigid task only after legal adjacent-prefix identification; blind learned
+readouts fail. Finally, raw octonion multiplication is lifted to associative
+`8 by 8` left-action operators, with exact `so(8)` Lie closure and optional
+WSL/Triton recurrence. A final-only depth curriculum recovers all 9/9
+structured and dense laws but reveals a necessary `G2 union -G2` parity
+ambiguity, exposed by a held-out odd length. These are mechanism,
+identification, and synthetic-composition results—not one universal model
+claim. See the [SSM model ledger](SSM-Models/README.md).
+
 The exact compiler frontier now includes a native ordered
 \(\mathbb Q(\sqrt2)\) scalar layer rather than only rational matrices or a
 special-purpose rationalizing bridge. Its genuine split/nonsplit controls and
@@ -111,7 +139,7 @@ optimality, novelty, and any exceptional-Spin consequence explicitly open.
 | Path | Role |
 |---|---|
 | [`research-programs/`](research-programs/README.md) | Public claim map, status ledgers, and reading order |
-| [`SSM-Models/`](SSM-Models/) | Maintained rotor-SSM implementation and transport ablations |
+| [`SSM-Models/`](SSM-Models/) | Maintained Pure Rotor and Pure Spin(8) models, controlled comparisons, and executable representation gates |
 | [`Spin-Space-Research/`](Spin-Space-Research/) | Root-owned exact theorem, certificate, artifact, and research-document layer |
 | [`Spin8-SSM-Benchmark/`](Spin8-SSM-Benchmark/) | Matched empirical benchmarks and controls |
 | [`SpinorModel/`](SpinorModel/) | Preserved original prototype and a separate overhaul |
@@ -126,9 +154,11 @@ GitHub remote and Python package slug remain unchanged as provenance
 identifiers; artifact contents and hashes were not rewritten by the move.
 
 Large model weights, downloaded datasets, generated caches, and raw process
-logs are intentionally excluded from Git. Reproducible conclusions should be
-backed by structured artifacts, executable checks, and a concise interpretation
-that states both the pass criteria and the nonclaims.
+logs are intentionally excluded from Git. The compact 2026-08-16 frozen
+checkpoint cohort is a deliberate exception so artifact rehash/reload tests
+work from a clean clone. Reproducible conclusions should be backed by structured
+artifacts, executable checks, and a concise interpretation that states both the
+pass criteria and the nonclaims.
 See the [public-release policy](PUBLICATION_SCOPE.md) for the complete boundary.
 
 Clone the complete repository with:

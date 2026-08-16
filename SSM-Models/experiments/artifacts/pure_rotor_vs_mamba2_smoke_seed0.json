@@ -1,0 +1,106 @@
+{
+  "experiment": "pure rotor SSM versus Mamba-2 byte-level comparison",
+  "status": "completed empirical screen; not a language-model superiority claim",
+  "pure_rotor_model_version": "2.1.0",
+  "device": "NVIDIA GeForce RTX 2070 SUPER",
+  "torch_version": "2.12.0+cu130",
+  "transformers_version": "5.9.0",
+  "config": {
+    "steps": 1,
+    "batch_size": 2,
+    "sequence_length": 7,
+    "validation_batches": 1,
+    "learning_rate": 0.003,
+    "weight_decay": 0.01,
+    "gradient_clip": 1.0,
+    "rotor_channels": 20,
+    "rotor_layers": 3,
+    "rotor_expansion": 2,
+    "mamba_hidden_size": 96,
+    "mamba_layers": 2,
+    "mamba_heads": 4,
+    "mamba_head_dim": 48,
+    "mamba_state_size": 16,
+    "seed": 0
+  },
+  "rotor_scan_mode": "parallel",
+  "integrity": {
+    "shared_utf8_byte_vocabulary": true,
+    "shared_random_windows_per_seed": true,
+    "candidate_initialized_after_seed": true,
+    "mamba2_backend": "huggingface_transformers",
+    "mamba_ssm_extension_importable": false,
+    "mamba2_fused_kernel_claimed": false,
+    "identity_rotation_ablation": {
+      "raw_parameter_count": 141796,
+      "disabled_rotor_controller_parameter_count": 6060,
+      "effective_parameter_count_if_rotation_is_fixed_identity": 135736,
+      "raw_parameter_match_is_not_effective_capacity_match": true
+    },
+    "decoder_tying": {
+      "pure_rotor_input_output_embeddings_tied": true,
+      "mamba2_input_output_embeddings_tied": true
+    },
+    "dataset_offline_mode": true,
+    "parameter_counts": {
+      "pure_rotor": 141796,
+      "identity_rotation_ablation": 141796,
+      "mamba2_transformers": 145016
+    }
+  },
+  "data": {
+    "dataset": "wikitext/wikitext-2-raw-v1",
+    "encoding": "UTF-8 bytes",
+    "train_bytes": 10962377,
+    "validation_bytes": 1149168,
+    "train_sha256": "1bfd06255cddf4dae742db40e827e824e8054f67ca0ff6f6e7d9d57bf6623cd1",
+    "validation_sha256": "52b6d7dd2f63bfa0e29ad7c665117e3a6cad8a1a1bbd3cdfbe13d447d491fa8a"
+  },
+  "results": [
+    {
+      "name": "pure_rotor",
+      "parameters": 141796,
+      "initial_validation_nll": 5.547280992780413,
+      "final_validation_nll": 5.545377458844866,
+      "final_validation_bits_per_byte": 8.000288559732931,
+      "final_train_loss": 5.545053958892822,
+      "loss_samples": {
+        "1": 5.545053958892822
+      },
+      "last_preclip_gradient_norm": 0.6191617250442505,
+      "elapsed_seconds": 0.3195560000021942,
+      "tokens_per_second": 43.81078746731049,
+      "peak_cuda_memory_mib": 19.0537109375
+    },
+    {
+      "name": "identity_rotation_ablation",
+      "parameters": 141796,
+      "initial_validation_nll": 5.547280992780413,
+      "final_validation_nll": 5.544083186558315,
+      "final_validation_bits_per_byte": 7.998421319523564,
+      "final_train_loss": 5.545053958892822,
+      "loss_samples": {
+        "1": 5.545053958892822
+      },
+      "last_preclip_gradient_norm": 0.613362729549408,
+      "elapsed_seconds": 0.09745220001786947,
+      "tokens_per_second": 143.6601738845595,
+      "peak_cuda_memory_mib": 19.0537109375
+    },
+    {
+      "name": "mamba2_transformers",
+      "parameters": 145016,
+      "initial_validation_nll": 5.824710300990513,
+      "final_validation_nll": 5.6660902840750555,
+      "final_validation_bits_per_byte": 8.17444035406422,
+      "final_train_loss": 6.29867696762085,
+      "loss_samples": {
+        "1": 6.29867696762085
+      },
+      "last_preclip_gradient_norm": 13.016613960266113,
+      "elapsed_seconds": 0.050320500042289495,
+      "tokens_per_second": 278.21663115895825,
+      "peak_cuda_memory_mib": 227.4306640625
+    }
+  ]
+}

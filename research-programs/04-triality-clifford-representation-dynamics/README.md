@@ -21,6 +21,9 @@ quotient structure, and representation-specific memory controls.
 - One shared 28-dimensional bivector action generates the maintained vector
   and two chiral Spin(8) representations, with bracket, center-signature,
   equivariance, and norm-preservation checks in the theorem repository.
+- The same three actions now back the separately maintained Pure Spin(8) v1.0
+  model. Its 24-scalar tuple distinguishes all four central signatures; model
+  quality and scan claims remain routed to Programme 06.
 - Unit triality binding is an exact norm-preserving single-pair bind/unbind
   primitive under the maintained normalization.
 - With supplied unit keys and shared transport, triality-coded addressed slots
@@ -53,6 +56,12 @@ quotient structure, and representation-specific memory controls.
   action is four copies of the four-dimensional complex-type real irreducible.
   This algebraic restriction is distinct from the maintained model's
   conjugation decomposition `2V0 + 2V1`.
+- A separate exact `2.A5`/Spin--Dirac continuation constructs the binary
+  icosahedral table over `Q(sqrt(5))`, proves `H1=H2=0` for the fixed linear
+  modules, enumerates the compact-real representation components through
+  dimensions 3, 8, 9, 10, 11, and 12, and verifies the corresponding spinor
+  branching identities. Triality remains confined to the Spin(8) rung; these
+  exact representation results imply no sequence-model advantage.
 
 ## Open Claims
 
@@ -91,6 +100,9 @@ quotient structure, and representation-specific memory controls.
 - [Spin(8)/Spin(9) representation and hierarchy report](../../Spin-Space-Research/docs/experiments/SPIN8_SPIN9_HIERARCHICAL_MEMORY_RESULTS.md)
 - [Algebraic scalar-extension design](../../Spin-Space-Research/docs/ALGEBRAIC_EXTENSION_DESIGN.md)
 - [Spin(8) and Clifford-signature theorem](../../Spin-Space-Research/docs/manuscripts/CLIFFORD_SIGNATURE_EXTENSION.md)
+- [Binary-icosahedral Clifford ladder](../../SSM-Models/experiments/SPIN_DIRAC_A5_LADDER_RESULTS.md)
+- [Exact component atlas](../../SSM-Models/experiments/SPIN_DIRAC_A5_COMPONENT_ATLAS_RESULTS.md)
+- [Spinor branching atlas](../../SSM-Models/experiments/SPIN_DIRAC_A5_SPINOR_BRANCHING_RESULTS.md)
 
 The triangular lift is cross-listed with Programme 01, and the paired-action
 cohort is cross-listed with Programme 02. Cross-listing identifies a shared

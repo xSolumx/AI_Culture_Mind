@@ -85,6 +85,17 @@ evidence about implementations of that algebra.
   the transported DeltaRule to an ordinary DeltaRule plus an action-prefix
   scan and frame changes. Exact and gradient checks pass under the stated
   arithmetic contracts.
+- Raw octonion multiplication remains nonassociative, but its left actions are
+  ordinary associative `8 by 8` matrices. The implemented operator lift has an
+  exact rank-28 `so(8)` coordinate determinant `-2^49`, an ordered linear-work
+  scan, an eight-scalar recurrent action path, and a bounded affine extension.
+  The optional WSL/Triton recurrence passes custom forward/backward and local
+  L4096 gates. Task-quality and law-identification conclusions remain routed
+  to Programme 06.
+- Quaternion and unit-dual-quaternion composition now provide associative
+  compact scans for the double covers of `SO(3)` and `SE(3)`, including exact
+  identity padding and streaming cache continuation. Their eager-kernel and
+  learned-task outcomes are not consequences of closure alone.
 
 ## Open Claims
 
@@ -133,6 +144,8 @@ evidence about implementations of that algebra.
 - [Local-algebra scanner optimization](../../Spin-Space-Research/docs/experiments/SCHURSCAN_MEMORY_SCANNER_OPTIMIZATION_RESULTS.md)
 - [Co-moving compiler and parity gates](../../Spin-Space-Research/docs/experiments/SPIN8_SPIN9_HIERARCHICAL_MEMORY_RESULTS.md)
 - [Exact Gaussian phase-lattice audit](GAUSSIAN_PHASE_LATTICE_AUDIT.md)
+- [Octonion operator-lift implementation result](../../SSM-Models/experiments/OCTONION_OPERATOR_SCAN_RESULTS.md)
+- [Dual-quaternion motor implementation result](../../SSM-Models/experiments/MOTOR_PATH_DEVELOPMENT_RESULTS.md)
 
 The final two reports are cross-program evidence. Their algebra/compiler claims
 belong here; their retrieval and hardware conclusions belong to Programme 03.

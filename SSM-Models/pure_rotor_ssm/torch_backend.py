@@ -88,9 +88,7 @@ def normalized_rotor(parameters: torch.Tensor) -> torch.Tensor:
     parameters = torch.where(norm > 1e-6, normalized, fallback)
     scalar, e12, e13, e23 = parameters.unbind(dim=-1)
     zeros = torch.zeros_like(scalar)
-    return torch.stack(
-        (scalar, zeros, zeros, zeros, e12, e13, e23, zeros), dim=-1
-    )
+    return torch.stack((scalar, zeros, zeros, zeros, e12, e13, e23, zeros), dim=-1)
 
 
 def rotor_from_bivector(
@@ -116,9 +114,9 @@ def rotor_from_bivector(
     regular_scalar = torch.cos(regular_angle / 2)
     regular_scale = torch.sin(regular_angle / 2) / safe_magnitude
     small_scalar = 1 - angle_limit.square() * magnitude_squared / 8
-    small_scale = angle_limit / 2 - (
-        angle_limit / 6 + angle_limit**3 / 48
-    ) * magnitude_squared
+    small_scale = (
+        angle_limit / 2 - (angle_limit / 6 + angle_limit**3 / 48) * magnitude_squared
+    )
     use_regular = magnitude_squared > threshold
     parameters = torch.cat(
         (
@@ -184,9 +182,7 @@ def specialized_rotor_sandwich(
         return (
             (scalar.square() - vector_square) * vectors
             + 2 * quaternion_vector * dot
-            + 2
-            * scalar
-            * torch.linalg.cross(quaternion_vector, vectors, dim=-1)
+            + 2 * scalar * torch.linalg.cross(quaternion_vector, vectors, dim=-1)
         )
 
     vector = rotate(multivector[..., 1:4])
@@ -229,9 +225,9 @@ def pack_spin3_isotypic(
     if multivector.ndim < 2 or multivector.shape[-1] != GA_DIM:
         raise ValueError("multivectors must have shape (..., channels, 8)")
     channels = multivector.shape[-2]
-    trivial = torch.stack(
-        (multivector[..., 0], multivector[..., 7]), dim=-1
-    ).reshape(*multivector.shape[:-2], 2 * channels)
+    trivial = torch.stack((multivector[..., 0], multivector[..., 7]), dim=-1).reshape(
+        *multivector.shape[:-2], 2 * channels
+    )
     dual_bivector = torch.stack(
         (multivector[..., 6], -multivector[..., 5], multivector[..., 4]),
         dim=-1,
@@ -240,9 +236,7 @@ def pack_spin3_isotypic(
     return trivial, active.reshape(*multivector.shape[:-2], 2 * channels, 3)
 
 
-def unpack_spin3_isotypic(
-    trivial: torch.Tensor, active: torch.Tensor
-) -> torch.Tensor:
+def unpack_spin3_isotypic(trivial: torch.Tensor, active: torch.Tensor) -> torch.Tensor:
     if trivial.shape[:-1] != active.shape[:-2] or active.shape[-1] != 3:
         raise ValueError("trivial and active isotypic shapes are incompatible")
     if trivial.shape[-1] != active.shape[-2] or trivial.shape[-1] % 2:
@@ -322,12 +316,8 @@ class Spin3IsotypicLinear(nn.Module):
             raise ValueError("channel counts must be positive")
         self.in_channels = in_channels
         self.out_channels = out_channels
-        self.trivial_kernel = nn.Parameter(
-            torch.empty(out_channels, 2, in_channels, 2)
-        )
-        self.active_kernel = nn.Parameter(
-            torch.empty(out_channels, 2, in_channels, 2)
-        )
+        self.trivial_kernel = nn.Parameter(torch.empty(out_channels, 2, in_channels, 2))
+        self.active_kernel = nn.Parameter(torch.empty(out_channels, 2, in_channels, 2))
         nn.init.kaiming_uniform_(self.trivial_kernel, a=math.sqrt(5))
         nn.init.kaiming_uniform_(self.active_kernel, a=math.sqrt(5))
         self.trivial_bias = (
@@ -340,12 +330,8 @@ class Spin3IsotypicLinear(nn.Module):
         trivial, active = pack_spin3_isotypic(inputs)
         trivial = trivial.reshape(*trivial.shape[:-1], self.in_channels, 2)
         active = active.reshape(*active.shape[:-2], self.in_channels, 2, 3)
-        trivial_output = torch.einsum(
-            "ocid,...id->...oc", self.trivial_kernel, trivial
-        )
-        active_output = torch.einsum(
-            "ocid,...idk->...ock", self.active_kernel, active
-        )
+        trivial_output = torch.einsum("ocid,...id->...oc", self.trivial_kernel, trivial)
+        active_output = torch.einsum("ocid,...idk->...ock", self.active_kernel, active)
         if self.trivial_bias is not None:
             trivial_output = trivial_output + self.trivial_bias
         return unpack_spin3_isotypic(
@@ -428,9 +414,217 @@ def compose_transitions(
         later_decay * earlier_decay,
         rotor_product(later_rotor, earlier_rotor),
         later_drive
-        + later_decay.unsqueeze(-1)
-        * rotor_sandwich(later_rotor, earlier_drive),
+        + later_decay.unsqueeze(-1) * rotor_sandwich(later_rotor, earlier_drive),
     )
+
+
+def _rotor_scale(rotor: torch.Tensor) -> torch.Tensor:
+    """Rotor sandwich scaling factor on trivial Cl(3,0) components."""
+
+    if rotor.shape[-1] != GA_DIM:
+        raise ValueError("rotors must end in GA_DIM components")
+    quaternion_vector = _quaternion_vector(rotor)
+    return rotor[..., :1].square() + quaternion_vector.square().sum(
+        dim=-1, keepdim=True
+    )
+
+
+def _rotor_linear_map(rotor: torch.Tensor) -> torch.Tensor:
+    """Build the 3x3 real-linear map associated with rotor conjugation."""
+
+    if rotor.shape[-1] != GA_DIM:
+        raise ValueError("rotors must end in GA_DIM components")
+    scalar = rotor[..., 0]
+    vector = _quaternion_vector(rotor)
+    x, y, z = vector.unbind(dim=-1)
+    xx = x.square()
+    yy = y.square()
+    zz = z.square()
+    sx = scalar.square()
+
+    row0 = torch.stack(
+        (
+            sx + xx - yy - zz,
+            2.0 * (x * y - z * scalar),
+            2.0 * (x * z + y * scalar),
+        ),
+        dim=-1,
+    )
+    row1 = torch.stack(
+        (
+            2.0 * (x * y + z * scalar),
+            sx - x.square() + y.square() - z.square(),
+            2.0 * (y * z - x * scalar),
+        ),
+        dim=-1,
+    )
+    row2 = torch.stack(
+        (
+            2.0 * (x * z - y * scalar),
+            2.0 * (y * z + x * scalar),
+            sx - xx - yy + z.square(),
+        ),
+        dim=-1,
+    )
+    # ``row0`` through ``row2`` are output-coordinate rows.  Keep that
+    # conventional ``R[i, j]`` layout: ``_apply_schur_rotation`` and scan
+    # composition apply maps as column actions, so a final-axis stack here
+    # would silently transpose every rotor action.
+    return torch.stack((row0, row1, row2), dim=-2)
+
+
+def _apply_schur_rotation(
+    rotation: torch.Tensor, vectors: torch.Tensor
+) -> torch.Tensor:
+    """Apply a per-step 3x3 map to stacked isotypic vectors."""
+
+    if rotation.ndim != 5 or rotation.shape[-2:] != (3, 3):
+        raise ValueError("rotation must have shape (B,L,C,3,3)")
+    if vectors.ndim not in {3, 4}:
+        raise ValueError("vectors must be (B,2*C,3) or (B,L,M*C,3)")
+    batch = rotation.shape[0]
+    if vectors.shape[0] != batch:
+        raise ValueError("vectors must match batch size")
+    channels = rotation.shape[2]
+    length = rotation.shape[1]
+    if vectors.shape[-1] != 3:
+        raise ValueError("vectors must end in three active coordinates")
+    if vectors.ndim == 3:
+        if vectors.shape[1] != channels * 2:
+            raise ValueError("vector multiplicity must equal two per channel")
+        vectors = vectors[:, None, :, :].expand(
+            batch, rotation.shape[1], vectors.shape[1], vectors.shape[2]
+        )
+    elif vectors.shape[:2] != rotation.shape[:2]:
+        raise ValueError(
+            "vectors must match (batch, length) for this scan representation"
+        )
+    if vectors.shape[2] % channels != 0:
+        raise ValueError("vector multiplicity must be channel-compatible")
+
+    multiplicity = vectors.shape[2] // channels
+    vectors = vectors.reshape(
+        batch, rotation.shape[1], channels, multiplicity, vectors.shape[-1]
+    )
+    rotation_matrix = rotation.reshape(batch * length * channels, 3, 3)
+    vectors = vectors.reshape(batch * length * channels, multiplicity, 3)
+    return (
+        torch.matmul(rotation_matrix, vectors.transpose(-2, -1))
+        .transpose(-2, -1)
+        .reshape(batch, length, channels, multiplicity, 3)
+        .reshape(batch, rotation.shape[1], channels * multiplicity, 3)
+    )
+
+
+def compose_schur_affine_transitions(
+    later: tuple[
+        torch.Tensor,
+        torch.Tensor,
+        torch.Tensor,
+        torch.Tensor,
+        torch.Tensor,
+    ],
+    earlier: tuple[
+        torch.Tensor,
+        torch.Tensor,
+        torch.Tensor,
+        torch.Tensor,
+        torch.Tensor,
+    ],
+) -> tuple[
+    torch.Tensor,
+    torch.Tensor,
+    torch.Tensor,
+    torch.Tensor,
+    torch.Tensor,
+]:
+    """Compose Schur-factored affine transitions in chronological order."""
+
+    (
+        later_trivial_scale,
+        later_active_scale,
+        later_rotation,
+        later_trivial_drive,
+        later_active_drive,
+    ) = later
+    (
+        earlier_trivial_scale,
+        earlier_active_scale,
+        earlier_rotation,
+        earlier_trivial_drive,
+        earlier_active_drive,
+    ) = earlier
+
+    return (
+        later_trivial_scale * earlier_trivial_scale,
+        later_active_scale * earlier_active_scale,
+        torch.matmul(later_rotation, earlier_rotation),
+        later_trivial_drive + later_trivial_scale * earlier_trivial_drive,
+        later_active_drive
+        + later_active_scale[..., None]
+        * _apply_schur_rotation(later_rotation, earlier_active_drive),
+    )
+
+
+def _to_schur_scan_state(
+    decay: torch.Tensor, rotors: torch.Tensor, drive: torch.Tensor
+) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]:
+    """Convert affine transitions to Schur-factored scan representation."""
+
+    trivial_drive, active_drive = pack_spin3_isotypic(drive)
+    rotor_scale = _rotor_scale(rotors)
+    scaled_decay = decay[..., None] * rotor_scale
+    trivial_scale = torch.stack((scaled_decay, scaled_decay), dim=-1).reshape(
+        *decay.shape[:2], -1
+    )
+    active_scale = torch.stack((decay, decay), dim=-1).reshape(*decay.shape[:2], -1)
+    rotation = _rotor_linear_map(rotors)
+    return trivial_scale, active_scale, rotation, trivial_drive, active_drive
+
+
+def rotor_affine_scan_schur(
+    decay: torch.Tensor,
+    rotors: torch.Tensor,
+    drive: torch.Tensor,
+    initial_state: torch.Tensor | None = None,
+) -> tuple[torch.Tensor, torch.Tensor]:
+    """Hillis--Steele scan using Schur-factored isotypic coordinates."""
+
+    _validate_transition_shapes(decay, rotors, drive)
+    cumulative = _to_schur_scan_state(decay, rotors, drive)
+    offset = 1
+    while offset < decay.shape[1]:
+        earlier = tuple(value[:, :-offset] for value in cumulative)
+        later = tuple(value[:, offset:] for value in cumulative)
+        composed = compose_schur_affine_transitions(later, earlier)
+        cumulative = tuple(
+            torch.cat((value[:, :offset], update), dim=1)
+            for value, update in zip(cumulative, composed)
+        )
+        offset *= 2
+    (
+        cumulative_trivial_scale,
+        cumulative_active_scale,
+        cumulative_rotation,
+        cumulative_trivial_drive,
+        cumulative_active_drive,
+    ) = cumulative
+    if initial_state is None:
+        states = unpack_spin3_isotypic(
+            cumulative_trivial_drive, cumulative_active_drive
+        )
+    else:
+        if initial_state.shape != drive.shape[:1] + drive.shape[2:]:
+            raise ValueError("initial_state must have shape (B,C,8)")
+        initial_trivial, initial_active = pack_spin3_isotypic(initial_state)
+        states = unpack_spin3_isotypic(
+            cumulative_trivial_scale * initial_trivial[:, None]
+            + cumulative_trivial_drive,
+            cumulative_active_scale[..., None]
+            * _apply_schur_rotation(cumulative_rotation, initial_active)
+            + cumulative_active_drive,
+        )
+    return states, states[:, -1]
 
 
 def rotor_transition_step(
@@ -564,9 +758,7 @@ class SelectiveRotorSSM(nn.Module):
                 f"inputs must have shape (batch,length,{self.channels},{GA_DIM})"
             )
         invariants = spin3_invariant_features(inputs).flatten(-2)
-        step_size = self.minimum_step_size + F.softplus(
-            self.step_control(invariants)
-        )
+        step_size = self.minimum_step_size + F.softplus(self.step_control(invariants))
         rates = self.minimum_decay_rate + F.softplus(self.log_rates)
         decay = torch.exp(-step_size * rates)
 
@@ -585,12 +777,8 @@ class SelectiveRotorSSM(nn.Module):
                 raise ValueError("valid_mask must have shape (batch,length)")
             valid = valid_mask.bool()
             decay = torch.where(valid[..., None], decay, torch.ones_like(decay))
-            rotors = torch.where(
-                valid[..., None, None], rotors, identity_rotor(rotors)
-            )
-            drive = torch.where(
-                valid[..., None, None], drive, torch.zeros_like(drive)
-            )
+            rotors = torch.where(valid[..., None, None], rotors, identity_rotor(rotors))
+            drive = torch.where(valid[..., None, None], drive, torch.zeros_like(drive))
         return decay, rotors, drive
 
     def forward(
@@ -604,9 +792,13 @@ class SelectiveRotorSSM(nn.Module):
         decay, rotors, drive = self.transitions(inputs, valid_mask)
         if scan_mode == "parallel":
             return rotor_affine_scan(decay, rotors, drive, initial_state)
+        if scan_mode == "schur_parallel":
+            return rotor_affine_scan_schur(decay, rotors, drive, initial_state)
         if scan_mode == "recurrent":
             return rotor_recurrent_scan(decay, rotors, drive, initial_state)
-        raise ValueError("scan_mode must be 'parallel' or 'recurrent'")
+        raise ValueError(
+            "scan_mode must be 'parallel', 'schur_parallel', or 'recurrent'"
+        )
 
 
 class GASSMBlock(nn.Module):
@@ -667,9 +859,7 @@ class GASSMLanguageModel(nn.Module):
         # Retained only for construction compatibility. The recurrent model
         # has no positional table and therefore no intrinsic length ceiling.
         self.max_len = max_len
-        self.token_embeddings = nn.Parameter(
-            torch.empty(vocab_size, channels, GA_DIM)
-        )
+        self.token_embeddings = nn.Parameter(torch.empty(vocab_size, channels, GA_DIM))
         nn.init.normal_(self.token_embeddings, std=0.02)
         self.blocks = nn.ModuleList(
             GASSMBlock(channels, expansion, dropout_rate, max_rotor_angle)
@@ -778,6 +968,7 @@ __all__ = [
     "Spin3IsotypicLinear",
     "__version__",
     "bounded_multivector",
+    "compose_schur_affine_transitions",
     "compose_transitions",
     "geometric_product",
     "grade_invariants",
@@ -786,6 +977,7 @@ __all__ = [
     "pack_spin3_isotypic",
     "reversion",
     "rotor_affine_scan",
+    "rotor_affine_scan_schur",
     "rotor_from_bivector",
     "rotor_product",
     "rotor_recurrent_scan",

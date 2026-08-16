@@ -2,6 +2,11 @@
 
 Date: 2026-08-06
 
+> **Historical-result pointer, reconciled 2026-08-16T16:05:27+02:00.** This
+> one-seed v2.0 report is preserved unchanged. The later v2.1 transport cohort
+> is the current local transport evidence; the new Pure Rotor / Mamba-2 smoke
+> runner has not produced a quality result and does not supersede this report.
+
 ## Status
 
 This is the first checkpoint of the rewritten pure architecture. It establishes

@@ -1,2 +1,9 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+# Frozen SSM artifacts are byte-hashed. Windows-generated JSON is canonical
+# CRLF; the WSL/Triton artifact is canonical LF on every checkout.
+SSM-Models/experiments/artifacts/*.json text eol=crlf
+SSM-Models/experiments/artifacts/octonion_triton_scan_wsl_rtx2070s_20260816.json text eol=lf
+SSM-Models/checkpoints/*.pt binary
+SSM-Models/checkpoints/**/*.pt binary
