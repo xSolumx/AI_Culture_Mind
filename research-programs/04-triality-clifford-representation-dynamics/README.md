@@ -74,8 +74,13 @@ quotient structure, and representation-specific memory controls.
   four-space carries the orientation-preserving `H4`/600-cell group, its
   second carries one binary-icosahedral action, and its center consists of the
   four combinations of two independent block signs. This classifies the fixed
-  embedding; it is not a
-  new abstract group or an irreducible eight-dimensional discovery.
+  embedding; it is not a new abstract group or an irreducible
+  eight-dimensional discovery.
+- Adjoining the order-21,504 monomial operator group to the vector or either
+  half-spin golden image gives an infinite subgroup of `SO(8)`. The same
+  shortest word `FanoA FanoB b` proves all three cases: its exact
+  characteristic polynomial contains `(1-sqrt(5))/4`, which is not an
+  algebraic integer. This proves infinitude, not density.
 
 ## Open Claims
 
@@ -86,8 +91,8 @@ quotient structure, and representation-specific memory controls.
   improves sample efficiency or generalization.
 - Any model-level advantage attributable specifically to triality or Clifford
   structure.
-- Classification of the subgroup generated jointly by the monomial operator
-  group and a golden-field `2.A5` embedding.
+- Classification of the identity component, topological closure, or Zariski
+  closure of the infinite mixed monomial/golden groups.
 
 ## Dependencies
 
@@ -121,6 +126,7 @@ quotient structure, and representation-specific memory controls.
 - [Spinor branching atlas](../../SSM-Models/experiments/SPIN_DIRAC_A5_SPINOR_BRANCHING_RESULTS.md)
 - [Finite octonion-operator groups](../../Spin-Space-Research/docs/experiments/OCTONION_OPERATOR_GROUP_RESULTS.md)
 - [Exact binary-icosahedral triality closure](../../Spin-Space-Research/docs/experiments/SPIN8_TRIALITY_2A5_CLOSURE_RESULTS.md)
+- [Exact mixed monomial/golden infinitude](../../Spin-Space-Research/docs/experiments/MIXED_MONOMIAL_GOLDEN_CLOSURE_RESULTS.md)
 - [Group and number-structure catalogue](GROUP_AND_NUMBER_STRUCTURE_CATALOGUE.md)
 
 The triangular lift is cross-listed with Programme 01, and the paired-action

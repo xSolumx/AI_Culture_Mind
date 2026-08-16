@@ -968,6 +968,26 @@ central-product factor, the full direct-product order, perfectness, and the
 independent block-sign center. Numerical spectral discovery is excluded from
 acceptance.
 
+### Exact mixed monomial/golden infinitude
+
+This bounded replay reconstructs the order-21,504 monomial group, all three
+golden source images, and the same length-three witness in their fixed shared
+basis:
+
+```powershell
+$env:PYTHONPATH = "src"
+python -m mixed_monomial_golden_closure `
+  --output artifacts/mixed_monomial_golden_closure_20260817.json
+python -m pytest -q tests/test_mixed_monomial_golden_closure.py
+```
+
+Acceptance checks all 187 symmetric mixed words of length two by exact matrix
+powering. For `FanoA FanoB b`, it reconstructs the characteristic polynomial
+over \(\mathbb Q(\sqrt5)\), rejects algebraic integrality of
+\((1-\sqrt5)/4\), and independently verifies that the rational characteristic
+norm has nonintegral coefficients. No floating-point eigenvalue decision is an
+acceptance input.
+
 ### Enforced workstation envelope
 
 For any expensive stage on the reference i7-9700K, use the bounded runner:

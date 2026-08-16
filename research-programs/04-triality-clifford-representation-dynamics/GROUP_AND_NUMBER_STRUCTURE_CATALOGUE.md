@@ -1,6 +1,6 @@
 # Group and Number-Structure Catalogue
 
-**Last audited:** 2026-08-17T00:43:30+02:00
+**Last audited:** 2026-08-17T01:14:10+02:00
 **Scope:** claim-bearing groups, loops, and additive finite structures actually
 defined, generated, or used as experimental targets in this repository. Casual
 literature mentions are excluded unless code or a theorem depends on them.
@@ -54,6 +54,20 @@ Their abstract structures are known externally. What was previously unknown in
 this repository was which structures its fixed Fano and common-carrier
 triality conventions generated.
 
+## Infinite embedding-generated matrix groups
+
+| Object | Exact conclusion | Witness and boundary |
+|---|---|---|
+| Monomial group plus vector $A_5$ | Infinite subgroup of $SO(8)$ | The shortest word $F_AF_Bb$ has characteristic coefficient $(1-\sqrt5)/4$, which is not an algebraic integer |
+| Monomial group plus positive $2.A_5$ | Infinite subgroup of $SO(8)$ | The same word and the same nonintegral coefficient prove infinite order |
+| Monomial group plus negative $2.A_5$ | Infinite subgroup of $SO(8)$ | The same word and the same nonintegral coefficient prove infinite order |
+
+The [mixed-closure certificate](../../Spin-Space-Research/docs/experiments/MIXED_MONOMIAL_GOLDEN_CLOSURE_RESULTS.md)
+first exhausts all 187 symmetric mixed words of length two and powers each to
+its exact finite order. Its length-three witness is therefore minimal in the
+maintained symmetric alphabet. Infinitude does not classify the compact
+topological closure or prove density in $SO(8)$.
+
 ## Continuous groups and representation families actually used
 
 | Group | Implemented or proved role | Boundary |
@@ -90,29 +104,25 @@ rather than calling both `G2`.
 - The union of the three \(D_4\) minuscule weight orbits is the 24-cell. The
   code proves the order-three triality map but does not yet enumerate the
   generated \(W(D_4):C_3\) subgroup or the full \(W(F_4)\) automorphism group.
-- The subgroup generated jointly by the 21,504-element monomial group and an
-  exact golden-field `2.A5` embedding has not been classified. A spectral
-  root-of-unity test must precede any finite-closure attempt.
 - Exceptional nonprincipal continuous five-probe stabilizers remain only
   partially classified.
 
 ## Strongest next novelty test
 
-The best unresolved candidate is now the **mixed monomial/golden closure**:
+The best unresolved continuation is now the **identity component of the mixed
+monomial/golden closure**:
 
-1. place the 21,504-element signed-monomial group and the exact
-   golden-field `2.A5` matrices in one fixed eight-dimensional basis;
-2. search short mixed words for a characteristic polynomial with a
-   non-cyclotomic rational norm, which would prove the closure infinite;
-3. check whether either 120-point \(H_4\) orbit, an \(E_8\)-type lattice, or
-   another finite spanning configuration is preserved;
-4. only if every spectral gate remains cyclotomic, construct a faithful
-   permutation action before attempting a closure;
-5. if the closure is finite, compute order, center, derived series, conjugacy
-   classes, and GAP/ATLAS identifiers before making a novelty claim.
+1. compute the exact commutant and invariant bilinear/tensor spaces of the
+   mixed generators to reject reducible, complex, and quaternionic closures;
+2. determine all rational relations among the eigenangles of the certified
+   infinite-order witness, with an explicit integer-relation bound;
+3. conjugate the resulting torus directions by the finite monomial group and
+   compute the generated Lie-algebra dimension;
+4. prove that the identity component is $SO(8)$ if the Lie algebra is all of
+   $\mathfrak{so}(8)$, or identify the proper compact subgroup otherwise; and
+5. keep numerical logarithm and rank calculations as discovery only until the
+   angle relations and Lie closure have exact certificates.
 
-This is a search for an unclassified **embedding-generated subgroup**, not a
-promise of a new abstract finite group. Standard finite groups are extensively
-catalogued; a legitimate research contribution here is more likely to be a new
-representation, extension realization, orbit classification, or exact model
-mechanism.
+This is a classification of the closure of a fixed matrix representation, not
+a promise of a new abstract infinite group. The established infinitude theorem
+already rules out the earlier finite $E_8$-orbit hypothesis for this alignment.

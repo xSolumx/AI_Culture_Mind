@@ -502,3 +502,24 @@ group, or evidence of sequence-model advantage. The authoritative report is
 [`SPIN8_TRIALITY_2A5_CLOSURE_RESULTS.md`](Spin-Space-Research/docs/experiments/SPIN8_TRIALITY_2A5_CLOSURE_RESULTS.md),
 and the artifact SHA-256 is
 `ff238d047c94362136d70a9c57ae41c832d63bf15fb6263d0019456a9351cfc9`.
+
+## Exact mixed monomial/golden infinitude
+
+At **2026-08-17T01:14:10+02:00**, the next open embedding-generated group
+question was resolved negatively. Adjoining the maintained order-21,504
+monomial octonion-operator group to the vector, positive-half-spin, or
+negative-half-spin golden image produces an infinite subgroup of `SO(8)` in
+all three cases.
+
+The same shortest witness word `FanoA FanoB b` works in every view. Exact
+characteristic polynomials over `Q(sqrt(5))` contain the coefficient
+`(1-sqrt(5))/4`, which lies outside `Z[(1+sqrt(5))/2]`; their rational
+characteristic norms have coefficient denominators `{1,2,4}` and therefore
+cannot be cyclotomic products. An exhaustive exact audit first verifies that
+all 187 symmetric mixed words of length two have finite order.
+
+This proves infinitude but not topological or Zariski density. The
+authoritative report is
+[`MIXED_MONOMIAL_GOLDEN_CLOSURE_RESULTS.md`](Spin-Space-Research/docs/experiments/MIXED_MONOMIAL_GOLDEN_CLOSURE_RESULTS.md),
+and the artifact SHA-256 is
+`535e37a4fb25d3ac7255d932df2171c2113283f292c828fc0cfc2ecec5a3e0d3`.

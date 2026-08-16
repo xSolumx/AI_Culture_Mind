@@ -95,6 +95,11 @@ broader numerical counterexample searches without promoting them to proof.
   rotation group and one binary-icosahedral action, while its Klein-four
   center acts by independent block signs. This is an exact embedding result,
   not a new abstract group or a model-performance claim.
+- Adjoining the order-21,504 monomial octonion-operator group to any one of
+  those three golden views produces an infinite subgroup of \(SO(8)\). The
+  same shortest witness word \(F_AF_Bb\) works in all three views: its exact
+  characteristic polynomial has the nonintegral coefficient
+  \((1-\sqrt5)/4\). This proves infinitude, not density or model advantage.
 - Within the triality sensor model, every four-probe design has a
   positive-dimensional stabilizer. Every mixed five-probe allocation has an
   open dense free stratum, while a five-probe design confined to one

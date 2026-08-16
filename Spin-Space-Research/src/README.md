@@ -15,6 +15,10 @@ module name. Editable installation adds this directory to the Python path.
   permutation classification of the three common-carrier binary-icosahedral
   triality views, giving a reducible perfect group of order 864,000 with
   independent block-sign center.
+- `mixed_monomial_golden_closure.py`: exact algebraic-integer and
+  characteristic-norm obstruction proving that adjoining the maintained
+  monomial operator group to any golden triality view gives an infinite group;
+  includes the complete symmetric length-two minimality audit.
 - `spin8_five_probe_identifiability.py`: exact shared-rank and ambiguity gates.
 - `spin8_global_probe_certificate.py`: exact integral triality closure proving
   one global five-probe free tuple and a four-probe `su(2)` counterfamily.

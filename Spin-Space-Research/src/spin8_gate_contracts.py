@@ -371,6 +371,35 @@ GATES: tuple[GateContract, ...] = (
         ),
     ),
     GateContract(
+        gate_id="spin8_mixed_monomial_golden_infinitude",
+        claim=(
+            "Adjoining the fixed order-21,504 monomial operator group to the "
+            "vector, positive-half-spin, or negative-half-spin golden image "
+            "gives an infinite subgroup of SO(8); FanoA FanoB b is a shortest "
+            "infinite-order word in the maintained symmetric alphabet."
+        ),
+        status="proved_exact",
+        evidence_layers=(
+            "exact_arithmetic",
+            "symbolic_identity",
+            "exact_reconstruction",
+        ),
+        test_suites=("tests/test_mixed_monomial_golden_closure.py",),
+        artifacts=("artifacts/mixed_monomial_golden_closure_20260817.json",),
+        boundary_obligations=(
+            "The source groups and all three view orders are reconstructed in one fixed basis.",
+            "All 187 symmetric mixed words of length two are powered to their exact finite orders.",
+            "The length-three witness has a characteristic coefficient outside Z[(1+sqrt(5))/2] in every view.",
+            "The rational characteristic norm has denominator set {1,2,4}, so it is not a cyclotomic product.",
+        ),
+        limitations=(
+            "Infinitude does not establish topological or Zariski density in SO(8).",
+            "The theorem classifies the fixed relative embedding, not every alignment of the two abstract finite groups.",
+            "The group theorem establishes no sequence-model quality or kernel-speed advantage.",
+        ),
+        replay_tier="bounded_full",
+    ),
+    GateContract(
         gate_id="signed_star_dirac_gram",
         claim="The strengthened Dirac--Gram inequality and its complete equality classification hold on the full four-parameter signed-star ansatz.",
         status="proved_exact",

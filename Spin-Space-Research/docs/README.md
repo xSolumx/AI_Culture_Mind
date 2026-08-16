@@ -36,6 +36,7 @@ proof-search products and private working notes are intentionally absent.
 | Review the Clifford signature chain | [Clifford signature theorem](manuscripts/CLIFFORD_SIGNATURE_EXTENSION.md) | [Spin(9) ledger](../../research-programs/05-information-geometry-and-dirac-gram-sensing/SPIN9_DIRAC_CLIFFORD_LEDGER.md) |
 | Review finite groups in the octonion operator lift | [Exact operator-group result](experiments/OCTONION_OPERATOR_GROUP_RESULTS.md) | [Repository group catalogue](../../research-programs/04-triality-clifford-representation-dynamics/GROUP_AND_NUMBER_STRUCTURE_CATALOGUE.md) |
 | Review the binary-icosahedral triality closure | [Exact order-864,000 closure](experiments/SPIN8_TRIALITY_2A5_CLOSURE_RESULTS.md) | [Repository group catalogue](../../research-programs/04-triality-clifford-representation-dynamics/GROUP_AND_NUMBER_STRUCTURE_CATALOGUE.md) |
+| Review the mixed monomial/golden closure | [Exact infinite-order witness](experiments/MIXED_MONOMIAL_GOLDEN_CLOSURE_RESULTS.md) | [Repository group catalogue](../../research-programs/04-triality-clifford-representation-dynamics/GROUP_AND_NUMBER_STRUCTURE_CATALOGUE.md) |
 | Referee one compact theorem | [Cayley-spectrum referee package](../referee/cayley-information-spectrum/README.md) | [LaTeX paper](../papers/cayley-information-spectrum/README.md) |
 | Review the maintained sequence-model architecture | [Canonical Pure Rotor foundations](../../SSM-Models/FOUNDATIONS.md) | [Historical Spin-Space foundations](FOUNDATIONS.md) and [Triality experiment](SPIN8_TRIALITY_EXPERIMENT.md) |
 | Review memory scanning and hierarchical retrieval | [Memory benchmark atlas and FLA fit](experiments/MEMORY_BENCHMARK_ATLAS.md) | [Large-slot semantic hierarchy and fused gather](experiments/LARGE_SLOT_SEMANTIC_HIERARCHY_RESULTS.md) |
@@ -92,6 +93,9 @@ proof-search products and private working notes are intentionally absent.
 
 ### Triality geometry and sensing
 
+- [Mixed Monomial/Golden Closure](experiments/MIXED_MONOMIAL_GOLDEN_CLOSURE_RESULTS.md)
+  — exact common length-three infinite-order witness for the vector and both
+  half-spin embeddings, after an exhaustive symmetric length-two audit.
 - [Binary-Icosahedral Triality Closure](experiments/SPIN8_TRIALITY_2A5_CLOSURE_RESULTS.md)
   — exact reducible closure of order 864,000, with a 600-cell rotation block,
   one binary-icosahedral block, and independent block-sign center.
