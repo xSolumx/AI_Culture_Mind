@@ -1,7 +1,7 @@
 # Documentation reconciliation — 2026-08-16
 
 Reconciliation opened at **2026-08-16T16:05:27+02:00** and latest
-research status reconciliation completed at **2026-08-16T22:37:10+02:00**
+research status reconciliation completed at **2026-08-17T00:02:40+02:00**
 (`Africa/Johannesburg`, UTC+02:00).
 
 ## Scope and method
@@ -428,3 +428,34 @@ Final integrated verification completed at **2026-08-16T22:37:10+02:00**:
   local Markdown targets. Its only reports are the intentionally non-public
   `.private/` directory named by `REPOSITORY_MAP.md` and the known LaTeX `x_t`
   false positive in `FOUNDATIONS.md`; no real local link is missing.
+
+## Exact adjacent-octet determinant continuation
+
+At **2026-08-17T00:02:40+02:00**, the maintained Spin-Space theorem tree was
+reconciled with three new exact computer-assisted results:
+
+- all ten coordinate faces of the five-variable adjacent endpoint-octet
+  determinant are nonnegative; nine reduce to one-mode perfect squares and
+  the tenth replays the hash-bound `Z=X^2` endpoint identity;
+- strict Walsh diagonal dominance holds on the complete central cube
+  `[1/4,3/4]^5`; and
+- an adaptive 2,140-leaf exact atlas extends that strict result to
+  `[1/8,7/8]^5`, with no unresolved leaf and exact minimum physical margin
+  `320281275533252594456507202812099057 /
+  5316911983139663491615228241121378304`.
+
+The corresponding artifact SHA-256 values are, respectively,
+`9a8988673ce4c5af4e0dca4b822b818b0f14e58364656bcc5e884e6f7edcbbec`,
+`26611845fd3f5a5b5e63be145c04ede664e4ed033091fc74284381cb9c308fe2`, and
+`cab3e87fb0c0c0ff9abb1c21cf2ea32bec9a92edc6364e225a5a66720486f762`.
+The authoritative reports are
+[`SPIN8_DIRAC_OCTET_DETERMINANT_BOUNDARY_RESULTS.md`](Spin-Space-Research/docs/experiments/SPIN8_DIRAC_OCTET_DETERMINANT_BOUNDARY_RESULTS.md)
+and
+[`SPIN8_DIRAC_OCTET_EXTENDED_CORE_DOMINANCE_RESULTS.md`](Spin-Space-Research/docs/experiments/SPIN8_DIRAC_OCTET_EXTENDED_CORE_DOMINANCE_RESULTS.md).
+
+The complete `Spin-Space-Research/tests` suite passed **398 tests, 224
+subtests, and one expected skip** in 2,165.47 seconds. Targeted theorem-chain,
+artifact, gate-contract, Ruff, compilation, and documentation audits also
+passed. These results do not cover the remaining width-`1/8` collars, the
+unrestricted seven-variable Dirac--Gram inequality, or global five-query
+D-optimality.

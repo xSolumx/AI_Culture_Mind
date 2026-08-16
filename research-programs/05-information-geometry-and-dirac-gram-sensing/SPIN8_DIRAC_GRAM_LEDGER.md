@@ -23,10 +23,13 @@ distinct from probe identifiability and from sequence modelling.
 | Unrestricted sector reconstruction | [`SPIN8_DIRAC_UNRESTRICTED_RECONSTRUCTION_RESULTS.md`](../../Spin-Space-Research/docs/experiments/SPIN8_DIRAC_UNRESTRICTED_RECONSTRUCTION_RESULTS.md) | Exact polynomial reconstruction and held-out identity checks; not positivity |
 | Fourier-energy inequality | [`UNRESTRICTED_FOURIER_ENERGY.md`](../../Spin-Space-Research/docs/manuscripts/UNRESTRICTED_FOURIER_ENERGY.md) | Exact aggregate second-moment bound; not orientation-wise positivity |
 | Endpoint Klein-four face | [`UNRESTRICTED_ENDPOINT_KLEIN_FACE.md`](../../Spin-Space-Research/docs/manuscripts/UNRESTRICTED_ENDPOINT_KLEIN_FACE.md) | Exact complete boundary-face theorem |
-| Adjacent endpoint octet | [`UNRESTRICTED_ENDPOINT_OCTET_REDUCTION.md`](../../Spin-Space-Research/docs/manuscripts/UNRESTRICTED_ENDPOINT_OCTET_REDUCTION.md) | Exact reduction; complete first Schur block; scalar, three quadratic, and cubic second-block theorems; determinant endpoints proved |
+| Adjacent endpoint octet | [`UNRESTRICTED_ENDPOINT_OCTET_REDUCTION.md`](../../Spin-Space-Research/docs/manuscripts/UNRESTRICTED_ENDPOINT_OCTET_REDUCTION.md) | Exact reduction; complete first Schur block; scalar, three quadratic, and cubic second-block theorems; complete determinant coordinate boundary proved |
 | Global octet quadratics | [`SPIN8_DIRAC_OCTET_QUADRATIC_RESULTS.md`](../../Spin-Space-Research/docs/experiments/SPIN8_DIRAC_OCTET_QUADRATIC_RESULTS.md) | Complete exact five-cube quadratic gate for modes `0011001`, `0101010`, and `0110011` |
 | Global octet cubic | [`SPIN8_DIRAC_OCTET_CUBIC_RESULTS.md`](../../Spin-Space-Research/docs/experiments/SPIN8_DIRAC_OCTET_CUBIC_RESULTS.md) | Complete exact five-cube cubic gate by endpoint assembly and a 32-box quotient atlas; determinant interior remains open |
 | Octet determinant endpoints | [`SPIN8_DIRAC_OCTET_DETERMINANT_ENDPOINT_RESULTS.md`](../../Spin-Space-Research/docs/experiments/SPIN8_DIRAC_OCTET_DETERMINANT_ENDPOINT_RESULTS.md) | Exact 6,082,148-term reconstruction; \(y=0\) proved by a 31-leaf atlas and \(y=1\) by \(Z=X^2\); open interior remains |
+| Octet determinant coordinate boundary | [`SPIN8_DIRAC_OCTET_DETERMINANT_BOUNDARY_RESULTS.md`](../../Spin-Space-Research/docs/experiments/SPIN8_DIRAC_OCTET_DETERMINANT_BOUNDARY_RESULTS.md) | Complete exact ten-face theorem: nine one-mode perfect squares plus the hash-bound \(y=1\) identity; all-five-coordinate strict interior remains open |
+| Octet central-core dominance | [`SPIN8_DIRAC_OCTET_CORE_DOMINANCE_RESULTS.md`](../../Spin-Space-Research/docs/experiments/SPIN8_DIRAC_OCTET_CORE_DOMINANCE_RESULTS.md) | Exact 32-box rational Bernstein theorem on \([1/4,3/4]^5\); every unique physical margin is strictly positive by Walsh diagonal dominance; boundary collars remain open |
+| Octet extended-core dominance atlas | [`SPIN8_DIRAC_OCTET_EXTENDED_CORE_DOMINANCE_RESULTS.md`](../../Spin-Space-Research/docs/experiments/SPIN8_DIRAC_OCTET_EXTENDED_CORE_DOMINANCE_RESULTS.md) | Exact adaptive 2,140-leaf theorem on \([1/8,7/8]^5\); every unique physical margin is strictly positive; only width-\(1/8\) collars remain outside this certificate |
 | Octet determinant equality tangent | [`SPIN8_DIRAC_OCTET_DETERMINANT_ENDPOINT_RESULTS.md`](../../Spin-Space-Research/docs/experiments/SPIN8_DIRAC_OCTET_DETERMINANT_ENDPOINT_RESULTS.md) | Exact descent (t=y^2); order-eight leading form (2^{48}F_4^2\geq0); degree-matched endpoint-selector quotient exactly rejected by a rational negative witness; finite-radius interior remains open |
 
 ## Open claims
@@ -34,7 +37,8 @@ distinct from probe identifiability and from sequence modelling.
 - positivity of every one of the sixteen unrestricted orientation margins on
   the complete feasible seven-variable domain;
 - the remaining elementary-symmetric orientation gates (e_5,\ldots,e_{16});
-- the determinant Schur minor for \(0<y<1\) on the adjacent endpoint face;
+- the determinant Schur minor when all five adjacent-face coordinates are
+  strictly interior;
 - any deduction of global five-query optimality from these partial results.
 
 ## Certificate boundary

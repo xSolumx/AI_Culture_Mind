@@ -31,6 +31,16 @@ claim families inside this theorem programme.
   constrained families, including signed-star, variable-Cayley one-edge, and
   frozen two-edge sectors, plus exact unrestricted reconstruction and boundary
   reductions. These results retain their individual domains.
+- On the adjacent endpoint-octet five-cube, the complete determinant
+  coordinate boundary is now exact: nine faces collapse to one-mode perfect
+  squares and the tenth is the hash-bound identity \(Z=X^2\). The determinant
+  with all five coordinates strictly interior remains open.
+- On the disjoint central core \([1/4,3/4]^5\), an exact 32-box Bernstein
+  certificate proves the stronger Walsh diagonal-dominance inequality, so all
+  unique physical margins are strictly positive. An adaptive continuation
+  expands this to \([1/8,7/8]^5\) with 2,140 exact leaves and no unresolved
+  box. Only the width-\(1/8\) collars between that extended core and the
+  coordinate boundary remain uncertified.
 - The Spin(9) Clifford-sensing ledger establishes exact generic
   identifiability, frame-operator reduction, and a strict local D-optimality
   theorem modulo Spin(9) for the displayed rank-three candidate. A separate
@@ -68,7 +78,8 @@ claim families inside this theorem programme.
   open; local optimality and the approximate-design relaxation do not settle
   it.
 - The unrestricted Spin(8) Dirac--Gram inequality remains open on the complete
-  feasible seven-variable domain.
+  feasible seven-variable domain; even the adjacent endpoint-octet reduction
+  still has an uncertified all-five-coordinate strict interior.
 - The global exact three-spinor Spin(9) optimum remains open; the maintained
   theorem is strict local optimality modulo symmetry plus a complete pure-
   \(V_5\) graph theorem and a complete \(21/20\) bound on the first coupled

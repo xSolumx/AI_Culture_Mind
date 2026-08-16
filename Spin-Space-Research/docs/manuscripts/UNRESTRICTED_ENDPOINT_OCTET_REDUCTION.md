@@ -3,8 +3,9 @@
 **Exact theorem note — updated 2026-08-12**
 **Status:** exact subgroup reduction, complete first-block theorem, exact
 scalar second-block theorem, and all three global quadratic second-block
-theorems; the cubic second-block theorem and both determinant endpoint faces
-are complete, while the determinant interior remains open
+theorems; the cubic second-block theorem and the complete ten-face determinant
+coordinate boundary are proved, while the strict determinant interior remains
+open
 **Certificate:**
 [`spin8_dirac_endpoint_octet.py`](../../src/spin8_dirac_endpoint_octet.py) and
 [`spin8_dirac_endpoint_octet_determinant.py`](../../src/spin8_dirac_endpoint_octet_determinant.py)
@@ -57,8 +58,9 @@ boundary \(u_d=u_g=0\), those three quadratic \(Z\)-minors coincide and factor
 as the square of a polynomial of multidegree \((6,6,12)\). A subsequent exact
 endpoint-selector identity and complete 32-box Bernstein atlas prove the cubic
 minor on the entire five-cube. The fourth-order determinant is reconstructed
-exactly and proved nonnegative on both (y=0) and (y=1); its open interval
-(0<y<1) remains unresolved.
+exactly. A complete coordinate-boundary theorem proves all ten faces: nine
+collapse to one-mode perfect squares, and (y=1) is the square identity
+(Z=X^2). The all-five-coordinate strict interior remains unresolved.
 Consequently this is a rigorous continuation beyond the four-variable endpoint
 theorem, but not yet a proof of the full adjacent face or the unrestricted
 seven-variable inequality.
@@ -302,6 +304,38 @@ four-variable dyadic atlas certifies 15 of 16 coarse cells; the unique rejected
 cell '0001' is replaced by all 16 of its children, each of which certifies.
 The resulting 31-leaf exact cover proves the complete \(y=0\) face.
 
+A later support-collapse theorem closes the complete coordinate boundary, not
+only these two endpoint faces. On each of the other eight coordinate faces,
+and independently again on \(y=0\), the mixed product \(\tau\) vanishes and
+at most one nontrivial forced radical square survives. The determinant is
+therefore exactly
+
+\[
+D=(Z_0^2-s_kZ_k^2)^2\geq0.
+\]
+
+Together with \(Z=X^2\) at \(y=1\), this proves all ten coordinate faces.
+The exact face table, hash-bound replay, and nonclaims are recorded in
+[`SPIN8_DIRAC_OCTET_DETERMINANT_BOUNDARY_RESULTS.md`](../experiments/SPIN8_DIRAC_OCTET_DETERMINANT_BOUNDARY_RESULTS.md).
+
+There is also a disjoint strict-interior theorem. On the complete central core
+\([1/4,3/4]^5\), a 32-box exact Bernstein certificate proves
+
+\[
+A_0>\sum_{\mu\ne0}|A_\mu|.
+\]
+
+Thus every unique physical margin is strictly positive there, a conclusion
+stronger than determinant positivity. The proof uses only rational Bernstein
+bounds and exact outward dyadic square-root ceilings. It is recorded in
+[`SPIN8_DIRAC_OCTET_CORE_DOMINANCE_RESULTS.md`](../experiments/SPIN8_DIRAC_OCTET_CORE_DOMINANCE_RESULTS.md).
+
+An adaptive continuation expands the same exact inequality to
+\([1/8,7/8]^5\). Its complete prefix tree has 2,140 certified leaves and 68
+refined basis-failure nodes, with no unresolved box through depth four. This
+stronger maintained core theorem is recorded in
+[`SPIN8_DIRAC_OCTET_EXTENDED_CORE_DOMINANCE_RESULTS.md`](../experiments/SPIN8_DIRAC_OCTET_EXTENDED_CORE_DOMINANCE_RESULTS.md).
+
 The maintained result, replay boundary, and explicit nonclaims are recorded in
 [SPIN8_DIRAC_OCTET_DETERMINANT_ENDPOINT_RESULTS.md](../experiments/SPIN8_DIRAC_OCTET_DETERMINANT_ENDPOINT_RESULTS.md).
 
@@ -323,16 +357,22 @@ decomposition.
 
 The exact reduction has isolated the remaining proof burden sharply. The
 scalar, quadratic, and cubic principal minors are nonnegative on the complete
-five-cube, and the determinant is nonnegative on both \(y\)-endpoint faces. If
-the determinant of the Klein-four circulant \(Z\) is also nonnegative for
-\(0<y<1\), then \(Z\succeq0\), hence \(K_8\succeq0\), and the complete adjacent
-endpoint face is proved.
+five-cube, and the determinant is nonnegative on its complete coordinate
+boundary and strictly positive on the extended core \([1/8,7/8]^5\). If the
+determinant of the Klein-four circulant \(Z\) is also nonnegative throughout
+the remaining width-\(1/8\) collars, then
+\(Z\succeq0\), hence \(K_8\succeq0\), and the complete adjacent endpoint face
+is proved.
 
 That statement has **not** yet been established. In particular:
 
 - native Bernstein negativity of a \(Z\)-minor is not a counterexample;
 - preliminary floating-point searches are falsifiers, not certificates;
 - positivity of all proper principal minors does not imply the determinant;
+- complete coordinate-boundary positivity does not imply strict-interior
+  positivity;
+- strict positivity on the extended core does not cover the remaining
+  width-\(1/8\) boundary collars;
 - this five-variable face does not settle the unrestricted seven-variable
   Dirac--Gram inequality.
 
@@ -344,5 +384,6 @@ negative determinant value. In contrast, the determinant itself has exact
 order-eight leading form (2^{48}F_4^2\geq0) at the remaining equality
 corner. The next exact target is therefore a finite-radius max-coordinate
 blow-up of (D) itself that retains this nonnegative exceptional divisor. The
-two endpoint theorems, proper-minor theorems, and local tangent theorem still
-do not by themselves imply the determinant inequality on (0<y<1).
+complete coordinate-boundary theorem, proper-minor theorems, and local tangent
+theorem still do not by themselves imply the determinant inequality in the
+strict interior.

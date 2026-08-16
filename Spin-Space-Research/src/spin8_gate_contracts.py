@@ -585,9 +585,7 @@ GATES: tuple[GateContract, ...] = (
             "positivity_certificate",
         ),
         test_suites=("tests/test_spin8_endpoint_octet_determinant.py",),
-        artifacts=(
-            "artifacts/spin8_dirac_endpoint_octet_determinant_20260812.json",
-        ),
+        artifacts=("artifacts/spin8_dirac_endpoint_octet_determinant_20260812.json",),
         boundary_obligations=(
             "The radical-free formula must agree with both the generic four-by-four determinant and the product of the four Walsh eigenvalues.",
             "The y=0 face must be covered by all fifteen certifying coarse cells and all sixteen children of the sole rejected coarse cell.",
@@ -627,6 +625,34 @@ GATES: tuple[GateContract, ...] = (
         replay_tier="expensive_exact",
     ),
     GateContract(
+        gate_id="endpoint_octet_determinant_coordinate_boundary",
+        claim=(
+            "The adjacent-octet fourth-order Schur determinant is "
+            "nonnegative on the complete ten-face coordinate boundary of "
+            "its five-cube."
+        ),
+        status="proved_exact",
+        evidence_layers=(
+            "exact_arithmetic",
+            "symbolic_identity",
+            "artifact_hash",
+        ),
+        test_suites=("tests/test_spin8_endpoint_octet_determinant_boundary.py",),
+        artifacts=(
+            "artifacts/spin8_dirac_endpoint_octet_determinant_boundary_20260816.json",
+        ),
+        boundary_obligations=(
+            "On each of the nine non-y=1 faces, tau must vanish and at most one nontrivial forced radical square may survive.",
+            "The zero-mode and all three one-mode specializations of the generic determinant must be exact perfect squares.",
+            "The y=1 face may be delegated only through the hash-bound Z=X^2 endpoint theorem.",
+            "The artifact must retain an explicit false flag for strict-interior determinant positivity.",
+        ),
+        limitations=(
+            "This proves the coordinate boundary only; all-five-coordinate strict-interior positivity, the complete adjacent octet, and unrestricted Dirac--Gram positivity remain open.",
+        ),
+        replay_tier="bounded_full",
+    ),
+    GateContract(
         gate_id="endpoint_octet_degree_matched_selector_route",
         claim=(
             "The degree-matched two-endpoint quotient Q24 in "
@@ -649,6 +675,62 @@ GATES: tuple[GateContract, ...] = (
         ),
         limitations=(
             "Only this over-strong sufficient decomposition is disproved; determinant nonnegativity remains open.",
+        ),
+        replay_tier="expensive_exact",
+    ),
+    GateContract(
+        gate_id="endpoint_octet_central_core_dominance",
+        claim=(
+            "The trivial endpoint-octet Walsh amplitude strictly dominates "
+            "the sum of the seven nontrivial absolute amplitudes on "
+            "[1/4,3/4]^5, so every physical margin is strictly positive."
+        ),
+        status="proved_exact",
+        evidence_layers=(
+            "exact_arithmetic",
+            "positivity_certificate",
+            "artifact_hash",
+        ),
+        test_suites=("tests/test_spin8_endpoint_octet_core_dominance.py",),
+        artifacts=(
+            "artifacts/spin8_dirac_endpoint_octet_core_dominance_20260816.json",
+        ),
+        boundary_obligations=(
+            "The 32 dyadic boxes must form the complete Cartesian partition of [1/4,3/4]^5.",
+            "Every residual and forced-square bound must come from an exact Bernstein convex-hull transform.",
+            "Every square-root upper bound must be an outward dyadic ceiling verified by exact squaring.",
+            "The trivial-amplitude lower bound must exceed the sum of all seven nontrivial absolute upper bounds on every box.",
+        ),
+        limitations=(
+            "This strict theorem covers only the central core; the boundary collars, complete adjacent octet, unrestricted Dirac--Gram inequality, and global exact-design problem remain open.",
+        ),
+        replay_tier="bounded_full",
+    ),
+    GateContract(
+        gate_id="endpoint_octet_extended_core_dominance",
+        claim=(
+            "An adaptive 2,140-leaf exact atlas proves that the trivial "
+            "endpoint-octet Walsh amplitude strictly dominates the seven "
+            "nontrivial absolute amplitudes on [1/8,7/8]^5."
+        ),
+        status="proved_exact",
+        evidence_layers=(
+            "exact_arithmetic",
+            "positivity_certificate",
+            "artifact_hash",
+        ),
+        test_suites=("tests/test_spin8_endpoint_octet_core_dominance_atlas.py",),
+        artifacts=(
+            "artifacts/spin8_dirac_endpoint_octet_core_dominance_atlas_20260816.json",
+        ),
+        boundary_obligations=(
+            "The 32 affine roots must cover [1/8,7/8]^5 and every rejected node must delegate to all 32 five-axis children.",
+            "Every one of the 2,140 leaves must have a strictly positive exact rational dominance gap.",
+            "Every Bernstein transform and outward radical bound must be recomputed by the full source harness; the compact test verifies the stored summaries and complete prefix tree.",
+            "No box may remain unresolved at the frozen maximum refinement depth four.",
+        ),
+        limitations=(
+            "This strict theorem does not cover the width-1/8 boundary collars, complete adjacent octet, unrestricted Dirac--Gram inequality, or global exact-design problem.",
         ),
         replay_tier="expensive_exact",
     ),

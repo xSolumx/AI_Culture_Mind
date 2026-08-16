@@ -143,9 +143,14 @@ broader numerical counterexample searches without promoting them to proof.
   complete first block is now proved positive semidefinite, and the scalar
   minor of the second block follows exactly from the global Fourier-energy
   theorem. All three quadratic minors of the second block are now proved on
-  the complete five-cube. The cubic is proved on its full \(y=0\) endpoint
-  face, but its interior certificate remains open; the determinant is also
-  open. Therefore the full adjacent face is not yet a theorem.
+  the complete five-cube, as is the cubic minor. The 6,082,148-term
+  determinant is proved on the complete coordinate boundary: nine faces
+  collapse exactly to one-mode perfect squares, while \(y=1\) is
+  \(Z=X^2\). On \([1/8,7/8]^5\), a 2,140-leaf adaptive exact rational
+  Bernstein atlas proves the stronger inequality that the trivial Walsh
+  amplitude strictly dominates the other seven in absolute sum. The remaining
+  width-\(1/8\) boundary collars are open, so the full adjacent face is not yet
+  a theorem.
 - A triangular recurrence driven by an equivariant bilinear intertwiner has an
   exact finite lift, an associative staged scan, and fixed recurrent state.
   \(\operatorname{Spin}(8)\) triality is the exceptional instance studied here.
