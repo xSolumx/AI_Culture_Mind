@@ -1,0 +1,1201 @@
+{
+  "all_required_checks_passed": false,
+  "basis_reports": [
+    {
+      "all_required_checks_passed": false,
+      "basis_seed": 0,
+      "checks": {
+        "all_learned_metrics_finite": true,
+        "all_structured_beat_matched_dense_l128": true,
+        "all_structured_l128_below_1e_3": true,
+        "collapsed_ablation_fails_l128": true,
+        "oracle_is_within_float32_gate": false
+      },
+      "config": {
+        "batch_size": 32,
+        "delta_heads": 4,
+        "delta_hidden_size": 32,
+        "delta_householder": 4,
+        "evaluation_batch_size": 128,
+        "evaluation_lengths": [
+          16,
+          64,
+          128
+        ],
+        "learning_rate": 0.003,
+        "mamba_head_dim": 16,
+        "mamba_heads": 4,
+        "mamba_hidden_size": 32,
+        "mamba_state_size": 16,
+        "operator_noise_std": 0.05,
+        "seed": 0,
+        "steps": 1000,
+        "train_length": 16,
+        "weight_decay": 0.0001
+      },
+      "curriculum": [
+        {
+          "length": 2,
+          "updates": 250
+        },
+        {
+          "length": 4,
+          "updates": 250
+        },
+        {
+          "length": 8,
+          "updates": 250
+        },
+        {
+          "length": 16,
+          "updates": 250
+        }
+      ],
+      "dense_linear_operator": {
+        "0": {
+          "checkpoint": "checkpoints\\octonion_final_only_curriculum1000\\dense_linear_operator_basis0_init0.pt",
+          "checkpoint_sha256": "5d8b7ad39fd9a0fbf7be293794b5da5e05869b56a316fe40e54b0129dfe3c7c9",
+          "evaluation": {
+            "128": {
+              "maximum_absolute_error": 0.004651129245758057,
+              "mean_relative_frobenius_error": 0.0038607942406088114,
+              "mse": 1.8813011593010742e-06
+            },
+            "16": {
+              "maximum_absolute_error": 0.00377771258354187,
+              "mean_relative_frobenius_error": 0.003197913058102131,
+              "mse": 1.2887762750324327e-06
+            },
+            "64": {
+              "maximum_absolute_error": 0.004657819867134094,
+              "mean_relative_frobenius_error": 0.003432916710153222,
+              "mse": 1.4905720036040293e-06
+            }
+          },
+          "loss_samples": {
+            "1": 0.2235070765018463,
+            "100": 0.13241378962993622,
+            "1000": 1.3603191746369703e-06,
+            "300": 0.11561787128448486,
+            "500": 0.052724067121744156,
+            "750": 0.0006655196193605661
+          },
+          "parameters": 512,
+          "peak_cuda_memory_bytes": 38710272,
+          "recurrent_state_scalars": 64,
+          "training_wall_seconds": 2.846168900025077
+        },
+        "1": {
+          "checkpoint": "checkpoints\\octonion_final_only_curriculum1000\\dense_linear_operator_basis0_init1.pt",
+          "checkpoint_sha256": "46f5990d19191d45fd275cbba8a9a91ac5c964d5856ec84629197b082b10a996",
+          "evaluation": {
+            "128": {
+              "maximum_absolute_error": 0.004908323287963867,
+              "mean_relative_frobenius_error": 0.004135618451982737,
+              "mse": 2.158722054446116e-06
+            },
+            "16": {
+              "maximum_absolute_error": 0.004074037075042725,
+              "mean_relative_frobenius_error": 0.003428664058446884,
+              "mse": 1.4812861763857654e-06
+            },
+            "64": {
+              "maximum_absolute_error": 0.004997119307518005,
+              "mean_relative_frobenius_error": 0.0036744121462106705,
+              "mse": 1.7078509699786082e-06
+            }
+          },
+          "loss_samples": {
+            "1": 0.22553622722625732,
+            "100": 0.13306844234466553,
+            "1000": 1.558180883876048e-06,
+            "300": 0.11589634418487549,
+            "500": 0.05429608002305031,
+            "750": 0.000733240507543087
+          },
+          "parameters": 512,
+          "peak_cuda_memory_bytes": 38710272,
+          "recurrent_state_scalars": 64,
+          "training_wall_seconds": 2.8570570000447333
+        },
+        "2": {
+          "checkpoint": "checkpoints\\octonion_final_only_curriculum1000\\dense_linear_operator_basis0_init2.pt",
+          "checkpoint_sha256": "a6235a20ad939d6e05e69bf868787a04b72a59588d26b6278e6e19eedcc85eb7",
+          "evaluation": {
+            "128": {
+              "maximum_absolute_error": 0.004670977592468262,
+              "mean_relative_frobenius_error": 0.0038089421577751637,
+              "mse": 1.8315596435058978e-06
+            },
+            "16": {
+              "maximum_absolute_error": 0.003751218318939209,
+              "mean_relative_frobenius_error": 0.003155795391649008,
+              "mse": 1.2552229691209504e-06
+            },
+            "64": {
+              "maximum_absolute_error": 0.004629701375961304,
+              "mean_relative_frobenius_error": 0.003389406483620405,
+              "mse": 1.4527456642099423e-06
+            }
+          },
+          "loss_samples": {
+            "1": 0.2238117903470993,
+            "100": 0.13254818320274353,
+            "1000": 1.3240519365353975e-06,
+            "300": 0.11542768776416779,
+            "500": 0.05159175023436546,
+            "750": 0.000631638802587986
+          },
+          "parameters": 512,
+          "peak_cuda_memory_bytes": 38710272,
+          "recurrent_state_scalars": 64,
+          "training_wall_seconds": 2.8233237999957055
+        }
+      },
+      "fixed_results": {
+        "exact_transported_oracle": {
+          "evaluation": {
+            "128": {
+              "maximum_absolute_error": 5.4836273193359375e-06,
+              "mean_relative_frobenius_error": 4.165823156654369e-06,
+              "mse": 2.20445927137658e-12
+            },
+            "16": {
+              "maximum_absolute_error": 2.0135194063186646e-06,
+              "mean_relative_frobenius_error": 1.3945598311693175e-06,
+              "mse": 2.490551439127825e-13
+            },
+            "64": {
+              "maximum_absolute_error": 4.291534423828125e-06,
+              "mean_relative_frobenius_error": 2.8736808417306747e-06,
+              "mse": 1.047076162753735e-12
+            }
+          },
+          "parameters": 0,
+          "recurrent_state_scalars": 64
+        },
+        "fixed_canonical_operator": {
+          "evaluation": {
+            "128": {
+              "maximum_absolute_error": 1.5443638563156128,
+              "mean_relative_frobenius_error": 1.4126313924789429,
+              "mse": 0.25040358304977417
+            },
+            "16": {
+              "maximum_absolute_error": 1.659232258796692,
+              "mean_relative_frobenius_error": 1.4171841144561768,
+              "mse": 0.2521001696586609
+            },
+            "64": {
+              "maximum_absolute_error": 1.6763521432876587,
+              "mean_relative_frobenius_error": 1.4218852519989014,
+              "mse": 0.2535403072834015
+            }
+          },
+          "parameters": 0,
+          "recurrent_state_scalars": 64
+        },
+        "transported_collapsed_octonion": {
+          "evaluation": {
+            "128": {
+              "maximum_absolute_error": 1.5532304048538208,
+              "mean_relative_frobenius_error": 1.320195198059082,
+              "mse": 0.21914228796958923
+            },
+            "16": {
+              "maximum_absolute_error": 1.561190128326416,
+              "mean_relative_frobenius_error": 1.3193397521972656,
+              "mse": 0.21865211427211761
+            },
+            "64": {
+              "maximum_absolute_error": 1.5000121593475342,
+              "mean_relative_frobenius_error": 1.3316479921340942,
+              "mse": 0.222796231508255
+            }
+          },
+          "parameters": 0,
+          "recurrent_state_scalars": 8
+        }
+      },
+      "learned_basis_operator": {
+        "0": {
+          "checkpoint": "checkpoints\\octonion_final_only_curriculum1000\\learned_basis_operator_basis0_init0.pt",
+          "checkpoint_sha256": "8546c1e8395b39bf13ee8ed6765fd892aba360bf6594dd203357101ebeb92ef4",
+          "evaluation": {
+            "128": {
+              "maximum_absolute_error": 1.3485550880432129e-05,
+              "mean_relative_frobenius_error": 1.040540973917814e-05,
+              "mse": 1.374559494005112e-11
+            },
+            "16": {
+              "maximum_absolute_error": 7.063150405883789e-06,
+              "mean_relative_frobenius_error": 4.865896698902361e-06,
+              "mse": 3.0139029293108077e-12
+            },
+            "64": {
+              "maximum_absolute_error": 1.0546296834945679e-05,
+              "mean_relative_frobenius_error": 7.66051289247116e-06,
+              "mse": 7.513694527672143e-12
+            }
+          },
+          "learned_basis_orthogonality_residual": 5.960464477539062e-07,
+          "loss_samples": {
+            "1": 0.22708240151405334,
+            "100": 0.08784130215644836,
+            "1000": 3.285611799991317e-12,
+            "300": 6.818704605393577e-06,
+            "500": 1.5857540974772988e-11,
+            "750": 5.8050638948592415e-12
+          },
+          "parameters": 28,
+          "peak_cuda_memory_bytes": 39760896,
+          "recurrent_state_scalars": 64,
+          "training_wall_seconds": 8.180556500039529
+        },
+        "1": {
+          "checkpoint": "checkpoints\\octonion_final_only_curriculum1000\\learned_basis_operator_basis0_init1.pt",
+          "checkpoint_sha256": "54b50f16329991225b8888f421ecedfb5fe2df292dbea70d6862a76311ffb99c",
+          "evaluation": {
+            "128": {
+              "maximum_absolute_error": 1.3709068298339844e-05,
+              "mean_relative_frobenius_error": 9.83810969046317e-06,
+              "mse": 1.228617728388226e-11
+            },
+            "16": {
+              "maximum_absolute_error": 7.0035457611083984e-06,
+              "mean_relative_frobenius_error": 4.5163910726842005e-06,
+              "mse": 2.5990281975196705e-12
+            },
+            "64": {
+              "maximum_absolute_error": 1.0468065738677979e-05,
+              "mean_relative_frobenius_error": 7.13147073838627e-06,
+              "mse": 6.495136893602815e-12
+            }
+          },
+          "learned_basis_orthogonality_residual": 7.152557373046875e-07,
+          "loss_samples": {
+            "1": 0.2279491424560547,
+            "100": 0.09937289357185364,
+            "1000": 2.7298653788865312e-12,
+            "300": 7.632060260220896e-06,
+            "500": 1.5396389024813217e-11,
+            "750": 5.5400666693072864e-12
+          },
+          "parameters": 28,
+          "peak_cuda_memory_bytes": 39760896,
+          "recurrent_state_scalars": 64,
+          "training_wall_seconds": 7.922221900022123
+        },
+        "2": {
+          "checkpoint": "checkpoints\\octonion_final_only_curriculum1000\\learned_basis_operator_basis0_init2.pt",
+          "checkpoint_sha256": "410b662963850e9e5a6440765f6458e97d7260771fedc225a939f134078dbd7e",
+          "evaluation": {
+            "128": {
+              "maximum_absolute_error": 1.3679265975952148e-05,
+              "mean_relative_frobenius_error": 9.341087206848897e-06,
+              "mse": 1.1075392339354728e-11
+            },
+            "16": {
+              "maximum_absolute_error": 7.152557373046875e-06,
+              "mean_relative_frobenius_error": 4.541661382972961e-06,
+              "mse": 2.6270433311353925e-12
+            },
+            "64": {
+              "maximum_absolute_error": 9.655952453613281e-06,
+              "mean_relative_frobenius_error": 6.923101864231285e-06,
+              "mse": 6.13008428740347e-12
+            }
+          },
+          "learned_basis_orthogonality_residual": 3.5762786865234375e-07,
+          "loss_samples": {
+            "1": 0.22999224066734314,
+            "100": 0.08592656254768372,
+            "1000": 3.0890342367362322e-12,
+            "300": 4.367168003227562e-06,
+            "500": 1.782628558655297e-11,
+            "750": 6.291439157840584e-12
+          },
+          "parameters": 28,
+          "peak_cuda_memory_bytes": 39760896,
+          "recurrent_state_scalars": 64,
+          "training_wall_seconds": 7.946999100036919
+        }
+      },
+      "reference_results": {
+        "delta_product_reference": {
+          "checkpoint": "checkpoints\\octonion_final_only_curriculum1000\\delta_product_reference_basis0_init0.pt",
+          "checkpoint_sha256": "25b073498e6d05b4600b1d35fce3ba5d264e48de257648303e151467b18407cf",
+          "evaluation": {
+            "128": {
+              "maximum_absolute_error": 0.940200686454773,
+              "mean_relative_frobenius_error": 1.0008955001831055,
+              "mse": 0.1252317726612091
+            },
+            "16": {
+              "maximum_absolute_error": 0.9695022106170654,
+              "mean_relative_frobenius_error": 1.0011191368103027,
+              "mse": 0.12528479099273682
+            },
+            "64": {
+              "maximum_absolute_error": 0.9714707136154175,
+              "mean_relative_frobenius_error": 1.0021698474884033,
+              "mse": 0.12554925680160522
+            }
+          },
+          "loss_samples": {
+            "1": 0.1704544723033905,
+            "100": 0.10459940135478973,
+            "1000": 0.12467741221189499,
+            "300": 0.12686151266098022,
+            "500": 0.12619777023792267,
+            "750": 0.12524768710136414
+          },
+          "parameters": 13192,
+          "peak_cuda_memory_bytes": 198335488,
+          "recurrent_state_scalars": 256,
+          "training_wall_seconds": 19.02440910000587
+        },
+        "transformers_mamba2": {
+          "checkpoint": "checkpoints\\octonion_final_only_curriculum1000\\transformers_mamba2_basis0_init0.pt",
+          "checkpoint_sha256": "2b6bc501d37a4b3998ce76b66b75d772e21ecf1934e544bcbdca1d0e00be5df0",
+          "evaluation": {
+            "128": {
+              "maximum_absolute_error": 0.9711655378341675,
+              "mean_relative_frobenius_error": 1.0031167268753052,
+              "mse": 0.12580172717571259
+            },
+            "16": {
+              "maximum_absolute_error": 0.9683660268783569,
+              "mean_relative_frobenius_error": 1.0046570301055908,
+              "mse": 0.12618793547153473
+            },
+            "64": {
+              "maximum_absolute_error": 1.0028358697891235,
+              "mean_relative_frobenius_error": 1.0051028728485107,
+              "mse": 0.12629854679107666
+            }
+          },
+          "loss_samples": {
+            "1": 0.42069533467292786,
+            "100": 0.11924437433481216,
+            "1000": 0.12600618600845337,
+            "300": 0.12769246101379395,
+            "500": 0.12664362788200378,
+            "750": 0.12645021080970764
+          },
+          "parameters": 12300,
+          "peak_cuda_memory_bytes": 4916369920,
+          "recurrent_state_scalars": 1408,
+          "training_wall_seconds": 34.87765729997773
+        }
+      },
+      "schedules": {
+        "basis_sha256": "25f2e8cba780ca2f9a88432d446c4ace3d9e5d1a22e318d1834e2a547546372a",
+        "evaluation_schedule_sha256": "02264c49fd68a5ada4ccdbbdcc668e7ebaa9636882b4230451278f41a39d529a",
+        "training_schedule_sha256": "8118e80ab3b549a70694b029f2f176d69f4a7d57dc51882c70ae1b103b32bcfe"
+      }
+    },
+    {
+      "all_required_checks_passed": true,
+      "basis_seed": 1,
+      "checks": {
+        "all_learned_metrics_finite": true,
+        "all_structured_beat_matched_dense_l128": true,
+        "all_structured_l128_below_1e_3": true,
+        "collapsed_ablation_fails_l128": true,
+        "oracle_is_within_float32_gate": true
+      },
+      "config": {
+        "batch_size": 32,
+        "delta_heads": 4,
+        "delta_hidden_size": 32,
+        "delta_householder": 4,
+        "evaluation_batch_size": 128,
+        "evaluation_lengths": [
+          16,
+          64,
+          128
+        ],
+        "learning_rate": 0.003,
+        "mamba_head_dim": 16,
+        "mamba_heads": 4,
+        "mamba_hidden_size": 32,
+        "mamba_state_size": 16,
+        "operator_noise_std": 0.05,
+        "seed": 1,
+        "steps": 1000,
+        "train_length": 16,
+        "weight_decay": 0.0001
+      },
+      "curriculum": [
+        {
+          "length": 2,
+          "updates": 250
+        },
+        {
+          "length": 4,
+          "updates": 250
+        },
+        {
+          "length": 8,
+          "updates": 250
+        },
+        {
+          "length": 16,
+          "updates": 250
+        }
+      ],
+      "dense_linear_operator": {
+        "0": {
+          "checkpoint": "checkpoints\\octonion_final_only_curriculum1000\\dense_linear_operator_basis1_init0.pt",
+          "checkpoint_sha256": "c271c5c37094246121953421126dba600499bc64d71b56465d5d03ddc7942c97",
+          "evaluation": {
+            "128": {
+              "maximum_absolute_error": 0.0019044280052185059,
+              "mean_relative_frobenius_error": 0.0013633372727781534,
+              "mse": 2.3487449141157413e-07
+            },
+            "16": {
+              "maximum_absolute_error": 0.0014366209506988525,
+              "mean_relative_frobenius_error": 0.0010888496180996299,
+              "mse": 1.49463915022352e-07
+            },
+            "64": {
+              "maximum_absolute_error": 0.0018560439348220825,
+              "mean_relative_frobenius_error": 0.001227158703841269,
+              "mse": 1.903748341192113e-07
+            }
+          },
+          "loss_samples": {
+            "1": 0.19014689326286316,
+            "100": 0.12890103459358215,
+            "1000": 1.5320188140321989e-07,
+            "300": 0.059685200452804565,
+            "500": 0.005293090362101793,
+            "750": 4.5999848225619644e-05
+          },
+          "parameters": 512,
+          "peak_cuda_memory_bytes": 38710272,
+          "recurrent_state_scalars": 64,
+          "training_wall_seconds": 4.780510000011418
+        },
+        "1": {
+          "checkpoint": "checkpoints\\octonion_final_only_curriculum1000\\dense_linear_operator_basis1_init1.pt",
+          "checkpoint_sha256": "8fb3a463a70f154d862fa4740c0139bae6de7da5bbcb2c8e6eafd4e3da3a3fd9",
+          "evaluation": {
+            "128": {
+              "maximum_absolute_error": 0.0019272863864898682,
+              "mean_relative_frobenius_error": 0.0013618506491184235,
+              "mse": 2.3437249296875962e-07
+            },
+            "16": {
+              "maximum_absolute_error": 0.0014626085758209229,
+              "mean_relative_frobenius_error": 0.001086078118532896,
+              "mse": 1.4868732023387565e-07
+            },
+            "64": {
+              "maximum_absolute_error": 0.001852571964263916,
+              "mean_relative_frobenius_error": 0.0012252499582245946,
+              "mse": 1.8975251236952317e-07
+            }
+          },
+          "loss_samples": {
+            "1": 0.18950551748275757,
+            "100": 0.1284719705581665,
+            "1000": 1.5262907027135952e-07,
+            "300": 0.05885476619005203,
+            "500": 0.00513678090646863,
+            "750": 4.520866059465334e-05
+          },
+          "parameters": 512,
+          "peak_cuda_memory_bytes": 38710272,
+          "recurrent_state_scalars": 64,
+          "training_wall_seconds": 4.6944709999952465
+        },
+        "2": {
+          "checkpoint": "checkpoints\\octonion_final_only_curriculum1000\\dense_linear_operator_basis1_init2.pt",
+          "checkpoint_sha256": "be90e17cbe8c39a393fa8f5fc349197b97dc09a8b524bb9a3da76c1750b1be6a",
+          "evaluation": {
+            "128": {
+              "maximum_absolute_error": 0.0017858445644378662,
+              "mean_relative_frobenius_error": 0.001258324133232236,
+              "mse": 2.0011665924357658e-07
+            },
+            "16": {
+              "maximum_absolute_error": 0.0013367831707000732,
+              "mean_relative_frobenius_error": 0.0010037497850134969,
+              "mse": 1.2702906815320603e-07
+            },
+            "64": {
+              "maximum_absolute_error": 0.0016747862100601196,
+              "mean_relative_frobenius_error": 0.001133578596636653,
+              "mse": 1.6244500500306458e-07
+            }
+          },
+          "loss_samples": {
+            "1": 0.18877077102661133,
+            "100": 0.1279989778995514,
+            "1000": 1.3014172850489558e-07,
+            "300": 0.05854237079620361,
+            "500": 0.0050205569714307785,
+            "750": 4.195368819637224e-05
+          },
+          "parameters": 512,
+          "peak_cuda_memory_bytes": 38710272,
+          "recurrent_state_scalars": 64,
+          "training_wall_seconds": 3.849759000004269
+        }
+      },
+      "fixed_results": {
+        "exact_transported_oracle": {
+          "evaluation": {
+            "128": {
+              "maximum_absolute_error": 3.993511199951172e-06,
+              "mean_relative_frobenius_error": 2.7697751647792757e-06,
+              "mse": 9.765686523333095e-13
+            },
+            "16": {
+              "maximum_absolute_error": 1.2218952178955078e-06,
+              "mean_relative_frobenius_error": 8.534492508260882e-07,
+              "mse": 9.304118890260393e-14
+            },
+            "64": {
+              "maximum_absolute_error": 2.6151537895202637e-06,
+              "mean_relative_frobenius_error": 1.818019654820091e-06,
+              "mse": 4.2036551106336417e-13
+            }
+          },
+          "parameters": 0,
+          "recurrent_state_scalars": 64
+        },
+        "fixed_canonical_operator": {
+          "evaluation": {
+            "128": {
+              "maximum_absolute_error": 1.748509407043457,
+              "mean_relative_frobenius_error": 1.4009180068969727,
+              "mse": 0.24620845913887024
+            },
+            "16": {
+              "maximum_absolute_error": 1.6078921556472778,
+              "mean_relative_frobenius_error": 1.413986325263977,
+              "mse": 0.25095826387405396
+            },
+            "64": {
+              "maximum_absolute_error": 1.5916836261749268,
+              "mean_relative_frobenius_error": 1.4123475551605225,
+              "mse": 0.2502710223197937
+            }
+          },
+          "parameters": 0,
+          "recurrent_state_scalars": 64
+        },
+        "transported_collapsed_octonion": {
+          "evaluation": {
+            "128": {
+              "maximum_absolute_error": 1.6562384366989136,
+              "mean_relative_frobenius_error": 1.3033381700515747,
+              "mse": 0.21371522545814514
+            },
+            "16": {
+              "maximum_absolute_error": 1.5760209560394287,
+              "mean_relative_frobenius_error": 1.3119467496871948,
+              "mse": 0.2164839208126068
+            },
+            "64": {
+              "maximum_absolute_error": 1.6276882886886597,
+              "mean_relative_frobenius_error": 1.3193413019180298,
+              "mse": 0.21895043551921844
+            }
+          },
+          "parameters": 0,
+          "recurrent_state_scalars": 8
+        }
+      },
+      "learned_basis_operator": {
+        "0": {
+          "checkpoint": "checkpoints\\octonion_final_only_curriculum1000\\learned_basis_operator_basis1_init0.pt",
+          "checkpoint_sha256": "aa8ca41da5d513ea0dfc92660f518ea68b0f1e4cd4982fd5c94892173eb2fdfe",
+          "evaluation": {
+            "128": {
+              "maximum_absolute_error": 1.4543533325195312e-05,
+              "mean_relative_frobenius_error": 1.0814941560965963e-05,
+              "mse": 1.4898027256293744e-11
+            },
+            "16": {
+              "maximum_absolute_error": 6.366521120071411e-06,
+              "mean_relative_frobenius_error": 3.994690814579371e-06,
+              "mse": 2.041847593781121e-12
+            },
+            "64": {
+              "maximum_absolute_error": 1.1488795280456543e-05,
+              "mean_relative_frobenius_error": 7.739823558949865e-06,
+              "mse": 7.645450245119534e-12
+            }
+          },
+          "learned_basis_orthogonality_residual": 4.76837158203125e-07,
+          "loss_samples": {
+            "1": 0.192325621843338,
+            "100": 0.12842252850532532,
+            "1000": 2.3099291576733627e-12,
+            "300": 2.2285046725301072e-05,
+            "500": 1.589516018807302e-11,
+            "750": 5.702795440737374e-12
+          },
+          "parameters": 28,
+          "peak_cuda_memory_bytes": 39760896,
+          "recurrent_state_scalars": 64,
+          "training_wall_seconds": 12.276254999975208
+        },
+        "1": {
+          "checkpoint": "checkpoints\\octonion_final_only_curriculum1000\\learned_basis_operator_basis1_init1.pt",
+          "checkpoint_sha256": "44f8f93ceb229c48a75b2d28b338b583faec7a72b4e5a5931d8c1ebaee8d8579",
+          "evaluation": {
+            "128": {
+              "maximum_absolute_error": 1.665949821472168e-05,
+              "mean_relative_frobenius_error": 1.1919492862944026e-05,
+              "mse": 1.8076968741342903e-11
+            },
+            "16": {
+              "maximum_absolute_error": 6.616115570068359e-06,
+              "mean_relative_frobenius_error": 4.4112316572864074e-06,
+              "mse": 2.487944529214192e-12
+            },
+            "64": {
+              "maximum_absolute_error": 1.1771917343139648e-05,
+              "mean_relative_frobenius_error": 8.499016985297203e-06,
+              "mse": 9.244944219888307e-12
+            }
+          },
+          "learned_basis_orthogonality_residual": 6.556510925292969e-07,
+          "loss_samples": {
+            "1": 0.1878894865512848,
+            "100": 0.1289704591035843,
+            "1000": 2.590729497251032e-12,
+            "300": 2.2901327611180022e-05,
+            "500": 2.03305965812417e-11,
+            "750": 7.074200166629074e-12
+          },
+          "parameters": 28,
+          "peak_cuda_memory_bytes": 39760896,
+          "recurrent_state_scalars": 64,
+          "training_wall_seconds": 12.69545899995137
+        },
+        "2": {
+          "checkpoint": "checkpoints\\octonion_final_only_curriculum1000\\learned_basis_operator_basis1_init2.pt",
+          "checkpoint_sha256": "490ea49c7fb97a536242cff5640c2e095114aa15effce0aab2af3a22b90249fd",
+          "evaluation": {
+            "128": {
+              "maximum_absolute_error": 1.4066696166992188e-05,
+              "mean_relative_frobenius_error": 1.006857019092422e-05,
+              "mse": 1.2906764199072107e-11
+            },
+            "16": {
+              "maximum_absolute_error": 5.751848220825195e-06,
+              "mean_relative_frobenius_error": 3.925729743059492e-06,
+              "mse": 1.9670207303257303e-12
+            },
+            "64": {
+              "maximum_absolute_error": 1.0967254638671875e-05,
+              "mean_relative_frobenius_error": 7.341328455368057e-06,
+              "mse": 6.878287002465289e-12
+            }
+          },
+          "learned_basis_orthogonality_residual": 7.152557373046875e-07,
+          "loss_samples": {
+            "1": 0.19109606742858887,
+            "100": 0.12579560279846191,
+            "1000": 2.1550649719620507e-12,
+            "300": 3.888704668497667e-05,
+            "500": 1.8912670041171253e-11,
+            "750": 6.59020581161851e-12
+          },
+          "parameters": 28,
+          "peak_cuda_memory_bytes": 39760896,
+          "recurrent_state_scalars": 64,
+          "training_wall_seconds": 11.793141099973582
+        }
+      },
+      "reference_results": {
+        "delta_product_reference": {
+          "checkpoint": "checkpoints\\octonion_final_only_curriculum1000\\delta_product_reference_basis1_init0.pt",
+          "checkpoint_sha256": "84223af44ceddfdf0a9300d6e7aab71202c11a8dae5ea807aa883d85a2300a80",
+          "evaluation": {
+            "128": {
+              "maximum_absolute_error": 0.9661949276924133,
+              "mean_relative_frobenius_error": 1.0029518604278564,
+              "mse": 0.12574750185012817
+            },
+            "16": {
+              "maximum_absolute_error": 0.9688523411750793,
+              "mean_relative_frobenius_error": 1.0011659860610962,
+              "mse": 0.1253003180027008
+            },
+            "64": {
+              "maximum_absolute_error": 0.940430760383606,
+              "mean_relative_frobenius_error": 1.0014011859893799,
+              "mse": 0.12535974383354187
+            }
+          },
+          "loss_samples": {
+            "1": 0.17303043603897095,
+            "100": 0.10956419259309769,
+            "1000": 0.12499075382947922,
+            "300": 0.12674936652183533,
+            "500": 0.12507474422454834,
+            "750": 0.12543126940727234
+          },
+          "parameters": 13192,
+          "peak_cuda_memory_bytes": 198335488,
+          "recurrent_state_scalars": 256,
+          "training_wall_seconds": 17.74065569997765
+        },
+        "transformers_mamba2": {
+          "checkpoint": "checkpoints\\octonion_final_only_curriculum1000\\transformers_mamba2_basis1_init0.pt",
+          "checkpoint_sha256": "33550c1387dca4caf7f1b5e6fd1f49baf2dc325f56d1de98fe88bfafc12b9529",
+          "evaluation": {
+            "128": {
+              "maximum_absolute_error": 0.9630320072174072,
+              "mean_relative_frobenius_error": 1.0062377452850342,
+              "mse": 0.12657827138900757
+            },
+            "16": {
+              "maximum_absolute_error": 0.9935907125473022,
+              "mean_relative_frobenius_error": 1.0021744966506958,
+              "mse": 0.1255555897951126
+            },
+            "64": {
+              "maximum_absolute_error": 0.9664903879165649,
+              "mean_relative_frobenius_error": 1.002791404724121,
+              "mse": 0.1257149577140808
+            }
+          },
+          "loss_samples": {
+            "1": 0.42903101444244385,
+            "100": 0.11671043187379837,
+            "1000": 0.12509697675704956,
+            "300": 0.1286904215812683,
+            "500": 0.12670829892158508,
+            "750": 0.1251603215932846
+          },
+          "parameters": 12300,
+          "peak_cuda_memory_bytes": 4916369920,
+          "recurrent_state_scalars": 1408,
+          "training_wall_seconds": 50.885112299991306
+        }
+      },
+      "schedules": {
+        "basis_sha256": "322cfee5320253f41bea50b3c913cd285e623ec2c2b27b2890b09d656fb66780",
+        "evaluation_schedule_sha256": "b5337d02901c0fcc3341731435199f9ef028d7c1842d51ada853cb297bcc8f05",
+        "training_schedule_sha256": "5d13977f7d8e7283e9d15582476c0b2bcc797483a21dd485fb702bf1246b122f"
+      }
+    },
+    {
+      "all_required_checks_passed": true,
+      "basis_seed": 2,
+      "checks": {
+        "all_learned_metrics_finite": true,
+        "all_structured_beat_matched_dense_l128": true,
+        "all_structured_l128_below_1e_3": true,
+        "collapsed_ablation_fails_l128": true,
+        "oracle_is_within_float32_gate": true
+      },
+      "config": {
+        "batch_size": 32,
+        "delta_heads": 4,
+        "delta_hidden_size": 32,
+        "delta_householder": 4,
+        "evaluation_batch_size": 128,
+        "evaluation_lengths": [
+          16,
+          64,
+          128
+        ],
+        "learning_rate": 0.003,
+        "mamba_head_dim": 16,
+        "mamba_heads": 4,
+        "mamba_hidden_size": 32,
+        "mamba_state_size": 16,
+        "operator_noise_std": 0.05,
+        "seed": 2,
+        "steps": 1000,
+        "train_length": 16,
+        "weight_decay": 0.0001
+      },
+      "curriculum": [
+        {
+          "length": 2,
+          "updates": 250
+        },
+        {
+          "length": 4,
+          "updates": 250
+        },
+        {
+          "length": 8,
+          "updates": 250
+        },
+        {
+          "length": 16,
+          "updates": 250
+        }
+      ],
+      "dense_linear_operator": {
+        "0": {
+          "checkpoint": "checkpoints\\octonion_final_only_curriculum1000\\dense_linear_operator_basis2_init0.pt",
+          "checkpoint_sha256": "e289344de49a888fdcc2fbdcabc1398beeb147e156cb013d877a67b732a1e325",
+          "evaluation": {
+            "128": {
+              "maximum_absolute_error": 0.04035848379135132,
+              "mean_relative_frobenius_error": 0.02859218791127205,
+              "mse": 0.00010321646550437436
+            },
+            "16": {
+              "maximum_absolute_error": 0.030369088053703308,
+              "mean_relative_frobenius_error": 0.023464569821953773,
+              "mse": 6.949661474209279e-05
+            },
+            "64": {
+              "maximum_absolute_error": 0.03398274630308151,
+              "mean_relative_frobenius_error": 0.025971107184886932,
+              "mse": 8.494551002513617e-05
+            }
+          },
+          "loss_samples": {
+            "1": 0.21707136929035187,
+            "100": 0.14538836479187012,
+            "1000": 7.15026690158993e-05,
+            "300": 0.12007708847522736,
+            "500": 0.09323696792125702,
+            "750": 0.00551827484741807
+          },
+          "parameters": 512,
+          "peak_cuda_memory_bytes": 38710272,
+          "recurrent_state_scalars": 64,
+          "training_wall_seconds": 3.336000499955844
+        },
+        "1": {
+          "checkpoint": "checkpoints\\octonion_final_only_curriculum1000\\dense_linear_operator_basis2_init1.pt",
+          "checkpoint_sha256": "412fc10ee020cc45effb7f884d19b9097e8bcf29ef7116ab629367d6fb6613f5",
+          "evaluation": {
+            "128": {
+              "maximum_absolute_error": 0.046304792165756226,
+              "mean_relative_frobenius_error": 0.03305795043706894,
+              "mse": 0.00013796621351502836
+            },
+            "16": {
+              "maximum_absolute_error": 0.03518958389759064,
+              "mean_relative_frobenius_error": 0.02724798023700714,
+              "mse": 9.372497152071446e-05
+            },
+            "64": {
+              "maximum_absolute_error": 0.03925050050020218,
+              "mean_relative_frobenius_error": 0.0301227867603302,
+              "mse": 0.0001142558321589604
+            }
+          },
+          "loss_samples": {
+            "1": 0.21665963530540466,
+            "100": 0.14524832367897034,
+            "1000": 9.686121484264731e-05,
+            "300": 0.12018714845180511,
+            "500": 0.09678810089826584,
+            "750": 0.007154817692935467
+          },
+          "parameters": 512,
+          "peak_cuda_memory_bytes": 38710272,
+          "recurrent_state_scalars": 64,
+          "training_wall_seconds": 3.250757200003136
+        },
+        "2": {
+          "checkpoint": "checkpoints\\octonion_final_only_curriculum1000\\dense_linear_operator_basis2_init2.pt",
+          "checkpoint_sha256": "8304eed9b9d2497310a74d486b9ffc55109882d77fdaf9dadfb5046cf44d733f",
+          "evaluation": {
+            "128": {
+              "maximum_absolute_error": 0.03940314054489136,
+              "mean_relative_frobenius_error": 0.027921630069613457,
+              "mse": 9.843328007264063e-05
+            },
+            "16": {
+              "maximum_absolute_error": 0.029645010828971863,
+              "mean_relative_frobenius_error": 0.022895805537700653,
+              "mse": 6.616866448894143e-05
+            },
+            "64": {
+              "maximum_absolute_error": 0.033045388758182526,
+              "mean_relative_frobenius_error": 0.02534729428589344,
+              "mse": 8.091571362456307e-05
+            }
+          },
+          "loss_samples": {
+            "1": 0.21662457287311554,
+            "100": 0.1452541947364807,
+            "1000": 6.797648529754952e-05,
+            "300": 0.12005920708179474,
+            "500": 0.09167195856571198,
+            "750": 0.005184588022530079
+          },
+          "parameters": 512,
+          "peak_cuda_memory_bytes": 38710272,
+          "recurrent_state_scalars": 64,
+          "training_wall_seconds": 3.350508500006981
+        }
+      },
+      "fixed_results": {
+        "exact_transported_oracle": {
+          "evaluation": {
+            "128": {
+              "maximum_absolute_error": 3.382563591003418e-06,
+              "mean_relative_frobenius_error": 2.376559677941259e-06,
+              "mse": 7.179378619381893e-13
+            },
+            "16": {
+              "maximum_absolute_error": 9.5367431640625e-07,
+              "mean_relative_frobenius_error": 8.052144835346553e-07,
+              "mse": 8.236487392728614e-14
+            },
+            "64": {
+              "maximum_absolute_error": 2.3245811462402344e-06,
+              "mean_relative_frobenius_error": 1.6435956240457017e-06,
+              "mse": 3.42983942028946e-13
+            }
+          },
+          "parameters": 0,
+          "recurrent_state_scalars": 64
+        },
+        "fixed_canonical_operator": {
+          "evaluation": {
+            "128": {
+              "maximum_absolute_error": 1.6459816694259644,
+              "mean_relative_frobenius_error": 1.4039548635482788,
+              "mse": 0.2474791705608368
+            },
+            "16": {
+              "maximum_absolute_error": 1.6373848915100098,
+              "mean_relative_frobenius_error": 1.4078733921051025,
+              "mse": 0.2486748844385147
+            },
+            "64": {
+              "maximum_absolute_error": 1.6707277297973633,
+              "mean_relative_frobenius_error": 1.411863088607788,
+              "mse": 0.2501753866672516
+            }
+          },
+          "parameters": 0,
+          "recurrent_state_scalars": 64
+        },
+        "transported_collapsed_octonion": {
+          "evaluation": {
+            "128": {
+              "maximum_absolute_error": 1.6351470947265625,
+              "mean_relative_frobenius_error": 1.322866678237915,
+              "mse": 0.2196541726589203
+            },
+            "16": {
+              "maximum_absolute_error": 1.5613230466842651,
+              "mean_relative_frobenius_error": 1.326621413230896,
+              "mse": 0.22094152867794037
+            },
+            "64": {
+              "maximum_absolute_error": 1.8207942247390747,
+              "mean_relative_frobenius_error": 1.3132381439208984,
+              "mse": 0.21664781868457794
+            }
+          },
+          "parameters": 0,
+          "recurrent_state_scalars": 8
+        }
+      },
+      "learned_basis_operator": {
+        "0": {
+          "checkpoint": "checkpoints\\octonion_final_only_curriculum1000\\learned_basis_operator_basis2_init0.pt",
+          "checkpoint_sha256": "047b26a1e712ef0f1196b213ff8f7d97ee9644b45ea90a090e20ca9dd7f053a3",
+          "evaluation": {
+            "128": {
+              "maximum_absolute_error": 1.2576580047607422e-05,
+              "mean_relative_frobenius_error": 9.327503903477918e-06,
+              "mse": 1.1093653773386336e-11
+            },
+            "16": {
+              "maximum_absolute_error": 5.453824996948242e-06,
+              "mean_relative_frobenius_error": 4.3731688492698595e-06,
+              "mse": 2.4336565748739325e-12
+            },
+            "64": {
+              "maximum_absolute_error": 9.41939651966095e-06,
+              "mean_relative_frobenius_error": 6.89144781063078e-06,
+              "mse": 6.031408011919481e-12
+            }
+          },
+          "learned_basis_orthogonality_residual": 7.152557373046875e-07,
+          "loss_samples": {
+            "1": 0.21823951601982117,
+            "100": 0.08053745329380035,
+            "1000": 2.474596916268723e-12,
+            "300": 5.41285635335953e-06,
+            "500": 1.4105347098669618e-11,
+            "750": 5.121896830273531e-12
+          },
+          "parameters": 28,
+          "peak_cuda_memory_bytes": 39760896,
+          "recurrent_state_scalars": 64,
+          "training_wall_seconds": 9.193948999978602
+        },
+        "1": {
+          "checkpoint": "checkpoints\\octonion_final_only_curriculum1000\\learned_basis_operator_basis2_init1.pt",
+          "checkpoint_sha256": "8ac21dd9abc1655f845ff4628eb95c6028df5ad1690bf5c185f3d20a8fdf52a5",
+          "evaluation": {
+            "128": {
+              "maximum_absolute_error": 1.1265277862548828e-05,
+              "mean_relative_frobenius_error": 8.95113407750614e-06,
+              "mse": 1.0194141537855916e-11
+            },
+            "16": {
+              "maximum_absolute_error": 5.7220458984375e-06,
+              "mean_relative_frobenius_error": 4.245465788699221e-06,
+              "mse": 2.2905548985319157e-12
+            },
+            "64": {
+              "maximum_absolute_error": 9.641051292419434e-06,
+              "mean_relative_frobenius_error": 6.5374388213967904e-06,
+              "mse": 5.436342348508205e-12
+            }
+          },
+          "learned_basis_orthogonality_residual": 2.384185791015625e-07,
+          "loss_samples": {
+            "1": 0.21747446060180664,
+            "100": 0.07806162536144257,
+            "1000": 2.2827286935700464e-12,
+            "300": 1.5482507933484158e-06,
+            "500": 1.3567035515860137e-11,
+            "750": 5.20019964589391e-12
+          },
+          "parameters": 28,
+          "peak_cuda_memory_bytes": 39760896,
+          "recurrent_state_scalars": 64,
+          "training_wall_seconds": 9.280554600001778
+        },
+        "2": {
+          "checkpoint": "checkpoints\\octonion_final_only_curriculum1000\\learned_basis_operator_basis2_init2.pt",
+          "checkpoint_sha256": "dcf8f6a6f505fc4d8cd0d88d76dec8084e9bc13d2f37abe16898f90ff8c2e49d",
+          "evaluation": {
+            "128": {
+              "maximum_absolute_error": 2.0995736122131348e-05,
+              "mean_relative_frobenius_error": 1.5638397599104792e-05,
+              "mse": 3.123475436628276e-11
+            },
+            "16": {
+              "maximum_absolute_error": 9.08970832824707e-06,
+              "mean_relative_frobenius_error": 6.3331431192636956e-06,
+              "mse": 5.133740654805763e-12
+            },
+            "64": {
+              "maximum_absolute_error": 1.4990568161010742e-05,
+              "mean_relative_frobenius_error": 1.0920619388343766e-05,
+              "mse": 1.5195032732062685e-11
+            }
+          },
+          "learned_basis_orthogonality_residual": 7.152557373046875e-07,
+          "loss_samples": {
+            "1": 0.21375030279159546,
+            "100": 0.12608298659324646,
+            "1000": 4.511386056393896e-12,
+            "300": 0.0007323491154238582,
+            "500": 3.4017906547223475e-11,
+            "750": 1.2070796619190194e-11
+          },
+          "parameters": 28,
+          "peak_cuda_memory_bytes": 39760896,
+          "recurrent_state_scalars": 64,
+          "training_wall_seconds": 9.111494699958712
+        }
+      },
+      "reference_results": {
+        "delta_product_reference": {
+          "checkpoint": "checkpoints\\octonion_final_only_curriculum1000\\delta_product_reference_basis2_init0.pt",
+          "checkpoint_sha256": "571ca2f9d3d695ffca47516d8d5141e6847cb08067cbe4f96552ef19ad528943",
+          "evaluation": {
+            "128": {
+              "maximum_absolute_error": 0.9567899703979492,
+              "mean_relative_frobenius_error": 1.001428484916687,
+              "mse": 0.12536701560020447
+            },
+            "16": {
+              "maximum_absolute_error": 0.9355108737945557,
+              "mean_relative_frobenius_error": 1.0011630058288574,
+              "mse": 0.12529681622982025
+            },
+            "64": {
+              "maximum_absolute_error": 0.9638698101043701,
+              "mean_relative_frobenius_error": 1.0019038915634155,
+              "mse": 0.12548322975635529
+            }
+          },
+          "loss_samples": {
+            "1": 0.16638413071632385,
+            "100": 0.10210997611284256,
+            "1000": 0.1250031590461731,
+            "300": 0.1272539496421814,
+            "500": 0.1269800364971161,
+            "750": 0.1259641945362091
+          },
+          "parameters": 13192,
+          "peak_cuda_memory_bytes": 198335488,
+          "recurrent_state_scalars": 256,
+          "training_wall_seconds": 18.320492499973625
+        },
+        "transformers_mamba2": {
+          "checkpoint": "checkpoints\\octonion_final_only_curriculum1000\\transformers_mamba2_basis2_init0.pt",
+          "checkpoint_sha256": "cbfd2e3fd7561c9ad94c0fa236a35321611217c563cb863a9abddabc6313fdf9",
+          "evaluation": {
+            "128": {
+              "maximum_absolute_error": 0.9921969771385193,
+              "mean_relative_frobenius_error": 1.0041755437850952,
+              "mse": 0.12606781721115112
+            },
+            "16": {
+              "maximum_absolute_error": 0.9451283812522888,
+              "mean_relative_frobenius_error": 1.004063606262207,
+              "mse": 0.12603729963302612
+            },
+            "64": {
+              "maximum_absolute_error": 0.9382699728012085,
+              "mean_relative_frobenius_error": 1.006704568862915,
+              "mse": 0.126701220870018
+            }
+          },
+          "loss_samples": {
+            "1": 0.45217442512512207,
+            "100": 0.11846940219402313,
+            "1000": 0.1259583681821823,
+            "300": 0.12797117233276367,
+            "500": 0.12743708491325378,
+            "750": 0.12621891498565674
+          },
+          "parameters": 12300,
+          "peak_cuda_memory_bytes": 4916369920,
+          "recurrent_state_scalars": 1408,
+          "training_wall_seconds": 39.09692390001146
+        }
+      },
+      "schedules": {
+        "basis_sha256": "dce4969061622743bef45a33b7f564d156d7c5e3fcd9e390e9e73df33da8790a",
+        "evaluation_schedule_sha256": "91ec07c579aae117a1868ef32ce320f9da1f6562a7dfe3d908e0f79321f88bb1",
+        "training_schedule_sha256": "7e5731957a6a7b751999851e1ef078dd23c81af9ab89a4e7702f72991a14b1b3"
+      }
+    }
+  ],
+  "claim_boundary": "Terminal-only synthetic composition-depth curriculum; not a global optimization theorem, natural-task result, or fused SSM comparison.",
+  "environment": {
+    "device": "cuda",
+    "device_name": "NVIDIA GeForce RTX 2070 SUPER",
+    "numpy": "2.4.6",
+    "python": "3.12.10",
+    "torch": "2.12.0+cu130",
+    "transformers": "5.9.0"
+  },
+  "experiment": "terminal-only octonion composition-depth homotopy",
+  "finished_at": "2026-08-16T21:40:22.825724+02:00",
+  "protocol_frozen_at": "2026-08-16T21:33:30+02:00",
+  "schema_version": 1,
+  "started_at": "2026-08-16T21:35:15.701177+02:00"
+}

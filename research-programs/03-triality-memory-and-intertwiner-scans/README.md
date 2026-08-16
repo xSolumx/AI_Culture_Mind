@@ -18,6 +18,27 @@ intertwiner scan.
   production-kernel comparison.
 - The octonionic/triality binding map is an exact norm-preserving single-pair
   bind/unbind primitive under the stated normalization.
+- Shared octonion machinery now also supplies an associative multiplication-
+  operator scan: raw nonassociative products remain explicitly parenthesized,
+  while `8 by 8` operators are scanned. The exact left-generator Lie closure
+  is all `so(8)`. This is cross-listed machinery, not evidence for a
+  triality-specific memory advantage.
+- A separately maintained Pure Spin(8) v1.0 model now scans one shared Lie
+  element in `8v`, `8s+`, and `8s-`. The 24-scalar tuple is faithful to all
+  four central signatures, while a fixed octonion invariant couples the three
+  streams only in the post-scan readout. Its frozen transport cohort passes,
+  but supplying the true 28 Lie coordinates makes it an algebra-aligned
+  mechanism result rather than evidence for generic triality memory.
+- Under three hidden Haar changes of token and state basis, a 28-parameter
+  `SO(8)` gauge learns the transported multiplication law and is identified
+  only up to numerical `G2` automorphism residuals at most `2.17e-4`, exactly
+  matching the classical stabilizer ambiguity. This is equivariant algebra
+  identification, not a triality-specific sequence-model win.
+- Terminal-only even-depth training sharpens that ambiguity to
+  `G2 union -G2`: four curriculum checkpoints recover the positive coset and
+  five the negative coset. A held-out odd length produces the predicted sign
+  in all nine runs. This is a task-identifiability result, not a global
+  optimization theorem.
 - Multiplicity channels give exact orthogonal slot isolation for at most the
   multiplicity dimension; raw eight-dimensional superposition does not.
 - In a controlled teacher-aligned identification gate, the known
@@ -106,3 +127,8 @@ geometry—not scan capacity—remains the dominant local failure.
 The unrestricted Dirac--Gram global proof is not a prerequisite for either
 step. It is a separate sensing/design theorem and cannot substitute for memory
 or throughput evidence.
+
+The local operator-lift implementation and separate SSM claim boundary are in
+[`OCTONION_FINAL_ONLY_RESULTS.md`](../../SSM-Models/experiments/OCTONION_FINAL_ONLY_RESULTS.md),
+[`PURE_SPIN8_VS_MAMBA2_RESULTS.md`](../../SSM-Models/experiments/PURE_SPIN8_VS_MAMBA2_RESULTS.md),
+[`OCTONION_OPERATOR_SCAN_RESULTS.md`](../../SSM-Models/experiments/OCTONION_OPERATOR_SCAN_RESULTS.md).

@@ -33,6 +33,11 @@ establish a same-state Spin(9) memory or sequence-model advantage. Its current
 programme role is a possible coarse router for hierarchical memory, not a
 replacement for fine retrieval.
 
+The later Spin(9)--Spin(12) Clifford branching implementation is tracked
+separately in [Program 08](../08-spin-dirac-a5-branching/README.md). It reuses
+this programme's Spin(9) algebra but does not inherit the sensing or
+D-optimality claims.
+
 ## Canonical evidence
 
 Use the theorem submodule's

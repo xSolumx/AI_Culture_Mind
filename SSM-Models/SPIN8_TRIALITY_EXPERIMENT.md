@@ -1,5 +1,19 @@
 # Selective Spin(8) triality SSM research program
 
+> **Scope update, 2026-08-16T16:05:27+02:00.** This document concerns the
+> Spin(8) research branch, not the maintained Cl(3,0) Pure Rotor SSM. The
+> latter's new Mamba-2 runner and one-step smoke artifact live under
+> `benchmark_pure_rotor_vs_mamba2.py` and
+> `experiments/PURE_ROTOR_VS_MAMBA2_BENCHMARK.md`; neither is evidence for the
+> Spin(8) claims below.
+
+> **Maintained-model continuation, 2026-08-16.** The later
+> `pure_spin8_ssm/` v1.0 package promotes the faithful three-view action and
+> associative scan into a separately maintained model without changing Pure
+> Rotor v2.1. Its frozen signed-transport result is documented in
+> `experiments/PURE_SPIN8_VS_MAMBA2_RESULTS.md`. Historical experiments below
+> remain evidence for their original research implementations only.
+
 ## Research question
 
 Can a token-selective, noncommutative orthogonal recurrence learn ordered
@@ -13,8 +27,9 @@ vector and two chiral 8D representations driven by one 28D bivector, verifies
 triality, and exposes associative affine scans plus constant recurrent state.
 `pure_spin8_positive` supplies the write-free positive-chiral mechanism row.
 The broader selective language-model comparison and invariant triality-coupled
-ablation remain future experiments; the maintained production-scale rotor
-language model still uses Cl(3,0).
+ablation remain future experiments for this historical branch. The original
+maintained language model remains Cl(3,0), while the newer Pure Spin(8) model
+is a separate maintained family with its own checkpoint schema.
 
 The strongest new result is no longer just a supplied algebra check. The
 implemented infinitesimal equivariance system verifies that the triality map in

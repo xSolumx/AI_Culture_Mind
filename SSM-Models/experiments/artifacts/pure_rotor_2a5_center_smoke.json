@@ -1,0 +1,769 @@
+{
+  "experiment": "center-sensitive 2.A5 prefix tracking",
+  "status": "completed empirical screen; exact oracles are controls, not trained models",
+  "pure_rotor_model_version": "2.1.0",
+  "device": "NVIDIA GeForce RTX 2070 SUPER",
+  "torch_version": "2.12.0+cu130",
+  "transformers_version": "5.9.0",
+  "config": {
+    "steps": 1,
+    "batch_size": 2,
+    "training_length": 16,
+    "validation_batches": 1,
+    "validation_pairs_per_batch": 2,
+    "evaluation_microbatch_size": 2,
+    "evaluation_lengths": [
+      2,
+      4
+    ],
+    "enforce_training_state_coverage": false,
+    "learning_rate": 0.003,
+    "weight_decay": 0.01,
+    "gradient_clip": 1.0,
+    "rotor_channels": 9,
+    "rotor_layers": 3,
+    "rotor_expansion": 2,
+    "quaternion_lanes": 8,
+    "quaternion_decoder_hidden": 192,
+    "mamba_hidden_size": 32,
+    "mamba_layers": 3,
+    "mamba_heads": 4,
+    "mamba_head_dim": 16,
+    "mamba_state_size": 24,
+    "seed": 0
+  },
+  "seeds": [
+    0
+  ],
+  "rotor_scan_mode": "parallel",
+  "quaternion_scan_mode": "parallel",
+  "task": {
+    "group": {
+      "key": "2a5",
+      "name": "binary icosahedral group 2.A5",
+      "order": 120
+    },
+    "projective_order": 60,
+    "presentation": {
+      "a_index": 1,
+      "b_index": 2,
+      "b_inverse_index": 4,
+      "center_index": 5,
+      "a_squared_is_center": true,
+      "b_cubed_is_center": true,
+      "ab_to_fifth_is_center": true,
+      "center_squared_is_identity": true,
+      "b_times_b_inverse_is_identity": true,
+      "generated_subgroup_order": 120,
+      "binary_group_order": 120,
+      "projective_group_order": 60
+    },
+    "group_table_sha256": "ee26aff5719e54cf28eccc7a0259c79eeb27c7e06bb18134bf7ca910773f58c9",
+    "target": "every ordered binary-icosahedral prefix product",
+    "paired_relation": "a*a=z versus b*b_inverse=e",
+    "split": {
+      "0": {
+        "training": {
+          "held_out_relation": "a*a=z",
+          "identity_control_relation": "b*b_inverse=e",
+          "training_pair_audit": {
+            "pair_occurrences": 0,
+            "sequences_with_pair": 0,
+            "total_sequences": 2
+          },
+          "training_coverage": {
+            "observed_group_states": 24,
+            "group_state_fraction": 0.2,
+            "missing_group_state_indices": [
+              4,
+              5,
+              8,
+              9,
+              10,
+              14,
+              15,
+              16,
+              19,
+              20,
+              23,
+              24,
+              26,
+              27,
+              28,
+              29,
+              31,
+              34,
+              35,
+              37,
+              39,
+              40,
+              41,
+              42,
+              44,
+              46,
+              47,
+              48,
+              49,
+              51,
+              52,
+              53,
+              55,
+              56,
+              57,
+              58,
+              59,
+              60,
+              61,
+              62,
+              64,
+              65,
+              66,
+              67,
+              68,
+              69,
+              70,
+              71,
+              72,
+              73,
+              74,
+              75,
+              76,
+              77,
+              78,
+              79,
+              80,
+              81,
+              82,
+              83,
+              84,
+              85,
+              86,
+              87,
+              88,
+              89,
+              90,
+              91,
+              92,
+              93,
+              94,
+              95,
+              96,
+              97,
+              98,
+              99,
+              100,
+              101,
+              102,
+              103,
+              104,
+              105,
+              106,
+              107,
+              108,
+              109,
+              110,
+              111,
+              112,
+              113,
+              114,
+              115,
+              116,
+              117,
+              118,
+              119
+            ],
+            "observed_input_pairs": 8,
+            "possible_input_pairs": 9,
+            "input_pair_fraction": 0.8888888888888888
+          },
+          "exact_training_language_coverage": {
+            "reachable_binary_states": 120,
+            "maximum_shortest_witness_length": 10,
+            "all_binary_states_reachable": true
+          },
+          "observed_binary_target_states": 24,
+          "observed_projective_target_states": 21,
+          "observed_center_bits": [
+            0,
+            1
+          ],
+          "training_schedule_sha256": "08c219efee4fa4ba934428cbe89bc4b3098480a34d0a7b6e9a95adaa56cb1aac"
+        },
+        "evaluations": {
+          "early_L2": {
+            "paired_sequences": 2,
+            "post_relation_pair_positions": 2,
+            "exact_central_partner_checks": 2,
+            "projective_match_checks": 2,
+            "center_relation_occurrences": 2,
+            "identity_relation_occurrences": 2,
+            "forced_center_relation_checks": 2,
+            "forced_identity_relation_checks": 2,
+            "passed": true
+          },
+          "early_L4": {
+            "paired_sequences": 2,
+            "post_relation_pair_positions": 6,
+            "exact_central_partner_checks": 6,
+            "projective_match_checks": 6,
+            "center_relation_occurrences": 2,
+            "identity_relation_occurrences": 2,
+            "forced_center_relation_checks": 2,
+            "forced_identity_relation_checks": 2,
+            "passed": true
+          },
+          "late_L4": {
+            "paired_sequences": 2,
+            "post_relation_pair_positions": 2,
+            "exact_central_partner_checks": 2,
+            "projective_match_checks": 2,
+            "center_relation_occurrences": 2,
+            "identity_relation_occurrences": 2,
+            "forced_center_relation_checks": 2,
+            "forced_identity_relation_checks": 2,
+            "passed": true
+          }
+        }
+      }
+    }
+  },
+  "integrity": {
+    "same_precomputed_training_batches_per_seed": true,
+    "same_paired_evaluation_batches_per_seed": true,
+    "candidate_initialized_after_seed": true,
+    "pure_rotor_vs_identity_initial_function_identical": true,
+    "parameter_counts": {
+      "pure_rotor": 29370,
+      "identity_rotation_ablation": 29370,
+      "spin_quaternion_scan": 29592,
+      "mamba2_transformers": 29300
+    },
+    "maximum_relative_parameter_gap": 0.009867531765341985,
+    "mamba2_backend": "huggingface_transformers",
+    "mamba_ssm_extension_importable": false,
+    "mamba2_fused_kernel_claimed": false,
+    "state_size_matched": false,
+    "state_matching_note": "Candidates are parameter-near but retain architecture-specific states; the Spin quaternion scan uses 8 persistent quaternion lanes.",
+    "transport_center_action": {
+      "pure_rotor_sandwich": "q and -q induce the same conjugation",
+      "spin_quaternion_scan": "q and -q are distinct persistent states"
+    }
+  },
+  "oracle_results": {
+    "0": {
+      "exact_table_oracle": {
+        "early_L2": {
+          "post_relation_nll": 0.0,
+          "post_relation_exact_accuracy": 1.0,
+          "post_relation_projective_accuracy": 1.0,
+          "post_relation_center_bit_accuracy": 1.0,
+          "post_relation_central_margin_accuracy": 1.0,
+          "post_relation_target_probability_within_central_pair": 1.0,
+          "final_exact_accuracy": 1.0,
+          "final_projective_accuracy": 1.0,
+          "final_center_bit_accuracy": 1.0,
+          "paired_final_exact_accuracy": 1.0,
+          "paired_final_structural_center_separation": 1.0
+        },
+        "early_L4": {
+          "post_relation_nll": 0.0,
+          "post_relation_exact_accuracy": 1.0,
+          "post_relation_projective_accuracy": 1.0,
+          "post_relation_center_bit_accuracy": 1.0,
+          "post_relation_central_margin_accuracy": 1.0,
+          "post_relation_target_probability_within_central_pair": 1.0,
+          "final_exact_accuracy": 1.0,
+          "final_projective_accuracy": 1.0,
+          "final_center_bit_accuracy": 1.0,
+          "paired_final_exact_accuracy": 1.0,
+          "paired_final_structural_center_separation": 1.0
+        },
+        "late_L4": {
+          "post_relation_nll": 0.0,
+          "post_relation_exact_accuracy": 1.0,
+          "post_relation_projective_accuracy": 1.0,
+          "post_relation_center_bit_accuracy": 1.0,
+          "post_relation_central_margin_accuracy": 1.0,
+          "post_relation_target_probability_within_central_pair": 1.0,
+          "final_exact_accuracy": 1.0,
+          "final_projective_accuracy": 1.0,
+          "final_center_bit_accuracy": 1.0,
+          "paired_final_exact_accuracy": 1.0,
+          "paired_final_structural_center_separation": 1.0
+        }
+      },
+      "projective_a5_oracle": {
+        "early_L2": {
+          "post_relation_nll": 0.6931471824645996,
+          "post_relation_exact_accuracy": 0.5,
+          "post_relation_projective_accuracy": 1.0,
+          "post_relation_center_bit_accuracy": 0.5,
+          "post_relation_central_margin_accuracy": 0.5,
+          "post_relation_target_probability_within_central_pair": 0.5,
+          "final_exact_accuracy": 0.5,
+          "final_projective_accuracy": 1.0,
+          "final_center_bit_accuracy": 0.5,
+          "paired_final_exact_accuracy": 0.0,
+          "paired_final_structural_center_separation": 0.0
+        },
+        "early_L4": {
+          "post_relation_nll": 0.6931471824645996,
+          "post_relation_exact_accuracy": 0.5,
+          "post_relation_projective_accuracy": 1.0,
+          "post_relation_center_bit_accuracy": 0.5,
+          "post_relation_central_margin_accuracy": 0.5,
+          "post_relation_target_probability_within_central_pair": 0.5,
+          "final_exact_accuracy": 0.5,
+          "final_projective_accuracy": 1.0,
+          "final_center_bit_accuracy": 0.5,
+          "paired_final_exact_accuracy": 0.0,
+          "paired_final_structural_center_separation": 0.0
+        },
+        "late_L4": {
+          "post_relation_nll": 0.6931471824645996,
+          "post_relation_exact_accuracy": 0.5,
+          "post_relation_projective_accuracy": 1.0,
+          "post_relation_center_bit_accuracy": 0.5,
+          "post_relation_central_margin_accuracy": 0.5,
+          "post_relation_target_probability_within_central_pair": 0.5,
+          "final_exact_accuracy": 0.5,
+          "final_projective_accuracy": 1.0,
+          "final_center_bit_accuracy": 0.5,
+          "paired_final_exact_accuracy": 0.0,
+          "paired_final_structural_center_separation": 0.0
+        }
+      },
+      "float64_quaternion_oracle": {
+        "early_L2": {
+          "post_relation_nll": 0.0008550205966457725,
+          "post_relation_exact_accuracy": 1.0,
+          "post_relation_projective_accuracy": 1.0,
+          "post_relation_center_bit_accuracy": 1.0,
+          "post_relation_central_margin_accuracy": 1.0,
+          "post_relation_target_probability_within_central_pair": 1.0,
+          "final_exact_accuracy": 1.0,
+          "final_projective_accuracy": 1.0,
+          "final_center_bit_accuracy": 1.0,
+          "paired_final_exact_accuracy": 1.0,
+          "paired_final_structural_center_separation": 1.0
+        },
+        "early_L4": {
+          "post_relation_nll": 0.0008549510966986418,
+          "post_relation_exact_accuracy": 1.0,
+          "post_relation_projective_accuracy": 1.0,
+          "post_relation_center_bit_accuracy": 1.0,
+          "post_relation_central_margin_accuracy": 1.0,
+          "post_relation_target_probability_within_central_pair": 1.0,
+          "final_exact_accuracy": 1.0,
+          "final_projective_accuracy": 1.0,
+          "final_center_bit_accuracy": 1.0,
+          "paired_final_exact_accuracy": 1.0,
+          "paired_final_structural_center_separation": 1.0
+        },
+        "late_L4": {
+          "post_relation_nll": 0.000854961050208658,
+          "post_relation_exact_accuracy": 1.0,
+          "post_relation_projective_accuracy": 1.0,
+          "post_relation_center_bit_accuracy": 1.0,
+          "post_relation_central_margin_accuracy": 1.0,
+          "post_relation_target_probability_within_central_pair": 1.0,
+          "final_exact_accuracy": 1.0,
+          "final_projective_accuracy": 1.0,
+          "final_center_bit_accuracy": 1.0,
+          "paired_final_exact_accuracy": 1.0,
+          "paired_final_structural_center_separation": 1.0
+        }
+      }
+    }
+  },
+  "results": [
+    {
+      "name": "pure_rotor",
+      "parameters": 29370,
+      "initial_center_pair_metrics": {
+        "early_L2": {
+          "post_relation_nll": 4.7857818603515625,
+          "post_relation_exact_accuracy": 0.0,
+          "post_relation_projective_accuracy": 0.0,
+          "post_relation_center_bit_accuracy": 0.5,
+          "post_relation_central_margin_accuracy": 0.5,
+          "post_relation_target_probability_within_central_pair": 0.4968433380126953,
+          "final_exact_accuracy": 0.0,
+          "final_projective_accuracy": 0.0,
+          "final_center_bit_accuracy": 0.5,
+          "paired_final_exact_accuracy": 0.0,
+          "paired_final_structural_center_separation": 0.0
+        },
+        "early_L4": {
+          "post_relation_nll": 4.775332132975261,
+          "post_relation_exact_accuracy": 0.16666666666666666,
+          "post_relation_projective_accuracy": 0.16666666666666666,
+          "post_relation_center_bit_accuracy": 0.6666666666666666,
+          "post_relation_central_margin_accuracy": 0.5,
+          "post_relation_target_probability_within_central_pair": 0.49897507826487225,
+          "final_exact_accuracy": 0.0,
+          "final_projective_accuracy": 0.0,
+          "final_center_bit_accuracy": 0.5,
+          "paired_final_exact_accuracy": 0.0,
+          "paired_final_structural_center_separation": 0.0
+        },
+        "late_L4": {
+          "post_relation_nll": 4.785235404968262,
+          "post_relation_exact_accuracy": 0.0,
+          "post_relation_projective_accuracy": 0.0,
+          "post_relation_center_bit_accuracy": 0.5,
+          "post_relation_central_margin_accuracy": 0.5,
+          "post_relation_target_probability_within_central_pair": 0.4969216585159302,
+          "final_exact_accuracy": 0.0,
+          "final_projective_accuracy": 0.0,
+          "final_center_bit_accuracy": 0.5,
+          "paired_final_exact_accuracy": 0.0,
+          "paired_final_structural_center_separation": 0.0
+        }
+      },
+      "final_center_pair_metrics": {
+        "early_L2": {
+          "post_relation_nll": 4.783236503601074,
+          "post_relation_exact_accuracy": 0.0,
+          "post_relation_projective_accuracy": 0.0,
+          "post_relation_center_bit_accuracy": 0.0,
+          "post_relation_central_margin_accuracy": 0.5,
+          "post_relation_target_probability_within_central_pair": 0.49770861864089966,
+          "final_exact_accuracy": 0.0,
+          "final_projective_accuracy": 0.0,
+          "final_center_bit_accuracy": 0.0,
+          "paired_final_exact_accuracy": 0.0,
+          "paired_final_structural_center_separation": 0.0
+        },
+        "early_L4": {
+          "post_relation_nll": 4.776289621988933,
+          "post_relation_exact_accuracy": 0.0,
+          "post_relation_projective_accuracy": 0.0,
+          "post_relation_center_bit_accuracy": 0.3333333333333333,
+          "post_relation_central_margin_accuracy": 0.5,
+          "post_relation_target_probability_within_central_pair": 0.4993145863215129,
+          "final_exact_accuracy": 0.0,
+          "final_projective_accuracy": 0.0,
+          "final_center_bit_accuracy": 0.5,
+          "paired_final_exact_accuracy": 0.0,
+          "paired_final_structural_center_separation": 0.0
+        },
+        "late_L4": {
+          "post_relation_nll": 4.771244049072266,
+          "post_relation_exact_accuracy": 0.0,
+          "post_relation_projective_accuracy": 0.25,
+          "post_relation_center_bit_accuracy": 0.0,
+          "post_relation_central_margin_accuracy": 0.5,
+          "post_relation_target_probability_within_central_pair": 0.49540975689888,
+          "final_exact_accuracy": 0.0,
+          "final_projective_accuracy": 0.25,
+          "final_center_bit_accuracy": 0.0,
+          "paired_final_exact_accuracy": 0.0,
+          "paired_final_structural_center_separation": 0.0
+        }
+      },
+      "final_train_loss": 4.791751384735107,
+      "loss_samples": {
+        "1": 4.791751384735107
+      },
+      "last_preclip_gradient_norm": 0.4599990248680115,
+      "elapsed_seconds": 0.26600859995232895,
+      "tokens_per_second": 120.29686260419655,
+      "peak_cuda_memory_mib": 17.7685546875
+    },
+    {
+      "name": "identity_rotation_ablation",
+      "parameters": 29370,
+      "initial_center_pair_metrics": {
+        "early_L2": {
+          "post_relation_nll": 4.7857818603515625,
+          "post_relation_exact_accuracy": 0.0,
+          "post_relation_projective_accuracy": 0.0,
+          "post_relation_center_bit_accuracy": 0.5,
+          "post_relation_central_margin_accuracy": 0.5,
+          "post_relation_target_probability_within_central_pair": 0.4968433380126953,
+          "final_exact_accuracy": 0.0,
+          "final_projective_accuracy": 0.0,
+          "final_center_bit_accuracy": 0.5,
+          "paired_final_exact_accuracy": 0.0,
+          "paired_final_structural_center_separation": 0.0
+        },
+        "early_L4": {
+          "post_relation_nll": 4.775332132975261,
+          "post_relation_exact_accuracy": 0.16666666666666666,
+          "post_relation_projective_accuracy": 0.16666666666666666,
+          "post_relation_center_bit_accuracy": 0.6666666666666666,
+          "post_relation_central_margin_accuracy": 0.5,
+          "post_relation_target_probability_within_central_pair": 0.49897507826487225,
+          "final_exact_accuracy": 0.0,
+          "final_projective_accuracy": 0.0,
+          "final_center_bit_accuracy": 0.5,
+          "paired_final_exact_accuracy": 0.0,
+          "paired_final_structural_center_separation": 0.0
+        },
+        "late_L4": {
+          "post_relation_nll": 4.785235404968262,
+          "post_relation_exact_accuracy": 0.0,
+          "post_relation_projective_accuracy": 0.0,
+          "post_relation_center_bit_accuracy": 0.5,
+          "post_relation_central_margin_accuracy": 0.5,
+          "post_relation_target_probability_within_central_pair": 0.4969216585159302,
+          "final_exact_accuracy": 0.0,
+          "final_projective_accuracy": 0.0,
+          "final_center_bit_accuracy": 0.5,
+          "paired_final_exact_accuracy": 0.0,
+          "paired_final_structural_center_separation": 0.0
+        }
+      },
+      "final_center_pair_metrics": {
+        "early_L2": {
+          "post_relation_nll": 4.781452178955078,
+          "post_relation_exact_accuracy": 0.0,
+          "post_relation_projective_accuracy": 0.0,
+          "post_relation_center_bit_accuracy": 0.0,
+          "post_relation_central_margin_accuracy": 0.5,
+          "post_relation_target_probability_within_central_pair": 0.49766236543655396,
+          "final_exact_accuracy": 0.0,
+          "final_projective_accuracy": 0.0,
+          "final_center_bit_accuracy": 0.0,
+          "paired_final_exact_accuracy": 0.0,
+          "paired_final_structural_center_separation": 0.0
+        },
+        "early_L4": {
+          "post_relation_nll": 4.775733947753906,
+          "post_relation_exact_accuracy": 0.0,
+          "post_relation_projective_accuracy": 0.0,
+          "post_relation_center_bit_accuracy": 0.3333333333333333,
+          "post_relation_central_margin_accuracy": 0.5,
+          "post_relation_target_probability_within_central_pair": 0.4993351300557454,
+          "final_exact_accuracy": 0.0,
+          "final_projective_accuracy": 0.0,
+          "final_center_bit_accuracy": 0.5,
+          "paired_final_exact_accuracy": 0.0,
+          "paired_final_structural_center_separation": 0.0
+        },
+        "late_L4": {
+          "post_relation_nll": 4.772364616394043,
+          "post_relation_exact_accuracy": 0.0,
+          "post_relation_projective_accuracy": 0.25,
+          "post_relation_center_bit_accuracy": 0.0,
+          "post_relation_central_margin_accuracy": 0.5,
+          "post_relation_target_probability_within_central_pair": 0.4951620399951935,
+          "final_exact_accuracy": 0.0,
+          "final_projective_accuracy": 0.25,
+          "final_center_bit_accuracy": 0.0,
+          "paired_final_exact_accuracy": 0.0,
+          "paired_final_structural_center_separation": 0.0
+        }
+      },
+      "final_train_loss": 4.791751384735107,
+      "loss_samples": {
+        "1": 4.791751384735107
+      },
+      "last_preclip_gradient_norm": 0.4019348621368408,
+      "elapsed_seconds": 0.15843830001540482,
+      "tokens_per_second": 201.97136675215947,
+      "peak_cuda_memory_mib": 17.7685546875
+    },
+    {
+      "name": "spin_quaternion_scan",
+      "parameters": 29592,
+      "initial_center_pair_metrics": {
+        "early_L2": {
+          "post_relation_nll": 4.7620744705200195,
+          "post_relation_exact_accuracy": 0.0,
+          "post_relation_projective_accuracy": 0.0,
+          "post_relation_center_bit_accuracy": 0.0,
+          "post_relation_central_margin_accuracy": 1.0,
+          "post_relation_target_probability_within_central_pair": 0.5122698545455933,
+          "final_exact_accuracy": 0.0,
+          "final_projective_accuracy": 0.0,
+          "final_center_bit_accuracy": 0.0,
+          "paired_final_exact_accuracy": 0.0,
+          "paired_final_structural_center_separation": 0.0
+        },
+        "early_L4": {
+          "post_relation_nll": 4.782292366027832,
+          "post_relation_exact_accuracy": 0.0,
+          "post_relation_projective_accuracy": 0.0,
+          "post_relation_center_bit_accuracy": 0.08333333333333333,
+          "post_relation_central_margin_accuracy": 0.6666666666666666,
+          "post_relation_target_probability_within_central_pair": 0.5074063936869303,
+          "final_exact_accuracy": 0.0,
+          "final_projective_accuracy": 0.0,
+          "final_center_bit_accuracy": 0.25,
+          "paired_final_exact_accuracy": 0.0,
+          "paired_final_structural_center_separation": 0.0
+        },
+        "late_L4": {
+          "post_relation_nll": 4.781951427459717,
+          "post_relation_exact_accuracy": 0.0,
+          "post_relation_projective_accuracy": 0.0,
+          "post_relation_center_bit_accuracy": 0.25,
+          "post_relation_central_margin_accuracy": 0.5,
+          "post_relation_target_probability_within_central_pair": 0.4979211688041687,
+          "final_exact_accuracy": 0.0,
+          "final_projective_accuracy": 0.0,
+          "final_center_bit_accuracy": 0.25,
+          "paired_final_exact_accuracy": 0.0,
+          "paired_final_structural_center_separation": 0.0
+        }
+      },
+      "final_center_pair_metrics": {
+        "early_L2": {
+          "post_relation_nll": 4.6886725425720215,
+          "post_relation_exact_accuracy": 0.0,
+          "post_relation_projective_accuracy": 0.0,
+          "post_relation_center_bit_accuracy": 0.0,
+          "post_relation_central_margin_accuracy": 1.0,
+          "post_relation_target_probability_within_central_pair": 0.5294817686080933,
+          "final_exact_accuracy": 0.0,
+          "final_projective_accuracy": 0.0,
+          "final_center_bit_accuracy": 0.0,
+          "paired_final_exact_accuracy": 0.0,
+          "paired_final_structural_center_separation": 0.0
+        },
+        "early_L4": {
+          "post_relation_nll": 4.7522328694661455,
+          "post_relation_exact_accuracy": 0.0,
+          "post_relation_projective_accuracy": 0.0,
+          "post_relation_center_bit_accuracy": 0.08333333333333333,
+          "post_relation_central_margin_accuracy": 0.5833333333333334,
+          "post_relation_target_probability_within_central_pair": 0.5137061675389608,
+          "final_exact_accuracy": 0.0,
+          "final_projective_accuracy": 0.0,
+          "final_center_bit_accuracy": 0.25,
+          "paired_final_exact_accuracy": 0.0,
+          "paired_final_structural_center_separation": 0.0
+        },
+        "late_L4": {
+          "post_relation_nll": 4.742904186248779,
+          "post_relation_exact_accuracy": 0.0,
+          "post_relation_projective_accuracy": 0.0,
+          "post_relation_center_bit_accuracy": 0.25,
+          "post_relation_central_margin_accuracy": 0.5,
+          "post_relation_target_probability_within_central_pair": 0.5015126466751099,
+          "final_exact_accuracy": 0.0,
+          "final_projective_accuracy": 0.0,
+          "final_center_bit_accuracy": 0.25,
+          "paired_final_exact_accuracy": 0.0,
+          "paired_final_structural_center_separation": 0.0
+        }
+      },
+      "final_train_loss": 4.813150405883789,
+      "loss_samples": {
+        "1": 4.813150405883789
+      },
+      "last_preclip_gradient_norm": 0.5143749713897705,
+      "elapsed_seconds": 0.015288099995814264,
+      "tokens_per_second": 2093.1312595261215,
+      "peak_cuda_memory_mib": 16.8330078125
+    },
+    {
+      "name": "mamba2_transformers",
+      "parameters": 29300,
+      "initial_center_pair_metrics": {
+        "early_L2": {
+          "post_relation_nll": 4.4574384689331055,
+          "post_relation_exact_accuracy": 0.0,
+          "post_relation_projective_accuracy": 0.0,
+          "post_relation_center_bit_accuracy": 0.5,
+          "post_relation_central_margin_accuracy": 0.5,
+          "post_relation_target_probability_within_central_pair": 0.48824161291122437,
+          "final_exact_accuracy": 0.0,
+          "final_projective_accuracy": 0.0,
+          "final_center_bit_accuracy": 0.5,
+          "paired_final_exact_accuracy": 0.0,
+          "paired_final_structural_center_separation": 0.0
+        },
+        "early_L4": {
+          "post_relation_nll": 4.823102633158366,
+          "post_relation_exact_accuracy": 0.0,
+          "post_relation_projective_accuracy": 0.0,
+          "post_relation_center_bit_accuracy": 0.3333333333333333,
+          "post_relation_central_margin_accuracy": 0.5,
+          "post_relation_target_probability_within_central_pair": 0.478893518447876,
+          "final_exact_accuracy": 0.0,
+          "final_projective_accuracy": 0.0,
+          "final_center_bit_accuracy": 0.0,
+          "paired_final_exact_accuracy": 0.0,
+          "paired_final_structural_center_separation": 0.0
+        },
+        "late_L4": {
+          "post_relation_nll": 5.118930339813232,
+          "post_relation_exact_accuracy": 0.0,
+          "post_relation_projective_accuracy": 0.25,
+          "post_relation_center_bit_accuracy": 0.5,
+          "post_relation_central_margin_accuracy": 0.25,
+          "post_relation_target_probability_within_central_pair": 0.35108721256256104,
+          "final_exact_accuracy": 0.0,
+          "final_projective_accuracy": 0.25,
+          "final_center_bit_accuracy": 0.5,
+          "paired_final_exact_accuracy": 0.0,
+          "paired_final_structural_center_separation": 0.0
+        }
+      },
+      "final_center_pair_metrics": {
+        "early_L2": {
+          "post_relation_nll": 4.368288040161133,
+          "post_relation_exact_accuracy": 0.0,
+          "post_relation_projective_accuracy": 0.0,
+          "post_relation_center_bit_accuracy": 0.5,
+          "post_relation_central_margin_accuracy": 0.5,
+          "post_relation_target_probability_within_central_pair": 0.5764390230178833,
+          "final_exact_accuracy": 0.0,
+          "final_projective_accuracy": 0.0,
+          "final_center_bit_accuracy": 0.5,
+          "paired_final_exact_accuracy": 0.0,
+          "paired_final_structural_center_separation": 0.0
+        },
+        "early_L4": {
+          "post_relation_nll": 4.667443911234538,
+          "post_relation_exact_accuracy": 0.0,
+          "post_relation_projective_accuracy": 0.0,
+          "post_relation_center_bit_accuracy": 0.3333333333333333,
+          "post_relation_central_margin_accuracy": 0.5,
+          "post_relation_target_probability_within_central_pair": 0.5227620999018351,
+          "final_exact_accuracy": 0.0,
+          "final_projective_accuracy": 0.0,
+          "final_center_bit_accuracy": 0.0,
+          "paired_final_exact_accuracy": 0.0,
+          "paired_final_structural_center_separation": 0.0
+        },
+        "late_L4": {
+          "post_relation_nll": 5.414486408233643,
+          "post_relation_exact_accuracy": 0.0,
+          "post_relation_projective_accuracy": 0.0,
+          "post_relation_center_bit_accuracy": 0.5,
+          "post_relation_central_margin_accuracy": 0.0,
+          "post_relation_target_probability_within_central_pair": 0.2698215842247009,
+          "final_exact_accuracy": 0.0,
+          "final_projective_accuracy": 0.0,
+          "final_center_bit_accuracy": 0.5,
+          "paired_final_exact_accuracy": 0.0,
+          "paired_final_structural_center_separation": 0.0
+        }
+      },
+      "final_train_loss": 4.875181198120117,
+      "loss_samples": {
+        "1": 4.875181198120117
+      },
+      "last_preclip_gradient_norm": 4.5495381355285645,
+      "elapsed_seconds": 0.047606399981305,
+      "tokens_per_second": 672.178530881696,
+      "peak_cuda_memory_mib": 134.63330078125
+    }
+  ],
+  "claim_scope": {
+    "empirical": [
+      "paired center acquisition and retention for the configured models",
+      "parameter-near comparison on identical symbolic schedules"
+    ],
+    "not_claimed": [
+      "a theorem about Mamba-2 or diagonal SSMs",
+      "a language-model quality result",
+      "a state-matched systems comparison",
+      "that the projective transport alone can represent the binary center"
+    ]
+  }
+}

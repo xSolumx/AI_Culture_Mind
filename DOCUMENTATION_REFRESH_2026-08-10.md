@@ -1,5 +1,11 @@
 # Repository-wide documentation refresh, 2026-08-10
 
+> **Historical status.** This refresh remains the 2026-08-10 record. Its
+> maintained-model and benchmark successor is
+> [`DOCUMENTATION_REFRESH_2026-08-16.md`](DOCUMENTATION_REFRESH_2026-08-16.md),
+> which preserves this document's 2026-08-10 observations while recording later
+> Pure Rotor scan and benchmark provenance.
+
 ## Scope
 
 This pass audited every Markdown file visible from the parent workspace and the

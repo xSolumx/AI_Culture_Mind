@@ -14,6 +14,10 @@
 > separate memory-core programme. It has not been integrated into this
 > historical model and must not be used to upgrade its claims.
 
+> **2026-08-16 clarification.** The maintained Pure Rotor / Mamba-2 benchmark
+> is also separate from this historical baseline. Its smoke artifact does not
+> update any result or status in `SpinorModel`.
+
 `spinor_llm.py` and `geometric_layers.py` are the maintained historical
 baseline.
 They represent every GA(3, 0) multivector as a PyTorch tensor with final-axis

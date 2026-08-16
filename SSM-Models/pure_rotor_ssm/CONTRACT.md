@@ -5,6 +5,13 @@ parameterization; version 2.1 expands the default physical rotor-angle chart
 from `pi/2` to the full open `pi` range. A v2.0 checkpoint remains loadable
 because its saved model configuration records the old explicit angle limit.
 
+Documentation last reconciled: **2026-08-16T21:19:20+02:00**. The adjacent
+PyTorch-only `schur_parallel` scan mode is execution-compatible and opt-in, and
+`spin_scan.py`, `motor_scan.py`, and `octonion_operator_scan.py` are explicitly
+experimental companions. The optional `octonion_operator_triton.py` backend is
+WSL/Linux CUDA-only. None alters this model version, parameter layout, or
+checkpoint contract.
+
 This directory is the single maintained implementation of the Cl(3,0)
 selective rotor SSM. It contains model mathematics only: no dataset access,
 optimizer, trainer, checkpoint, profiler, benchmark, or report writer.
@@ -91,6 +98,85 @@ PyTorch uses a differentiable vectorized Hillis--Steele scan and keeps a
 recurrent oracle. Different tree orderings are not bitwise equivalent in
 floating point; tests enforce tolerance-based parity.
 
+PyTorch additionally exposes `scan_mode="schur_parallel"`: an equivalent,
+experimental Hillis--Steele implementation in the two trivial plus two
+three-dimensional Spin(3) isotypic coordinates. It is guarded against the
+direct rotor sandwich in forward and first-order-gradient float64 tests, but
+it remains opt-in until matched CPU/GPU throughput and memory measurements
+establish a deployment benefit. It does not alter checkpoint parameters or
+the recurrence/caching contract, and is not yet implemented by the JAX
+backend.
+
+## Experimental sign-sensitive companion
+
+`spin_scan.py` is a PyTorch-only experimental module, not part of the v2.1
+checkpoint or recurrence contract. It keeps unit quaternions themselves as
+fixed-size state and uses the right-composition update
+
+```text
+s_next = normalize(s * q_token).
+```
+
+This distinguishes the central pair `q` and `-q`, unlike the canonical
+conjugation action `Ad(q)=Ad(-q)`. The module exposes recurrent and
+Hillis--Steele scans, identity padding, streaming continuation, compact/Cl(3,0)
+coordinate conversion, trainable token increments, and a small classifier
+wrapper. Float64 forward and first-order-gradient parity, long unit-norm
+stability, cache equivalence, masking, center separation, Clifford-product
+orientation, and CUDA backward are tested.
+
+The completed three-seed `2.A5` pilot motivates this component, but does not
+establish broad sequence utility. Promoting it into a maintained hybrid needs a
+new protocol, state/parameter/compute comparisons, stronger structured-product
+baselines, and non-symbolic tasks.
+
+`motor_scan.py` extends this companion state to unit dual quaternions. It
+exposes generic token-motor composition/classification plus two direct pose
+trackers: the true semidirect motor and a parameter-matched
+`Spin(3) x (R^3,+)` ablation. The direct motor emits signed quaternion and
+translation coordinates without an MLP. Its algebra, Study projection,
+parallel/recurrent/cache/gradient behavior, and homogeneous-matrix action are
+tested separately. The rigid `2.A5` benchmark finds that blind 300-step
+end-to-end training fails, while local transition identification from every-
+prefix pose targets succeeds in 9/9 finite coordinate/schedule replications.
+That estimator is not part of the v2.1 training or checkpoint contract and the
+result does not establish continuous-data or final-only-supervision utility.
+
+`octonion_operator_scan.py` is a third separate PyTorch experiment. Raw
+octonion multiplication remains nonassociative. The layer instead lifts each
+unit octonion to a real left/right multiplication matrix, scans those operators
+associatively, and evaluates the identical explicitly parenthesized product
+with an eight-scalar streaming cache. Its bounded affine recurrence obeys
+`||h_t|| <= max(||h_0||,1)`. The exact Lie certificate shows that the seven
+imaginary left generators and their 21 commutators span `so(8)`. This does not
+make one octonion a parameterization of arbitrary `SO(8)`, nor does one acted-
+on eight-vector identify the accumulated operator.
+
+`octonion_operator_triton.py` fuses the same left recurrence and its reverse-
+mode derivative in the separately recorded Ubuntu WSL2/Triton environment.
+It accelerates chunk recurrence but is not a parallel matrix-prefix kernel or
+a native-Windows dependency. Both octonion modules remain outside the v2.1
+weights, recurrence, cache, and checkpoint format.
+
+The separately frozen continuous associator-tracking pilot supervises every
+complete 64-scalar prefix operator. A 72-parameter identity-near token encoder
+plus exact operator scan extrapolates from L16 to L128 near float32 numerical
+precision, while collapsed-octonion, unfused DeltaProduct, and unfused Mamba-2
+controls do not. This is a one-seed coordinate-aligned realizability result.
+Because the target is the complete operator, its recurrent-state accounting is
+64 scalars; it does not convert the compact acted-on-vector cache into a full
+operator cache or modify the maintained v2.1 contract.
+
+The separately frozen Haar-basis successor learns three transported octonion
+laws with a 28-parameter `SO(8)` gauge and satisfies the recovered `G2`
+automorphism intertwiner to the recorded tolerances. Its top-level frozen
+artifact is explicitly failed: the 512-parameter dense AdamW control misses its
+accuracy gate in all bases and one float32 oracle narrowly misses `1e-12`.
+A post-protocol legal first-prefix least-squares estimator makes the dense map
+numerically exact, so the dense failure is optimization rather than capacity.
+None of these experimental weights or 64-scalar full-operator targets changes
+the maintained eight-scalar acted-on-state cache contract.
+
 A model cache is one `(batch, channels, 8)` tensor per layer, independent of
 context length. It denotes the state *after* the last supplied token. Supplying
 it as `recurrent_states` continues the same recurrence. PyTorch inference must
@@ -137,3 +223,5 @@ optimization, not a change to the model contract.
 - No supplied 3D frame establishes that Spin(3) is a true language symmetry.
 - The recurrence is channel-diagonal in state transport; learned channel
   interaction occurs in controls, projections, and the feed-forward path.
+- The experimental `spin_scan.py` result does not change these canonical v2.1
+  claims or retroactively make conjugation center-sensitive.

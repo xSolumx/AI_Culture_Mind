@@ -9,10 +9,9 @@ import jax
 jax.config.update("jax_enable_x64", True)
 import jax.numpy as jnp
 import numpy as np
-import torch
-
 import pure_rotor_ssm.jax_backend as jx
 import pure_rotor_ssm.torch_backend as pt
+import torch
 
 
 class PureAlgebraTests(unittest.TestCase):
@@ -23,9 +22,7 @@ class PureAlgebraTests(unittest.TestCase):
         multivectors = rng.normal(size=(3, 5, 8))
 
         tq = pt.rotor_from_bivector(torch.tensor(bivectors, dtype=torch.float64))
-        tr = pt.rotor_from_bivector(
-            torch.tensor(other_bivectors, dtype=torch.float64)
-        )
+        tr = pt.rotor_from_bivector(torch.tensor(other_bivectors, dtype=torch.float64))
         tx = torch.tensor(multivectors, dtype=torch.float64)
         torch.testing.assert_close(
             pt.rotor_product(tq, tr),
@@ -35,9 +32,7 @@ class PureAlgebraTests(unittest.TestCase):
         )
         torch.testing.assert_close(
             pt.rotor_sandwich(tq, tx),
-            pt.geometric_product(
-                pt.geometric_product(tq, tx), pt.reversion(tq)
-            ),
+            pt.geometric_product(pt.geometric_product(tq, tx), pt.reversion(tq)),
             rtol=1e-13,
             atol=1e-13,
         )
@@ -53,9 +48,7 @@ class PureAlgebraTests(unittest.TestCase):
         )
         np.testing.assert_allclose(
             jx.rotor_sandwich(jq, jmv),
-            jx.geometric_product(
-                jx.geometric_product(jq, jmv), jx.reversion(jq)
-            ),
+            jx.geometric_product(jx.geometric_product(jq, jmv), jx.reversion(jq)),
             rtol=1e-13,
             atol=1e-13,
         )
@@ -131,9 +124,7 @@ class PureTransitionTests(unittest.TestCase):
         left = pt.compose_transitions(c, pt.compose_transitions(b, a))
         right = pt.compose_transitions(pt.compose_transitions(c, b), a)
         for left_value, right_value in zip(left, right):
-            torch.testing.assert_close(
-                left_value, right_value, rtol=1e-12, atol=1e-12
-            )
+            torch.testing.assert_close(left_value, right_value, rtol=1e-12, atol=1e-12)
 
         jd, jb, ji = jnp.asarray(decay), jnp.asarray(drive), jnp.asarray(initial)
         jq = jx.rotor_from_bivector(jnp.asarray(bivectors))
@@ -147,6 +138,89 @@ class PureTransitionTests(unittest.TestCase):
             parallel.numpy(), np.asarray(jparallel), rtol=1e-12, atol=1e-12
         )
 
+    def test_schur_scan_matches_existing_paths(self) -> None:
+        decay, bivectors, drive, initial = self._transition_arrays(seed=109, length=17)
+        td = torch.tensor(decay, dtype=torch.float64)
+        tq = pt.rotor_from_bivector(torch.tensor(bivectors, dtype=torch.float64))
+        tb = torch.tensor(drive, dtype=torch.float64)
+        ti = torch.tensor(initial, dtype=torch.float64)
+
+        parallel, parallel_final = pt.rotor_affine_scan(td, tq, tb, ti)
+        schur, schur_final = pt.rotor_affine_scan_schur(td, tq, tb, ti)
+        recurrent, recurrent_final = pt.rotor_recurrent_scan(td, tq, tb, ti)
+        torch.testing.assert_close(schur, parallel, rtol=1e-12, atol=1e-12)
+        torch.testing.assert_close(schur_final, parallel_final, rtol=1e-12, atol=1e-12)
+        torch.testing.assert_close(schur, recurrent, rtol=1e-12, atol=1e-12)
+        torch.testing.assert_close(schur_final, recurrent_final, rtol=1e-12, atol=1e-12)
+
+        torch.manual_seed(110)
+        layer = pt.SelectiveRotorSSM(channels=3).double()
+        inputs = torch.randn(2, 29, 3, 8, dtype=torch.float64)
+        schur_states, _ = layer(inputs, scan_mode="schur_parallel")
+        parallel_states, _ = layer(inputs, scan_mode="parallel")
+        torch.testing.assert_close(
+            schur_states, parallel_states, rtol=1e-12, atol=1e-12
+        )
+
+    def test_schur_coordinates_match_one_rotor_transition_and_gradients(self) -> None:
+        """Guard the active-vector orientation used by the Schur scan."""
+
+        torch.manual_seed(111)
+        bivectors = torch.randn(2, 11, 3, 3, dtype=torch.float64)
+        rotors = pt.rotor_from_bivector(bivectors)
+        state = torch.randn(2, 11, 3, 8, dtype=torch.float64)
+        trivial, active = pt.pack_spin3_isotypic(state)
+        expected_trivial, expected_active = pt.pack_spin3_isotypic(
+            pt.specialized_rotor_sandwich(rotors, state)
+        )
+        scale = pt._rotor_scale(rotors).squeeze(-1).repeat_interleave(2, dim=-1)
+        torch.testing.assert_close(expected_trivial, scale * trivial)
+        torch.testing.assert_close(
+            expected_active,
+            pt._apply_schur_rotation(pt._rotor_linear_map(rotors), active),
+        )
+
+        decay, raw_bivectors, drive, initial = self._transition_arrays(
+            seed=112, length=11
+        )
+
+        def scan_value_and_gradients(scan):
+            current_decay = torch.tensor(decay, dtype=torch.float64, requires_grad=True)
+            current_bivectors = torch.tensor(
+                raw_bivectors, dtype=torch.float64, requires_grad=True
+            )
+            current_drive = torch.tensor(drive, dtype=torch.float64, requires_grad=True)
+            current_initial = torch.tensor(
+                initial, dtype=torch.float64, requires_grad=True
+            )
+            states, _ = scan(
+                current_decay,
+                pt.rotor_from_bivector(current_bivectors),
+                current_drive,
+                current_initial,
+            )
+            objective = states.square().mean() + states[:, -1].sum()
+            return states, torch.autograd.grad(
+                objective,
+                (current_decay, current_bivectors, current_drive, current_initial),
+            )
+
+        parallel_states, parallel_gradients = scan_value_and_gradients(
+            pt.rotor_affine_scan
+        )
+        schur_states, schur_gradients = scan_value_and_gradients(
+            pt.rotor_affine_scan_schur
+        )
+        torch.testing.assert_close(
+            schur_states, parallel_states, rtol=1e-12, atol=1e-12
+        )
+        for schur_gradient, parallel_gradient in zip(
+            schur_gradients, parallel_gradients
+        ):
+            torch.testing.assert_close(
+                schur_gradient, parallel_gradient, rtol=1e-11, atol=1e-12
+            )
+
     def test_hard_bound_under_long_arbitrary_additive_inputs(self) -> None:
         torch.manual_seed(103)
         layer = pt.SelectiveRotorSSM(
@@ -154,12 +228,8 @@ class PureTransitionTests(unittest.TestCase):
         ).double()
         inputs = 1e4 * torch.randn(2, 4096, 2, 8, dtype=torch.float64)
         states, final_state = layer(inputs, scan_mode="recurrent")
-        self.assertLessEqual(
-            float(states.norm(dim=-1).max().detach()), 1 + 1e-12
-        )
-        self.assertLessEqual(
-            float(final_state.norm(dim=-1).max().detach()), 1 + 1e-12
-        )
+        self.assertLessEqual(float(states.norm(dim=-1).max().detach()), 1 + 1e-12)
+        self.assertLessEqual(float(final_state.norm(dim=-1).max().detach()), 1 + 1e-12)
 
     def test_padding_is_an_identity_transition(self) -> None:
         torch.manual_seed(104)
@@ -175,8 +245,16 @@ class PureTransitionTests(unittest.TestCase):
         expected_identity = pt.identity_rotor(rotors[0, 4:])
         torch.testing.assert_close(rotors[0, 4:], expected_identity)
         states, final_state = pt.rotor_affine_scan(decay, rotors, drive)
+        schur_states, schur_final_state = pt.rotor_affine_scan_schur(
+            decay, rotors, drive
+        )
+        torch.testing.assert_close(schur_states, states, rtol=1e-12, atol=1e-12)
         torch.testing.assert_close(
-            states[0, 4:], states[0, 3].expand_as(states[0, 4:]),
+            schur_final_state, final_state, rtol=1e-12, atol=1e-12
+        )
+        torch.testing.assert_close(
+            states[0, 4:],
+            states[0, 3].expand_as(states[0, 4:]),
             rtol=1e-12,
             atol=1e-12,
         )
@@ -186,19 +264,43 @@ class PureTransitionTests(unittest.TestCase):
         tokens = np.arange(22, dtype=np.int64).reshape(2, 11) % 29
 
         torch.manual_seed(105)
-        tmodel = pt.GASSMLanguageModel(
-            vocab_size=29, channels=2, num_layers=2, dropout_rate=0
-        ).double().eval()
+        tmodel = (
+            pt.GASSMLanguageModel(
+                vocab_size=29, channels=2, num_layers=2, dropout_rate=0
+            )
+            .double()
+            .eval()
+        )
         ttokens = torch.from_numpy(tokens)
         full, full_states = tmodel(ttokens, return_recurrent_states=True)
         first, cache = tmodel(ttokens[:, :6], return_recurrent_states=True)
-        second, cache = tmodel(
-            ttokens[:, 6:], cache, return_recurrent_states=True
-        )
+        second, cache = tmodel(ttokens[:, 6:], cache, return_recurrent_states=True)
         torch.testing.assert_close(
             full, torch.cat((first, second), dim=1), rtol=1e-12, atol=1e-12
         )
         for expected, actual in zip(full_states, cache):
+            torch.testing.assert_close(expected, actual, rtol=1e-12, atol=1e-12)
+
+        schur_full, schur_full_states = tmodel(
+            ttokens, return_recurrent_states=True, scan_mode="schur_parallel"
+        )
+        schur_first, schur_cache = tmodel(
+            ttokens[:, :6], return_recurrent_states=True, scan_mode="schur_parallel"
+        )
+        schur_second, schur_cache = tmodel(
+            ttokens[:, 6:],
+            schur_cache,
+            return_recurrent_states=True,
+            scan_mode="schur_parallel",
+        )
+        torch.testing.assert_close(schur_full, full, rtol=1e-12, atol=1e-12)
+        torch.testing.assert_close(
+            schur_full,
+            torch.cat((schur_first, schur_second), dim=1),
+            rtol=1e-12,
+            atol=1e-12,
+        )
+        for expected, actual in zip(schur_full_states, schur_cache):
             torch.testing.assert_close(expected, actual, rtol=1e-12, atol=1e-12)
 
         jmodel = jx.GASSMLanguageModel(
@@ -239,12 +341,13 @@ class PureTransitionTests(unittest.TestCase):
         layer = pt.SelectiveRotorSSM(channels=8).cuda()
         inputs = torch.randn(4, 257, 8, 8, device="cuda", requires_grad=True)
         parallel, final_state = layer(inputs, scan_mode="parallel")
+        schur, schur_final = layer(inputs, scan_mode="schur_parallel")
         recurrent, recurrent_final = layer(inputs, scan_mode="recurrent")
         torch.testing.assert_close(parallel, recurrent, rtol=2e-4, atol=2e-5)
-        torch.testing.assert_close(
-            final_state, recurrent_final, rtol=2e-4, atol=2e-5
-        )
-        (parallel.square().mean() + final_state.square().mean()).backward()
+        torch.testing.assert_close(final_state, recurrent_final, rtol=2e-4, atol=2e-5)
+        torch.testing.assert_close(parallel, schur, rtol=2e-4, atol=2e-5)
+        torch.testing.assert_close(final_state, schur_final, rtol=2e-4, atol=2e-5)
+        (schur.square().mean() + schur_final.square().mean()).backward()
         self.assertTrue(bool(torch.isfinite(inputs.grad).all()))
 
     def test_cuda_dispatch_matches_specialized_sandwich(self) -> None:
@@ -259,9 +362,7 @@ class PureTransitionTests(unittest.TestCase):
             pt.geometric_product(rotors, values), pt.reversion(rotors)
         )
         torch.testing.assert_close(selected, dense, rtol=0, atol=0)
-        torch.testing.assert_close(
-            selected, specialized, rtol=2e-5, atol=2e-6
-        )
+        torch.testing.assert_close(selected, specialized, rtol=2e-5, atol=2e-6)
 
 
 if __name__ == "__main__":

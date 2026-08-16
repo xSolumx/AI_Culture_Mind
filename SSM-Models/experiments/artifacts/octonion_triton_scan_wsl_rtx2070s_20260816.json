@@ -1,0 +1,249 @@
+{
+  "all_required_checks_passed": true,
+  "checks": {
+    "finite_outputs_and_gradients": true,
+    "forward_parity": true,
+    "initial_gradient_parity": true,
+    "long_unit_norm_stability": true,
+    "token_gradient_parity": true
+  },
+  "claim_boundary": "Fused differentiable chunk recurrence in the recorded WSL/Triton environment; not a production SSM or fused associative matrix scan.",
+  "configuration": {
+    "backward_max_length": 1024,
+    "batch": 8,
+    "dtype": "float32",
+    "lanes": 4,
+    "lengths": [
+      128,
+      512,
+      1024,
+      4096
+    ],
+    "raw_max_length": 512,
+    "repeats": 20,
+    "seed": 20260823,
+    "warmup": 5
+  },
+  "correctness": {
+    "all_outputs_and_gradients_finite": true,
+    "length127_forward_max_abs_error": 7.748603820800781e-07,
+    "length31_initial_gradient_max_abs_error": 2.9802322387695312e-06,
+    "length31_token_gradient_max_abs_error": 2.384185791015625e-06,
+    "length4096_unit_norm_max_abs_error": 6.9141387939453125e-06
+  },
+  "environment": {
+    "compute_capability": [
+      7,
+      5
+    ],
+    "device_name": "NVIDIA GeForce RTX 2070 SUPER",
+    "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.35",
+    "python": "3.10.12",
+    "torch": "2.4.0+cu121",
+    "torch_cuda": "12.1",
+    "triton": "3.0.0"
+  },
+  "experiment": "fused octonion recurrence WSL Triton benchmark",
+  "finished_at": "2026-08-16T20:58:30.977867+02:00",
+  "protocol_frozen_at": "2026-08-16T20:56:25+02:00",
+  "schema_version": 1,
+  "started_at": "2026-08-16T20:58:20.032925+02:00",
+  "timings": {
+    "forward": {
+      "1024": {
+        "pytorch_work_efficient_operator": {
+          "mean_ms": 3.5877568244934084,
+          "median_ms": 3.3755840063095093,
+          "minimum_ms": 3.2709760665893555,
+          "p20_ms": 3.3423359394073486,
+          "p80_ms": 3.8645761013031006,
+          "repeats": 20,
+          "standard_deviation_ms": 0.3070381668395297
+        },
+        "triton_fused_recurrent": {
+          "mean_ms": 0.7151536047458649,
+          "median_ms": 0.6711519956588745,
+          "minimum_ms": 0.5495679974555969,
+          "p20_ms": 0.6209279894828796,
+          "p80_ms": 0.718720018863678,
+          "repeats": 20,
+          "standard_deviation_ms": 0.164917704778798
+        }
+      },
+      "128": {
+        "pytorch_raw_recurrent": {
+          "mean_ms": 20.01725788116455,
+          "median_ms": 19.842703819274902,
+          "minimum_ms": 19.12099266052246,
+          "p20_ms": 19.398752212524414,
+          "p80_ms": 20.334592819213867,
+          "repeats": 10,
+          "standard_deviation_ms": 0.7086286628795417
+        },
+        "pytorch_work_efficient_operator": {
+          "mean_ms": 1.893812781572342,
+          "median_ms": 1.705951988697052,
+          "minimum_ms": 1.6569279432296753,
+          "p20_ms": 1.691648006439209,
+          "p80_ms": 2.238879919052124,
+          "repeats": 20,
+          "standard_deviation_ms": 0.29766932349825487
+        },
+        "triton_fused_recurrent": {
+          "mean_ms": 0.45285279750823976,
+          "median_ms": 0.3844960033893585,
+          "minimum_ms": 0.3195199966430664,
+          "p20_ms": 0.35123199224472046,
+          "p80_ms": 0.43462398648262024,
+          "repeats": 20,
+          "standard_deviation_ms": 0.1694361129778807
+        }
+      },
+      "4096": {
+        "pytorch_work_efficient_operator": {
+          "mean_ms": 9.522747135162353,
+          "median_ms": 8.951231956481934,
+          "minimum_ms": 8.698016166687012,
+          "p20_ms": 8.847935676574707,
+          "p80_ms": 9.540575981140137,
+          "repeats": 20,
+          "standard_deviation_ms": 1.7130907162011402
+        },
+        "triton_fused_recurrent": {
+          "mean_ms": 1.9301711916923523,
+          "median_ms": 1.805023968219757,
+          "minimum_ms": 1.7326079607009888,
+          "p20_ms": 1.782655954360962,
+          "p80_ms": 2.0518720149993896,
+          "repeats": 20,
+          "standard_deviation_ms": 0.20636322999595844
+        }
+      },
+      "512": {
+        "pytorch_raw_recurrent": {
+          "mean_ms": 99.04870071411133,
+          "median_ms": 105.32889938354492,
+          "minimum_ms": 79.80329895019531,
+          "p20_ms": 82.25071716308594,
+          "p80_ms": 111.83055877685547,
+          "repeats": 10,
+          "standard_deviation_ms": 14.207196056221244
+        },
+        "pytorch_work_efficient_operator": {
+          "mean_ms": 2.6447007775306703,
+          "median_ms": 2.4913439750671387,
+          "minimum_ms": 2.296447992324829,
+          "p20_ms": 2.3659839630126953,
+          "p80_ms": 2.9944961071014404,
+          "repeats": 20,
+          "standard_deviation_ms": 0.30317708121783515
+        },
+        "triton_fused_recurrent": {
+          "mean_ms": 0.5719248071312905,
+          "median_ms": 0.555616021156311,
+          "minimum_ms": 0.40400001406669617,
+          "p20_ms": 0.43372800946235657,
+          "p80_ms": 0.6205440163612366,
+          "repeats": 20,
+          "standard_deviation_ms": 0.15432714360724992
+        }
+      }
+    },
+    "forward_backward": {
+      "1024": {
+        "pytorch_work_efficient_operator": {
+          "mean_ms": 11.950334405899047,
+          "median_ms": 11.627504348754883,
+          "minimum_ms": 10.301664352416992,
+          "p20_ms": 10.611647605895996,
+          "p80_ms": 12.300928115844727,
+          "repeats": 20,
+          "standard_deviation_ms": 1.5188595356905863
+        },
+        "triton_fused_recurrent": {
+          "mean_ms": 1.8759440064430237,
+          "median_ms": 1.6910719871520996,
+          "minimum_ms": 1.5489920377731323,
+          "p20_ms": 1.58515202999115,
+          "p80_ms": 2.0256640911102295,
+          "repeats": 20,
+          "standard_deviation_ms": 0.37409012970538363
+        }
+      },
+      "128": {
+        "pytorch_raw_recurrent": {
+          "mean_ms": 74.67207107543945,
+          "median_ms": 73.52577590942383,
+          "minimum_ms": 70.04377746582031,
+          "p20_ms": 70.55366516113281,
+          "p80_ms": 75.86224365234375,
+          "repeats": 10,
+          "standard_deviation_ms": 4.4024480353850555
+        },
+        "pytorch_work_efficient_operator": {
+          "mean_ms": 7.784364843368531,
+          "median_ms": 7.4247682094573975,
+          "minimum_ms": 6.8033599853515625,
+          "p20_ms": 7.016064167022705,
+          "p80_ms": 7.882880210876465,
+          "repeats": 20,
+          "standard_deviation_ms": 1.3967889619683838
+        },
+        "triton_fused_recurrent": {
+          "mean_ms": 1.4165087997913361,
+          "median_ms": 1.2783360481262207,
+          "minimum_ms": 1.10316801071167,
+          "p20_ms": 1.1603840589523315,
+          "p80_ms": 1.3907519578933716,
+          "repeats": 20,
+          "standard_deviation_ms": 0.34836679559207473
+        }
+      },
+      "512": {
+        "pytorch_raw_recurrent": {
+          "mean_ms": 300.9603332519531,
+          "median_ms": 280.32264709472656,
+          "minimum_ms": 274.21881103515625,
+          "p20_ms": 276.22711181640625,
+          "p80_ms": 321.3006591796875,
+          "repeats": 10,
+          "standard_deviation_ms": 36.57839636524498
+        },
+        "pytorch_work_efficient_operator": {
+          "mean_ms": 9.698104000091552,
+          "median_ms": 9.286287784576416,
+          "minimum_ms": 8.027520179748535,
+          "p20_ms": 8.891039848327637,
+          "p80_ms": 10.534175872802734,
+          "repeats": 20,
+          "standard_deviation_ms": 1.22888060118121
+        },
+        "triton_fused_recurrent": {
+          "mean_ms": 1.4913919866085052,
+          "median_ms": 1.2241439819335938,
+          "minimum_ms": 1.0941760540008545,
+          "p20_ms": 1.146496057510376,
+          "p80_ms": 1.6708799600601196,
+          "repeats": 20,
+          "standard_deviation_ms": 0.5658906560499173
+        }
+      }
+    },
+    "speedup_ratios": {
+      "1024": {
+        "work_efficient_over_triton_forward": 5.029537315158655
+      },
+      "128": {
+        "raw_recurrent_over_triton_forward": 51.60704830312959,
+        "work_efficient_over_triton_forward": 4.4368523304766985
+      },
+      "4096": {
+        "work_efficient_over_triton_forward": 4.95906542743046
+      },
+      "512": {
+        "raw_recurrent_over_triton_forward": 189.57138630441474,
+        "work_efficient_over_triton_forward": 4.483931132659421
+      }
+    }
+  }
+}
