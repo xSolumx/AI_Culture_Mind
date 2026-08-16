@@ -11,6 +11,10 @@ module name. Editable installation adds this directory to the Python path.
 - `spin8_triality_memory.py`: multiplicity-slot memory contracts.
 - `spin8_triality_direct_memory_equivalence.py`: exact dynamic gauge
   equivalence between supplied-key triality-bound and direct addressed slots.
+- `spin8_triality_2a5_closure.py`: exact quadratic-field and faithful
+  permutation classification of the three common-carrier binary-icosahedral
+  triality views, giving a reducible perfect group of order 864,000 with
+  independent block-sign center.
 - `spin8_five_probe_identifiability.py`: exact shared-rank and ambiguity gates.
 - `spin8_global_probe_certificate.py`: exact integral triality closure proving
   one global five-probe free tuple and a four-probe `su(2)` counterfamily.

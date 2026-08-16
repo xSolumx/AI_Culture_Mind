@@ -68,6 +68,14 @@ quotient structure, and representation-specific memory controls.
   `2^3.PSL(2,7)` of order 1,344, and together they generate the split perfect
   group `2_+^(1+6):PSL(2,7)` of order 21,504. These are exact classifications
   of the maintained matrix embedding, not new abstract finite groups.
+- The three common-carrier triality views of the exact `2.A5` embedding close
+  to the reducible perfect group
+  `((2.A5 x 2.A5)/C2_diagonal) x 2.A5` of order 864,000. Its first
+  four-space carries the orientation-preserving `H4`/600-cell group, its
+  second carries one binary-icosahedral action, and its center consists of the
+  four combinations of two independent block signs. This classifies the fixed
+  embedding; it is not a
+  new abstract group or an irreducible eight-dimensional discovery.
 
 ## Open Claims
 
@@ -78,9 +86,8 @@ quotient structure, and representation-specific memory controls.
   improves sample efficiency or generalization.
 - Any model-level advantage attributable specifically to triality or Clifford
   structure.
-- Classification of the subgroup generated jointly by triality-conjugate
-  `2.A5` embeddings, or by the monomial operator group and a golden-field
-  `2.A5` embedding.
+- Classification of the subgroup generated jointly by the monomial operator
+  group and a golden-field `2.A5` embedding.
 
 ## Dependencies
 
@@ -113,6 +120,7 @@ quotient structure, and representation-specific memory controls.
 - [Exact component atlas](../../SSM-Models/experiments/SPIN_DIRAC_A5_COMPONENT_ATLAS_RESULTS.md)
 - [Spinor branching atlas](../../SSM-Models/experiments/SPIN_DIRAC_A5_SPINOR_BRANCHING_RESULTS.md)
 - [Finite octonion-operator groups](../../Spin-Space-Research/docs/experiments/OCTONION_OPERATOR_GROUP_RESULTS.md)
+- [Exact binary-icosahedral triality closure](../../Spin-Space-Research/docs/experiments/SPIN8_TRIALITY_2A5_CLOSURE_RESULTS.md)
 - [Group and number-structure catalogue](GROUP_AND_NUMBER_STRUCTURE_CATALOGUE.md)
 
 The triangular lift is cross-listed with Programme 01, and the paired-action

@@ -87,6 +87,14 @@ broader numerical counterexample searches without promoting them to proof.
   \(2_+^{1+6}:\operatorname{PSL}(2,7)\) of order 21,504. This identifies a
   known abstract group in the repository's fixed representation; it is not a
   new finite-group claim.
+- The common-carrier closure of the vector and two half-spin views of the
+  exact binary-icosahedral embedding is the reducible perfect group
+  \(
+  ((2.A_5\times2.A_5)/C_{2,\mathrm{diag}})\times2.A_5
+  \) of order 864,000. Its two four-dimensional blocks carry the 600-cell
+  rotation group and one binary-icosahedral action, while its Klein-four
+  center acts by independent block signs. This is an exact embedding result,
+  not a new abstract group or a model-performance claim.
 - Within the triality sensor model, every four-probe design has a
   positive-dimensional stabilizer. Every mixed five-probe allocation has an
   open dense free stratum, while a five-probe design confined to one
