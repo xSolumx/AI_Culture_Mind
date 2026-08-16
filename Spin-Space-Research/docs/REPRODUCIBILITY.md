@@ -933,6 +933,22 @@ The completed 20-row receipt, exact/byte split, resource measurements, and
 historical return-code-120 diagnosis are recorded in the dated
 [`Spin(8) endpoint-octet twenty-output replay report`](experiments/SPIN8_ENDPOINT_OCTET_RUNTIME_REPLAY_20260811.md).
 
+### Exact octonion-operator group classification
+
+This finite signed-permutation replay is CPU- and memory-light; it deliberately
+does not use the expensive-proof runner or claim speed from additional cores:
+
+```powershell
+$env:PYTHONPATH = "src"
+python -m octonion_operator_groups `
+  --output artifacts/octonion_operator_groups_20260817.json
+python -m pytest -q tests/test_octonion_operator_groups.py
+```
+
+The source enumerates all signed Fano-basis automorphisms and all relevant
+generator lifts. Acceptance is exact integer closure and invariant equality.
+The stored artifact is a reproducibility target, not an input to the proof.
+
 ### Enforced workstation envelope
 
 For any expensive stage on the reference i7-9700K, use the bounded runner:

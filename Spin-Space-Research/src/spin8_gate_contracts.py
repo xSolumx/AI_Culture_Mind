@@ -308,6 +308,37 @@ GATES: tuple[GateContract, ...] = (
         replay_tier="unit",
     ),
     GateContract(
+        gate_id="octonion_operator_finite_groups",
+        claim=(
+            "The fixed Fano-plane left operators generate 2_+^(1+6), the "
+            "signed basis automorphisms form the nonsplit 2^3.PSL(2,7), and "
+            "their combined matrix closure is the split perfect "
+            "2_+^(1+6):PSL(2,7) of order 21,504."
+        ),
+        status="proved_hybrid",
+        evidence_layers=(
+            "exact_arithmetic",
+            "symbolic_identity",
+            "external_theorem",
+        ),
+        test_suites=("tests/test_octonion_operator_groups.py",),
+        artifacts=("artifacts/octonion_operator_groups_20260817.json",),
+        boundary_obligations=(
+            "Raw unit octonions remain a nonassociative Moufang loop; the theorem concerns associative matrix composition.",
+            "The extraspecial type is fixed by the exact square count, not order alone.",
+            "Both split-status claims exhaust every lift of one fixed generating quotient pair.",
+            "External nomenclature is separated from the exact repository-specific closure and invariants.",
+        ),
+        limitations=(
+            "The abstract groups are known and this is not a new finite simple group or a classification of all finite Spin(8) subgroups.",
+            "The group theorem establishes no ML-quality or kernel-speed advantage.",
+        ),
+        replay_tier="bounded_full",
+        external_inputs=(
+            "The automorphism group of the Fano plane is PSL(2,7) isomorphic to GL(3,2), and the standard extraspecial-group Arf-count classification.",
+        ),
+    ),
+    GateContract(
         gate_id="signed_star_dirac_gram",
         claim="The strengthened Dirac--Gram inequality and its complete equality classification hold on the full four-parameter signed-star ansatz.",
         status="proved_exact",
