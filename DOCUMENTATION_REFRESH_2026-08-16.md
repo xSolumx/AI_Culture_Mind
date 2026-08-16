@@ -1,7 +1,7 @@
 # Documentation reconciliation — 2026-08-16
 
 Reconciliation opened at **2026-08-16T16:05:27+02:00** and latest
-research status reconciliation completed at **2026-08-17T00:02:40+02:00**
+research status reconciliation completed at **2026-08-17T00:20:13+02:00**
 (`Africa/Johannesburg`, UTC+02:00).
 
 ## Scope and method
@@ -459,3 +459,24 @@ artifact, gate-contract, Ruff, compilation, and documentation audits also
 passed. These results do not cover the remaining width-`1/8` collars, the
 unrestricted seven-variable Dirac--Gram inequality, or global five-query
 D-optimality.
+
+## Exact octonion-operator group classification
+
+At **2026-08-17T00:20:13+02:00**, the finite groups implicit in the maintained
+associative octonion-operator lift were classified. The seven imaginary-basis
+left operators generate the plus-extraspecial group `2_+^(1+6)` of order 128.
+All signed Fano-basis automorphisms form the non-split group
+`2^3.PSL(2,7)` of order 1,344. Their order-eight intersection yields a split,
+perfect, orientation-preserving group `2_+^(1+6):PSL(2,7)` of order 21,504.
+
+The result is an exact identification of the repository's fixed matrix
+embedding, not discovery of a new abstract finite group. The authoritative
+report is
+[`OCTONION_OPERATOR_GROUP_RESULTS.md`](Spin-Space-Research/docs/experiments/OCTONION_OPERATOR_GROUP_RESULTS.md),
+and the broader inventory is
+[`GROUP_AND_NUMBER_STRUCTURE_CATALOGUE.md`](research-programs/04-triality-clifford-representation-dynamics/GROUP_AND_NUMBER_STRUCTURE_CATALOGUE.md).
+The exact replay additionally exhausts all 384 lifts of a fixed quotient
+generating pair: 192 have product order seven and 64 also have commutator
+order four; at least one of the latter generates an explicit split complement.
+The artifact SHA-256 is
+`835d0535d7827834ecd6b707984a7f3ae0eeac651f6fec4c3ff6f4ba74796a92`.

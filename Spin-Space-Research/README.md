@@ -80,6 +80,13 @@ broader numerical counterexample searches without promoting them to proof.
   chiral eight-dimensional triality representations. The implementation checks
   the full \(\mathfrak{so}(8)\) brackets, center signatures, triality
   equivariance, scan parity, and norm preservation.
+- The seven discrete octonion left operators generate the plus-extraspecial
+  group \(2_+^{1+6}\) of order 128. All signed Fano-basis automorphisms form
+  the non-split group \(2^3.\operatorname{PSL}(2,7)\), and their combined
+  associative matrix closure is the split perfect group
+  \(2_+^{1+6}:\operatorname{PSL}(2,7)\) of order 21,504. This identifies a
+  known abstract group in the repository's fixed representation; it is not a
+  new finite-group claim.
 - Within the triality sensor model, every four-probe design has a
   positive-dimensional stabilizer. Every mixed five-probe allocation has an
   open dense free stratum, while a five-probe design confined to one

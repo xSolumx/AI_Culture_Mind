@@ -34,6 +34,7 @@ proof-search products and private working notes are intentionally absent.
 | Review Dirac--Gram inequalities | [Signed-star manuscript](manuscripts/SIGNED_STAR_DIRAC_GRAM.md) | [Dirac--Gram programme ledger](../../research-programs/05-information-geometry-and-dirac-gram-sensing/SPIN8_DIRAC_GRAM_LEDGER.md) |
 | Review exact algebraic scalar extension | [Design rationale](ALGEBRAIC_EXTENSION_DESIGN.md) | [Quadratic-field result](experiments/ALGEBRAIC_ISOTYPIC_DECOMPOSITION_RESULTS.md) |
 | Review the Clifford signature chain | [Clifford signature theorem](manuscripts/CLIFFORD_SIGNATURE_EXTENSION.md) | [Spin(9) ledger](../../research-programs/05-information-geometry-and-dirac-gram-sensing/SPIN9_DIRAC_CLIFFORD_LEDGER.md) |
+| Review finite groups in the octonion operator lift | [Exact operator-group result](experiments/OCTONION_OPERATOR_GROUP_RESULTS.md) | [Repository group catalogue](../../research-programs/04-triality-clifford-representation-dynamics/GROUP_AND_NUMBER_STRUCTURE_CATALOGUE.md) |
 | Referee one compact theorem | [Cayley-spectrum referee package](../referee/cayley-information-spectrum/README.md) | [LaTeX paper](../papers/cayley-information-spectrum/README.md) |
 | Review the maintained sequence-model architecture | [Canonical Pure Rotor foundations](../../SSM-Models/FOUNDATIONS.md) | [Historical Spin-Space foundations](FOUNDATIONS.md) and [Triality experiment](SPIN8_TRIALITY_EXPERIMENT.md) |
 | Review memory scanning and hierarchical retrieval | [Memory benchmark atlas and FLA fit](experiments/MEMORY_BENCHMARK_ATLAS.md) | [Large-slot semantic hierarchy and fused gather](experiments/LARGE_SLOT_SEMANTIC_HIERARCHY_RESULTS.md) |
@@ -90,6 +91,10 @@ proof-search products and private working notes are intentionally absent.
 
 ### Triality geometry and sensing
 
+- [Finite Octonion-Operator Groups](experiments/OCTONION_OPERATOR_GROUP_RESULTS.md)
+  — exact identification of the plus-extraspecial 128-element operator group,
+  the non-split 1,344-element signed Fano automorphism group, and their split
+  perfect 21,504-element extension.
 - [Paper draft](PAPER_DRAFT_TRIALITY_INFORMATION_GEOMETRY.md) — current
   theorem-level synthesis.
 - [Multiplicity Gauge Theorem](SPIN8_MULTIPLICITY_GAUGE_THEOREM.md) — exact

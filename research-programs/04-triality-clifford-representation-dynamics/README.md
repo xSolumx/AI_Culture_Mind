@@ -62,6 +62,12 @@ quotient structure, and representation-specific memory controls.
   dimensions 3, 8, 9, 10, 11, and 12, and verifies the corresponding spinor
   branching identities. Triality remains confined to the Spin(8) rung; these
   exact representation results imply no sequence-model advantage.
+- The seven discrete octonion left-multiplication operators generate the
+  plus-type extraspecial group `2_+^(1+6)` of order 128. Exhaustive signed
+  Fano-basis automorphisms form the non-split extension
+  `2^3.PSL(2,7)` of order 1,344, and together they generate the split perfect
+  group `2_+^(1+6):PSL(2,7)` of order 21,504. These are exact classifications
+  of the maintained matrix embedding, not new abstract finite groups.
 
 ## Open Claims
 
@@ -72,6 +78,9 @@ quotient structure, and representation-specific memory controls.
   improves sample efficiency or generalization.
 - Any model-level advantage attributable specifically to triality or Clifford
   structure.
+- Classification of the subgroup generated jointly by triality-conjugate
+  `2.A5` embeddings, or by the monomial operator group and a golden-field
+  `2.A5` embedding.
 
 ## Dependencies
 
@@ -103,6 +112,8 @@ quotient structure, and representation-specific memory controls.
 - [Binary-icosahedral Clifford ladder](../../SSM-Models/experiments/SPIN_DIRAC_A5_LADDER_RESULTS.md)
 - [Exact component atlas](../../SSM-Models/experiments/SPIN_DIRAC_A5_COMPONENT_ATLAS_RESULTS.md)
 - [Spinor branching atlas](../../SSM-Models/experiments/SPIN_DIRAC_A5_SPINOR_BRANCHING_RESULTS.md)
+- [Finite octonion-operator groups](../../Spin-Space-Research/docs/experiments/OCTONION_OPERATOR_GROUP_RESULTS.md)
+- [Group and number-structure catalogue](GROUP_AND_NUMBER_STRUCTURE_CATALOGUE.md)
 
 The triangular lift is cross-listed with Programme 01, and the paired-action
 cohort is cross-listed with Programme 02. Cross-listing identifies a shared

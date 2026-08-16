@@ -16,6 +16,10 @@ module name. Editable installation adds this directory to the Python path.
   one global five-probe free tuple and a four-probe `su(2)` counterfamily.
 - `spin8_coordinate_geometry.py`: exhaustive `F_2^5` classification of all
   coordinate four/five-probe sensors and their exact stabilizer ladder.
+- `octonion_operator_groups.py`: exact signed-permutation closure identifying
+  the associative left-operator group `2_+^(1+6)`, the non-split signed Fano
+  automorphism group `2^3.PSL(2,7)`, and their split perfect
+  `2_+^(1+6):PSL(2,7)` extension of order 21,504.
 - `spin8_continuous_probe_orbits.py`: invariant/principal-orbit certificate
   proving universal four-probe insufficiency and generic mixed five-probe
   global identifiability.
