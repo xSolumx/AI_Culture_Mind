@@ -96,10 +96,51 @@ broader numerical counterexample searches without promoting them to proof.
   center acts by independent block signs. This is an exact embedding result,
   not a new abstract group or a model-performance claim.
 - Adjoining the order-21,504 monomial octonion-operator group to any one of
-  those three golden views produces an infinite subgroup of \(SO(8)\). The
-  same shortest witness word \(F_AF_Bb\) works in all three views: its exact
-  characteristic polynomial has the nonintegral coefficient
-  \((1-\sqrt5)/4\). This proves infinitude, not density or model advantage.
+  those three golden views produces a subgroup topologically dense in
+  \(SO(8)\). The same shortest witness word \(F_AF_Bb\) proves infinitude in
+  all three views; an exact irreducible \(7+21\) adjoint decomposition and
+  golden normalizer failure then force the full \(\mathfrak{so}(8)\) identity
+  Lie algebra. The density proof itself supplies no rate or model advantage.
+- For the uniform labelled symmetric generator measures, exact Sturm and LDL
+  certificates now prove strict contraction in the defining `8`, adjoint
+  `28`, and traceless-symmetric `35` representations. The strongest certified
+  lower gaps are tabulated per view in the maintained report; this finite
+  representation band is not a full \(L^2(SO(8))\) spectral-gap theorem.
+- Exact exterior-power continuation adds `Lambda^3` dimension 56 and both
+  Hodge-four 35s. It exposes a unique monomial-fixed Cayley-form line as the
+  slow sector, then proves that a symmetric precompiled `N-H-N` macro walk
+  improves the worst six-representation gap by more than `3x` in the vector
+  view and `56/25x` in both half-spin views per macro-step. One macro has three
+  primitive letters unless its finite dictionary is precompiled.
+- Exact macro compilation reduces 867 vector triples to 530 matrices and each
+  1,156-label half-spin set to 394, while retaining the exact multiplicity-
+  weighted measure. On the recorded single-thread CPU and synchronized RTX
+  2070 SUPER benchmark, a direct labelled FP32 table beat online construction
+  in all 24 view/device/batch cells: `1.92-8.07x` for transition materialization
+  and `1.60-3.14x` for final-state application. Every-prefix scan speed remains
+  a separate contract because an endpoint macro alone exposes no interior state.
+- An exact `24x8` stacked operator now emits all three causal prefixes of each
+  discrete `N-H-N` chunk. In recurrent sequences through 192 primitive steps,
+  this every-prefix path won all 72 recorded CPU/CUDA cells by `1.007-2.394x`,
+  with maximum float32 error `2.15e-6`. Large-batch CPU was nearly break-even;
+  fused logarithmic-depth scan, table/full-model backward, and continuous
+  learned transitions remain open.
+- The two-stage parallel implementation now scans `C` compiled endpoints rather
+  than `3C` primitive matrices and expands every local prefix in parallel.
+  Float64 tests match recurrence and all `L/H/R/initial` gradients. On the final
+  eager-PyTorch grid, forward improved `1.16-3.98x` and forward plus initial-
+  state backward `1.01-3.39x`; the `1.01x` floor remains near break-even. This
+  path remains the logarithmic-depth parallel control.
+- A fused indexed `24x8` Triton kernel now implements local-prefix forward and
+  incoming-state backward. It beat realistic indexed eager in 26/27 isolated
+  forward cells, but only 16/27 complete forward cells because the eager
+  endpoint tree dominated; it does not implement table gradients.
+- A complementary register-resident Triton recurrence removes that endpoint
+  tree for frozen exact labels. Across all 27 synchronized CUDA cells it beat
+  the optimistic pre-gathered parallel control by `4.71-19.86x` forward and
+  `2.21-6.46x` for forward plus initial-state backward, with maximum errors
+  `2.38e-6` and `1.49e-8`. It is serial in chunk depth, tested only through 64
+  chunks, and is neither a parallel-prefix theorem nor an end-to-end SSM win.
 - Within the triality sensor model, every four-probe design has a
   positive-dimensional stabilizer. Every mixed five-probe allocation has an
   open dense free stratum, while a five-probe design confined to one
@@ -423,7 +464,7 @@ The fused tests skip when CUDA or that optional dependency is unavailable.
     python tools/audit_math_docs.py
     python tools/verify_artifact_manifest.py
 
-Pytest currently collects 362 maintained tests. The complete suite includes
+Pytest currently collects 484 maintained tests. The complete suite includes
 several expensive exact certificates and was not replayed wholesale during the
 2026-08-11 scalar-extension audit; the result documents list the targeted
 passing subsets. The earlier bounded full run used six CPU cores, took 375.8

@@ -55,6 +55,95 @@
 > [`PURE_SPIN8_VS_MAMBA2_RESULTS.md`](experiments/PURE_SPIN8_VS_MAMBA2_RESULTS.md)
 > and the [`v1.0 contract`](pure_spin8_ssm/CONTRACT.md).
 
+> **2026-08-17 latent-action validation and Pure Spin(8) v1.1 compiler.**
+> A parameter-near follow-up hides the teacher's 28 Lie coordinates and omits
+> the center-producing pair `a,a` from training. In fresh seeds 1--3, the
+> maintained model identifies the eight token actions and retains 100% center
+> and identity classification through L128; its six L128 post-relation MSEs
+> are `2.66e-5`--`2.87e-4`. Median unfused Mamba-2 and GRU errors are 1,223x
+> and 1,179x larger on this synthetic every-prefix task. See
+> [`PURE_SPIN8_LATENT_INCREMENT_RESULTS.md`](experiments/PURE_SPIN8_LATENT_INCREMENT_RESULTS.md).
+> Version 1.1 adds an opt-in compiled finite-token inference path: the learned
+> router is evaluated once into a frozen faithful action table, then a
+> register-resident Triton recurrence emits all prefixes. On the local RTX
+> 2070 SUPER it is 30.7x--67.1x faster than the dynamic source model over the
+> recorded grid while preserving the center relation; see
+> [`PURE_SPIN8_COMPILED_TOKEN_SCAN_RESULTS.md`](experiments/PURE_SPIN8_COMPILED_TOKEN_SCAN_RESULTS.md).
+> Neither result is state/compute matched or a broad claim that Spin(8) beats
+> Mamba.
+
+> **2026-08-17 noisy continuous online-action validation.** The next frozen
+> cohort replaces the finite token dictionary with unique 12-real noisy
+> observations from seed-specific nonlinear charts. Across fresh seeds 1--3,
+> the 930-parameter shared Spin(8) router attains action RMSE
+> `0.01334--0.01468`, exact center/identity correctness through L128, and six
+> L128 post-relation MSEs in `0.01216--0.02814`. A capable 957-parameter,
+> exactly state-matched independent `SO(8)^3` tracker also classifies every
+> relation but has median L128 MSE `3.295x` higher. A separately frozen RTX
+> 2070 SUPER update allocation matches all model-update walls within 2.97%; the
+> shared median stays `0.01860`, versus `0.07476` independent and
+> `0.13181--0.14099` for Mamba-2/GRU/observation controls. See
+> [`PURE_SPIN8_CONTINUOUS_OBSERVATION_RESULTS.md`](experiments/PURE_SPIN8_CONTINUOUS_OBSERVATION_RESULTS.md).
+> This is every-prefix synthetic identification with an injective chart and an
+> unfused Mamba fallback, not natural-data or language-model superiority.
+
+> **2026-08-17 endpoint-only continuous identification.** A frozen successor
+> removes every intermediate target: each L16 training sequence exposes only
+> its final signed 24-real triality state. Across fresh seeds 1--3, shared
+> Spin(8) is exactly correct on every L128 center/identity row and records
+> median post-relation MSE `0.01296`, versus `0.06268` for the capable,
+> exactly state-matched independent `SO(8)^3` family and about `0.128--0.133`
+> for the generic controls. The independent/shared ratio is `4.8365x` at equal
+> updates and `7.0055x` under the separately pre-frozen local update-wall
+> allocation. Both validators strictly rehash and reload all 36 checkpoints
+> across the two cohorts. See
+> [`PURE_SPIN8_ENDPOINT_SUPERVISION_RESULTS.md`](experiments/PURE_SPIN8_ENDPOINT_SUPERVISION_RESULTS.md).
+> This closes the dense-prefix-target objection only for an injective,
+> seven-coordinate, signed synthetic teacher; unsigned, partial, chart-shifted,
+> all-28-coordinate, natural-data, and fused-modern-SSM comparisons remain open.
+
+> **2026-08-17 endpoint observability boundary.** Exact rational generator-
+> probe ranks are `7,13,18,22,25,27,28,28` in each 8D representation. The
+> tested center is invisible in `8v` and visible in both half-spin views. In a
+> frozen partial-readout cohort, one final `8s+` or `8s-` block is enough for
+> shared Spin(8) to transfer the action into all three views through L128; the
+> corresponding all-view MSE ranges are `0.00974--0.02492` and
+> `0.00932--0.02520`. The overall cohort nevertheless fails (`37/40`, `39/40`,
+> `39/40`) because vector-only supervision misses exact hidden-lift rows in all
+> seeds and one independent positive-only control fails optimization. A
+> separate identical-`8v`/opposite-spinor collision proves balanced Bayes MSE
+> `1/8` and lift accuracy `1/2`. See
+> [`PURE_SPIN8_ENDPOINT_OBSERVABILITY_RESULTS.md`](experiments/PURE_SPIN8_ENDPOINT_OBSERVABILITY_RESULTS.md).
+
+> **2026-08-17 adaptive lift-bit calibration.** The pre-frozen repair supplies
+> `8v`, a lift-invariant max-coordinate address, and exactly one lift-odd sign
+> bit. The address costs three bits and the sign costs one: this is not a
+> one-total-bit interface. Exact geometry gives selected magnitude at least
+> `1/sqrt(8)`. Across untouched seeds 4--6, shared Spin(8) passes every seedwise
+> gate without median rescue: action RMSE is `0.012825--0.013633`, all-view
+> L128 MSE is `0.009198--0.026986`, and every lift/center relation row is exact.
+> The fixed-coordinate sign is a replicated negative control and is worse than
+> vector-only. See
+> [`PURE_SPIN8_LIFT_BIT_CALIBRATION_RESULTS.md`](experiments/PURE_SPIN8_LIFT_BIT_CALIBRATION_RESULTS.md).
+> This closes the tested double-cover selection failure only when the external
+> chart address and bit are supplied. It does not infer them from `8v`, build a
+> global continuous section, or establish natural-task or generic SSM gains.
+
+> **2026-08-17 gradient and alignment boundary.** Under the adaptive loss, the
+> independent control's negative-specific head has exactly zero data gradient;
+> after 2,000 AdamW steps its weights and biases equal the exact decay-only
+> counterfactual with residual `0.0`. Every row of the shared Spin(8) coordinate
+> head receives data gradient. A separately frozen same-state shared-latent
+> control then scrambles the two spinor actions and adds 56 trainable alignment
+> parameters. Its headline all-view gate **fails** on two seed-7 vector-L128
+> cells, and that failure is preserved. The correct alignment nevertheless wins
+> all `9/9` action, `12/12` spinor-L128, and `6/6` hidden-negative-L128 cells;
+> full supervision repairs the scrambled negative view. This isolates a bounded
+> cross-view spinor-transfer effect, not universal dominance. See
+> [`PURE_SPIN8_LIFT_GRADIENT_IDENTIFIABILITY_RESULTS.md`](experiments/PURE_SPIN8_LIFT_GRADIENT_IDENTIFIABILITY_RESULTS.md)
+> and
+> [`PURE_SPIN8_SCRAMBLED_ALIGNMENT_RESULTS.md`](experiments/PURE_SPIN8_SCRAMBLED_ALIGNMENT_RESULTS.md).
+
 > **2026-08-16 center-sensitive `2.A5` result.** The frozen three-seed runner
 > [`benchmark_pure_rotor_2a5.py`](benchmark_pure_rotor_2a5.py) holds the
 > projected A5 trajectory fixed while paired binary targets differ by the
@@ -327,8 +416,8 @@ allocation failures. The spectrum is now proved on the complete orthonormal
 balanced orbit, and its nonorthogonal extension is now exact on the signed
 star family; the general nonorthogonal completion lemma, cross-allocation
 upper bounds, scalable joint retraction, nonorthogonal capacity stress,
-endpoint-only action discovery, and naturalistic downstream utility remain
-open.
+endpoint-only blind action discovery in that separate Dirac--Gram sensor-family
+campaign, and naturalistic downstream utility remain open.
 See SPIN8_TRIALITY_EXPERIMENT.md and the Spin8 result files under experiments.
 
 The numbered `GA-SSM-*` scripts are research history. `GA-SSM-3.5.py` is now a

@@ -1,0 +1,3263 @@
+{
+  "algorithm": {
+    "backward": "custom reverse recurrence for initial-state gradients only",
+    "candidate": "one Triton program per batch sequence walks C exact labelled 24x8 operators, keeps the 8-state in registers, and emits 3C states",
+    "depth_tradeoff": "candidate has serial depth C inside each program; parallel control has logarithmic endpoint-tree depth but multiple kernel launches",
+    "parallel_control": "eager PyTorch work-efficient scan over C endpoint matrices, followed by parallel local-prefix expansion"
+  },
+  "checks": {
+    "all_float32_forward_backward_parity_checks_passed": true,
+    "all_result_grids_are_complete": true,
+    "triton_forward_and_backward_kernels_compiled_and_executed": true
+  },
+  "claim_scope": {
+    "empirical": [
+      "the recorded fused-recurrence, eager-recurrence, and parallel-control timing distributions on this workstation"
+    ],
+    "not_claimed": [
+      "the candidate is a parallel prefix scan",
+      "prefix-table gradients in the Triton path",
+      "gradients through discrete label selection",
+      "full model backward, optimizer-step, or end-to-end SSM throughput",
+      "the timing ranking generalizes beyond the recorded workstation or sequence grid",
+      "an SSM accuracy advantage"
+    ],
+    "validated_implementation": [
+      "one-kernel exact labelled chunk recurrence on CUDA float32",
+      "custom initial-state reverse recurrence on CUDA float32",
+      "automatic eager fallback for CPU, unsupported dtype, or trainable operator tables"
+    ]
+  },
+  "exact_chunk_compiler_artifact": "mixed_monomial_golden_chunk_compiler_20260817.json",
+  "exact_chunk_compiler_artifact_sha256": "ed1ae7e8ac98c5e037be4e45d10f22ec3236e7d6f8337fbc2b9f9a499e13e5de",
+  "experiment": "register-resident exact compiled chunk recurrence benchmark",
+  "passed": true,
+  "recorded_at": "2026-08-17T03:10:03.939308+02:00",
+  "results": [
+    {
+      "all_float32_forward_backward_parity_checks_passed": true,
+      "prefix_table_bytes": 665856,
+      "prefix_table_shape": [
+        17,
+        3,
+        17,
+        24,
+        8
+      ],
+      "results": [
+        {
+          "batch_size": 1,
+          "chunk_count": 4,
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "fused_speedup_vs_parallel_indexed_eager": 6.1163391933815925,
+            "fused_speedup_vs_parallel_indexed_triton_local": 5.962254395036194,
+            "fused_speedup_vs_parallel_preselected_eager": 5.53205791106515,
+            "fused_speedup_vs_sequential_indexed_eager": 6.119441571871768,
+            "max_abs_error_vs_parallel_preselected_eager": {
+              "fused_triton_recurrence": 1.1920928955078125e-07,
+              "parallel_indexed_eager": 0.0,
+              "parallel_indexed_triton_local": 5.960464477539063e-08,
+              "parallel_preselected_eager": 0.0,
+              "sequential_indexed_eager": 1.1920928955078125e-07
+            },
+            "timings": {
+              "fused_triton_recurrence": {
+                "median_microseconds": 96.7,
+                "minimum_microseconds": 94.5,
+                "p10_microseconds": 95.2,
+                "p90_microseconds": 99.33,
+                "repeats": 100,
+                "warmups": 10
+              },
+              "parallel_indexed_eager": {
+                "median_microseconds": 591.45,
+                "minimum_microseconds": 564.6,
+                "p10_microseconds": 570.0300000000001,
+                "p90_microseconds": 630.66,
+                "repeats": 100,
+                "warmups": 10
+              },
+              "parallel_indexed_triton_local": {
+                "median_microseconds": 576.55,
+                "minimum_microseconds": 570.4,
+                "p10_microseconds": 572.78,
+                "p90_microseconds": 654.0600000000001,
+                "repeats": 100,
+                "warmups": 10
+              },
+              "parallel_preselected_eager": {
+                "median_microseconds": 534.95,
+                "minimum_microseconds": 528.3,
+                "p10_microseconds": 530.29,
+                "p90_microseconds": 572.96,
+                "repeats": 100,
+                "warmups": 10
+              },
+              "sequential_indexed_eager": {
+                "median_microseconds": 591.75,
+                "minimum_microseconds": 465.0,
+                "p10_microseconds": 468.68,
+                "p90_microseconds": 763.33,
+                "repeats": 100,
+                "warmups": 10
+              }
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "fused_speedup_vs_parallel_indexed_eager": 2.4150927123760244,
+            "fused_speedup_vs_parallel_indexed_triton_local": 2.460629581716257,
+            "fused_speedup_vs_parallel_preselected_eager": 2.305735230702889,
+            "fused_speedup_vs_sequential_indexed_eager": 2.752393272962484,
+            "max_abs_error_vs_parallel_preselected_eager": {
+              "fused_triton_recurrence": 3.725290298461914e-09,
+              "parallel_indexed_eager": 0.0,
+              "parallel_indexed_triton_local": 7.450580596923828e-09,
+              "parallel_preselected_eager": 0.0,
+              "sequential_indexed_eager": 7.450580596923828e-09
+            },
+            "timings": {
+              "fused_triton_recurrence": {
+                "median_microseconds": 579.75,
+                "minimum_microseconds": 536.8,
+                "p10_microseconds": 539.1300000000001,
+                "p90_microseconds": 790.82,
+                "repeats": 30,
+                "warmups": 7
+              },
+              "parallel_indexed_eager": {
+                "median_microseconds": 1400.15,
+                "minimum_microseconds": 1363.9,
+                "p10_microseconds": 1376.4,
+                "p90_microseconds": 1519.77,
+                "repeats": 30,
+                "warmups": 7
+              },
+              "parallel_indexed_triton_local": {
+                "median_microseconds": 1426.55,
+                "minimum_microseconds": 1306.3,
+                "p10_microseconds": 1357.64,
+                "p90_microseconds": 1822.31,
+                "repeats": 30,
+                "warmups": 7
+              },
+              "parallel_preselected_eager": {
+                "median_microseconds": 1336.75,
+                "minimum_microseconds": 1310.0,
+                "p10_microseconds": 1316.23,
+                "p90_microseconds": 1514.5700000000002,
+                "repeats": 30,
+                "warmups": 7
+              },
+              "sequential_indexed_eager": {
+                "median_microseconds": 1595.7,
+                "minimum_microseconds": 1544.1,
+                "p10_microseconds": 1562.32,
+                "p90_microseconds": 1741.6100000000001,
+                "repeats": 30,
+                "warmups": 7
+              }
+            }
+          },
+          "primitive_sequence_length": 12
+        },
+        {
+          "batch_size": 1,
+          "chunk_count": 16,
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "fused_speedup_vs_parallel_indexed_eager": 8.308236483072257,
+            "fused_speedup_vs_parallel_indexed_triton_local": 10.552299140980294,
+            "fused_speedup_vs_parallel_preselected_eager": 8.001515917129863,
+            "fused_speedup_vs_sequential_indexed_eager": 17.447195553309754,
+            "max_abs_error_vs_parallel_preselected_eager": {
+              "fused_triton_recurrence": 1.4901161193847656e-07,
+              "parallel_indexed_eager": 0.0,
+              "parallel_indexed_triton_local": 5.960464477539063e-08,
+              "parallel_preselected_eager": 0.0,
+              "sequential_indexed_eager": 1.1920928955078125e-07
+            },
+            "timings": {
+              "fused_triton_recurrence": {
+                "median_microseconds": 98.95,
+                "minimum_microseconds": 96.9,
+                "p10_microseconds": 97.5,
+                "p90_microseconds": 102.24000000000004,
+                "repeats": 100,
+                "warmups": 10
+              },
+              "parallel_indexed_eager": {
+                "median_microseconds": 822.0999999999999,
+                "minimum_microseconds": 807.8,
+                "p10_microseconds": 813.8599999999999,
+                "p90_microseconds": 957.1300000000002,
+                "repeats": 100,
+                "warmups": 10
+              },
+              "parallel_indexed_triton_local": {
+                "median_microseconds": 1044.15,
+                "minimum_microseconds": 816.9,
+                "p10_microseconds": 821.66,
+                "p90_microseconds": 1404.31,
+                "repeats": 100,
+                "warmups": 10
+              },
+              "parallel_preselected_eager": {
+                "median_microseconds": 791.75,
+                "minimum_microseconds": 759.9,
+                "p10_microseconds": 774.4100000000001,
+                "p90_microseconds": 923.4100000000001,
+                "repeats": 100,
+                "warmups": 10
+              },
+              "sequential_indexed_eager": {
+                "median_microseconds": 1726.4,
+                "minimum_microseconds": 1659.1,
+                "p10_microseconds": 1673.57,
+                "p90_microseconds": 2611.0399999999995,
+                "repeats": 100,
+                "warmups": 10
+              }
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "fused_speedup_vs_parallel_indexed_eager": 2.815111185983828,
+            "fused_speedup_vs_parallel_indexed_triton_local": 2.8334737196765496,
+            "fused_speedup_vs_parallel_preselected_eager": 2.806266846361186,
+            "fused_speedup_vs_sequential_indexed_eager": 8.73879716981132,
+            "max_abs_error_vs_parallel_preselected_eager": {
+              "fused_triton_recurrence": 1.1175870895385742e-08,
+              "parallel_indexed_eager": 0.0,
+              "parallel_indexed_triton_local": 9.313225746154785e-10,
+              "parallel_preselected_eager": 0.0,
+              "sequential_indexed_eager": 1.1175870895385742e-08
+            },
+            "timings": {
+              "fused_triton_recurrence": {
+                "median_microseconds": 593.6,
+                "minimum_microseconds": 582.5,
+                "p10_microseconds": 583.39,
+                "p90_microseconds": 640.0,
+                "repeats": 30,
+                "warmups": 7
+              },
+              "parallel_indexed_eager": {
+                "median_microseconds": 1671.0500000000002,
+                "minimum_microseconds": 1620.1,
+                "p10_microseconds": 1623.3600000000001,
+                "p90_microseconds": 1877.1200000000008,
+                "repeats": 30,
+                "warmups": 7
+              },
+              "parallel_indexed_triton_local": {
+                "median_microseconds": 1681.9499999999998,
+                "minimum_microseconds": 1621.8,
+                "p10_microseconds": 1635.52,
+                "p90_microseconds": 1894.1600000000003,
+                "repeats": 30,
+                "warmups": 7
+              },
+              "parallel_preselected_eager": {
+                "median_microseconds": 1665.8,
+                "minimum_microseconds": 1584.3,
+                "p10_microseconds": 1614.2599999999998,
+                "p90_microseconds": 1860.33,
+                "repeats": 30,
+                "warmups": 7
+              },
+              "sequential_indexed_eager": {
+                "median_microseconds": 5187.35,
+                "minimum_microseconds": 5106.3,
+                "p10_microseconds": 5121.87,
+                "p90_microseconds": 5272.150000000001,
+                "repeats": 30,
+                "warmups": 7
+              }
+            }
+          },
+          "primitive_sequence_length": 48
+        },
+        {
+          "batch_size": 1,
+          "chunk_count": 64,
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "fused_speedup_vs_parallel_indexed_eager": 8.936859368593685,
+            "fused_speedup_vs_parallel_indexed_triton_local": 9.050020500205004,
+            "fused_speedup_vs_parallel_preselected_eager": 8.33128331283313,
+            "fused_speedup_vs_sequential_indexed_eager": 54.44936449364494,
+            "max_abs_error_vs_parallel_preselected_eager": {
+              "fused_triton_recurrence": 2.60770320892334e-07,
+              "parallel_indexed_eager": 0.0,
+              "parallel_indexed_triton_local": 5.960464477539063e-08,
+              "parallel_preselected_eager": 0.0,
+              "sequential_indexed_eager": 3.2782554626464844e-07
+            },
+            "timings": {
+              "fused_triton_recurrence": {
+                "median_microseconds": 121.94999999999999,
+                "minimum_microseconds": 118.0,
+                "p10_microseconds": 118.97999999999999,
+                "p90_microseconds": 155.75000000000003,
+                "repeats": 100,
+                "warmups": 10
+              },
+              "parallel_indexed_eager": {
+                "median_microseconds": 1089.85,
+                "minimum_microseconds": 1051.8,
+                "p10_microseconds": 1067.0900000000001,
+                "p90_microseconds": 1331.1500000000017,
+                "repeats": 100,
+                "warmups": 10
+              },
+              "parallel_indexed_triton_local": {
+                "median_microseconds": 1103.65,
+                "minimum_microseconds": 1054.7,
+                "p10_microseconds": 1061.79,
+                "p90_microseconds": 1226.67,
+                "repeats": 100,
+                "warmups": 10
+              },
+              "parallel_preselected_eager": {
+                "median_microseconds": 1016.0,
+                "minimum_microseconds": 979.7,
+                "p10_microseconds": 997.97,
+                "p90_microseconds": 1210.4000000000008,
+                "repeats": 100,
+                "warmups": 10
+              },
+              "sequential_indexed_eager": {
+                "median_microseconds": 6640.1,
+                "minimum_microseconds": 6446.5,
+                "p10_microseconds": 6512.06,
+                "p90_microseconds": 8804.090000000002,
+                "repeats": 100,
+                "warmups": 10
+              }
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "fused_speedup_vs_parallel_indexed_eager": 3.1652924404716036,
+            "fused_speedup_vs_parallel_indexed_triton_local": 3.0512445095168372,
+            "fused_speedup_vs_parallel_preselected_eager": 3.0393003005317096,
+            "fused_speedup_vs_sequential_indexed_eager": 29.94451722277876,
+            "max_abs_error_vs_parallel_preselected_eager": {
+              "fused_triton_recurrence": 4.6566128730773926e-09,
+              "parallel_indexed_eager": 0.0,
+              "parallel_indexed_triton_local": 1.862645149230957e-09,
+              "parallel_preselected_eager": 0.0,
+              "sequential_indexed_eager": 6.51925802230835e-09
+            },
+            "timings": {
+              "fused_triton_recurrence": {
+                "median_microseconds": 648.85,
+                "minimum_microseconds": 628.8,
+                "p10_microseconds": 644.63,
+                "p90_microseconds": 804.06,
+                "repeats": 30,
+                "warmups": 7
+              },
+              "parallel_indexed_eager": {
+                "median_microseconds": 2053.8,
+                "minimum_microseconds": 1879.4,
+                "p10_microseconds": 1941.78,
+                "p90_microseconds": 2984.84,
+                "repeats": 30,
+                "warmups": 7
+              },
+              "parallel_indexed_triton_local": {
+                "median_microseconds": 1979.8,
+                "minimum_microseconds": 1937.2,
+                "p10_microseconds": 1951.18,
+                "p90_microseconds": 2863.2099999999996,
+                "repeats": 30,
+                "warmups": 7
+              },
+              "parallel_preselected_eager": {
+                "median_microseconds": 1972.05,
+                "minimum_microseconds": 1921.3,
+                "p10_microseconds": 1930.79,
+                "p90_microseconds": 2301.03,
+                "repeats": 30,
+                "warmups": 7
+              },
+              "sequential_indexed_eager": {
+                "median_microseconds": 19429.5,
+                "minimum_microseconds": 18988.8,
+                "p10_microseconds": 19222.239999999998,
+                "p90_microseconds": 21781.989999999998,
+                "repeats": 30,
+                "warmups": 7
+              }
+            }
+          },
+          "primitive_sequence_length": 192
+        },
+        {
+          "batch_size": 64,
+          "chunk_count": 4,
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "fused_speedup_vs_parallel_indexed_eager": 6.7927974947807925,
+            "fused_speedup_vs_parallel_indexed_triton_local": 6.917014613778704,
+            "fused_speedup_vs_parallel_preselected_eager": 6.096555323590813,
+            "fused_speedup_vs_sequential_indexed_eager": 5.220250521920668,
+            "max_abs_error_vs_parallel_preselected_eager": {
+              "fused_triton_recurrence": 2.384185791015625e-07,
+              "parallel_indexed_eager": 0.0,
+              "parallel_indexed_triton_local": 2.384185791015625e-07,
+              "parallel_preselected_eager": 0.0,
+              "sequential_indexed_eager": 2.384185791015625e-07
+            },
+            "timings": {
+              "fused_triton_recurrence": {
+                "median_microseconds": 95.80000000000001,
+                "minimum_microseconds": 94.1,
+                "p10_microseconds": 94.5,
+                "p90_microseconds": 105.25000000000001,
+                "repeats": 50,
+                "warmups": 10
+              },
+              "parallel_indexed_eager": {
+                "median_microseconds": 650.75,
+                "minimum_microseconds": 632.0,
+                "p10_microseconds": 635.79,
+                "p90_microseconds": 735.63,
+                "repeats": 50,
+                "warmups": 10
+              },
+              "parallel_indexed_triton_local": {
+                "median_microseconds": 662.65,
+                "minimum_microseconds": 640.4,
+                "p10_microseconds": 649.0600000000001,
+                "p90_microseconds": 767.34,
+                "repeats": 50,
+                "warmups": 10
+              },
+              "parallel_preselected_eager": {
+                "median_microseconds": 584.05,
+                "minimum_microseconds": 574.6,
+                "p10_microseconds": 578.89,
+                "p90_microseconds": 745.1800000000003,
+                "repeats": 50,
+                "warmups": 10
+              },
+              "sequential_indexed_eager": {
+                "median_microseconds": 500.1,
+                "minimum_microseconds": 485.1,
+                "p10_microseconds": 486.38,
+                "p90_microseconds": 568.1600000000001,
+                "repeats": 50,
+                "warmups": 10
+              }
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "fused_speedup_vs_parallel_indexed_eager": 2.585467540202501,
+            "fused_speedup_vs_parallel_indexed_triton_local": 2.583850931677018,
+            "fused_speedup_vs_parallel_preselected_eager": 2.4790266314983405,
+            "fused_speedup_vs_sequential_indexed_eager": 2.803284267846507,
+            "max_abs_error_vs_parallel_preselected_eager": {
+              "fused_triton_recurrence": 2.3283064365386963e-10,
+              "parallel_indexed_eager": 0.0,
+              "parallel_indexed_triton_local": 1.7462298274040222e-10,
+              "parallel_preselected_eager": 0.0,
+              "sequential_indexed_eager": 2.3283064365386963e-10
+            },
+            "timings": {
+              "fused_triton_recurrence": {
+                "median_microseconds": 587.6500000000001,
+                "minimum_microseconds": 537.7,
+                "p10_microseconds": 572.3,
+                "p90_microseconds": 634.3000000000001,
+                "repeats": 20,
+                "warmups": 5
+              },
+              "parallel_indexed_eager": {
+                "median_microseconds": 1519.35,
+                "minimum_microseconds": 1481.1,
+                "p10_microseconds": 1493.53,
+                "p90_microseconds": 1597.3100000000002,
+                "repeats": 20,
+                "warmups": 5
+              },
+              "parallel_indexed_triton_local": {
+                "median_microseconds": 1518.4,
+                "minimum_microseconds": 1437.6,
+                "p10_microseconds": 1464.06,
+                "p90_microseconds": 1773.8600000000006,
+                "repeats": 20,
+                "warmups": 5
+              },
+              "parallel_preselected_eager": {
+                "median_microseconds": 1456.8,
+                "minimum_microseconds": 1413.4,
+                "p10_microseconds": 1427.3899999999999,
+                "p90_microseconds": 2032.3600000000001,
+                "repeats": 20,
+                "warmups": 5
+              },
+              "sequential_indexed_eager": {
+                "median_microseconds": 1647.35,
+                "minimum_microseconds": 1597.0,
+                "p10_microseconds": 1602.5200000000002,
+                "p90_microseconds": 1817.2000000000003,
+                "repeats": 20,
+                "warmups": 5
+              }
+            }
+          },
+          "primitive_sequence_length": 12
+        },
+        {
+          "batch_size": 64,
+          "chunk_count": 16,
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "fused_speedup_vs_parallel_indexed_eager": 7.116569200779727,
+            "fused_speedup_vs_parallel_indexed_triton_local": 8.130994152046783,
+            "fused_speedup_vs_parallel_preselected_eager": 6.445224171539961,
+            "fused_speedup_vs_sequential_indexed_eager": 13.936062378167643,
+            "max_abs_error_vs_parallel_preselected_eager": {
+              "fused_triton_recurrence": 4.76837158203125e-07,
+              "parallel_indexed_eager": 0.0,
+              "parallel_indexed_triton_local": 2.384185791015625e-07,
+              "parallel_preselected_eager": 0.0,
+              "sequential_indexed_eager": 4.76837158203125e-07
+            },
+            "timings": {
+              "fused_triton_recurrence": {
+                "median_microseconds": 128.25,
+                "minimum_microseconds": 95.4,
+                "p10_microseconds": 95.8,
+                "p90_microseconds": 138.45000000000002,
+                "repeats": 50,
+                "warmups": 10
+              },
+              "parallel_indexed_eager": {
+                "median_microseconds": 912.7,
+                "minimum_microseconds": 874.4,
+                "p10_microseconds": 883.67,
+                "p90_microseconds": 1063.66,
+                "repeats": 50,
+                "warmups": 10
+              },
+              "parallel_indexed_triton_local": {
+                "median_microseconds": 1042.8,
+                "minimum_microseconds": 890.5,
+                "p10_microseconds": 916.55,
+                "p90_microseconds": 3948.4,
+                "repeats": 50,
+                "warmups": 10
+              },
+              "parallel_preselected_eager": {
+                "median_microseconds": 826.6,
+                "minimum_microseconds": 808.4,
+                "p10_microseconds": 816.88,
+                "p90_microseconds": 951.26,
+                "repeats": 50,
+                "warmups": 10
+              },
+              "sequential_indexed_eager": {
+                "median_microseconds": 1787.3000000000002,
+                "minimum_microseconds": 1737.6,
+                "p10_microseconds": 1748.0900000000001,
+                "p90_microseconds": 2701.3199999999997,
+                "repeats": 50,
+                "warmups": 10
+              }
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "fused_speedup_vs_parallel_indexed_eager": 2.82515479876161,
+            "fused_speedup_vs_parallel_indexed_triton_local": 2.788699690402477,
+            "fused_speedup_vs_parallel_preselected_eager": 2.719969040247678,
+            "fused_speedup_vs_sequential_indexed_eager": 8.384520123839009,
+            "max_abs_error_vs_parallel_preselected_eager": {
+              "fused_triton_recurrence": 1.7462298274040222e-10,
+              "parallel_indexed_eager": 0.0,
+              "parallel_indexed_triton_local": 5.820766091346741e-11,
+              "parallel_preselected_eager": 0.0,
+              "sequential_indexed_eager": 1.1641532182693481e-10
+            },
+            "timings": {
+              "fused_triton_recurrence": {
+                "median_microseconds": 646.0,
+                "minimum_microseconds": 583.0,
+                "p10_microseconds": 587.1899999999999,
+                "p90_microseconds": 694.2900000000001,
+                "repeats": 20,
+                "warmups": 5
+              },
+              "parallel_indexed_eager": {
+                "median_microseconds": 1825.0500000000002,
+                "minimum_microseconds": 1770.8,
+                "p10_microseconds": 1796.7999999999997,
+                "p90_microseconds": 1991.630000000001,
+                "repeats": 20,
+                "warmups": 5
+              },
+              "parallel_indexed_triton_local": {
+                "median_microseconds": 1801.5,
+                "minimum_microseconds": 1744.1,
+                "p10_microseconds": 1749.01,
+                "p90_microseconds": 2480.8700000000003,
+                "repeats": 20,
+                "warmups": 5
+              },
+              "parallel_preselected_eager": {
+                "median_microseconds": 1757.1,
+                "minimum_microseconds": 1723.9,
+                "p10_microseconds": 1734.39,
+                "p90_microseconds": 1897.28,
+                "repeats": 20,
+                "warmups": 5
+              },
+              "sequential_indexed_eager": {
+                "median_microseconds": 5416.4,
+                "minimum_microseconds": 5232.1,
+                "p10_microseconds": 5244.66,
+                "p90_microseconds": 7038.91,
+                "repeats": 20,
+                "warmups": 5
+              }
+            }
+          },
+          "primitive_sequence_length": 48
+        },
+        {
+          "batch_size": 64,
+          "chunk_count": 64,
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "fused_speedup_vs_parallel_indexed_eager": 9.453839869281046,
+            "fused_speedup_vs_parallel_indexed_triton_local": 9.554738562091503,
+            "fused_speedup_vs_parallel_preselected_eager": 8.941176470588236,
+            "fused_speedup_vs_sequential_indexed_eager": 56.46732026143791,
+            "max_abs_error_vs_parallel_preselected_eager": {
+              "fused_triton_recurrence": 1.1920928955078125e-06,
+              "parallel_indexed_eager": 0.0,
+              "parallel_indexed_triton_local": 2.384185791015625e-07,
+              "parallel_preselected_eager": 0.0,
+              "sequential_indexed_eager": 9.5367431640625e-07
+            },
+            "timings": {
+              "fused_triton_recurrence": {
+                "median_microseconds": 122.4,
+                "minimum_microseconds": 121.1,
+                "p10_microseconds": 121.38000000000001,
+                "p90_microseconds": 279.15,
+                "repeats": 20,
+                "warmups": 5
+              },
+              "parallel_indexed_eager": {
+                "median_microseconds": 1157.15,
+                "minimum_microseconds": 1139.7,
+                "p10_microseconds": 1141.8600000000001,
+                "p90_microseconds": 1202.3100000000002,
+                "repeats": 20,
+                "warmups": 5
+              },
+              "parallel_indexed_triton_local": {
+                "median_microseconds": 1169.5,
+                "minimum_microseconds": 1151.0,
+                "p10_microseconds": 1156.3500000000001,
+                "p90_microseconds": 1245.8100000000002,
+                "repeats": 20,
+                "warmups": 5
+              },
+              "parallel_preselected_eager": {
+                "median_microseconds": 1094.4,
+                "minimum_microseconds": 1088.3,
+                "p10_microseconds": 1089.69,
+                "p90_microseconds": 1138.96,
+                "repeats": 20,
+                "warmups": 5
+              },
+              "sequential_indexed_eager": {
+                "median_microseconds": 6911.6,
+                "minimum_microseconds": 6756.8,
+                "p10_microseconds": 6768.27,
+                "p90_microseconds": 10784.690000000002,
+                "repeats": 20,
+                "warmups": 5
+              }
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "fused_speedup_vs_parallel_indexed_eager": 3.2568897637795278,
+            "fused_speedup_vs_parallel_indexed_triton_local": 3.2331920048455474,
+            "fused_speedup_vs_parallel_preselected_eager": 3.105314960629921,
+            "fused_speedup_vs_sequential_indexed_eager": 29.835781344639607,
+            "max_abs_error_vs_parallel_preselected_eager": {
+              "fused_triton_recurrence": 1.4551915228366852e-10,
+              "parallel_indexed_eager": 0.0,
+              "parallel_indexed_triton_local": 5.820766091346741e-11,
+              "parallel_preselected_eager": 0.0,
+              "sequential_indexed_eager": 1.2005330063402653e-10
+            },
+            "timings": {
+              "fused_triton_recurrence": {
+                "median_microseconds": 660.4000000000001,
+                "minimum_microseconds": 645.5,
+                "p10_microseconds": 647.2099999999999,
+                "p90_microseconds": 721.6899999999999,
+                "repeats": 10,
+                "warmups": 5
+              },
+              "parallel_indexed_eager": {
+                "median_microseconds": 2150.8500000000004,
+                "minimum_microseconds": 2061.3,
+                "p10_microseconds": 2086.5,
+                "p90_microseconds": 2557.34,
+                "repeats": 10,
+                "warmups": 5
+              },
+              "parallel_indexed_triton_local": {
+                "median_microseconds": 2135.2,
+                "minimum_microseconds": 2101.2,
+                "p10_microseconds": 2102.1,
+                "p90_microseconds": 2335.1299999999997,
+                "repeats": 10,
+                "warmups": 5
+              },
+              "parallel_preselected_eager": {
+                "median_microseconds": 2050.75,
+                "minimum_microseconds": 1979.3,
+                "p10_microseconds": 2005.04,
+                "p90_microseconds": 2986.6000000000004,
+                "repeats": 10,
+                "warmups": 5
+              },
+              "sequential_indexed_eager": {
+                "median_microseconds": 19703.55,
+                "minimum_microseconds": 19525.4,
+                "p10_microseconds": 19560.950000000004,
+                "p90_microseconds": 23477.6,
+                "repeats": 10,
+                "warmups": 5
+              }
+            }
+          },
+          "primitive_sequence_length": 192
+        },
+        {
+          "batch_size": 1024,
+          "chunk_count": 4,
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "fused_speedup_vs_parallel_indexed_eager": 6.338717572197748,
+            "fused_speedup_vs_parallel_indexed_triton_local": 6.452765540871268,
+            "fused_speedup_vs_parallel_preselected_eager": 5.819872736172296,
+            "fused_speedup_vs_sequential_indexed_eager": 4.971120900636319,
+            "max_abs_error_vs_parallel_preselected_eager": {
+              "fused_triton_recurrence": 4.76837158203125e-07,
+              "parallel_indexed_eager": 0.0,
+              "parallel_indexed_triton_local": 4.76837158203125e-07,
+              "parallel_preselected_eager": 0.0,
+              "sequential_indexed_eager": 3.5762786865234375e-07
+            },
+            "timings": {
+              "fused_triton_recurrence": {
+                "median_microseconds": 102.15,
+                "minimum_microseconds": 99.6,
+                "p10_microseconds": 100.07999999999998,
+                "p90_microseconds": 238.82000000000008,
+                "repeats": 20,
+                "warmups": 5
+              },
+              "parallel_indexed_eager": {
+                "median_microseconds": 647.5,
+                "minimum_microseconds": 642.1,
+                "p10_microseconds": 644.64,
+                "p90_microseconds": 693.0000000000001,
+                "repeats": 20,
+                "warmups": 5
+              },
+              "parallel_indexed_triton_local": {
+                "median_microseconds": 659.1500000000001,
+                "minimum_microseconds": 651.4,
+                "p10_microseconds": 653.49,
+                "p90_microseconds": 718.9300000000002,
+                "repeats": 20,
+                "warmups": 5
+              },
+              "parallel_preselected_eager": {
+                "median_microseconds": 594.5,
+                "minimum_microseconds": 583.7,
+                "p10_microseconds": 586.3499999999999,
+                "p90_microseconds": 671.9599999999999,
+                "repeats": 20,
+                "warmups": 5
+              },
+              "sequential_indexed_eager": {
+                "median_microseconds": 507.8,
+                "minimum_microseconds": 503.3,
+                "p10_microseconds": 504.78,
+                "p90_microseconds": 533.9300000000001,
+                "repeats": 20,
+                "warmups": 5
+              }
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "fused_speedup_vs_parallel_indexed_eager": 2.5682011935208866,
+            "fused_speedup_vs_parallel_indexed_triton_local": 2.4603580562659846,
+            "fused_speedup_vs_parallel_preselected_eager": 2.462233589087809,
+            "fused_speedup_vs_sequential_indexed_eager": 2.796845694799659,
+            "max_abs_error_vs_parallel_preselected_eager": {
+              "fused_triton_recurrence": 2.1827872842550278e-11,
+              "parallel_indexed_eager": 0.0,
+              "parallel_indexed_triton_local": 1.4551915228366852e-11,
+              "parallel_preselected_eager": 0.0,
+              "sequential_indexed_eager": 2.1827872842550278e-11
+            },
+            "timings": {
+              "fused_triton_recurrence": {
+                "median_microseconds": 586.5,
+                "minimum_microseconds": 580.0,
+                "p10_microseconds": 580.45,
+                "p90_microseconds": 626.15,
+                "repeats": 10,
+                "warmups": 5
+              },
+              "parallel_indexed_eager": {
+                "median_microseconds": 1506.25,
+                "minimum_microseconds": 1462.9,
+                "p10_microseconds": 1473.61,
+                "p90_microseconds": 1737.12,
+                "repeats": 10,
+                "warmups": 5
+              },
+              "parallel_indexed_triton_local": {
+                "median_microseconds": 1443.0,
+                "minimum_microseconds": 1421.9,
+                "p10_microseconds": 1431.3500000000001,
+                "p90_microseconds": 1831.3199999999997,
+                "repeats": 10,
+                "warmups": 5
+              },
+              "parallel_preselected_eager": {
+                "median_microseconds": 1444.1,
+                "minimum_microseconds": 1421.1,
+                "p10_microseconds": 1421.28,
+                "p90_microseconds": 2039.9,
+                "repeats": 10,
+                "warmups": 5
+              },
+              "sequential_indexed_eager": {
+                "median_microseconds": 1640.35,
+                "minimum_microseconds": 1599.2,
+                "p10_microseconds": 1602.35,
+                "p90_microseconds": 1815.48,
+                "repeats": 10,
+                "warmups": 5
+              }
+            }
+          },
+          "primitive_sequence_length": 12
+        },
+        {
+          "batch_size": 1024,
+          "chunk_count": 16,
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "fused_speedup_vs_parallel_indexed_eager": 11.202363367799114,
+            "fused_speedup_vs_parallel_indexed_triton_local": 12.441654357459381,
+            "fused_speedup_vs_parallel_preselected_eager": 12.74052191038897,
+            "fused_speedup_vs_sequential_indexed_eager": 17.65829640571147,
+            "max_abs_error_vs_parallel_preselected_eager": {
+              "fused_triton_recurrence": 7.152557373046875e-07,
+              "parallel_indexed_eager": 0.0,
+              "parallel_indexed_triton_local": 2.384185791015625e-07,
+              "parallel_preselected_eager": 0.0,
+              "sequential_indexed_eager": 7.152557373046875e-07
+            },
+            "timings": {
+              "fused_triton_recurrence": {
+                "median_microseconds": 101.55,
+                "minimum_microseconds": 99.2,
+                "p10_microseconds": 99.39000000000001,
+                "p90_microseconds": 211.12,
+                "repeats": 20,
+                "warmups": 5
+              },
+              "parallel_indexed_eager": {
+                "median_microseconds": 1137.6,
+                "minimum_microseconds": 1109.9,
+                "p10_microseconds": 1112.46,
+                "p90_microseconds": 1752.2499999999998,
+                "repeats": 20,
+                "warmups": 5
+              },
+              "parallel_indexed_triton_local": {
+                "median_microseconds": 1263.45,
+                "minimum_microseconds": 986.7,
+                "p10_microseconds": 988.4,
+                "p90_microseconds": 1594.71,
+                "repeats": 20,
+                "warmups": 5
+              },
+              "parallel_preselected_eager": {
+                "median_microseconds": 1293.8,
+                "minimum_microseconds": 1024.4,
+                "p10_microseconds": 1031.8899999999999,
+                "p90_microseconds": 1577.95,
+                "repeats": 20,
+                "warmups": 5
+              },
+              "sequential_indexed_eager": {
+                "median_microseconds": 1793.2,
+                "minimum_microseconds": 1737.7,
+                "p10_microseconds": 1741.99,
+                "p90_microseconds": 1904.6400000000003,
+                "repeats": 20,
+                "warmups": 5
+              }
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "fused_speedup_vs_parallel_indexed_eager": 2.680568079350766,
+            "fused_speedup_vs_parallel_indexed_triton_local": 2.705290051097084,
+            "fused_speedup_vs_parallel_preselected_eager": 2.640967838893898,
+            "fused_speedup_vs_sequential_indexed_eager": 8.09986474301172,
+            "max_abs_error_vs_parallel_preselected_eager": {
+              "fused_triton_recurrence": 2.9103830456733704e-11,
+              "parallel_indexed_eager": 0.0,
+              "parallel_indexed_triton_local": 1.4551915228366852e-11,
+              "parallel_preselected_eager": 0.0,
+              "sequential_indexed_eager": 2.9103830456733704e-11
+            },
+            "timings": {
+              "fused_triton_recurrence": {
+                "median_microseconds": 665.4000000000001,
+                "minimum_microseconds": 658.8,
+                "p10_microseconds": 659.61,
+                "p90_microseconds": 728.3199999999999,
+                "repeats": 10,
+                "warmups": 5
+              },
+              "parallel_indexed_eager": {
+                "median_microseconds": 1783.65,
+                "minimum_microseconds": 1749.8,
+                "p10_microseconds": 1761.14,
+                "p90_microseconds": 2032.7899999999995,
+                "repeats": 10,
+                "warmups": 5
+              },
+              "parallel_indexed_triton_local": {
+                "median_microseconds": 1800.1,
+                "minimum_microseconds": 1723.3,
+                "p10_microseconds": 1725.19,
+                "p90_microseconds": 2238.06,
+                "repeats": 10,
+                "warmups": 5
+              },
+              "parallel_preselected_eager": {
+                "median_microseconds": 1757.3000000000002,
+                "minimum_microseconds": 1692.4,
+                "p10_microseconds": 1702.66,
+                "p90_microseconds": 2341.01,
+                "repeats": 10,
+                "warmups": 5
+              },
+              "sequential_indexed_eager": {
+                "median_microseconds": 5389.65,
+                "minimum_microseconds": 5278.6,
+                "p10_microseconds": 5288.86,
+                "p90_microseconds": 6615.18,
+                "repeats": 10,
+                "warmups": 5
+              }
+            }
+          },
+          "primitive_sequence_length": 48
+        },
+        {
+          "batch_size": 1024,
+          "chunk_count": 64,
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "fused_speedup_vs_parallel_indexed_eager": 22.294290759270158,
+            "fused_speedup_vs_parallel_indexed_triton_local": 20.022954679223073,
+            "fused_speedup_vs_parallel_preselected_eager": 18.801942319011182,
+            "fused_speedup_vs_sequential_indexed_eager": 41.96674514420247,
+            "max_abs_error_vs_parallel_preselected_eager": {
+              "fused_triton_recurrence": 1.1920928955078125e-06,
+              "parallel_indexed_eager": 0.0,
+              "parallel_indexed_triton_local": 4.76837158203125e-07,
+              "parallel_preselected_eager": 0.0,
+              "sequential_indexed_eager": 1.2516975402832031e-06
+            },
+            "timings": {
+              "fused_triton_recurrence": {
+                "median_microseconds": 169.9,
+                "minimum_microseconds": 168.5,
+                "p10_microseconds": 168.5,
+                "p90_microseconds": 171.60999999999999,
+                "repeats": 10,
+                "warmups": 5
+              },
+              "parallel_indexed_eager": {
+                "median_microseconds": 3787.7999999999997,
+                "minimum_microseconds": 3381.6,
+                "p10_microseconds": 3397.98,
+                "p90_microseconds": 4169.76,
+                "repeats": 10,
+                "warmups": 5
+              },
+              "parallel_indexed_triton_local": {
+                "median_microseconds": 3401.9,
+                "minimum_microseconds": 2978.6,
+                "p10_microseconds": 2993.54,
+                "p90_microseconds": 3857.62,
+                "repeats": 10,
+                "warmups": 5
+              },
+              "parallel_preselected_eager": {
+                "median_microseconds": 3194.45,
+                "minimum_microseconds": 3044.9,
+                "p10_microseconds": 3088.01,
+                "p90_microseconds": 3763.74,
+                "repeats": 10,
+                "warmups": 5
+              },
+              "sequential_indexed_eager": {
+                "median_microseconds": 7130.15,
+                "minimum_microseconds": 7027.9,
+                "p10_microseconds": 7041.49,
+                "p90_microseconds": 7846.179999999999,
+                "repeats": 10,
+                "warmups": 5
+              }
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "fused_speedup_vs_parallel_indexed_eager": 6.956381755461861,
+            "fused_speedup_vs_parallel_indexed_triton_local": 5.5905711000383285,
+            "fused_speedup_vs_parallel_preselected_eager": 6.464852433882715,
+            "fused_speedup_vs_sequential_indexed_eager": 30.569566883863548,
+            "max_abs_error_vs_parallel_preselected_eager": {
+              "fused_triton_recurrence": 1.2732925824820995e-11,
+              "parallel_indexed_eager": 0.0,
+              "parallel_indexed_triton_local": 5.4569682106375694e-12,
+              "parallel_preselected_eager": 0.0,
+              "sequential_indexed_eager": 1.0913936421275139e-11
+            },
+            "timings": {
+              "fused_triton_recurrence": {
+                "median_microseconds": 652.25,
+                "minimum_microseconds": 644.4,
+                "p10_microseconds": 647.0099999999999,
+                "p90_microseconds": 695.78,
+                "repeats": 10,
+                "warmups": 5
+              },
+              "parallel_indexed_eager": {
+                "median_microseconds": 4537.299999999999,
+                "minimum_microseconds": 3925.5,
+                "p10_microseconds": 3932.97,
+                "p90_microseconds": 4586.099999999999,
+                "repeats": 10,
+                "warmups": 5
+              },
+              "parallel_indexed_triton_local": {
+                "median_microseconds": 3646.45,
+                "minimum_microseconds": 3342.9,
+                "p10_microseconds": 3345.96,
+                "p90_microseconds": 4068.08,
+                "repeats": 10,
+                "warmups": 5
+              },
+              "parallel_preselected_eager": {
+                "median_microseconds": 4216.700000000001,
+                "minimum_microseconds": 3527.1,
+                "p10_microseconds": 3578.2200000000003,
+                "p90_microseconds": 4309.610000000001,
+                "repeats": 10,
+                "warmups": 5
+              },
+              "sequential_indexed_eager": {
+                "median_microseconds": 19939.0,
+                "minimum_microseconds": 19514.5,
+                "p10_microseconds": 19538.980000000003,
+                "p90_microseconds": 22433.280000000002,
+                "repeats": 10,
+                "warmups": 5
+              }
+            }
+          },
+          "primitive_sequence_length": 192
+        }
+      ],
+      "view": "vector"
+    },
+    {
+      "all_float32_forward_backward_parity_checks_passed": true,
+      "prefix_table_bytes": 887808,
+      "prefix_table_shape": [
+        17,
+        4,
+        17,
+        24,
+        8
+      ],
+      "results": [
+        {
+          "batch_size": 1,
+          "chunk_count": 4,
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "fused_speedup_vs_parallel_indexed_eager": 5.896954314720811,
+            "fused_speedup_vs_parallel_indexed_triton_local": 5.911675126903553,
+            "fused_speedup_vs_parallel_preselected_eager": 5.359390862944162,
+            "fused_speedup_vs_sequential_indexed_eager": 6.332994923857868,
+            "max_abs_error_vs_parallel_preselected_eager": {
+              "fused_triton_recurrence": 7.450580596923828e-09,
+              "parallel_indexed_eager": 0.0,
+              "parallel_indexed_triton_local": 0.0,
+              "parallel_preselected_eager": 0.0,
+              "sequential_indexed_eager": 0.0
+            },
+            "timings": {
+              "fused_triton_recurrence": {
+                "median_microseconds": 98.5,
+                "minimum_microseconds": 96.6,
+                "p10_microseconds": 97.47999999999999,
+                "p90_microseconds": 102.22000000000001,
+                "repeats": 100,
+                "warmups": 10
+              },
+              "parallel_indexed_eager": {
+                "median_microseconds": 580.8499999999999,
+                "minimum_microseconds": 553.1,
+                "p10_microseconds": 567.98,
+                "p90_microseconds": 958.3700000000001,
+                "repeats": 100,
+                "warmups": 10
+              },
+              "parallel_indexed_triton_local": {
+                "median_microseconds": 582.3,
+                "minimum_microseconds": 570.7,
+                "p10_microseconds": 572.79,
+                "p90_microseconds": 635.7500000000001,
+                "repeats": 100,
+                "warmups": 10
+              },
+              "parallel_preselected_eager": {
+                "median_microseconds": 527.9,
+                "minimum_microseconds": 504.3,
+                "p10_microseconds": 509.95,
+                "p90_microseconds": 859.1,
+                "repeats": 100,
+                "warmups": 10
+              },
+              "sequential_indexed_eager": {
+                "median_microseconds": 623.8,
+                "minimum_microseconds": 465.0,
+                "p10_microseconds": 467.57000000000005,
+                "p90_microseconds": 781.8900000000001,
+                "repeats": 100,
+                "warmups": 10
+              }
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "fused_speedup_vs_parallel_indexed_eager": 2.3716429363117055,
+            "fused_speedup_vs_parallel_indexed_triton_local": 2.299258248785063,
+            "fused_speedup_vs_parallel_preselected_eager": 2.28425270696564,
+            "fused_speedup_vs_sequential_indexed_eager": 2.8497740642851053,
+            "max_abs_error_vs_parallel_preselected_eager": {
+              "fused_triton_recurrence": 7.450580596923828e-09,
+              "parallel_indexed_eager": 0.0,
+              "parallel_indexed_triton_local": 7.450580596923828e-09,
+              "parallel_preselected_eager": 0.0,
+              "sequential_indexed_eager": 7.450580596923828e-09
+            },
+            "timings": {
+              "fused_triton_recurrence": {
+                "median_microseconds": 586.45,
+                "minimum_microseconds": 574.1,
+                "p10_microseconds": 579.3599999999999,
+                "p90_microseconds": 659.9000000000001,
+                "repeats": 30,
+                "warmups": 7
+              },
+              "parallel_indexed_eager": {
+                "median_microseconds": 1390.85,
+                "minimum_microseconds": 1355.5,
+                "p10_microseconds": 1373.64,
+                "p90_microseconds": 1535.9,
+                "repeats": 30,
+                "warmups": 7
+              },
+              "parallel_indexed_triton_local": {
+                "median_microseconds": 1348.4,
+                "minimum_microseconds": 1323.9,
+                "p10_microseconds": 1326.53,
+                "p90_microseconds": 1473.3400000000001,
+                "repeats": 30,
+                "warmups": 7
+              },
+              "parallel_preselected_eager": {
+                "median_microseconds": 1339.6,
+                "minimum_microseconds": 1288.2,
+                "p10_microseconds": 1314.95,
+                "p90_microseconds": 1439.0600000000002,
+                "repeats": 30,
+                "warmups": 7
+              },
+              "sequential_indexed_eager": {
+                "median_microseconds": 1671.25,
+                "minimum_microseconds": 1547.5,
+                "p10_microseconds": 1572.81,
+                "p90_microseconds": 2001.4100000000003,
+                "repeats": 30,
+                "warmups": 7
+              }
+            }
+          },
+          "primitive_sequence_length": 12
+        },
+        {
+          "batch_size": 1,
+          "chunk_count": 16,
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "fused_speedup_vs_parallel_indexed_eager": 8.318471337579618,
+            "fused_speedup_vs_parallel_indexed_triton_local": 8.240568348848605,
+            "fused_speedup_vs_parallel_preselected_eager": 7.691327780499755,
+            "fused_speedup_vs_sequential_indexed_eager": 17.02106810387065,
+            "max_abs_error_vs_parallel_preselected_eager": {
+              "fused_triton_recurrence": 1.7881393432617188e-07,
+              "parallel_indexed_eager": 0.0,
+              "parallel_indexed_triton_local": 5.960464477539063e-08,
+              "parallel_preselected_eager": 0.0,
+              "sequential_indexed_eager": 1.1920928955078125e-07
+            },
+            "timings": {
+              "fused_triton_recurrence": {
+                "median_microseconds": 102.05,
+                "minimum_microseconds": 98.1,
+                "p10_microseconds": 98.68,
+                "p90_microseconds": 136.06,
+                "repeats": 100,
+                "warmups": 10
+              },
+              "parallel_indexed_eager": {
+                "median_microseconds": 848.9,
+                "minimum_microseconds": 812.8,
+                "p10_microseconds": 826.9,
+                "p90_microseconds": 884.1400000000001,
+                "repeats": 100,
+                "warmups": 10
+              },
+              "parallel_indexed_triton_local": {
+                "median_microseconds": 840.95,
+                "minimum_microseconds": 818.0,
+                "p10_microseconds": 822.1600000000001,
+                "p90_microseconds": 989.4500000000003,
+                "repeats": 100,
+                "warmups": 10
+              },
+              "parallel_preselected_eager": {
+                "median_microseconds": 784.9,
+                "minimum_microseconds": 752.3,
+                "p10_microseconds": 770.67,
+                "p90_microseconds": 848.6400000000003,
+                "repeats": 100,
+                "warmups": 10
+              },
+              "sequential_indexed_eager": {
+                "median_microseconds": 1737.0,
+                "minimum_microseconds": 1655.4,
+                "p10_microseconds": 1704.88,
+                "p90_microseconds": 1822.73,
+                "repeats": 100,
+                "warmups": 10
+              }
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "fused_speedup_vs_parallel_indexed_eager": 2.931775380927923,
+            "fused_speedup_vs_parallel_indexed_triton_local": 2.889573703133025,
+            "fused_speedup_vs_parallel_preselected_eager": 2.7551789077212807,
+            "fused_speedup_vs_sequential_indexed_eager": 9.008132169149118,
+            "max_abs_error_vs_parallel_preselected_eager": {
+              "fused_triton_recurrence": 7.450580596923828e-09,
+              "parallel_indexed_eager": 0.0,
+              "parallel_indexed_triton_local": 3.725290298461914e-09,
+              "parallel_preselected_eager": 0.0,
+              "sequential_indexed_eager": 5.587935447692871e-09
+            },
+            "timings": {
+              "fused_triton_recurrence": {
+                "median_microseconds": 584.1,
+                "minimum_microseconds": 544.9,
+                "p10_microseconds": 546.6500000000001,
+                "p90_microseconds": 633.24,
+                "repeats": 30,
+                "warmups": 7
+              },
+              "parallel_indexed_eager": {
+                "median_microseconds": 1712.4499999999998,
+                "minimum_microseconds": 1624.7,
+                "p10_microseconds": 1633.5700000000002,
+                "p90_microseconds": 2146.3900000000003,
+                "repeats": 30,
+                "warmups": 7
+              },
+              "parallel_indexed_triton_local": {
+                "median_microseconds": 1687.8,
+                "minimum_microseconds": 1632.1,
+                "p10_microseconds": 1639.5200000000002,
+                "p90_microseconds": 1872.6200000000001,
+                "repeats": 30,
+                "warmups": 7
+              },
+              "parallel_preselected_eager": {
+                "median_microseconds": 1609.3000000000002,
+                "minimum_microseconds": 1558.0,
+                "p10_microseconds": 1561.54,
+                "p90_microseconds": 1700.2600000000002,
+                "repeats": 30,
+                "warmups": 7
+              },
+              "sequential_indexed_eager": {
+                "median_microseconds": 5261.65,
+                "minimum_microseconds": 5094.6,
+                "p10_microseconds": 5145.1900000000005,
+                "p90_microseconds": 6275.25,
+                "repeats": 30,
+                "warmups": 7
+              }
+            }
+          },
+          "primitive_sequence_length": 48
+        },
+        {
+          "batch_size": 1,
+          "chunk_count": 64,
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "fused_speedup_vs_parallel_indexed_eager": 9.12966848510281,
+            "fused_speedup_vs_parallel_indexed_triton_local": 9.159462861938731,
+            "fused_speedup_vs_parallel_preselected_eager": 8.597146454049517,
+            "fused_speedup_vs_sequential_indexed_eager": 56.0516156105749,
+            "max_abs_error_vs_parallel_preselected_eager": {
+              "fused_triton_recurrence": 4.76837158203125e-07,
+              "parallel_indexed_eager": 0.0,
+              "parallel_indexed_triton_local": 1.1920928955078125e-07,
+              "parallel_preselected_eager": 0.0,
+              "sequential_indexed_eager": 4.76837158203125e-07
+            },
+            "timings": {
+              "fused_triton_recurrence": {
+                "median_microseconds": 119.15,
+                "minimum_microseconds": 118.0,
+                "p10_microseconds": 118.39,
+                "p90_microseconds": 121.61,
+                "repeats": 100,
+                "warmups": 10
+              },
+              "parallel_indexed_eager": {
+                "median_microseconds": 1087.8,
+                "minimum_microseconds": 1053.9,
+                "p10_microseconds": 1074.02,
+                "p90_microseconds": 1232.2800000000002,
+                "repeats": 100,
+                "warmups": 10
+              },
+              "parallel_indexed_triton_local": {
+                "median_microseconds": 1091.35,
+                "minimum_microseconds": 1057.4,
+                "p10_microseconds": 1066.76,
+                "p90_microseconds": 1191.0800000000002,
+                "repeats": 100,
+                "warmups": 10
+              },
+              "parallel_preselected_eager": {
+                "median_microseconds": 1024.35,
+                "minimum_microseconds": 996.7,
+                "p10_microseconds": 1006.19,
+                "p90_microseconds": 1115.0400000000002,
+                "repeats": 100,
+                "warmups": 10
+              },
+              "sequential_indexed_eager": {
+                "median_microseconds": 6678.549999999999,
+                "minimum_microseconds": 6459.6,
+                "p10_microseconds": 6517.5,
+                "p90_microseconds": 9454.050000000001,
+                "repeats": 100,
+                "warmups": 10
+              }
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "fused_speedup_vs_parallel_indexed_eager": 3.0894884154874824,
+            "fused_speedup_vs_parallel_indexed_triton_local": 3.084046027056445,
+            "fused_speedup_vs_parallel_preselected_eager": 3.0433836106359817,
+            "fused_speedup_vs_sequential_indexed_eager": 30.321722904680456,
+            "max_abs_error_vs_parallel_preselected_eager": {
+              "fused_triton_recurrence": 5.587935447692871e-09,
+              "parallel_indexed_eager": 0.0,
+              "parallel_indexed_triton_local": 1.3969838619232178e-09,
+              "parallel_preselected_eager": 0.0,
+              "sequential_indexed_eager": 6.05359673500061e-09
+            },
+            "timings": {
+              "fused_triton_recurrence": {
+                "median_microseconds": 643.1,
+                "minimum_microseconds": 598.4,
+                "p10_microseconds": 608.62,
+                "p90_microseconds": 749.1500000000001,
+                "repeats": 30,
+                "warmups": 7
+              },
+              "parallel_indexed_eager": {
+                "median_microseconds": 1986.85,
+                "minimum_microseconds": 1881.7,
+                "p10_microseconds": 1932.11,
+                "p90_microseconds": 2644.1100000000006,
+                "repeats": 30,
+                "warmups": 7
+              },
+              "parallel_indexed_triton_local": {
+                "median_microseconds": 1983.35,
+                "minimum_microseconds": 1885.6,
+                "p10_microseconds": 1946.85,
+                "p90_microseconds": 2877.9100000000003,
+                "repeats": 30,
+                "warmups": 7
+              },
+              "parallel_preselected_eager": {
+                "median_microseconds": 1957.1999999999998,
+                "minimum_microseconds": 1874.1,
+                "p10_microseconds": 1897.3,
+                "p90_microseconds": 2793.46,
+                "repeats": 30,
+                "warmups": 7
+              },
+              "sequential_indexed_eager": {
+                "median_microseconds": 19499.9,
+                "minimum_microseconds": 19090.0,
+                "p10_microseconds": 19235.019999999997,
+                "p90_microseconds": 23358.05,
+                "repeats": 30,
+                "warmups": 7
+              }
+            }
+          },
+          "primitive_sequence_length": 192
+        },
+        {
+          "batch_size": 64,
+          "chunk_count": 4,
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "fused_speedup_vs_parallel_indexed_eager": 5.1700547302580135,
+            "fused_speedup_vs_parallel_indexed_triton_local": 5.05707584050039,
+            "fused_speedup_vs_parallel_preselected_eager": 4.708756841282251,
+            "fused_speedup_vs_sequential_indexed_eager": 3.8326817826426893,
+            "max_abs_error_vs_parallel_preselected_eager": {
+              "fused_triton_recurrence": 4.76837158203125e-07,
+              "parallel_indexed_eager": 0.0,
+              "parallel_indexed_triton_local": 2.384185791015625e-07,
+              "parallel_preselected_eager": 0.0,
+              "sequential_indexed_eager": 4.76837158203125e-07
+            },
+            "timings": {
+              "fused_triton_recurrence": {
+                "median_microseconds": 127.9,
+                "minimum_microseconds": 125.8,
+                "p10_microseconds": 126.28999999999999,
+                "p90_microseconds": 139.25,
+                "repeats": 50,
+                "warmups": 10
+              },
+              "parallel_indexed_eager": {
+                "median_microseconds": 661.25,
+                "minimum_microseconds": 653.4,
+                "p10_microseconds": 655.8,
+                "p90_microseconds": 708.6400000000001,
+                "repeats": 50,
+                "warmups": 10
+              },
+              "parallel_indexed_triton_local": {
+                "median_microseconds": 646.8,
+                "minimum_microseconds": 639.7,
+                "p10_microseconds": 641.89,
+                "p90_microseconds": 698.4100000000001,
+                "repeats": 50,
+                "warmups": 10
+              },
+              "parallel_preselected_eager": {
+                "median_microseconds": 602.25,
+                "minimum_microseconds": 596.9,
+                "p10_microseconds": 598.39,
+                "p90_microseconds": 640.39,
+                "repeats": 50,
+                "warmups": 10
+              },
+              "sequential_indexed_eager": {
+                "median_microseconds": 490.2,
+                "minimum_microseconds": 486.0,
+                "p10_microseconds": 487.7,
+                "p90_microseconds": 651.5000000000002,
+                "repeats": 50,
+                "warmups": 10
+              }
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "fused_speedup_vs_parallel_indexed_eager": 2.5723478113622895,
+            "fused_speedup_vs_parallel_indexed_triton_local": 2.5800524934383207,
+            "fused_speedup_vs_parallel_preselected_eager": 2.4852256371179413,
+            "fused_speedup_vs_sequential_indexed_eager": 2.8036576073152144,
+            "max_abs_error_vs_parallel_preselected_eager": {
+              "fused_triton_recurrence": 2.3283064365386963e-10,
+              "parallel_indexed_eager": 0.0,
+              "parallel_indexed_triton_local": 1.7462298274040222e-10,
+              "parallel_preselected_eager": 0.0,
+              "sequential_indexed_eager": 2.3283064365386963e-10
+            },
+            "timings": {
+              "fused_triton_recurrence": {
+                "median_microseconds": 590.55,
+                "minimum_microseconds": 581.7,
+                "p10_microseconds": 583.59,
+                "p90_microseconds": 656.7200000000003,
+                "repeats": 20,
+                "warmups": 5
+              },
+              "parallel_indexed_eager": {
+                "median_microseconds": 1519.1,
+                "minimum_microseconds": 1469.5,
+                "p10_microseconds": 1495.25,
+                "p90_microseconds": 1655.07,
+                "repeats": 20,
+                "warmups": 5
+              },
+              "parallel_indexed_triton_local": {
+                "median_microseconds": 1523.65,
+                "minimum_microseconds": 1474.8,
+                "p10_microseconds": 1501.58,
+                "p90_microseconds": 1638.8799999999999,
+                "repeats": 20,
+                "warmups": 5
+              },
+              "parallel_preselected_eager": {
+                "median_microseconds": 1467.65,
+                "minimum_microseconds": 1391.1,
+                "p10_microseconds": 1422.5500000000002,
+                "p90_microseconds": 1572.5,
+                "repeats": 20,
+                "warmups": 5
+              },
+              "sequential_indexed_eager": {
+                "median_microseconds": 1655.6999999999998,
+                "minimum_microseconds": 1549.3,
+                "p10_microseconds": 1598.78,
+                "p90_microseconds": 2188.27,
+                "repeats": 20,
+                "warmups": 5
+              }
+            }
+          },
+          "primitive_sequence_length": 12
+        },
+        {
+          "batch_size": 64,
+          "chunk_count": 16,
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "fused_speedup_vs_parallel_indexed_eager": 9.16039195461578,
+            "fused_speedup_vs_parallel_indexed_triton_local": 9.605466735430634,
+            "fused_speedup_vs_parallel_preselected_eager": 8.872614749871067,
+            "fused_speedup_vs_sequential_indexed_eager": 18.30221763795771,
+            "max_abs_error_vs_parallel_preselected_eager": {
+              "fused_triton_recurrence": 1.1920928955078125e-06,
+              "parallel_indexed_eager": 0.0,
+              "parallel_indexed_triton_local": 2.384185791015625e-07,
+              "parallel_preselected_eager": 0.0,
+              "sequential_indexed_eager": 7.152557373046875e-07
+            },
+            "timings": {
+              "fused_triton_recurrence": {
+                "median_microseconds": 96.95,
+                "minimum_microseconds": 94.2,
+                "p10_microseconds": 95.09,
+                "p90_microseconds": 127.60000000000002,
+                "repeats": 50,
+                "warmups": 10
+              },
+              "parallel_indexed_eager": {
+                "median_microseconds": 888.1,
+                "minimum_microseconds": 870.6,
+                "p10_microseconds": 877.6700000000001,
+                "p90_microseconds": 957.19,
+                "repeats": 50,
+                "warmups": 10
+              },
+              "parallel_indexed_triton_local": {
+                "median_microseconds": 931.25,
+                "minimum_microseconds": 900.9,
+                "p10_microseconds": 906.27,
+                "p90_microseconds": 1475.3600000000001,
+                "repeats": 50,
+                "warmups": 10
+              },
+              "parallel_preselected_eager": {
+                "median_microseconds": 860.2,
+                "minimum_microseconds": 824.0,
+                "p10_microseconds": 841.47,
+                "p90_microseconds": 1086.2900000000002,
+                "repeats": 50,
+                "warmups": 10
+              },
+              "sequential_indexed_eager": {
+                "median_microseconds": 1774.4,
+                "minimum_microseconds": 1753.5,
+                "p10_microseconds": 1758.4199999999998,
+                "p90_microseconds": 2104.690000000001,
+                "repeats": 50,
+                "warmups": 10
+              }
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "fused_speedup_vs_parallel_indexed_eager": 2.7905839192907362,
+            "fused_speedup_vs_parallel_indexed_triton_local": 2.8046468969734026,
+            "fused_speedup_vs_parallel_preselected_eager": 2.666386426169367,
+            "fused_speedup_vs_sequential_indexed_eager": 8.247477835524304,
+            "max_abs_error_vs_parallel_preselected_eager": {
+              "fused_triton_recurrence": 1.7826096154749393e-10,
+              "parallel_indexed_eager": 0.0,
+              "parallel_indexed_triton_local": 1.1641532182693481e-10,
+              "parallel_preselected_eager": 0.0,
+              "sequential_indexed_eager": 1.7462298274040222e-10
+            },
+            "timings": {
+              "fused_triton_recurrence": {
+                "median_microseconds": 654.2,
+                "minimum_microseconds": 608.1,
+                "p10_microseconds": 641.39,
+                "p90_microseconds": 716.1300000000001,
+                "repeats": 20,
+                "warmups": 5
+              },
+              "parallel_indexed_eager": {
+                "median_microseconds": 1825.6,
+                "minimum_microseconds": 1763.8,
+                "p10_microseconds": 1778.6599999999999,
+                "p90_microseconds": 2605.4300000000003,
+                "repeats": 20,
+                "warmups": 5
+              },
+              "parallel_indexed_triton_local": {
+                "median_microseconds": 1834.8000000000002,
+                "minimum_microseconds": 1751.5,
+                "p10_microseconds": 1783.0900000000001,
+                "p90_microseconds": 2672.2999999999997,
+                "repeats": 20,
+                "warmups": 5
+              },
+              "parallel_preselected_eager": {
+                "median_microseconds": 1744.35,
+                "minimum_microseconds": 1667.7,
+                "p10_microseconds": 1718.52,
+                "p90_microseconds": 2448.43,
+                "repeats": 20,
+                "warmups": 5
+              },
+              "sequential_indexed_eager": {
+                "median_microseconds": 5395.5,
+                "minimum_microseconds": 5210.2,
+                "p10_microseconds": 5251.159999999999,
+                "p90_microseconds": 6444.139999999999,
+                "repeats": 20,
+                "warmups": 5
+              }
+            }
+          },
+          "primitive_sequence_length": 48
+        },
+        {
+          "batch_size": 64,
+          "chunk_count": 64,
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "fused_speedup_vs_parallel_indexed_eager": 9.29106029106029,
+            "fused_speedup_vs_parallel_indexed_triton_local": 9.323492723492723,
+            "fused_speedup_vs_parallel_preselected_eager": 9.202910602910604,
+            "fused_speedup_vs_sequential_indexed_eager": 58.30436590436591,
+            "max_abs_error_vs_parallel_preselected_eager": {
+              "fused_triton_recurrence": 1.9073486328125e-06,
+              "parallel_indexed_eager": 0.0,
+              "parallel_indexed_triton_local": 4.76837158203125e-07,
+              "parallel_preselected_eager": 0.0,
+              "sequential_indexed_eager": 1.6689300537109375e-06
+            },
+            "timings": {
+              "fused_triton_recurrence": {
+                "median_microseconds": 120.25,
+                "minimum_microseconds": 118.4,
+                "p10_microseconds": 119.19,
+                "p90_microseconds": 121.94000000000001,
+                "repeats": 20,
+                "warmups": 5
+              },
+              "parallel_indexed_eager": {
+                "median_microseconds": 1117.25,
+                "minimum_microseconds": 1099.2,
+                "p10_microseconds": 1104.31,
+                "p90_microseconds": 1161.17,
+                "repeats": 20,
+                "warmups": 5
+              },
+              "parallel_indexed_triton_local": {
+                "median_microseconds": 1121.15,
+                "minimum_microseconds": 1109.5,
+                "p10_microseconds": 1113.51,
+                "p90_microseconds": 1225.71,
+                "repeats": 20,
+                "warmups": 5
+              },
+              "parallel_preselected_eager": {
+                "median_microseconds": 1106.65,
+                "minimum_microseconds": 1050.5,
+                "p10_microseconds": 1052.77,
+                "p90_microseconds": 1253.07,
+                "repeats": 20,
+                "warmups": 5
+              },
+              "sequential_indexed_eager": {
+                "median_microseconds": 7011.1,
+                "minimum_microseconds": 6833.4,
+                "p10_microseconds": 6847.049999999999,
+                "p90_microseconds": 9594.510000000002,
+                "repeats": 20,
+                "warmups": 5
+              }
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "fused_speedup_vs_parallel_indexed_eager": 3.256087257085798,
+            "fused_speedup_vs_parallel_indexed_triton_local": 3.4804516475919804,
+            "fused_speedup_vs_parallel_preselected_eager": 3.1402565481219753,
+            "fused_speedup_vs_sequential_indexed_eager": 30.527920731238957,
+            "max_abs_error_vs_parallel_preselected_eager": {
+              "fused_triton_recurrence": 1.4551915228366852e-10,
+              "parallel_indexed_eager": 0.0,
+              "parallel_indexed_triton_local": 5.820766091346741e-11,
+              "parallel_preselected_eager": 0.0,
+              "sequential_indexed_eager": 1.6007106751203537e-10
+            },
+            "timings": {
+              "fused_triton_recurrence": {
+                "median_microseconds": 650.95,
+                "minimum_microseconds": 644.8,
+                "p10_microseconds": 645.4300000000001,
+                "p90_microseconds": 665.01,
+                "repeats": 10,
+                "warmups": 5
+              },
+              "parallel_indexed_eager": {
+                "median_microseconds": 2119.55,
+                "minimum_microseconds": 2022.0,
+                "p10_microseconds": 2080.86,
+                "p90_microseconds": 3075.52,
+                "repeats": 10,
+                "warmups": 5
+              },
+              "parallel_indexed_triton_local": {
+                "median_microseconds": 2265.6,
+                "minimum_microseconds": 2131.7,
+                "p10_microseconds": 2132.69,
+                "p90_microseconds": 2427.7599999999998,
+                "repeats": 10,
+                "warmups": 5
+              },
+              "parallel_preselected_eager": {
+                "median_microseconds": 2044.15,
+                "minimum_microseconds": 2005.0,
+                "p10_microseconds": 2014.0,
+                "p90_microseconds": 3046.81,
+                "repeats": 10,
+                "warmups": 5
+              },
+              "sequential_indexed_eager": {
+                "median_microseconds": 19872.15,
+                "minimum_microseconds": 19402.1,
+                "p10_microseconds": 19534.94,
+                "p90_microseconds": 20509.339999999997,
+                "repeats": 10,
+                "warmups": 5
+              }
+            }
+          },
+          "primitive_sequence_length": 192
+        },
+        {
+          "batch_size": 1024,
+          "chunk_count": 4,
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "fused_speedup_vs_parallel_indexed_eager": 6.399691358024691,
+            "fused_speedup_vs_parallel_indexed_triton_local": 6.67798353909465,
+            "fused_speedup_vs_parallel_preselected_eager": 6.193415637860082,
+            "fused_speedup_vs_sequential_indexed_eager": 5.147633744855967,
+            "max_abs_error_vs_parallel_preselected_eager": {
+              "fused_triton_recurrence": 7.152557373046875e-07,
+              "parallel_indexed_eager": 0.0,
+              "parallel_indexed_triton_local": 2.384185791015625e-07,
+              "parallel_preselected_eager": 0.0,
+              "sequential_indexed_eager": 4.76837158203125e-07
+            },
+            "timings": {
+              "fused_triton_recurrence": {
+                "median_microseconds": 97.2,
+                "minimum_microseconds": 95.6,
+                "p10_microseconds": 95.79,
+                "p90_microseconds": 280.96000000000004,
+                "repeats": 20,
+                "warmups": 5
+              },
+              "parallel_indexed_eager": {
+                "median_microseconds": 622.05,
+                "minimum_microseconds": 616.0,
+                "p10_microseconds": 617.87,
+                "p90_microseconds": 801.5700000000002,
+                "repeats": 20,
+                "warmups": 5
+              },
+              "parallel_indexed_triton_local": {
+                "median_microseconds": 649.1,
+                "minimum_microseconds": 629.1,
+                "p10_microseconds": 632.46,
+                "p90_microseconds": 714.5200000000002,
+                "repeats": 20,
+                "warmups": 5
+              },
+              "parallel_preselected_eager": {
+                "median_microseconds": 602.0,
+                "minimum_microseconds": 572.5,
+                "p10_microseconds": 583.15,
+                "p90_microseconds": 926.07,
+                "repeats": 20,
+                "warmups": 5
+              },
+              "sequential_indexed_eager": {
+                "median_microseconds": 500.35,
+                "minimum_microseconds": 483.5,
+                "p10_microseconds": 489.78,
+                "p90_microseconds": 597.9800000000002,
+                "repeats": 20,
+                "warmups": 5
+              }
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "fused_speedup_vs_parallel_indexed_eager": 2.317739836153434,
+            "fused_speedup_vs_parallel_indexed_triton_local": 2.418804073195008,
+            "fused_speedup_vs_parallel_preselected_eager": 2.238649414286808,
+            "fused_speedup_vs_sequential_indexed_eager": 2.588239797871526,
+            "max_abs_error_vs_parallel_preselected_eager": {
+              "fused_triton_recurrence": 2.1827872842550278e-11,
+              "parallel_indexed_eager": 0.0,
+              "parallel_indexed_triton_local": 1.4551915228366852e-11,
+              "parallel_preselected_eager": 0.0,
+              "sequential_indexed_eager": 2.1827872842550278e-11
+            },
+            "timings": {
+              "fused_triton_recurrence": {
+                "median_microseconds": 653.05,
+                "minimum_microseconds": 619.2,
+                "p10_microseconds": 643.86,
+                "p90_microseconds": 682.17,
+                "repeats": 10,
+                "warmups": 5
+              },
+              "parallel_indexed_eager": {
+                "median_microseconds": 1513.6,
+                "minimum_microseconds": 1459.5,
+                "p10_microseconds": 1485.7800000000002,
+                "p90_microseconds": 1677.08,
+                "repeats": 10,
+                "warmups": 5
+              },
+              "parallel_indexed_triton_local": {
+                "median_microseconds": 1579.6,
+                "minimum_microseconds": 1434.5,
+                "p10_microseconds": 1475.54,
+                "p90_microseconds": 2136.79,
+                "repeats": 10,
+                "warmups": 5
+              },
+              "parallel_preselected_eager": {
+                "median_microseconds": 1461.9499999999998,
+                "minimum_microseconds": 1423.2,
+                "p10_microseconds": 1432.74,
+                "p90_microseconds": 1658.31,
+                "repeats": 10,
+                "warmups": 5
+              },
+              "sequential_indexed_eager": {
+                "median_microseconds": 1690.25,
+                "minimum_microseconds": 1658.0,
+                "p10_microseconds": 1665.9199999999998,
+                "p90_microseconds": 1878.75,
+                "repeats": 10,
+                "warmups": 5
+              }
+            }
+          },
+          "primitive_sequence_length": 12
+        },
+        {
+          "batch_size": 1024,
+          "chunk_count": 16,
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "fused_speedup_vs_parallel_indexed_eager": 11.473710565848775,
+            "fused_speedup_vs_parallel_indexed_triton_local": 10.034551827741613,
+            "fused_speedup_vs_parallel_preselected_eager": 10.27290936404607,
+            "fused_speedup_vs_sequential_indexed_eager": 18.131196795192793,
+            "max_abs_error_vs_parallel_preselected_eager": {
+              "fused_triton_recurrence": 9.5367431640625e-07,
+              "parallel_indexed_eager": 0.0,
+              "parallel_indexed_triton_local": 2.384185791015625e-07,
+              "parallel_preselected_eager": 0.0,
+              "sequential_indexed_eager": 9.5367431640625e-07
+            },
+            "timings": {
+              "fused_triton_recurrence": {
+                "median_microseconds": 99.85,
+                "minimum_microseconds": 98.7,
+                "p10_microseconds": 98.79,
+                "p90_microseconds": 100.98,
+                "repeats": 20,
+                "warmups": 5
+              },
+              "parallel_indexed_eager": {
+                "median_microseconds": 1145.65,
+                "minimum_microseconds": 1123.9,
+                "p10_microseconds": 1129.25,
+                "p90_microseconds": 1450.2300000000005,
+                "repeats": 20,
+                "warmups": 5
+              },
+              "parallel_indexed_triton_local": {
+                "median_microseconds": 1001.95,
+                "minimum_microseconds": 988.5,
+                "p10_microseconds": 991.69,
+                "p90_microseconds": 1455.4200000000005,
+                "repeats": 20,
+                "warmups": 5
+              },
+              "parallel_preselected_eager": {
+                "median_microseconds": 1025.75,
+                "minimum_microseconds": 1006.6,
+                "p10_microseconds": 1008.7399999999999,
+                "p90_microseconds": 1610.4900000000002,
+                "repeats": 20,
+                "warmups": 5
+              },
+              "sequential_indexed_eager": {
+                "median_microseconds": 1810.4,
+                "minimum_microseconds": 1776.3,
+                "p10_microseconds": 1777.99,
+                "p90_microseconds": 2745.8,
+                "repeats": 20,
+                "warmups": 5
+              }
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "fused_speedup_vs_parallel_indexed_eager": 3.0156510156510152,
+            "fused_speedup_vs_parallel_indexed_triton_local": 3.0188145188145183,
+            "fused_speedup_vs_parallel_preselected_eager": 2.8558108558108555,
+            "fused_speedup_vs_sequential_indexed_eager": 8.95945720945721,
+            "max_abs_error_vs_parallel_preselected_eager": {
+              "fused_triton_recurrence": 1.8189894035458565e-11,
+              "parallel_indexed_eager": 0.0,
+              "parallel_indexed_triton_local": 7.275957614183426e-12,
+              "parallel_preselected_eager": 0.0,
+              "sequential_indexed_eager": 1.8189894035458565e-11
+            },
+            "timings": {
+              "fused_triton_recurrence": {
+                "median_microseconds": 600.6,
+                "minimum_microseconds": 593.4,
+                "p10_microseconds": 594.0300000000001,
+                "p90_microseconds": 693.89,
+                "repeats": 10,
+                "warmups": 5
+              },
+              "parallel_indexed_eager": {
+                "median_microseconds": 1811.1999999999998,
+                "minimum_microseconds": 1747.3,
+                "p10_microseconds": 1754.23,
+                "p90_microseconds": 2030.0299999999997,
+                "repeats": 10,
+                "warmups": 5
+              },
+              "parallel_indexed_triton_local": {
+                "median_microseconds": 1813.1,
+                "minimum_microseconds": 1784.8,
+                "p10_microseconds": 1794.97,
+                "p90_microseconds": 1970.17,
+                "repeats": 10,
+                "warmups": 5
+              },
+              "parallel_preselected_eager": {
+                "median_microseconds": 1715.1999999999998,
+                "minimum_microseconds": 1686.8,
+                "p10_microseconds": 1694.4499999999998,
+                "p90_microseconds": 1753.84,
+                "repeats": 10,
+                "warmups": 5
+              },
+              "sequential_indexed_eager": {
+                "median_microseconds": 5381.05,
+                "minimum_microseconds": 5321.0,
+                "p10_microseconds": 5345.299999999999,
+                "p90_microseconds": 6409.85,
+                "repeats": 10,
+                "warmups": 5
+              }
+            }
+          },
+          "primitive_sequence_length": 48
+        },
+        {
+          "batch_size": 1024,
+          "chunk_count": 64,
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "fused_speedup_vs_parallel_indexed_eager": 22.298134863701577,
+            "fused_speedup_vs_parallel_indexed_triton_local": 19.34002869440459,
+            "fused_speedup_vs_parallel_preselected_eager": 19.842467718794836,
+            "fused_speedup_vs_sequential_indexed_eager": 40.437302725968436,
+            "max_abs_error_vs_parallel_preselected_eager": {
+              "fused_triton_recurrence": 1.9073486328125e-06,
+              "parallel_indexed_eager": 0.0,
+              "parallel_indexed_triton_local": 4.76837158203125e-07,
+              "parallel_preselected_eager": 0.0,
+              "sequential_indexed_eager": 2.384185791015625e-06
+            },
+            "timings": {
+              "fused_triton_recurrence": {
+                "median_microseconds": 174.25,
+                "minimum_microseconds": 169.5,
+                "p10_microseconds": 170.48999999999998,
+                "p90_microseconds": 297.28999999999996,
+                "repeats": 10,
+                "warmups": 5
+              },
+              "parallel_indexed_eager": {
+                "median_microseconds": 3885.45,
+                "minimum_microseconds": 3369.4,
+                "p10_microseconds": 3409.72,
+                "p90_microseconds": 4093.6600000000003,
+                "repeats": 10,
+                "warmups": 5
+              },
+              "parallel_indexed_triton_local": {
+                "median_microseconds": 3370.0,
+                "minimum_microseconds": 2972.7,
+                "p10_microseconds": 3017.7900000000004,
+                "p90_microseconds": 3797.89,
+                "repeats": 10,
+                "warmups": 5
+              },
+              "parallel_preselected_eager": {
+                "median_microseconds": 3457.55,
+                "minimum_microseconds": 3066.6,
+                "p10_microseconds": 3085.14,
+                "p90_microseconds": 3879.83,
+                "repeats": 10,
+                "warmups": 5
+              },
+              "sequential_indexed_eager": {
+                "median_microseconds": 7046.2,
+                "minimum_microseconds": 6847.5,
+                "p10_microseconds": 6924.36,
+                "p90_microseconds": 7236.15,
+                "repeats": 10,
+                "warmups": 5
+              }
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "fused_speedup_vs_parallel_indexed_eager": 6.615163220480194,
+            "fused_speedup_vs_parallel_indexed_triton_local": 5.504809512989472,
+            "fused_speedup_vs_parallel_preselected_eager": 5.988260243883966,
+            "fused_speedup_vs_sequential_indexed_eager": 30.111944255093544,
+            "max_abs_error_vs_parallel_preselected_eager": {
+              "fused_triton_recurrence": 1.4551915228366852e-11,
+              "parallel_indexed_eager": 0.0,
+              "parallel_indexed_triton_local": 7.275957614183426e-12,
+              "parallel_preselected_eager": 0.0,
+              "sequential_indexed_eager": 1.4551915228366852e-11
+            },
+            "timings": {
+              "fused_triton_recurrence": {
+                "median_microseconds": 660.15,
+                "minimum_microseconds": 649.2,
+                "p10_microseconds": 651.9899999999999,
+                "p90_microseconds": 932.7,
+                "repeats": 10,
+                "warmups": 5
+              },
+              "parallel_indexed_eager": {
+                "median_microseconds": 4367.0,
+                "minimum_microseconds": 3925.8,
+                "p10_microseconds": 3927.6000000000004,
+                "p90_microseconds": 4684.58,
+                "repeats": 10,
+                "warmups": 5
+              },
+              "parallel_indexed_triton_local": {
+                "median_microseconds": 3634.0,
+                "minimum_microseconds": 3385.4,
+                "p10_microseconds": 3400.79,
+                "p90_microseconds": 4132.29,
+                "repeats": 10,
+                "warmups": 5
+              },
+              "parallel_preselected_eager": {
+                "median_microseconds": 3953.15,
+                "minimum_microseconds": 3561.7,
+                "p10_microseconds": 3612.82,
+                "p90_microseconds": 4272.9,
+                "repeats": 10,
+                "warmups": 5
+              },
+              "sequential_indexed_eager": {
+                "median_microseconds": 19878.4,
+                "minimum_microseconds": 19750.6,
+                "p10_microseconds": 19755.370000000003,
+                "p90_microseconds": 24127.89,
+                "repeats": 10,
+                "warmups": 5
+              }
+            }
+          },
+          "primitive_sequence_length": 192
+        }
+      ],
+      "view": "positive_half_spin"
+    },
+    {
+      "all_float32_forward_backward_parity_checks_passed": true,
+      "prefix_table_bytes": 887808,
+      "prefix_table_shape": [
+        17,
+        4,
+        17,
+        24,
+        8
+      ],
+      "results": [
+        {
+          "batch_size": 1,
+          "chunk_count": 4,
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "fused_speedup_vs_parallel_indexed_eager": 6.07109252483011,
+            "fused_speedup_vs_parallel_indexed_triton_local": 6.056978567694719,
+            "fused_speedup_vs_parallel_preselected_eager": 5.447464715107161,
+            "fused_speedup_vs_sequential_indexed_eager": 4.89231573444851,
+            "max_abs_error_vs_parallel_preselected_eager": {
+              "fused_triton_recurrence": 5.960464477539063e-08,
+              "parallel_indexed_eager": 0.0,
+              "parallel_indexed_triton_local": 5.960464477539063e-08,
+              "parallel_preselected_eager": 0.0,
+              "sequential_indexed_eager": 0.0
+            },
+            "timings": {
+              "fused_triton_recurrence": {
+                "median_microseconds": 95.65,
+                "minimum_microseconds": 93.3,
+                "p10_microseconds": 94.0,
+                "p90_microseconds": 124.90000000000008,
+                "repeats": 100,
+                "warmups": 10
+              },
+              "parallel_indexed_eager": {
+                "median_microseconds": 580.7,
+                "minimum_microseconds": 548.4,
+                "p10_microseconds": 566.48,
+                "p90_microseconds": 656.47,
+                "repeats": 100,
+                "warmups": 10
+              },
+              "parallel_indexed_triton_local": {
+                "median_microseconds": 579.3499999999999,
+                "minimum_microseconds": 571.1,
+                "p10_microseconds": 573.6,
+                "p90_microseconds": 803.7700000000001,
+                "repeats": 100,
+                "warmups": 10
+              },
+              "parallel_preselected_eager": {
+                "median_microseconds": 521.05,
+                "minimum_microseconds": 489.3,
+                "p10_microseconds": 511.88,
+                "p90_microseconds": 566.9800000000001,
+                "repeats": 100,
+                "warmups": 10
+              },
+              "sequential_indexed_eager": {
+                "median_microseconds": 467.95000000000005,
+                "minimum_microseconds": 462.0,
+                "p10_microseconds": 464.9,
+                "p90_microseconds": 576.86,
+                "repeats": 100,
+                "warmups": 10
+              }
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "fused_speedup_vs_parallel_indexed_eager": 2.399382398353062,
+            "fused_speedup_vs_parallel_indexed_triton_local": 2.323383084577115,
+            "fused_speedup_vs_parallel_preselected_eager": 2.315062617944759,
+            "fused_speedup_vs_sequential_indexed_eager": 2.763081145994167,
+            "max_abs_error_vs_parallel_preselected_eager": {
+              "fused_triton_recurrence": 7.450580596923828e-09,
+              "parallel_indexed_eager": 0.0,
+              "parallel_indexed_triton_local": 5.587935447692871e-09,
+              "parallel_preselected_eager": 0.0,
+              "sequential_indexed_eager": 1.4901161193847656e-08
+            },
+            "timings": {
+              "fused_triton_recurrence": {
+                "median_microseconds": 582.9,
+                "minimum_microseconds": 544.5,
+                "p10_microseconds": 564.0400000000001,
+                "p90_microseconds": 642.8100000000001,
+                "repeats": 30,
+                "warmups": 7
+              },
+              "parallel_indexed_eager": {
+                "median_microseconds": 1398.6,
+                "minimum_microseconds": 1348.8,
+                "p10_microseconds": 1378.8700000000001,
+                "p90_microseconds": 1581.5500000000006,
+                "repeats": 30,
+                "warmups": 7
+              },
+              "parallel_indexed_triton_local": {
+                "median_microseconds": 1354.3000000000002,
+                "minimum_microseconds": 1322.7,
+                "p10_microseconds": 1325.8600000000001,
+                "p90_microseconds": 1468.2800000000002,
+                "repeats": 30,
+                "warmups": 7
+              },
+              "parallel_preselected_eager": {
+                "median_microseconds": 1349.45,
+                "minimum_microseconds": 1287.0,
+                "p10_microseconds": 1316.8400000000001,
+                "p90_microseconds": 1524.6799999999998,
+                "repeats": 30,
+                "warmups": 7
+              },
+              "sequential_indexed_eager": {
+                "median_microseconds": 1610.6,
+                "minimum_microseconds": 1567.8,
+                "p10_microseconds": 1577.85,
+                "p90_microseconds": 2115.66,
+                "repeats": 30,
+                "warmups": 7
+              }
+            }
+          },
+          "primitive_sequence_length": 12
+        },
+        {
+          "batch_size": 1,
+          "chunk_count": 16,
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "fused_speedup_vs_parallel_indexed_eager": 8.662974683544304,
+            "fused_speedup_vs_parallel_indexed_triton_local": 9.075421940928269,
+            "fused_speedup_vs_parallel_preselected_eager": 8.344409282700422,
+            "fused_speedup_vs_sequential_indexed_eager": 17.78850210970464,
+            "max_abs_error_vs_parallel_preselected_eager": {
+              "fused_triton_recurrence": 1.7881393432617188e-07,
+              "parallel_indexed_eager": 0.0,
+              "parallel_indexed_triton_local": 1.1920928955078125e-07,
+              "parallel_preselected_eager": 0.0,
+              "sequential_indexed_eager": 1.4901161193847656e-07
+            },
+            "timings": {
+              "fused_triton_recurrence": {
+                "median_microseconds": 94.8,
+                "minimum_microseconds": 93.2,
+                "p10_microseconds": 93.7,
+                "p90_microseconds": 96.93,
+                "repeats": 100,
+                "warmups": 10
+              },
+              "parallel_indexed_eager": {
+                "median_microseconds": 821.25,
+                "minimum_microseconds": 806.3,
+                "p10_microseconds": 811.3799999999999,
+                "p90_microseconds": 870.9000000000001,
+                "repeats": 100,
+                "warmups": 10
+              },
+              "parallel_indexed_triton_local": {
+                "median_microseconds": 860.3499999999999,
+                "minimum_microseconds": 817.2,
+                "p10_microseconds": 821.5799999999999,
+                "p90_microseconds": 1339.58,
+                "repeats": 100,
+                "warmups": 10
+              },
+              "parallel_preselected_eager": {
+                "median_microseconds": 791.05,
+                "minimum_microseconds": 754.2,
+                "p10_microseconds": 761.94,
+                "p90_microseconds": 1288.3000000000002,
+                "repeats": 100,
+                "warmups": 10
+              },
+              "sequential_indexed_eager": {
+                "median_microseconds": 1686.35,
+                "minimum_microseconds": 1651.0,
+                "p10_microseconds": 1659.08,
+                "p90_microseconds": 1849.3799999999999,
+                "repeats": 100,
+                "warmups": 10
+              }
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "fused_speedup_vs_parallel_indexed_eager": 2.887845681119836,
+            "fused_speedup_vs_parallel_indexed_triton_local": 2.8770911573916016,
+            "fused_speedup_vs_parallel_preselected_eager": 2.844827586206897,
+            "fused_speedup_vs_sequential_indexed_eager": 8.8353533629225,
+            "max_abs_error_vs_parallel_preselected_eager": {
+              "fused_triton_recurrence": 3.725290298461914e-09,
+              "parallel_indexed_eager": 0.0,
+              "parallel_indexed_triton_local": 3.725290298461914e-09,
+              "parallel_preselected_eager": 0.0,
+              "sequential_indexed_eager": 4.190951585769653e-09
+            },
+            "timings": {
+              "fused_triton_recurrence": {
+                "median_microseconds": 585.8,
+                "minimum_microseconds": 541.0,
+                "p10_microseconds": 545.1899999999999,
+                "p90_microseconds": 737.5500000000001,
+                "repeats": 30,
+                "warmups": 7
+              },
+              "parallel_indexed_eager": {
+                "median_microseconds": 1691.6999999999998,
+                "minimum_microseconds": 1623.9,
+                "p10_microseconds": 1631.26,
+                "p90_microseconds": 1861.3799999999999,
+                "repeats": 30,
+                "warmups": 7
+              },
+              "parallel_indexed_triton_local": {
+                "median_microseconds": 1685.4,
+                "minimum_microseconds": 1590.1,
+                "p10_microseconds": 1630.2800000000002,
+                "p90_microseconds": 1843.6100000000001,
+                "repeats": 30,
+                "warmups": 7
+              },
+              "parallel_preselected_eager": {
+                "median_microseconds": 1666.5,
+                "minimum_microseconds": 1609.8,
+                "p10_microseconds": 1624.08,
+                "p90_microseconds": 1816.3300000000002,
+                "repeats": 30,
+                "warmups": 7
+              },
+              "sequential_indexed_eager": {
+                "median_microseconds": 5175.75,
+                "minimum_microseconds": 5091.8,
+                "p10_microseconds": 5114.52,
+                "p90_microseconds": 5275.97,
+                "repeats": 30,
+                "warmups": 7
+              }
+            }
+          },
+          "primitive_sequence_length": 48
+        },
+        {
+          "batch_size": 1,
+          "chunk_count": 64,
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "fused_speedup_vs_parallel_indexed_eager": 9.189512799339388,
+            "fused_speedup_vs_parallel_indexed_triton_local": 9.049132947976878,
+            "fused_speedup_vs_parallel_preselected_eager": 8.62014863748968,
+            "fused_speedup_vs_sequential_indexed_eager": 54.84805945499588,
+            "max_abs_error_vs_parallel_preselected_eager": {
+              "fused_triton_recurrence": 5.960464477539062e-07,
+              "parallel_indexed_eager": 0.0,
+              "parallel_indexed_triton_local": 1.1920928955078125e-07,
+              "parallel_preselected_eager": 0.0,
+              "sequential_indexed_eager": 5.960464477539062e-07
+            },
+            "timings": {
+              "fused_triton_recurrence": {
+                "median_microseconds": 121.1,
+                "minimum_microseconds": 119.8,
+                "p10_microseconds": 120.2,
+                "p90_microseconds": 131.06,
+                "repeats": 100,
+                "warmups": 10
+              },
+              "parallel_indexed_eager": {
+                "median_microseconds": 1112.85,
+                "minimum_microseconds": 1054.5,
+                "p10_microseconds": 1075.5,
+                "p90_microseconds": 1793.3500000000001,
+                "repeats": 100,
+                "warmups": 10
+              },
+              "parallel_indexed_triton_local": {
+                "median_microseconds": 1095.85,
+                "minimum_microseconds": 1061.5,
+                "p10_microseconds": 1067.31,
+                "p90_microseconds": 1206.1700000000003,
+                "repeats": 100,
+                "warmups": 10
+              },
+              "parallel_preselected_eager": {
+                "median_microseconds": 1043.9,
+                "minimum_microseconds": 994.2,
+                "p10_microseconds": 1002.12,
+                "p90_microseconds": 1705.28,
+                "repeats": 100,
+                "warmups": 10
+              },
+              "sequential_indexed_eager": {
+                "median_microseconds": 6642.1,
+                "minimum_microseconds": 6443.0,
+                "p10_microseconds": 6492.66,
+                "p90_microseconds": 6915.840000000001,
+                "repeats": 100,
+                "warmups": 10
+              }
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "fused_speedup_vs_parallel_indexed_eager": 3.0854410857495367,
+            "fused_speedup_vs_parallel_indexed_triton_local": 3.0862122146822943,
+            "fused_speedup_vs_parallel_preselected_eager": 3.0293800123380623,
+            "fused_speedup_vs_sequential_indexed_eager": 29.958975940777297,
+            "max_abs_error_vs_parallel_preselected_eager": {
+              "fused_triton_recurrence": 4.190951585769653e-09,
+              "parallel_indexed_eager": 0.0,
+              "parallel_indexed_triton_local": 3.725290298461914e-09,
+              "parallel_preselected_eager": 0.0,
+              "sequential_indexed_eager": 2.7939677238464355e-09
+            },
+            "timings": {
+              "fused_triton_recurrence": {
+                "median_microseconds": 648.4000000000001,
+                "minimum_microseconds": 626.4,
+                "p10_microseconds": 640.2900000000001,
+                "p90_microseconds": 854.6300000000001,
+                "repeats": 30,
+                "warmups": 7
+              },
+              "parallel_indexed_eager": {
+                "median_microseconds": 2000.6,
+                "minimum_microseconds": 1929.9,
+                "p10_microseconds": 1946.45,
+                "p90_microseconds": 2911.56,
+                "repeats": 30,
+                "warmups": 7
+              },
+              "parallel_indexed_triton_local": {
+                "median_microseconds": 2001.1,
+                "minimum_microseconds": 1935.8,
+                "p10_microseconds": 1947.4699999999998,
+                "p90_microseconds": 2526.8900000000003,
+                "repeats": 30,
+                "warmups": 7
+              },
+              "parallel_preselected_eager": {
+                "median_microseconds": 1964.25,
+                "minimum_microseconds": 1861.5,
+                "p10_microseconds": 1883.6100000000001,
+                "p90_microseconds": 2758.7500000000005,
+                "repeats": 30,
+                "warmups": 7
+              },
+              "sequential_indexed_eager": {
+                "median_microseconds": 19425.4,
+                "minimum_microseconds": 18863.6,
+                "p10_microseconds": 19083.19,
+                "p90_microseconds": 20163.830000000005,
+                "repeats": 30,
+                "warmups": 7
+              }
+            }
+          },
+          "primitive_sequence_length": 192
+        },
+        {
+          "batch_size": 64,
+          "chunk_count": 4,
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "fused_speedup_vs_parallel_indexed_eager": 6.663244353182751,
+            "fused_speedup_vs_parallel_indexed_triton_local": 6.737166324435318,
+            "fused_speedup_vs_parallel_preselected_eager": 6.411704312114989,
+            "fused_speedup_vs_sequential_indexed_eager": 5.111909650924024,
+            "max_abs_error_vs_parallel_preselected_eager": {
+              "fused_triton_recurrence": 4.76837158203125e-07,
+              "parallel_indexed_eager": 0.0,
+              "parallel_indexed_triton_local": 2.384185791015625e-07,
+              "parallel_preselected_eager": 0.0,
+              "sequential_indexed_eager": 4.76837158203125e-07
+            },
+            "timings": {
+              "fused_triton_recurrence": {
+                "median_microseconds": 97.4,
+                "minimum_microseconds": 95.7,
+                "p10_microseconds": 96.08999999999999,
+                "p90_microseconds": 108.08000000000001,
+                "repeats": 50,
+                "warmups": 10
+              },
+              "parallel_indexed_eager": {
+                "median_microseconds": 649.0,
+                "minimum_microseconds": 621.3,
+                "p10_microseconds": 634.79,
+                "p90_microseconds": 697.3199999999999,
+                "repeats": 50,
+                "warmups": 10
+              },
+              "parallel_indexed_triton_local": {
+                "median_microseconds": 656.2,
+                "minimum_microseconds": 649.7,
+                "p10_microseconds": 650.99,
+                "p90_microseconds": 734.04,
+                "repeats": 50,
+                "warmups": 10
+              },
+              "parallel_preselected_eager": {
+                "median_microseconds": 624.5,
+                "minimum_microseconds": 578.2,
+                "p10_microseconds": 586.6899999999999,
+                "p90_microseconds": 1008.24,
+                "repeats": 50,
+                "warmups": 10
+              },
+              "sequential_indexed_eager": {
+                "median_microseconds": 497.9,
+                "minimum_microseconds": 485.5,
+                "p10_microseconds": 495.18,
+                "p90_microseconds": 556.6700000000001,
+                "repeats": 50,
+                "warmups": 10
+              }
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "fused_speedup_vs_parallel_indexed_eager": 2.522964682473885,
+            "fused_speedup_vs_parallel_indexed_triton_local": 2.548499419665064,
+            "fused_speedup_vs_parallel_preselected_eager": 2.449593765544686,
+            "fused_speedup_vs_sequential_indexed_eager": 2.7083402420825737,
+            "max_abs_error_vs_parallel_preselected_eager": {
+              "fused_triton_recurrence": 2.3283064365386963e-10,
+              "parallel_indexed_eager": 0.0,
+              "parallel_indexed_triton_local": 2.3283064365386963e-10,
+              "parallel_preselected_eager": 0.0,
+              "sequential_indexed_eager": 2.3283064365386963e-10
+            },
+            "timings": {
+              "fused_triton_recurrence": {
+                "median_microseconds": 603.0999999999999,
+                "minimum_microseconds": 582.3,
+                "p10_microseconds": 585.58,
+                "p90_microseconds": 665.6700000000002,
+                "repeats": 20,
+                "warmups": 5
+              },
+              "parallel_indexed_eager": {
+                "median_microseconds": 1521.6,
+                "minimum_microseconds": 1479.0,
+                "p10_microseconds": 1494.39,
+                "p90_microseconds": 1697.8900000000006,
+                "repeats": 20,
+                "warmups": 5
+              },
+              "parallel_indexed_triton_local": {
+                "median_microseconds": 1537.0,
+                "minimum_microseconds": 1503.0,
+                "p10_microseconds": 1504.58,
+                "p90_microseconds": 1693.1200000000001,
+                "repeats": 20,
+                "warmups": 5
+              },
+              "parallel_preselected_eager": {
+                "median_microseconds": 1477.35,
+                "minimum_microseconds": 1409.1,
+                "p10_microseconds": 1428.51,
+                "p90_microseconds": 1846.9800000000005,
+                "repeats": 20,
+                "warmups": 5
+              },
+              "sequential_indexed_eager": {
+                "median_microseconds": 1633.4,
+                "minimum_microseconds": 1591.8,
+                "p10_microseconds": 1600.15,
+                "p90_microseconds": 1782.1400000000008,
+                "repeats": 20,
+                "warmups": 5
+              }
+            }
+          },
+          "primitive_sequence_length": 12
+        },
+        {
+          "batch_size": 64,
+          "chunk_count": 16,
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "fused_speedup_vs_parallel_indexed_eager": 9.318413021363172,
+            "fused_speedup_vs_parallel_indexed_triton_local": 9.284842319430314,
+            "fused_speedup_vs_parallel_preselected_eager": 8.476093591047812,
+            "fused_speedup_vs_sequential_indexed_eager": 18.462868769074262,
+            "max_abs_error_vs_parallel_preselected_eager": {
+              "fused_triton_recurrence": 5.960464477539062e-07,
+              "parallel_indexed_eager": 0.0,
+              "parallel_indexed_triton_local": 2.384185791015625e-07,
+              "parallel_preselected_eager": 0.0,
+              "sequential_indexed_eager": 5.960464477539062e-07
+            },
+            "timings": {
+              "fused_triton_recurrence": {
+                "median_microseconds": 98.30000000000001,
+                "minimum_microseconds": 96.4,
+                "p10_microseconds": 97.29,
+                "p90_microseconds": 109.64000000000001,
+                "repeats": 50,
+                "warmups": 10
+              },
+              "parallel_indexed_eager": {
+                "median_microseconds": 916.0,
+                "minimum_microseconds": 871.5,
+                "p10_microseconds": 879.68,
+                "p90_microseconds": 996.4300000000001,
+                "repeats": 50,
+                "warmups": 10
+              },
+              "parallel_indexed_triton_local": {
+                "median_microseconds": 912.7,
+                "minimum_microseconds": 880.2,
+                "p10_microseconds": 887.67,
+                "p90_microseconds": 1458.45,
+                "repeats": 50,
+                "warmups": 10
+              },
+              "parallel_preselected_eager": {
+                "median_microseconds": 833.2,
+                "minimum_microseconds": 810.1,
+                "p10_microseconds": 818.8599999999999,
+                "p90_microseconds": 920.9100000000001,
+                "repeats": 50,
+                "warmups": 10
+              },
+              "sequential_indexed_eager": {
+                "median_microseconds": 1814.9,
+                "minimum_microseconds": 1736.4,
+                "p10_microseconds": 1752.38,
+                "p90_microseconds": 2142.5099999999998,
+                "repeats": 50,
+                "warmups": 10
+              }
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "fused_speedup_vs_parallel_indexed_eager": 3.1059102857627408,
+            "fused_speedup_vs_parallel_indexed_triton_local": 3.039684558636479,
+            "fused_speedup_vs_parallel_preselected_eager": 3.027049944882558,
+            "fused_speedup_vs_sequential_indexed_eager": 9.070041550072077,
+            "max_abs_error_vs_parallel_preselected_eager": {
+              "fused_triton_recurrence": 1.7462298274040222e-10,
+              "parallel_indexed_eager": 0.0,
+              "parallel_indexed_triton_local": 1.1641532182693481e-10,
+              "parallel_preselected_eager": 0.0,
+              "sequential_indexed_eager": 1.7462298274040222e-10
+            },
+            "timings": {
+              "fused_triton_recurrence": {
+                "median_microseconds": 589.65,
+                "minimum_microseconds": 577.3,
+                "p10_microseconds": 583.5500000000001,
+                "p90_microseconds": 713.58,
+                "repeats": 20,
+                "warmups": 5
+              },
+              "parallel_indexed_eager": {
+                "median_microseconds": 1831.4,
+                "minimum_microseconds": 1732.2,
+                "p10_microseconds": 1793.38,
+                "p90_microseconds": 2615.21,
+                "repeats": 20,
+                "warmups": 5
+              },
+              "parallel_indexed_triton_local": {
+                "median_microseconds": 1792.35,
+                "minimum_microseconds": 1739.6,
+                "p10_microseconds": 1742.63,
+                "p90_microseconds": 2044.4100000000012,
+                "repeats": 20,
+                "warmups": 5
+              },
+              "parallel_preselected_eager": {
+                "median_microseconds": 1784.9,
+                "minimum_microseconds": 1701.2,
+                "p10_microseconds": 1732.8200000000002,
+                "p90_microseconds": 2447.82,
+                "repeats": 20,
+                "warmups": 5
+              },
+              "sequential_indexed_eager": {
+                "median_microseconds": 5348.15,
+                "minimum_microseconds": 5156.8,
+                "p10_microseconds": 5243.46,
+                "p90_microseconds": 6345.03,
+                "repeats": 20,
+                "warmups": 5
+              }
+            }
+          },
+          "primitive_sequence_length": 48
+        },
+        {
+          "batch_size": 64,
+          "chunk_count": 64,
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "fused_speedup_vs_parallel_indexed_eager": 9.279331941544886,
+            "fused_speedup_vs_parallel_indexed_triton_local": 9.479749478079333,
+            "fused_speedup_vs_parallel_preselected_eager": 8.886847599164927,
+            "fused_speedup_vs_sequential_indexed_eager": 59.64592901878915,
+            "max_abs_error_vs_parallel_preselected_eager": {
+              "fused_triton_recurrence": 1.6689300537109375e-06,
+              "parallel_indexed_eager": 0.0,
+              "parallel_indexed_triton_local": 4.76837158203125e-07,
+              "parallel_preselected_eager": 0.0,
+              "sequential_indexed_eager": 1.6689300537109375e-06
+            },
+            "timings": {
+              "fused_triton_recurrence": {
+                "median_microseconds": 119.75,
+                "minimum_microseconds": 118.3,
+                "p10_microseconds": 118.58,
+                "p90_microseconds": 126.13000000000001,
+                "repeats": 20,
+                "warmups": 5
+              },
+              "parallel_indexed_eager": {
+                "median_microseconds": 1111.2,
+                "minimum_microseconds": 1100.7,
+                "p10_microseconds": 1103.6100000000001,
+                "p90_microseconds": 1232.9699999999998,
+                "repeats": 20,
+                "warmups": 5
+              },
+              "parallel_indexed_triton_local": {
+                "median_microseconds": 1135.2,
+                "minimum_microseconds": 1111.9,
+                "p10_microseconds": 1116.07,
+                "p90_microseconds": 1276.17,
+                "repeats": 20,
+                "warmups": 5
+              },
+              "parallel_preselected_eager": {
+                "median_microseconds": 1064.2,
+                "minimum_microseconds": 1052.3,
+                "p10_microseconds": 1053.73,
+                "p90_microseconds": 1146.2000000000003,
+                "repeats": 20,
+                "warmups": 5
+              },
+              "sequential_indexed_eager": {
+                "median_microseconds": 7142.6,
+                "minimum_microseconds": 6992.2,
+                "p10_microseconds": 7064.049999999999,
+                "p90_microseconds": 7480.620000000001,
+                "repeats": 20,
+                "warmups": 5
+              }
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "fused_speedup_vs_parallel_indexed_eager": 3.7172593965953142,
+            "fused_speedup_vs_parallel_indexed_triton_local": 3.645120512388337,
+            "fused_speedup_vs_parallel_preselected_eager": 3.4689027473453575,
+            "fused_speedup_vs_sequential_indexed_eager": 33.33473790662397,
+            "max_abs_error_vs_parallel_preselected_eager": {
+              "fused_triton_recurrence": 1.6007106751203537e-10,
+              "parallel_indexed_eager": 0.0,
+              "parallel_indexed_triton_local": 4.3655745685100555e-11,
+              "parallel_preselected_eager": 0.0,
+              "sequential_indexed_eager": 2.0372681319713593e-10
+            },
+            "timings": {
+              "fused_triton_recurrence": {
+                "median_microseconds": 593.3,
+                "minimum_microseconds": 586.7,
+                "p10_microseconds": 586.7,
+                "p90_microseconds": 689.7699999999999,
+                "repeats": 10,
+                "warmups": 5
+              },
+              "parallel_indexed_eager": {
+                "median_microseconds": 2205.45,
+                "minimum_microseconds": 2089.8,
+                "p10_microseconds": 2090.88,
+                "p90_microseconds": 2354.5699999999997,
+                "repeats": 10,
+                "warmups": 5
+              },
+              "parallel_indexed_triton_local": {
+                "median_microseconds": 2162.65,
+                "minimum_microseconds": 2066.4,
+                "p10_microseconds": 2089.89,
+                "p90_microseconds": 3156.9,
+                "repeats": 10,
+                "warmups": 5
+              },
+              "parallel_preselected_eager": {
+                "median_microseconds": 2058.1000000000004,
+                "minimum_microseconds": 1999.0,
+                "p10_microseconds": 2020.06,
+                "p90_microseconds": 2955.6899999999996,
+                "repeats": 10,
+                "warmups": 5
+              },
+              "sequential_indexed_eager": {
+                "median_microseconds": 19777.5,
+                "minimum_microseconds": 19427.9,
+                "p10_microseconds": 19631.03,
+                "p90_microseconds": 23771.43,
+                "repeats": 10,
+                "warmups": 5
+              }
+            }
+          },
+          "primitive_sequence_length": 192
+        },
+        {
+          "batch_size": 1024,
+          "chunk_count": 4,
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "fused_speedup_vs_parallel_indexed_eager": 4.868970755791872,
+            "fused_speedup_vs_parallel_indexed_triton_local": 4.83782757311052,
+            "fused_speedup_vs_parallel_preselected_eager": 7.014432206608432,
+            "fused_speedup_vs_sequential_indexed_eager": 3.730345613368781,
+            "max_abs_error_vs_parallel_preselected_eager": {
+              "fused_triton_recurrence": 4.76837158203125e-07,
+              "parallel_indexed_eager": 0.0,
+              "parallel_indexed_triton_local": 2.384185791015625e-07,
+              "parallel_preselected_eager": 0.0,
+              "sequential_indexed_eager": 4.76837158203125e-07
+            },
+            "timings": {
+              "fused_triton_recurrence": {
+                "median_microseconds": 131.65,
+                "minimum_microseconds": 128.8,
+                "p10_microseconds": 130.07,
+                "p90_microseconds": 133.92000000000002,
+                "repeats": 20,
+                "warmups": 5
+              },
+              "parallel_indexed_eager": {
+                "median_microseconds": 641.0,
+                "minimum_microseconds": 619.1,
+                "p10_microseconds": 620.5500000000001,
+                "p90_microseconds": 711.57,
+                "repeats": 20,
+                "warmups": 5
+              },
+              "parallel_indexed_triton_local": {
+                "median_microseconds": 636.9,
+                "minimum_microseconds": 625.7,
+                "p10_microseconds": 628.4300000000001,
+                "p90_microseconds": 683.7800000000001,
+                "repeats": 20,
+                "warmups": 5
+              },
+              "parallel_preselected_eager": {
+                "median_microseconds": 923.45,
+                "minimum_microseconds": 582.7,
+                "p10_microseconds": 603.27,
+                "p90_microseconds": 1020.87,
+                "repeats": 20,
+                "warmups": 5
+              },
+              "sequential_indexed_eager": {
+                "median_microseconds": 491.1,
+                "minimum_microseconds": 486.2,
+                "p10_microseconds": 487.49,
+                "p90_microseconds": 783.46,
+                "repeats": 20,
+                "warmups": 5
+              }
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "fused_speedup_vs_parallel_indexed_eager": 2.3169197729713145,
+            "fused_speedup_vs_parallel_indexed_triton_local": 2.308099401748734,
+            "fused_speedup_vs_parallel_preselected_eager": 2.2129160914250647,
+            "fused_speedup_vs_sequential_indexed_eager": 2.5621260929590424,
+            "max_abs_error_vs_parallel_preselected_eager": {
+              "fused_triton_recurrence": 2.1827872842550278e-11,
+              "parallel_indexed_eager": 0.0,
+              "parallel_indexed_triton_local": 1.4551915228366852e-11,
+              "parallel_preselected_eager": 0.0,
+              "sequential_indexed_eager": 2.1827872842550278e-11
+            },
+            "timings": {
+              "fused_triton_recurrence": {
+                "median_microseconds": 651.9000000000001,
+                "minimum_microseconds": 642.7,
+                "p10_microseconds": 646.93,
+                "p90_microseconds": 715.6400000000001,
+                "repeats": 10,
+                "warmups": 5
+              },
+              "parallel_indexed_eager": {
+                "median_microseconds": 1510.4,
+                "minimum_microseconds": 1427.9,
+                "p10_microseconds": 1452.47,
+                "p90_microseconds": 1706.62,
+                "repeats": 10,
+                "warmups": 5
+              },
+              "parallel_indexed_triton_local": {
+                "median_microseconds": 1504.65,
+                "minimum_microseconds": 1461.4,
+                "p10_microseconds": 1483.7200000000003,
+                "p90_microseconds": 1714.1000000000001,
+                "repeats": 10,
+                "warmups": 5
+              },
+              "parallel_preselected_eager": {
+                "median_microseconds": 1442.6,
+                "minimum_microseconds": 1421.6,
+                "p10_microseconds": 1422.0499999999997,
+                "p90_microseconds": 1689.0599999999997,
+                "repeats": 10,
+                "warmups": 5
+              },
+              "sequential_indexed_eager": {
+                "median_microseconds": 1670.25,
+                "minimum_microseconds": 1641.3,
+                "p10_microseconds": 1651.56,
+                "p90_microseconds": 1828.37,
+                "repeats": 10,
+                "warmups": 5
+              }
+            }
+          },
+          "primitive_sequence_length": 12
+        },
+        {
+          "batch_size": 1024,
+          "chunk_count": 16,
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "fused_speedup_vs_parallel_indexed_eager": 11.346441015430562,
+            "fused_speedup_vs_parallel_indexed_triton_local": 10.205077152812343,
+            "fused_speedup_vs_parallel_preselected_eager": 10.36436037829766,
+            "fused_speedup_vs_sequential_indexed_eager": 18.10851169736187,
+            "max_abs_error_vs_parallel_preselected_eager": {
+              "fused_triton_recurrence": 9.5367431640625e-07,
+              "parallel_indexed_eager": 0.0,
+              "parallel_indexed_triton_local": 2.384185791015625e-07,
+              "parallel_preselected_eager": 0.0,
+              "sequential_indexed_eager": 9.5367431640625e-07
+            },
+            "timings": {
+              "fused_triton_recurrence": {
+                "median_microseconds": 100.45,
+                "minimum_microseconds": 99.8,
+                "p10_microseconds": 99.89000000000001,
+                "p90_microseconds": 101.56,
+                "repeats": 20,
+                "warmups": 5
+              },
+              "parallel_indexed_eager": {
+                "median_microseconds": 1139.75,
+                "minimum_microseconds": 1125.8,
+                "p10_microseconds": 1130.21,
+                "p90_microseconds": 1383.96,
+                "repeats": 20,
+                "warmups": 5
+              },
+              "parallel_indexed_triton_local": {
+                "median_microseconds": 1025.1,
+                "minimum_microseconds": 1010.2,
+                "p10_microseconds": 1011.85,
+                "p90_microseconds": 1615.4,
+                "repeats": 20,
+                "warmups": 5
+              },
+              "parallel_preselected_eager": {
+                "median_microseconds": 1041.1,
+                "minimum_microseconds": 1024.2,
+                "p10_microseconds": 1026.3100000000002,
+                "p90_microseconds": 1696.01,
+                "repeats": 20,
+                "warmups": 5
+              },
+              "sequential_indexed_eager": {
+                "median_microseconds": 1819.0,
+                "minimum_microseconds": 1804.8,
+                "p10_microseconds": 1810.97,
+                "p90_microseconds": 1887.84,
+                "repeats": 20,
+                "warmups": 5
+              }
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "fused_speedup_vs_parallel_indexed_eager": 2.788533074559276,
+            "fused_speedup_vs_parallel_indexed_triton_local": 2.825408377810125,
+            "fused_speedup_vs_parallel_preselected_eager": 2.7471292252951645,
+            "fused_speedup_vs_sequential_indexed_eager": 8.726022966197638,
+            "max_abs_error_vs_parallel_preselected_eager": {
+              "fused_triton_recurrence": 2.1827872842550278e-11,
+              "parallel_indexed_eager": 0.0,
+              "parallel_indexed_triton_local": 1.4551915228366852e-11,
+              "parallel_preselected_eager": 0.0,
+              "sequential_indexed_eager": 1.4551915228366852e-11
+            },
+            "timings": {
+              "fused_triton_recurrence": {
+                "median_microseconds": 618.3,
+                "minimum_microseconds": 595.6,
+                "p10_microseconds": 596.86,
+                "p90_microseconds": 716.9399999999999,
+                "repeats": 10,
+                "warmups": 5
+              },
+              "parallel_indexed_eager": {
+                "median_microseconds": 1724.15,
+                "minimum_microseconds": 1692.3,
+                "p10_microseconds": 1698.96,
+                "p90_microseconds": 2053.8199999999997,
+                "repeats": 10,
+                "warmups": 5
+              },
+              "parallel_indexed_triton_local": {
+                "median_microseconds": 1746.95,
+                "minimum_microseconds": 1708.3,
+                "p10_microseconds": 1710.73,
+                "p90_microseconds": 1826.1999999999998,
+                "repeats": 10,
+                "warmups": 5
+              },
+              "parallel_preselected_eager": {
+                "median_microseconds": 1698.5500000000002,
+                "minimum_microseconds": 1635.4,
+                "p10_microseconds": 1635.76,
+                "p90_microseconds": 2378.73,
+                "repeats": 10,
+                "warmups": 5
+              },
+              "sequential_indexed_eager": {
+                "median_microseconds": 5395.299999999999,
+                "minimum_microseconds": 5284.5,
+                "p10_microseconds": 5317.08,
+                "p90_microseconds": 5624.389999999999,
+                "repeats": 10,
+                "warmups": 5
+              }
+            }
+          },
+          "primitive_sequence_length": 48
+        },
+        {
+          "batch_size": 1024,
+          "chunk_count": 64,
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "fused_speedup_vs_parallel_indexed_eager": 22.100355239786857,
+            "fused_speedup_vs_parallel_indexed_triton_local": 19.994079336885733,
+            "fused_speedup_vs_parallel_preselected_eager": 19.860568383658972,
+            "fused_speedup_vs_sequential_indexed_eager": 40.93339253996448,
+            "max_abs_error_vs_parallel_preselected_eager": {
+              "fused_triton_recurrence": 2.1457672119140625e-06,
+              "parallel_indexed_eager": 0.0,
+              "parallel_indexed_triton_local": 4.76837158203125e-07,
+              "parallel_preselected_eager": 0.0,
+              "sequential_indexed_eager": 2.384185791015625e-06
+            },
+            "timings": {
+              "fused_triton_recurrence": {
+                "median_microseconds": 168.89999999999998,
+                "minimum_microseconds": 166.9,
+                "p10_microseconds": 166.99,
+                "p90_microseconds": 180.84,
+                "repeats": 10,
+                "warmups": 5
+              },
+              "parallel_indexed_eager": {
+                "median_microseconds": 3732.75,
+                "minimum_microseconds": 3420.6,
+                "p10_microseconds": 3421.77,
+                "p90_microseconds": 4150.66,
+                "repeats": 10,
+                "warmups": 5
+              },
+              "parallel_indexed_triton_local": {
+                "median_microseconds": 3377.0,
+                "minimum_microseconds": 3008.8,
+                "p10_microseconds": 3010.42,
+                "p90_microseconds": 3876.24,
+                "repeats": 10,
+                "warmups": 5
+              },
+              "parallel_preselected_eager": {
+                "median_microseconds": 3354.45,
+                "minimum_microseconds": 3045.3,
+                "p10_microseconds": 3046.29,
+                "p90_microseconds": 3851.53,
+                "repeats": 10,
+                "warmups": 5
+              },
+              "sequential_indexed_eager": {
+                "median_microseconds": 6913.65,
+                "minimum_microseconds": 6815.5,
+                "p10_microseconds": 6816.400000000001,
+                "p90_microseconds": 7099.79,
+                "repeats": 10,
+                "warmups": 5
+              }
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "fused_speedup_vs_parallel_indexed_eager": 6.647995102540557,
+            "fused_speedup_vs_parallel_indexed_triton_local": 5.721227425772881,
+            "fused_speedup_vs_parallel_preselected_eager": 6.437633914906643,
+            "fused_speedup_vs_sequential_indexed_eager": 30.783670033670035,
+            "max_abs_error_vs_parallel_preselected_eager": {
+              "fused_triton_recurrence": 1.4551915228366852e-11,
+              "parallel_indexed_eager": 0.0,
+              "parallel_indexed_triton_local": 5.4569682106375694e-12,
+              "parallel_preselected_eager": 0.0,
+              "sequential_indexed_eager": 1.9099388737231493e-11
+            },
+            "timings": {
+              "fused_triton_recurrence": {
+                "median_microseconds": 653.4,
+                "minimum_microseconds": 646.7,
+                "p10_microseconds": 647.2399999999999,
+                "p90_microseconds": 692.3900000000001,
+                "repeats": 10,
+                "warmups": 5
+              },
+              "parallel_indexed_eager": {
+                "median_microseconds": 4343.8,
+                "minimum_microseconds": 3872.2,
+                "p10_microseconds": 3917.92,
+                "p90_microseconds": 4603.0,
+                "repeats": 10,
+                "warmups": 5
+              },
+              "parallel_indexed_triton_local": {
+                "median_microseconds": 3738.25,
+                "minimum_microseconds": 3343.8,
+                "p10_microseconds": 3350.46,
+                "p90_microseconds": 4101.76,
+                "repeats": 10,
+                "warmups": 5
+              },
+              "parallel_preselected_eager": {
+                "median_microseconds": 4206.35,
+                "minimum_microseconds": 3529.3,
+                "p10_microseconds": 3587.89,
+                "p90_microseconds": 4298.51,
+                "repeats": 10,
+                "warmups": 5
+              },
+              "sequential_indexed_eager": {
+                "median_microseconds": 20114.05,
+                "minimum_microseconds": 19778.3,
+                "p10_microseconds": 19783.699999999997,
+                "p90_microseconds": 22758.899999999998,
+                "repeats": 10,
+                "warmups": 5
+              }
+            }
+          },
+          "primitive_sequence_length": 192
+        }
+      ],
+      "view": "negative_half_spin"
+    }
+  ],
+  "schema_version": 1,
+  "settings": {
+    "backward_scope": "gradient with respect to initial state",
+    "batch_sizes": [
+      1,
+      64,
+      1024
+    ],
+    "chunk_counts": [
+      4,
+      16,
+      64
+    ],
+    "cuda_synchronized_each_complete_call": true,
+    "device": "cuda",
+    "dtype": "float32",
+    "forward_parity_tolerance_max_abs": 0.0001,
+    "index_dtype": "int64",
+    "initial_gradient_parity_tolerance_max_abs": 5e-05,
+    "primitive_lengths": [
+      12,
+      48,
+      192
+    ],
+    "seed": 20260818,
+    "torch_cpu_threads": 1,
+    "torch_interop_threads": 1,
+    "variants": [
+      "parallel_preselected_eager",
+      "parallel_indexed_eager",
+      "parallel_indexed_triton_local",
+      "sequential_indexed_eager",
+      "fused_triton_recurrence"
+    ]
+  },
+  "system": {
+    "cuda_device": {
+      "compute_capability": [
+        7,
+        5
+      ],
+      "name": "NVIDIA GeForce RTX 2070 SUPER",
+      "total_memory_bytes": 8589606912
+    },
+    "platform": "Windows-11-10.0.22631-SP0",
+    "processor": "Intel64 Family 6 Model 158 Stepping 13, GenuineIntel",
+    "python": "3.12.10",
+    "torch": "2.12.0+cu130",
+    "torch_cuda": "13.0",
+    "triton": "3.7.1.post27"
+  }
+}

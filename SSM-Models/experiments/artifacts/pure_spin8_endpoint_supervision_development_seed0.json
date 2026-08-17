@@ -1,0 +1,929 @@
+{
+  "candidates": [
+    "shared_pure_spin8",
+    "independent_so8_triplet",
+    "mamba2_parameter_near",
+    "gru_parameter_near",
+    "observation_only_ablation",
+    "gru_state_matched"
+  ],
+  "claim_scope": {
+    "empirical": [
+      "endpoint-only synthetic group-action credit assignment",
+      "no intermediate prefix targets retained in training batches"
+    ],
+    "not_claimed": [
+      "a frozen or replicated result before an explicit protocol",
+      "natural-data, unsigned-state, or sparse input supervision",
+      "all-28-coordinate Spin8 action identification",
+      "fused-Mamba or language-model superiority"
+    ]
+  },
+  "config": {
+    "batch_size": 32,
+    "evaluation_lengths": [
+      16,
+      64,
+      128
+    ],
+    "evaluation_microbatch_size": 32,
+    "evaluation_pairs": 64,
+    "gradient_clip": 1.0,
+    "half_center_delta": 0.25,
+    "half_center_probability": 0.12,
+    "learning_rate": 0.003,
+    "observation_noise_std": 0.01,
+    "regular_coordinate_std": 0.4,
+    "seed": 0,
+    "steps": 2000,
+    "training_length": 16,
+    "weight_decay": 0.0001
+  },
+  "development_started_at": "2026-08-17T04:54:00+02:00",
+  "development_timestamp_corrected_at": "2026-08-17T05:01:31+02:00",
+  "environment": {
+    "device": "cuda",
+    "device_name": "NVIDIA GeForce RTX 2070 SUPER",
+    "mamba2_backend": "huggingface_transformers_naive_fallback",
+    "platform": "Windows-11-10.0.22631-SP0",
+    "python": "3.12.10",
+    "torch": "2.12.0+cu130",
+    "torch_cpu_threads": 1,
+    "torch_interop_threads": 1,
+    "transformers": "5.9.0"
+  },
+  "experiment": "endpoint-only noisy continuous-observation Pure Spin8 identification",
+  "integrity": {
+    "all_metrics_finite": true,
+    "candidate_initialized_after_seed": true,
+    "parameter_counts": {
+      "gru_parameter_near": 960,
+      "gru_state_matched": 3312,
+      "independent_so8_triplet": 957,
+      "mamba2_parameter_near": 931,
+      "observation_only_ablation": 949,
+      "shared_pure_spin8": 930
+    },
+    "recurrent_state_scalars": {
+      "gru_parameter_near": 10,
+      "gru_state_matched": 24,
+      "independent_so8_triplet": 24,
+      "mamba2_parameter_near": 160,
+      "observation_only_ablation": 0,
+      "shared_pure_spin8": 24
+    },
+    "same_precomputed_schedule_for_every_candidate": true
+  },
+  "passed": true,
+  "pure_spin8_version": "1.1.0",
+  "recorded_at": "2026-08-17T05:00:45.194288+02:00",
+  "results": {
+    "gru_parameter_near": {
+      "checkpoint": "checkpoints\\pure_spin8_endpoint_supervision_development\\gru_parameter_near_endpoint_seed0_step2000.pt",
+      "checkpoint_sha256": "9d17e3e80a6c33443ae0d7336bc8d3f91ca2ab132f7138101b7a2f24c69e9bec",
+      "evaluation": {
+        "early_L128": {
+          "all_prefix_mse": 0.12843494613965353,
+          "center_classification_accuracy": 0.5078125,
+          "center_rows_correct": 0.515625,
+          "final_mse": 0.13137848178545633,
+          "identity_rows_correct": 0.5,
+          "post_relation_mse": 0.1284443412240096,
+          "predicted_spinor_negation_rmse": 0.07577967543785062,
+          "predicted_vector_pair_rmse": 9.26569300581002e-05,
+          "teacher_spinor_negation_max_abs": 2.980232238769531e-07,
+          "teacher_vector_pair_max_abs": 1.7881393432617188e-07
+        },
+        "early_L16": {
+          "all_prefix_mse": 0.11600947380065918,
+          "center_classification_accuracy": 0.5625,
+          "center_rows_correct": 0.625,
+          "final_mse": 0.121002991994222,
+          "identity_rows_correct": 0.5,
+          "post_relation_mse": 0.11526550716824002,
+          "predicted_spinor_negation_rmse": 0.07651125058723117,
+          "predicted_vector_pair_rmse": 0.014821099894333683,
+          "teacher_spinor_negation_max_abs": 2.980232238769531e-07,
+          "teacher_vector_pair_max_abs": 1.7881393432617188e-07
+        },
+        "early_L64": {
+          "all_prefix_mse": 0.12414845824241638,
+          "center_classification_accuracy": 0.5078125,
+          "center_rows_correct": 0.5625,
+          "final_mse": 0.13083457946777344,
+          "identity_rows_correct": 0.453125,
+          "post_relation_mse": 0.12410226448503121,
+          "predicted_spinor_negation_rmse": 0.08203466726178889,
+          "predicted_vector_pair_rmse": 0.0011943604836881323,
+          "teacher_spinor_negation_max_abs": 2.980232238769531e-07,
+          "teacher_vector_pair_max_abs": 1.4901161193847656e-07
+        },
+        "late_L128": {
+          "all_prefix_mse": 0.12965316573778787,
+          "center_classification_accuracy": 0.4921875,
+          "center_rows_correct": 0.5,
+          "final_mse": 0.1309376358985901,
+          "identity_rows_correct": 0.484375,
+          "post_relation_mse": 0.1309376358985901,
+          "predicted_spinor_negation_rmse": 0.092426948005061,
+          "predicted_vector_pair_rmse": 0.021416093682209057,
+          "teacher_spinor_negation_max_abs": 1.2386590242385864e-07,
+          "teacher_vector_pair_max_abs": 1.7881393432617188e-07
+        },
+        "late_L16": {
+          "all_prefix_mse": 0.11814163128534953,
+          "center_classification_accuracy": 0.5546875,
+          "center_rows_correct": 0.5,
+          "final_mse": 0.12109255790710449,
+          "identity_rows_correct": 0.609375,
+          "post_relation_mse": 0.12109255790710449,
+          "predicted_spinor_negation_rmse": 0.07925491126998514,
+          "predicted_vector_pair_rmse": 0.02325242452211709,
+          "teacher_spinor_negation_max_abs": 1.7881393432617188e-07,
+          "teacher_vector_pair_max_abs": 2.384185791015625e-07
+        },
+        "late_L64": {
+          "all_prefix_mse": 0.12558794021606445,
+          "center_classification_accuracy": 0.484375,
+          "center_rows_correct": 0.484375,
+          "final_mse": 0.13078643878300986,
+          "identity_rows_correct": 0.484375,
+          "post_relation_mse": 0.13078643878300986,
+          "predicted_spinor_negation_rmse": 0.09164217331335239,
+          "predicted_vector_pair_rmse": 0.022065815530751792,
+          "teacher_spinor_negation_max_abs": 1.7881393432617188e-07,
+          "teacher_vector_pair_max_abs": 2.384185791015625e-07
+        }
+      },
+      "final_training_loss": 0.12113012373447418,
+      "last_preclip_gradient_norm": 0.018349695950746536,
+      "loss_samples": {
+        "1": 0.1383013129234314,
+        "100": 0.11986316740512848,
+        "1000": 0.11988407373428345,
+        "1100": 0.12176322937011719,
+        "1200": 0.12012726068496704,
+        "1300": 0.12248414754867554,
+        "1400": 0.12153144925832748,
+        "1500": 0.11941206455230713,
+        "1600": 0.1232881173491478,
+        "1700": 0.12300215661525726,
+        "1800": 0.12184540927410126,
+        "1900": 0.12319251149892807,
+        "200": 0.1199493259191513,
+        "2000": 0.12113012373447418,
+        "300": 0.12167426943778992,
+        "400": 0.12251576036214828,
+        "500": 0.12119301408529282,
+        "600": 0.12033849954605103,
+        "700": 0.12078820914030075,
+        "800": 0.12136679887771606,
+        "900": 0.1201966255903244
+      },
+      "parameters": 960,
+      "peak_cuda_memory_bytes": 26195968,
+      "recurrent_state_scalars": 10,
+      "training_tokens_per_second": 198982.7396075078,
+      "training_wall_seconds": 5.146175000001676
+    },
+    "gru_state_matched": {
+      "checkpoint": "checkpoints\\pure_spin8_endpoint_supervision_development\\gru_state_matched_endpoint_seed0_step2000.pt",
+      "checkpoint_sha256": "a4c4e6404f5629aa5cf932eb7548e890e4569b3d9130e444af0ab8ef188b0145",
+      "evaluation": {
+        "early_L128": {
+          "all_prefix_mse": 0.1294339100519816,
+          "center_classification_accuracy": 0.484375,
+          "center_rows_correct": 0.28125,
+          "final_mse": 0.131966233253479,
+          "identity_rows_correct": 0.6875,
+          "post_relation_mse": 0.12944673553226502,
+          "predicted_spinor_negation_rmse": 0.12849781324561307,
+          "predicted_vector_pair_rmse": 0.013330021162051104,
+          "teacher_spinor_negation_max_abs": 2.980232238769531e-07,
+          "teacher_vector_pair_max_abs": 1.7881393432617188e-07
+        },
+        "early_L16": {
+          "all_prefix_mse": 0.11941395203272502,
+          "center_classification_accuracy": 0.7421875,
+          "center_rows_correct": 0.796875,
+          "final_mse": 0.1160438855489095,
+          "identity_rows_correct": 0.6875,
+          "post_relation_mse": 0.11885084576076932,
+          "predicted_spinor_negation_rmse": 0.08027459385078463,
+          "predicted_vector_pair_rmse": 0.058596440094548466,
+          "teacher_spinor_negation_max_abs": 2.980232238769531e-07,
+          "teacher_vector_pair_max_abs": 1.7881393432617188e-07
+        },
+        "early_L64": {
+          "all_prefix_mse": 0.12564079960187277,
+          "center_classification_accuracy": 0.546875,
+          "center_rows_correct": 0.515625,
+          "final_mse": 0.13065668940544128,
+          "identity_rows_correct": 0.578125,
+          "post_relation_mse": 0.1256086056825345,
+          "predicted_spinor_negation_rmse": 0.10933436337067338,
+          "predicted_vector_pair_rmse": 0.03502763627250179,
+          "teacher_spinor_negation_max_abs": 2.980232238769531e-07,
+          "teacher_vector_pair_max_abs": 1.4901161193847656e-07
+        },
+        "late_L128": {
+          "all_prefix_mse": 0.12969561417897543,
+          "center_classification_accuracy": 0.4765625,
+          "center_rows_correct": 0.453125,
+          "final_mse": 0.13335402806599936,
+          "identity_rows_correct": 0.5,
+          "post_relation_mse": 0.13335402806599936,
+          "predicted_spinor_negation_rmse": 0.08590938368265072,
+          "predicted_vector_pair_rmse": 0.07811967116301946,
+          "teacher_spinor_negation_max_abs": 1.2386590242385864e-07,
+          "teacher_vector_pair_max_abs": 1.7881393432617188e-07
+        },
+        "late_L16": {
+          "all_prefix_mse": 0.1179977258046468,
+          "center_classification_accuracy": 0.7265625,
+          "center_rows_correct": 0.59375,
+          "final_mse": 0.11849348743756612,
+          "identity_rows_correct": 0.859375,
+          "post_relation_mse": 0.11849348743756612,
+          "predicted_spinor_negation_rmse": 0.0763852481022585,
+          "predicted_vector_pair_rmse": 0.07376936335061024,
+          "teacher_spinor_negation_max_abs": 1.7881393432617188e-07,
+          "teacher_vector_pair_max_abs": 2.384185791015625e-07
+        },
+        "late_L64": {
+          "all_prefix_mse": 0.12625755866368613,
+          "center_classification_accuracy": 0.4296875,
+          "center_rows_correct": 0.40625,
+          "final_mse": 0.1316045025984446,
+          "identity_rows_correct": 0.453125,
+          "post_relation_mse": 0.1316045025984446,
+          "predicted_spinor_negation_rmse": 0.08689960616681525,
+          "predicted_vector_pair_rmse": 0.07241548323279325,
+          "teacher_spinor_negation_max_abs": 1.7881393432617188e-07,
+          "teacher_vector_pair_max_abs": 2.384185791015625e-07
+        }
+      },
+      "final_training_loss": 0.1178005263209343,
+      "last_preclip_gradient_norm": 0.03189017251133919,
+      "loss_samples": {
+        "1": 0.1285763680934906,
+        "100": 0.11925208568572998,
+        "1000": 0.12044065445661545,
+        "1100": 0.1202133297920227,
+        "1200": 0.11708974838256836,
+        "1300": 0.12420663237571716,
+        "1400": 0.12182625383138657,
+        "1500": 0.11687858402729034,
+        "1600": 0.11943374574184418,
+        "1700": 0.11948954313993454,
+        "1800": 0.11888252943754196,
+        "1900": 0.11965857446193695,
+        "200": 0.12030705064535141,
+        "2000": 0.1178005263209343,
+        "300": 0.1224377453327179,
+        "400": 0.12288888543844223,
+        "500": 0.12006615102291107,
+        "600": 0.11957110464572906,
+        "700": 0.12208795547485352,
+        "800": 0.12106069922447205,
+        "900": 0.12043892592191696
+      },
+      "parameters": 3312,
+      "peak_cuda_memory_bytes": 27018752,
+      "recurrent_state_scalars": 24,
+      "training_tokens_per_second": 199048.57115727573,
+      "training_wall_seconds": 5.144472999963909
+    },
+    "independent_so8_triplet": {
+      "action_identification": {
+        "action_rmse": 0.06972513269992682,
+        "relation_action_residuals": {
+          "early_L128": {
+            "center_spinor_minus_identity_rmse": 0.023563595488667488,
+            "center_vector_identity_rmse": 0.04383338615298271,
+            "identity_pair_rmse": 0.035831209272146225
+          },
+          "early_L16": {
+            "center_spinor_minus_identity_rmse": 0.02263474278151989,
+            "center_vector_identity_rmse": 0.04303028807044029,
+            "identity_pair_rmse": 0.03559112176299095
+          },
+          "early_L64": {
+            "center_spinor_minus_identity_rmse": 0.023526092991232872,
+            "center_vector_identity_rmse": 0.04053743928670883,
+            "identity_pair_rmse": 0.03422475978732109
+          },
+          "late_L128": {
+            "center_spinor_minus_identity_rmse": 0.023992188274860382,
+            "center_vector_identity_rmse": 0.043308764696121216,
+            "identity_pair_rmse": 0.03513399511575699
+          },
+          "late_L16": {
+            "center_spinor_minus_identity_rmse": 0.023094557225704193,
+            "center_vector_identity_rmse": 0.04146464169025421,
+            "identity_pair_rmse": 0.03391679376363754
+          },
+          "late_L64": {
+            "center_spinor_minus_identity_rmse": 0.023014523088932037,
+            "center_vector_identity_rmse": 0.04163758456707001,
+            "identity_pair_rmse": 0.03534846380352974
+          }
+        }
+      },
+      "checkpoint": "checkpoints\\pure_spin8_endpoint_supervision_development\\independent_so8_triplet_endpoint_seed0_step2000.pt",
+      "checkpoint_sha256": "0dc7c8109e7d7927a4f39bde5cc70473b7299e77b6c06e605f99f976e01698c0",
+      "evaluation": {
+        "early_L128": {
+          "all_prefix_mse": 0.052183697621027626,
+          "center_classification_accuracy": 1.0,
+          "center_rows_correct": 1.0,
+          "final_mse": 0.0943998396396637,
+          "identity_rows_correct": 1.0,
+          "post_relation_mse": 0.052559795029207164,
+          "predicted_spinor_negation_rmse": 0.029979842448138578,
+          "predicted_vector_pair_rmse": 0.03640367339444697,
+          "teacher_spinor_negation_max_abs": 2.980232238769531e-07,
+          "teacher_vector_pair_max_abs": 1.7881393432617188e-07
+        },
+        "early_L16": {
+          "all_prefix_mse": 0.009828158964713415,
+          "center_classification_accuracy": 1.0,
+          "center_rows_correct": 1.0,
+          "final_mse": 0.01625644912322362,
+          "identity_rows_correct": 1.0,
+          "post_relation_mse": 0.010197958019044663,
+          "predicted_spinor_negation_rmse": 0.028368648641328646,
+          "predicted_vector_pair_rmse": 0.03437874764094972,
+          "teacher_spinor_negation_max_abs": 2.980232238769531e-07,
+          "teacher_vector_pair_max_abs": 1.7881393432617188e-07
+        },
+        "early_L64": {
+          "all_prefix_mse": 0.029266059398651123,
+          "center_classification_accuracy": 1.0,
+          "center_rows_correct": 1.0,
+          "final_mse": 0.05007692674795786,
+          "identity_rows_correct": 1.0,
+          "post_relation_mse": 0.02966905018639943,
+          "predicted_spinor_negation_rmse": 0.02967853693176635,
+          "predicted_vector_pair_rmse": 0.033121974031996924,
+          "teacher_spinor_negation_max_abs": 2.980232238769531e-07,
+          "teacher_vector_pair_max_abs": 1.4901161193847656e-07
+        },
+        "late_L128": {
+          "all_prefix_mse": 0.054528032739957176,
+          "center_classification_accuracy": 1.0,
+          "center_rows_correct": 1.0,
+          "final_mse": 0.09986089666684468,
+          "identity_rows_correct": 1.0,
+          "post_relation_mse": 0.09986089666684468,
+          "predicted_spinor_negation_rmse": 0.03331353259454415,
+          "predicted_vector_pair_rmse": 0.056562674256051076,
+          "teacher_spinor_negation_max_abs": 1.2386590242385864e-07,
+          "teacher_vector_pair_max_abs": 1.7881393432617188e-07
+        },
+        "late_L16": {
+          "all_prefix_mse": 0.010110831509033838,
+          "center_classification_accuracy": 1.0,
+          "center_rows_correct": 1.0,
+          "final_mse": 0.014756971349318823,
+          "identity_rows_correct": 1.0,
+          "post_relation_mse": 0.014756971349318823,
+          "predicted_spinor_negation_rmse": 0.03164944319820949,
+          "predicted_vector_pair_rmse": 0.05680618056094118,
+          "teacher_spinor_negation_max_abs": 1.7881393432617188e-07,
+          "teacher_vector_pair_max_abs": 2.384185791015625e-07
+        },
+        "late_L64": {
+          "all_prefix_mse": 0.02932146688302358,
+          "center_classification_accuracy": 1.0,
+          "center_rows_correct": 1.0,
+          "final_mse": 0.052361875772476196,
+          "identity_rows_correct": 1.0,
+          "post_relation_mse": 0.052361875772476196,
+          "predicted_spinor_negation_rmse": 0.03278809857741032,
+          "predicted_vector_pair_rmse": 0.06120173800827315,
+          "teacher_spinor_negation_max_abs": 1.7881393432617188e-07,
+          "teacher_vector_pair_max_abs": 2.384185791015625e-07
+        }
+      },
+      "final_training_loss": 0.015903159976005554,
+      "last_preclip_gradient_norm": 0.12404192984104156,
+      "loss_samples": {
+        "1": 0.25454074144363403,
+        "100": 0.19434517621994019,
+        "1000": 0.07414329051971436,
+        "1100": 0.04850953072309494,
+        "1200": 0.03132989630103111,
+        "1300": 0.0288726594299078,
+        "1400": 0.024742018431425095,
+        "1500": 0.021883364766836166,
+        "1600": 0.020093299448490143,
+        "1700": 0.02207101508975029,
+        "1800": 0.016782637685537338,
+        "1900": 0.01751631498336792,
+        "200": 0.19181609153747559,
+        "2000": 0.015903159976005554,
+        "300": 0.20905199646949768,
+        "400": 0.2072593867778778,
+        "500": 0.18951347470283508,
+        "600": 0.1668909788131714,
+        "700": 0.16996274888515472,
+        "800": 0.14511916041374207,
+        "900": 0.11213277280330658
+      },
+      "parameters": 957,
+      "peak_cuda_memory_bytes": 44147712,
+      "recurrent_state_scalars": 24,
+      "training_tokens_per_second": 26032.219315176175,
+      "training_wall_seconds": 39.33587020001141
+    },
+    "mamba2_parameter_near": {
+      "checkpoint": "checkpoints\\pure_spin8_endpoint_supervision_development\\mamba2_parameter_near_endpoint_seed0_step2000.pt",
+      "checkpoint_sha256": "492407189f0ebca5f2d0391b822d4c5face636a78df2c3e62272408586a415ae",
+      "evaluation": {
+        "early_L128": {
+          "all_prefix_mse": 0.12671122948328653,
+          "center_classification_accuracy": 0.5,
+          "center_rows_correct": 0.546875,
+          "final_mse": 0.1286811629931132,
+          "identity_rows_correct": 0.453125,
+          "post_relation_mse": 0.12673879107778155,
+          "predicted_spinor_negation_rmse": 0.062422469599378125,
+          "predicted_vector_pair_rmse": 2.6897626839573693e-05,
+          "teacher_spinor_negation_max_abs": 2.980232238769531e-07,
+          "teacher_vector_pair_max_abs": 1.7881393432617188e-07
+        },
+        "early_L16": {
+          "all_prefix_mse": 0.11664036909739177,
+          "center_classification_accuracy": 0.4921875,
+          "center_rows_correct": 0.578125,
+          "final_mse": 0.1208467185497284,
+          "identity_rows_correct": 0.40625,
+          "post_relation_mse": 0.11621184878879123,
+          "predicted_spinor_negation_rmse": 0.062264015561055756,
+          "predicted_vector_pair_rmse": 0.003621423484455115,
+          "teacher_spinor_negation_max_abs": 2.980232238769531e-07,
+          "teacher_vector_pair_max_abs": 1.7881393432617188e-07
+        },
+        "early_L64": {
+          "all_prefix_mse": 0.12338437636693318,
+          "center_classification_accuracy": 0.5,
+          "center_rows_correct": 0.546875,
+          "final_mse": 0.12860905130704245,
+          "identity_rows_correct": 0.453125,
+          "post_relation_mse": 0.12339046014049065,
+          "predicted_spinor_negation_rmse": 0.06195984006967296,
+          "predicted_vector_pair_rmse": 0.0002820487634062425,
+          "teacher_spinor_negation_max_abs": 2.980232238769531e-07,
+          "teacher_vector_pair_max_abs": 1.4901161193847656e-07
+        },
+        "late_L128": {
+          "all_prefix_mse": 0.127584179242452,
+          "center_classification_accuracy": 0.515625,
+          "center_rows_correct": 0.5625,
+          "final_mse": 0.1277329921722412,
+          "identity_rows_correct": 0.46875,
+          "post_relation_mse": 0.1277329921722412,
+          "predicted_spinor_negation_rmse": 0.06269760855513846,
+          "predicted_vector_pair_rmse": 0.017973771086971586,
+          "teacher_spinor_negation_max_abs": 1.2386590242385864e-07,
+          "teacher_vector_pair_max_abs": 1.7881393432617188e-07
+        },
+        "late_L16": {
+          "all_prefix_mse": 0.1183789074420929,
+          "center_classification_accuracy": 0.4765625,
+          "center_rows_correct": 0.484375,
+          "final_mse": 0.12121695280075073,
+          "identity_rows_correct": 0.46875,
+          "post_relation_mse": 0.12121695280075073,
+          "predicted_spinor_negation_rmse": 0.06229117270832519,
+          "predicted_vector_pair_rmse": 0.019823670320958244,
+          "teacher_spinor_negation_max_abs": 1.7881393432617188e-07,
+          "teacher_vector_pair_max_abs": 2.384185791015625e-07
+        },
+        "late_L64": {
+          "all_prefix_mse": 0.12472796440124512,
+          "center_classification_accuracy": 0.5078125,
+          "center_rows_correct": 0.59375,
+          "final_mse": 0.12727736433347067,
+          "identity_rows_correct": 0.421875,
+          "post_relation_mse": 0.12727736433347067,
+          "predicted_spinor_negation_rmse": 0.06250781517043107,
+          "predicted_vector_pair_rmse": 0.018125821371931406,
+          "teacher_spinor_negation_max_abs": 1.7881393432617188e-07,
+          "teacher_vector_pair_max_abs": 2.384185791015625e-07
+        }
+      },
+      "final_training_loss": 0.12295810878276825,
+      "last_preclip_gradient_norm": 0.05489451065659523,
+      "loss_samples": {
+        "1": 0.37251514196395874,
+        "100": 0.11991365998983383,
+        "1000": 0.12113308161497116,
+        "1100": 0.12226888537406921,
+        "1200": 0.12194788455963135,
+        "1300": 0.1231602281332016,
+        "1400": 0.12290182709693909,
+        "1500": 0.12144696712493896,
+        "1600": 0.12400363385677338,
+        "1700": 0.12100648880004883,
+        "1800": 0.12272092700004578,
+        "1900": 0.1249963641166687,
+        "200": 0.1210809201002121,
+        "2000": 0.12295810878276825,
+        "300": 0.12210933864116669,
+        "400": 0.12239325046539307,
+        "500": 0.12134509533643723,
+        "600": 0.1216561421751976,
+        "700": 0.12142422050237656,
+        "800": 0.12411539256572723,
+        "900": 0.12086528539657593
+      },
+      "parameters": 931,
+      "peak_cuda_memory_bytes": 322485760,
+      "recurrent_state_scalars": 160,
+      "training_tokens_per_second": 46973.0918084642,
+      "training_wall_seconds": 21.799714699969627
+    },
+    "observation_only_ablation": {
+      "checkpoint": "checkpoints\\pure_spin8_endpoint_supervision_development\\observation_only_ablation_endpoint_seed0_step2000.pt",
+      "checkpoint_sha256": "b55dc954145668054818e0af655f9eb208e85ee9d0a8023f03c30a125645ea3e",
+      "evaluation": {
+        "early_L128": {
+          "all_prefix_mse": 0.12667215863863626,
+          "center_classification_accuracy": 0.5,
+          "center_rows_correct": 0.515625,
+          "final_mse": 0.1289170483748118,
+          "identity_rows_correct": 0.484375,
+          "post_relation_mse": 0.12674980463944083,
+          "predicted_spinor_negation_rmse": 0.0436235089402485,
+          "predicted_vector_pair_rmse": 0.0,
+          "teacher_spinor_negation_max_abs": 2.980232238769531e-07,
+          "teacher_vector_pair_max_abs": 1.7881393432617188e-07
+        },
+        "early_L16": {
+          "all_prefix_mse": 0.11555762092272441,
+          "center_classification_accuracy": 0.5,
+          "center_rows_correct": 0.640625,
+          "final_mse": 0.12031612793604533,
+          "identity_rows_correct": 0.359375,
+          "post_relation_mse": 0.1154737048678928,
+          "predicted_spinor_negation_rmse": 0.04224828181594507,
+          "predicted_vector_pair_rmse": 0.0,
+          "teacher_spinor_negation_max_abs": 2.980232238769531e-07,
+          "teacher_vector_pair_max_abs": 1.7881393432617188e-07
+        },
+        "early_L64": {
+          "all_prefix_mse": 0.12309659520785014,
+          "center_classification_accuracy": 0.5,
+          "center_rows_correct": 0.515625,
+          "final_mse": 0.12855441371599832,
+          "identity_rows_correct": 0.484375,
+          "post_relation_mse": 0.1231973234307829,
+          "predicted_spinor_negation_rmse": 0.04379125320142478,
+          "predicted_vector_pair_rmse": 0.0,
+          "teacher_spinor_negation_max_abs": 2.980232238769531e-07,
+          "teacher_vector_pair_max_abs": 1.4901161193847656e-07
+        },
+        "late_L128": {
+          "all_prefix_mse": 0.1275552213191986,
+          "center_classification_accuracy": 0.4453125,
+          "center_rows_correct": 0.515625,
+          "final_mse": 0.12795127431551614,
+          "identity_rows_correct": 0.375,
+          "post_relation_mse": 0.12795127431551614,
+          "predicted_spinor_negation_rmse": 0.042619055740690075,
+          "predicted_vector_pair_rmse": 0.010772403504794586,
+          "teacher_spinor_negation_max_abs": 1.2386590242385864e-07,
+          "teacher_vector_pair_max_abs": 1.7881393432617188e-07
+        },
+        "late_L16": {
+          "all_prefix_mse": 0.11785739660263062,
+          "center_classification_accuracy": 0.5546875,
+          "center_rows_correct": 0.515625,
+          "final_mse": 0.12054479122161865,
+          "identity_rows_correct": 0.59375,
+          "post_relation_mse": 0.12054479122161865,
+          "predicted_spinor_negation_rmse": 0.04262986713949449,
+          "predicted_vector_pair_rmse": 0.010670805074475001,
+          "teacher_spinor_negation_max_abs": 1.7881393432617188e-07,
+          "teacher_vector_pair_max_abs": 2.384185791015625e-07
+        },
+        "late_L64": {
+          "all_prefix_mse": 0.1244150201479594,
+          "center_classification_accuracy": 0.484375,
+          "center_rows_correct": 0.5,
+          "final_mse": 0.12762677669525146,
+          "identity_rows_correct": 0.46875,
+          "post_relation_mse": 0.12762677669525146,
+          "predicted_spinor_negation_rmse": 0.04253589231896601,
+          "predicted_vector_pair_rmse": 0.010963375898371921,
+          "teacher_spinor_negation_max_abs": 1.7881393432617188e-07,
+          "teacher_vector_pair_max_abs": 2.384185791015625e-07
+        }
+      },
+      "final_training_loss": 0.1229318231344223,
+      "last_preclip_gradient_norm": 0.02362506277859211,
+      "loss_samples": {
+        "1": 0.13562878966331482,
+        "100": 0.1188376247882843,
+        "1000": 0.12030041217803955,
+        "1100": 0.12187713384628296,
+        "1200": 0.12089630216360092,
+        "1300": 0.12297986447811127,
+        "1400": 0.12224781513214111,
+        "1500": 0.12060167640447617,
+        "1600": 0.12348158657550812,
+        "1700": 0.12129601091146469,
+        "1800": 0.12220847606658936,
+        "1900": 0.12442737817764282,
+        "200": 0.11999407410621643,
+        "2000": 0.1229318231344223,
+        "300": 0.12185858190059662,
+        "400": 0.12329640984535217,
+        "500": 0.12043780088424683,
+        "600": 0.12122662365436554,
+        "700": 0.12092389911413193,
+        "800": 0.12206827104091644,
+        "900": 0.1203654333949089
+      },
+      "parameters": 949,
+      "peak_cuda_memory_bytes": 17341440,
+      "recurrent_state_scalars": 0,
+      "training_tokens_per_second": 258727.48574721074,
+      "training_wall_seconds": 3.957832300045993
+    },
+    "shared_pure_spin8": {
+      "action_identification": {
+        "action_rmse": 0.011170264236310144,
+        "relation_action_residuals": {
+          "early_L128": {
+            "center_spinor_minus_identity_rmse": 0.015592393465340137,
+            "center_vector_identity_rmse": 0.015588401816785336,
+            "identity_pair_rmse": 0.014604579657316208
+          },
+          "early_L16": {
+            "center_spinor_minus_identity_rmse": 0.014905408956110477,
+            "center_vector_identity_rmse": 0.014902254566550255,
+            "identity_pair_rmse": 0.014499178156256676
+          },
+          "early_L64": {
+            "center_spinor_minus_identity_rmse": 0.015213796868920326,
+            "center_vector_identity_rmse": 0.01521025039255619,
+            "identity_pair_rmse": 0.014291888102889061
+          },
+          "late_L128": {
+            "center_spinor_minus_identity_rmse": 0.015144865028560162,
+            "center_vector_identity_rmse": 0.015141207724809647,
+            "identity_pair_rmse": 0.014936811290681362
+          },
+          "late_L16": {
+            "center_spinor_minus_identity_rmse": 0.015164702199399471,
+            "center_vector_identity_rmse": 0.015161273069679737,
+            "identity_pair_rmse": 0.013959457166492939
+          },
+          "late_L64": {
+            "center_spinor_minus_identity_rmse": 0.015346146188676357,
+            "center_vector_identity_rmse": 0.015342561528086662,
+            "identity_pair_rmse": 0.015165453776717186
+          }
+        }
+      },
+      "checkpoint": "checkpoints\\pure_spin8_endpoint_supervision_development\\shared_pure_spin8_endpoint_seed0_step2000.pt",
+      "checkpoint_sha256": "5d39bb3eb2c3094f076313f185bd682b4cd4f1d80f3eccd5caad2567e851a606",
+      "evaluation": {
+        "early_L128": {
+          "all_prefix_mse": 0.007942639912168184,
+          "center_classification_accuracy": 1.0,
+          "center_rows_correct": 1.0,
+          "final_mse": 0.015757717192173004,
+          "identity_rows_correct": 1.0,
+          "post_relation_mse": 0.008004135972871555,
+          "predicted_spinor_negation_rmse": 0.020005678553743068,
+          "predicted_vector_pair_rmse": 0.021155473931221875,
+          "teacher_spinor_negation_max_abs": 2.980232238769531e-07,
+          "teacher_vector_pair_max_abs": 1.7881393432617188e-07
+        },
+        "early_L16": {
+          "all_prefix_mse": 0.001009200932458043,
+          "center_classification_accuracy": 1.0,
+          "center_rows_correct": 1.0,
+          "final_mse": 0.0018425343247751396,
+          "identity_rows_correct": 1.0,
+          "post_relation_mse": 0.0010678791337543063,
+          "predicted_spinor_negation_rmse": 0.020177026864382105,
+          "predicted_vector_pair_rmse": 0.02062706109787955,
+          "teacher_spinor_negation_max_abs": 2.980232238769531e-07,
+          "teacher_vector_pair_max_abs": 1.7881393432617188e-07
+        },
+        "early_L64": {
+          "all_prefix_mse": 0.004196546350916226,
+          "center_classification_accuracy": 1.0,
+          "center_rows_correct": 1.0,
+          "final_mse": 0.008687103788057962,
+          "identity_rows_correct": 1.0,
+          "post_relation_mse": 0.004261110510144915,
+          "predicted_spinor_negation_rmse": 0.020239925258476916,
+          "predicted_vector_pair_rmse": 0.021647567732755727,
+          "teacher_spinor_negation_max_abs": 2.980232238769531e-07,
+          "teacher_vector_pair_max_abs": 1.4901161193847656e-07
+        },
+        "late_L128": {
+          "all_prefix_mse": 0.008309571072459221,
+          "center_classification_accuracy": 1.0,
+          "center_rows_correct": 1.0,
+          "final_mse": 0.016139147182305653,
+          "identity_rows_correct": 1.0,
+          "post_relation_mse": 0.016139147182305653,
+          "predicted_spinor_negation_rmse": 0.020930335565862834,
+          "predicted_vector_pair_rmse": 0.021104926304224447,
+          "teacher_spinor_negation_max_abs": 1.2386590242385864e-07,
+          "teacher_vector_pair_max_abs": 1.7881393432617188e-07
+        },
+        "late_L16": {
+          "all_prefix_mse": 0.0010479095702370007,
+          "center_classification_accuracy": 1.0,
+          "center_rows_correct": 1.0,
+          "final_mse": 0.0019897515885531902,
+          "identity_rows_correct": 1.0,
+          "post_relation_mse": 0.0019897515885531902,
+          "predicted_spinor_negation_rmse": 0.019819187597004875,
+          "predicted_vector_pair_rmse": 0.02100626704575458,
+          "teacher_spinor_negation_max_abs": 1.7881393432617188e-07,
+          "teacher_vector_pair_max_abs": 2.384185791015625e-07
+        },
+        "late_L64": {
+          "all_prefix_mse": 0.0038557487229506173,
+          "center_classification_accuracy": 1.0,
+          "center_rows_correct": 1.0,
+          "final_mse": 0.007793411612510681,
+          "identity_rows_correct": 1.0,
+          "post_relation_mse": 0.007793411612510681,
+          "predicted_spinor_negation_rmse": 0.021501953211063716,
+          "predicted_vector_pair_rmse": 0.01985430645176827,
+          "teacher_spinor_negation_max_abs": 1.7881393432617188e-07,
+          "teacher_vector_pair_max_abs": 2.384185791015625e-07
+        }
+      },
+      "final_training_loss": 0.0018446415197104216,
+      "last_preclip_gradient_norm": 0.07480816543102264,
+      "loss_samples": {
+        "1": 0.257002055644989,
+        "100": 0.20841053128242493,
+        "1000": 0.003086230717599392,
+        "1100": 0.0025959829799830914,
+        "1200": 0.0028292208444327116,
+        "1300": 0.0024807946756482124,
+        "1400": 0.002264399779960513,
+        "1500": 0.0019860598258674145,
+        "1600": 0.0019959579221904278,
+        "1700": 0.0023211438674479723,
+        "1800": 0.00203004851937294,
+        "1900": 0.0018226889660581946,
+        "200": 0.2023276537656784,
+        "2000": 0.0018446415197104216,
+        "300": 0.17660760879516602,
+        "400": 0.02760956808924675,
+        "500": 0.007137248292565346,
+        "600": 0.004564274102449417,
+        "700": 0.003811268135905266,
+        "800": 0.0031590345315635204,
+        "900": 0.0029873871244490147
+      },
+      "parameters": 930,
+      "peak_cuda_memory_bytes": 55616512,
+      "recurrent_state_scalars": 24,
+      "training_tokens_per_second": 33423.59957391839,
+      "training_wall_seconds": 30.637035300023854
+    }
+  },
+  "schema_version": 1,
+  "status": "development",
+  "task": {
+    "evaluation_audits": {
+      "early_L128": {
+        "checks": {
+          "all_values_finite": true,
+          "center_coordinates_sum_to_two_pi": true,
+          "identity_coordinates_sum_to_zero": true,
+          "paired_context_observations_identical": true,
+          "post_mask_starts_after_second_relation_observation": true,
+          "relation_observations_are_distinct": true,
+          "teacher_spinor_targets_negate": true,
+          "teacher_vector_targets_agree": true
+        },
+        "passed": true
+      },
+      "early_L16": {
+        "checks": {
+          "all_values_finite": true,
+          "center_coordinates_sum_to_two_pi": true,
+          "identity_coordinates_sum_to_zero": true,
+          "paired_context_observations_identical": true,
+          "post_mask_starts_after_second_relation_observation": true,
+          "relation_observations_are_distinct": true,
+          "teacher_spinor_targets_negate": true,
+          "teacher_vector_targets_agree": true
+        },
+        "passed": true
+      },
+      "early_L64": {
+        "checks": {
+          "all_values_finite": true,
+          "center_coordinates_sum_to_two_pi": true,
+          "identity_coordinates_sum_to_zero": true,
+          "paired_context_observations_identical": true,
+          "post_mask_starts_after_second_relation_observation": true,
+          "relation_observations_are_distinct": true,
+          "teacher_spinor_targets_negate": true,
+          "teacher_vector_targets_agree": true
+        },
+        "passed": true
+      },
+      "late_L128": {
+        "checks": {
+          "all_values_finite": true,
+          "center_coordinates_sum_to_two_pi": true,
+          "identity_coordinates_sum_to_zero": true,
+          "paired_context_observations_identical": true,
+          "post_mask_starts_after_second_relation_observation": true,
+          "relation_observations_are_distinct": true,
+          "teacher_spinor_targets_negate": true,
+          "teacher_vector_targets_agree": true
+        },
+        "passed": true
+      },
+      "late_L16": {
+        "checks": {
+          "all_values_finite": true,
+          "center_coordinates_sum_to_two_pi": true,
+          "identity_coordinates_sum_to_zero": true,
+          "paired_context_observations_identical": true,
+          "post_mask_starts_after_second_relation_observation": true,
+          "relation_observations_are_distinct": true,
+          "teacher_spinor_targets_negate": true,
+          "teacher_vector_targets_agree": true
+        },
+        "passed": true
+      },
+      "late_L64": {
+        "checks": {
+          "all_values_finite": true,
+          "center_coordinates_sum_to_two_pi": true,
+          "identity_coordinates_sum_to_zero": true,
+          "paired_context_observations_identical": true,
+          "post_mask_starts_after_second_relation_observation": true,
+          "relation_observations_are_distinct": true,
+          "teacher_spinor_targets_negate": true,
+          "teacher_vector_targets_agree": true
+        },
+        "passed": true
+      }
+    },
+    "evaluation_schedule_sha256": {
+      "early_L128": "d2da17bf78d75e3f8701275135631221e58fee8a7a18d30b2a75508fb1bbfb50",
+      "early_L16": "21b37f2dc3d22fb76657af5e6db8e8b66e608a123491113b9cd1093b0f95b1c1",
+      "early_L64": "5fc041ec3308b5802ea15365c4ad3348e3d0903c39b7a5116c0f0ab549bac31b",
+      "late_L128": "6a6f41335ea71805b5195d13c3f558b97205e63a7292064ac708ae354505ea81",
+      "late_L16": "65c4f40a55f81255d27ff6e82b8ad26baaa6f2d0dd1612a8a3e5ec75adbb4eca",
+      "late_L64": "bb12724e6b1958fdc44cf3f078763b20170c992d8da6ab2fb527e00b0f2f925d"
+    },
+    "held_out_relation": "two adjacent fresh observations with plane-0 coordinates pi+delta and pi-delta",
+    "intermediate_prefix_targets_retained_by_training_schedule": false,
+    "observation_system_sha256": "f9b37d04b15d2ec2a034bbf93ca448973bb4e112e9cf1def06f03ee039e4f0b9",
+    "teacher_contract": {
+      "center_spinor_minus_identity_max_abs": 2.9694726677576e-08,
+      "center_vector_identity_max_abs": 7.759399611728668e-08,
+      "inverse_pair_identity_max_abs": 4.772740069824977e-08,
+      "passed": true
+    },
+    "training_split": {
+      "checks": {
+        "endpoint_target_shape_exact": true,
+        "endpoint_targets_are_finite": true,
+        "every_observation_is_unique": true,
+        "half_center_delta_spans_both_signs": true,
+        "half_center_events_present": true,
+        "held_out_adjacent_half_center_count_zero": true,
+        "no_intermediate_targets_in_training_batch": true,
+        "observations_are_finite": true,
+        "regular_events_present": true
+      },
+      "half_center_coordinate_range": [
+        2.8915932178497314,
+        3.391589403152466
+      ],
+      "half_center_event_count": 110195,
+      "held_out_adjacent_half_center_count": 0,
+      "observation_count": 1024000,
+      "passed": true,
+      "regular_event_count": 913805,
+      "retained_intermediate_target_count": 0,
+      "schedule_sha256": "7f4784241419c8215634400df5a3de157802cf7678ffc193e257870988b33694",
+      "supervised_endpoint_count": 64000,
+      "supervised_scalars_per_sequence": 24,
+      "unique_observation_count": 1024000
+    },
+    "training_supervision": "final signed 24-real triality state only"
+  }
+}

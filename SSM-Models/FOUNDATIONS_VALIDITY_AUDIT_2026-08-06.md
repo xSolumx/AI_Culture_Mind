@@ -21,10 +21,13 @@ Date: 2026-08-06
 > changes this historical validity verdict nor establishes that the maintained
 > rotor model implements the new memory compiler.
 
-> **Separate later model.** `pure_spin8_ssm/` v1.0 was added on 2026-08-16
+> **Separate later model.** `pure_spin8_ssm/` was added at v1.0 on 2026-08-16
 > alongside Pure Rotor, with independent tests and checkpoints. It was not the
 > subject of this historical audit. Its current boundary is recorded in
-> `pure_spin8_ssm/CONTRACT.md`.
+> `pure_spin8_ssm/CONTRACT.md`; v1.1 adds the separately tested frozen-token
+> compiler and a separately frozen noisy continuous-router cohort. Neither
+> alters this historical audit's verdict; current evidence and limitations are
+> recorded in `experiments/PURE_SPIN8_CONTINUOUS_OBSERVATION_RESULTS.md`.
 
 ## Verdict
 

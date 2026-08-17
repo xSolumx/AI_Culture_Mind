@@ -371,18 +371,20 @@ GATES: tuple[GateContract, ...] = (
         ),
     ),
     GateContract(
-        gate_id="spin8_mixed_monomial_golden_infinitude",
+        gate_id="spin8_mixed_monomial_golden_density",
         claim=(
             "Adjoining the fixed order-21,504 monomial operator group to the "
             "vector, positive-half-spin, or negative-half-spin golden image "
-            "gives an infinite subgroup of SO(8); FanoA FanoB b is a shortest "
-            "infinite-order word in the maintained symmetric alphabet."
+            "gives a topologically dense subgroup of SO(8); FanoA FanoB b is "
+            "a shortest infinite-order word and the exact adjoint Lie gate "
+            "forces the complete 28-dimensional identity algebra."
         ),
-        status="proved_exact",
+        status="proved_hybrid",
         evidence_layers=(
             "exact_arithmetic",
             "symbolic_identity",
             "exact_reconstruction",
+            "external_theorem",
         ),
         test_suites=("tests/test_mixed_monomial_golden_closure.py",),
         artifacts=("artifacts/mixed_monomial_golden_closure_20260817.json",),
@@ -391,13 +393,410 @@ GATES: tuple[GateContract, ...] = (
             "All 187 symmetric mixed words of length two are powered to their exact finite orders.",
             "The length-three witness has a characteristic coefficient outside Z[(1+sqrt(5))/2] in every view.",
             "The rational characteristic norm has denominator set {1,2,4}, so it is not a cyclotomic product.",
+            "Exact commutant ranks make the monomial-adjoint 7- and 21-dimensional summands irreducible.",
+            "The 7-dimensional summand is not bracket closed, while golden b fails to normalize the 21-dimensional Lie summand in every view.",
         ),
         limitations=(
-            "Infinitude does not establish topological or Zariski density in SO(8).",
+            "This density gate supplies no rate; a separate gate certifies only the defining, adjoint, and traceless-symmetric bands.",
             "The theorem classifies the fixed relative embedding, not every alignment of the two abstract finite groups.",
             "The group theorem establishes no sequence-model quality or kernel-speed advantage.",
         ),
         replay_tier="bounded_full",
+        external_inputs=(
+            "Closed-subgroup and compact-Lie-group facts: an infinite compact matrix group has nonzero identity Lie algebra, and a connected subgroup with Lie algebra so(8) is SO(8).",
+        ),
+    ),
+    GateContract(
+        gate_id="spin8_mixed_monomial_golden_low_degree_mixing",
+        claim=(
+            "The fixed uniform symmetric labelled monomial/golden measures "
+            "contract strictly in the defining 8-dimensional, adjoint "
+            "28-dimensional, and traceless-symmetric 35-dimensional "
+            "representations in all three triality views, with the exact "
+            "or rational bounds recorded in the maintained artifact."
+        ),
+        status="proved_exact",
+        evidence_layers=(
+            "exact_arithmetic",
+            "exact_reconstruction",
+            "symbolic_identity",
+            "positivity_certificate",
+        ),
+        test_suites=("tests/test_mixed_monomial_golden_mixing.py",),
+        artifacts=("artifacts/mixed_monomial_golden_mixing_20260817.json",),
+        boundary_obligations=(
+            "The probability measure is uniform on concatenated symmetric labelled alphabets, so cross-source equal matrices retain multiplicity.",
+            "The defining bounds use exact characteristic polynomials and Sturm root counts, not floating-point eigensolvers.",
+            "Both signed radius forms in dimensions 28 and 35 have exact positive quadratic-field LDL pivots.",
+            "The non-orthonormal 35-vector basis uses its exact Frobenius Gram matrix in every self-adjointness and positivity check.",
+        ),
+        limitations=(
+            "The three finite representations do not establish a spectral gap over the full mean-zero L2(SO(8)) Peter-Weyl spectrum.",
+            "No total-variation, Wasserstein, or global word-length mixing theorem is claimed.",
+            "The uniform label weights are fixed rather than proved optimal.",
+            "The contraction bounds establish no sequence-model quality or kernel-speed advantage.",
+        ),
+        replay_tier="bounded_full",
+    ),
+    GateContract(
+        gate_id="spin8_mixed_monomial_golden_higher_weight",
+        claim=(
+            "The exact six-representation exterior-power band exposes a "
+            "unique monomial-fixed Cayley-form line, and the symmetric "
+            "N-H-N compiled macro distribution has a strictly larger "
+            "certified macro-step band gap than the original labelled walk "
+            "in all three triality views."
+        ),
+        status="proved_exact",
+        evidence_layers=(
+            "exact_arithmetic",
+            "exact_reconstruction",
+            "symbolic_identity",
+            "positivity_certificate",
+        ),
+        test_suites=(
+            "tests/test_mixed_monomial_golden_higher_weight.py",
+        ),
+        artifacts=(
+            "artifacts/mixed_monomial_golden_higher_weight_20260817.json",
+        ),
+        boundary_obligations=(
+            "Every exterior-power entry is reconstructed as an exact minor over Q(sqrt(5)).",
+            "Both Hodge eigenspaces are checked invariant in the fixed standard orientation before their blocks are used.",
+            "The monomial fixed-line claim requires rank 34 and exact fixation of the displayed Cayley vector by all 17 symmetric steps.",
+            "Original-walk upper gap witnesses and sandwich lower gaps remain distinct one-sided inequalities.",
+            "The N-H-N comparison is per compiled three-letter macro-step, not per primitive multiplication.",
+        ),
+        limitations=(
+            "The finite exterior-power band does not establish a spectral gap over the full mean-zero L2(SO(8)) spectrum.",
+            "The macro distribution is not proved optimal among word distributions or weights.",
+            "Without dictionary precompilation, one macro consumes three primitive group products.",
+            "No sequence-model accuracy, training, memory, or kernel-speed advantage is established.",
+        ),
+        replay_tier="bounded_full",
+    ),
+    GateContract(
+        gate_id="spin8_mixed_macro_exact_compiler",
+        claim=(
+            "The fixed N-H-N labelled distributions compile to the exact "
+            "530-matrix vector and 394-matrix half-spin dictionaries, with "
+            "multiplicity-weighted inverse symmetry and averaging operator "
+            "M_N M_H M_N preserved exactly."
+        ),
+        status="proved_exact",
+        evidence_layers=(
+            "exact_arithmetic",
+            "exact_reconstruction",
+            "symbolic_identity",
+            "implementation_parity",
+        ),
+        test_suites=(
+            "tests/test_mixed_monomial_golden_macro_compiler.py",
+        ),
+        artifacts=(
+            "artifacts/mixed_monomial_golden_macro_compiler_20260817.json",
+        ),
+        boundary_obligations=(
+            "Label multiplicities must survive deduplication; uniform distinct-matrix sampling is a different measure.",
+            "Every labelled lookup index must resolve to its exact n1*h*n2 matrix.",
+            "The weighted compiled mean must equal M_N M_H M_N over Q(sqrt(5)), not merely in float tolerance.",
+            "The storage byte claims are tied to explicit float and unsigned-index formats.",
+        ),
+        limitations=(
+            "Exact compilation does not by itself prove a runtime speedup.",
+            "Float16 storage does not preserve the exact field theorem.",
+            "A block endpoint dictionary does not emit the two interior prefixes.",
+            "No end-to-end SSM quality or throughput advantage is established.",
+        ),
+        replay_tier="bounded_full",
+    ),
+    GateContract(
+        gate_id="spin8_mixed_macro_workstation_benchmark",
+        claim=(
+            "On the recorded single-thread CPU and synchronized RTX 2070 "
+            "SUPER float32 benchmark, compiled direct-labelled N-H-N lookup "
+            "beats online three-letter transition construction and final-state "
+            "application in every tested view and batch cell."
+        ),
+        status="empirical",
+        evidence_layers=(
+            "raw_artifact",
+            "implementation_parity",
+            "negative_control",
+        ),
+        test_suites=(
+            "tests/test_mixed_monomial_golden_macro_benchmark.py",
+        ),
+        artifacts=(
+            "artifacts/mixed_monomial_golden_macro_benchmark_20260817.json",
+        ),
+        boundary_obligations=(
+            "CPU thread counts, CUDA synchronization, dtype, batch grid, seed, warmups, repeats, and percentile spread must be recorded.",
+            "Compiled float32 outputs must match online construction within the declared max-absolute tolerance.",
+            "Exact compiler evidence and empirical timing evidence remain separate gates.",
+        ),
+        limitations=(
+            "The timings are local to the recorded hardware and software stack.",
+            "The benchmark emits only the three-letter block endpoint, not every causal prefix.",
+            "Backward, training, full scan scheduling, and custom packed-index kernels are unmeasured.",
+            "No end-to-end SSM accuracy or throughput advantage is established.",
+        ),
+        replay_tier="artifact_only_empirical",
+    ),
+    GateContract(
+        gate_id="spin8_mixed_every_prefix_chunk_compiler",
+        claim=(
+            "For every fixed labelled N-H-N word, one exact 24-by-8 operator "
+            "emits the right, middle-right, and left-middle-right causal "
+            "prefix states, with its endpoint block equal to the exact macro "
+            "dictionary."
+        ),
+        status="proved_exact",
+        evidence_layers=(
+            "exact_arithmetic",
+            "exact_reconstruction",
+            "symbolic_identity",
+            "implementation_parity",
+        ),
+        test_suites=(
+            "tests/test_mixed_monomial_golden_chunk_compiler.py",
+        ),
+        artifacts=(
+            "artifacts/mixed_monomial_golden_chunk_compiler_20260817.json",
+        ),
+        boundary_obligations=(
+            "Matrix-word order L*H*R and causal application order R,H,L must not be interchanged.",
+            "All three exact row blocks must be checked for every labelled triple.",
+            "The third block must agree with the independently compiled endpoint dictionary.",
+            "Storage arithmetic must name its scalar format and does not promote reduced precision to exact algebra.",
+        ),
+        limitations=(
+            "The finite table applies only to the fixed discrete labelled alphabet, not arbitrary continuous learned transitions.",
+            "Exact causal equivalence does not itself prove runtime speed.",
+            "No parallel scan, backward, training, or model-quality result follows from compilation alone.",
+        ),
+        replay_tier="bounded_full",
+    ),
+    GateContract(
+        gate_id="spin8_mixed_every_prefix_chunk_benchmark",
+        claim=(
+            "On the recorded single-thread CPU and synchronized RTX 2070 "
+            "SUPER grid, sequential compiled N-H-N recurrence beats three "
+            "primitive applications for both endpoint-only and every-prefix "
+            "outputs through 192 primitive steps in every tested cell."
+        ),
+        status="empirical",
+        evidence_layers=(
+            "raw_artifact",
+            "implementation_parity",
+            "negative_control",
+        ),
+        test_suites=(
+            "tests/test_mixed_monomial_golden_chunk_benchmark.py",
+        ),
+        artifacts=(
+            "artifacts/mixed_monomial_golden_chunk_benchmark_20260817.json",
+        ),
+        boundary_obligations=(
+            "Every-prefix outputs, not only chunk endpoints, must be retained and compared.",
+            "The final state of each chunk must feed the next chunk so long-horizon error is recurrent.",
+            "CPU thread counts, CUDA synchronization, sequence grid, repeats, spread, and float tolerance must be recorded.",
+            "The near-break-even large-batch CPU cell must not be hidden by an aggregate average.",
+        ),
+        limitations=(
+            "The benchmark uses sequential Python chunk loops rather than a fused parallel prefix scan.",
+            "The 1.007x minimum is too small to claim a robust large-batch CPU advantage across systems.",
+            "Backward, training, continuous transitions, and end-to-end SSM throughput remain unmeasured.",
+        ),
+        replay_tier="artifact_only_empirical",
+    ),
+    GateContract(
+        gate_id="spin8_mixed_parallel_chunk_scan_implementation",
+        claim=(
+            "The two-stage compiled scan over C endpoints plus parallel local "
+            "prefix expansion matches the 3C primitive recurrence under "
+            "work-efficient and Hillis-Steele trees, including gradients "
+            "with respect to L, H, R, and the initial state."
+        ),
+        status="validated_implementation",
+        evidence_layers=(
+            "implementation_parity",
+            "negative_control",
+        ),
+        test_suites=(
+            "tests/test_mixed_monomial_golden_parallel_chunk_scan.py",
+        ),
+        artifacts=(),
+        boundary_obligations=(
+            "Chronological later@earlier composition must match the maintained Pure Rotor matrix-scan convention.",
+            "Sequential recurrence, work-efficient scan, and Hillis-Steele scan must agree before timing is interpreted.",
+            "Gradient parity must cover L, H, R, and the initial state under differentiable on-the-fly compilation.",
+            "Precompiled tables and differentiable compilation must produce identical two-stage outputs.",
+        ),
+        limitations=(
+            "Implementation parity does not establish a speed or model-quality advantage.",
+            "The tested compiler structure is discrete and does not define a learned continuous transition quantizer.",
+            "No fused custom kernel is supplied by this gate.",
+        ),
+        replay_tier="unit",
+    ),
+    GateContract(
+        gate_id="spin8_mixed_parallel_chunk_scan_benchmark",
+        claim=(
+            "On the final recorded eager-PyTorch workstation grid, scanning "
+            "C compiled endpoints plus parallel local expansion beats the "
+            "3C primitive work-efficient scan for forward and forward plus "
+            "initial-state backward in every tested cell."
+        ),
+        status="empirical",
+        evidence_layers=(
+            "raw_artifact",
+            "implementation_parity",
+            "negative_control",
+        ),
+        test_suites=(
+            "tests/test_mixed_monomial_golden_parallel_chunk_scan_benchmark.py",
+        ),
+        artifacts=(
+            "artifacts/mixed_monomial_golden_parallel_chunk_scan_benchmark_20260817.json",
+        ),
+        boundary_obligations=(
+            "Primitive and compiled paths must use the same maintained work-efficient scan convention.",
+            "Every backward cell must have at least ten synchronized repeats and five warmups.",
+            "Forward recurrence error and initial-state gradient error must remain below their separate declared tolerances.",
+            "The near-break-even 1.012x minimum must remain visible rather than being hidden by an average.",
+        ),
+        limitations=(
+            "The implementation is eager PyTorch rather than fused Triton or raw CUDA.",
+            "Timed backward covers the initial-state gradient, not table gradients, label selection, optimizer steps, or a full model.",
+            "The timing ranking is local to the recorded workstation and does not establish robust universal acceleration.",
+            "No SSM accuracy advantage is established.",
+        ),
+        replay_tier="artifact_only_empirical",
+    ),
+    GateContract(
+        gate_id="spin8_mixed_triton_local_prefix_implementation",
+        claim=(
+            "A custom Triton kernel fuses exact labelled-table lookup with "
+            "24x8 local-prefix expansion and matches eager forward and "
+            "incoming-state gradients on CUDA float32."
+        ),
+        status="validated_implementation",
+        evidence_layers=(
+            "implementation_parity",
+            "negative_control",
+        ),
+        test_suites=(
+            "tests/test_mixed_monomial_golden_triton_local_prefix.py",
+        ),
+        artifacts=(),
+        boundary_obligations=(
+            "The indexed kernel must load the same exact labelled operator used by the eager oracle.",
+            "Forward and incoming-state transpose-matvec gradients must pass separate float32 tolerances.",
+            "CPU, unsupported dtype, and trainable-table inputs must preserve eager semantics.",
+            "The implementation must not claim to fuse the endpoint prefix tree.",
+        ),
+        limitations=(
+            "The Triton path treats the exact prefix table as frozen and does not differentiate discrete labels.",
+            "Incoming-state backward is not table, router, optimizer, or full-model backward.",
+            "Implementation parity alone establishes no speed or task-quality advantage.",
+        ),
+        replay_tier="unit",
+    ),
+    GateContract(
+        gate_id="spin8_mixed_triton_local_prefix_benchmark",
+        claim=(
+            "On the recorded CUDA grid, fused indexed local expansion usually "
+            "beats realistic indexed eager in isolation, while the complete "
+            "two-stage pipeline stays near break-even because its endpoint tree remains eager."
+        ),
+        status="empirical",
+        evidence_layers=(
+            "raw_artifact",
+            "implementation_parity",
+            "negative_control",
+        ),
+        test_suites=(
+            "tests/test_mixed_monomial_golden_triton_local_prefix_benchmark.py",
+        ),
+        artifacts=(
+            "artifacts/mixed_monomial_golden_triton_local_prefix_benchmark_20260817.json",
+        ),
+        boundary_obligations=(
+            "Realistic indexed eager and optimistic pre-gathered eager controls must both remain visible.",
+            "Isolated and full-pipeline timing must be reported separately.",
+            "All three views and the complete declared batch/chunk grid must pass parity.",
+            "Losing and near-break-even cells must not be hidden by aggregate averages.",
+        ),
+        limitations=(
+            "The endpoint prefix scan is eager PyTorch and dominates many complete-pipeline cells.",
+            "Timed backward covers incoming or initial state only, not table or model parameters.",
+            "The timing ranking is local to the recorded Windows/CUDA/Turing workstation.",
+            "No SSM accuracy advantage is established.",
+        ),
+        replay_tier="artifact_only_empirical",
+    ),
+    GateContract(
+        gate_id="spin8_mixed_triton_chunk_recurrence_implementation",
+        claim=(
+            "A register-resident Triton recurrence walks exact labelled 24x8 "
+            "chunk operators, emits all causal prefixes, and matches eager and "
+            "parallel controls including initial-state gradients."
+        ),
+        status="validated_implementation",
+        evidence_layers=(
+            "implementation_parity",
+            "negative_control",
+        ),
+        test_suites=(
+            "tests/test_mixed_monomial_golden_triton_chunk_recurrence.py",
+        ),
+        artifacts=(),
+        boundary_obligations=(
+            "Every chunk must emit R, HR, and LHR states in chronological order.",
+            "The final eight-row block must feed the next chunk without host recurrence.",
+            "The reverse recurrence must include both direct prefix cotangents and future endpoint cotangents.",
+            "Sequential eager, parallel scan, and fused recurrence outputs and initial gradients must agree.",
+        ),
+        limitations=(
+            "The implementation has serial depth in chunk count and is not a parallel prefix scan.",
+            "The custom backward covers the initial state, not prefix-table or selector gradients.",
+            "The finite exact dictionary is supplied rather than learned from raw data.",
+        ),
+        replay_tier="unit",
+    ),
+    GateContract(
+        gate_id="spin8_mixed_triton_chunk_recurrence_benchmark",
+        claim=(
+            "On the recorded three-view CUDA grid through 64 compiled chunks, "
+            "the register-resident recurrence beats the optimistic pre-gathered "
+            "parallel control in every forward and initial-state-backward cell."
+        ),
+        status="empirical",
+        evidence_layers=(
+            "raw_artifact",
+            "implementation_parity",
+            "negative_control",
+        ),
+        test_suites=(
+            "tests/test_mixed_monomial_golden_triton_chunk_recurrence_benchmark.py",
+        ),
+        artifacts=(
+            "artifacts/mixed_monomial_golden_triton_chunk_recurrence_benchmark_20260817.json",
+        ),
+        boundary_obligations=(
+            "The pre-gathered parallel, indexed parallel, fused-local parallel, and eager recurrent controls must remain in the artifact.",
+            "All three views and all 27 declared shape cells must pass forward and initial-gradient parity.",
+            "Every backward cell must retain at least ten synchronized repeats and five warmups.",
+            "Serial chunk depth and the 64-chunk tested maximum must remain explicit.",
+        ),
+        limitations=(
+            "The result does not generalize beyond the recorded GPU, float32 dtype, or bounded shape grid.",
+            "The custom path does not train the exact table or a discrete selector.",
+            "No full model, optimizer step, token throughput, or Mamba task comparison is measured.",
+            "A kernel speedup is not an SSM accuracy advantage.",
+        ),
+        replay_tier="artifact_only_empirical",
     ),
     GateContract(
         gate_id="signed_star_dirac_gram",

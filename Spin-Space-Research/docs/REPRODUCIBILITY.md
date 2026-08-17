@@ -968,7 +968,7 @@ central-product factor, the full direct-product order, perfectness, and the
 independent block-sign center. Numerical spectral discovery is excluded from
 acceptance.
 
-### Exact mixed monomial/golden infinitude
+### Exact mixed monomial/golden SO(8) density
 
 This bounded replay reconstructs the order-21,504 monomial group, all three
 golden source images, and the same length-three witness in their fixed shared
@@ -985,8 +985,177 @@ Acceptance checks all 187 symmetric mixed words of length two by exact matrix
 powering. For `FanoA FanoB b`, it reconstructs the characteristic polynomial
 over \(\mathbb Q(\sqrt5)\), rejects algebraic integrality of
 \((1-\sqrt5)/4\), and independently verifies that the rational characteristic
-norm has nonintegral coefficients. No floating-point eigenvalue decision is an
-acceptance input.
+norm has nonintegral coefficients. It then reconstructs the irreducible
+\(7+21\) monomial-adjoint splitting of \(\mathfrak{so}(8)\), verifies exact
+centralizer ranks 48, 440, and 782, and proves that golden `b` does not
+normalize the proper 21-dimensional Lie summand in any view. No floating-point
+eigenvalue or rank decision is an acceptance input.
+
+### Exact mixed monomial/golden low-degree mixing bounds
+
+This replay uses the concatenated inverse-closed monomial and golden labelled
+alphabets. Cross-source duplicate matrices retain multiplicity, giving 20
+labels in the vector view and 21 labels but 19 distinct matrices in each
+half-spin view:
+
+```powershell
+$env:PYTHONPATH = "src"
+python -m mixed_monomial_golden_mixing `
+  --output artifacts/mixed_monomial_golden_mixing_20260817.json
+python -m pytest -q tests/test_mixed_monomial_golden_mixing.py
+```
+
+Acceptance uses exact Sturm root counts for the defining representation and
+exact positive-definite `LDL^T` pivots over `Q(sqrt(5))` for both signs of the
+28- and 35-dimensional radius forms. The replay proves only the displayed
+finite-representation contraction bounds, not a full `L2(SO(8))` gap.
+
+### Exact higher-weight Cayley bottleneck and compiled sandwich
+
+This bounded replay constructs `Lambda^3` and both Hodge halves of `Lambda^4`
+from exact minors, proves the unique monomial-fixed Cayley-form line, and
+compares the original labelled measure with the symmetric `M_N M_H M_N`
+compiled macro distribution across all six maintained representations:
+
+```powershell
+$env:PYTHONPATH = "src"
+python -m mixed_monomial_golden_higher_weight `
+  --output artifacts/mixed_monomial_golden_higher_weight_20260817.json
+python -m pytest -q tests/test_mixed_monomial_golden_higher_weight.py
+```
+
+Acceptance checks exact Hodge invariance, a rank-34 fixed-space system, sparse
+Rayleigh witnesses, and both exact LDL radius forms for every view, measure,
+and representation. The improvement is per three-letter macro-step; no
+primitive-operation or full `L2(SO(8))` improvement is inferred.
+
+### Exact macro compiler and empirical workstation benchmark
+
+The compiler replay enumerates every labelled `N-H-N` triple over
+`Q(sqrt(5))`, deduplicates exact matrices, preserves multiplicities, verifies
+inverse symmetry, and checks that weighted averaging is exactly `M_N M_H M_N`:
+
+```powershell
+$env:PYTHONPATH = "src"
+python -m mixed_monomial_golden_macro_compiler `
+  --output artifacts/mixed_monomial_golden_macro_compiler_20260817.json
+python -m pytest -q tests/test_mixed_monomial_golden_macro_compiler.py
+```
+
+The separate empirical replay fixes PyTorch CPU execution to one intra-op and
+one inter-op thread, synchronizes CUDA around every timing, and compares online,
+deduplicated, and direct-labelled layouts:
+
+```powershell
+python -m benchmark_mixed_monomial_golden_macro `
+  --devices cpu,cuda `
+  --batch-sizes 1,64,1024,16384 `
+  --output artifacts/mixed_monomial_golden_macro_benchmark_20260817.json
+python -m pytest -q tests/test_mixed_monomial_golden_macro_benchmark.py
+```
+
+Timings are hardware-local raw evidence. Exact compiler acceptance and
+empirical speed are separate gates; neither establishes every-prefix scan or
+end-to-end SSM throughput.
+
+### Exact every-prefix chunk compiler and recurrent benchmark
+
+The exact replay constructs one `24x8` operator per labelled `N-H-N` triple and
+checks that its three row blocks equal `R`, `H R`, and `L H R`:
+
+```powershell
+$env:PYTHONPATH = "src"
+python -m mixed_monomial_golden_chunk_compiler `
+  --output artifacts/mixed_monomial_golden_chunk_compiler_20260817.json
+python -m pytest -q tests/test_mixed_monomial_golden_chunk_compiler.py
+```
+
+The empirical recurrence benchmark retains all interior states and carries the
+third state into the next chunk through primitive lengths 3, 12, 48, and 192:
+
+```powershell
+python -m benchmark_mixed_monomial_golden_chunk `
+  --devices cpu,cuda `
+  --batch-sizes 1,64,1024 `
+  --chunk-counts 1,4,16,64 `
+  --output artifacts/mixed_monomial_golden_chunk_benchmark_20260817.json
+python -m pytest -q tests/test_mixed_monomial_golden_chunk_benchmark.py
+```
+
+This gate is still a sequential chunk recurrence. It does not substitute for a
+fused parallel prefix scan or backward/training benchmark.
+
+### Two-stage parallel chunk scan and initial-state backward
+
+The implementation test compares sequential recurrence, Hillis--Steele,
+work-efficient primitive scan, and the compiled two-stage scan in float64. It
+also differentiates through on-the-fly `L/H/R` compilation and checks every
+matrix and initial-state gradient:
+
+```powershell
+$env:PYTHONPATH = "src"
+python -m pytest -q tests/test_mixed_monomial_golden_parallel_chunk_scan.py
+```
+
+The empirical benchmark scans `C` compiled endpoints rather than `3C`
+primitive matrices, expands all selected local prefixes in parallel, and times
+forward plus initial-state backward:
+
+```powershell
+python -m benchmark_mixed_monomial_golden_parallel_chunk_scan `
+  --devices cpu,cuda `
+  --batch-sizes 1,64,1024 `
+  --chunk-counts 4,16,64 `
+  --output artifacts/mixed_monomial_golden_parallel_chunk_scan_benchmark_20260817.json
+python -m pytest -q `
+  tests/test_mixed_monomial_golden_parallel_chunk_scan_benchmark.py
+```
+
+The benchmark is eager PyTorch, not a fused custom kernel. Timed backward is
+limited to the initial-state gradient; full table/model backward stays open.
+
+### Fused indexed local-prefix expansion
+
+The local kernel fuses exact three-label lookup with the selected `24x8`
+matrix-vector product. Its reverse kernel covers incoming-state gradients; a
+trainable table deliberately falls back to eager autograd:
+
+```powershell
+$env:PYTHONPATH = "src"
+python -m pytest -q `
+  tests/test_mixed_monomial_golden_triton_local_prefix.py `
+  tests/test_mixed_monomial_golden_triton_local_prefix_benchmark.py
+python -m benchmark_mixed_monomial_golden_triton_local_prefix `
+  --batch-sizes 1,64,1024 `
+  --chunk-counts 4,16,64 `
+  --output artifacts/mixed_monomial_golden_triton_local_prefix_benchmark_20260817.json
+```
+
+This benchmark requires the optional Windows/CUDA Triton dependency. It times
+both isolated local expansion and the full eager endpoint-tree pipeline
+against realistic indexed and optimistic pre-gathered controls.
+
+### Register-resident compiled chunk recurrence
+
+The streaming continuation removes the eager endpoint tree. One Triton
+program walks each batch sequence serially, retains the eight-state in
+registers, and emits all three causal prefixes per chunk. A reverse kernel
+computes the initial-state gradient:
+
+```powershell
+$env:PYTHONPATH = "src"
+python -m pytest -q `
+  tests/test_mixed_monomial_golden_triton_chunk_recurrence.py `
+  tests/test_mixed_monomial_golden_triton_chunk_recurrence_benchmark.py
+python -m benchmark_mixed_monomial_golden_triton_chunk_recurrence `
+  --batch-sizes 1,64,1024 `
+  --chunk-counts 4,16,64 `
+  --output artifacts/mixed_monomial_golden_triton_chunk_recurrence_benchmark_20260817.json
+```
+
+This is a bounded serial-depth CUDA recurrence, not a parallel prefix scan.
+The exact dictionary is frozen in the custom path; table gradients, selector
+gradients, optimizer steps, and full-model throughput remain outside the gate.
 
 ### Enforced workstation envelope
 

@@ -8,6 +8,7 @@ import unittest
 from pathlib import Path
 
 import torch
+
 from pure_spin8_ssm import __version__
 from pure_spin8_ssm.torch_backend import (
     PureSpin8CausalLM,
@@ -222,7 +223,7 @@ class PureSpin8LayerAndModelTests(unittest.TestCase):
             model.save_checkpoint(checkpoint, metadata={"test": True})
             loaded = PureSpin8CausalLM.load_checkpoint(checkpoint)
             loaded_logits = loaded(token_ids)["logits"]
-        self.assertEqual(__version__, "1.0.0")
+        self.assertEqual(__version__, "1.1.0")
         self.assertLess(
             float((loaded_logits - result["logits"].detach()).detach().abs().max()),
             1e-7,

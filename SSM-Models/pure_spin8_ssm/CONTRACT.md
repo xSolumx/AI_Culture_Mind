@@ -1,4 +1,4 @@
-# Pure Spin(8) SSM v1.0 contract
+# Pure Spin(8) SSM v1.1 contract
 
 Status: maintained PyTorch model alongside, not in place of, Pure Rotor v2.1.
 
@@ -49,6 +49,23 @@ correctness/streaming alternatives. Padding masks insert exact identity
 transitions. The cache is 24 scalars per channel per layer and does not grow
 with sequence length.
 
+## Compiled finite-token inference (v1.1)
+
+`discrete_scan.py` provides a separate compiler/runtime boundary for models
+whose trained input router has identified a finite action dictionary. The
+router is evaluated once per vocabulary item and frozen as a
+`(vocabulary, representations, 8, 8)` table. The eager recurrence preserves
+action-table and initial-state autograd. The optional CUDA float32 Triton path
+keeps one eight-scalar state per `(batch, representation)` in registers and
+implements initial-state backward, but deliberately does not implement table
+gradients.
+
+`CompiledSpin8TokenTracker` stores the action table, initial state,
+representation order, compiler metadata, and package version in a distinct
+checkpoint. This is an inference optimization for a frozen finite dictionary;
+it is not used silently by the continuous `PureSpin8SSMLayer`, and it is not a
+parallel-prefix algorithm.
+
 `transport_only=True` removes damping and drive controllers and scans pure
 Spin(8) actions. `normalize_inputs=False` is available when inputs already are
 meaningful bivector coordinates. Both choices are serialized; the general
@@ -76,10 +93,80 @@ streaming cache.
 Pure Rotor v2.x checkpoints are not loaded into this model, and Pure Spin(8)
 checkpoints are not accepted by the lower-dimensional model.
 
+The compiled token tracker uses model type `compiled_spin8_token_tracker` and
+format version 1. It cannot be loaded as a `PureSpin8CausalLM` checkpoint.
+
+## Controlled online-identification evidence
+
+The maintained group-action layer is now exercised by a separate continuous
+router in `benchmark_pure_spin8_continuous_observation.py`. Three fresh seeds
+infer local actions from unique noisy nonlinear observations, compose a held-out
+adjacent center relation through L128, and pass the frozen action, signature,
+state-match, checkpoint, and split gates. A 24-state independent `SO(8)^3`
+control can represent the teacher but is less accurate, including under a
+separately frozen local model-update wall allocation.
+
+This evidence validates trainability and the shared-action inductive bias on
+the stated synthetic every-prefix task. The router is an experiment, not a new
+silent default or checkpoint-format change. See
+[`PURE_SPIN8_CONTINUOUS_OBSERVATION_RESULTS.md`](../experiments/PURE_SPIN8_CONTINUOUS_OBSERVATION_RESULTS.md).
+
+A frozen successor exercises the same action layer with endpoint-only loss.
+Every L16 sequence provides only its final signed 24-real state; no intermediate
+target exists in the batch, and a unit test requires zero loss gradient at every
+nonfinal prediction. Three fresh seeds preserve exact L128 relation-row
+correctness and a shared-action advantage under both equal updates and a
+separately pre-frozen local update-wall allocation. This removes the dense-
+prefix-target dependency for this bounded synthetic teacher, not for unsigned,
+partial, noninjective, natural, or all-28-coordinate observations. See
+[`PURE_SPIN8_ENDPOINT_SUPERVISION_RESULTS.md`](../experiments/PURE_SPIN8_ENDPOINT_SUPERVISION_RESULTS.md).
+
+The partial-readout follow-up certifies the representation boundary rather than
+changing the layer. Exact rational generator-probe ranks reach 28 from seven
+basis states in each individual 8D view. One signed half-spin endpoint trains
+the shared router across all three views, but the overall frozen cohort fails
+because center-blind vector supervision does not robustly select an exact lift.
+An identical-vector-input/opposite-spinor-target collision proves that a true
+vector quotient cannot reveal a balanced hidden lift. See
+[`PURE_SPIN8_ENDPOINT_OBSERVABILITY_RESULTS.md`](../experiments/PURE_SPIN8_ENDPOINT_OBSERVABILITY_RESULTS.md).
+
+The frozen calibration successor repairs that specific lift-selection failure
+without changing the maintained layer. For unit positive-spinor endpoint `y`,
+it supplies the lift-invariant max-coordinate address `argmax |y_j|` and the
+single lift-odd bit `sign(y_j)` alongside the final vector endpoint. The
+address uses three bits, so the full calibration word has four bits; only one
+bit selects the double-cover fiber. Exact geometry bounds the selected
+magnitude below by `1/sqrt(8)`. Across untouched seeds 4--6, every seedwise
+action, L128, center, relation, capability, and integrity gate passes without
+median rescue. This is an experimental supervision interface, not a new model
+default or checkpoint format. See
+[`PURE_SPIN8_LIFT_BIT_CALIBRATION_RESULTS.md`](../experiments/PURE_SPIN8_LIFT_BIT_CALIBRATION_RESULTS.md).
+
+The exact optimizer-trace audit shows that the independent control's
+negative-specific coordinate head is outside that adaptive loss graph: every
+weight and bias has zero data gradient and the final block equals its repeated
+AdamW decay-only counterfactual exactly. The shared router's one coordinate head
+has nonzero gradient in all 28 rows. A same-state shared-latent control with
+independently trainable spinor alignments then supplies the stronger falsifier.
+Its frozen all-view dominance gate fails on two directly supervised vector-L128
+cells, while the maintained alignment wins every action, spinor-L128, and
+completely hidden negative-L128 comparison. Full supervision trains both
+scrambled alignments and restores negative-view capability. See
+[`PURE_SPIN8_LIFT_GRADIENT_IDENTIFIABILITY_RESULTS.md`](../experiments/PURE_SPIN8_LIFT_GRADIENT_IDENTIFIABILITY_RESULTS.md)
+and
+[`PURE_SPIN8_SCRAMBLED_ALIGNMENT_RESULTS.md`](../experiments/PURE_SPIN8_SCRAMBLED_ALIGNMENT_RESULTS.md).
+
 ## Claim boundary
 
 This contract establishes an implemented, faithful Spin(8) representation
-tuple, legal associative scan, constant cache, center coverage, bounded state,
-and explicit checkpoint format. It does not by itself establish language-model
-superiority, triality-specific capacity, a global optimizer theorem, or the
-open unrestricted Dirac--Gram/D-optimality theorem.
+tuple, legal associative scans, constant cache, center coverage, bounded state,
+explicit checkpoint formats, a tested frozen-dictionary CUDA recurrence, and a
+replicated noisy continuous-router exercise under both every-prefix and
+endpoint-only supervision, including a bounded partial-readout observability
+audit with a preserved negative result and a separately frozen adaptive
+calibration repair. The matched scrambled-alignment result supports only a
+bounded cross-view spinor-transfer claim and explicitly fails universal
+all-view dominance. This contract does not by itself establish
+language-model superiority, generic triality necessity, natural-data utility,
+fused training, a global optimizer theorem, or the open unrestricted
+Dirac--Gram/D-optimality theorem.

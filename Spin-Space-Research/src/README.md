@@ -15,10 +15,46 @@ module name. Editable installation adds this directory to the Python path.
   permutation classification of the three common-carrier binary-icosahedral
   triality views, giving a reducible perfect group of order 864,000 with
   independent block-sign center.
-- `mixed_monomial_golden_closure.py`: exact algebraic-integer and
-  characteristic-norm obstruction proving that adjoining the maintained
-  monomial operator group to any golden triality view gives an infinite group;
-  includes the complete symmetric length-two minimality audit.
+- `mixed_monomial_golden_closure.py`: exact algebraic-integer obstruction,
+  symmetric length-two minimality audit, and irreducible `7+21` Clifford-
+  adjoint certificate proving that adjoining the maintained monomial group to
+  any golden triality view gives a topologically dense subgroup of `SO(8)`.
+- `mixed_monomial_golden_mixing.py`: exact Sturm and quadratic-field LDL
+  certificates for the defining `8`, adjoint `28`, and traceless-symmetric
+  `35` contraction gaps of the three fixed symmetric generator measures; this
+  is a finite representation band, not a full `L2(SO(8))` spectral gap.
+- `mixed_monomial_golden_higher_weight.py`: exact `Lambda^3` and Hodge-split
+  `Lambda^4` continuation, the unique monomial-fixed Cayley-form line, and a
+  certified `N-H-N` compiled macro distribution that improves the worst
+  six-representation gap per macro-step while disclosing its three-letter cost.
+- `mixed_monomial_golden_macro_compiler.py`: exact deduplication, multiplicity,
+  inverse-symmetry, storage, and weighted-mean contract for the finite `N-H-N`
+  matrix dictionaries.
+- `benchmark_mixed_monomial_golden_macro.py`: single-thread CPU and synchronized
+  CUDA comparison of online three-letter construction against deduplicated and
+  direct-labelled compiled lookup; this is empirical workstation evidence.
+- `mixed_monomial_golden_chunk_compiler.py`: exact `24x8` stacked local-prefix
+  tables emitting all three causal states of every labelled `N-H-N` chunk.
+- `benchmark_mixed_monomial_golden_chunk.py`: recurrent endpoint and every-
+  prefix comparison through 192 primitive steps on single-thread CPU and
+  synchronized CUDA; parallel scan and backward remain separate frontiers.
+- `mixed_monomial_golden_parallel_chunk_scan.py`: differentiable maintained-
+  order work-efficient and Hillis--Steele controls plus the two-stage compiled
+  endpoint scan and parallel local-prefix expansion.
+- `benchmark_mixed_monomial_golden_parallel_chunk_scan.py`: eager PyTorch
+  forward and initial-state-backward timing/parity across CPU and CUDA; this
+  remains the parallel semantic/performance control.
+- `mixed_monomial_golden_triton_local_prefix.py`: fused exact-table indexing
+  and `24x8` local expansion with incoming-state transpose-matvec backward and
+  safe eager fallback for trainable tables.
+- `benchmark_mixed_monomial_golden_triton_local_prefix.py`: synchronized CUDA
+  comparison against realistic indexed and optimistic pre-gathered eager
+  controls, both locally and after the endpoint scan.
+- `mixed_monomial_golden_triton_chunk_recurrence.py`: one-program-per-sequence
+  register-resident frozen-dictionary recurrence with custom initial-state
+  reverse pass; serial in chunk depth and therefore not a parallel scan.
+- `benchmark_mixed_monomial_golden_triton_chunk_recurrence.py`: five-way CUDA
+  comparison of the fused recurrence, eager recurrence, and parallel controls.
 - `spin8_five_probe_identifiability.py`: exact shared-rank and ambiguity gates.
 - `spin8_global_probe_certificate.py`: exact integral triality closure proving
   one global five-probe free tuple and a four-probe `su(2)` counterfamily.

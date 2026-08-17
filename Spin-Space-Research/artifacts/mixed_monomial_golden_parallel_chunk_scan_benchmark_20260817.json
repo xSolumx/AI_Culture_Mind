@@ -1,0 +1,3152 @@
+{
+  "algorithm": {
+    "compiled": "work-efficient ordered scan over C endpoint 8x8 matrices, then parallel selected 24x8 local-prefix application",
+    "implementation": "eager PyTorch composition; no fused custom kernel",
+    "primitive": "work-efficient ordered scan over 3C primitive 8x8 matrices"
+  },
+  "checks": {
+    "all_float32_forward_backward_parity_checks_passed": true,
+    "all_result_grids_are_complete": true
+  },
+  "claim_scope": {
+    "empirical": [
+      "the recorded eager-PyTorch forward and forward-plus-initial-state-backward timing distributions"
+    ],
+    "not_claimed": [
+      "a fused Triton or custom CUDA scan kernel has been implemented",
+      "gradients through discrete label selection or a learned continuous transition compiler",
+      "full model backward, optimizer-step, or end-to-end SSM throughput",
+      "the timing ranking generalizes beyond the recorded workstation",
+      "an SSM accuracy advantage"
+    ],
+    "validated_implementation": [
+      "the two scan trees and sequential recurrence agree in float64 unit tests, including gradients with respect to L,H,R and initial state",
+      "the recorded float32 forward and initial-state-gradient parity across the workstation grid"
+    ]
+  },
+  "exact_chunk_compiler_artifact": "mixed_monomial_golden_chunk_compiler_20260817.json",
+  "exact_chunk_compiler_artifact_sha256": "ed1ae7e8ac98c5e037be4e45d10f22ec3236e7d6f8337fbc2b9f9a499e13e5de",
+  "experiment": "two-stage compiled parallel chunk scan benchmark",
+  "passed": true,
+  "recorded_at": "2026-08-17T02:49:15.961966+02:00",
+  "results": [
+    {
+      "all_float32_forward_backward_parity_checks_passed": true,
+      "device": "cpu",
+      "matrix_dtype": "torch.float32",
+      "results": [
+        {
+          "batch_size": 1,
+          "chunk_count": 4,
+          "composition_counts": {
+            "compiled_chunk_length": 4,
+            "compiled_hillis_steele_products": 5,
+            "compiled_work_efficient_products": 10,
+            "primitive_hillis_steele_products": 33,
+            "primitive_length": 12,
+            "primitive_work_efficient_products": 46
+          },
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "compiled_speedup_vs_primitive": 1.3974264705882353,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 136.0,
+              "minimum_microseconds": 133.7,
+              "p10_microseconds": 134.8,
+              "p90_microseconds": 140.31,
+              "repeats": 100,
+              "warmups": 10
+            },
+            "compiled_vs_recurrent_max_abs_error": 1.1920928955078125e-07,
+            "primitive_vs_recurrent_max_abs_error": 1.1920928955078125e-07,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 190.05,
+              "minimum_microseconds": 185.2,
+              "p10_microseconds": 186.68,
+              "p90_microseconds": 194.88000000000002,
+              "repeats": 100,
+              "warmups": 10
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "compiled_speedup_vs_primitive": 1.0426326777277224,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 455.05,
+              "minimum_microseconds": 449.8,
+              "p10_microseconds": 450.4,
+              "p90_microseconds": 467.65000000000003,
+              "repeats": 30,
+              "warmups": 7
+            },
+            "forward_max_abs_error": 0.0,
+            "initial_state_gradient_max_abs_error": 7.450580596923828e-09,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 474.45000000000005,
+              "minimum_microseconds": 469.1,
+              "p10_microseconds": 469.79,
+              "p90_microseconds": 490.80000000000007,
+              "repeats": 30,
+              "warmups": 7
+            }
+          },
+          "primitive_sequence_length": 12
+        },
+        {
+          "batch_size": 1,
+          "chunk_count": 16,
+          "composition_counts": {
+            "compiled_chunk_length": 16,
+            "compiled_hillis_steele_products": 49,
+            "compiled_work_efficient_products": 46,
+            "primitive_hillis_steele_products": 225,
+            "primitive_length": 48,
+            "primitive_work_efficient_products": 190
+          },
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "compiled_speedup_vs_primitive": 1.3047525722684958,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 204.1,
+              "minimum_microseconds": 199.2,
+              "p10_microseconds": 201.2,
+              "p90_microseconds": 210.94000000000003,
+              "repeats": 100,
+              "warmups": 10
+            },
+            "compiled_vs_recurrent_max_abs_error": 3.5762786865234375e-07,
+            "primitive_vs_recurrent_max_abs_error": 2.384185791015625e-07,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 266.3,
+              "minimum_microseconds": 263.5,
+              "p10_microseconds": 264.5,
+              "p90_microseconds": 273.31,
+              "repeats": 100,
+              "warmups": 10
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "compiled_speedup_vs_primitive": 1.066607851786502,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 566.75,
+              "minimum_microseconds": 559.9,
+              "p10_microseconds": 562.33,
+              "p90_microseconds": 605.4900000000001,
+              "repeats": 30,
+              "warmups": 7
+            },
+            "forward_max_abs_error": 2.384185791015625e-07,
+            "initial_state_gradient_max_abs_error": 5.587935447692871e-09,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 604.5,
+              "minimum_microseconds": 582.9,
+              "p10_microseconds": 585.07,
+              "p90_microseconds": 793.01,
+              "repeats": 30,
+              "warmups": 7
+            }
+          },
+          "primitive_sequence_length": 48
+        },
+        {
+          "batch_size": 1,
+          "chunk_count": 64,
+          "composition_counts": {
+            "compiled_chunk_length": 64,
+            "compiled_hillis_steele_products": 321,
+            "compiled_work_efficient_products": 190,
+            "primitive_hillis_steele_products": 1281,
+            "primitive_length": 192,
+            "primitive_work_efficient_products": 766
+          },
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "compiled_speedup_vs_primitive": 1.3794459644322847,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 292.4,
+              "minimum_microseconds": 286.8,
+              "p10_microseconds": 287.69999999999993,
+              "p90_microseconds": 304.16,
+              "repeats": 100,
+              "warmups": 10
+            },
+            "compiled_vs_recurrent_max_abs_error": 5.960464477539062e-07,
+            "primitive_vs_recurrent_max_abs_error": 5.364418029785156e-07,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 403.35,
+              "minimum_microseconds": 396.2,
+              "p10_microseconds": 398.6,
+              "p90_microseconds": 428.13,
+              "repeats": 100,
+              "warmups": 10
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "compiled_speedup_vs_primitive": 1.103356381446269,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 694.2,
+              "minimum_microseconds": 688.0,
+              "p10_microseconds": 688.96,
+              "p90_microseconds": 813.0799999999999,
+              "repeats": 30,
+              "warmups": 7
+            },
+            "forward_max_abs_error": 2.682209014892578e-07,
+            "initial_state_gradient_max_abs_error": 3.725290298461914e-09,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 765.95,
+              "minimum_microseconds": 755.1,
+              "p10_microseconds": 756.57,
+              "p90_microseconds": 822.49,
+              "repeats": 30,
+              "warmups": 7
+            }
+          },
+          "primitive_sequence_length": 192
+        },
+        {
+          "batch_size": 64,
+          "chunk_count": 4,
+          "composition_counts": {
+            "compiled_chunk_length": 4,
+            "compiled_hillis_steele_products": 5,
+            "compiled_work_efficient_products": 10,
+            "primitive_hillis_steele_products": 33,
+            "primitive_length": 12,
+            "primitive_work_efficient_products": 46
+          },
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "compiled_speedup_vs_primitive": 1.9973791973791974,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 305.25,
+              "minimum_microseconds": 302.6,
+              "p10_microseconds": 303.38999999999993,
+              "p90_microseconds": 316.16,
+              "repeats": 50,
+              "warmups": 10
+            },
+            "compiled_vs_recurrent_max_abs_error": 4.76837158203125e-07,
+            "primitive_vs_recurrent_max_abs_error": 4.76837158203125e-07,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 609.7,
+              "minimum_microseconds": 598.2,
+              "p10_microseconds": 599.69,
+              "p90_microseconds": 730.6000000000001,
+              "repeats": 50,
+              "warmups": 10
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "compiled_speedup_vs_primitive": 1.277925260363488,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 734.55,
+              "minimum_microseconds": 708.0,
+              "p10_microseconds": 712.6800000000001,
+              "p90_microseconds": 758.85,
+              "repeats": 20,
+              "warmups": 5
+            },
+            "forward_max_abs_error": 4.76837158203125e-07,
+            "initial_state_gradient_max_abs_error": 2.3283064365386963e-10,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 938.7,
+              "minimum_microseconds": 930.5,
+              "p10_microseconds": 932.04,
+              "p90_microseconds": 1037.99,
+              "repeats": 20,
+              "warmups": 5
+            }
+          },
+          "primitive_sequence_length": 12
+        },
+        {
+          "batch_size": 64,
+          "chunk_count": 16,
+          "composition_counts": {
+            "compiled_chunk_length": 16,
+            "compiled_hillis_steele_products": 49,
+            "compiled_work_efficient_products": 46,
+            "primitive_hillis_steele_products": 225,
+            "primitive_length": 48,
+            "primitive_work_efficient_products": 190
+          },
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "compiled_speedup_vs_primitive": 2.3396181526199964,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 840.65,
+              "minimum_microseconds": 827.5,
+              "p10_microseconds": 830.0699999999999,
+              "p90_microseconds": 901.12,
+              "repeats": 50,
+              "warmups": 10
+            },
+            "compiled_vs_recurrent_max_abs_error": 4.76837158203125e-07,
+            "primitive_vs_recurrent_max_abs_error": 7.152557373046875e-07,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 1966.8,
+              "minimum_microseconds": 1866.3,
+              "p10_microseconds": 1901.3700000000001,
+              "p90_microseconds": 2134.93,
+              "repeats": 50,
+              "warmups": 10
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "compiled_speedup_vs_primitive": 1.689970855477456,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 1458.25,
+              "minimum_microseconds": 1436.4,
+              "p10_microseconds": 1440.3000000000002,
+              "p90_microseconds": 1599.74,
+              "repeats": 20,
+              "warmups": 5
+            },
+            "forward_max_abs_error": 4.76837158203125e-07,
+            "initial_state_gradient_max_abs_error": 1.7462298274040222e-10,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 2464.4,
+              "minimum_microseconds": 2332.3,
+              "p10_microseconds": 2346.95,
+              "p90_microseconds": 2627.6500000000005,
+              "repeats": 20,
+              "warmups": 5
+            }
+          },
+          "primitive_sequence_length": 48
+        },
+        {
+          "batch_size": 64,
+          "chunk_count": 64,
+          "composition_counts": {
+            "compiled_chunk_length": 64,
+            "compiled_hillis_steele_products": 321,
+            "compiled_work_efficient_products": 190,
+            "primitive_hillis_steele_products": 1281,
+            "primitive_length": 192,
+            "primitive_work_efficient_products": 766
+          },
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "compiled_speedup_vs_primitive": 2.756343477314218,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 2985.35,
+              "minimum_microseconds": 2835.4,
+              "p10_microseconds": 2901.55,
+              "p90_microseconds": 3191.7,
+              "repeats": 20,
+              "warmups": 5
+            },
+            "compiled_vs_recurrent_max_abs_error": 9.5367431640625e-07,
+            "primitive_vs_recurrent_max_abs_error": 1.1920928955078125e-06,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 8228.650000000001,
+              "minimum_microseconds": 7980.8,
+              "p10_microseconds": 8028.66,
+              "p90_microseconds": 8872.710000000001,
+              "repeats": 20,
+              "warmups": 5
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "compiled_speedup_vs_primitive": 1.9658863240418119,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 4592.0,
+              "minimum_microseconds": 4432.4,
+              "p10_microseconds": 4456.07,
+              "p90_microseconds": 4923.570000000001,
+              "repeats": 10,
+              "warmups": 5
+            },
+            "forward_max_abs_error": 9.5367431640625e-07,
+            "initial_state_gradient_max_abs_error": 8.731149137020111e-11,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 9027.35,
+              "minimum_microseconds": 8622.6,
+              "p10_microseconds": 8755.98,
+              "p90_microseconds": 9314.449999999999,
+              "repeats": 10,
+              "warmups": 5
+            }
+          },
+          "primitive_sequence_length": 192
+        },
+        {
+          "batch_size": 1024,
+          "chunk_count": 4,
+          "composition_counts": {
+            "compiled_chunk_length": 4,
+            "compiled_hillis_steele_products": 5,
+            "compiled_work_efficient_products": 10,
+            "primitive_hillis_steele_products": 33,
+            "primitive_length": 12,
+            "primitive_work_efficient_products": 46
+          },
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "compiled_speedup_vs_primitive": 3.111049021119161,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 2594.8,
+              "minimum_microseconds": 2445.5,
+              "p10_microseconds": 2482.2799999999997,
+              "p90_microseconds": 2854.68,
+              "repeats": 20,
+              "warmups": 5
+            },
+            "compiled_vs_recurrent_max_abs_error": 4.76837158203125e-07,
+            "primitive_vs_recurrent_max_abs_error": 3.5762786865234375e-07,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 8072.55,
+              "minimum_microseconds": 7659.8,
+              "p10_microseconds": 7792.87,
+              "p90_microseconds": 8247.61,
+              "repeats": 20,
+              "warmups": 5
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "compiled_speedup_vs_primitive": 2.2112611835457074,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 4057.3,
+              "minimum_microseconds": 3958.8,
+              "p10_microseconds": 3964.8300000000004,
+              "p90_microseconds": 4182.25,
+              "repeats": 10,
+              "warmups": 5
+            },
+            "forward_max_abs_error": 4.76837158203125e-07,
+            "initial_state_gradient_max_abs_error": 1.4551915228366852e-11,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 8971.75,
+              "minimum_microseconds": 8822.7,
+              "p10_microseconds": 8824.41,
+              "p90_microseconds": 9207.84,
+              "repeats": 10,
+              "warmups": 5
+            }
+          },
+          "primitive_sequence_length": 12
+        },
+        {
+          "batch_size": 1024,
+          "chunk_count": 16,
+          "composition_counts": {
+            "compiled_chunk_length": 16,
+            "compiled_hillis_steele_products": 49,
+            "compiled_work_efficient_products": 46,
+            "primitive_hillis_steele_products": 225,
+            "primitive_length": 48,
+            "primitive_work_efficient_products": 190
+          },
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "compiled_speedup_vs_primitive": 3.3666805573320016,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 12118.45,
+              "minimum_microseconds": 11750.1,
+              "p10_microseconds": 11967.560000000001,
+              "p90_microseconds": 12435.11,
+              "repeats": 20,
+              "warmups": 5
+            },
+            "compiled_vs_recurrent_max_abs_error": 9.5367431640625e-07,
+            "primitive_vs_recurrent_max_abs_error": 7.152557373046875e-07,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 40798.95,
+              "minimum_microseconds": 38237.1,
+              "p10_microseconds": 38771.75,
+              "p90_microseconds": 44106.399999999994,
+              "repeats": 20,
+              "warmups": 5
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "compiled_speedup_vs_primitive": 2.4731229803096815,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 16927.1,
+              "minimum_microseconds": 16489.2,
+              "p10_microseconds": 16639.05,
+              "p90_microseconds": 17237.16,
+              "repeats": 10,
+              "warmups": 5
+            },
+            "forward_max_abs_error": 7.152557373046875e-07,
+            "initial_state_gradient_max_abs_error": 1.4551915228366852e-11,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 41862.8,
+              "minimum_microseconds": 41312.6,
+              "p10_microseconds": 41412.86,
+              "p90_microseconds": 42253.3,
+              "repeats": 10,
+              "warmups": 5
+            }
+          },
+          "primitive_sequence_length": 48
+        },
+        {
+          "batch_size": 1024,
+          "chunk_count": 64,
+          "composition_counts": {
+            "compiled_chunk_length": 64,
+            "compiled_hillis_steele_products": 321,
+            "compiled_work_efficient_products": 190,
+            "primitive_hillis_steele_products": 1281,
+            "primitive_length": 192,
+            "primitive_work_efficient_products": 766
+          },
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "compiled_speedup_vs_primitive": 2.3020891291206547,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 62365.7,
+              "minimum_microseconds": 59802.4,
+              "p10_microseconds": 60957.19,
+              "p90_microseconds": 65246.95,
+              "repeats": 10,
+              "warmups": 5
+            },
+            "compiled_vs_recurrent_max_abs_error": 1.430511474609375e-06,
+            "primitive_vs_recurrent_max_abs_error": 1.430511474609375e-06,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 143571.4,
+              "minimum_microseconds": 142162.3,
+              "p10_microseconds": 142582.24,
+              "p90_microseconds": 147340.6,
+              "repeats": 10,
+              "warmups": 5
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "compiled_speedup_vs_primitive": 1.9888368271621664,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 78261.79999999999,
+              "minimum_microseconds": 77146.4,
+              "p10_microseconds": 77343.05,
+              "p90_microseconds": 79682.33,
+              "repeats": 10,
+              "warmups": 5
+            },
+            "forward_max_abs_error": 1.430511474609375e-06,
+            "initial_state_gradient_max_abs_error": 7.275957614183426e-12,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 155649.95,
+              "minimum_microseconds": 153769.2,
+              "p10_microseconds": 155164.2,
+              "p90_microseconds": 158771.75,
+              "repeats": 10,
+              "warmups": 5
+            }
+          },
+          "primitive_sequence_length": 192
+        }
+      ],
+      "view": "vector"
+    },
+    {
+      "all_float32_forward_backward_parity_checks_passed": true,
+      "device": "cuda",
+      "matrix_dtype": "torch.float32",
+      "results": [
+        {
+          "batch_size": 1,
+          "chunk_count": 4,
+          "composition_counts": {
+            "compiled_chunk_length": 4,
+            "compiled_hillis_steele_products": 5,
+            "compiled_work_efficient_products": 10,
+            "primitive_hillis_steele_products": 33,
+            "primitive_length": 12,
+            "primitive_work_efficient_products": 46
+          },
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "compiled_speedup_vs_primitive": 1.4290821256038646,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 517.5,
+              "minimum_microseconds": 509.7,
+              "p10_microseconds": 512.7,
+              "p90_microseconds": 574.38,
+              "repeats": 100,
+              "warmups": 10
+            },
+            "compiled_vs_recurrent_max_abs_error": 5.960464477539063e-08,
+            "primitive_vs_recurrent_max_abs_error": 5.960464477539063e-08,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 739.55,
+              "minimum_microseconds": 707.9,
+              "p10_microseconds": 715.79,
+              "p90_microseconds": 793.6000000000001,
+              "repeats": 100,
+              "warmups": 10
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "compiled_speedup_vs_primitive": 1.1471115615498557,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 1282.7,
+              "minimum_microseconds": 1216.8,
+              "p10_microseconds": 1255.3600000000001,
+              "p90_microseconds": 1654.9000000000003,
+              "repeats": 30,
+              "warmups": 7
+            },
+            "forward_max_abs_error": 0.0,
+            "initial_state_gradient_max_abs_error": 7.450580596923828e-09,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 1471.4,
+              "minimum_microseconds": 1401.0,
+              "p10_microseconds": 1419.21,
+              "p90_microseconds": 1602.29,
+              "repeats": 30,
+              "warmups": 7
+            }
+          },
+          "primitive_sequence_length": 12
+        },
+        {
+          "batch_size": 1,
+          "chunk_count": 16,
+          "composition_counts": {
+            "compiled_chunk_length": 16,
+            "compiled_hillis_steele_products": 49,
+            "compiled_work_efficient_products": 46,
+            "primitive_hillis_steele_products": 225,
+            "primitive_length": 48,
+            "primitive_work_efficient_products": 190
+          },
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "compiled_speedup_vs_primitive": 1.3215204527913558,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 777.4,
+              "minimum_microseconds": 753.5,
+              "p10_microseconds": 759.5600000000001,
+              "p90_microseconds": 865.5400000000001,
+              "repeats": 100,
+              "warmups": 10
+            },
+            "compiled_vs_recurrent_max_abs_error": 2.980232238769531e-07,
+            "primitive_vs_recurrent_max_abs_error": 2.384185791015625e-07,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 1027.35,
+              "minimum_microseconds": 972.8,
+              "p10_microseconds": 997.2700000000001,
+              "p90_microseconds": 1669.5400000000002,
+              "repeats": 100,
+              "warmups": 10
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "compiled_speedup_vs_primitive": 1.0927284252467628,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 1656.45,
+              "minimum_microseconds": 1564.9,
+              "p10_microseconds": 1582.3799999999999,
+              "p90_microseconds": 2298.14,
+              "repeats": 30,
+              "warmups": 7
+            },
+            "forward_max_abs_error": 2.384185791015625e-07,
+            "initial_state_gradient_max_abs_error": 5.587935447692871e-09,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 1810.0500000000002,
+              "minimum_microseconds": 1751.7,
+              "p10_microseconds": 1772.76,
+              "p90_microseconds": 1886.81,
+              "repeats": 30,
+              "warmups": 7
+            }
+          },
+          "primitive_sequence_length": 48
+        },
+        {
+          "batch_size": 1,
+          "chunk_count": 64,
+          "composition_counts": {
+            "compiled_chunk_length": 64,
+            "compiled_hillis_steele_products": 321,
+            "compiled_work_efficient_products": 190,
+            "primitive_hillis_steele_products": 1281,
+            "primitive_length": 192,
+            "primitive_work_efficient_products": 766
+          },
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "compiled_speedup_vs_primitive": 1.1945839395503828,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 1065.35,
+              "minimum_microseconds": 1001.8,
+              "p10_microseconds": 1008.77,
+              "p90_microseconds": 1251.0700000000002,
+              "repeats": 100,
+              "warmups": 10
+            },
+            "compiled_vs_recurrent_max_abs_error": 2.384185791015625e-07,
+            "primitive_vs_recurrent_max_abs_error": 3.5762786865234375e-07,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 1272.65,
+              "minimum_microseconds": 1190.0,
+              "p10_microseconds": 1202.03,
+              "p90_microseconds": 1360.66,
+              "repeats": 100,
+              "warmups": 10
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "compiled_speedup_vs_primitive": 1.0768233555446083,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 1928.45,
+              "minimum_microseconds": 1870.9,
+              "p10_microseconds": 1899.54,
+              "p90_microseconds": 2087.59,
+              "repeats": 30,
+              "warmups": 7
+            },
+            "forward_max_abs_error": 3.5762786865234375e-07,
+            "initial_state_gradient_max_abs_error": 1.862645149230957e-09,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 2076.6,
+              "minimum_microseconds": 1998.1,
+              "p10_microseconds": 2021.7,
+              "p90_microseconds": 2244.04,
+              "repeats": 30,
+              "warmups": 7
+            }
+          },
+          "primitive_sequence_length": 192
+        },
+        {
+          "batch_size": 64,
+          "chunk_count": 4,
+          "composition_counts": {
+            "compiled_chunk_length": 4,
+            "compiled_hillis_steele_products": 5,
+            "compiled_work_efficient_products": 10,
+            "primitive_hillis_steele_products": 33,
+            "primitive_length": 12,
+            "primitive_work_efficient_products": 46
+          },
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "compiled_speedup_vs_primitive": 1.2777458781068,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 609.55,
+              "minimum_microseconds": 572.9,
+              "p10_microseconds": 576.2,
+              "p90_microseconds": 1000.86,
+              "repeats": 50,
+              "warmups": 10
+            },
+            "compiled_vs_recurrent_max_abs_error": 2.384185791015625e-07,
+            "primitive_vs_recurrent_max_abs_error": 2.384185791015625e-07,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 778.8499999999999,
+              "minimum_microseconds": 767.5,
+              "p10_microseconds": 771.78,
+              "p90_microseconds": 840.1600000000001,
+              "repeats": 50,
+              "warmups": 10
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "compiled_speedup_vs_primitive": 1.066157674085688,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 1466.95,
+              "minimum_microseconds": 1385.3,
+              "p10_microseconds": 1439.98,
+              "p90_microseconds": 1734.3000000000004,
+              "repeats": 20,
+              "warmups": 5
+            },
+            "forward_max_abs_error": 2.384185791015625e-07,
+            "initial_state_gradient_max_abs_error": 2.3283064365386963e-10,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 1564.0,
+              "minimum_microseconds": 1510.3,
+              "p10_microseconds": 1531.7400000000002,
+              "p90_microseconds": 1962.0000000000002,
+              "repeats": 20,
+              "warmups": 5
+            }
+          },
+          "primitive_sequence_length": 12
+        },
+        {
+          "batch_size": 64,
+          "chunk_count": 16,
+          "composition_counts": {
+            "compiled_chunk_length": 16,
+            "compiled_hillis_steele_products": 49,
+            "compiled_work_efficient_products": 46,
+            "primitive_hillis_steele_products": 225,
+            "primitive_length": 48,
+            "primitive_work_efficient_products": 190
+          },
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "compiled_speedup_vs_primitive": 1.2518479715965312,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 859.05,
+              "minimum_microseconds": 818.5,
+              "p10_microseconds": 822.6999999999999,
+              "p90_microseconds": 933.2400000000002,
+              "repeats": 50,
+              "warmups": 10
+            },
+            "compiled_vs_recurrent_max_abs_error": 4.76837158203125e-07,
+            "primitive_vs_recurrent_max_abs_error": 7.152557373046875e-07,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 1075.4,
+              "minimum_microseconds": 1002.9,
+              "p10_microseconds": 1013.3399999999999,
+              "p90_microseconds": 1703.25,
+              "repeats": 50,
+              "warmups": 10
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "compiled_speedup_vs_primitive": 1.0714035292742783,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 1711.4,
+              "minimum_microseconds": 1681.6,
+              "p10_microseconds": 1683.9099999999999,
+              "p90_microseconds": 1854.11,
+              "repeats": 20,
+              "warmups": 5
+            },
+            "forward_max_abs_error": 4.76837158203125e-07,
+            "initial_state_gradient_max_abs_error": 1.7462298274040222e-10,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 1833.6,
+              "minimum_microseconds": 1761.8,
+              "p10_microseconds": 1780.67,
+              "p90_microseconds": 2569.3900000000003,
+              "repeats": 20,
+              "warmups": 5
+            }
+          },
+          "primitive_sequence_length": 48
+        },
+        {
+          "batch_size": 64,
+          "chunk_count": 64,
+          "composition_counts": {
+            "compiled_chunk_length": 64,
+            "compiled_hillis_steele_products": 321,
+            "compiled_work_efficient_products": 190,
+            "primitive_hillis_steele_products": 1281,
+            "primitive_length": 192,
+            "primitive_work_efficient_products": 766
+          },
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "compiled_speedup_vs_primitive": 1.4464436718970215,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 1064.3,
+              "minimum_microseconds": 1051.3,
+              "p10_microseconds": 1052.3799999999999,
+              "p90_microseconds": 1149.4700000000003,
+              "repeats": 20,
+              "warmups": 5
+            },
+            "compiled_vs_recurrent_max_abs_error": 1.1920928955078125e-06,
+            "primitive_vs_recurrent_max_abs_error": 1.1920928955078125e-06,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 1539.4499999999998,
+              "minimum_microseconds": 1518.6,
+              "p10_microseconds": 1524.54,
+              "p90_microseconds": 2071.36,
+              "repeats": 20,
+              "warmups": 5
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "compiled_speedup_vs_primitive": 1.0116633109070374,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 2036.3,
+              "minimum_microseconds": 1991.1,
+              "p10_microseconds": 2004.1499999999999,
+              "p90_microseconds": 2962.35,
+              "repeats": 10,
+              "warmups": 5
+            },
+            "forward_max_abs_error": 9.5367431640625e-07,
+            "initial_state_gradient_max_abs_error": 8.731149137020111e-11,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 2060.05,
+              "minimum_microseconds": 2016.1,
+              "p10_microseconds": 2036.17,
+              "p90_microseconds": 2220.5299999999997,
+              "repeats": 10,
+              "warmups": 5
+            }
+          },
+          "primitive_sequence_length": 192
+        },
+        {
+          "batch_size": 1024,
+          "chunk_count": 4,
+          "composition_counts": {
+            "compiled_chunk_length": 4,
+            "compiled_hillis_steele_products": 5,
+            "compiled_work_efficient_products": 10,
+            "primitive_hillis_steele_products": 33,
+            "primitive_length": 12,
+            "primitive_work_efficient_products": 46
+          },
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "compiled_speedup_vs_primitive": 1.713429158110883,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 608.75,
+              "minimum_microseconds": 590.7,
+              "p10_microseconds": 593.1500000000001,
+              "p90_microseconds": 674.43,
+              "repeats": 20,
+              "warmups": 5
+            },
+            "compiled_vs_recurrent_max_abs_error": 4.76837158203125e-07,
+            "primitive_vs_recurrent_max_abs_error": 4.76837158203125e-07,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 1043.05,
+              "minimum_microseconds": 1021.1,
+              "p10_microseconds": 1026.3300000000002,
+              "p90_microseconds": 1286.53,
+              "repeats": 20,
+              "warmups": 5
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "compiled_speedup_vs_primitive": 1.0463554757630162,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 1392.5,
+              "minimum_microseconds": 1338.5,
+              "p10_microseconds": 1356.8600000000001,
+              "p90_microseconds": 1475.26,
+              "repeats": 10,
+              "warmups": 5
+            },
+            "forward_max_abs_error": 4.76837158203125e-07,
+            "initial_state_gradient_max_abs_error": 1.4551915228366852e-11,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 1457.0500000000002,
+              "minimum_microseconds": 1435.4,
+              "p10_microseconds": 1439.81,
+              "p90_microseconds": 1685.2799999999997,
+              "repeats": 10,
+              "warmups": 5
+            }
+          },
+          "primitive_sequence_length": 12
+        },
+        {
+          "batch_size": 1024,
+          "chunk_count": 16,
+          "composition_counts": {
+            "compiled_chunk_length": 16,
+            "compiled_hillis_steele_products": 49,
+            "compiled_work_efficient_products": 46,
+            "primitive_hillis_steele_products": 225,
+            "primitive_length": 48,
+            "primitive_work_efficient_products": 190
+          },
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "compiled_speedup_vs_primitive": 3.196183599793708,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 969.5,
+              "minimum_microseconds": 936.1,
+              "p10_microseconds": 940.09,
+              "p90_microseconds": 1293.1,
+              "repeats": 20,
+              "warmups": 5
+            },
+            "compiled_vs_recurrent_max_abs_error": 7.152557373046875e-07,
+            "primitive_vs_recurrent_max_abs_error": 7.152557373046875e-07,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 3098.7,
+              "minimum_microseconds": 2947.2,
+              "p10_microseconds": 2966.9700000000003,
+              "p90_microseconds": 3762.12,
+              "repeats": 20,
+              "warmups": 5
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "compiled_speedup_vs_primitive": 1.953133499384466,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 1746.4499999999998,
+              "minimum_microseconds": 1653.4,
+              "p10_microseconds": 1677.25,
+              "p90_microseconds": 1928.2699999999998,
+              "repeats": 10,
+              "warmups": 5
+            },
+            "forward_max_abs_error": 7.152557373046875e-07,
+            "initial_state_gradient_max_abs_error": 1.4551915228366852e-11,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 3411.05,
+              "minimum_microseconds": 3117.4,
+              "p10_microseconds": 3122.1699999999996,
+              "p90_microseconds": 3919.91,
+              "repeats": 10,
+              "warmups": 5
+            }
+          },
+          "primitive_sequence_length": 48
+        },
+        {
+          "batch_size": 1024,
+          "chunk_count": 64,
+          "composition_counts": {
+            "compiled_chunk_length": 64,
+            "compiled_hillis_steele_products": 321,
+            "compiled_work_efficient_products": 190,
+            "primitive_hillis_steele_products": 1281,
+            "primitive_length": 192,
+            "primitive_work_efficient_products": 766
+          },
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "compiled_speedup_vs_primitive": 3.737435456110155,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 3486.0,
+              "minimum_microseconds": 3103.4,
+              "p10_microseconds": 3115.01,
+              "p90_microseconds": 3840.79,
+              "repeats": 10,
+              "warmups": 5
+            },
+            "compiled_vs_recurrent_max_abs_error": 1.1920928955078125e-06,
+            "primitive_vs_recurrent_max_abs_error": 1.430511474609375e-06,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 13028.7,
+              "minimum_microseconds": 12234.4,
+              "p10_microseconds": 12799.779999999999,
+              "p90_microseconds": 13087.77,
+              "repeats": 10,
+              "warmups": 5
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "compiled_speedup_vs_primitive": 3.2620501073386023,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 4169.05,
+              "minimum_microseconds": 3535.0,
+              "p10_microseconds": 3544.7200000000003,
+              "p90_microseconds": 4286.45,
+              "repeats": 10,
+              "warmups": 5
+            },
+            "forward_max_abs_error": 1.430511474609375e-06,
+            "initial_state_gradient_max_abs_error": 7.275957614183426e-12,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 13599.650000000001,
+              "minimum_microseconds": 13536.9,
+              "p10_microseconds": 13537.170000000002,
+              "p90_microseconds": 13684.36,
+              "repeats": 10,
+              "warmups": 5
+            }
+          },
+          "primitive_sequence_length": 192
+        }
+      ],
+      "view": "vector"
+    },
+    {
+      "all_float32_forward_backward_parity_checks_passed": true,
+      "device": "cpu",
+      "matrix_dtype": "torch.float32",
+      "results": [
+        {
+          "batch_size": 1,
+          "chunk_count": 4,
+          "composition_counts": {
+            "compiled_chunk_length": 4,
+            "compiled_hillis_steele_products": 5,
+            "compiled_work_efficient_products": 10,
+            "primitive_hillis_steele_products": 33,
+            "primitive_length": 12,
+            "primitive_work_efficient_products": 46
+          },
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "compiled_speedup_vs_primitive": 1.3693825356229445,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 136.85000000000002,
+              "minimum_microseconds": 134.4,
+              "p10_microseconds": 135.67999999999998,
+              "p90_microseconds": 139.60999999999999,
+              "repeats": 100,
+              "warmups": 10
+            },
+            "compiled_vs_recurrent_max_abs_error": 1.1920928955078125e-07,
+            "primitive_vs_recurrent_max_abs_error": 1.1920928955078125e-07,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 187.4,
+              "minimum_microseconds": 185.3,
+              "p10_microseconds": 186.19,
+              "p90_microseconds": 191.57000000000002,
+              "repeats": 100,
+              "warmups": 10
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "compiled_speedup_vs_primitive": 1.0296858071505959,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 461.5,
+              "minimum_microseconds": 454.5,
+              "p10_microseconds": 456.71000000000004,
+              "p90_microseconds": 577.38,
+              "repeats": 30,
+              "warmups": 7
+            },
+            "forward_max_abs_error": 1.1920928955078125e-07,
+            "initial_state_gradient_max_abs_error": 7.450580596923828e-09,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 475.20000000000005,
+              "minimum_microseconds": 469.5,
+              "p10_microseconds": 471.93,
+              "p90_microseconds": 498.53000000000003,
+              "repeats": 30,
+              "warmups": 7
+            }
+          },
+          "primitive_sequence_length": 12
+        },
+        {
+          "batch_size": 1,
+          "chunk_count": 16,
+          "composition_counts": {
+            "compiled_chunk_length": 16,
+            "compiled_hillis_steele_products": 49,
+            "compiled_work_efficient_products": 46,
+            "primitive_hillis_steele_products": 225,
+            "primitive_length": 48,
+            "primitive_work_efficient_products": 190
+          },
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "compiled_speedup_vs_primitive": 1.3205065757428154,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 205.3,
+              "minimum_microseconds": 202.8,
+              "p10_microseconds": 203.59,
+              "p90_microseconds": 224.98000000000002,
+              "repeats": 100,
+              "warmups": 10
+            },
+            "compiled_vs_recurrent_max_abs_error": 7.152557373046875e-07,
+            "primitive_vs_recurrent_max_abs_error": 4.76837158203125e-07,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 271.1,
+              "minimum_microseconds": 267.5,
+              "p10_microseconds": 269.1,
+              "p90_microseconds": 294.1,
+              "repeats": 100,
+              "warmups": 10
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "compiled_speedup_vs_primitive": 1.0117465489153732,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 583.1500000000001,
+              "minimum_microseconds": 555.8,
+              "p10_microseconds": 560.28,
+              "p90_microseconds": 615.0600000000001,
+              "repeats": 30,
+              "warmups": 7
+            },
+            "forward_max_abs_error": 7.152557373046875e-07,
+            "initial_state_gradient_max_abs_error": 3.725290298461914e-09,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 590.0,
+              "minimum_microseconds": 586.0,
+              "p10_microseconds": 586.39,
+              "p90_microseconds": 606.4599999999999,
+              "repeats": 30,
+              "warmups": 7
+            }
+          },
+          "primitive_sequence_length": 48
+        },
+        {
+          "batch_size": 1,
+          "chunk_count": 64,
+          "composition_counts": {
+            "compiled_chunk_length": 64,
+            "compiled_hillis_steele_products": 321,
+            "compiled_work_efficient_products": 190,
+            "primitive_hillis_steele_products": 1281,
+            "primitive_length": 192,
+            "primitive_work_efficient_products": 766
+          },
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "compiled_speedup_vs_primitive": 1.413887463656576,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 292.35,
+              "minimum_microseconds": 289.2,
+              "p10_microseconds": 290.3,
+              "p90_microseconds": 305.41,
+              "repeats": 100,
+              "warmups": 10
+            },
+            "compiled_vs_recurrent_max_abs_error": 4.172325134277344e-07,
+            "primitive_vs_recurrent_max_abs_error": 4.172325134277344e-07,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 413.35,
+              "minimum_microseconds": 403.0,
+              "p10_microseconds": 404.19,
+              "p90_microseconds": 432.96999999999997,
+              "repeats": 100,
+              "warmups": 10
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "compiled_speedup_vs_primitive": 1.0953879156238828,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 699.25,
+              "minimum_microseconds": 691.1,
+              "p10_microseconds": 692.6800000000001,
+              "p90_microseconds": 721.95,
+              "repeats": 30,
+              "warmups": 7
+            },
+            "forward_max_abs_error": 5.960464477539062e-07,
+            "initial_state_gradient_max_abs_error": 3.3760443329811096e-09,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 765.95,
+              "minimum_microseconds": 758.4,
+              "p10_microseconds": 759.13,
+              "p90_microseconds": 795.35,
+              "repeats": 30,
+              "warmups": 7
+            }
+          },
+          "primitive_sequence_length": 192
+        },
+        {
+          "batch_size": 64,
+          "chunk_count": 4,
+          "composition_counts": {
+            "compiled_chunk_length": 4,
+            "compiled_hillis_steele_products": 5,
+            "compiled_work_efficient_products": 10,
+            "primitive_hillis_steele_products": 33,
+            "primitive_length": 12,
+            "primitive_work_efficient_products": 46
+          },
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "compiled_speedup_vs_primitive": 2.082132803444279,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 301.95,
+              "minimum_microseconds": 298.8,
+              "p10_microseconds": 299.85999999999996,
+              "p90_microseconds": 310.81,
+              "repeats": 50,
+              "warmups": 10
+            },
+            "compiled_vs_recurrent_max_abs_error": 3.5762786865234375e-07,
+            "primitive_vs_recurrent_max_abs_error": 3.5762786865234375e-07,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 628.7,
+              "minimum_microseconds": 601.3,
+              "p10_microseconds": 602.59,
+              "p90_microseconds": 701.8499999999999,
+              "repeats": 50,
+              "warmups": 10
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "compiled_speedup_vs_primitive": 1.2640407470288626,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 736.25,
+              "minimum_microseconds": 707.0,
+              "p10_microseconds": 712.4200000000001,
+              "p90_microseconds": 762.3100000000001,
+              "repeats": 20,
+              "warmups": 5
+            },
+            "forward_max_abs_error": 3.5762786865234375e-07,
+            "initial_state_gradient_max_abs_error": 2.3283064365386963e-10,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 930.6500000000001,
+              "minimum_microseconds": 919.1,
+              "p10_microseconds": 919.56,
+              "p90_microseconds": 998.5999999999999,
+              "repeats": 20,
+              "warmups": 5
+            }
+          },
+          "primitive_sequence_length": 12
+        },
+        {
+          "batch_size": 64,
+          "chunk_count": 16,
+          "composition_counts": {
+            "compiled_chunk_length": 16,
+            "compiled_hillis_steele_products": 49,
+            "compiled_work_efficient_products": 46,
+            "primitive_hillis_steele_products": 225,
+            "primitive_length": 48,
+            "primitive_work_efficient_products": 190
+          },
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "compiled_speedup_vs_primitive": 2.391829318328351,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 853.05,
+              "minimum_microseconds": 829.8,
+              "p10_microseconds": 832.57,
+              "p90_microseconds": 966.99,
+              "repeats": 50,
+              "warmups": 10
+            },
+            "compiled_vs_recurrent_max_abs_error": 7.152557373046875e-07,
+            "primitive_vs_recurrent_max_abs_error": 9.5367431640625e-07,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 2040.35,
+              "minimum_microseconds": 1859.7,
+              "p10_microseconds": 1894.8200000000002,
+              "p90_microseconds": 2286.94,
+              "repeats": 50,
+              "warmups": 10
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "compiled_speedup_vs_primitive": 1.7324158514342565,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 1507.75,
+              "minimum_microseconds": 1454.8,
+              "p10_microseconds": 1457.8600000000001,
+              "p90_microseconds": 1595.76,
+              "repeats": 20,
+              "warmups": 5
+            },
+            "forward_max_abs_error": 8.940696716308594e-07,
+            "initial_state_gradient_max_abs_error": 1.7462298274040222e-10,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 2612.05,
+              "minimum_microseconds": 2358.3,
+              "p10_microseconds": 2421.8900000000003,
+              "p90_microseconds": 2855.2700000000004,
+              "repeats": 20,
+              "warmups": 5
+            }
+          },
+          "primitive_sequence_length": 48
+        },
+        {
+          "batch_size": 64,
+          "chunk_count": 64,
+          "composition_counts": {
+            "compiled_chunk_length": 64,
+            "compiled_hillis_steele_products": 321,
+            "compiled_work_efficient_products": 190,
+            "primitive_hillis_steele_products": 1281,
+            "primitive_length": 192,
+            "primitive_work_efficient_products": 766
+          },
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "compiled_speedup_vs_primitive": 2.6310153631063025,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 3147.15,
+              "minimum_microseconds": 2878.1,
+              "p10_microseconds": 2940.8399999999997,
+              "p90_microseconds": 3287.55,
+              "repeats": 20,
+              "warmups": 5
+            },
+            "compiled_vs_recurrent_max_abs_error": 1.430511474609375e-06,
+            "primitive_vs_recurrent_max_abs_error": 1.1920928955078125e-06,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 8280.2,
+              "minimum_microseconds": 7928.3,
+              "p10_microseconds": 8036.77,
+              "p90_microseconds": 8697.19,
+              "repeats": 20,
+              "warmups": 5
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "compiled_speedup_vs_primitive": 2.0106014759344317,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 4593.7,
+              "minimum_microseconds": 4490.5,
+              "p10_microseconds": 4508.77,
+              "p90_microseconds": 5433.16,
+              "repeats": 10,
+              "warmups": 5
+            },
+            "forward_max_abs_error": 1.6689300537109375e-06,
+            "initial_state_gradient_max_abs_error": 1.1641532182693481e-10,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 9236.099999999999,
+              "minimum_microseconds": 8737.7,
+              "p10_microseconds": 8912.57,
+              "p90_microseconds": 9367.93,
+              "repeats": 10,
+              "warmups": 5
+            }
+          },
+          "primitive_sequence_length": 192
+        },
+        {
+          "batch_size": 1024,
+          "chunk_count": 4,
+          "composition_counts": {
+            "compiled_chunk_length": 4,
+            "compiled_hillis_steele_products": 5,
+            "compiled_work_efficient_products": 10,
+            "primitive_hillis_steele_products": 33,
+            "primitive_length": 12,
+            "primitive_work_efficient_products": 46
+          },
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "compiled_speedup_vs_primitive": 2.960542929292929,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 2692.8,
+              "minimum_microseconds": 2438.5,
+              "p10_microseconds": 2528.14,
+              "p90_microseconds": 3137.95,
+              "repeats": 20,
+              "warmups": 5
+            },
+            "compiled_vs_recurrent_max_abs_error": 5.960464477539062e-07,
+            "primitive_vs_recurrent_max_abs_error": 5.066394805908203e-07,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 7972.15,
+              "minimum_microseconds": 7539.0,
+              "p10_microseconds": 7602.09,
+              "p90_microseconds": 8372.6,
+              "repeats": 20,
+              "warmups": 5
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "compiled_speedup_vs_primitive": 2.1795794913241,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 4083.15,
+              "minimum_microseconds": 3892.8,
+              "p10_microseconds": 3992.5199999999995,
+              "p90_microseconds": 4377.7,
+              "repeats": 10,
+              "warmups": 5
+            },
+            "forward_max_abs_error": 5.960464477539062e-07,
+            "initial_state_gradient_max_abs_error": 1.4551915228366852e-11,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 8899.55,
+              "minimum_microseconds": 8472.1,
+              "p10_microseconds": 8741.47,
+              "p90_microseconds": 9166.63,
+              "repeats": 10,
+              "warmups": 5
+            }
+          },
+          "primitive_sequence_length": 12
+        },
+        {
+          "batch_size": 1024,
+          "chunk_count": 16,
+          "composition_counts": {
+            "compiled_chunk_length": 16,
+            "compiled_hillis_steele_products": 49,
+            "compiled_work_efficient_products": 46,
+            "primitive_hillis_steele_products": 225,
+            "primitive_length": 48,
+            "primitive_work_efficient_products": 190
+          },
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "compiled_speedup_vs_primitive": 3.3396041854386347,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 12318.900000000001,
+              "minimum_microseconds": 11870.3,
+              "p10_microseconds": 11988.9,
+              "p90_microseconds": 12567.920000000002,
+              "repeats": 20,
+              "warmups": 5
+            },
+            "compiled_vs_recurrent_max_abs_error": 1.1920928955078125e-06,
+            "primitive_vs_recurrent_max_abs_error": 1.1920928955078125e-06,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 41140.25,
+              "minimum_microseconds": 38220.8,
+              "p10_microseconds": 39919.990000000005,
+              "p90_microseconds": 43067.950000000004,
+              "repeats": 20,
+              "warmups": 5
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "compiled_speedup_vs_primitive": 2.4241778346166485,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 16889.85,
+              "minimum_microseconds": 16571.8,
+              "p10_microseconds": 16624.63,
+              "p90_microseconds": 17250.329999999998,
+              "repeats": 10,
+              "warmups": 5
+            },
+            "forward_max_abs_error": 1.0728836059570312e-06,
+            "initial_state_gradient_max_abs_error": 1.0913936421275139e-11,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 40944.0,
+              "minimum_microseconds": 40408.2,
+              "p10_microseconds": 40618.08,
+              "p90_microseconds": 41987.86,
+              "repeats": 10,
+              "warmups": 5
+            }
+          },
+          "primitive_sequence_length": 48
+        },
+        {
+          "batch_size": 1024,
+          "chunk_count": 64,
+          "composition_counts": {
+            "compiled_chunk_length": 64,
+            "compiled_hillis_steele_products": 321,
+            "compiled_work_efficient_products": 190,
+            "primitive_hillis_steele_products": 1281,
+            "primitive_length": 192,
+            "primitive_work_efficient_products": 766
+          },
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "compiled_speedup_vs_primitive": 2.4537315847428,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 57486.3,
+              "minimum_microseconds": 56701.5,
+              "p10_microseconds": 56817.96000000001,
+              "p90_microseconds": 58161.479999999996,
+              "repeats": 10,
+              "warmups": 5
+            },
+            "compiled_vs_recurrent_max_abs_error": 2.1457672119140625e-06,
+            "primitive_vs_recurrent_max_abs_error": 2.1457672119140625e-06,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 141055.95,
+              "minimum_microseconds": 139685.6,
+              "p10_microseconds": 139691.0,
+              "p90_microseconds": 142669.16,
+              "repeats": 10,
+              "warmups": 5
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "compiled_speedup_vs_primitive": 1.828331671950773,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 86123.04999999999,
+              "minimum_microseconds": 80525.0,
+              "p10_microseconds": 80890.85,
+              "p90_microseconds": 86965.91,
+              "repeats": 10,
+              "warmups": 5
+            },
+            "forward_max_abs_error": 1.9073486328125e-06,
+            "initial_state_gradient_max_abs_error": 1.0913936421275139e-11,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 157461.5,
+              "minimum_microseconds": 155215.7,
+              "p10_microseconds": 155787.02000000002,
+              "p90_microseconds": 159730.97,
+              "repeats": 10,
+              "warmups": 5
+            }
+          },
+          "primitive_sequence_length": 192
+        }
+      ],
+      "view": "positive_half_spin"
+    },
+    {
+      "all_float32_forward_backward_parity_checks_passed": true,
+      "device": "cuda",
+      "matrix_dtype": "torch.float32",
+      "results": [
+        {
+          "batch_size": 1,
+          "chunk_count": 4,
+          "composition_counts": {
+            "compiled_chunk_length": 4,
+            "compiled_hillis_steele_products": 5,
+            "compiled_work_efficient_products": 10,
+            "primitive_hillis_steele_products": 33,
+            "primitive_length": 12,
+            "primitive_work_efficient_products": 46
+          },
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "compiled_speedup_vs_primitive": 1.4002216271123833,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 541.45,
+              "minimum_microseconds": 511.6,
+              "p10_microseconds": 515.4,
+              "p90_microseconds": 578.3599999999999,
+              "repeats": 100,
+              "warmups": 10
+            },
+            "compiled_vs_recurrent_max_abs_error": 1.1920928955078125e-07,
+            "primitive_vs_recurrent_max_abs_error": 5.960464477539063e-08,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 758.15,
+              "minimum_microseconds": 714.2,
+              "p10_microseconds": 718.1800000000001,
+              "p90_microseconds": 800.6700000000001,
+              "repeats": 100,
+              "warmups": 10
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "compiled_speedup_vs_primitive": 1.1165097840096865,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 1280.15,
+              "minimum_microseconds": 1229.3,
+              "p10_microseconds": 1233.99,
+              "p90_microseconds": 1398.56,
+              "repeats": 30,
+              "warmups": 7
+            },
+            "forward_max_abs_error": 1.1920928955078125e-07,
+            "initial_state_gradient_max_abs_error": 5.587935447692871e-09,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 1429.3000000000002,
+              "minimum_microseconds": 1395.3,
+              "p10_microseconds": 1406.38,
+              "p90_microseconds": 1788.8700000000006,
+              "repeats": 30,
+              "warmups": 7
+            }
+          },
+          "primitive_sequence_length": 12
+        },
+        {
+          "batch_size": 1,
+          "chunk_count": 16,
+          "composition_counts": {
+            "compiled_chunk_length": 16,
+            "compiled_hillis_steele_products": 49,
+            "compiled_work_efficient_products": 46,
+            "primitive_hillis_steele_products": 225,
+            "primitive_length": 48,
+            "primitive_work_efficient_products": 190
+          },
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "compiled_speedup_vs_primitive": 1.2278882517994387,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 819.7,
+              "minimum_microseconds": 754.7,
+              "p10_microseconds": 758.54,
+              "p90_microseconds": 1314.7100000000003,
+              "repeats": 100,
+              "warmups": 10
+            },
+            "compiled_vs_recurrent_max_abs_error": 4.76837158203125e-07,
+            "primitive_vs_recurrent_max_abs_error": 7.152557373046875e-07,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 1006.5,
+              "minimum_microseconds": 952.3,
+              "p10_microseconds": 968.3499999999999,
+              "p90_microseconds": 1144.5400000000009,
+              "repeats": 100,
+              "warmups": 10
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "compiled_speedup_vs_primitive": 1.0925594787088952,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 1649.75,
+              "minimum_microseconds": 1574.1,
+              "p10_microseconds": 1581.07,
+              "p90_microseconds": 1918.9300000000005,
+              "repeats": 30,
+              "warmups": 7
+            },
+            "forward_max_abs_error": 7.152557373046875e-07,
+            "initial_state_gradient_max_abs_error": 2.7939677238464355e-09,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 1802.45,
+              "minimum_microseconds": 1751.4,
+              "p10_microseconds": 1771.9299999999998,
+              "p90_microseconds": 1925.3700000000003,
+              "repeats": 30,
+              "warmups": 7
+            }
+          },
+          "primitive_sequence_length": 48
+        },
+        {
+          "batch_size": 1,
+          "chunk_count": 64,
+          "composition_counts": {
+            "compiled_chunk_length": 64,
+            "compiled_hillis_steele_products": 321,
+            "compiled_work_efficient_products": 190,
+            "primitive_hillis_steele_products": 1281,
+            "primitive_length": 192,
+            "primitive_work_efficient_products": 766
+          },
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "compiled_speedup_vs_primitive": 1.233422007255139,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 1033.75,
+              "minimum_microseconds": 998.4,
+              "p10_microseconds": 1003.1600000000001,
+              "p90_microseconds": 1687.56,
+              "repeats": 100,
+              "warmups": 10
+            },
+            "compiled_vs_recurrent_max_abs_error": 5.960464477539062e-07,
+            "primitive_vs_recurrent_max_abs_error": 2.980232238769531e-07,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 1275.05,
+              "minimum_microseconds": 1194.2,
+              "p10_microseconds": 1200.9299999999998,
+              "p90_microseconds": 1410.4800000000005,
+              "repeats": 100,
+              "warmups": 10
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "compiled_speedup_vs_primitive": 1.1072649243183512,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 1945.65,
+              "minimum_microseconds": 1869.1,
+              "p10_microseconds": 1882.44,
+              "p90_microseconds": 2180.210000000001,
+              "repeats": 30,
+              "warmups": 7
+            },
+            "forward_max_abs_error": 3.5762786865234375e-07,
+            "initial_state_gradient_max_abs_error": 4.6566128730773926e-09,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 2154.3500000000004,
+              "minimum_microseconds": 2039.8,
+              "p10_microseconds": 2093.76,
+              "p90_microseconds": 2355.1000000000013,
+              "repeats": 30,
+              "warmups": 7
+            }
+          },
+          "primitive_sequence_length": 192
+        },
+        {
+          "batch_size": 64,
+          "chunk_count": 4,
+          "composition_counts": {
+            "compiled_chunk_length": 4,
+            "compiled_hillis_steele_products": 5,
+            "compiled_work_efficient_products": 10,
+            "primitive_hillis_steele_products": 33,
+            "primitive_length": 12,
+            "primitive_work_efficient_products": 46
+          },
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "compiled_speedup_vs_primitive": 1.2574975814253466,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 620.2,
+              "minimum_microseconds": 573.6,
+              "p10_microseconds": 579.2299999999999,
+              "p90_microseconds": 980.05,
+              "repeats": 50,
+              "warmups": 10
+            },
+            "compiled_vs_recurrent_max_abs_error": 3.5762786865234375e-07,
+            "primitive_vs_recurrent_max_abs_error": 2.384185791015625e-07,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 779.9,
+              "minimum_microseconds": 761.1,
+              "p10_microseconds": 770.5600000000001,
+              "p90_microseconds": 834.74,
+              "repeats": 50,
+              "warmups": 10
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "compiled_speedup_vs_primitive": 1.0765376166941238,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 1456.8000000000002,
+              "minimum_microseconds": 1429.5,
+              "p10_microseconds": 1433.9499999999998,
+              "p90_microseconds": 1677.6600000000008,
+              "repeats": 20,
+              "warmups": 5
+            },
+            "forward_max_abs_error": 2.980232238769531e-07,
+            "initial_state_gradient_max_abs_error": 2.3283064365386963e-10,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 1568.3,
+              "minimum_microseconds": 1491.3,
+              "p10_microseconds": 1533.4299999999998,
+              "p90_microseconds": 1727.7800000000002,
+              "repeats": 20,
+              "warmups": 5
+            }
+          },
+          "primitive_sequence_length": 12
+        },
+        {
+          "batch_size": 64,
+          "chunk_count": 16,
+          "composition_counts": {
+            "compiled_chunk_length": 16,
+            "compiled_hillis_steele_products": 49,
+            "compiled_work_efficient_products": 46,
+            "primitive_hillis_steele_products": 225,
+            "primitive_length": 48,
+            "primitive_work_efficient_products": 190
+          },
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "compiled_speedup_vs_primitive": 1.1603083952027413,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 875.5,
+              "minimum_microseconds": 818.2,
+              "p10_microseconds": 852.5100000000001,
+              "p90_microseconds": 1392.12,
+              "repeats": 50,
+              "warmups": 10
+            },
+            "compiled_vs_recurrent_max_abs_error": 7.152557373046875e-07,
+            "primitive_vs_recurrent_max_abs_error": 7.152557373046875e-07,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 1015.85,
+              "minimum_microseconds": 997.0,
+              "p10_microseconds": 1002.4399999999999,
+              "p90_microseconds": 1126.43,
+              "repeats": 50,
+              "warmups": 10
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "compiled_speedup_vs_primitive": 1.1073829426550537,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 1710.6999999999998,
+              "minimum_microseconds": 1677.3,
+              "p10_microseconds": 1688.1100000000001,
+              "p90_microseconds": 1835.0100000000002,
+              "repeats": 20,
+              "warmups": 5
+            },
+            "forward_max_abs_error": 7.152557373046875e-07,
+            "initial_state_gradient_max_abs_error": 1.7462298274040222e-10,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 1894.4,
+              "minimum_microseconds": 1803.3,
+              "p10_microseconds": 1837.3,
+              "p90_microseconds": 2003.6200000000001,
+              "repeats": 20,
+              "warmups": 5
+            }
+          },
+          "primitive_sequence_length": 48
+        },
+        {
+          "batch_size": 64,
+          "chunk_count": 64,
+          "composition_counts": {
+            "compiled_chunk_length": 64,
+            "compiled_hillis_steele_products": 321,
+            "compiled_work_efficient_products": 190,
+            "primitive_hillis_steele_products": 1281,
+            "primitive_length": 192,
+            "primitive_work_efficient_products": 766
+          },
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "compiled_speedup_vs_primitive": 1.3689108558197525,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 1122.9,
+              "minimum_microseconds": 1107.1,
+              "p10_microseconds": 1109.9799999999998,
+              "p90_microseconds": 1274.8100000000002,
+              "repeats": 20,
+              "warmups": 5
+            },
+            "compiled_vs_recurrent_max_abs_error": 1.1920928955078125e-06,
+            "primitive_vs_recurrent_max_abs_error": 1.430511474609375e-06,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 1537.15,
+              "minimum_microseconds": 1518.8,
+              "p10_microseconds": 1520.53,
+              "p90_microseconds": 2135.56,
+              "repeats": 20,
+              "warmups": 5
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "compiled_speedup_vs_primitive": 1.0356397219561317,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 2035.65,
+              "minimum_microseconds": 1989.5,
+              "p10_microseconds": 1996.88,
+              "p90_microseconds": 2919.2099999999996,
+              "repeats": 10,
+              "warmups": 5
+            },
+            "forward_max_abs_error": 1.430511474609375e-06,
+            "initial_state_gradient_max_abs_error": 9.458744898438454e-11,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 2108.2,
+              "minimum_microseconds": 2045.0,
+              "p10_microseconds": 2059.76,
+              "p90_microseconds": 3142.03,
+              "repeats": 10,
+              "warmups": 5
+            }
+          },
+          "primitive_sequence_length": 192
+        },
+        {
+          "batch_size": 1024,
+          "chunk_count": 4,
+          "composition_counts": {
+            "compiled_chunk_length": 4,
+            "compiled_hillis_steele_products": 5,
+            "compiled_work_efficient_products": 10,
+            "primitive_hillis_steele_products": 33,
+            "primitive_length": 12,
+            "primitive_work_efficient_products": 46
+          },
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "compiled_speedup_vs_primitive": 1.818205851251322,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 567.4,
+              "minimum_microseconds": 559.6,
+              "p10_microseconds": 559.87,
+              "p90_microseconds": 641.38,
+              "repeats": 20,
+              "warmups": 5
+            },
+            "compiled_vs_recurrent_max_abs_error": 4.76837158203125e-07,
+            "primitive_vs_recurrent_max_abs_error": 4.76837158203125e-07,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 1031.65,
+              "minimum_microseconds": 1003.2,
+              "p10_microseconds": 1022.3900000000001,
+              "p90_microseconds": 1616.3300000000002,
+              "repeats": 20,
+              "warmups": 5
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "compiled_speedup_vs_primitive": 1.0527952505477418,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 1414.9,
+              "minimum_microseconds": 1332.9,
+              "p10_microseconds": 1341.1799999999998,
+              "p90_microseconds": 1513.62,
+              "repeats": 10,
+              "warmups": 5
+            },
+            "forward_max_abs_error": 4.76837158203125e-07,
+            "initial_state_gradient_max_abs_error": 2.1827872842550278e-11,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 1489.6,
+              "minimum_microseconds": 1433.5,
+              "p10_microseconds": 1446.01,
+              "p90_microseconds": 1601.1799999999998,
+              "repeats": 10,
+              "warmups": 5
+            }
+          },
+          "primitive_sequence_length": 12
+        },
+        {
+          "batch_size": 1024,
+          "chunk_count": 16,
+          "composition_counts": {
+            "compiled_chunk_length": 16,
+            "compiled_hillis_steele_products": 49,
+            "compiled_work_efficient_products": 46,
+            "primitive_hillis_steele_products": 225,
+            "primitive_length": 48,
+            "primitive_work_efficient_products": 190
+          },
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "compiled_speedup_vs_primitive": 3.873181866440174,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 941.9000000000001,
+              "minimum_microseconds": 926.5,
+              "p10_microseconds": 927.2399999999999,
+              "p90_microseconds": 1260.7500000000002,
+              "repeats": 20,
+              "warmups": 5
+            },
+            "compiled_vs_recurrent_max_abs_error": 8.344650268554688e-07,
+            "primitive_vs_recurrent_max_abs_error": 9.5367431640625e-07,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 3648.15,
+              "minimum_microseconds": 2925.4,
+              "p10_microseconds": 3411.6800000000003,
+              "p90_microseconds": 4293.04,
+              "repeats": 20,
+              "warmups": 5
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "compiled_speedup_vs_primitive": 1.9932348792353973,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 1736.85,
+              "minimum_microseconds": 1642.9,
+              "p10_microseconds": 1678.72,
+              "p90_microseconds": 1796.94,
+              "repeats": 10,
+              "warmups": 5
+            },
+            "forward_max_abs_error": 8.344650268554688e-07,
+            "initial_state_gradient_max_abs_error": 1.2732925824820995e-11,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 3461.95,
+              "minimum_microseconds": 3066.4,
+              "p10_microseconds": 3071.44,
+              "p90_microseconds": 3890.0299999999997,
+              "repeats": 10,
+              "warmups": 5
+            }
+          },
+          "primitive_sequence_length": 48
+        },
+        {
+          "batch_size": 1024,
+          "chunk_count": 64,
+          "composition_counts": {
+            "compiled_chunk_length": 64,
+            "compiled_hillis_steele_products": 321,
+            "compiled_work_efficient_products": 190,
+            "primitive_hillis_steele_products": 1281,
+            "primitive_length": 192,
+            "primitive_work_efficient_products": 766
+          },
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "compiled_speedup_vs_primitive": 3.7517169735095517,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 3465.4,
+              "minimum_microseconds": 3085.9,
+              "p10_microseconds": 3104.4399999999996,
+              "p90_microseconds": 3821.07,
+              "repeats": 10,
+              "warmups": 5
+            },
+            "compiled_vs_recurrent_max_abs_error": 2.1457672119140625e-06,
+            "primitive_vs_recurrent_max_abs_error": 1.9073486328125e-06,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 13001.2,
+              "minimum_microseconds": 12254.2,
+              "p10_microseconds": 12874.12,
+              "p90_microseconds": 13365.919999999998,
+              "repeats": 10,
+              "warmups": 5
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "compiled_speedup_vs_primitive": 3.107267851461297,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 4400.2,
+              "minimum_microseconds": 3568.3,
+              "p10_microseconds": 3588.0099999999998,
+              "p90_microseconds": 4762.030000000001,
+              "repeats": 10,
+              "warmups": 5
+            },
+            "forward_max_abs_error": 1.6689300537109375e-06,
+            "initial_state_gradient_max_abs_error": 7.503331289626658e-12,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 13672.599999999999,
+              "minimum_microseconds": 13543.6,
+              "p10_microseconds": 13593.55,
+              "p90_microseconds": 14059.36,
+              "repeats": 10,
+              "warmups": 5
+            }
+          },
+          "primitive_sequence_length": 192
+        }
+      ],
+      "view": "positive_half_spin"
+    },
+    {
+      "all_float32_forward_backward_parity_checks_passed": true,
+      "device": "cpu",
+      "matrix_dtype": "torch.float32",
+      "results": [
+        {
+          "batch_size": 1,
+          "chunk_count": 4,
+          "composition_counts": {
+            "compiled_chunk_length": 4,
+            "compiled_hillis_steele_products": 5,
+            "compiled_work_efficient_products": 10,
+            "primitive_hillis_steele_products": 33,
+            "primitive_length": 12,
+            "primitive_work_efficient_products": 46
+          },
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "compiled_speedup_vs_primitive": 1.383164005805515,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 137.8,
+              "minimum_microseconds": 136.0,
+              "p10_microseconds": 136.5,
+              "p90_microseconds": 140.34,
+              "repeats": 100,
+              "warmups": 10
+            },
+            "compiled_vs_recurrent_max_abs_error": 1.1920928955078125e-07,
+            "primitive_vs_recurrent_max_abs_error": 1.1920928955078125e-07,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 190.6,
+              "minimum_microseconds": 188.5,
+              "p10_microseconds": 189.29000000000002,
+              "p90_microseconds": 193.42000000000002,
+              "repeats": 100,
+              "warmups": 10
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "compiled_speedup_vs_primitive": 1.0466703357182168,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 454.25,
+              "minimum_microseconds": 449.3,
+              "p10_microseconds": 451.56,
+              "p90_microseconds": 477.62,
+              "repeats": 30,
+              "warmups": 7
+            },
+            "forward_max_abs_error": 1.1920928955078125e-07,
+            "initial_state_gradient_max_abs_error": 7.450580596923828e-09,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 475.45,
+              "minimum_microseconds": 470.8,
+              "p10_microseconds": 473.06,
+              "p90_microseconds": 491.53999999999996,
+              "repeats": 30,
+              "warmups": 7
+            }
+          },
+          "primitive_sequence_length": 12
+        },
+        {
+          "batch_size": 1,
+          "chunk_count": 16,
+          "composition_counts": {
+            "compiled_chunk_length": 16,
+            "compiled_hillis_steele_products": 49,
+            "compiled_work_efficient_products": 46,
+            "primitive_hillis_steele_products": 225,
+            "primitive_length": 48,
+            "primitive_work_efficient_products": 190
+          },
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "compiled_speedup_vs_primitive": 1.318469785575049,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 205.2,
+              "minimum_microseconds": 202.7,
+              "p10_microseconds": 204.09999999999997,
+              "p90_microseconds": 211.4,
+              "repeats": 100,
+              "warmups": 10
+            },
+            "compiled_vs_recurrent_max_abs_error": 4.76837158203125e-07,
+            "primitive_vs_recurrent_max_abs_error": 5.364418029785156e-07,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 270.55,
+              "minimum_microseconds": 266.9,
+              "p10_microseconds": 268.79,
+              "p90_microseconds": 277.12,
+              "repeats": 100,
+              "warmups": 10
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "compiled_speedup_vs_primitive": 1.0566678584197355,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 559.4,
+              "minimum_microseconds": 554.9,
+              "p10_microseconds": 556.2,
+              "p90_microseconds": 574.47,
+              "repeats": 30,
+              "warmups": 7
+            },
+            "forward_max_abs_error": 5.066394805908203e-07,
+            "initial_state_gradient_max_abs_error": 5.587935447692871e-09,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 591.1,
+              "minimum_microseconds": 575.8,
+              "p10_microseconds": 580.1800000000001,
+              "p90_microseconds": 650.36,
+              "repeats": 30,
+              "warmups": 7
+            }
+          },
+          "primitive_sequence_length": 48
+        },
+        {
+          "batch_size": 1,
+          "chunk_count": 64,
+          "composition_counts": {
+            "compiled_chunk_length": 64,
+            "compiled_hillis_steele_products": 321,
+            "compiled_work_efficient_products": 190,
+            "primitive_hillis_steele_products": 1281,
+            "primitive_length": 192,
+            "primitive_work_efficient_products": 766
+          },
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "compiled_speedup_vs_primitive": 1.3580978168894906,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 295.45,
+              "minimum_microseconds": 291.0,
+              "p10_microseconds": 291.89,
+              "p90_microseconds": 339.1000000000001,
+              "repeats": 100,
+              "warmups": 10
+            },
+            "compiled_vs_recurrent_max_abs_error": 5.960464477539062e-07,
+            "primitive_vs_recurrent_max_abs_error": 4.76837158203125e-07,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 401.25,
+              "minimum_microseconds": 392.3,
+              "p10_microseconds": 393.89,
+              "p90_microseconds": 422.12000000000006,
+              "repeats": 100,
+              "warmups": 10
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "compiled_speedup_vs_primitive": 1.0836689986573387,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 707.55,
+              "minimum_microseconds": 698.0,
+              "p10_microseconds": 699.45,
+              "p90_microseconds": 727.51,
+              "repeats": 30,
+              "warmups": 7
+            },
+            "forward_max_abs_error": 4.172325134277344e-07,
+            "initial_state_gradient_max_abs_error": 4.6566128730773926e-09,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 766.75,
+              "minimum_microseconds": 759.4,
+              "p10_microseconds": 761.58,
+              "p90_microseconds": 810.72,
+              "repeats": 30,
+              "warmups": 7
+            }
+          },
+          "primitive_sequence_length": 192
+        },
+        {
+          "batch_size": 64,
+          "chunk_count": 4,
+          "composition_counts": {
+            "compiled_chunk_length": 4,
+            "compiled_hillis_steele_products": 5,
+            "compiled_work_efficient_products": 10,
+            "primitive_hillis_steele_products": 33,
+            "primitive_length": 12,
+            "primitive_work_efficient_products": 46
+          },
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "compiled_speedup_vs_primitive": 2.031944219231393,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 308.35,
+              "minimum_microseconds": 305.2,
+              "p10_microseconds": 306.59000000000003,
+              "p90_microseconds": 395.06000000000006,
+              "repeats": 50,
+              "warmups": 10
+            },
+            "compiled_vs_recurrent_max_abs_error": 4.76837158203125e-07,
+            "primitive_vs_recurrent_max_abs_error": 3.5762786865234375e-07,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 626.55,
+              "minimum_microseconds": 607.4,
+              "p10_microseconds": 609.47,
+              "p90_microseconds": 699.4300000000001,
+              "repeats": 50,
+              "warmups": 10
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "compiled_speedup_vs_primitive": 1.36784588441331,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 713.75,
+              "minimum_microseconds": 706.1,
+              "p10_microseconds": 708.52,
+              "p90_microseconds": 745.1500000000001,
+              "repeats": 20,
+              "warmups": 5
+            },
+            "forward_max_abs_error": 4.76837158203125e-07,
+            "initial_state_gradient_max_abs_error": 2.3283064365386963e-10,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 976.3,
+              "minimum_microseconds": 919.3,
+              "p10_microseconds": 927.68,
+              "p90_microseconds": 1232.67,
+              "repeats": 20,
+              "warmups": 5
+            }
+          },
+          "primitive_sequence_length": 12
+        },
+        {
+          "batch_size": 64,
+          "chunk_count": 16,
+          "composition_counts": {
+            "compiled_chunk_length": 16,
+            "compiled_hillis_steele_products": 49,
+            "compiled_work_efficient_products": 46,
+            "primitive_hillis_steele_products": 225,
+            "primitive_length": 48,
+            "primitive_work_efficient_products": 190
+          },
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "compiled_speedup_vs_primitive": 2.365331739390317,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 836.5,
+              "minimum_microseconds": 826.5,
+              "p10_microseconds": 829.1700000000001,
+              "p90_microseconds": 877.62,
+              "repeats": 50,
+              "warmups": 10
+            },
+            "compiled_vs_recurrent_max_abs_error": 9.5367431640625e-07,
+            "primitive_vs_recurrent_max_abs_error": 8.344650268554688e-07,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 1978.6,
+              "minimum_microseconds": 1854.9,
+              "p10_microseconds": 1881.82,
+              "p90_microseconds": 2145.82,
+              "repeats": 50,
+              "warmups": 10
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "compiled_speedup_vs_primitive": 1.6204357775345737,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 1507.65,
+              "minimum_microseconds": 1453.4,
+              "p10_microseconds": 1460.7599999999998,
+              "p90_microseconds": 1681.51,
+              "repeats": 20,
+              "warmups": 5
+            },
+            "forward_max_abs_error": 7.152557373046875e-07,
+            "initial_state_gradient_max_abs_error": 1.4551915228366852e-10,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 2443.05,
+              "minimum_microseconds": 2324.1,
+              "p10_microseconds": 2343.72,
+              "p90_microseconds": 2683.04,
+              "repeats": 20,
+              "warmups": 5
+            }
+          },
+          "primitive_sequence_length": 48
+        },
+        {
+          "batch_size": 64,
+          "chunk_count": 64,
+          "composition_counts": {
+            "compiled_chunk_length": 64,
+            "compiled_hillis_steele_products": 321,
+            "compiled_work_efficient_products": 190,
+            "primitive_hillis_steele_products": 1281,
+            "primitive_length": 192,
+            "primitive_work_efficient_products": 766
+          },
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "compiled_speedup_vs_primitive": 2.794131651971167,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 3045.15,
+              "minimum_microseconds": 2891.7,
+              "p10_microseconds": 2912.1299999999997,
+              "p90_microseconds": 3241.81,
+              "repeats": 20,
+              "warmups": 5
+            },
+            "compiled_vs_recurrent_max_abs_error": 1.6689300537109375e-06,
+            "primitive_vs_recurrent_max_abs_error": 1.3113021850585938e-06,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 8508.55,
+              "minimum_microseconds": 7880.4,
+              "p10_microseconds": 8079.69,
+              "p90_microseconds": 9469.45,
+              "repeats": 20,
+              "warmups": 5
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "compiled_speedup_vs_primitive": 2.0455123985077903,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 4557.0,
+              "minimum_microseconds": 4466.7,
+              "p10_microseconds": 4473.54,
+              "p90_microseconds": 4704.76,
+              "repeats": 10,
+              "warmups": 5
+            },
+            "forward_max_abs_error": 1.3113021850585938e-06,
+            "initial_state_gradient_max_abs_error": 1.1641532182693481e-10,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 9321.400000000001,
+              "minimum_microseconds": 8741.3,
+              "p10_microseconds": 8948.03,
+              "p90_microseconds": 9713.619999999999,
+              "repeats": 10,
+              "warmups": 5
+            }
+          },
+          "primitive_sequence_length": 192
+        },
+        {
+          "batch_size": 1024,
+          "chunk_count": 4,
+          "composition_counts": {
+            "compiled_chunk_length": 4,
+            "compiled_hillis_steele_products": 5,
+            "compiled_work_efficient_products": 10,
+            "primitive_hillis_steele_products": 33,
+            "primitive_length": 12,
+            "primitive_work_efficient_products": 46
+          },
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "compiled_speedup_vs_primitive": 2.8711882972333136,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 2830.1,
+              "minimum_microseconds": 2483.3,
+              "p10_microseconds": 2572.46,
+              "p90_microseconds": 3434.2400000000002,
+              "repeats": 20,
+              "warmups": 5
+            },
+            "compiled_vs_recurrent_max_abs_error": 9.5367431640625e-07,
+            "primitive_vs_recurrent_max_abs_error": 4.76837158203125e-07,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 8125.75,
+              "minimum_microseconds": 7794.2,
+              "p10_microseconds": 7845.23,
+              "p90_microseconds": 8521.59,
+              "repeats": 20,
+              "warmups": 5
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "compiled_speedup_vs_primitive": 2.3088981318971946,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 4159.3,
+              "minimum_microseconds": 3950.9,
+              "p10_microseconds": 4092.38,
+              "p90_microseconds": 4433.89,
+              "repeats": 10,
+              "warmups": 5
+            },
+            "forward_max_abs_error": 4.76837158203125e-07,
+            "initial_state_gradient_max_abs_error": 2.1827872842550278e-11,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 9603.400000000001,
+              "minimum_microseconds": 8691.5,
+              "p10_microseconds": 9211.880000000001,
+              "p90_microseconds": 10004.8,
+              "repeats": 10,
+              "warmups": 5
+            }
+          },
+          "primitive_sequence_length": 12
+        },
+        {
+          "batch_size": 1024,
+          "chunk_count": 16,
+          "composition_counts": {
+            "compiled_chunk_length": 16,
+            "compiled_hillis_steele_products": 49,
+            "compiled_work_efficient_products": 46,
+            "primitive_hillis_steele_products": 225,
+            "primitive_length": 48,
+            "primitive_work_efficient_products": 190
+          },
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "compiled_speedup_vs_primitive": 3.6893467627305716,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 12276.55,
+              "minimum_microseconds": 11902.8,
+              "p10_microseconds": 12027.369999999999,
+              "p90_microseconds": 12932.810000000001,
+              "repeats": 20,
+              "warmups": 5
+            },
+            "compiled_vs_recurrent_max_abs_error": 1.1920928955078125e-06,
+            "primitive_vs_recurrent_max_abs_error": 9.5367431640625e-07,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 45292.45,
+              "minimum_microseconds": 43047.9,
+              "p10_microseconds": 44521.65,
+              "p90_microseconds": 46637.579999999994,
+              "repeats": 20,
+              "warmups": 5
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "compiled_speedup_vs_primitive": 2.788943510384548,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 17189.0,
+              "minimum_microseconds": 16929.2,
+              "p10_microseconds": 16965.83,
+              "p90_microseconds": 17637.780000000002,
+              "repeats": 10,
+              "warmups": 5
+            },
+            "forward_max_abs_error": 9.5367431640625e-07,
+            "initial_state_gradient_max_abs_error": 1.4551915228366852e-11,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 47939.15,
+              "minimum_microseconds": 44355.3,
+              "p10_microseconds": 45594.69,
+              "p90_microseconds": 49711.19,
+              "repeats": 10,
+              "warmups": 5
+            }
+          },
+          "primitive_sequence_length": 48
+        },
+        {
+          "batch_size": 1024,
+          "chunk_count": 64,
+          "composition_counts": {
+            "compiled_chunk_length": 64,
+            "compiled_hillis_steele_products": 321,
+            "compiled_work_efficient_products": 190,
+            "primitive_hillis_steele_products": 1281,
+            "primitive_length": 192,
+            "primitive_work_efficient_products": 766
+          },
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "compiled_speedup_vs_primitive": 2.7191139328034475,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 54955.2,
+              "minimum_microseconds": 53992.5,
+              "p10_microseconds": 54204.810000000005,
+              "p90_microseconds": 55993.3,
+              "repeats": 10,
+              "warmups": 5
+            },
+            "compiled_vs_recurrent_max_abs_error": 1.6689300537109375e-06,
+            "primitive_vs_recurrent_max_abs_error": 2.384185791015625e-06,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 149429.45,
+              "minimum_microseconds": 142275.8,
+              "p10_microseconds": 143233.13,
+              "p90_microseconds": 157083.11,
+              "repeats": 10,
+              "warmups": 5
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "compiled_speedup_vs_primitive": 1.9244866839691046,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 80335.5,
+              "minimum_microseconds": 78251.9,
+              "p10_microseconds": 78253.43000000001,
+              "p90_microseconds": 81527.37,
+              "repeats": 10,
+              "warmups": 5
+            },
+            "forward_max_abs_error": 1.6689300537109375e-06,
+            "initial_state_gradient_max_abs_error": 9.094947017729282e-12,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 154604.6,
+              "minimum_microseconds": 152875.3,
+              "p10_microseconds": 153400.0,
+              "p90_microseconds": 156021.72999999998,
+              "repeats": 10,
+              "warmups": 5
+            }
+          },
+          "primitive_sequence_length": 192
+        }
+      ],
+      "view": "negative_half_spin"
+    },
+    {
+      "all_float32_forward_backward_parity_checks_passed": true,
+      "device": "cuda",
+      "matrix_dtype": "torch.float32",
+      "results": [
+        {
+          "batch_size": 1,
+          "chunk_count": 4,
+          "composition_counts": {
+            "compiled_chunk_length": 4,
+            "compiled_hillis_steele_products": 5,
+            "compiled_work_efficient_products": 10,
+            "primitive_hillis_steele_products": 33,
+            "primitive_length": 12,
+            "primitive_work_efficient_products": 46
+          },
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "compiled_speedup_vs_primitive": 1.3940682059704377,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 517.55,
+              "minimum_microseconds": 505.8,
+              "p10_microseconds": 514.1700000000001,
+              "p90_microseconds": 546.75,
+              "repeats": 100,
+              "warmups": 10
+            },
+            "compiled_vs_recurrent_max_abs_error": 1.1920928955078125e-07,
+            "primitive_vs_recurrent_max_abs_error": 1.1920928955078125e-07,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 721.5,
+              "minimum_microseconds": 692.4,
+              "p10_microseconds": 715.38,
+              "p90_microseconds": 754.5,
+              "repeats": 100,
+              "warmups": 10
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "compiled_speedup_vs_primitive": 1.1067172875239633,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 1330.15,
+              "minimum_microseconds": 1284.2,
+              "p10_microseconds": 1314.07,
+              "p90_microseconds": 1507.2900000000006,
+              "repeats": 30,
+              "warmups": 7
+            },
+            "forward_max_abs_error": 1.1920928955078125e-07,
+            "initial_state_gradient_max_abs_error": 3.725290298461914e-09,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 1472.1,
+              "minimum_microseconds": 1409.1,
+              "p10_microseconds": 1429.75,
+              "p90_microseconds": 1626.6100000000006,
+              "repeats": 30,
+              "warmups": 7
+            }
+          },
+          "primitive_sequence_length": 12
+        },
+        {
+          "batch_size": 1,
+          "chunk_count": 16,
+          "composition_counts": {
+            "compiled_chunk_length": 16,
+            "compiled_hillis_steele_products": 49,
+            "compiled_work_efficient_products": 46,
+            "primitive_hillis_steele_products": 225,
+            "primitive_length": 48,
+            "primitive_work_efficient_products": 190
+          },
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "compiled_speedup_vs_primitive": 1.2535093367675465,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 776.5,
+              "minimum_microseconds": 730.7,
+              "p10_microseconds": 758.44,
+              "p90_microseconds": 884.35,
+              "repeats": 100,
+              "warmups": 10
+            },
+            "compiled_vs_recurrent_max_abs_error": 4.76837158203125e-07,
+            "primitive_vs_recurrent_max_abs_error": 4.76837158203125e-07,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 973.3499999999999,
+              "minimum_microseconds": 935.5,
+              "p10_microseconds": 955.8499999999999,
+              "p90_microseconds": 1077.7900000000002,
+              "repeats": 100,
+              "warmups": 10
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "compiled_speedup_vs_primitive": 1.0569302492379415,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 1673.1,
+              "minimum_microseconds": 1589.0,
+              "p10_microseconds": 1621.15,
+              "p90_microseconds": 2205.54,
+              "repeats": 30,
+              "warmups": 7
+            },
+            "forward_max_abs_error": 4.76837158203125e-07,
+            "initial_state_gradient_max_abs_error": 5.587935447692871e-09,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 1768.35,
+              "minimum_microseconds": 1721.0,
+              "p10_microseconds": 1730.39,
+              "p90_microseconds": 1952.210000000001,
+              "repeats": 30,
+              "warmups": 7
+            }
+          },
+          "primitive_sequence_length": 48
+        },
+        {
+          "batch_size": 1,
+          "chunk_count": 64,
+          "composition_counts": {
+            "compiled_chunk_length": 64,
+            "compiled_hillis_steele_products": 321,
+            "compiled_work_efficient_products": 190,
+            "primitive_hillis_steele_products": 1281,
+            "primitive_length": 192,
+            "primitive_work_efficient_products": 766
+          },
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "compiled_speedup_vs_primitive": 1.1973825568903211,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 1023.9000000000001,
+              "minimum_microseconds": 967.7,
+              "p10_microseconds": 1000.9599999999999,
+              "p90_microseconds": 1226.6500000000003,
+              "repeats": 100,
+              "warmups": 10
+            },
+            "compiled_vs_recurrent_max_abs_error": 6.183981895446777e-07,
+            "primitive_vs_recurrent_max_abs_error": 6.183981895446777e-07,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 1226.0,
+              "minimum_microseconds": 1189.1,
+              "p10_microseconds": 1200.9299999999998,
+              "p90_microseconds": 1378.73,
+              "repeats": 100,
+              "warmups": 10
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "compiled_speedup_vs_primitive": 1.0666176582422875,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 1972.45,
+              "minimum_microseconds": 1861.2,
+              "p10_microseconds": 1887.31,
+              "p90_microseconds": 2754.75,
+              "repeats": 30,
+              "warmups": 7
+            },
+            "forward_max_abs_error": 4.76837158203125e-07,
+            "initial_state_gradient_max_abs_error": 3.725290298461914e-09,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 2103.85,
+              "minimum_microseconds": 2055.7,
+              "p10_microseconds": 2069.6699999999996,
+              "p90_microseconds": 2977.48,
+              "repeats": 30,
+              "warmups": 7
+            }
+          },
+          "primitive_sequence_length": 192
+        },
+        {
+          "batch_size": 64,
+          "chunk_count": 4,
+          "composition_counts": {
+            "compiled_chunk_length": 4,
+            "compiled_hillis_steele_products": 5,
+            "compiled_work_efficient_products": 10,
+            "primitive_hillis_steele_products": 33,
+            "primitive_length": 12,
+            "primitive_work_efficient_products": 46
+          },
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "compiled_speedup_vs_primitive": 1.3718938173182937,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 589.55,
+              "minimum_microseconds": 577.7,
+              "p10_microseconds": 584.89,
+              "p90_microseconds": 647.3199999999999,
+              "repeats": 50,
+              "warmups": 10
+            },
+            "compiled_vs_recurrent_max_abs_error": 2.384185791015625e-07,
+            "primitive_vs_recurrent_max_abs_error": 2.384185791015625e-07,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 808.8,
+              "minimum_microseconds": 788.6,
+              "p10_microseconds": 798.28,
+              "p90_microseconds": 855.9200000000001,
+              "repeats": 50,
+              "warmups": 10
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "compiled_speedup_vs_primitive": 1.0665290123888849,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 1428.7,
+              "minimum_microseconds": 1332.7,
+              "p10_microseconds": 1374.75,
+              "p90_microseconds": 1519.0400000000002,
+              "repeats": 20,
+              "warmups": 5
+            },
+            "forward_max_abs_error": 2.384185791015625e-07,
+            "initial_state_gradient_max_abs_error": 2.3283064365386963e-10,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 1523.75,
+              "minimum_microseconds": 1468.2,
+              "p10_microseconds": 1488.59,
+              "p90_microseconds": 1564.29,
+              "repeats": 20,
+              "warmups": 5
+            }
+          },
+          "primitive_sequence_length": 12
+        },
+        {
+          "batch_size": 64,
+          "chunk_count": 16,
+          "composition_counts": {
+            "compiled_chunk_length": 16,
+            "compiled_hillis_steele_products": 49,
+            "compiled_work_efficient_products": 46,
+            "primitive_hillis_steele_products": 225,
+            "primitive_length": 48,
+            "primitive_work_efficient_products": 190
+          },
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "compiled_speedup_vs_primitive": 1.279680019392764,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 825.05,
+              "minimum_microseconds": 809.9,
+              "p10_microseconds": 816.2,
+              "p90_microseconds": 1419.49,
+              "repeats": 50,
+              "warmups": 10
+            },
+            "compiled_vs_recurrent_max_abs_error": 7.152557373046875e-07,
+            "primitive_vs_recurrent_max_abs_error": 7.152557373046875e-07,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 1055.8,
+              "minimum_microseconds": 1006.1,
+              "p10_microseconds": 1041.78,
+              "p90_microseconds": 1192.8600000000001,
+              "repeats": 50,
+              "warmups": 10
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "compiled_speedup_vs_primitive": 1.056005958690234,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 1745.35,
+              "minimum_microseconds": 1687.4,
+              "p10_microseconds": 1709.85,
+              "p90_microseconds": 1902.3000000000004,
+              "repeats": 20,
+              "warmups": 5
+            },
+            "forward_max_abs_error": 7.152557373046875e-07,
+            "initial_state_gradient_max_abs_error": 1.7462298274040222e-10,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 1843.1,
+              "minimum_microseconds": 1785.8,
+              "p10_microseconds": 1801.1899999999998,
+              "p90_microseconds": 1924.41,
+              "repeats": 20,
+              "warmups": 5
+            }
+          },
+          "primitive_sequence_length": 48
+        },
+        {
+          "batch_size": 64,
+          "chunk_count": 64,
+          "composition_counts": {
+            "compiled_chunk_length": 64,
+            "compiled_hillis_steele_products": 321,
+            "compiled_work_efficient_products": 190,
+            "primitive_hillis_steele_products": 1281,
+            "primitive_length": 192,
+            "primitive_work_efficient_products": 766
+          },
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "compiled_speedup_vs_primitive": 1.3883627754507377,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 1098.1999999999998,
+              "minimum_microseconds": 1082.4,
+              "p10_microseconds": 1087.66,
+              "p90_microseconds": 1111.91,
+              "repeats": 20,
+              "warmups": 5
+            },
+            "compiled_vs_recurrent_max_abs_error": 1.430511474609375e-06,
+            "primitive_vs_recurrent_max_abs_error": 1.6689300537109375e-06,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 1524.6999999999998,
+              "minimum_microseconds": 1481.8,
+              "p10_microseconds": 1498.24,
+              "p90_microseconds": 1837.9099999999999,
+              "repeats": 20,
+              "warmups": 5
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "compiled_speedup_vs_primitive": 1.0472163321662802,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 2027.9,
+              "minimum_microseconds": 1982.4,
+              "p10_microseconds": 1989.96,
+              "p90_microseconds": 2167.22,
+              "repeats": 10,
+              "warmups": 5
+            },
+            "forward_max_abs_error": 1.1920928955078125e-06,
+            "initial_state_gradient_max_abs_error": 1.0186340659856796e-10,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 2123.6499999999996,
+              "minimum_microseconds": 1961.2,
+              "p10_microseconds": 1972.18,
+              "p90_microseconds": 2801.49,
+              "repeats": 10,
+              "warmups": 5
+            }
+          },
+          "primitive_sequence_length": 192
+        },
+        {
+          "batch_size": 1024,
+          "chunk_count": 4,
+          "composition_counts": {
+            "compiled_chunk_length": 4,
+            "compiled_hillis_steele_products": 5,
+            "compiled_work_efficient_products": 10,
+            "primitive_hillis_steele_products": 33,
+            "primitive_length": 12,
+            "primitive_work_efficient_products": 46
+          },
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "compiled_speedup_vs_primitive": 1.7058922558922558,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 594.0,
+              "minimum_microseconds": 585.7,
+              "p10_microseconds": 589.94,
+              "p90_microseconds": 631.7400000000001,
+              "repeats": 20,
+              "warmups": 5
+            },
+            "compiled_vs_recurrent_max_abs_error": 7.152557373046875e-07,
+            "primitive_vs_recurrent_max_abs_error": 5.960464477539062e-07,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 1013.3,
+              "minimum_microseconds": 1000.7,
+              "p10_microseconds": 1002.6400000000001,
+              "p90_microseconds": 1324.48,
+              "repeats": 20,
+              "warmups": 5
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "compiled_speedup_vs_primitive": 1.131565564838358,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 1376.5,
+              "minimum_microseconds": 1344.5,
+              "p10_microseconds": 1349.3600000000001,
+              "p90_microseconds": 1552.34,
+              "repeats": 10,
+              "warmups": 5
+            },
+            "forward_max_abs_error": 4.76837158203125e-07,
+            "initial_state_gradient_max_abs_error": 2.1827872842550278e-11,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 1557.6,
+              "minimum_microseconds": 1386.0,
+              "p10_microseconds": 1392.3,
+              "p90_microseconds": 2176.86,
+              "repeats": 10,
+              "warmups": 5
+            }
+          },
+          "primitive_sequence_length": 12
+        },
+        {
+          "batch_size": 1024,
+          "chunk_count": 16,
+          "composition_counts": {
+            "compiled_chunk_length": 16,
+            "compiled_hillis_steele_products": 49,
+            "compiled_work_efficient_products": 46,
+            "primitive_hillis_steele_products": 225,
+            "primitive_length": 48,
+            "primitive_work_efficient_products": 190
+          },
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "compiled_speedup_vs_primitive": 3.9843611531043117,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 959.15,
+              "minimum_microseconds": 948.0,
+              "p10_microseconds": 952.48,
+              "p90_microseconds": 1246.8100000000002,
+              "repeats": 20,
+              "warmups": 5
+            },
+            "compiled_vs_recurrent_max_abs_error": 9.5367431640625e-07,
+            "primitive_vs_recurrent_max_abs_error": 9.5367431640625e-07,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 3821.6000000000004,
+              "minimum_microseconds": 3221.1,
+              "p10_microseconds": 3338.79,
+              "p90_microseconds": 4267.84,
+              "repeats": 20,
+              "warmups": 5
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "compiled_speedup_vs_primitive": 2.138131479594894,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 1668.7,
+              "minimum_microseconds": 1643.6,
+              "p10_microseconds": 1649.6299999999999,
+              "p90_microseconds": 1813.52,
+              "repeats": 10,
+              "warmups": 5
+            },
+            "forward_max_abs_error": 9.5367431640625e-07,
+            "initial_state_gradient_max_abs_error": 1.0913936421275139e-11,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 3567.9,
+              "minimum_microseconds": 3380.8,
+              "p10_microseconds": 3383.5,
+              "p90_microseconds": 3690.16,
+              "repeats": 10,
+              "warmups": 5
+            }
+          },
+          "primitive_sequence_length": 48
+        },
+        {
+          "batch_size": 1024,
+          "chunk_count": 64,
+          "composition_counts": {
+            "compiled_chunk_length": 64,
+            "compiled_hillis_steele_products": 321,
+            "compiled_work_efficient_products": 190,
+            "primitive_hillis_steele_products": 1281,
+            "primitive_length": 192,
+            "primitive_work_efficient_products": 766
+          },
+          "float32_forward_backward_parity_passed": true,
+          "forward": {
+            "compiled_speedup_vs_primitive": 3.74638330022106,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 3573.7,
+              "minimum_microseconds": 3355.0,
+              "p10_microseconds": 3364.2700000000004,
+              "p90_microseconds": 3742.11,
+              "repeats": 10,
+              "warmups": 5
+            },
+            "compiled_vs_recurrent_max_abs_error": 2.1457672119140625e-06,
+            "primitive_vs_recurrent_max_abs_error": 1.9073486328125e-06,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 13388.45,
+              "minimum_microseconds": 12740.6,
+              "p10_microseconds": 13052.36,
+              "p90_microseconds": 13439.85,
+              "repeats": 10,
+              "warmups": 5
+            }
+          },
+          "forward_plus_initial_state_backward": {
+            "compiled_speedup_vs_primitive": 3.3920862867461885,
+            "compiled_two_stage_scan": {
+              "median_microseconds": 4070.15,
+              "minimum_microseconds": 3847.5,
+              "p10_microseconds": 3865.4100000000003,
+              "p90_microseconds": 4190.110000000001,
+              "repeats": 10,
+              "warmups": 5
+            },
+            "forward_max_abs_error": 1.430511474609375e-06,
+            "initial_state_gradient_max_abs_error": 7.275957614183426e-12,
+            "primitive_work_efficient_scan": {
+              "median_microseconds": 13806.3,
+              "minimum_microseconds": 13651.1,
+              "p10_microseconds": 13668.02,
+              "p90_microseconds": 14080.630000000001,
+              "repeats": 10,
+              "warmups": 5
+            }
+          },
+          "primitive_sequence_length": 192
+        }
+      ],
+      "view": "negative_half_spin"
+    }
+  ],
+  "schema_version": 1,
+  "settings": {
+    "backward_scope": "gradient with respect to initial state",
+    "batch_sizes": [
+      1,
+      64,
+      1024
+    ],
+    "chunk_counts": [
+      4,
+      16,
+      64
+    ],
+    "cuda_synchronized_each_complete_call": true,
+    "devices": [
+      "cpu",
+      "cuda"
+    ],
+    "dtype": "float32",
+    "forward_parity_tolerance_max_abs": 0.0001,
+    "initial_gradient_parity_tolerance_max_abs": 5e-05,
+    "primitive_lengths": [
+      12,
+      48,
+      192
+    ],
+    "seed": 20260817,
+    "torch_cpu_threads": 1,
+    "torch_interop_threads": 1
+  },
+  "system": {
+    "cuda_available": true,
+    "cuda_device": {
+      "compute_capability": [
+        7,
+        5
+      ],
+      "name": "NVIDIA GeForce RTX 2070 SUPER",
+      "total_memory_bytes": 8589606912
+    },
+    "platform": "Windows-11-10.0.22631-SP0",
+    "processor": "Intel64 Family 6 Model 158 Stepping 13, GenuineIntel",
+    "python": "3.12.10",
+    "torch": "2.12.0+cu130",
+    "torch_cuda": "13.0"
+  }
+}

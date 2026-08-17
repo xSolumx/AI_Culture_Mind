@@ -91,7 +91,7 @@ eight-dimensional representations of `Spin(8)`.
 
 Pure Rotor remains the stable v2.1.0 `Cl(3,0)` family. Its PyTorch backend now
 also has a tested opt-in Schur-factored scan, but no fused-kernel claim. A
-separate maintained [`pure_spin8_ssm`](SSM-Models/pure_spin8_ssm/) v1.0 family
+separate maintained [`pure_spin8_ssm`](SSM-Models/pure_spin8_ssm/) v1.1 family
 was added without changing the Pure Rotor checkpoint contract. One shared
 28-coordinate controller drives `8v`, `8s+`, and `8s-`, giving a faithful
 24-scalar triality cache. On its frozen supplied-coordinate transport task,
@@ -100,6 +100,72 @@ classification, versus unfused Transformers Mamba-2 at `0.132`--`0.135` and
 50%. This is an algebra-matched synthetic result, not generic language-model
 superiority. See
 [`PURE_SPIN8_VS_MAMBA2_RESULTS.md`](SSM-Models/experiments/PURE_SPIN8_VS_MAMBA2_RESULTS.md).
+
+The 2026-08-17 follow-up hides those 28 coordinates behind eight symbolic
+tokens and excludes the center-producing pair `a,a` from training. Three fresh
+seeds identify the local actions and retain 100% center/identity correctness
+through L128, with post-relation MSE `2.66e-5`--`2.87e-4`; see
+[`PURE_SPIN8_LATENT_INCREMENT_RESULTS.md`](SSM-Models/experiments/PURE_SPIN8_LATENT_INCREMENT_RESULTS.md).
+The v1.1 finite-token compiler freezes those learned actions into a faithful
+table and uses a register-resident Triton recurrence. Its recorded local
+model-forward speedup is 30.7x--67.1x with all center signatures preserved;
+see
+[`PURE_SPIN8_COMPILED_TOKEN_SCAN_RESULTS.md`](SSM-Models/experiments/PURE_SPIN8_COMPILED_TOKEN_SCAN_RESULTS.md).
+The next frozen cohort removes the dictionary entirely: three seed-specific
+noisy nonlinear observation charts are decoded online. Shared Spin(8) records
+median L128 post-relation MSE `0.01860`, versus `0.06129` for a parameter-near,
+exactly state-matched independent `SO(8)^3` control, with exact relation
+classification in both rows. A separately frozen RTX 2070 SUPER allocation
+matches model-update wall within 2.97% and preserves the ordering; see
+[`PURE_SPIN8_CONTINUOUS_OBSERVATION_RESULTS.md`](SSM-Models/experiments/PURE_SPIN8_CONTINUOUS_OBSERVATION_RESULTS.md).
+The frozen endpoint-only successor then removes every intermediate target:
+each L16 training sequence exposes only its final signed 24-real state. Shared
+Spin(8) retains median L128 MSE `0.01296`, versus `0.06268` for the capable
+exactly state-matched independent family at equal updates and `0.09080` under a
+separately pre-frozen local update-wall allocation; see
+[`PURE_SPIN8_ENDPOINT_SUPERVISION_RESULTS.md`](SSM-Models/experiments/PURE_SPIN8_ENDPOINT_SUPERVISION_RESULTS.md).
+These remain injective seven-coordinate signed synthetic and workstation-
+specific results, not an unsigned/partial observation, natural-task, fused-
+Mamba, or generic language-model claim.
+
+The next observability audit asks how much of that final signed state is
+actually necessary. Exact rational probe ranks reach all 28 Lie directions
+from seven basis states in any one triality representation. One final `8s+` or
+`8s-` block transfers across all three views, but the frozen aggregate fails:
+center-blind vector-only supervision misses exact hidden-lift rows in every
+seed. A separate quotient collision proves that identical `8v` inputs with
+opposite spinor labels have balanced Bayes MSE `1/8` and lift accuracy `1/2`;
+see
+[`PURE_SPIN8_ENDPOINT_OBSERVABILITY_RESULTS.md`](SSM-Models/experiments/PURE_SPIN8_ENDPOINT_OBSERVABILITY_RESULTS.md).
+
+A frozen successor tests the minimum repair. For a unit half-spin endpoint
+`y`, the adaptive chart `j=argmax |y_j|`, `b=sign(y_j)` has lift-invariant
+three-bit address, one lift-odd bit, and selected magnitude at least
+`1/sqrt(8)`. Across untouched seeds 4--6, that four-bit calibration word closes
+every vector-only failure for shared Spin(8): action RMSE spans
+`0.012825--0.013633`, all-view L128 MSE spans `0.009198--0.026986`, and every
+lift/center relation row is exact. The fixed-coordinate sign control is worse
+than vector-only. This is one bit of lift information, not one total bit or
+recovery from the vector endpoint alone; see
+[`PURE_SPIN8_LIFT_BIT_CALIBRATION_RESULTS.md`](SSM-Models/experiments/PURE_SPIN8_LIFT_BIT_CALIBRATION_RESULTS.md).
+
+An exact gradient trace sharpens why the state-matched independent control
+does not transfer the calibrated lift. Its negative-specific head receives
+zero data gradient and its final weights equal the 2,000-step AdamW decay-only
+counterfactual with residual `0.0`; all 28 rows of the shared Spin(8) coordinate
+head receive data gradient. See
+[`PURE_SPIN8_LIFT_GRADIENT_IDENTIFIABILITY_RESULTS.md`](SSM-Models/experiments/PURE_SPIN8_LIFT_GRADIENT_IDENTIFIABILITY_RESULTS.md).
+
+The next frozen matched control preserves that shared latent head but
+independently scrambles the two spinor actions. Its all-view dominance gate
+**fails** because seed 7 wins two directly supervised vector L128 cells. The
+non-rescued boundary is narrower: correct triality alignment wins all `9/9`
+action, `12/12` spinor-L128, and `6/6` completely hidden negative-L128
+comparisons, while winning only `4/6` vector-L128 comparisons. Full supervision
+repairs the scrambled negative action, so the control is capable. This is
+bounded evidence for cross-view spinor transfer, not a universal triality or
+vector-inference advantage; see
+[`PURE_SPIN8_SCRAMBLED_ALIGNMENT_RESULTS.md`](SSM-Models/experiments/PURE_SPIN8_SCRAMBLED_ALIGNMENT_RESULTS.md).
 
 The broader noncommutative continuation now contains three separately bounded
 claims. A Spin quaternion scan retains the binary center on frozen `2.A5`

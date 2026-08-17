@@ -1,6 +1,6 @@
 # Group and Number-Structure Catalogue
 
-**Last audited:** 2026-08-17T01:14:10+02:00
+**Last audited:** 2026-08-17T01:29:02+02:00
 **Scope:** claim-bearing groups, loops, and additive finite structures actually
 defined, generated, or used as experimental targets in this repository. Casual
 literature mentions are excluded unless code or a theorem depends on them.
@@ -54,19 +54,74 @@ Their abstract structures are known externally. What was previously unknown in
 this repository was which structures its fixed Fano and common-carrier
 triality conventions generated.
 
-## Infinite embedding-generated matrix groups
+## Dense embedding-generated matrix groups
 
 | Object | Exact conclusion | Witness and boundary |
 |---|---|---|
-| Monomial group plus vector $A_5$ | Infinite subgroup of $SO(8)$ | The shortest word $F_AF_Bb$ has characteristic coefficient $(1-\sqrt5)/4$, which is not an algebraic integer |
-| Monomial group plus positive $2.A_5$ | Infinite subgroup of $SO(8)$ | The same word and the same nonintegral coefficient prove infinite order |
-| Monomial group plus negative $2.A_5$ | Infinite subgroup of $SO(8)$ | The same word and the same nonintegral coefficient prove infinite order |
+| Monomial group plus vector $A_5$ | Topologically dense in $SO(8)$ | The shortest word $F_AF_Bb$ proves infinitude; the exact $7+21$ adjoint gate forces the full identity Lie algebra |
+| Monomial group plus positive $2.A_5$ | Topologically dense in $SO(8)$ | The same word and adjoint gate prove the same closure |
+| Monomial group plus negative $2.A_5$ | Topologically dense in $SO(8)$ | The same word and adjoint gate prove the same closure |
 
 The [mixed-closure certificate](../../Spin-Space-Research/docs/experiments/MIXED_MONOMIAL_GOLDEN_CLOSURE_RESULTS.md)
 first exhausts all 187 symmetric mixed words of length two and powers each to
 its exact finite order. Its length-three witness is therefore minimal in the
-maintained symmetric alphabet. Infinitude does not classify the compact
-topological closure or prove density in $SO(8)$.
+maintained symmetric alphabet. Exact commutant ranks split
+$\mathfrak{so}(8)$ into irreducible dimensions 7 and 21; bracket closure and
+golden normalizer failure eliminate both proper identity-Lie-algebra options.
+
+The companion [low-degree mixing certificate](../../Spin-Space-Research/docs/experiments/MIXED_MONOMIAL_GOLDEN_MIXING_RESULTS.md)
+fixes uniform symmetric labelled measures and proves exact contraction bounds:
+
+| View | Defining 8 gap | Adjoint 28 gap | Traceless-symmetric 35 gap |
+|---|---:|---:|---:|
+| Vector | $>18/25$ | $>3/8$ | $>2/3$ |
+| Positive half-spin | $=17/21$ | $>1/4$ | $>5/8$ |
+| Negative half-spin | $=17/21$ | $>1/4$ | $>5/8$ |
+
+These are finite-representation gaps. They do not establish a uniform gap over
+the infinite Peter--Weyl spectrum of $SO(8)$.
+The density theorem alone supplies no rate; the companion certificate supplies
+only the displayed low-degree rates.
+
+The [higher-weight continuation](../../Spin-Space-Research/docs/experiments/MIXED_MONOMIAL_GOLDEN_HIGHER_WEIGHT_RESULTS.md)
+adds `Lambda^3` dimension 56 and both Hodge-four 35s. It proves that the
+monomial subgroup fixes one Cayley-form line in the orientation-labelled
+Hodge-minus sector. Exact sparse Rayleigh witnesses bound the original
+six-representation band gaps above by `(7-sqrt(5))/105` in the vector view and
+`3/224` in both half-spin views. The symmetric compiled `N-H-N` distribution
+has exact band gaps greater than `3/20` and `3/100`, respectively. This gives
+strict macro-step improvement factors above `3` and `56/25`, while leaving the
+three-primitive-letter cost explicit.
+
+The [exact compiler and workstation benchmark](../../Spin-Space-Research/docs/experiments/MIXED_MONOMIAL_GOLDEN_MACRO_COMPILER_RESULTS.md)
+then deduplicates the labelled products to 530 vector or 394 half-spin matrices
+without flattening multiplicities. A direct labelled FP32 table remains below
+300 kB per view and beat online construction in all 24 recorded CPU/CUDA
+endpoint cells. This is not yet an every-prefix scan result: the two interior
+states of each three-letter block were not emitted.
+
+The [every-prefix chunk continuation](../../Spin-Space-Research/docs/experiments/MIXED_MONOMIAL_GOLDEN_CHUNK_SCAN_RESULTS.md)
+removes that structural limitation with exact `24x8` operators whose blocks are
+`R`, `H R`, and `L H R`. Sequential recurrences through 192 primitive steps
+won all 72 recorded cells, with `1.007-2.394x` every-prefix speedup and maximum
+float32 error `2.15e-6`. The minimum is near break-even, and no fused parallel
+scan or backward claim is made.
+
+The [two-stage parallel continuation](../../Spin-Space-Research/docs/experiments/MIXED_MONOMIAL_GOLDEN_PARALLEL_CHUNK_SCAN_RESULTS.md)
+now scans only the `C` endpoint matrices and expands all local prefixes in
+parallel. The maintained work-efficient tree uses 190 products at `C=64`
+instead of 766 for the 192 primitive matrices. Float64 all-input gradients
+match recurrence; the final eager-PyTorch grid shows `1.160-3.984x` forward and
+`1.012-3.392x` forward-plus-initial-state-backward speedups. The minimum is
+near break-even; this path remains the parallel semantic control.
+
+The [fused local-prefix continuation](../../Spin-Space-Research/docs/experiments/MIXED_MONOMIAL_GOLDEN_TRITON_LOCAL_PREFIX_RESULTS.md)
+implements indexed `24x8` forward and incoming-state backward. Its isolated
+gain is mostly hidden by the eager endpoint tree. The subsequent
+[register-resident recurrence](../../Spin-Space-Research/docs/experiments/MIXED_MONOMIAL_GOLDEN_TRITON_CHUNK_RECURRENCE_RESULTS.md)
+removes that tree for frozen exact labels and wins every recorded CUDA cell
+against the optimistic parallel control. It has serial chunk depth, initial-
+state-only backward, and no learned selector or end-to-end model claim.
 
 ## Continuous groups and representation families actually used
 
@@ -109,20 +164,22 @@ rather than calling both `G2`.
 
 ## Strongest next novelty test
 
-The best unresolved continuation is now the **identity component of the mixed
-monomial/golden closure**:
+The exterior-power continuation found and repaired the first bottleneck, and
+endpoint, sequential every-prefix, and eager parallel tests passed. The best
+unresolved continuation is now a **fused-kernel-and-non-exterior falsification
+pair**:
 
-1. compute the exact commutant and invariant bilinear/tensor spaces of the
-   mixed generators to reject reducible, complex, and quaternionic closures;
-2. determine all rational relations among the eigenangles of the certified
-   infinite-order witness, with an explicit integer-relation bound;
-3. conjugate the resulting torus directions by the finite monomial group and
-   compute the generated Lie-algebra dimension;
-4. prove that the identity component is $SO(8)$ if the Lie algebra is all of
-   $\mathfrak{so}(8)$, or identify the proper compact subgroup otherwise; and
-5. keep numerical logarithm and rank calculations as discovery only until the
-   angle relations and Lie closure have exact certificates.
+1. fuse the two-stage endpoint scan, incoming-state formation, and indexed
+   local `24x8` expansion in Triton or raw CUDA;
+2. benchmark fused forward, table-gradient, and full model backward against the primitive scan,
+   reporting lookup, launch, and memory traffic separately;
+3. generate the first irreducible $SO(8)$ modules not supplied by exterior
+   powers of the vector representation and interval-certify their norms;
+4. reject the macro proposal if fused or backward runtime loses, especially in
+   the nearly break-even large-batch CPU regime, or a new
+   higher weight restores a near-unit radius; and
+5. seek a full algebraic expansion theorem only after those falsifiers pass.
 
-This is a classification of the closure of a fixed matrix representation, not
-a promise of a new abstract infinite group. The established infinitude theorem
-already rules out the earlier finite $E_8$-orbit hypothesis for this alignment.
+The current theorem and eager benchmarks improve a finite band and parallel
+every-prefix execution on one workstation. They do not yet prove a global word
+length, fused-kernel/full-model speed, or SSM mixing guarantee.

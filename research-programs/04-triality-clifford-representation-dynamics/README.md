@@ -21,9 +21,20 @@ quotient structure, and representation-specific memory controls.
 - One shared 28-dimensional bivector action generates the maintained vector
   and two chiral Spin(8) representations, with bracket, center-signature,
   equivariance, and norm-preservation checks in the theorem repository.
-- The same three actions now back the separately maintained Pure Spin(8) v1.0
+- The same three actions now back the separately maintained Pure Spin(8) v1.1
   model. Its 24-scalar tuple distinguishes all four central signatures; model
   quality and scan claims remain routed to Programme 06.
+- For a known half-spin double-cover fiber `{y,-y}`, the max-coordinate address
+  is lift invariant and the addressed sign is one necessary-and-sufficient
+  lift-odd bit, with selected amplitude at least `1/sqrt(8)`. The frozen model
+  calibration result is routed to Programme 06; the external address means it
+  is not vector-only lift recovery or a global continuous section.
+- With one shared 28-coordinate latent head, the correct triality alignment
+  beats an independently scrambled legal Spin(8) alignment in every frozen
+  action, spinor-L128, and hidden negative-L128 cell. The broader all-view gate
+  fails on two directly supervised vector-L128 cells, so the established claim
+  is cross-view spinor transfer rather than universal triality dominance. Model
+  training and control capability remain routed to Programme 06.
 - Unit triality binding is an exact norm-preserving single-pair bind/unbind
   primitive under the maintained normalization.
 - With supplied unit keys and shared transport, triality-coded addressed slots
@@ -77,10 +88,45 @@ quotient structure, and representation-specific memory controls.
   embedding; it is not a new abstract group or an irreducible
   eight-dimensional discovery.
 - Adjoining the order-21,504 monomial operator group to the vector or either
-  half-spin golden image gives an infinite subgroup of `SO(8)`. The same
-  shortest word `FanoA FanoB b` proves all three cases: its exact
-  characteristic polynomial contains `(1-sqrt(5))/4`, which is not an
-  algebraic integer. This proves infinitude, not density.
+  half-spin golden image gives a topologically dense subgroup of `SO(8)`. The
+  same shortest word `FanoA FanoB b` proves infinitude in all three cases; an
+  exact irreducible `7+21` adjoint decomposition, bracket audit, and golden
+  normalizer failure then force the full `so(8)` identity Lie algebra.
+- For the corresponding uniform labelled symmetric walks, exact Sturm and
+  quadratic-field LDL certificates prove strict contraction in the defining
+  `8`, adjoint `28`, and traceless-symmetric `35` representations. This is a
+  certified low-degree band, not a full `L2(SO(8))` spectral gap.
+- Exterior-power continuation through `Lambda^3` and both Hodge halves of
+  `Lambda^4` proves that the monomial subgroup fixes a unique Cayley-form line
+  in one 35. A symmetric `N-H-N` macro distribution improves the worst exact
+  six-representation gap per precompiled macro-step by more than `3x` in the
+  vector view and `56/25x` in both half-spin views; without precompilation it
+  consumes three primitive letters.
+- Exact compilation reduces the vector macro set from 867 labels to 530
+  matrices and each half-spin set from 1,156 labels to 394 while preserving
+  multiplicity-weighted `M_N M_H M_N`. On the reference single-thread CPU and
+  synchronized RTX 2070 SUPER benchmark, the direct labelled table won all 24
+  endpoint comparisons. This is local implementation evidence; every-prefix
+  sequence scans and end-to-end model throughput remain open.
+- One exact `24x8` operator per labelled chunk now emits all three causal
+  prefixes. The sequential recurrent benchmark through 192 primitive steps won
+  all 72 recorded endpoint/every-prefix cells, but the worst every-prefix CPU
+  margin was only `1.007x`; fused scan and backward evidence remain open.
+- The eager two-stage parallel scan reduces the work-efficient tree from `3C`
+  primitive leaves to `C` endpoints, then expands local prefixes in parallel.
+  Float64 recurrence and all-input gradients agree; local forward and initial-
+  state-backward timings improve in all final cells, with a near-break-even
+  `1.012x` backward floor. This remains the logarithmic-depth parallel control.
+- A fused indexed local-prefix Triton kernel now passes forward and incoming-
+  state-gradient parity. It wins 26/27 isolated forward cells against realistic
+  indexed eager, but only 16/27 complete forward cells because the eager
+  endpoint tree dominates; table gradients remain outside the custom path.
+- A complementary register-resident Triton recurrence removes the endpoint
+  tree for frozen exact labels and lengths through 64 chunks. It beats the
+  optimistic pre-gathered parallel control in all 27 CUDA cells by
+  `4.709-19.861x` forward and `2.213-6.465x` forward plus initial-state
+  backward. Its chunk depth is serial, and no learned-router or model-quality
+  conclusion follows.
 
 ## Open Claims
 
@@ -91,8 +137,13 @@ quotient structure, and representation-specific memory controls.
   improves sample efficiency or generalization.
 - Any model-level advantage attributable specifically to triality or Clifford
   structure.
-- Classification of the identity component, topological closure, or Zariski
-  closure of the infinite mixed monomial/golden groups.
+- A full `L2(SO(8))` spectral gap or global word-length equidistribution theorem
+  for the dense mixed monomial/golden generators beyond the certified
+  six-representation exterior-power band.
+- Prefix-table/full-model backward, a differentiable learned selector or
+  continuous-transition compiler, and an end-to-end matched SSM benchmark.
+- A fused logarithmic-depth endpoint scan that retains the parallel algorithm;
+  the fast register-resident continuation is serial in chunk count.
 
 ## Dependencies
 
@@ -115,6 +166,7 @@ quotient structure, and representation-specific memory controls.
 
 - [Spin(8) triality algebra](../../Spin-Space-Research/docs/experiments/SPIN8_TRIALITY_ALGEBRA_RESULTS.md)
 - [Triangular triality lift](../../Spin-Space-Research/docs/experiments/SPIN8_TRIANGULAR_TRIALITY_LIFT_RESULTS.md)
+- [Pure Spin(8) scrambled-alignment control](../../SSM-Models/experiments/PURE_SPIN8_SCRAMBLED_ALIGNMENT_RESULTS.md)
 - [Direct-memory equivalence theorem](../../Spin-Space-Research/docs/experiments/SPIN8_TRIALITY_DIRECT_MEMORY_EQUIVALENCE.md)
 - [Coded-memory result](../../Spin-Space-Research/docs/experiments/SPIN8_CODED_MEMORY_RESULTS.md)
 - [Prospective paired-action replication](../../Spin-Space-Research/docs/experiments/TASK_B_PAIRED_ACTION_REPLICATION_RESULTS.md)
@@ -126,7 +178,14 @@ quotient structure, and representation-specific memory controls.
 - [Spinor branching atlas](../../SSM-Models/experiments/SPIN_DIRAC_A5_SPINOR_BRANCHING_RESULTS.md)
 - [Finite octonion-operator groups](../../Spin-Space-Research/docs/experiments/OCTONION_OPERATOR_GROUP_RESULTS.md)
 - [Exact binary-icosahedral triality closure](../../Spin-Space-Research/docs/experiments/SPIN8_TRIALITY_2A5_CLOSURE_RESULTS.md)
-- [Exact mixed monomial/golden infinitude](../../Spin-Space-Research/docs/experiments/MIXED_MONOMIAL_GOLDEN_CLOSURE_RESULTS.md)
+- [Exact mixed monomial/golden SO(8) density](../../Spin-Space-Research/docs/experiments/MIXED_MONOMIAL_GOLDEN_CLOSURE_RESULTS.md)
+- [Exact mixed monomial/golden low-degree mixing](../../Spin-Space-Research/docs/experiments/MIXED_MONOMIAL_GOLDEN_MIXING_RESULTS.md)
+- [Exact higher-weight Cayley bottleneck and compiled sandwich](../../Spin-Space-Research/docs/experiments/MIXED_MONOMIAL_GOLDEN_HIGHER_WEIGHT_RESULTS.md)
+- [Exact macro compiler and workstation benchmark](../../Spin-Space-Research/docs/experiments/MIXED_MONOMIAL_GOLDEN_MACRO_COMPILER_RESULTS.md)
+- [Exact every-prefix chunk compiler and recurrent benchmark](../../Spin-Space-Research/docs/experiments/MIXED_MONOMIAL_GOLDEN_CHUNK_SCAN_RESULTS.md)
+- [Two-stage parallel chunk scan forward/backward](../../Spin-Space-Research/docs/experiments/MIXED_MONOMIAL_GOLDEN_PARALLEL_CHUNK_SCAN_RESULTS.md)
+- [Fused indexed local-prefix expansion](../../Spin-Space-Research/docs/experiments/MIXED_MONOMIAL_GOLDEN_TRITON_LOCAL_PREFIX_RESULTS.md)
+- [Register-resident compiled chunk recurrence](../../Spin-Space-Research/docs/experiments/MIXED_MONOMIAL_GOLDEN_TRITON_CHUNK_RECURRENCE_RESULTS.md)
 - [Group and number-structure catalogue](GROUP_AND_NUMBER_STRUCTURE_CATALOGUE.md)
 
 The triangular lift is cross-listed with Programme 01, and the paired-action

@@ -8,7 +8,7 @@ from mixed_monomial_golden_closure import certificate
 ROOT = Path(__file__).resolve().parents[1]
 ARTIFACT = ROOT / "artifacts" / "mixed_monomial_golden_closure_20260817.json"
 EXPECTED_ARTIFACT_SHA256 = (
-    "535e37a4fb25d3ac7255d932df2171c2113283f292c828fc0cfc2ecec5a3e0d3"
+    "4d6840bd89a0c58ac086c308e88f823928cc4d3206450f24bcc035f499d6d8c7"
 )
 
 
@@ -75,9 +75,33 @@ class MixedMonomialGoldenClosureTests(unittest.TestCase):
                 self.assertTrue(report["mixed_closure_is_infinite"])
                 self.assertTrue(all(witness["checks"].values()))
 
-    def test_infinitude_does_not_promote_density_or_model_claims(self) -> None:
+    def test_clifford_adjoint_gate_proves_so8_density(self) -> None:
+        adjoint = self.report["clifford_adjoint_density"]
+        self.assertEqual(adjoint["grade_one_dimension"], 7)
+        self.assertEqual(adjoint["grade_two_dimension"], 21)
+        self.assertEqual(adjoint["union_dimension"], 28)
+        self.assertEqual(
+            adjoint["grade_one_centralizer"]["centralizer_dimension"], 1
+        )
+        self.assertEqual(
+            adjoint["grade_two_centralizer"]["centralizer_dimension"], 1
+        )
+        self.assertEqual(adjoint["full_centralizer"]["centralizer_dimension"], 2)
+        self.assertEqual(adjoint["grade_one_bracket_span_dimension"], 21)
+        self.assertTrue(adjoint["passed"])
+        for view, report in self.report["views"].items():
+            with self.subTest(view=view):
+                self.assertEqual(report["topological_closure"], "SO(8)")
+                self.assertTrue(report["mixed_group_is_topologically_dense_in_SO8"])
+                self.assertTrue(
+                    adjoint["view_normalizer_failures"][view][
+                        "golden_b_does_not_normalize_grade_two"
+                    ]
+                )
+
+    def test_density_does_not_promote_rate_or_model_claims(self) -> None:
         nonclaims = self.report["claim_scope"]["not_claimed"]
-        self.assertIn("topological or Zariski density in SO(8)", nonclaims)
+        self.assertIn("a quantitative spectral gap or equidistribution rate", nonclaims)
         self.assertIn("an ML-quality or kernel-speed advantage", nonclaims)
 
     def test_artifact_hash(self) -> None:

@@ -5,7 +5,7 @@
 Bounded recurrent models whose persistent state is transported by
 input-selective noncommuting actions. The stable Pure Rotor v2.1 family uses
 `Cl(3,0)`/`Spin(3)` rotor conjugation; the separately maintained Pure Spin(8)
-v1.0 family uses a faithful `(8v,8s+,8s-)` cache. This is a model-design and
+v1.1 family uses a faithful `(8v,8s+,8s-)` cache. This is a model-design and
 controlled-ablation programme, distinct from the general scan/compiler algebra
 and from representation-theorem claims made without a trained model.
 
@@ -36,7 +36,7 @@ and from representation-theorem claims made without a trained model.
   that learned actions are causally active in the frozen v2.1 cohort.
 - At matched recurrent state in that cohort, rotor transport improves
   prediction loss over identity in all five seeds.
-- `pure_spin8_ssm/` v1.0 is a separately maintained PyTorch model with one
+- `pure_spin8_ssm/` v1.1 is a separately maintained PyTorch model with one
   shared 28D controller, vector and both chiral eight-real actions, a faithful
   24-scalar cache, bounded affine writes, work-efficient/recurrent scans,
   masks, gradients, CUDA, and an independent checkpoint schema. It does not
@@ -46,6 +46,60 @@ and from representation-theorem claims made without a trained model.
   classification. The unfused Mamba-2 reference remains at
   `0.132`--`0.135` and 50%; the comparison is supplied-coordinate and not
   parameter/state/compute matched.
+- A parameter-near latent-token continuation withholds the teacher's 28D
+  coordinates and excludes the center-producing pair `a,a`. Fresh seeds 1--3
+  identify the eight local actions, preserve 100% center/identity correctness
+  through L128, and produce six L128 post-relation MSEs in
+  `2.66e-5`--`2.87e-4`. Mamba-2 and GRU remain near chance on the central
+  distinction. This is finite-dictionary identification under every-prefix
+  supervision, not natural-input or prior-matched superiority.
+- The v1.1 compiled-token path freezes an identified finite action dictionary
+  and scans it with a register-resident Triton recurrence. It preserves the
+  24-state faithful cache and the held-out relation while recording a
+  30.7x--67.1x local model-forward speedup. It is inference-only, serial in
+  sequence depth, workstation-specific, and not a fused-Mamba comparison.
+- A frozen noisy continuous-observation continuation removes the finite token
+  dictionary. Fresh seeds 1--3 identify unique nonlinear/noisy local actions,
+  retain exact center/identity correctness through L128, and give shared
+  Spin(8) median L128 post-relation MSE `0.01860`, versus `0.06129` for a
+  capable parameter-near, exactly 24-state independent `SO(8)^3` control. A
+  separately frozen local update-wall allocation matches all rows within 2.97%
+  and changes the independent/shared median ratio from `3.295x` to `4.019x`.
+  This is an injective, every-prefix synthetic task with an unfused Mamba
+  fallback, not a natural-task or generic-compute result.
+- A frozen endpoint-only continuation removes every intermediate target while
+  retaining the same noisy observation system and excluded relation. Across
+  fresh seeds 1--3, shared Spin(8) has median L128 post-relation MSE `0.01296`,
+  versus `0.06268` for the capable exactly state-matched independent family at
+  equal updates. The separately pre-frozen local update-wall cohort records
+  `0.01296` versus `0.09080`; every structured L128 row remains correct. This
+  closes the dense-prefix-target objection for the stated signed synthetic
+  teacher, not for unsigned, partial, noninjective, or natural observations.
+- The endpoint observability continuation exactly computes rational probe-rank
+  profiles `7,13,18,22,25,27,28,28` in every triality view and proves a
+  balanced quotient-input hidden-lift lower bound of MSE `1/8` and accuracy
+  `1/2`. Empirically, one signed half-spin endpoint transfers through the
+  shared action to all three views in every fresh seed. The frozen aggregate
+  remains failed: vector-only supervision misses exact lift rows in all three
+  seeds, and one independent positive-only control fails optimization.
+- A separately frozen adaptive calibration supplies the vector endpoint, a
+  three-bit lift-invariant max-coordinate address, and one lift-odd sign bit.
+  Exact geometry guarantees selected magnitude at least `1/sqrt(8)`. Across
+  untouched seeds 4--6, shared Spin(8) passes every seedwise gate without
+  median rescue: action RMSE spans `0.012825--0.013633`, all-view L128 MSE
+  spans `0.009198--0.026986`, and all lift/center relation rows are exact. The
+  fixed-coordinate sign is worse than vector-only. This is four transmitted
+  bits but only one bit of lift information; it is not lift recovery from
+  `8v` alone.
+- Exact gradient tracing proves that the independent control's unsupervised
+  negative-specific head receives zero data gradient and ends exactly at its
+  AdamW decay-only counterfactual, while all 28 shared Spin(8) coordinate rows
+  receive gradient. A matched same-state shared-latent control then scrambles
+  the spinor alignments. Its frozen all-view dominance gate fails on two seed-7
+  vector-L128 cells; no aggregate statistic rescues it. Correct alignment still
+  wins all `9/9` action, `12/12` spinor-L128, and `6/6` fully hidden negative-
+  L128 comparisons, and full supervision establishes scrambled capability.
+  This supports bounded cross-view spinor transfer, not universal dominance.
 - A direct Spin quaternion scan passes the frozen binary-center `2.A5` gates
   that conjugation-based Pure Rotor cannot represent. A unit-dual-quaternion
   motor extends the state to the double cover of `SE(3)`; its blind learned
@@ -63,10 +117,19 @@ and from representation-theorem claims made without a trained model.
 - State-, parameter-, and optimized-compute-matched superiority over quaternion,
   complex/MIMO, Householder-product, delta-rule, and modern SSM baselines.
 - Long-context memory and language-model scaling benefits.
-- Fused rotor kernels and end-to-end throughput on supported accelerators.
+- Fused continuous-action rotor/Spin(8) training and end-to-end throughput on
+  supported accelerators; v1.1 has online continuous-router evidence but no
+  fused training implementation.
 - Broader equivariance beyond the tested `Spin(3)` tensor contract.
-- Latent-input and natural-data replication of the Pure Spin(8) result with
-  separately matched parameter, recurrent-state, and optimized-compute rows.
+- Natural-data replication of the Pure Spin(8) result, noninjective/chart-shift
+  observation robustness, and fused optimized-compute comparison.
+- Deriving a stable calibration address from physically available observations
+  rather than supplying it, and global lift consistency under unknown initial
+  state or chart-boundary perturbations.
+- The calibration-rank curve for partially revealed negative-spinor anchors:
+  determine when the 28-parameter scrambled alignment becomes locally
+  identifiable and compare it with the exact probe ranks
+  `7,13,18,22,25,27,28,28`.
 - Odd/even, unseen-basis octonion-law recovery without supplied local algebra
   coordinates.
 
@@ -99,6 +162,24 @@ and from representation-theorem claims made without a trained model.
 - No current result establishes language-model or production superiority.
 - The approximately 2,000x Pure Spin(8) MSE gap is task-specific and does not
   establish generic Mamba superiority, state matching, or a fused-kernel win.
+- The latent-token result removes supplied coordinates only for eight fixed
+  symbols; the compiler caches those learned actions and does not solve online
+  continuous action inference.
+- The continuous-observation result does solve online action inference for its
+  seven-coordinate injective noisy chart. Its endpoint-only successor shows
+  that intermediate prefix targets are unnecessary on this fixed L16 signed-
+  state task, but does not cover unsigned/partial observations, irregular or
+  longer-horizon labelling, natural inputs, chart shift, or all 28 tangents.
+- The partial-readout aggregate is not a pass. Signed half-spin transfer is a
+  replicated stratum inside a failed all-mask cohort; vector-only near-perfect
+  center accuracy is not exact lift identifiability, and quotient-input lift
+  recovery is formally impossible under balanced collisions.
+- The adaptive calibration successor is a separate pass, but its four-bit
+  interface includes an externally supplied address. It proves one lift-odd
+  bit is sufficient inside that chart, not that one total bit or the vector
+  endpoint alone determines the trained lift. One independent seed also ends
+  below exact bit fit, so the matched-family gap is evidence for the shared
+  prior rather than an optimization-independent theorem.
 - Exact motor identification from every-prefix signed poses is not end-to-end
   learning from ordinary `SO(3)` observations.
 - Even-depth final-only success does not uniquely identify `G2`; the negative
@@ -113,6 +194,12 @@ and from representation-theorem claims made without a trained model.
 - [Exact \(\mathrm{Cl}(3,0)\) to \(\mathrm{Cl}(1,4)\) embedding](../../Spin-Space-Research/docs/manuscripts/CLIFFORD_SIGNATURE_EXTENSION.md)
 - [Pure Spin(8) model contract](../../SSM-Models/pure_spin8_ssm/CONTRACT.md)
 - [Pure Spin(8) versus Mamba-2 result](../../SSM-Models/experiments/PURE_SPIN8_VS_MAMBA2_RESULTS.md)
+- [Pure Spin(8) latent-increment validation](../../SSM-Models/experiments/PURE_SPIN8_LATENT_INCREMENT_RESULTS.md)
+- [Pure Spin(8) compiled token scan](../../SSM-Models/experiments/PURE_SPIN8_COMPILED_TOKEN_SCAN_RESULTS.md)
+- [Pure Spin(8) noisy continuous-observation validation](../../SSM-Models/experiments/PURE_SPIN8_CONTINUOUS_OBSERVATION_RESULTS.md)
+- [Pure Spin(8) endpoint-only continuous identification](../../SSM-Models/experiments/PURE_SPIN8_ENDPOINT_SUPERVISION_RESULTS.md)
+- [Pure Spin(8) endpoint observability boundary](../../SSM-Models/experiments/PURE_SPIN8_ENDPOINT_OBSERVABILITY_RESULTS.md)
+- [Pure Spin(8) adaptive lift-bit calibration](../../SSM-Models/experiments/PURE_SPIN8_LIFT_BIT_CALIBRATION_RESULTS.md)
 - [Spin/2.A5 multi-relation result](../../SSM-Models/experiments/SPIN_2A5_MULTIRELATION_RESULTS.md)
 - [Motor implementation and identification result](../../SSM-Models/experiments/SPIN_MOTOR_RIGID_2A5_RESULTS.md)
 - [Octonion operator-scan result](../../SSM-Models/experiments/OCTONION_OPERATOR_SCAN_RESULTS.md)
