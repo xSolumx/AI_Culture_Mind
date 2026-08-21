@@ -96,6 +96,9 @@ proof-search products and private working notes are intentionally absent.
 - [Spin(9) Explicit Candidate Collars](experiments/SPIN9_CANDIDATE_EXPLICIT_COLLARS.md)
   — exact Cartan blow-up and rational bounds proving four explicit
   finite-radius candidate neighborhoods; the compact complement remains open.
+- [Spin(9) Exact-Candidate Quadratic Atlas](experiments/SPIN9_CANDIDATE_QUADRATIC_ATLAS.md)
+  — ordered `Q(sqrt(241))` Bernstein localization proving 36 compact leaves at
+  the irrational target and isolating 29 cusp-chart handoffs.
 - [Clifford Signature Extension](manuscripts/CLIFFORD_SIGNATURE_EXTENSION.md)
   — exact faithful \(\mathrm{Cl}(1,4)\) matrix image, its even algebra, the
   \(\mathrm{Cl}(3,0)\) inclusion, and Spin(8) branching controls.

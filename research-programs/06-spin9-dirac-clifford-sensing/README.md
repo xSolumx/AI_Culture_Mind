@@ -78,6 +78,10 @@ the square of the `Q(sqrt(241))` quartic equality fiber, and the first mixed
 [`SPIN9_CANDIDATE_NORMAL_FORM.md`](../../Spin-Space-Research/docs/experiments/SPIN9_CANDIDATE_NORMAL_FORM.md).
 The corresponding quantitative neighborhoods are certified in
 [`SPIN9_CANDIDATE_EXPLICIT_COLLARS.md`](../../Spin-Space-Research/docs/experiments/SPIN9_CANDIDATE_EXPLICIT_COLLARS.md).
+The compact atlas has also been lifted to the exact ordered field
+`Q(sqrt(241))`; its strict leaves certify the irrational target directly and
+its retained cells identify the still-open cusp handoff. See
+[`SPIN9_CANDIDATE_QUADRATIC_ATLAS.md`](../../Spin-Space-Research/docs/experiments/SPIN9_CANDIDATE_QUADRATIC_ATLAS.md).
 The memory boundary and executable gate are reported in
 [`SPIN8_SPIN9_HIERARCHICAL_MEMORY_RESULTS.md`](../../Spin-Space-Research/docs/experiments/SPIN8_SPIN9_HIERARCHICAL_MEMORY_RESULTS.md).
 

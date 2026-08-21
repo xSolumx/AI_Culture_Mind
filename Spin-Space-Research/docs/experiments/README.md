@@ -92,6 +92,11 @@ at all four algebraic preimages. The quantitative continuation
 uses an exact Cartan blow-up to certify explicit finite-radius collars around
 all four preimages. Candidate maximality on the compact complement remains
 open.
+The exact-target compact continuation
+[`SPIN9_CANDIDATE_QUADRATIC_ATLAS.md`](SPIN9_CANDIDATE_QUADRATIC_ATLAS.md)
+lifts the Bernstein atlas to ordered `Q(sqrt(241))`: 36 depth-six leaves prove
+the irrational target directly, while 29 retained boxes show that the next
+handoff must couple equality-fiber distance to the mixed radius.
 
 - **Theorem or exact identity:** derived symbolically or checked by exact
   arithmetic under an explicitly stated domain.

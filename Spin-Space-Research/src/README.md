@@ -210,6 +210,9 @@ module name. Editable installation adds this directory to the Python path.
   Bernstein/coefficient bounds proving four explicit finite-radius collars
   around those algebraic candidate preimages; the compact complement remains
   a separate gate.
+- `spin9_candidate_quadratic_atlas.py`: exact ordered-`Q(sqrt(241))` compact
+  Bernstein lowering at the algebraic candidate; its strict leaves are exact,
+  while retained cells identify the required cusp-chart handoff.
 - `spin9_v1_v5_screen.py`: reproducible float64 multistart, compactified
   random, and projective-boundary falsification screen. It finds no candidate
   counterexample but exactly rejects pointwise monotonicity in the \(V_5\)
