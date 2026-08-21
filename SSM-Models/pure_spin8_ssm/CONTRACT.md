@@ -180,5 +180,30 @@ all-view dominance. The calibration-rank result identifies the supplied
 `SO(8)` action globally from seven ordered probes but does not infer that frame
 or its Spin lift from raw inputs. This contract does not by itself establish
 language-model superiority, generic triality necessity, natural-data utility,
-fused training, a global optimizer theorem, or the open unrestricted
-Dirac--Gram/D-optimality theorem.
+end-to-end fused action construction, a global optimizer theorem, or the open
+unrestricted Dirac--Gram/D-optimality theorem.
+
+## Isotypic-to-silicon compiler v2.1.1
+
+`ScanMode="compiled_recurrent"` is an opt-in continuous-action path. Its typed
+plan keeps the exact Schur block, runtime action-sharing contract, precision,
+hardware target, and measured dispatch profile separate. It refuses to treat
+independently routed channels as isotypic multiplicity. FP32 scalar Triton has
+a custom reverse pass for action, scale, drive, and initial state. FP16
+Tensor-Core inference is selected only for an exact passing hardware/shape
+profile and never for training in v2.1.1.
+
+`SelfCalibratingSpin8SSMLayer` accepts seven ordered vector-probe images and a
+separate lift sign. An oriented Hodge cofactor completes the `SO(8)` frame;
+adjacent Givens factors lift it into all three maintained triality actions.
+The supplied sign leaves `8v` fixed and flips `8s+` and `8s-`. QR projection is
+available for noisy differentiable inputs, but it is a local chart rather than
+a global continuous section. The caller remains responsible for probe rank,
+orientation convention, and a valid `+1/-1` lift sign.
+
+The recorded RTX 2070 SUPER audit finds a `112.62x` full-forward/backward gain
+over a sequential eager recurrence oracle, but only a `1.059x` end-to-end
+self-calibrating gain because action construction dominates. One of eight
+inference cells selects Tensor Cores and records `1.423x`; the other seven
+correctly remain scalar. See
+[`ISOTYPIC_TO_SILICON_COMPILER_V211.md`](../experiments/ISOTYPIC_TO_SILICON_COMPILER_V211.md).

@@ -8,10 +8,12 @@ SPIN8_DIM = 8
 SPIN8_BIVECTOR_DIM = 28
 TRIALITY_STATE_DIM = 24
 __version__ = "1.1.0"
+__compiler_version__ = "2.1.1"
 
 __all__ = [
     "SPIN8_BIVECTOR_DIM",
     "SPIN8_DIM",
     "TRIALITY_STATE_DIM",
+    "__compiler_version__",
     "__version__",
 ]

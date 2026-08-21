@@ -16,6 +16,11 @@ module, and the information geometry of one, two, or three spinor probes.
   D-optimality of the symmetric rank-three candidate modulo Spin(9).
 - exact norm-preserving (9\to16) Clifford binding and algebraic unbinding,
   plus a Hopf-coordinate coarse-index construction for hierarchical routing.
+- The exact `V1 + 2V5` quotient certificate is now consumable by the v2.1.1
+  isotypic compiler without trusting descriptive labels: observed and expected
+  block signatures must agree and each row must satisfy its double-centralizer
+  dimension. This is a verified Programme 01 interface, not a Spin(9)
+  Tensor-Core or model-performance result.
 
 The local theorem is internally replayed and now has a separate full-chart
 float64 autodiff path that rederives the \(11\)-negative/\(33\)-zero signature
@@ -40,7 +45,11 @@ D-optimality claims.
 
 ## Canonical evidence
 
-Use the theorem submodule's
-[`Spin(9) sensing ledger`](../../Spin8-Triality-Research/programs/spin9-dirac-clifford-sensing/README.md).
+Use the exact theorem tree's
+[`Spin(9) Dirac--Clifford gate`](../../Spin-Space-Research/docs/experiments/SPIN9_DIRAC_CLIFFORD_GATE.md).
 The memory boundary and executable gate are reported in
-[`SPIN8_SPIN9_HIERARCHICAL_MEMORY_RESULTS.md`](../../Spin8-Triality-Research/docs/experiments/SPIN8_SPIN9_HIERARCHICAL_MEMORY_RESULTS.md).
+[`SPIN8_SPIN9_HIERARCHICAL_MEMORY_RESULTS.md`](../../Spin-Space-Research/docs/experiments/SPIN8_SPIN9_HIERARCHICAL_MEMORY_RESULTS.md).
+
+The compiler interface and its bounded Spin(8) hardware application are
+reported separately in
+[`ISOTYPIC_TO_SILICON_COMPILER_V211.md`](../../SSM-Models/experiments/ISOTYPIC_TO_SILICON_COMPILER_V211.md).

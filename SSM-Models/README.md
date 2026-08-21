@@ -72,6 +72,16 @@
 > Neither result is state/compute matched or a broad claim that Spin(8) beats
 > Mamba.
 
+> **2026-08-21 isotypic-to-silicon compiler v2.1.1.** The continuous affine
+> recurrence now has a full-gradient FP32 Triton backend and a profile-guarded
+> FP16 Tensor-Core inference backend. Exact seven-probe Hodge completion plus
+> a supplied lift bit constructs a self-calibrating action shared across
+> repeated triality memories. The RTX 2070 SUPER audit records `112.62x` over
+> a sequential eager forward/backward oracle, but only `1.059x` end to end;
+> action construction is now the bottleneck. Tensor Cores win one of eight
+> profiled shapes (`1.423x`) and are refused elsewhere. See
+> [`ISOTYPIC_TO_SILICON_COMPILER_V211.md`](experiments/ISOTYPIC_TO_SILICON_COMPILER_V211.md).
+
 > **2026-08-17 noisy continuous online-action validation.** The next frozen
 > cohort replaces the finite token dictionary with unique 12-real noisy
 > observations from seed-specific nonlinear charts. Across fresh seeds 1--3,

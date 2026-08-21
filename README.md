@@ -243,6 +243,12 @@ checkpoint cohort is a deliberate exception so artifact rehash/reload tests
 work from a clean clone. Reproducible conclusions should be backed by structured
 artifacts, executable checks, and a concise interpretation that states both the
 pass criteria and the nonclaims.
+
+The current Pure Spin(8) systems frontier is the
+[isotypic-to-silicon compiler v2.1.1](SSM-Models/experiments/ISOTYPIC_TO_SILICON_COMPILER_V211.md):
+exact block metadata, runtime sharing semantics, and measured hardware policy
+remain separate; a charted seven-probe construction applies the compiler to a
+self-calibrating continuous Spin(8) recurrence.
 See the [public-release policy](PUBLICATION_SCOPE.md) for the complete boundary.
 
 Clone the complete repository with:

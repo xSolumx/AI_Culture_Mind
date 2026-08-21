@@ -21,6 +21,7 @@ from torch import nn
 from torch.nn import functional as F
 
 from pure_spin8_ssm import __version__
+from pure_spin8_ssm.continuous_scan import continuous_spin8_scan
 from spin8_triality import (
     SPIN8_BIVECTOR_DIM,
     SPIN8_DIM,
@@ -31,7 +32,9 @@ from spin8_triality import (
 from spin8_triality_lift import triality_tensor
 
 ActionMode = Literal["factorized", "exponential"]
-ScanMode = Literal["work_efficient", "hillis_steele", "recurrent"]
+ScanMode = Literal[
+    "work_efficient", "hillis_steele", "recurrent", "compiled_recurrent"
+]
 
 
 @dataclass(frozen=True)
@@ -546,7 +549,16 @@ class PureSpin8SSMLayer(nn.Module):
         )
         if state.shape != expected:
             raise ValueError(f"state must have shape {expected}")
-        if scan_mode == "recurrent":
+        if scan_mode == "compiled_recurrent":
+            raw = continuous_spin8_scan(
+                transition.action,
+                transition.scale,
+                transition.drive,
+                state,
+                backend="auto",
+            )
+            final_state = raw[:, -1]
+        elif scan_mode == "recurrent":
             raw, final_state = recurrent_spin8_scan(transition, state)
         else:
             if scan_mode == "work_efficient":

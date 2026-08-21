@@ -111,6 +111,13 @@ evidence about implementations of that algebra.
   most recorded cells; only one high-parallelism cell records a modest 1.147x
   Tensor-Core win. This establishes a valid compiler target and rejects a
   universal Tensor-Core policy.
+- Compiler v2.1.1 promotes that audit into typed dispatch. It ingests exact
+  block signatures, separately requires shared runtime action, records
+  precision and hardware, and refuses false multiplicity. The continuous FP32
+  recurrence now has full gradients for action, scale, drive, and initial
+  state. Its RTX 2070 SUPER profile selects Tensor Cores in only one of eight
+  cells (`1.423x`) and the scalar kernel elsewhere; the bounded fused
+  forward/backward gain over a sequential eager oracle is `112.62x`.
 - Quaternion and unit-dual-quaternion composition now provide associative
   compact scans for the double covers of `SO(3)` and `SE(3)`, including exact
   identity padding and streaming cache continuation. Their eager-kernel and
@@ -129,9 +136,11 @@ evidence about implementations of that algebra.
 - Production competitiveness requires cross-device and end-to-end model
   comparisons; one local GPU kernel result does not establish a general
   systems or task-quality result.
-- Hardware scheduling from isotypic type is not yet automatic. Complex and
-  quaternionic layouts, per-device autotuning, precision certification, and
-  integration into trained continuous-action models remain open.
+- Real eight-dimensional Spin(8) scheduling is automatic for exact profiled
+  shapes and is integrated into the maintained continuous-action layer.
+  Complex and quaternionic layouts, portable profile generation, broader
+  precision certification, action-constructor fusion, and trained natural-task
+  integration remain open.
 - No general no-go theorem covers every nonlinear coordinate system for cyclic
   feedback.
 
@@ -174,8 +183,9 @@ evidence about implementations of that algebra.
 - [Register-resident compiled chunk recurrence](../../Spin-Space-Research/docs/experiments/MIXED_MONOMIAL_GOLDEN_TRITON_CHUNK_RECURRENCE_RESULTS.md)
 - [Pure Spin(8) learned finite-token compiler](../../SSM-Models/experiments/PURE_SPIN8_COMPILED_TOKEN_SCAN_RESULTS.md)
 - [Spin(8) isotypic Tensor-Core dispatch audit](../../SSM-Models/experiments/SPIN8_ISOTYPIC_TENSOR_CORE_AUDIT.md)
+- [Isotypic-to-silicon compiler v2.1.1](../../SSM-Models/experiments/ISOTYPIC_TO_SILICON_COMPILER_V211.md)
 
-The final two reports are cross-program evidence. Their algebra/compiler claims
+The final three reports are cross-program evidence. Their algebra/compiler claims
 belong here; their retrieval and hardware conclusions belong to Programme 03.
 
 ## Reproduction and Horizon Expansion

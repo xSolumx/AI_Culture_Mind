@@ -617,6 +617,18 @@ recorded local grid. This is a serial streaming recurrence and frozen-table
 inference result, not a parallel-prefix or fused-training claim; see
 `experiments/PURE_SPIN8_COMPILED_TOKEN_SCAN_RESULTS.md`.
 
+The v2.1.1 isotypic-to-silicon continuation removes the finite dictionary from
+the execution contract. Exact Schur metadata, runtime action sharing, precision,
+and empirical hardware policy are separate IR fields. A full-gradient FP32
+Triton recurrence handles continuously supplied actions; an FP16 Tensor-Core
+kernel is admitted only when a matching profile beats the scalar kernel. Seven
+ordered vector-probe images complete an oriented `SO(8)` frame by a Hodge
+cofactor, adjacent Givens factors construct all three triality actions, and one
+external bit selects the Spin lift. This is a differentiable local chart, not a
+global continuous section. The bounded hardware evidence and external-system
+comparison are in
+`experiments/ISOTYPIC_TO_SILICON_COMPILER_V211.md`.
+
 The subsequent frozen continuation removes the dictionary rather than merely
 compiling it. A 930-parameter router receives only unique 12-real noisy
 observations of hidden seven-coordinate actions under a different nonlinear
