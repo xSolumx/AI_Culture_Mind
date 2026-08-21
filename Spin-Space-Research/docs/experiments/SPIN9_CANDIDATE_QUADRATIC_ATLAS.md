@@ -39,9 +39,9 @@ at the rational target `26201/25000`, even though the new leaves certify
 the candidate by a nearby rational number.
 
 This is the useful negative result: blind deeper subdivision retains the
-algebraic equality edge and cannot close the theorem economically. The next
-certificate must excise the four explicit collars and introduce a cusp or
-blow-up chart coupling distance from the equality quartic to the `V5` radius.
+algebraic equality edge and cannot close the theorem economically. The required
+distance/radius coupling has now been certified in
+[`SPIN9_CANDIDATE_CUSP_CHARTS.md`](SPIN9_CANDIDATE_CUSP_CHARTS.md).
 
 The exact incidence map sharpens that statement. Of the 29 retained cells, 16
 touch an equality edge and 13 are ordinary refinement cells. Every algebraic

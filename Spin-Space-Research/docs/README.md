@@ -99,6 +99,9 @@ proof-search products and private working notes are intentionally absent.
 - [Spin(9) Exact-Candidate Quadratic Atlas](experiments/SPIN9_CANDIDATE_QUADRATIC_ATLAS.md)
   — ordered `Q(sqrt(241))` Bernstein localization proving 36 compact leaves at
   the irrational target and isolating 29 cusp-chart handoffs.
+- [Spin(9) Candidate Cusp Charts](experiments/SPIN9_CANDIDATE_CUSP_CHARTS.md)
+  — four exact shape-uniform charts on macroscopic rational `x` intervals,
+  closing every equality-edge handoff by `Q^2 H` and Young absorption.
 - [Clifford Signature Extension](manuscripts/CLIFFORD_SIGNATURE_EXTENSION.md)
   — exact faithful \(\mathrm{Cl}(1,4)\) matrix image, its even algebra, the
   \(\mathrm{Cl}(3,0)\) inclusion, and Spin(8) branching controls.

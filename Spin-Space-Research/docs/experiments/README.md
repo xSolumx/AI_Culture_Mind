@@ -97,6 +97,11 @@ The exact-target compact continuation
 lifts the Bernstein atlas to ordered `Q(sqrt(241))`: 36 depth-six leaves prove
 the irrational target directly, while 29 retained boxes show that the next
 handoff must couple equality-fiber distance to the mixed radius.
+That handoff is now completed in
+[`SPIN9_CANDIDATE_CUSP_CHARTS.md`](SPIN9_CANDIDATE_CUSP_CHARTS.md): exact
+`Q^2 H` distance bounds and Young absorption close four macroscopic-`x`,
+shape-uniform cusp charts. The compact region above their rational radial
+floors remains open.
 
 - **Theorem or exact identity:** derived symbolically or checked by exact
   arithmetic under an explicitly stated domain.

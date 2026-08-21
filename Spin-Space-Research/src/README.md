@@ -216,6 +216,9 @@ module name. Editable installation adds this directory to the Python path.
 - `spin9_candidate_handoff_map.py`: exact boundary-incidence classifier
   separating 16 equality-edge cells from 13 generic refinement cells and
   collapsing the former to four shape-independent cusp charts.
+- `spin9_candidate_cusp_charts.py`: exact `Q^2 H` distance bounds and Young
+  absorption closing the four shape-uniform equality-edge charts on
+  macroscopic rational `x` intervals.
 - `spin9_v1_v5_screen.py`: reproducible float64 multistart, compactified
   random, and projective-boundary falsification screen. It finds no candidate
   counterexample but exactly rejects pointwise monotonicity in the \(V_5\)

@@ -82,6 +82,10 @@ The compact atlas has also been lifted to the exact ordered field
 `Q(sqrt(241))`; its strict leaves certify the irrational target directly and
 its retained cells identify the still-open cusp handoff. See
 [`SPIN9_CANDIDATE_QUADRATIC_ATLAS.md`](../../Spin-Space-Research/docs/experiments/SPIN9_CANDIDATE_QUADRATIC_ATLAS.md).
+The four equality-edge handoffs are now closed by exact shape-uniform cusp
+charts on macroscopic rational scalar intervals; the remaining first-graph
+gate is the compact region above their explicit radial floors. See
+[`SPIN9_CANDIDATE_CUSP_CHARTS.md`](../../Spin-Space-Research/docs/experiments/SPIN9_CANDIDATE_CUSP_CHARTS.md).
 The memory boundary and executable gate are reported in
 [`SPIN8_SPIN9_HIERARCHICAL_MEMORY_RESULTS.md`](../../Spin-Space-Research/docs/experiments/SPIN8_SPIN9_HIERARCHICAL_MEMORY_RESULTS.md).
 
