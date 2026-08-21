@@ -429,6 +429,13 @@ def train_candidate(
     result: dict[str, Any] = {
         "parameters": continuous.parameter_count(model),
         "recurrent_state_scalars": int(model.recurrent_state_scalars),
+        "final_trainable_parameter_sha256": continuous.tensor_hash(
+            tuple(
+                parameter.detach()
+                for parameter in model.parameters()
+                if parameter.requires_grad
+            )
+        ),
         "loss_samples": samples,
         "component_samples": component_samples,
         "final_training_loss": samples[str(config.steps)],

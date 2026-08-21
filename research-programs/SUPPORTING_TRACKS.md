@@ -85,6 +85,16 @@ and every fully hidden negative-L128 cell; full supervision confirms that the
 scrambled control can fit both alignments. The remaining claim is therefore
 bounded cross-view spinor transfer, not universal triality advantage.
 
+The negative-only successor now closes the exact observability question for a
+supplied ordered frame. The probe ranks are
+`0,7,13,18,22,25,27,28,28`; exact rational stabilizer witnesses show that zero
+through six probes are globally insufficient to identify the `SO(8)` action,
+seven are sufficient, and eight are redundant. All fresh rank-28 rows recover
+the aligned sequence metrics with bitwise-matched routers. The frozen uniform
+effect-size headline fails in seed 10, however, because its rank-27 residual is
+small relative to the shared router floor. The next open question is frame
+discovery from relational inputs, not another supplied-frame rank count.
+
 ## Historical SpinorModel prototype
 
 [`SpinorModel/`](../SpinorModel/) preserves the original compact

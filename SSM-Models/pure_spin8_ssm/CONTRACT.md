@@ -156,6 +156,16 @@ scrambled alignments and restores negative-view capability. See
 and
 [`PURE_SPIN8_SCRAMBLED_ALIGNMENT_RESULTS.md`](../experiments/PURE_SPIN8_SCRAMBLED_ALIGNMENT_RESULTS.md).
 
+The follow-up negative-only calibration curve leaves the maintained router and
+24-scalar state bitwise unchanged. The exact ordered-probe ranks are
+`0,7,13,18,22,25,27,28,28`; explicit rational stabilizer witnesses prove that
+fewer than seven probes cannot globally identify the `SO(8)` action, while
+seven do and eight are redundant. Rank 28 recovers the aligned action in all
+fresh seeds. The frozen uniform effect-size gate still fails in seed 10, so the
+result is an exact action-identifiability theorem plus bounded optimization
+evidence, not an all-seed task-error phase transition. See
+[`PURE_SPIN8_ALIGNMENT_CALIBRATION_RANK_RESULTS.md`](../experiments/PURE_SPIN8_ALIGNMENT_CALIBRATION_RANK_RESULTS.md).
+
 ## Claim boundary
 
 This contract establishes an implemented, faithful Spin(8) representation
@@ -166,7 +176,9 @@ endpoint-only supervision, including a bounded partial-readout observability
 audit with a preserved negative result and a separately frozen adaptive
 calibration repair. The matched scrambled-alignment result supports only a
 bounded cross-view spinor-transfer claim and explicitly fails universal
-all-view dominance. This contract does not by itself establish
+all-view dominance. The calibration-rank result identifies the supplied
+`SO(8)` action globally from seven ordered probes but does not infer that frame
+or its Spin lift from raw inputs. This contract does not by itself establish
 language-model superiority, generic triality necessity, natural-data utility,
 fused training, a global optimizer theorem, or the open unrestricted
 Dirac--Gram/D-optimality theorem.

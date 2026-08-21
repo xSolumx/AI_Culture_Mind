@@ -143,11 +143,14 @@ Reproduce with
 and adjudicate with
 [`validate_pure_spin8_scrambled_alignment.py`](../validate_pure_spin8_scrambled_alignment.py).
 
-## Next falsifier
+## Completed next falsifier
 
-The clean continuation is no longer another broad all-view comparison. It is a
-calibration-rank experiment: reveal a controlled number of negative-view
-scalar anchors and measure the Jacobian rank at which the 28-parameter hidden
-alignment becomes locally identifiable. That directly connects the empirical
-model to the exact probe-rank profile `7,13,18,22,25,27,28,28` without
-pretending the failed headline passed.
+The calibration-rank continuation is now complete. Ordered negative-view basis
+probes have exact ranks `0,7,13,18,22,25,27,28,28`. Explicit rational
+stabilizer witnesses make the boundary global: zero through six probes cannot
+identify the `SO(8)` action, seven do, and eight are redundant. The fresh
+empirical all-seed headline nevertheless fails because seed 10's rank-27
+residual is too small to satisfy the frozen factor-of-two total-error gate.
+All integrity checks pass, and seven probes recover the aligned action and L128
+rows exactly in every seed. See
+[`PURE_SPIN8_ALIGNMENT_CALIBRATION_RANK_RESULTS.md`](PURE_SPIN8_ALIGNMENT_CALIBRATION_RANK_RESULTS.md).

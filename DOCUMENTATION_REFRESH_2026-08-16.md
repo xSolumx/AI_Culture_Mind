@@ -881,3 +881,38 @@ Authoritative reports:
 [`PURE_SPIN8_LIFT_GRADIENT_IDENTIFIABILITY_RESULTS.md`](SSM-Models/experiments/PURE_SPIN8_LIFT_GRADIENT_IDENTIFIABILITY_RESULTS.md)
 and
 [`PURE_SPIN8_SCRAMBLED_ALIGNMENT_RESULTS.md`](SSM-Models/experiments/PURE_SPIN8_SCRAMBLED_ALIGNMENT_RESULTS.md).
+
+## Exact alignment-calibration threshold
+
+Documentation reconciled: **2026-08-17T10:34:43.2866889+02:00**
+
+The negative-only calibration protocol froze at
+**2026-08-17T09:52:34.5014289+02:00**, before fresh seeds 10--12. It keeps the
+maintained 930-parameter router and 24-scalar state bitwise matched, adds one
+28-parameter negative-view alignment, and transfers only external ordered
+basis probes to the alignment optimizer. No negative sequence endpoint target
+is used.
+
+The exact probe map `T -> (T e_1,...,T e_m)` has fiber `SO(8-m)` and ranks
+`0,7,13,18,22,25,27,28,28`. Rational quarter-turn stabilizers now certify
+global action non-identifiability for every `m<=6`; seven probes globally
+determine the `SO(8)` action and eight are redundant. This does not determine
+factorized coordinates or a discrete Spin-cover lift. Exact certificate
+SHA-256:
+`0a1c6ea0107aa732a0656bbb739b1e1eab650eabf40d64ad6229f42810255124`.
+
+At **2026-08-17T10:34:43.2866889+02:00**, strict fresh adjudication completed.
+Every source, schedule, observation, evaluation, checkpoint, reload, replay,
+and router-identity check passes. Seeds 11 and 12 pass all 14 frozen gates;
+seed 10 passes 12/14. Its nonzero rank-27 frame residual is small enough that
+total action error remains near the common router floor, failing the frozen
+factor-of-two gate, and it narrowly wins one late-L128 cell. No aggregate
+statistic rescues the failed headline.
+
+The surviving empirical stratum is replicated: every nonzero probe frame is
+fit, every seven-probe alignment has full-frame RMSE at most `1.255e-21`, and
+seven/eight probes reproduce the aligned action and L128 metrics in every
+seed. Failed aggregate SHA-256:
+`1708d2932cce32f0b1715c1563af35686aa096e7020fe0cbd80ed7f67a2bad2a`.
+The authoritative report is
+[`PURE_SPIN8_ALIGNMENT_CALIBRATION_RANK_RESULTS.md`](SSM-Models/experiments/PURE_SPIN8_ALIGNMENT_CALIBRATION_RANK_RESULTS.md).

@@ -144,6 +144,18 @@
 > and
 > [`PURE_SPIN8_SCRAMBLED_ALIGNMENT_RESULTS.md`](experiments/PURE_SPIN8_SCRAMBLED_ALIGNMENT_RESULTS.md).
 
+> **2026-08-17 exact alignment-calibration threshold.** A negative-only matched
+> control keeps the shared router bitwise identical and reveals `m=0,...,8`
+> ordered basis probes. Exact rational ranks are
+> `0,7,13,18,22,25,27,28,28`. Explicit quarter-turn stabilizers prove global
+> action non-identifiability through six probes; seven globally determine the
+> `SO(8)` action and eight add no information. Seven probes recover the aligned
+> action and L128 rows in every fresh seed, but the frozen empirical headline
+> **fails**: seed 10 does not meet the factor-of-two rank-27 effect-size gate
+> and loses one L128 strict comparison. This preserves the exact theorem and
+> rejects a uniform task-error claim. See
+> [`PURE_SPIN8_ALIGNMENT_CALIBRATION_RANK_RESULTS.md`](experiments/PURE_SPIN8_ALIGNMENT_CALIBRATION_RANK_RESULTS.md).
+
 > **2026-08-16 center-sensitive `2.A5` result.** The frozen three-seed runner
 > [`benchmark_pure_rotor_2a5.py`](benchmark_pure_rotor_2a5.py) holds the
 > projected A5 trajectory fixed while paired binary targets differ by the

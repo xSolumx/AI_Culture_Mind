@@ -35,6 +35,12 @@ quotient structure, and representation-specific memory controls.
   fails on two directly supervised vector-L128 cells, so the established claim
   is cross-view spinor transfer rather than universal triality dominance. Model
   training and control capability remain routed to Programme 06.
+- For ordered basis probes in any maintained 8D action, the exact rank profile
+  is `0,7,13,18,22,25,27,28,28`. Rational quarter-turns in the residual
+  `SO(8-m)` fiber prove global action non-identifiability through six probes;
+  seven determine the `SO(8)` action and eight are redundant. This does not
+  determine factorized coordinates or a discrete Spin-cover lift. Optimization
+  and the failed uniform effect-size gate remain routed to Programme 06.
 - Unit triality binding is an exact norm-preserving single-pair bind/unbind
   primitive under the maintained normalization.
 - With supplied unit keys and shared transport, triality-coded addressed slots
@@ -167,6 +173,7 @@ quotient structure, and representation-specific memory controls.
 - [Spin(8) triality algebra](../../Spin-Space-Research/docs/experiments/SPIN8_TRIALITY_ALGEBRA_RESULTS.md)
 - [Triangular triality lift](../../Spin-Space-Research/docs/experiments/SPIN8_TRIANGULAR_TRIALITY_LIFT_RESULTS.md)
 - [Pure Spin(8) scrambled-alignment control](../../SSM-Models/experiments/PURE_SPIN8_SCRAMBLED_ALIGNMENT_RESULTS.md)
+- [Pure Spin(8) exact alignment-calibration threshold](../../SSM-Models/experiments/PURE_SPIN8_ALIGNMENT_CALIBRATION_RANK_RESULTS.md)
 - [Direct-memory equivalence theorem](../../Spin-Space-Research/docs/experiments/SPIN8_TRIALITY_DIRECT_MEMORY_EQUIVALENCE.md)
 - [Coded-memory result](../../Spin-Space-Research/docs/experiments/SPIN8_CODED_MEMORY_RESULTS.md)
 - [Prospective paired-action replication](../../Spin-Space-Research/docs/experiments/TASK_B_PAIRED_ACTION_REPLICATION_RESULTS.md)

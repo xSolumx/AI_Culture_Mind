@@ -167,6 +167,15 @@ bounded evidence for cross-view spinor transfer, not a universal triality or
 vector-inference advantage; see
 [`PURE_SPIN8_SCRAMBLED_ALIGNMENT_RESULTS.md`](SSM-Models/experiments/PURE_SPIN8_SCRAMBLED_ALIGNMENT_RESULTS.md).
 
+The negative-only calibration-rank successor makes that alignment boundary
+exact. Ordered basis probes have ranks `0,7,13,18,22,25,27,28,28`; rational
+stabilizer witnesses prove that zero through six probes are globally
+insufficient to identify the `SO(8)` action, seven are sufficient, and eight
+are redundant. All three fresh seeds recover the aligned action at rank 28,
+but the frozen all-seed effect-size headline **fails** because seed 10's
+rank-27 residual is already near the common router floor. See
+[`PURE_SPIN8_ALIGNMENT_CALIBRATION_RANK_RESULTS.md`](SSM-Models/experiments/PURE_SPIN8_ALIGNMENT_CALIBRATION_RANK_RESULTS.md).
+
 The broader noncommutative continuation now contains three separately bounded
 claims. A Spin quaternion scan retains the binary center on frozen `2.A5`
 relations where conjugation-based Pure Rotor cannot. An eight-scalar unit-dual-

@@ -100,6 +100,14 @@ and from representation-theorem claims made without a trained model.
   wins all `9/9` action, `12/12` spinor-L128, and `6/6` fully hidden negative-
   L128 comparisons, and full supervision establishes scrambled capability.
   This supports bounded cross-view spinor transfer, not universal dominance.
+- The negative-only calibration-rank successor proves a sharper exact
+  boundary. Ordered basis probes have ranks
+  `0,7,13,18,22,25,27,28,28`; explicit rational stabilizers prove global
+  `SO(8)` action non-identifiability through six probes, global identification
+  at seven, and redundancy at eight. Every fresh rank-28 row recovers the
+  aligned action with a bitwise-identical router. The frozen all-seed empirical
+  headline still fails two seed-10 effect-size gates, so the exact theorem is
+  not reported as a uniform task-error phase transition.
 - A direct Spin quaternion scan passes the frozen binary-center `2.A5` gates
   that conjugation-based Pure Rotor cannot represent. A unit-dual-quaternion
   motor extends the state to the double cover of `SE(3)`; its blind learned
@@ -126,10 +134,8 @@ and from representation-theorem claims made without a trained model.
 - Deriving a stable calibration address from physically available observations
   rather than supplying it, and global lift consistency under unknown initial
   state or chart-boundary perturbations.
-- The calibration-rank curve for partially revealed negative-spinor anchors:
-  determine when the 28-parameter scrambled alignment becomes locally
-  identifiable and compare it with the exact probe ranks
-  `7,13,18,22,25,27,28,28`.
+- Deriving the seven-probe negative-view frame from relational or physically
+  available observations rather than supplying ordered basis images.
 - Odd/even, unseen-basis octonion-law recovery without supplied local algebra
   coordinates.
 
@@ -200,6 +206,7 @@ and from representation-theorem claims made without a trained model.
 - [Pure Spin(8) endpoint-only continuous identification](../../SSM-Models/experiments/PURE_SPIN8_ENDPOINT_SUPERVISION_RESULTS.md)
 - [Pure Spin(8) endpoint observability boundary](../../SSM-Models/experiments/PURE_SPIN8_ENDPOINT_OBSERVABILITY_RESULTS.md)
 - [Pure Spin(8) adaptive lift-bit calibration](../../SSM-Models/experiments/PURE_SPIN8_LIFT_BIT_CALIBRATION_RESULTS.md)
+- [Pure Spin(8) exact alignment-calibration threshold](../../SSM-Models/experiments/PURE_SPIN8_ALIGNMENT_CALIBRATION_RANK_RESULTS.md)
 - [Spin/2.A5 multi-relation result](../../SSM-Models/experiments/SPIN_2A5_MULTIRELATION_RESULTS.md)
 - [Motor implementation and identification result](../../SSM-Models/experiments/SPIN_MOTOR_RIGID_2A5_RESULTS.md)
 - [Octonion operator-scan result](../../SSM-Models/experiments/OCTONION_OPERATOR_SCAN_RESULTS.md)

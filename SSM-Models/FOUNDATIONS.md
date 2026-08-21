@@ -693,6 +693,18 @@ repairs the negative action. Thus correct triality alignment supplies bounded
 cross-view spinor transfer, not universal inference superiority. See
 `experiments/PURE_SPIN8_SCRAMBLED_ALIGNMENT_RESULTS.md`.
 
+The negative-only calibration-rank successor separates exact identifiability
+from that noisy task comparison. For `m` ordered basis probes, the fiber is
+`SO(8-m)` and the rank is `28-(8-m)(7-m)/2`, giving
+`0,7,13,18,22,25,27,28,28`. Exact rational quarter-turn witnesses inside the
+unobserved complement prove global action non-identifiability for `m<=6`;
+`SO(1)` is trivial, so seven probes globally determine the `SO(8)` action and
+the eighth is redundant. All fresh rank-28 rows recover the aligned metrics,
+with bitwise-identical routers and no negative endpoint targets. The frozen
+empirical aggregate nevertheless fails two seed-10 effect-size gates because a
+small rank-27 residual is masked by the common router floor. See
+`experiments/PURE_SPIN8_ALIGNMENT_CALIBRATION_RANK_RESULTS.md`.
+
 An evaluation-only follow-up then applies a deterministic input-only selector
 to the frozen schedules. The shortest locally reduced identity/center pair
 absent from every seed has length 11. Without retraining, the same Spin
