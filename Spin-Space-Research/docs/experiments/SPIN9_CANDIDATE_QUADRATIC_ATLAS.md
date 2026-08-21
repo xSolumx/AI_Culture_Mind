@@ -43,5 +43,18 @@ algebraic equality edge and cannot close the theorem economically. The next
 certificate must excise the four explicit collars and introduce a cusp or
 blow-up chart coupling distance from the equality quartic to the `V5` radius.
 
+The exact incidence map sharpens that statement. Of the 29 retained cells, 16
+touch an equality edge and 13 are ordinary refinement cells. Every algebraic
+root occurs in four incident cells only because depth six has split the
+irrelevant shape coordinate `z` into four strips. Since the equality edge is
+independent of `z`, these collapse to exactly four required cusp charts—one per
+candidate preimage, not sixteen unrelated local problems.
+
+That classification is replayed by
+[`spin9_candidate_handoff_map.py`](../../src/spin9_candidate_handoff_map.py)
+and recorded in
+[`spin9_candidate_handoff_map_20260821.json`](../../artifacts/spin9_candidate_handoff_map_20260821.json),
+SHA-256 `735e8e6b31ac3a963a2124b6029cbe1a0e99fdde54d6c6aca6e725d0572da155`.
+
 The artifact does not certify the compact complement, the second `V5`, or the
 unrestricted quotient.
