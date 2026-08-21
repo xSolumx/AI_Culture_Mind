@@ -159,7 +159,13 @@ def benchmark(args: argparse.Namespace) -> dict[str, object]:
         product_backend="dense",
         determinant_backend="explicit",
     ).to(device)
-    fast_dense = _build(
+    fast_dense_safe = _build(
+        config,
+        fast=True,
+        product_backend="dense",
+        determinant_backend="jordan",
+    ).to(device)
+    fast_dense_explicit = _build(
         config,
         fast=True,
         product_backend="dense",
@@ -169,12 +175,13 @@ def benchmark(args: argparse.Namespace) -> dict[str, object]:
         config,
         fast=True,
         product_backend="sparse",
-        determinant_backend="explicit",
+        determinant_backend="jordan",
     ).to(device)
     generic_explicit.load_state_dict(generic_legacy.state_dict())
-    fast_dense.load_state_dict(generic_legacy.state_dict())
+    fast_dense_safe.load_state_dict(generic_legacy.state_dict())
+    fast_dense_explicit.load_state_dict(generic_legacy.state_dict())
     fast_sparse.load_state_dict(generic_legacy.state_dict())
-    compiled_dense_source = copy.deepcopy(fast_dense)
+    compiled_dense_source = copy.deepcopy(fast_dense_safe)
     compiled_sparse_source = copy.deepcopy(fast_sparse)
     compiled_dense = torch.compile(
         compiled_dense_source,
@@ -203,7 +210,12 @@ def benchmark(args: argparse.Namespace) -> dict[str, object]:
     explicit_output, explicit_gradients = _output_and_gradients(
         generic_explicit, tokens
     )
-    fast_dense_output, fast_dense_gradients = _output_and_gradients(fast_dense, tokens)
+    fast_dense_safe_output, fast_dense_safe_gradients = _output_and_gradients(
+        fast_dense_safe, tokens
+    )
+    fast_dense_explicit_output, fast_dense_explicit_gradients = _output_and_gradients(
+        fast_dense_explicit, tokens
+    )
     fast_sparse_output, fast_sparse_gradients = _output_and_gradients(
         fast_sparse, tokens
     )
@@ -214,11 +226,17 @@ def benchmark(args: argparse.Namespace) -> dict[str, object]:
         "explicit_determinant_vs_legacy_gradients": _gradient_difference(
             explicit_gradients, generic_gradients
         ),
-        "one_sided_dense_vs_explicit_generic_output": _difference(
-            fast_dense_output, explicit_output
+        "safe_one_sided_dense_vs_legacy_output": _difference(
+            fast_dense_safe_output, generic_output
         ),
-        "one_sided_dense_vs_explicit_generic_gradients": _gradient_difference(
-            fast_dense_gradients, explicit_gradients
+        "safe_one_sided_dense_vs_legacy_gradients": _gradient_difference(
+            fast_dense_safe_gradients, generic_gradients
+        ),
+        "rejected_explicit_one_sided_vs_explicit_generic_output": _difference(
+            fast_dense_explicit_output, explicit_output
+        ),
+        "rejected_explicit_one_sided_vs_explicit_generic_gradients": _gradient_difference(
+            fast_dense_explicit_gradients, explicit_gradients
         ),
         "one_sided_sparse_vs_generic_output": _difference(
             fast_sparse_output, generic_output
@@ -256,7 +274,8 @@ def benchmark(args: argparse.Namespace) -> dict[str, object]:
     inference_operations = {
         "eager_generic_legacy": inference(generic_legacy),
         "eager_generic_explicit": inference(generic_explicit),
-        "eager_one_sided_dense": inference(fast_dense),
+        "eager_one_sided_dense_safe": inference(fast_dense_safe),
+        "eager_one_sided_dense_explicit_rejected": inference(fast_dense_explicit),
         "eager_one_sided_sparse": inference(fast_sparse),
         "compiled_one_sided_dense": inference(compiled_dense, mark_step=True),
         "compiled_one_sided_sparse": inference(compiled_sparse, mark_step=True),
@@ -264,7 +283,10 @@ def benchmark(args: argparse.Namespace) -> dict[str, object]:
     training_operations = {
         "eager_generic_legacy": forward_backward(generic_legacy),
         "eager_generic_explicit": forward_backward(generic_explicit),
-        "eager_one_sided_dense": forward_backward(fast_dense),
+        "eager_one_sided_dense_safe": forward_backward(fast_dense_safe),
+        "eager_one_sided_dense_explicit_rejected": forward_backward(
+            fast_dense_explicit
+        ),
         "eager_one_sided_sparse": forward_backward(fast_sparse),
         "compiled_one_sided_dense": forward_backward(compiled_dense, mark_step=True),
         "compiled_one_sided_sparse": forward_backward(compiled_sparse, mark_step=True),

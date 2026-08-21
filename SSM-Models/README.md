@@ -22,6 +22,11 @@
 > prospectively frozen five-seed layer-localization follow-up rejected the
 > apparent seed-17 E6 gain. The folder's constraint audit records which older
 > gates were retained, generalized, or removed.
+> Its identity reference now has a bitwise-matched one-sided affine fast path.
+> A prospectively tested explicit-determinant shortcut was rejected after a
+> +0.0160 bpb mean regression, despite higher throughput; the safe eager path
+> and opt-in fixed-shape compiler measurements are documented in
+> `pure_f4_delta_ssm_v1_3/V1_3_OPTIMIZATION_RESULTS.md`.
 
 > **2026-08-10 programme boundary.** The theorem tree now has a
 > completed hierarchical memory-core campaign and an official FLA chunk-kernel

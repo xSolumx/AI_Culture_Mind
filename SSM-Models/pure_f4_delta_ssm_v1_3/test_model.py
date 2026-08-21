@@ -27,6 +27,13 @@ def _tiny(**changes) -> ExceptionalDeltaLM:
     return ExceptionalDeltaLM(ExceptionalDeltaConfig(**values))
 
 
+def test_safe_numeric_backends_are_the_defaults() -> None:
+    config = ExceptionalDeltaConfig()
+    assert config.identity_fast_path is True
+    assert config.albert_determinant_backend == "jordan"
+    assert config.albert_product_backend == "dense"
+
+
 def test_model_shape_causality_backward_and_finite_state() -> None:
     torch.manual_seed(5)
     model = _tiny()

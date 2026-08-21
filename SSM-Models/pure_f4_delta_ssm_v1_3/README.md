@@ -29,6 +29,8 @@ arbitrary schedules, and caller-supplied generator banks are controls.
 - a configurable rank-(r), independent erase/write memory update;
 - an associative two-sided affine prefix compiler for general invertible value
   actions;
+- a bitwise-matched one-sided affine specialization that removes the entire
+  27 by 27 value action when identity transport is selected;
 - recurrent and logarithmic-depth semantic scans with output, state, and
   gradient parity;
 - automatic parallel-prefix execution for full sequences and recurrent
@@ -43,10 +45,11 @@ arbitrary schedules, and caller-supplied generator banks are controls.
 
 ## Status
 
-This is a semantic PyTorch implementation, not yet an optimized CUDA backend
-or a promoted trained model. The algebra and model suite currently has 28
-tests. The generated audit separates exact-data, numerical, empirical, and
-open claims in `artifacts/algebra_audit.json`.
+This is a semantic PyTorch implementation with an accepted eager identity fast
+path and an opt-in fixed-shape `torch.compile` tier, not a custom CUDA kernel or
+a promoted trained model. The v1.3 suite currently has 39 tests. The generated
+audit separates exact-data, numerical, empirical, and open claims in
+`artifacts/algebra_audit.json`.
 
 When E6 is selected, the default geometry is now the direct 78-coordinate
 chart. Polar and Cartan
@@ -64,6 +67,15 @@ effect `-0.0093` bpb). Exceptional actions remain available for explicit
 symmetry and sparse-transport experiments. See
 [`SHAKESPEARE_LAYER_LOCALIZATION_RESULTS.md`](SHAKESPEARE_LAYER_LOCALIZATION_RESULTS.md).
 
+The identity reference is now rigorously optimized. A one-sided associative
+scan is bitwise equal to the generic two-sided identity path and improves the
+tested RTX 2070 SUPER eager forward+backward median by 1.104x. The cheaper
+explicit Albert cubic was rejected as the default after failing a frozen
+five-seed quality gate; dense Jordan evaluation remains the accepted default.
+The optional fixed-shape CUDA-graph compiler tier is much faster but retains a
+small numerical difference and a substantial cold compile cost. See
+[`V1_3_OPTIMIZATION_RESULTS.md`](V1_3_OPTIMIZATION_RESULTS.md).
+
 Run from the repository root:
 
 ```powershell
@@ -74,9 +86,12 @@ python -m pure_f4_delta_ssm_v1_3.audit_algebra `
 python -m pure_f4_delta_ssm_v1_3.benchmark_train `
   --device cuda --steps 50 `
   --output SSM-Models/pure_f4_delta_ssm_v1_3/artifacts/shakespeare_screen.json
+python -m pure_f4_delta_ssm_v1_3.benchmark_optimization `
+  --compile-mode reduce-overhead `
+  --output SSM-Models/pure_f4_delta_ssm_v1_3/artifacts/optimization.json
 ```
 
-The next promotion gate is not “make it larger.” It is a matched experiment
+The next architecture promotion gate is not “make it larger.” It is a matched experiment
 that independently varies action algebra, update rank, tying, and mixer across
 multiple seeds, then compares quality and complete-step cost against v1.2, the
 no-action delta control, an unrestricted-action control, and an official fused

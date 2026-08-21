@@ -148,6 +148,36 @@ octonion multiplication nor the Albert Jordan product is claimed associative;
 they are used pointwise to construct linear operators and nonlinear channel
 features.
 
+### Identity specialization and numerical algebra
+
+When (R_t=I), the value-axis action is not merely cheap; it is absent from the
+mathematics. The transition reduces to
+
+\[
+(A_2,B_2)\circ(A_1,B_1)
+=\left(A_2A_1,\ B_2+A_2B_1\right).
+\]
+
+The dedicated one-sided compiler implements this smaller monoid directly. It
+does not construct identity matrices or multiply value-space prefixes, and it
+is bitwise float32 equal to the generic identity specialization in the tested
+model path.
+
+The Albert determinant has two implemented formulas. The explicit cubic
+
+\[
+abc-a\lVert z\rVert^2-b\lVert y\rVert^2-c\lVert x\rVert^2
++2\operatorname{Re}((xz)\bar y)
+\]
+
+equals the determinant recovered from Jordan traces in exact algebra and in
+float64 value/gradient tests. It is not interchangeable during finite-
+precision optimization: the changed contraction order perturbs float32
+gradients, and a prospective five-seed Shakespeare gate detected a mean
+quality regression. The default therefore deliberately retains the denser
+Jordan-trace evaluation. This is a numerical-analysis decision, not a change
+to the Albert algebra.
+
 ## Why the Riemann sphere and PGL are controls, not the core
 
 The Riemann sphere is (\mathbb{CP}^1), and (PGL(2,\mathbb C)) acts on it by

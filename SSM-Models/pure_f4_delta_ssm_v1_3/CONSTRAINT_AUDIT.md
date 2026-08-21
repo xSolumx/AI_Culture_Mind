@@ -43,6 +43,9 @@ v1.3 preserves those principles and removes the rest as hard constraints.
 | RMS-normalized read only | inherited stable readout | deletes magnitude even though overwrite strength is meaningful | direction plus trace, log-energy, and bounded Albert determinant |
 | causal ordering | SSM task definition | genuine semantic requirement | retained |
 | associative transition summaries | parallel prefix execution | genuine algebraic requirement | retained; raw octonion/Jordan multiplication is never scanned |
+| generic two-sided scan for identity transport | reuse of exceptional-action compiler | semantically valid but performs a nonexistent value action | specialized to the exact one-sided affine monoid |
+| explicit Albert determinant | exact cubic formula and lower operation count | algebraically equal, but finite-precision training equivalence was not guaranteed | retained as control; rejected as default by prospective five-seed gate |
+| sparse Albert product | 531 nonzero structure entries | exact sparse representation, but reduction order and GPU schedule are backend facts | retained as control; dense remains default |
 
 ## Local evidence chain
 
@@ -104,6 +107,18 @@ effect was `-0.0093` bpb. Identity transport is therefore the supported
 benchmark reference for generic natural-text development at this scale. This
 does not remove the exceptional actions; it prevents a valid algebra from
 being mistaken for an empirically justified universal language prior.
+
+The subsequent optimization audit followed the same discipline. Identity
+transport was reduced to its exact one-sided affine composition law, yielding
+bitwise-equal model outputs and gradients and lower eager cost. An algebraically
+equivalent explicit determinant was not assumed training-equivalent: it was
+preregistered and run on five fresh seeds. Its 1.134x geometric-mean training
+throughput and lower memory did not compensate for a +0.0160 bpb mean quality
+regression beyond the +0.0100 limit. The explicit formula was therefore
+removed from the default. `torch.compile(reduce-overhead)` is an opt-in
+fixed-shape tier because its eager-relative errors are small but nonzero and
+its cold compilation cost is material. Full evidence is in
+`V1_3_OPTIMIZATION_RESULTS.md`.
 
 ## Still deliberate, not accidental
 

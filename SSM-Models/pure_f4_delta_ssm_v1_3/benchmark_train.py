@@ -57,6 +57,11 @@ VARIANTS = {
         "identity_fast_path": False,
     },
     "identity_delta": {"action_algebra": "identity", "action_geometry": "direct"},
+    "identity_explicit": {
+        "action_algebra": "identity",
+        "action_geometry": "direct",
+        "albert_determinant_backend": "explicit",
+    },
     "f4_delta": {"action_algebra": "f4", "action_geometry": "direct"},
     "e6_direct_delta": {"action_algebra": "e6", "action_geometry": "direct"},
     "late_e6_delta": {

@@ -59,7 +59,9 @@ class ExceptionalDeltaConfig:
     local_mixer: Literal["depthwise_conv", "none"] = "depthwise_conv"
     channel_mixer: Literal["swiglu", "jordan", "none"] = "jordan"
     readout_mode: Literal["auto", "vector", "albert_invariants"] = "auto"
-    albert_determinant_backend: Literal["explicit", "jordan"] = "explicit"
+    # The explicit cubic is algebraically equivalent, but its altered float32
+    # evaluation order failed the prospective five-seed quality gate.
+    albert_determinant_backend: Literal["explicit", "jordan"] = "jordan"
     albert_product_backend: Literal["sparse", "dense"] = "dense"
     expansion: int = 2
     key_parameterization: Literal[
@@ -225,7 +227,7 @@ class AlbertInvariantReadout(nn.Module):
 
     output_dim = ALBERT_DIM + 3
 
-    def __init__(self, backend: Literal["explicit", "jordan"] = "explicit") -> None:
+    def __init__(self, backend: Literal["explicit", "jordan"] = "jordan") -> None:
         super().__init__()
         self.backend = backend
         self.direction_norm = nn.RMSNorm(ALBERT_DIM)
