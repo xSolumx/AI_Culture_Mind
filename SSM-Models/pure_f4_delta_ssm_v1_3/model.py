@@ -17,9 +17,25 @@ import torch
 from torch import nn
 from torch.nn import functional as F
 
-from .action import build_exceptional_action
-from .albert import ALBERT_DIM, albert_determinant, albert_trace, jordan_product
-from .scan import compile_delta_transition, parallel_delta_scan, recurrent_delta_scan
+from .action import IdentityAction, build_exceptional_action
+from .albert import (
+    ALBERT_DIM,
+    albert_determinant,
+    albert_determinant_via_jordan,
+    albert_trace,
+    jordan_product,
+    octonion_structure_constants,
+    orthonormal_jordan_structure_constants,
+    sparse_jordan_product,
+)
+from .scan import (
+    compile_delta_transition,
+    compile_one_sided_delta_transition,
+    parallel_delta_scan,
+    parallel_one_sided_delta_scan,
+    recurrent_delta_scan,
+    recurrent_one_sided_delta_scan,
+)
 
 __version__ = "1.3.0-dev"
 
@@ -38,10 +54,13 @@ class ExceptionalDeltaConfig:
     ) = None
     action_coordinate_scale: float = 0.02
     action_factors: int = 1
+    identity_fast_path: bool = True
     d_conv: int = 4
     local_mixer: Literal["depthwise_conv", "none"] = "depthwise_conv"
     channel_mixer: Literal["swiglu", "jordan", "none"] = "jordan"
     readout_mode: Literal["auto", "vector", "albert_invariants"] = "auto"
+    albert_determinant_backend: Literal["explicit", "jordan"] = "explicit"
+    albert_product_backend: Literal["sparse", "dense"] = "dense"
     expansion: int = 2
     key_parameterization: Literal[
         "independent_bounded", "tied_delta", "unconstrained"
@@ -69,6 +88,10 @@ class ExceptionalDeltaConfig:
             raise ValueError("d_conv must be positive")
         if self.action_coordinate_scale < 0:
             raise ValueError("action_coordinate_scale must be nonnegative")
+        if self.albert_product_backend not in {"sparse", "dense"}:
+            raise ValueError("albert_product_backend must be sparse or dense")
+        if self.albert_determinant_backend not in {"explicit", "jordan"}:
+            raise ValueError("albert_determinant_backend must be explicit or jordan")
         if not 0.0 <= self.dropout < 1.0:
             raise ValueError("dropout must lie in [0,1)")
         if (
@@ -150,18 +173,48 @@ class SwiGLU(nn.Module):
 class AlbertJordanMixer(nn.Module):
     """Pointwise bilinear mixer using the full 27D Albert product."""
 
-    def __init__(self, width: int, expansion: int) -> None:
+    def __init__(
+        self, width: int, expansion: int, backend: Literal["sparse", "dense"]
+    ) -> None:
         super().__init__()
         self.copies = max(1, (width * expansion + ALBERT_DIM - 1) // ALBERT_DIM)
         hidden = self.copies * ALBERT_DIM
         self.input = nn.Linear(width, 2 * hidden, bias=False)
         self.output = nn.Linear(hidden, width, bias=False)
         self.residual_scale = nn.Parameter(torch.tensor(-2.0))
+        self.backend = backend
+        structure = torch.tensor(
+            orthonormal_jordan_structure_constants(), dtype=torch.float64
+        )
+        if backend == "dense":
+            self.register_buffer("structure", structure, persistent=False)
+            indices = (None, None, None)
+            coefficients = None
+        else:
+            nonzero = torch.nonzero(structure, as_tuple=True)
+            indices = nonzero
+            coefficients = structure[nonzero]
+            self.register_buffer("structure", None, persistent=False)
+        self.register_buffer("output_index", indices[0], persistent=False)
+        self.register_buffer("left_index", indices[1], persistent=False)
+        self.register_buffer("right_index", indices[2], persistent=False)
+        self.register_buffer("coefficients", coefficients, persistent=False)
 
     def forward(self, inputs: torch.Tensor) -> torch.Tensor:
         left, right = self.input(inputs).chunk(2, dim=-1)
         shape = (*inputs.shape[:-1], self.copies, ALBERT_DIM)
-        product = jordan_product(left.reshape(shape), right.reshape(shape))
+        left, right = left.reshape(shape), right.reshape(shape)
+        if self.backend == "dense":
+            product = jordan_product(left, right, self.structure)
+        else:
+            product = sparse_jordan_product(
+                left,
+                right,
+                self.output_index,
+                self.left_index,
+                self.right_index,
+                self.coefficients,
+            )
         return torch.sigmoid(self.residual_scale) * self.output(
             product.flatten(start_dim=-2)
         )
@@ -172,16 +225,23 @@ class AlbertInvariantReadout(nn.Module):
 
     output_dim = ALBERT_DIM + 3
 
-    def __init__(self) -> None:
+    def __init__(self, backend: Literal["explicit", "jordan"] = "explicit") -> None:
         super().__init__()
+        self.backend = backend
         self.direction_norm = nn.RMSNorm(ALBERT_DIM)
 
-    def forward(self, value: torch.Tensor) -> torch.Tensor:
+    def forward(
+        self, value: torch.Tensor, octonion_structure: torch.Tensor | None = None
+    ) -> torch.Tensor:
         if value.shape[-1] != ALBERT_DIM:
             raise ValueError("Albert invariant readout requires 27D values")
         trace = albert_trace(value) / (3.0**0.5)
         log_energy = torch.log1p(value.square().mean(dim=-1))
-        determinant = albert_determinant(value)
+        determinant = (
+            albert_determinant(value, octonion_structure)
+            if self.backend == "explicit"
+            else albert_determinant_via_jordan(value, octonion_structure)
+        )
         bounded_determinant = determinant * torch.rsqrt(1.0 + determinant.square())
         scalars = torch.stack((trace, log_energy, bounded_determinant), dim=-1)
         return torch.cat((self.direction_norm(value), scalars), dim=-1)
@@ -228,7 +288,9 @@ class ExceptionalDeltaBlock(nn.Module):
         if config.readout_mode == "albert_invariants" and v != ALBERT_DIM:
             raise ValueError("albert_invariants readout requires a 27D action")
         if use_invariants:
-            self.read_features = AlbertInvariantReadout()
+            self.read_features = AlbertInvariantReadout(
+                config.albert_determinant_backend
+            )
             read_dimension = self.read_features.output_dim
         else:
             self.read_features = nn.RMSNorm(v)
@@ -240,11 +302,24 @@ class ExceptionalDeltaBlock(nn.Module):
             self.channel = SwiGLU(config.d_model, config.expansion)
         elif config.channel_mixer == "jordan":
             self.channel_norm = nn.RMSNorm(config.d_model)
-            self.channel = AlbertJordanMixer(config.d_model, config.expansion)
+            self.channel = AlbertJordanMixer(
+                config.d_model, config.expansion, config.albert_product_backend
+            )
         else:
             self.channel_norm = nn.Identity()
             self.channel = None
         self.dropout = nn.Dropout(config.dropout)
+        if use_invariants and config.albert_determinant_backend == "explicit":
+            readout_structure = torch.tensor(
+                octonion_structure_constants(), dtype=torch.float64
+            )
+        elif use_invariants:
+            readout_structure = torch.tensor(
+                orthonormal_jordan_structure_constants(), dtype=torch.float64
+            )
+        else:
+            readout_structure = None
+        self.register_buffer("readout_structure", readout_structure, persistent=False)
         self._initialize_controller()
 
     @property
@@ -345,27 +420,51 @@ class ExceptionalDeltaBlock(nn.Module):
             )
         value = F.silu(local_value)
         fields = self._control_fields(value, valid_mask)
-        action = self.action.ordered(fields["coordinates"])
-        transition = compile_delta_transition(
-            fields["retention"],
-            fields["write_key"],
-            fields["erase_key"],
-            fields["write_value"],
-            action,
+        use_identity_fast_path = self.config.identity_fast_path and isinstance(
+            self.action, IdentityAction
         )
+        if use_identity_fast_path:
+            transition = compile_one_sided_delta_transition(
+                fields["retention"],
+                fields["write_key"],
+                fields["erase_key"],
+                fields["write_value"],
+            )
+        else:
+            action = self.action.ordered(fields["coordinates"])
+            transition = compile_delta_transition(
+                fields["retention"],
+                fields["write_key"],
+                fields["erase_key"],
+                fields["write_value"],
+                action,
+            )
         memory = None if state is None else state.memory
         if memory is None:
             memory = value.new_zeros((value.shape[0], *self.state_shape))
         if scan_mode == "auto":
             scan_mode = "parallel" if value.shape[1] > 1 else "recurrent"
-        scanner = parallel_delta_scan if scan_mode == "parallel" else recurrent_delta_scan
+        if use_identity_fast_path:
+            scanner = (
+                parallel_one_sided_delta_scan
+                if scan_mode == "parallel"
+                else recurrent_one_sided_delta_scan
+            )
+        else:
+            scanner = parallel_delta_scan if scan_mode == "parallel" else recurrent_delta_scan
         reads, _, final_memory = scanner(transition, memory, fields["query"])
         if reads is None:
             raise AssertionError("query was supplied but scan returned no reads")
-        update = self.output_projection(self.read_features(reads)) * torch.sigmoid(gate)
+        if isinstance(self.read_features, AlbertInvariantReadout):
+            read_features = self.read_features(reads, self.readout_structure)
+        else:
+            read_features = self.read_features(reads)
+        update = self.output_projection(read_features) * torch.sigmoid(gate)
         hidden = hidden + torch.sigmoid(self.residual_scale) * self.dropout(update)
         if self.channel is not None:
-            hidden = hidden + self.dropout(self.channel(self.channel_norm(hidden)))
+            channel_input = self.channel_norm(hidden)
+            channel_update = self.channel(channel_input)
+            hidden = hidden + self.dropout(channel_update)
         return hidden, ExceptionalDeltaState(final_memory, next_convolution)
 
 

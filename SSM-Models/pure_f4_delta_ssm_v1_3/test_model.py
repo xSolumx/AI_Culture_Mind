@@ -5,7 +5,12 @@ import copy
 import pytest
 import torch
 
-from .model import AlbertInvariantReadout, ExceptionalDeltaConfig, ExceptionalDeltaLM
+from .model import (
+    AlbertInvariantReadout,
+    AlbertJordanMixer,
+    ExceptionalDeltaConfig,
+    ExceptionalDeltaLM,
+)
 
 
 def _tiny(**changes) -> ExceptionalDeltaLM:
@@ -204,4 +209,76 @@ def test_custom_bank_auto_readout_is_vector_and_forced_albert_refuses() -> None:
                 readout_mode="albert_invariants",
             ),
             generator_banks=[generator],
+        )
+
+
+def test_identity_fast_path_matches_generic_model_and_gradients() -> None:
+    torch.manual_seed(59)
+    fast = _tiny(
+        action_algebra="identity",
+        identity_fast_path=True,
+        channel_mixer="none",
+    ).double()
+    generic = _tiny(
+        action_algebra="identity",
+        identity_fast_path=False,
+        channel_mixer="none",
+    ).double()
+    generic.load_state_dict(fast.state_dict())
+    tokens = torch.randint(0, 256, (2, 7))
+    actual = fast(tokens, scan_mode="parallel")["logits"]
+    expected = generic(tokens, scan_mode="parallel")["logits"]
+    torch.testing.assert_close(actual, expected, rtol=3e-11, atol=3e-11)
+
+    output_gradient = torch.randn_like(actual)
+    actual_gradients = torch.autograd.grad(actual, tuple(fast.parameters()), output_gradient)
+    expected_gradients = torch.autograd.grad(
+        expected, tuple(generic.parameters()), output_gradient
+    )
+    for actual_gradient, expected_gradient in zip(
+        actual_gradients, expected_gradients, strict=True
+    ):
+        torch.testing.assert_close(
+            actual_gradient, expected_gradient, rtol=3e-9, atol=3e-9
+        )
+
+
+def test_identity_fast_path_preserves_chunked_streaming() -> None:
+    torch.manual_seed(61)
+    model = _tiny(
+        action_algebra="identity",
+        identity_fast_path=True,
+        channel_mixer="none",
+    ).double().eval()
+    tokens = torch.randint(0, 256, (1, 9))
+    with torch.no_grad():
+        full = model(tokens)["logits"]
+        first = model(tokens[:, :4])
+        second = model(tokens[:, 4:], states=first["states"])
+    chunked = torch.cat((first["logits"], second["logits"]), dim=1)
+    torch.testing.assert_close(chunked, full, rtol=2e-11, atol=2e-11)
+
+
+def test_sparse_albert_mixer_matches_dense_output_and_gradients() -> None:
+    torch.manual_seed(67)
+    dense = AlbertJordanMixer(16, 2, "dense").double()
+    sparse = AlbertJordanMixer(16, 2, "sparse").double()
+    sparse.load_state_dict(dense.state_dict())
+    dense_input = torch.randn(2, 5, 16, dtype=torch.float64, requires_grad=True)
+    sparse_input = dense_input.detach().clone().requires_grad_(True)
+    expected = dense(dense_input)
+    actual = sparse(sparse_input)
+    torch.testing.assert_close(actual, expected, rtol=3e-15, atol=3e-15)
+    output_gradient = torch.randn_like(expected)
+    expected_gradients = torch.autograd.grad(
+        expected, (dense_input, *dense.parameters()), output_gradient
+    )
+    actual_gradients = torch.autograd.grad(
+        actual, (sparse_input, *sparse.parameters()), output_gradient
+    )
+    for actual_gradient, expected_gradient in zip(
+        actual_gradients, expected_gradients, strict=True
+    ):
+        torch.testing.assert_close(
+            actual_gradient, expected_gradient, rtol=3e-14, atol=3e-14
         )

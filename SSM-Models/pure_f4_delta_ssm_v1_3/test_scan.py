@@ -4,9 +4,12 @@ import torch
 
 from .scan import (
     compile_delta_transition,
+    compile_one_sided_delta_transition,
     compose_transition,
     parallel_delta_scan,
+    parallel_one_sided_delta_scan,
     recurrent_delta_scan,
+    recurrent_one_sided_delta_scan,
 )
 
 
@@ -84,3 +87,70 @@ def test_rank_one_tied_keys_recover_delta_prediction_error_update() -> None:
     _, states, _ = recurrent_delta_scan(transition, state)
     torch.testing.assert_close(states[0, 0, 0], value[0, 0, 0])
     torch.testing.assert_close(states[0, 0, 1], state[0, 1])
+
+
+def test_one_sided_identity_path_matches_generic_outputs_and_gradients() -> None:
+    torch.manual_seed(47)
+    dtype = torch.float64
+    batch, length, rank, key_dim, value_dim = 2, 9, 2, 3, 5
+    original = [
+        (0.8 + 0.1 * torch.rand(batch, length, key_dim, dtype=dtype)).requires_grad_(),
+        torch.randn(batch, length, rank, key_dim, dtype=dtype).requires_grad_(),
+        (0.03 * torch.randn(batch, length, rank, key_dim, dtype=dtype)).requires_grad_(),
+        torch.randn(batch, length, rank, value_dim, dtype=dtype).requires_grad_(),
+        torch.randn(batch, key_dim, value_dim, dtype=dtype).requires_grad_(),
+        torch.randn(batch, length, key_dim, dtype=dtype).requires_grad_(),
+    ]
+    fast_inputs = [value.detach().clone().requires_grad_(True) for value in original]
+
+    retention, write_key, erase_key, write_value, initial, query = original
+    identity = torch.eye(value_dim, dtype=dtype).reshape(1, 1, value_dim, value_dim)
+    generic_transition = compile_delta_transition(
+        retention,
+        write_key,
+        erase_key,
+        write_value,
+        identity.expand(batch, length, -1, -1),
+    )
+    expected, expected_states, expected_final = parallel_delta_scan(
+        generic_transition, initial, query
+    )
+
+    retention, write_key, erase_key, write_value, initial, query = fast_inputs
+    fast_transition = compile_one_sided_delta_transition(
+        retention, write_key, erase_key, write_value
+    )
+    actual, actual_states, actual_final = parallel_one_sided_delta_scan(
+        fast_transition, initial, query
+    )
+    torch.testing.assert_close(actual, expected, rtol=3e-12, atol=3e-12)
+    torch.testing.assert_close(actual_states, expected_states, rtol=3e-12, atol=3e-12)
+    torch.testing.assert_close(actual_final, expected_final, rtol=3e-12, atol=3e-12)
+
+    output_gradient = torch.randn_like(expected)
+    expected_gradients = torch.autograd.grad(expected, original, output_gradient)
+    actual_gradients = torch.autograd.grad(actual, fast_inputs, output_gradient)
+    for actual_gradient, expected_gradient in zip(
+        actual_gradients, expected_gradients, strict=True
+    ):
+        torch.testing.assert_close(
+            actual_gradient, expected_gradient, rtol=2e-11, atol=2e-11
+        )
+
+
+def test_one_sided_parallel_and_recurrent_scans_match() -> None:
+    torch.manual_seed(53)
+    transition = compile_one_sided_delta_transition(
+        0.9 + 0.05 * torch.rand(1, 11, 3, dtype=torch.float64),
+        torch.randn(1, 11, 2, 3, dtype=torch.float64),
+        0.02 * torch.randn(1, 11, 2, 3, dtype=torch.float64),
+        torch.randn(1, 11, 2, 7, dtype=torch.float64),
+    )
+    initial = torch.randn(1, 3, 7, dtype=torch.float64)
+    query = torch.randn(1, 11, 3, dtype=torch.float64)
+    expected = recurrent_one_sided_delta_scan(transition, initial, query)
+    actual = parallel_one_sided_delta_scan(transition, initial, query)
+    for actual_tensor, expected_tensor in zip(actual, expected, strict=True):
+        torch.testing.assert_close(
+            actual_tensor, expected_tensor, rtol=2e-11, atol=2e-11
+        )

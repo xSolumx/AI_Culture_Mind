@@ -16,6 +16,25 @@ class TwoSidedAffineTransition:
     bias: torch.Tensor
 
 
+@dataclass(frozen=True)
+class OneSidedAffineTransition:
+    """The transport-free map ``S -> left @ S + bias``."""
+
+    left: torch.Tensor
+    bias: torch.Tensor
+
+
+def compose_one_sided_transition(
+    later: OneSidedAffineTransition, earlier: OneSidedAffineTransition
+) -> OneSidedAffineTransition:
+    """Compose chronological transport-free transitions."""
+
+    return OneSidedAffineTransition(
+        left=later.left @ earlier.left,
+        bias=later.bias + later.left @ earlier.bias,
+    )
+
+
 def compose_transition(
     later: TwoSidedAffineTransition, earlier: TwoSidedAffineTransition
 ) -> TwoSidedAffineTransition:
@@ -65,6 +84,28 @@ def compile_delta_transition(
     return TwoSidedAffineTransition(left=left, right=action, bias=bias)
 
 
+def compile_one_sided_delta_transition(
+    retention: torch.Tensor,
+    write_key: torch.Tensor,
+    erase_key: torch.Tensor,
+    write_value: torch.Tensor,
+) -> OneSidedAffineTransition:
+    """Compile the same rank-r update without materializing identity transport."""
+
+    if write_key.shape != erase_key.shape:
+        raise ValueError("write and erase keys must have identical shapes")
+    if write_key.ndim < 2 or write_key.shape[-1] != retention.shape[-1]:
+        raise ValueError("keys must end in (rank,key_dimension)")
+    if write_value.shape[:-1] != write_key.shape[:-1]:
+        raise ValueError("write values must share key leading and rank axes")
+    key_dimension = retention.shape[-1]
+    identity = torch.eye(key_dimension, dtype=retention.dtype, device=retention.device)
+    erase = torch.einsum("...rh,...rk->...hk", write_key, erase_key)
+    left = (identity - erase) * retention.unsqueeze(-2)
+    bias = torch.einsum("...rh,...rv->...hv", write_key, write_value)
+    return OneSidedAffineTransition(left=left, bias=bias)
+
+
 def transition_prefix_scan(
     transition: TwoSidedAffineTransition,
 ) -> TwoSidedAffineTransition:
@@ -92,10 +133,42 @@ def transition_prefix_scan(
     return current
 
 
+def one_sided_transition_prefix_scan(
+    transition: OneSidedAffineTransition,
+) -> OneSidedAffineTransition:
+    """Inclusive Hillis-Steele scan without a value-space identity matrix."""
+
+    if transition.left.ndim < 4:
+        raise ValueError("transitions must include batch and sequence axes")
+    length = transition.left.shape[1]
+    current = transition
+    offset = 1
+    while offset < length:
+        later = OneSidedAffineTransition(
+            current.left[:, offset:], current.bias[:, offset:]
+        )
+        earlier = OneSidedAffineTransition(
+            current.left[:, :-offset], current.bias[:, :-offset]
+        )
+        composed = compose_one_sided_transition(later, earlier)
+        current = OneSidedAffineTransition(
+            left=torch.cat((current.left[:, :offset], composed.left), dim=1),
+            bias=torch.cat((current.bias[:, :offset], composed.bias), dim=1),
+        )
+        offset *= 2
+    return current
+
+
 def apply_transition(
     transition: TwoSidedAffineTransition, state: torch.Tensor
 ) -> torch.Tensor:
     return transition.left @ state @ transition.right.transpose(-1, -2) + transition.bias
+
+
+def apply_one_sided_transition(
+    transition: OneSidedAffineTransition, state: torch.Tensor
+) -> torch.Tensor:
+    return transition.left @ state + transition.bias
 
 
 def _read(states: torch.Tensor, query: torch.Tensor | None) -> torch.Tensor | None:
@@ -127,6 +200,25 @@ def recurrent_delta_scan(
     return _read(stacked, query), stacked, state
 
 
+def recurrent_one_sided_delta_scan(
+    transition: OneSidedAffineTransition,
+    initial_state: torch.Tensor,
+    query: torch.Tensor | None = None,
+) -> tuple[torch.Tensor | None, torch.Tensor, torch.Tensor]:
+    """Sequential transport-free oracle."""
+
+    state = initial_state
+    states = []
+    for position in range(transition.left.shape[1]):
+        local = OneSidedAffineTransition(
+            transition.left[:, position], transition.bias[:, position]
+        )
+        state = apply_one_sided_transition(local, state)
+        states.append(state)
+    stacked = torch.stack(states, dim=1)
+    return _read(stacked, query), stacked, state
+
+
 def parallel_delta_scan(
     transition: TwoSidedAffineTransition,
     initial_state: torch.Tensor,
@@ -140,12 +232,31 @@ def parallel_delta_scan(
     return _read(states, query), states, states[:, -1]
 
 
+def parallel_one_sided_delta_scan(
+    transition: OneSidedAffineTransition,
+    initial_state: torch.Tensor,
+    query: torch.Tensor | None = None,
+) -> tuple[torch.Tensor | None, torch.Tensor, torch.Tensor]:
+    """Log-depth transport-free scan with complete autograd."""
+
+    prefix = one_sided_transition_prefix_scan(transition)
+    states = apply_one_sided_transition(prefix, initial_state[:, None])
+    return _read(states, query), states, states[:, -1]
+
+
 __all__ = [
+    "OneSidedAffineTransition",
     "TwoSidedAffineTransition",
+    "apply_one_sided_transition",
     "apply_transition",
     "compile_delta_transition",
+    "compile_one_sided_delta_transition",
+    "compose_one_sided_transition",
     "compose_transition",
+    "one_sided_transition_prefix_scan",
     "parallel_delta_scan",
+    "parallel_one_sided_delta_scan",
     "recurrent_delta_scan",
+    "recurrent_one_sided_delta_scan",
     "transition_prefix_scan",
 ]

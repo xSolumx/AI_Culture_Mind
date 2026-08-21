@@ -44,6 +44,18 @@ class TrainingConfig:
 
 
 VARIANTS = {
+    "identity_legacy": {
+        "action_algebra": "identity",
+        "action_geometry": "direct",
+        "identity_fast_path": False,
+        "albert_determinant_backend": "jordan",
+        "albert_product_backend": "dense",
+    },
+    "identity_generic": {
+        "action_algebra": "identity",
+        "action_geometry": "direct",
+        "identity_fast_path": False,
+    },
     "identity_delta": {"action_algebra": "identity", "action_geometry": "direct"},
     "f4_delta": {"action_algebra": "f4", "action_geometry": "direct"},
     "e6_direct_delta": {"action_algebra": "e6", "action_geometry": "direct"},
@@ -96,14 +108,18 @@ def _build_model(name: str, config: TrainingConfig) -> ExceptionalDeltaLM:
 
 @torch.no_grad()
 def _evaluate(
-    model: ExceptionalDeltaLM,
+    model: torch.nn.Module,
     batches: list[tuple[torch.Tensor, torch.Tensor]],
     device: torch.device,
+    *,
+    mark_compile_step: bool = False,
 ) -> float:
     model.eval()
     loss_sum = 0.0
     token_count = 0
     for inputs, targets in batches:
+        if mark_compile_step:
+            torch.compiler.cudagraph_mark_step_begin()
         inputs, targets = inputs.to(device), targets.to(device)
         logits = model(inputs, scan_mode="auto")["logits"]
         loss_sum += float(
@@ -121,13 +137,23 @@ def _run_one(
     train_stream: torch.Tensor,
     validation: list[tuple[torch.Tensor, torch.Tensor]],
     device: torch.device,
+    execution: str,
 ) -> dict[str, object]:
     _seed_all(config.seed)
-    model = _build_model(name, config).to(device)
-    optimizer = torch.optim.AdamW(
-        model.parameters(), lr=config.learning_rate, weight_decay=config.weight_decay
+    base_model = _build_model(name, config).to(device)
+    model = (
+        base_model
+        if execution == "eager"
+        else torch.compile(base_model, fullgraph=True, mode=execution)
     )
-    initial_loss = _evaluate(model, validation, device)
+    optimizer = torch.optim.AdamW(
+        base_model.parameters(), lr=config.learning_rate, weight_decay=config.weight_decay
+    )
+    preparation_start = time.perf_counter()
+    mark_compile_step = execution == "reduce-overhead"
+    initial_loss = _evaluate(
+        model, validation, device, mark_compile_step=mark_compile_step
+    )
     generator = torch.Generator().manual_seed(config.seed)
 
     warmup_generator = torch.Generator().manual_seed(config.seed + 1)
@@ -139,11 +165,16 @@ def _run_one(
     )
     warmup_inputs, warmup_targets = warmup_inputs.to(device), warmup_targets.to(device)
     model.train()
+    if mark_compile_step:
+        torch.compiler.cudagraph_mark_step_begin()
     warmup_logits = model(warmup_inputs, scan_mode="auto")["logits"]
     F.cross_entropy(
         warmup_logits.flatten(0, 1), warmup_targets.flatten()
     ).backward()
-    model.zero_grad(set_to_none=True)
+    base_model.zero_grad(set_to_none=True)
+    if device.type == "cuda":
+        torch.cuda.synchronize()
+    preparation_seconds = time.perf_counter() - preparation_start
 
     if device.type == "cuda":
         torch.cuda.synchronize()
@@ -152,6 +183,8 @@ def _run_one(
     sampled_losses: dict[str, float] = {}
     maximum_gradient_norm = 0.0
     for step in range(1, config.steps + 1):
+        if mark_compile_step:
+            torch.compiler.cudagraph_mark_step_begin()
         inputs, targets = random_batch(
             train_stream,
             batch_size=config.batch_size,
@@ -175,12 +208,16 @@ def _run_one(
     if device.type == "cuda":
         torch.cuda.synchronize()
     seconds = time.perf_counter() - start
-    final_loss = _evaluate(model, validation, device)
+    final_loss = _evaluate(
+        model, validation, device, mark_compile_step=mark_compile_step
+    )
     tokens = config.steps * config.batch_size * config.sequence_length
     return {
         "name": name,
-        "parameters": parameter_count(model),
-        "cache_scalars": model.cache_scalars,
+        "parameters": parameter_count(base_model),
+        "cache_scalars": base_model.cache_scalars,
+        "execution": execution,
+        "preparation_seconds": preparation_seconds,
         "initial_nats_per_byte": initial_loss,
         "final_nats_per_byte": final_loss,
         "final_bits_per_byte": final_loss / math.log(2.0),
@@ -209,6 +246,11 @@ def main() -> None:
     parser.add_argument("--learning-rate", type=float, default=3e-3)
     parser.add_argument("--seed", type=int, default=17)
     parser.add_argument("--device", choices=("cpu", "cuda"), default="cuda")
+    parser.add_argument(
+        "--execution",
+        choices=("eager", "default", "reduce-overhead"),
+        default="eager",
+    )
     parser.add_argument("--offline", action="store_true")
     parser.add_argument("--cache-root", type=Path)
     parser.add_argument("--output", type=Path)
@@ -246,7 +288,7 @@ def main() -> None:
     ]
     device = torch.device(args.device)
     rows = [
-        _run_one(name, config, train_stream, validation, device)
+        _run_one(name, config, train_stream, validation, device, args.execution)
         for name in args.variants
     ]
     root = Path(__file__).resolve().parent
@@ -256,6 +298,7 @@ def main() -> None:
         "status": "development smoke; not parameter-matched and not a quality claim",
         "config": asdict(config),
         "variants": args.variants,
+        "execution": args.execution,
         "dataset": {
             "name": "tiny_shakespeare",
             "tokenization": "UTF-8 bytes",

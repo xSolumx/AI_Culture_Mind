@@ -149,6 +149,21 @@ def jordan_structure_constants() -> np.ndarray:
     return constants
 
 
+@lru_cache(maxsize=1)
+def orthonormal_jordan_structure_constants() -> np.ndarray:
+    """Return Albert product constants in the Euclidean orthonormal basis."""
+
+    scale = np.array([1.0, 1.0, 1.0] + [np.sqrt(2.0)] * 24)
+    structure = (
+        jordan_structure_constants()
+        * scale[:, None, None]
+        / scale[None, :, None]
+        / scale[None, None, :]
+    )
+    structure.setflags(write=False)
+    return structure
+
+
 def _raw_left_multiplications() -> np.ndarray:
     constants = jordan_structure_constants()
     return np.transpose(constants, (1, 0, 2)).copy()
@@ -251,6 +266,15 @@ class AlbertAlgebra:
         # copy before handing memory ownership to Torch.
         return torch.tensor(self.structure, dtype=reference.dtype, device=reference.device)
 
+    def torch_orthonormal_structure(self, reference: torch.Tensor) -> torch.Tensor:
+        """Return product constants directly in the orthonormal carrier basis."""
+
+        return torch.tensor(
+            orthonormal_jordan_structure_constants(),
+            dtype=reference.dtype,
+            device=reference.device,
+        )
+
     def torch_generators(self, algebra: str, reference: torch.Tensor) -> torch.Tensor:
         if algebra == "f4":
             generators = self.f4
@@ -346,16 +370,46 @@ def orthonormal_to_raw(coordinates: torch.Tensor) -> torch.Tensor:
     return coordinates * scale
 
 
-def jordan_product(left: torch.Tensor, right: torch.Tensor) -> torch.Tensor:
+def jordan_product(
+    left: torch.Tensor,
+    right: torch.Tensor,
+    structure: torch.Tensor | None = None,
+) -> torch.Tensor:
     """Differentiable Albert product in orthonormal 27 coordinates."""
 
     if left.shape != right.shape or left.shape[-1] != ALBERT_DIM:
         raise ValueError("Albert operands must share a final dimension of 27")
-    left_raw = orthonormal_to_raw(left)
-    right_raw = orthonormal_to_raw(right)
-    structure = build_albert_algebra().torch_structure(left)
-    product_raw = torch.einsum("kij,...i,...j->...k", structure, left_raw, right_raw)
-    return raw_to_orthonormal(product_raw)
+    if structure is None:
+        structure = build_albert_algebra().torch_orthonormal_structure(left)
+    elif structure.shape != (ALBERT_DIM, ALBERT_DIM, ALBERT_DIM):
+        raise ValueError("Albert structure must have shape (27,27,27)")
+    return torch.einsum("kij,...i,...j->...k", structure.to(left), left, right)
+
+
+def sparse_jordan_product(
+    left: torch.Tensor,
+    right: torch.Tensor,
+    output_index: torch.Tensor,
+    left_index: torch.Tensor,
+    right_index: torch.Tensor,
+    coefficients: torch.Tensor,
+) -> torch.Tensor:
+    """Evaluate the 531 nonzero Albert structure entries by gather/scatter."""
+
+    if left.shape != right.shape or left.shape[-1] != ALBERT_DIM:
+        raise ValueError("Albert operands must share a final dimension of 27")
+    count = coefficients.numel()
+    if any(index.shape != (count,) for index in (output_index, left_index, right_index)):
+        raise ValueError("sparse Albert indices and coefficients must have equal length")
+    terms = (
+        left[..., left_index]
+        * right[..., right_index]
+        * coefficients.to(left)
+    )
+    output = torch.zeros_like(left)
+    return output.scatter_add(
+        -1, output_index.expand(*terms.shape[:-1], count), terms
+    )
 
 
 def albert_trace(value: torch.Tensor) -> torch.Tensor:
@@ -363,17 +417,52 @@ def albert_trace(value: torch.Tensor) -> torch.Tensor:
     return raw[..., :3].sum(dim=-1)
 
 
-def albert_determinant(value: torch.Tensor) -> torch.Tensor:
-    """Cubic norm from the power-associative Jordan trace identity."""
+def albert_determinant_via_jordan(
+    value: torch.Tensor, structure: torch.Tensor | None = None
+) -> torch.Tensor:
+    """Cubic norm through the power-associative Jordan trace identity."""
 
-    square = jordan_product(value, value)
-    cube = jordan_product(square, value)
+    square = jordan_product(value, value, structure)
+    cube = jordan_product(square, value, structure)
     trace = albert_trace(value)
     trace_square = albert_trace(square)
     trace_cube = albert_trace(cube)
     return (
         trace.pow(3) - 3.0 * trace * trace_square + 2.0 * trace_cube
     ) / 6.0
+
+
+def albert_determinant(
+    value: torch.Tensor, octonion_structure: torch.Tensor | None = None
+) -> torch.Tensor:
+    """Explicit cubic norm of ``H_3(O)`` in orthonormal coordinates.
+
+    For raw off-diagonal octonions ``x,y,z`` and diagonal ``a,b,c`` this is
+    ``abc - a|z|^2 - b|y|^2 - c|x|^2 + 2 Re((xz) conjugate(y))``.
+    The final real part is the Euclidean inner product ``<xz,y>``.  This
+    evaluates one 8D octonion product instead of two dense 27D Jordan products.
+    """
+
+    if value.shape[-1] != ALBERT_DIM:
+        raise ValueError("Albert coordinates must have final dimension 27")
+    if octonion_structure is None:
+        octonion_structure = value.new_tensor(octonion_structure_constants())
+    elif octonion_structure.shape != (OCTONION_DIM,) * 3:
+        raise ValueError("octonion structure must have shape (8,8,8)")
+    diagonal = value[..., :3]
+    off_diagonal = value[..., 3:] * (2.0**-0.5)
+    x, y, z = off_diagonal.split(OCTONION_DIM, dim=-1)
+    xz = torch.einsum(
+        "kij,...i,...j->...k", octonion_structure.to(value), x, z
+    )
+    a, b, c = diagonal.unbind(dim=-1)
+    return (
+        a * b * c
+        - a * z.square().sum(dim=-1)
+        - b * y.square().sum(dim=-1)
+        - c * x.square().sum(dim=-1)
+        + 2.0 * (xz * y).sum(dim=-1)
+    )
 
 
 __all__ = [
@@ -385,6 +474,7 @@ __all__ = [
     "SPIN9_DIM",
     "AlbertAlgebra",
     "albert_determinant",
+    "albert_determinant_via_jordan",
     "albert_trace",
     "build_albert_algebra",
     "coordinates_to_hermitian",
@@ -393,8 +483,10 @@ __all__ = [
     "jordan_product_numpy",
     "jordan_structure_constants",
     "octonion_structure_constants",
+    "orthonormal_jordan_structure_constants",
     "orthonormal_to_raw",
     "raw_to_orthonormal",
+    "sparse_jordan_product",
     "trace_metric",
     "tracefree_to_raw_basis",
 ]

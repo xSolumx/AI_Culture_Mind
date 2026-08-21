@@ -15,6 +15,7 @@ from .albert import (
     SPIN8_DIM,
     SPIN9_DIM,
     albert_determinant,
+    albert_determinant_via_jordan,
     build_albert_algebra,
     jordan_product_numpy,
     jordan_structure_constants,
@@ -37,6 +38,23 @@ def test_albert_structure_is_half_integral_and_jordan_commutative() -> None:
     right = rng.integers(-2, 3, size=27).astype(np.float64)
     np.testing.assert_array_equal(
         jordan_product_numpy(left, right), jordan_product_numpy(right, left)
+    )
+
+
+def test_explicit_cubic_matches_jordan_trace_identity_and_gradient() -> None:
+    torch.manual_seed(13)
+    expected_value = torch.randn(3, 5, 27, dtype=torch.float64, requires_grad=True)
+    actual_value = expected_value.detach().clone().requires_grad_(True)
+    expected = albert_determinant_via_jordan(expected_value)
+    actual = albert_determinant(actual_value)
+    torch.testing.assert_close(actual, expected, rtol=2e-14, atol=2e-14)
+    output_gradient = torch.randn_like(expected)
+    (expected_gradient,) = torch.autograd.grad(
+        expected, expected_value, output_gradient
+    )
+    (actual_gradient,) = torch.autograd.grad(actual, actual_value, output_gradient)
+    torch.testing.assert_close(
+        actual_gradient, expected_gradient, rtol=3e-14, atol=3e-14
     )
 
 
