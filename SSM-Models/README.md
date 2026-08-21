@@ -8,6 +8,17 @@
 > live in the root-owned `Spin-Space-Research` tree. The maintained
 > Cl(3,0) implementation described below remains in this folder.
 
+> **2026-08-21 Pure Exceptional Delta SSM v1.3 development boundary.**
+> [`pure_f4_delta_ssm_v1_3/`](pure_f4_delta_ssm_v1_3/) now contains an isolated
+> semantic PyTorch implementation of the full Albert-algebra hierarchy
+> `Spin(8) -> Spin(9) -> F4 -> E6(-26)`, generalized rank-r independent
+> erase/write memory, ordered Lie exponentials, associative two-sided prefix
+> scans, complete convolution-plus-memory streaming state, and projective
+> router controls. Its algebra/model suite and deterministic audit pass. It is
+> not yet a promoted CUDA backend or trained quality result, and it does not
+> inherit v1.2's natural-data artifacts. The folder's constraint audit records
+> which older gates were retained, generalized, or removed.
+
 > **2026-08-10 programme boundary.** The theorem tree now has a
 > completed hierarchical memory-core campaign and an official FLA chunk-kernel
 > benchmark for a co-moving transported delta recurrence. The campaign finds

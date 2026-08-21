@@ -9,6 +9,15 @@ v1.1 family uses a faithful `(8v,8s+,8s-)` cache. This is a model-design and
 controlled-ablation programme, distinct from the general scan/compiler algebra
 and from representation-theorem claims made without a trained model.
 
+The 2026-08-21 development successor
+`SSM-Models/pure_f4_delta_ssm_v1_3/` is intentionally not yet called a
+maintained trained model. It supplies the semantic and algebraic machinery for
+one 27D Albert carrier with selectable
+`Spin(8) / Spin(9) / F4 / E6(-26) / custom` action banks and a generalized
+delta memory. Its local audit removed inherited compactness, monotone-schedule,
+rank-one, tied-address, and incomplete-cache restrictions. Promotion requires
+new matched natural-data and complete-step hardware evidence.
+
 ## Core Questions
 
 1. Do structured noncommuting transitions improve prediction, memory, state

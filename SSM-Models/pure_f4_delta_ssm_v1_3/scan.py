@@ -1,0 +1,151 @@
+"""Associative two-sided affine scans with generalized delta updates."""
+
+from __future__ import annotations
+
+from dataclasses import dataclass
+
+import torch
+
+
+@dataclass(frozen=True)
+class TwoSidedAffineTransition:
+    """The map ``S -> left @ S @ right.T + bias``."""
+
+    left: torch.Tensor
+    right: torch.Tensor
+    bias: torch.Tensor
+
+
+def compose_transition(
+    later: TwoSidedAffineTransition, earlier: TwoSidedAffineTransition
+) -> TwoSidedAffineTransition:
+    """Compose chronological transitions: ``later(earlier(S))``."""
+
+    return TwoSidedAffineTransition(
+        left=later.left @ earlier.left,
+        right=later.right @ earlier.right,
+        bias=later.bias + later.left @ earlier.bias @ later.right.transpose(-1, -2),
+    )
+
+
+def compile_delta_transition(
+    retention: torch.Tensor,
+    write_key: torch.Tensor,
+    erase_key: torch.Tensor,
+    write_value: torch.Tensor,
+    action: torch.Tensor,
+) -> TwoSidedAffineTransition:
+    """Compile a rank-r independent erase/write update into an affine map.
+
+    Shapes are ``retention (...,H)``, keys ``(...,R,H)``, values
+    ``(...,R,V)``, and action ``(...,V,V)``.  The update is
+
+    ``S' = (I - sum_r k_r e_r^T) diag(retention) S action^T``
+    ``     + sum_r k_r z_r^T``.
+
+    Setting ``erase_key = beta * write_key`` recovers a block DeltaRule.
+    Independent keys are supported because the local memory evidence did not
+    justify tying erase and write as a universal architectural law.
+    """
+
+    if write_key.shape != erase_key.shape:
+        raise ValueError("write and erase keys must have identical shapes")
+    if write_key.ndim < 2 or write_key.shape[-1] != retention.shape[-1]:
+        raise ValueError("keys must end in (rank,key_dimension)")
+    if write_value.shape[:-1] != write_key.shape[:-1]:
+        raise ValueError("write values must share key leading and rank axes")
+    if action.shape[-1] != action.shape[-2] or action.shape[-1] != write_value.shape[-1]:
+        raise ValueError("action and write-value dimensions must agree")
+    key_dimension = retention.shape[-1]
+    identity = torch.eye(key_dimension, dtype=retention.dtype, device=retention.device)
+    erase = torch.einsum("...rh,...rk->...hk", write_key, erase_key)
+    # Multiplication by diag(retention) scales the columns.
+    left = (identity - erase) * retention.unsqueeze(-2)
+    bias = torch.einsum("...rh,...rv->...hv", write_key, write_value)
+    return TwoSidedAffineTransition(left=left, right=action, bias=bias)
+
+
+def transition_prefix_scan(
+    transition: TwoSidedAffineTransition,
+) -> TwoSidedAffineTransition:
+    """Inclusive Hillis-Steele scan along axis 1."""
+
+    if transition.left.ndim < 4:
+        raise ValueError("transitions must include batch and sequence axes")
+    length = transition.left.shape[1]
+    current = transition
+    offset = 1
+    while offset < length:
+        later = TwoSidedAffineTransition(
+            current.left[:, offset:], current.right[:, offset:], current.bias[:, offset:]
+        )
+        earlier = TwoSidedAffineTransition(
+            current.left[:, :-offset], current.right[:, :-offset], current.bias[:, :-offset]
+        )
+        composed = compose_transition(later, earlier)
+        current = TwoSidedAffineTransition(
+            left=torch.cat((current.left[:, :offset], composed.left), dim=1),
+            right=torch.cat((current.right[:, :offset], composed.right), dim=1),
+            bias=torch.cat((current.bias[:, :offset], composed.bias), dim=1),
+        )
+        offset *= 2
+    return current
+
+
+def apply_transition(
+    transition: TwoSidedAffineTransition, state: torch.Tensor
+) -> torch.Tensor:
+    return transition.left @ state @ transition.right.transpose(-1, -2) + transition.bias
+
+
+def _read(states: torch.Tensor, query: torch.Tensor | None) -> torch.Tensor | None:
+    if query is None:
+        return None
+    if states.shape[:-2] != query.shape[:-1] or states.shape[-2] != query.shape[-1]:
+        raise ValueError("query must match state batch/sequence and key axes")
+    return torch.einsum("...hv,...h->...v", states, query)
+
+
+def recurrent_delta_scan(
+    transition: TwoSidedAffineTransition,
+    initial_state: torch.Tensor,
+    query: torch.Tensor | None = None,
+) -> tuple[torch.Tensor | None, torch.Tensor, torch.Tensor]:
+    """Sequential semantic oracle returning reads, every state, and final state."""
+
+    state = initial_state
+    states = []
+    for position in range(transition.left.shape[1]):
+        local = TwoSidedAffineTransition(
+            transition.left[:, position],
+            transition.right[:, position],
+            transition.bias[:, position],
+        )
+        state = apply_transition(local, state)
+        states.append(state)
+    stacked = torch.stack(states, dim=1)
+    return _read(stacked, query), stacked, state
+
+
+def parallel_delta_scan(
+    transition: TwoSidedAffineTransition,
+    initial_state: torch.Tensor,
+    query: torch.Tensor | None = None,
+) -> tuple[torch.Tensor | None, torch.Tensor, torch.Tensor]:
+    """Log-depth semantic prefix implementation with complete autograd."""
+
+    prefix = transition_prefix_scan(transition)
+    initial = initial_state[:, None]
+    states = apply_transition(prefix, initial)
+    return _read(states, query), states, states[:, -1]
+
+
+__all__ = [
+    "TwoSidedAffineTransition",
+    "apply_transition",
+    "compile_delta_transition",
+    "compose_transition",
+    "parallel_delta_scan",
+    "recurrent_delta_scan",
+    "transition_prefix_scan",
+]
