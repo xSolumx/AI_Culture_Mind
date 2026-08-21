@@ -159,7 +159,7 @@ def test_compiler_refuses_false_tensor_multiplicity() -> None:
         ),
         hardware_profile_path=PROFILE,
     )
-    assert plan.compiler_version == COMPILER_VERSION == "2.1.1"
+    assert plan.compiler_version == COMPILER_VERSION == "2.1.2"
     assert plan.schedules[0].backend != "triton_tensor_core"
     assert "actions differ" in plan.schedules[0].reason
 

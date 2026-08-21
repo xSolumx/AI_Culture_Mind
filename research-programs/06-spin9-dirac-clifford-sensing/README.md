@@ -21,6 +21,16 @@ module, and the information geometry of one, two, or three spinor probes.
   block signatures must agree and each row must satisfy its double-centralizer
   dimension. This is a verified Programme 01 interface, not a Spin(9)
   Tensor-Core or model-performance result.
+- The complete pure first-`V5` Cartan graph is reconstructed in the radial and
+  cubic shape invariants and has an exact global `101/100` bound. The complete
+  coupled first-`V1 + V5` finite-radius graph has a characteristic-zero
+  determinant identity and exact global `21/20` bound. The pure-`V1` line is
+  pulled back exactly to the symmetric curve and has four classified candidate
+  preimages. These are graph-slice theorems, not the unrestricted optimum.
+- The spinor-probe ranks `15,28,36` give stabilizer dimensions `21,8,0`,
+  consistent with the orbit ladder `Spin(7) -> SU(3) -> 1`. This ladder is
+  representation-specific and is not the defining-vector `3 -> 5 -> 7`
+  Stiefel tower in Spin(8).
 
 The local theorem is internally replayed and now has a separate full-chart
 float64 autodiff path that rederives the \(11\)-negative/\(33\)-zero signature
@@ -31,8 +41,11 @@ review. External review remains pending.
 
 ## Open gate
 
-The unrestricted global exact three-spinor optimum is not proved. The bounded
-multistart screen is counterexample-search evidence only. The 9-to-16 binding
+The unrestricted global exact three-spinor optimum is not proved. The remaining
+gates are exact maximality of the algebraic symmetric candidate on the mixed
+first-`V1 + V5` slice, control of the second supported `V5`, and passage from
+the graph chart to the unrestricted quotient. The bounded multistart screen is
+counterexample-search evidence only. The 9-to-16 binding
 identity is an exact mechanism, but it expands width and therefore does not
 establish a same-state Spin(9) memory or sequence-model advantage. Its current
 programme role is a possible coarse router for hierarchical memory, not a
@@ -47,6 +60,15 @@ D-optimality claims.
 
 Use the exact theorem tree's
 [`Spin(9) Dirac--Clifford gate`](../../Spin-Space-Research/docs/experiments/SPIN9_DIRAC_CLIFFORD_GATE.md).
+The promoted finite-radius theorem and its precise exclusions are assembled by
+[`spin9_v1_v5_theorem.py`](../../Spin-Space-Research/src/spin9_v1_v5_theorem.py),
+with the proof narrative in
+[`SPIN9_V1_V5_RECONSTRUCTION.md`](../../Spin-Space-Research/docs/manuscripts/SPIN9_V1_V5_RECONSTRUCTION.md).
+The cross-representation probe atlas is in
+[`SPIN8_PROBE_STABILIZER_TOWER.md`](../../Spin-Space-Research/docs/experiments/SPIN8_PROBE_STABILIZER_TOWER.md).
+The near-candidate rational collar and the resulting local-chart proof route
+are recorded without theorem promotion in
+[`SPIN9_CANDIDATE_COLLAR_DIAGNOSTIC.md`](../../Spin-Space-Research/docs/experiments/SPIN9_CANDIDATE_COLLAR_DIAGNOSTIC.md).
 The memory boundary and executable gate are reported in
 [`SPIN8_SPIN9_HIERARCHICAL_MEMORY_RESULTS.md`](../../Spin-Space-Research/docs/experiments/SPIN8_SPIN9_HIERARCHICAL_MEMORY_RESULTS.md).
 

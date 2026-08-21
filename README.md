@@ -6,6 +6,11 @@ AI Culture Mind is the latter third of a machine learning and topology research 
 work is separated into independently falsifiable programs with different
 mathematical objects, evidence standards, and publication paths.
 
+The current compiler work enforces four independent obligations: algebraic
+decomposition, shared-action semantics, numerical precision, and measured
+silicon cost. Collapsing these layers too early can produce either an invalid
+lowering or a slower kernel; the distinction is now executable and tested.
+
 Start with the [research-program index](research-programs/README.md). It
 distinguishes:
 

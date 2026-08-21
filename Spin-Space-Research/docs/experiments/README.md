@@ -74,6 +74,17 @@ recorded in
 
 ## Evidence vocabulary
 
+The exact ordered-probe geometry and its representation-dependent stabilizer
+boundaries are summarized in
+[`SPIN8_PROBE_STABILIZER_TOWER.md`](SPIN8_PROBE_STABILIZER_TOWER.md). Its
+`18+7+3` refinement is a defining-vector Stiefel theorem, not an empirical
+model result or an `SU(n)` isotypic decomposition.
+
+The current Spin(9) candidate-maximality handoff is recorded separately in
+[`SPIN9_CANDIDATE_COLLAR_DIAGNOSTIC.md`](SPIN9_CANDIDATE_COLLAR_DIAGNOSTIC.md).
+It is an exact partial atlas with retained boxes, not a promoted positivity
+certificate.
+
 - **Theorem or exact identity:** derived symbolically or checked by exact
   arithmetic under an explicitly stated domain.
 - **Computational certificate:** a finite exact object whose verifier checks the

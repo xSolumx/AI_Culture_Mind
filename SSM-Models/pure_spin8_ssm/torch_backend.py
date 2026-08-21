@@ -17,11 +17,6 @@ from pathlib import Path
 from typing import Any, Literal
 
 import torch
-from torch import nn
-from torch.nn import functional as F
-
-from pure_spin8_ssm import __version__
-from pure_spin8_ssm.continuous_scan import continuous_spin8_scan
 from spin8_triality import (
     SPIN8_BIVECTOR_DIM,
     SPIN8_DIM,
@@ -30,11 +25,38 @@ from spin8_triality import (
     torch_triality_generators,
 )
 from spin8_triality_lift import triality_tensor
+from torch import nn
+from torch.nn import functional as F
+
+from pure_spin8_ssm import __version__
+from pure_spin8_ssm.compiler import (
+    HardwareTarget,
+    RuntimeShape,
+    compile_spin8_training_plan,
+)
+from pure_spin8_ssm.continuous_scan import continuous_spin8_scan
+from pure_spin8_ssm.factorized_scan import (
+    factorized_coordinate_spin8_scan,
+    triton_controller_factorized_scan,
+)
 
 ActionMode = Literal["factorized", "exponential"]
 ScanMode = Literal[
-    "work_efficient", "hillis_steele", "recurrent", "compiled_recurrent"
+    "work_efficient",
+    "hillis_steele",
+    "recurrent",
+    "compiled_recurrent",
+    "compiled_factorized",
+    "compiled_controller",
+    "compiled_auto",
 ]
+
+TRAINING_PROFILE = (
+    Path(__file__).resolve().parents[1]
+    / "experiments"
+    / "artifacts"
+    / "spin8_factorized_training_rtx2070s_20260821.json"
+)
 
 
 @dataclass(frozen=True)
@@ -451,23 +473,15 @@ class PureSpin8SSMLayer(nn.Module):
             self.initial_state.to(reference).unsqueeze(0).expand(batch_size, -1, -1, -1)
         )
 
-    def transitions(
+    def _normalized_control_fields(
         self, inputs: torch.Tensor, valid_mask: torch.Tensor | None = None
-    ) -> Spin8AffineTransition:
+    ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]:
+        """Return normalized inputs, scale, drive, and the coordinate gate."""
+
         if inputs.ndim != 3 or inputs.shape[-1] != self.input_size:
             raise ValueError("inputs must have shape (batch,length,input_size)")
         batch, length, _ = inputs.shape
         normalized = self.input_norm(inputs)
-        coordinates = self.coefficient_controller(normalized).reshape(
-            batch, length, self.channels, SPIN8_BIVECTOR_DIM
-        )
-        generators = self.generators.to(dtype=inputs.dtype, device=inputs.device)
-        action = spin8_group_actions(
-            coordinates,
-            generators,
-            self.representations,
-            mode=self.action_mode,
-        )
         if self.transport_only:
             scale = inputs.new_ones(batch, length, self.channels)
             drive = inputs.new_zeros(
@@ -497,10 +511,47 @@ class PureSpin8SSMLayer(nn.Module):
                 * write[..., None, None]
                 * unit_ball(raw_drive)
             )
-        return mask_spin8_transition(
-            Spin8AffineTransition(scale=scale, action=action, drive=drive),
-            valid_mask,
+        coordinate_gate = torch.ones(
+            batch, length, dtype=inputs.dtype, device=inputs.device
         )
+        if valid_mask is not None:
+            if valid_mask.shape != (batch, length):
+                raise ValueError("valid_mask must have shape (batch,length)")
+            valid = valid_mask.bool()
+            scale = torch.where(valid[..., None], scale, torch.ones_like(scale))
+            drive = torch.where(
+                valid[..., None, None, None], drive, torch.zeros_like(drive)
+            )
+            coordinate_gate = valid.to(dtype=inputs.dtype)
+        return normalized, scale, drive, coordinate_gate
+
+    def controller_fields(
+        self, inputs: torch.Tensor, valid_mask: torch.Tensor | None = None
+    ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+        """Return coordinates, scale, and drive before action construction."""
+
+        normalized, scale, drive, coordinate_gate = (
+            self._normalized_control_fields(inputs, valid_mask)
+        )
+        batch, length = inputs.shape[:2]
+        coordinates = self.coefficient_controller(normalized).reshape(
+            batch, length, self.channels, SPIN8_BIVECTOR_DIM
+        )
+        coordinates = coordinates * coordinate_gate[..., None, None]
+        return coordinates, scale, drive
+
+    def transitions(
+        self, inputs: torch.Tensor, valid_mask: torch.Tensor | None = None
+    ) -> Spin8AffineTransition:
+        coordinates, scale, drive = self.controller_fields(inputs, valid_mask)
+        generators = self.generators.to(dtype=inputs.dtype, device=inputs.device)
+        action = spin8_group_actions(
+            coordinates,
+            generators,
+            self.representations,
+            mode=self.action_mode,
+        )
+        return Spin8AffineTransition(scale=scale, action=action, drive=drive)
 
     def triality_readout(self, states: torch.Tensor) -> torch.Tensor:
         """Add a gated equivariant triality interaction to readout states."""
@@ -538,7 +589,6 @@ class PureSpin8SSMLayer(nn.Module):
         scan_mode: ScanMode = "work_efficient",
         return_raw_states: bool = False,
     ) -> tuple[torch.Tensor, torch.Tensor]:
-        transition = self.transitions(inputs, valid_mask)
         if state is None:
             state = self.initial_cache(inputs.shape[0], inputs)
         expected = (
@@ -549,6 +599,89 @@ class PureSpin8SSMLayer(nn.Module):
         )
         if state.shape != expected:
             raise ValueError(f"state must have shape {expected}")
+        if scan_mode == "compiled_auto":
+            profile = TRAINING_PROFILE if TRAINING_PROFILE.is_file() else None
+            plan = compile_spin8_training_plan(
+                RuntimeShape(
+                    batch_size=inputs.shape[0],
+                    sequence_length=inputs.shape[1],
+                    dtype=str(inputs.dtype).removeprefix("torch."),
+                    device=inputs.device.type,
+                    training=(
+                        torch.is_grad_enabled()
+                        and (
+                            inputs.requires_grad
+                            or state.requires_grad
+                            or any(
+                                parameter.requires_grad
+                                for parameter in self.parameters()
+                            )
+                        )
+                    ),
+                ),
+                HardwareTarget.current(inputs.device),
+                channels=self.channels,
+                input_size=self.input_size,
+                hardware_profile_path=profile,
+            )
+            scan_mode = {
+                "eager_materialized_recurrent": "recurrent",
+                "materialized_action_compiled_scan": "compiled_recurrent",
+                "direct_factor_compiled_scan": "compiled_factorized",
+                "fused_controller_factor_scan": "compiled_controller",
+            }[plan.lowering]
+        if scan_mode in ("compiled_factorized", "compiled_controller"):
+            if self.action_mode != "factorized":
+                raise ValueError("compiled factor paths require factorized actions")
+            if self.representations != TRIALITY_REPRESENTATIONS:
+                raise ValueError(
+                    "compiled factor paths require canonical full triality order"
+                )
+        if scan_mode == "compiled_controller":
+            normalized, scale, drive, coordinate_gate = (
+                self._normalized_control_fields(inputs, valid_mask)
+            )
+            if inputs.device.type == "cuda" and inputs.dtype == torch.float32:
+                raw = triton_controller_factorized_scan(
+                    normalized,
+                    self.coefficient_controller.weight,
+                    self.coefficient_controller.bias,
+                    self.generators.to(inputs),
+                    scale,
+                    drive,
+                    state,
+                    coordinate_gate,
+                )
+            else:
+                coordinates = self.coefficient_controller(normalized).reshape(
+                    inputs.shape[0],
+                    inputs.shape[1],
+                    self.channels,
+                    SPIN8_BIVECTOR_DIM,
+                )
+                coordinates = coordinates * coordinate_gate[..., None, None]
+                raw = factorized_coordinate_spin8_scan(
+                    coordinates,
+                    self.generators.to(inputs),
+                    scale,
+                    drive,
+                    state,
+                    backend="eager",
+                )
+            final_state = raw[:, -1]
+        elif scan_mode == "compiled_factorized":
+            coordinates, scale, drive = self.controller_fields(inputs, valid_mask)
+            raw = factorized_coordinate_spin8_scan(
+                coordinates,
+                self.generators.to(inputs),
+                scale,
+                drive,
+                state,
+                backend="auto",
+            )
+            final_state = raw[:, -1]
+        else:
+            transition = self.transitions(inputs, valid_mask)
         if scan_mode == "compiled_recurrent":
             raw = continuous_spin8_scan(
                 transition.action,
@@ -558,6 +691,8 @@ class PureSpin8SSMLayer(nn.Module):
                 backend="auto",
             )
             final_state = raw[:, -1]
+        elif scan_mode in ("compiled_factorized", "compiled_controller"):
+            pass
         elif scan_mode == "recurrent":
             raw, final_state = recurrent_spin8_scan(transition, state)
         else:

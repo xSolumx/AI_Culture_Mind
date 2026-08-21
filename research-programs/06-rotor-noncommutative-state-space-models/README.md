@@ -72,6 +72,13 @@ and from representation-theorem claims made without a trained model.
   forward/backward gain over a sequential eager oracle, and only `1.059x`
   end-to-end for the self-calibrating layer because action construction now
   dominates.
+- Compiler v2.1.2 closes the canonical learned-linear-controller fusion gate:
+  all 28 coordinates, three triality factor streams, recurrence, and full
+  backward—including controller-table and input gradients—run in custom CUDA.
+  The maximally fused witness is slower than staging coordinates once because
+  the three representations share them. Profiled auto-dispatch selects the
+  staged direct-factor lowering, which records `11.615x`--`14.916x` over
+  materialized eager training on the local three-cell grid.
 - A frozen noisy continuous-observation continuation removes the finite token
   dictionary. Fresh seeds 1--3 identify unique nonlinear/noisy local actions,
   retain exact center/identity correctness through L128, and give shared
@@ -144,10 +151,11 @@ and from representation-theorem claims made without a trained model.
 - State-, parameter-, and optimized-compute-matched superiority over quaternion,
   complex/MIMO, Householder-product, delta-rule, and modern SSM baselines.
 - Long-context memory and language-model scaling benefits.
-- The continuous affine Spin(8) recurrence now has a full-gradient fused CUDA
-  implementation. Fusion of the probe-to-Hodge-to-Givens triality action
-  constructor, the learned observation router, and a complete trained model;
-  cross-device policy; and matched end-to-end throughput remain open.
+- The canonical learned linear controller and direct triality recurrence are
+  fused with full gradients. Fusion of the nonlinear probe-to-Hodge-to-Givens
+  self-calibration chart, low-precision/Tensor-Core training, optimizer steps,
+  cross-device policy, and matched end-to-end natural-task throughput remain
+  open.
 - Broader equivariance beyond the tested `Spin(3)` tensor contract.
 - Natural-data replication of the Pure Spin(8) result, noninjective/chart-shift
   observation robustness, and fused optimized-compute comparison.
@@ -226,6 +234,7 @@ and from representation-theorem claims made without a trained model.
 - [Pure Spin(8) compiled token scan](../../SSM-Models/experiments/PURE_SPIN8_COMPILED_TOKEN_SCAN_RESULTS.md)
 - [Spin(8) isotypic Tensor-Core dispatch audit](../../SSM-Models/experiments/SPIN8_ISOTYPIC_TENSOR_CORE_AUDIT.md)
 - [Isotypic-to-silicon compiler v2.1.1](../../SSM-Models/experiments/ISOTYPIC_TO_SILICON_COMPILER_V211.md)
+- [Trainable continuous Spin(8) factor compiler v2.1.2](../../SSM-Models/experiments/SPIN8_TRAINABLE_FACTOR_COMPILER_V212.md)
 - [Pure Spin(8) noisy continuous-observation validation](../../SSM-Models/experiments/PURE_SPIN8_CONTINUOUS_OBSERVATION_RESULTS.md)
 - [Pure Spin(8) endpoint-only continuous identification](../../SSM-Models/experiments/PURE_SPIN8_ENDPOINT_SUPERVISION_RESULTS.md)
 - [Pure Spin(8) endpoint observability boundary](../../SSM-Models/experiments/PURE_SPIN8_ENDPOINT_OBSERVABILITY_RESULTS.md)

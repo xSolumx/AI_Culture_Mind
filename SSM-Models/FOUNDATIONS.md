@@ -629,6 +629,26 @@ global continuous section. The bounded hardware evidence and external-system
 comparison are in
 `experiments/ISOTYPIC_TO_SILICON_COMPILER_V211.md`.
 
+Compiler v2.1.2 removes the remaining materialized-action boundary for the
+canonical continuous Spin(8) training path. The controller emits 28 shared
+coordinates once, and custom Triton forward/backward kernels apply the ordered
+vector and half-spin plane factors directly inside the recurrence. A maximal
+variant also evaluates the linear controller inside the scan and returns
+feature, controller-weight, and controller-bias gradients. Orthogonality makes
+the reverse economical: each prior state is recovered by inverse factors, so
+no 28-state tape is stored.
+
+The strongest algebraic fusion is not the fastest measured lowering. Three
+inequivalent representations share one coordinate field, so fusing the
+controller into each representation program repeats its work and requires
+atomic gradient aggregation. The staged direct-factor lowering retains one
+matrix multiplication and reuses its result three times. It wins all three
+recorded RTX 2070 SUPER cells while still removing the much larger action
+tensor. This establishes a compiler principle rather than a universal kernel
+ranking: preserve exact shared values until measurements justify recomputation.
+The audit is in
+`experiments/SPIN8_TRAINABLE_FACTOR_COMPILER_V212.md`.
+
 The subsequent frozen continuation removes the dictionary rather than merely
 compiling it. A 930-parameter router receives only unique 12-real noisy
 observations of hidden seven-coordinate actions under a different nonlinear

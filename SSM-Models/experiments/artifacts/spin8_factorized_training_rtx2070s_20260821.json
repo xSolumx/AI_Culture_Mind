@@ -1,0 +1,333 @@
+{
+  "schema_version": 1,
+  "experiment": "trainable direct-factor Spin(8) compiler audit",
+  "compiler_version": "2.1.2",
+  "recorded_at": "2026-08-21T16:35:07.304091+02:00",
+  "hardware": {
+    "gpu": "NVIDIA GeForce RTX 2070 SUPER",
+    "compute_capability": [
+      7,
+      5
+    ],
+    "total_memory_bytes": 8589606912,
+    "torch": "2.4.0+cu121",
+    "cuda_runtime": "12.1",
+    "python": "3.10.12",
+    "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.35"
+  },
+  "precision_contract": "FP32 forward and full backward",
+  "rows": [
+    {
+      "shape": {
+        "batch_size": 4,
+        "sequence_length": 128,
+        "channels": 4,
+        "input_size": 16,
+        "representations": 3
+      },
+      "timings": {
+        "eager_materialized_recurrent": {
+          "median_microseconds": 99071.04110717773,
+          "p10_microseconds": 97449.08905029297,
+          "p90_microseconds": 119048.12622070312
+        },
+        "materialized_action_compiled_scan": {
+          "median_microseconds": 16648.927688598633,
+          "p10_microseconds": 16406.52847290039,
+          "p90_microseconds": 17232.223510742188
+        },
+        "direct_factor_compiled_scan": {
+          "median_microseconds": 8529.647827148438,
+          "p10_microseconds": 8405.183792114258,
+          "p90_microseconds": 9908.576011657715
+        },
+        "fused_controller_factor_scan": {
+          "median_microseconds": 11395.904064178467,
+          "p10_microseconds": 10977.375984191895,
+          "p90_microseconds": 11704.319953918457
+        }
+      },
+      "peak_allocation_delta_bytes": {
+        "eager_materialized_recurrent": 150793728,
+        "materialized_action_compiled_scan": 150793728,
+        "direct_factor_compiled_scan": 2019328,
+        "fused_controller_factor_scan": 1576960
+      },
+      "speedups": {
+        "direct_vs_eager": 11.614904051706711,
+        "direct_vs_materialized_compiled": 1.9518892252043385,
+        "materialized_compiled_vs_eager": 5.950595915857251,
+        "fused_controller_vs_eager": 8.693565736359135,
+        "fused_controller_vs_materialized_compiled": 1.4609571645072337,
+        "fused_controller_vs_staged_direct": 0.7484836463269526
+      },
+      "parity": {
+        "materialized_action_compiled_scan": {
+          "forward_max_abs": 1.7881393432617188e-07,
+          "gradient_max_abs": [
+            2.980232238769531e-07,
+            1.430511474609375e-06,
+            1.0728836059570312e-06,
+            1.33514404296875e-05,
+            1.33514404296875e-05,
+            2.86102294921875e-06,
+            1.5497207641601562e-06,
+            1.0728836059570312e-06,
+            2.384185791015625e-07,
+            9.5367431640625e-07,
+            1.9073486328125e-06
+          ],
+          "coefficient_weight_gradient_norm": 291.6371765136719,
+          "coefficient_bias_gradient_norm": 165.96392822265625
+        },
+        "direct_factor_compiled_scan": {
+          "forward_max_abs": 4.172325134277344e-07,
+          "gradient_max_abs": [
+            5.960464477539062e-07,
+            4.291534423828125e-06,
+            2.7418136596679688e-06,
+            1.811981201171875e-05,
+            2.6702880859375e-05,
+            5.245208740234375e-06,
+            4.649162292480469e-06,
+            1.9073486328125e-06,
+            9.5367431640625e-07,
+            1.8477439880371094e-06,
+            3.814697265625e-06
+          ],
+          "coefficient_weight_gradient_norm": 291.6371765136719,
+          "coefficient_bias_gradient_norm": 165.96395874023438
+        },
+        "fused_controller_factor_scan": {
+          "forward_max_abs": 4.470348358154297e-07,
+          "gradient_max_abs": [
+            1.1920928955078125e-06,
+            4.172325134277344e-06,
+            3.814697265625e-06,
+            2.0503997802734375e-05,
+            2.956390380859375e-05,
+            4.291534423828125e-06,
+            2.682209014892578e-06,
+            2.2649765014648438e-06,
+            8.046627044677734e-07,
+            2.384185791015625e-06,
+            3.3676624298095703e-06
+          ],
+          "coefficient_weight_gradient_norm": 291.6371765136719,
+          "coefficient_bias_gradient_norm": 165.9639434814453
+        }
+      }
+    },
+    {
+      "shape": {
+        "batch_size": 8,
+        "sequence_length": 128,
+        "channels": 8,
+        "input_size": 16,
+        "representations": 3
+      },
+      "timings": {
+        "eager_materialized_recurrent": {
+          "median_microseconds": 144580.57403564453,
+          "p10_microseconds": 131292.95349121094,
+          "p90_microseconds": 187152.4200439453
+        },
+        "materialized_action_compiled_scan": {
+          "median_microseconds": 60756.81686401367,
+          "p10_microseconds": 60168.89572143555,
+          "p90_microseconds": 62148.799896240234
+        },
+        "direct_factor_compiled_scan": {
+          "median_microseconds": 9746.928215026855,
+          "p10_microseconds": 9140.416145324707,
+          "p90_microseconds": 10921.98371887207
+        },
+        "fused_controller_factor_scan": {
+          "median_microseconds": 12363.279819488525,
+          "p10_microseconds": 11870.047569274902,
+          "p90_microseconds": 12590.815544128418
+        }
+      },
+      "peak_allocation_delta_bytes": {
+        "eager_materialized_recurrent": 600915456,
+        "materialized_action_compiled_scan": 600915456,
+        "direct_factor_compiled_scan": 6896640,
+        "fused_controller_factor_scan": 6088704
+      },
+      "speedups": {
+        "direct_vs_eager": 14.833450174870933,
+        "direct_vs_materialized_compiled": 6.233432269496434,
+        "materialized_compiled_vs_eager": 2.379660118785449,
+        "fused_controller_vs_eager": 11.694354260892712,
+        "fused_controller_vs_materialized_compiled": 4.91429602428324,
+        "fused_controller_vs_staged_direct": 0.7883772233046562
+      },
+      "parity": {
+        "materialized_action_compiled_scan": {
+          "forward_max_abs": 2.086162567138672e-07,
+          "gradient_max_abs": [
+            4.76837158203125e-07,
+            2.86102294921875e-06,
+            3.0994415283203125e-06,
+            1.1444091796875e-05,
+            1.71661376953125e-05,
+            4.291534423828125e-06,
+            1.9073486328125e-06,
+            1.9073486328125e-06,
+            7.152557373046875e-07,
+            1.1920928955078125e-06,
+            2.6226043701171875e-06
+          ],
+          "coefficient_weight_gradient_norm": 576.6414184570312,
+          "coefficient_bias_gradient_norm": 403.53338623046875
+        },
+        "direct_factor_compiled_scan": {
+          "forward_max_abs": 4.172325134277344e-07,
+          "gradient_max_abs": [
+            7.748603820800781e-07,
+            7.62939453125e-06,
+            4.76837158203125e-06,
+            2.193450927734375e-05,
+            4.57763671875e-05,
+            7.152557373046875e-06,
+            5.9604644775390625e-06,
+            2.6226043701171875e-06,
+            1.3113021850585938e-06,
+            2.6226043701171875e-06,
+            7.62939453125e-06
+          ],
+          "coefficient_weight_gradient_norm": 576.6415405273438,
+          "coefficient_bias_gradient_norm": 403.533447265625
+        },
+        "fused_controller_factor_scan": {
+          "forward_max_abs": 4.172325134277344e-07,
+          "gradient_max_abs": [
+            1.341104507446289e-06,
+            7.62939453125e-06,
+            5.364418029785156e-06,
+            4.00543212890625e-05,
+            6.961822509765625e-05,
+            7.3909759521484375e-06,
+            7.62939453125e-06,
+            3.5762786865234375e-06,
+            1.1920928955078125e-06,
+            2.1457672119140625e-06,
+            8.58306884765625e-06
+          ],
+          "coefficient_weight_gradient_norm": 576.6415405273438,
+          "coefficient_bias_gradient_norm": 403.533447265625
+        }
+      }
+    },
+    {
+      "shape": {
+        "batch_size": 4,
+        "sequence_length": 512,
+        "channels": 4,
+        "input_size": 16,
+        "representations": 3
+      },
+      "timings": {
+        "eager_materialized_recurrent": {
+          "median_microseconds": 449764.8620605469,
+          "p10_microseconds": 418431.45751953125,
+          "p90_microseconds": 564217.1020507812
+        },
+        "materialized_action_compiled_scan": {
+          "median_microseconds": 61514.94216918945,
+          "p10_microseconds": 60909.568786621094,
+          "p90_microseconds": 65126.40380859375
+        },
+        "direct_factor_compiled_scan": {
+          "median_microseconds": 30153.568267822266,
+          "p10_microseconds": 29894.176483154297,
+          "p90_microseconds": 31910.463333129883
+        },
+        "fused_controller_factor_scan": {
+          "median_microseconds": 41850.975036621094,
+          "p10_microseconds": 41720.83282470703,
+          "p90_microseconds": 42067.00897216797
+        }
+      },
+      "peak_allocation_delta_bytes": {
+        "eager_materialized_recurrent": 601054720,
+        "materialized_action_compiled_scan": 601054720,
+        "direct_factor_compiled_scan": 7031296,
+        "fused_controller_factor_scan": 6277120
+      },
+      "speedups": {
+        "direct_vs_eager": 14.915808904132378,
+        "direct_vs_materialized_compiled": 2.0400551477960174,
+        "materialized_compiled_vs_eager": 7.311473378671522,
+        "fused_controller_vs_eager": 10.746819199958582,
+        "fused_controller_vs_materialized_compiled": 1.4698568459961014,
+        "fused_controller_vs_staged_direct": 0.7204985843564414
+      },
+      "parity": {
+        "materialized_action_compiled_scan": {
+          "forward_max_abs": 2.384185791015625e-07,
+          "gradient_max_abs": [
+            2.682209014892578e-07,
+            1.6689300537109375e-06,
+            2.6226043701171875e-06,
+            1.52587890625e-05,
+            1.9073486328125e-05,
+            5.7220458984375e-06,
+            2.86102294921875e-06,
+            1.9073486328125e-06,
+            7.152557373046875e-07,
+            1.9073486328125e-06,
+            4.76837158203125e-06
+          ],
+          "coefficient_weight_gradient_norm": 379.6773986816406,
+          "coefficient_bias_gradient_norm": 231.82810974121094
+        },
+        "direct_factor_compiled_scan": {
+          "forward_max_abs": 4.76837158203125e-07,
+          "gradient_max_abs": [
+            5.066394805908203e-07,
+            3.814697265625e-06,
+            1.9073486328125e-06,
+            2.09808349609375e-05,
+            3.814697265625e-05,
+            7.62939453125e-06,
+            8.106231689453125e-06,
+            3.814697265625e-06,
+            1.430511474609375e-06,
+            3.337860107421875e-06,
+            7.62939453125e-06
+          ],
+          "coefficient_weight_gradient_norm": 379.6774597167969,
+          "coefficient_bias_gradient_norm": 231.82814025878906
+        },
+        "fused_controller_factor_scan": {
+          "forward_max_abs": 4.76837158203125e-07,
+          "gradient_max_abs": [
+            9.5367431640625e-07,
+            3.4570693969726562e-06,
+            2.6226043701171875e-06,
+            5.5789947509765625e-05,
+            6.866455078125e-05,
+            7.62939453125e-06,
+            6.67572021484375e-06,
+            3.814697265625e-06,
+            1.430511474609375e-06,
+            3.337860107421875e-06,
+            7.62939453125e-06
+          ],
+          "coefficient_weight_gradient_norm": 379.67742919921875,
+          "coefficient_bias_gradient_norm": 231.82815551757812
+        }
+      }
+    }
+  ],
+  "checks": {
+    "all_metrics_finite": true,
+    "direct_forward_max_abs_below_5e_5": true,
+    "direct_gradient_max_abs_below_2e_3": true,
+    "controller_gradients_nonzero": true,
+    "fused_controller_forward_max_abs_below_5e_5": true,
+    "fused_controller_gradient_max_abs_below_2e_3": true
+  },
+  "passed": true
+}

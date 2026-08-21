@@ -146,6 +146,9 @@ module name. Editable installation adds this directory to the Python path.
   polynomial gates, plus a full-six-cube CUDA falsifier.
 - `spin8_multiplicity_gauge.py`: exact covariance and `O(m)` gauge theorem for
   repeated probes in the same triality representation.
+- `spin8_probe_stabilizer_tower.py`: exact ordered defining-vector ranks,
+  `3 -> 5 -> 7` Stiefel refinement and reverse quotient maps, plus cross-hashed
+  mixed-triality and Spin(9) stabilizer ladders.
 
 ## Spin(9) Dirac--Clifford sensing
 
@@ -197,6 +200,9 @@ module name. Editable installation adds this directory to the Python path.
 - `spin9_v1_candidate_line.py`: exact rational pullback of the symmetric
   equiangular determinant curve by the complete pure-\(V_1\) graph line, proving global
   candidate optimality there and classifying its four graph preimages.
+- `spin9_candidate_collar_diagnostic.py`: exact depth-limited Bernstein atlas
+  at the rational `26201/25000` collar immediately above the algebraic
+  candidate; retained boxes are local-chart handoffs, not a candidate theorem.
 - `spin9_v1_v5_screen.py`: reproducible float64 multistart, compactified
   random, and projective-boundary falsification screen. It finds no candidate
   counterexample but exactly rejects pointwise monotonicity in the \(V_5\)

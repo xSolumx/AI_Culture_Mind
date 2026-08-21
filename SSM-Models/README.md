@@ -82,6 +82,17 @@
 > profiled shapes (`1.423x`) and are refused elsewhere. See
 > [`ISOTYPIC_TO_SILICON_COMPILER_V211.md`](experiments/ISOTYPIC_TO_SILICON_COMPILER_V211.md).
 
+> **2026-08-21 trainable factor compiler v2.1.2.** The learned continuous
+> 28-coordinate controller, three triality factor actions, and recurrent scan
+> now have a full-gradient CUDA path. A second kernel fuses the controller too,
+> proving controller-table and input gradients survive end to end. The stronger
+> fusion is slower than staging the shared coordinate tensor: on the recorded
+> RTX 2070 SUPER grid, staged direct factors are `11.615x`--`14.916x` faster
+> than materialized eager training and use 2.02--7.03 MB transient allocation,
+> while maximal fusion reaches `8.694x`--`11.694x`. The compiler therefore
+> preserves cross-representation reuse instead of blindly maximizing fusion.
+> See [`SPIN8_TRAINABLE_FACTOR_COMPILER_V212.md`](experiments/SPIN8_TRAINABLE_FACTOR_COMPILER_V212.md).
+
 > **2026-08-17 noisy continuous online-action validation.** The next frozen
 > cohort replaces the finite token dictionary with unique 12-real noisy
 > observations from seed-specific nonlinear charts. Across fresh seeds 1--3,

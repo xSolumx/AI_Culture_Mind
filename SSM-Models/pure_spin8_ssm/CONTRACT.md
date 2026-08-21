@@ -180,7 +180,7 @@ all-view dominance. The calibration-rank result identifies the supplied
 `SO(8)` action globally from seven ordered probes but does not infer that frame
 or its Spin lift from raw inputs. This contract does not by itself establish
 language-model superiority, generic triality necessity, natural-data utility,
-end-to-end fused action construction, a global optimizer theorem, or the open
+natural-task superiority, a global optimizer theorem, or the open
 unrestricted Dirac--Gram/D-optimality theorem.
 
 ## Isotypic-to-silicon compiler v2.1.1
@@ -207,3 +207,32 @@ self-calibrating gain because action construction dominates. One of eight
 inference cells selects Tensor Cores and records `1.423x`; the other seven
 correctly remain scalar. See
 [`ISOTYPIC_TO_SILICON_COMPILER_V211.md`](../experiments/ISOTYPIC_TO_SILICON_COMPILER_V211.md).
+
+## Trainable factor compiler v2.1.2
+
+The maintained layer additionally accepts `compiled_factorized`,
+`compiled_controller`, and `compiled_auto`. The first evaluates the learned
+linear controller once, then applies its 28 ordered plane factors directly to
+the three recurrent eight-vectors. No per-token `8 x 8` actions are
+materialized. Its custom reverse pass reconstructs pre-factor states by
+orthogonal inverse transport and returns gradients through coordinates,
+retention, drive, initial state, and the controller.
+
+`compiled_controller` is the stronger fusion witness: controller evaluation,
+all three triality factor streams, recurrence, and their full reverse pass are
+one Triton primitive. It is correct but not the fastest recorded lowering.
+Because all three inequivalent representations share the same 28 coordinates,
+the maximally fused kernel recomputes the controller in three programs and
+atomically combines controller gradients. The staged factor path instead
+reuses one accelerator matrix multiplication and is `11.615x`--`14.916x`
+faster than the materialized eager training oracle on the three recorded RTX
+2070 SUPER cells; maximal fusion is `8.694x`--`11.694x` faster than that oracle
+but only `0.720x`--`0.788x` as fast as staged direct factors.
+
+`compiled_auto` uses an exact hardware/model-shape profile when available and
+otherwise preserves this algebraic reuse boundary for CUDA FP32. CPU and other
+precisions fall back explicitly. The result is continuous and trainable but
+still canonical-full-triality only; FP16/BF16 training, optimizer fusion,
+cross-device profiles, long-sequence checkpointing, and natural-task quality
+remain open. See
+[`SPIN8_TRAINABLE_FACTOR_COMPILER_V212.md`](../experiments/SPIN8_TRAINABLE_FACTOR_COMPILER_V212.md).

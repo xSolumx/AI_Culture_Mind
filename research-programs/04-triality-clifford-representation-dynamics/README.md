@@ -41,6 +41,13 @@ quotient structure, and representation-specific memory controls.
   seven determine the `SO(8)` action and eight are redundant. This does not
   determine factorized coordinates or a discrete Spin-cover lift. Optimization
   and the failed uniform effect-size gate remain routed to Programme 06.
+- The ordered defining-vector probe geometry is now organized as the exact
+  Stiefel tower `SO(8)/SO(5) -> SO(8)/SO(3) -> SO(8)` at 3, 5, and 7 probes.
+  Its cumulative ranks are `18,25,28`, so the refinement split is
+  `28=18+7+3`; forgetting the last two probes reverses each refinement. The
+  separate mixed-triality `SU(3)->SU(2)->1` and Spin(9) spinor
+  `Spin(7)->SU(3)->1` stabilizer ladders are cross-checked but not identified
+  with the defining-vector tower.
 - Unit triality binding is an exact norm-preserving single-pair bind/unbind
   primitive under the maintained normalization.
 - With supplied unit keys and shared transport, triality-coded addressed slots
@@ -146,8 +153,9 @@ quotient structure, and representation-specific memory controls.
 - A full `L2(SO(8))` spectral gap or global word-length equidistribution theorem
   for the dense mixed monomial/golden generators beyond the certified
   six-representation exterior-power band.
-- Prefix-table/full-model backward, a differentiable learned selector or
-  continuous-transition compiler, and an end-to-end matched SSM benchmark.
+- A matched natural-task comparison for the new differentiable continuous
+  controller/factor/scan compiler. Its exact-gradient CUDA implementation is
+  Programme 01/06 systems evidence, not a representation-level advantage.
 - A fused logarithmic-depth endpoint scan that retains the parallel algorithm;
   the fast register-resident continuation is serial in chunk count.
 - A stable trainable use of the full 28-direction Cayley chart. The structural
@@ -172,6 +180,8 @@ quotient structure, and representation-specific memory controls.
   triality-specific.
 
 ## Canonical Evidence
+
+- [Exact ordered-probe stabilizer tower](../../Spin-Space-Research/docs/experiments/SPIN8_PROBE_STABILIZER_TOWER.md)
 
 - [Spin(8) triality algebra](../../Spin-Space-Research/docs/experiments/SPIN8_TRIALITY_ALGEBRA_RESULTS.md)
 - [Triangular triality lift](../../Spin-Space-Research/docs/experiments/SPIN8_TRIANGULAR_TRIALITY_LIFT_RESULTS.md)

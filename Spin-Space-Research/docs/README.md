@@ -86,12 +86,20 @@ proof-search products and private working notes are intentionally absent.
   on the complete finite-radius coupled slice, using a compact-plus-local
   projective atlas and a 22-prime coefficient-bound lift; exact candidate
   optimality and the unrestricted quotient remain open.
+- [Spin(9) Near-Candidate Collar Diagnostic](experiments/SPIN9_CANDIDATE_COLLAR_DIAGNOSTIC.md)
+  — exact depth-six localization at `26201/25000`, about `1.08e-7` above the
+  algebraic candidate; 29 retained boxes identify the need for candidate-
+  centered local charts and do not constitute a positivity theorem.
 - [Clifford Signature Extension](manuscripts/CLIFFORD_SIGNATURE_EXTENSION.md)
   — exact faithful \(\mathrm{Cl}(1,4)\) matrix image, its even algebra, the
   \(\mathrm{Cl}(3,0)\) inclusion, and Spin(8) branching controls.
 - [Manuscript index](manuscripts/README.md) — scope and status in one table.
 
 ### Triality geometry and sensing
+
+- [Spin(8) Ordered-Probe Stabilizer Tower](experiments/SPIN8_PROBE_STABILIZER_TOWER.md)
+  — exact `3 -> 5 -> 7` Stiefel refinement with cumulative ranks `18,25,28`,
+  reverse quotient maps, and representation-separated `SU(n)` stabilizers.
 
 - [Mixed Monomial/Golden Register-Resident Chunk Recurrence](experiments/MIXED_MONOMIAL_GOLDEN_TRITON_CHUNK_RECURRENCE_RESULTS.md)
   — one-kernel frozen-dictionary recurrence and initial-state reverse pass;

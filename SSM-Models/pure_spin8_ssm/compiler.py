@@ -1,4 +1,4 @@
-"""Isotypic-to-silicon compiler IR, version 2.1.1.
+"""Isotypic-to-silicon compiler IR, version 2.1.2.
 
 The exact Programme 01 certificate describes mathematical blocks.  This module
 turns only certified block signatures into a runtime plan and keeps three
@@ -28,6 +28,12 @@ from pure_spin8_ssm import __compiler_version__
 COMPILER_VERSION = __compiler_version__
 SchurType = Literal["real", "complex", "quaternion"]
 KernelBackend = Literal["eager", "triton_scalar", "triton_tensor_core"]
+TrainingLowering = Literal[
+    "eager_materialized_recurrent",
+    "materialized_action_compiled_scan",
+    "direct_factor_compiled_scan",
+    "fused_controller_factor_scan",
+]
 DIVISION_DIMENSIONS: dict[SchurType, int] = {
     "real": 1,
     "complex": 2,
@@ -139,6 +145,25 @@ class IsotypicExecutionPlan:
         return payload
 
 
+@dataclass(frozen=True)
+class Spin8TrainingPlan:
+    compiler_version: str
+    runtime: RuntimeShape
+    hardware: HardwareTarget
+    channels: int
+    input_size: int
+    lowering: TrainingLowering
+    profile_median_microseconds: float | None
+    profile_peak_allocation_delta_bytes: int | None
+    profile_sha256: str | None
+    reason: str
+
+    @property
+    def fingerprint(self) -> str:
+        payload = json.dumps(asdict(self), sort_keys=True, separators=(",", ":"))
+        return hashlib.sha256(payload.encode()).hexdigest()
+
+
 def sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
@@ -242,7 +267,7 @@ def compile_isotypic_plan(
         recorded_capability = recorded_hardware.get("compute_capability", [])
         profile_compatible = (
             profile.get("passed") is True
-            and profile.get("compiler_version") == COMPILER_VERSION
+            and profile.get("compiler_version") in {"2.1.1", COMPILER_VERSION}
             and recorded_hardware.get("gpu") == hardware.name
             and tuple(recorded_capability) == hardware.compute_capability
         )
@@ -261,7 +286,7 @@ def compile_isotypic_plan(
             backend = "eager"
             accumulation = runtime.dtype
             tile = None
-            reason = "v2.1.1 has no compiled complex/quaternionic or non-8D kernel"
+            reason = "v2.1.2 has no compiled complex/quaternionic or non-8D kernel"
         elif runtime.dtype == "float32":
             backend = "triton_scalar"
             accumulation = "float32"
@@ -327,6 +352,89 @@ def compile_isotypic_plan(
     )
 
 
+def compile_spin8_training_plan(
+    runtime: RuntimeShape,
+    hardware: HardwareTarget,
+    *,
+    channels: int,
+    input_size: int,
+    hardware_profile_path: str | Path | None = None,
+) -> Spin8TrainingPlan:
+    """Choose the trainable factorized lowering without erasing reuse."""
+
+    if channels < 1 or input_size < 1:
+        raise ValueError("channels and input_size must be positive")
+    profile_hash = None
+    matching_row = None
+    if hardware_profile_path is not None:
+        profile_path = Path(hardware_profile_path)
+        profile = json.loads(profile_path.read_text(encoding="utf-8"))
+        profile_hash = sha256(profile_path)
+        recorded = profile.get("hardware", {})
+        compatible = (
+            profile.get("passed") is True
+            and profile.get("compiler_version") == COMPILER_VERSION
+            and recorded.get("gpu") == hardware.name
+            and tuple(recorded.get("compute_capability", []))
+            == hardware.compute_capability
+        )
+        if compatible:
+            for row in profile.get("rows", []):
+                shape = row.get("shape", {})
+                if (
+                    shape.get("batch_size") == runtime.batch_size
+                    and shape.get("sequence_length") == runtime.sequence_length
+                    and shape.get("channels") == channels
+                    and shape.get("input_size") == input_size
+                ):
+                    matching_row = row
+                    break
+
+    median = None
+    peak = None
+    if hardware.backend != "cuda" or runtime.dtype != "float32":
+        lowering: TrainingLowering = "eager_materialized_recurrent"
+        reason = "v2.1.2 trainable factor kernels require CUDA FP32"
+    elif not runtime.training:
+        lowering = "direct_factor_compiled_scan"
+        reason = "direct factors avoid action materialization for FP32 recurrence"
+    elif matching_row is None:
+        lowering = "direct_factor_compiled_scan"
+        reason = (
+            "no exact profile cell; preserve cross-representation controller reuse "
+            "and avoid materialized actions"
+        )
+    else:
+        timings = matching_row["timings"]
+        eligible: tuple[TrainingLowering, ...] = (
+            "materialized_action_compiled_scan",
+            "direct_factor_compiled_scan",
+            "fused_controller_factor_scan",
+        )
+        lowering = min(
+            eligible,
+            key=lambda name: float(timings[name]["median_microseconds"]),
+        )
+        median = float(timings[lowering]["median_microseconds"])
+        peak = int(matching_row["peak_allocation_delta_bytes"][lowering])
+        reason = (
+            "exact hardware/model-shape profile selects the lowest median; "
+            "full fusion is not preferred when it destroys controller reuse"
+        )
+    return Spin8TrainingPlan(
+        compiler_version=COMPILER_VERSION,
+        runtime=runtime,
+        hardware=hardware,
+        channels=channels,
+        input_size=input_size,
+        lowering=lowering,
+        profile_median_microseconds=median,
+        profile_peak_allocation_delta_bytes=peak,
+        profile_sha256=profile_hash,
+        reason=reason,
+    )
+
+
 __all__ = [
     "COMPILER_VERSION",
     "BlockSchedule",
@@ -334,7 +442,10 @@ __all__ = [
     "IsotypicBlock",
     "IsotypicExecutionPlan",
     "RuntimeShape",
+    "Spin8TrainingPlan",
+    "TrainingLowering",
     "blocks_from_exact_certificate",
     "compile_isotypic_plan",
+    "compile_spin8_training_plan",
     "spin8_triality_blocks",
 ]

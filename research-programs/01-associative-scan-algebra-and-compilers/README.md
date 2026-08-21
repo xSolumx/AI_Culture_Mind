@@ -118,6 +118,13 @@ evidence about implementations of that algebra.
   state. Its RTX 2070 SUPER profile selects Tensor Cores in only one of eight
   cells (`1.423x`) and the scalar kernel elsewhere; the bounded fused
   forward/backward gain over a sequential eager oracle is `112.62x`.
+- Compiler v2.1.2 fuses continuous learned Spin(8) coordinates with direct
+  ordered-factor recurrence and full reverse-mode differentiation. A maximal
+  kernel also fuses the linear controller and returns table, input, retention,
+  drive, and initial-state gradients. On the recorded RTX 2070 SUPER cells it
+  is correct but slower than staging the shared 28-coordinate tensor once:
+  staged direct factors achieve `11.615x`--`14.916x` over materialized eager
+  training. The cost model therefore preserves cross-representation reuse.
 - Quaternion and unit-dual-quaternion composition now provide associative
   compact scans for the double covers of `SO(3)` and `SE(3)`, including exact
   identity padding and streaming cache continuation. Their eager-kernel and
@@ -139,8 +146,9 @@ evidence about implementations of that algebra.
 - Real eight-dimensional Spin(8) scheduling is automatic for exact profiled
   shapes and is integrated into the maintained continuous-action layer.
   Complex and quaternionic layouts, portable profile generation, broader
-  precision certification, action-constructor fusion, and trained natural-task
-  integration remain open.
+  precision certification, nonlinear/probe-frame constructor fusion, and
+  trained natural-task integration remain open. Canonical linear-controller
+  factor/scan fusion is implemented with gradients in v2.1.2.
 - No general no-go theorem covers every nonlinear coordinate system for cyclic
   feedback.
 
@@ -184,6 +192,7 @@ evidence about implementations of that algebra.
 - [Pure Spin(8) learned finite-token compiler](../../SSM-Models/experiments/PURE_SPIN8_COMPILED_TOKEN_SCAN_RESULTS.md)
 - [Spin(8) isotypic Tensor-Core dispatch audit](../../SSM-Models/experiments/SPIN8_ISOTYPIC_TENSOR_CORE_AUDIT.md)
 - [Isotypic-to-silicon compiler v2.1.1](../../SSM-Models/experiments/ISOTYPIC_TO_SILICON_COMPILER_V211.md)
+- [Trainable continuous Spin(8) factor compiler v2.1.2](../../SSM-Models/experiments/SPIN8_TRAINABLE_FACTOR_COMPILER_V212.md)
 
 The final three reports are cross-program evidence. Their algebra/compiler claims
 belong here; their retrieval and hardware conclusions belong to Programme 03.
