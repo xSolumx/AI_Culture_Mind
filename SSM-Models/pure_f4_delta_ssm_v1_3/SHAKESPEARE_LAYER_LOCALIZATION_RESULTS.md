@@ -40,7 +40,7 @@ The seed-17 discovery was real but not stable. The correct conclusion is not
 to search schedules until one looks favorable. On generic character-level
 Shakespeare at this scale:
 
-- identity transport is the supported natural-text default;
+- identity transport is the supported natural-text benchmark reference;
 - F4/E6 actions remain mathematically verified, executable research controls;
 - dense exceptional transport has no demonstrated language-quality benefit;
 - the next exceptional test needs task-aligned multi-view structure or a

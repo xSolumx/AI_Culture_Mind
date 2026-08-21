@@ -12,9 +12,9 @@ The implemented state hierarchy is
 
 all acting in one 27-dimensional Albert-algebra carrier. The trace-free
 26-dimensional irreducible (F_4) module remains available and tested, but it
-is no longer the model ceiling. The default is the full 78-generator
-(E_{6(-26)}) action; compact (F_4), Spin(9), Spin(8), arbitrary schedules,
-and caller-supplied generator banks are controls.
+is no longer the model ceiling. The built-in hierarchy reaches the full
+78-generator (E_{6(-26)}) action; compact (F_4), Spin(9), Spin(8), identity,
+arbitrary schedules, and caller-supplied generator banks are controls.
 
 ## What is implemented
 
@@ -57,8 +57,8 @@ at the tested budget, so this is architecture evidence, not evidence of a
 language-model advantage. See
 [`SHAKESPEARE_DEVELOPMENT_RESULTS.md`](SHAKESPEARE_DEVELOPMENT_RESULTS.md).
 
-For generic Shakespeare language modeling, however, the supported development
-default is identity transport. A post-discovery, prospectively frozen five-
+For generic Shakespeare language modeling, however, the supported benchmark
+reference is identity transport. A post-discovery, prospectively frozen five-
 seed gate rejected the apparent `E6 -> identity` improvement (2/5 wins; mean
 effect `-0.0093` bpb). Exceptional actions remain available for explicit
 symmetry and sparse-transport experiments. See
