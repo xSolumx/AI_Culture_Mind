@@ -173,7 +173,8 @@ __global__ void controller_factorized_forward_kernel(
 
 __global__ void controller_factorized_backward_kernel(
     const float* features, const float* weight, const float* bias,
-    const float* generators, const float* scale, const float* initial,
+    const float* generators, const float* scale, const float* drive,
+    const float* initial,
     const float* gate, const float* output, const float* output_gradient,
     float* feature_gradient, float* weight_gradient, float* bias_gradient,
     float* scale_gradient, float* drive_gradient, float* initial_gradient,
@@ -195,23 +196,33 @@ __global__ void controller_factorized_backward_kernel(
     const int feature_base = step * input_size;
     const float gate_value = gate[step];
     float direct = active ? output_gradient[output_base + lane] + carry : 0.0f;
-    float previous = 0.0f;
-    if (active) {
-      previous = position == 0
-          ? initial[initial_base + lane]
-          : output[output_base - channels * 3 * 8 + lane];
-    }
-    float rotated = previous;
+    // Division removes a complete replay of the forward factor chain. Retain
+    // the replay path for zero/tiny float32 scales, where reconstruction would
+    // be undefined or ill-conditioned.
+    const float scale_value = scale[scalar_offset];
+    float rotated = 0.0f;
+    if (fabsf(scale_value) > 1.0e-7f) {
+      rotated = active
+          ? (output[output_base + lane] - drive[output_base + lane]) /
+                scale_value
+          : 0.0f;
+    } else {
+      rotated = active
+          ? (position == 0
+                ? initial[initial_base + lane]
+                : output[output_base - channels * 3 * 8 + lane])
+          : 0.0f;
 #pragma unroll
-    for (int coordinate = 0; coordinate < 28; ++coordinate) {
-      const int controller_row = channel * 28 + coordinate;
-      const float angle = controller_angle(
-          features, weight, bias, feature_base, controller_row, input_size,
-          gate_value);
-      const float next_rotated = apply_factor(
-          generators, representation, coordinate, row, rotated, angle, 28);
-      if (active) rotated = next_rotated;
-      __syncwarp();
+      for (int coordinate = 0; coordinate < 28; ++coordinate) {
+        const int controller_row = channel * 28 + coordinate;
+        const float angle = controller_angle(
+            features, weight, bias, feature_base, controller_row, input_size,
+            gate_value);
+        const float next_rotated = apply_factor(
+            generators, representation, coordinate, row, rotated, angle, 28);
+        if (active) rotated = next_rotated;
+        __syncwarp();
+      }
     }
 
     float scale_term = active ? direct * rotated : 0.0f;
@@ -222,7 +233,7 @@ __global__ void controller_factorized_backward_kernel(
     if (active) {
       drive_gradient[output_base + lane] = direct;
     }
-    float adjoint = active ? scale[scalar_offset] * direct : 0.0f;
+    float adjoint = active ? scale_value * direct : 0.0f;
     float state_after = rotated;
 
 #pragma unroll
@@ -302,7 +313,8 @@ __global__ void coordinate_factorized_forward_kernel(
 
 __global__ void coordinate_factorized_backward_kernel(
     const float* coordinates, const float* generators, const float* scale,
-    const float* initial, const float* output, const float* output_gradient,
+    const float* drive, const float* initial, const float* output,
+    const float* output_gradient,
     float* coordinate_gradient, float* scale_gradient, float* drive_gradient,
     float* initial_gradient, int length, int channels, int factors) {
   const int lane = threadIdx.x;
@@ -320,26 +332,34 @@ __global__ void coordinate_factorized_backward_kernel(
     const int coordinate_base = scalar_offset * factors;
     const int output_base = (scalar_offset * 3) * 8;
     float direct = active ? output_gradient[output_base + lane] + carry : 0.0f;
-    float previous = 0.0f;
-    if (active) {
-      previous = position == 0
-          ? initial[initial_base + lane]
-          : output[output_base - channels * 3 * 8 + lane];
-    }
-    float rotated = previous;
+    const float scale_value = scale[scalar_offset];
+    float rotated = 0.0f;
+    if (fabsf(scale_value) > 1.0e-7f) {
+      rotated = active
+          ? (output[output_base + lane] - drive[output_base + lane]) /
+                scale_value
+          : 0.0f;
+    } else {
+      rotated = active
+          ? (position == 0
+                ? initial[initial_base + lane]
+                : output[output_base - channels * 3 * 8 + lane])
+          : 0.0f;
 #pragma unroll 4
-    for (int coordinate = 0; coordinate < factors; ++coordinate) {
-      const float angle = coordinates[coordinate_base + coordinate];
-      const float next_rotated = apply_factor(
-          generators, representation, coordinate, row, rotated, angle, factors);
-      if (active) rotated = next_rotated;
-      __syncwarp();
+      for (int coordinate = 0; coordinate < factors; ++coordinate) {
+        const float angle = coordinates[coordinate_base + coordinate];
+        const float next_rotated = apply_factor(
+            generators, representation, coordinate, row, rotated, angle,
+            factors);
+        if (active) rotated = next_rotated;
+        __syncwarp();
+      }
     }
 
     float scale_term = warp_sum(active ? direct * rotated : 0.0f);
     if (lane == 0) scale_gradient[scalar_offset] = scale_term;
     if (active) drive_gradient[output_base + lane] = direct;
-    float adjoint = active ? scale[scalar_offset] * direct : 0.0f;
+    float adjoint = active ? scale_value * direct : 0.0f;
     float state_after = rotated;
 
 #pragma unroll 4
@@ -440,10 +460,9 @@ torch::Tensor controller_factorized_forward_cuda(
   const int batch = features.size(0), length = features.size(1);
   const int input_size = features.size(2), channels = scale.size(2);
   TORCH_CHECK(drive.is_cuda() && drive.scalar_type() == torch::kFloat32 &&
-      drive.is_contiguous() && drive.device() == features.device(),
-      "drive must be contiguous CUDA float32");
-  TORCH_CHECK(drive.sizes() == torch::IntArrayRef({batch, length, channels, 3, 8}),
-      "drive must be (B,L,C,3,8)");
+      drive.is_contiguous() && drive.device() == features.device() &&
+      drive.sizes() == torch::IntArrayRef({batch, length, channels, 3, 8}),
+      "drive must be contiguous CUDA float32 with shape (B,L,C,3,8)");
   auto output = torch::empty_like(drive);
   const c10::cuda::CUDAGuard guard(features.device());
   controller_factorized_forward_kernel<<<batch * channels, 32, 0,
@@ -458,11 +477,16 @@ torch::Tensor controller_factorized_forward_cuda(
 
 std::vector<torch::Tensor> controller_factorized_backward_cuda(
     torch::Tensor features, torch::Tensor weight, torch::Tensor bias,
-    torch::Tensor generators, torch::Tensor scale, torch::Tensor initial,
+    torch::Tensor generators, torch::Tensor scale, torch::Tensor drive,
+    torch::Tensor initial,
     torch::Tensor gate, torch::Tensor output, torch::Tensor output_gradient) {
   check_controller_inputs(features, weight, bias, generators, scale, initial, gate);
   const int batch = features.size(0), length = features.size(1);
   const int input_size = features.size(2), channels = scale.size(2);
+  TORCH_CHECK(drive.is_cuda() && drive.scalar_type() == torch::kFloat32 &&
+      drive.is_contiguous() && drive.device() == features.device() &&
+      drive.sizes() == torch::IntArrayRef({batch, length, channels, 3, 8}),
+      "drive must be contiguous CUDA float32 with shape (B,L,C,3,8)");
   TORCH_CHECK(output.is_contiguous() && output_gradient.is_contiguous(),
       "output tensors must be contiguous");
   auto feature_gradient = torch::zeros_like(features);
@@ -475,8 +499,9 @@ std::vector<torch::Tensor> controller_factorized_backward_cuda(
   controller_factorized_backward_kernel<<<batch * channels, 32, 0,
       at::cuda::getCurrentCUDAStream()>>>(
       features.data_ptr<float>(), weight.data_ptr<float>(), bias.data_ptr<float>(),
-      generators.data_ptr<float>(), scale.data_ptr<float>(), initial.data_ptr<float>(),
-      gate.data_ptr<float>(), output.data_ptr<float>(), output_gradient.data_ptr<float>(),
+      generators.data_ptr<float>(), scale.data_ptr<float>(), drive.data_ptr<float>(),
+      initial.data_ptr<float>(), gate.data_ptr<float>(), output.data_ptr<float>(),
+      output_gradient.data_ptr<float>(),
       feature_gradient.data_ptr<float>(), weight_gradient.data_ptr<float>(),
       bias_gradient.data_ptr<float>(), scale_gradient.data_ptr<float>(),
       drive_gradient.data_ptr<float>(), initial_gradient.data_ptr<float>(),
@@ -494,10 +519,9 @@ torch::Tensor coordinate_factorized_forward_cuda(
   const int channels = coordinates.size(2);
   const int factors = coordinates.size(3);
   TORCH_CHECK(drive.is_cuda() && drive.scalar_type() == torch::kFloat32 &&
-      drive.is_contiguous() && drive.device() == coordinates.device(),
-      "drive must be contiguous CUDA float32");
-  TORCH_CHECK(drive.sizes() == torch::IntArrayRef({batch, length, channels, 3, 8}),
-      "drive must be (B,L,C,3,8)");
+      drive.is_contiguous() && drive.device() == coordinates.device() &&
+      drive.sizes() == torch::IntArrayRef({batch, length, channels, 3, 8}),
+      "drive must be contiguous CUDA float32 with shape (B,L,C,3,8)");
   auto output = torch::empty_like(drive);
   const c10::cuda::CUDAGuard guard(coordinates.device());
   coordinate_factorized_forward_kernel<<<batch * channels, 32, 0,
@@ -511,11 +535,16 @@ torch::Tensor coordinate_factorized_forward_cuda(
 
 std::vector<torch::Tensor> coordinate_factorized_backward_cuda(
     torch::Tensor coordinates, torch::Tensor generators, torch::Tensor scale,
-    torch::Tensor initial, torch::Tensor output, torch::Tensor output_gradient) {
+    torch::Tensor drive, torch::Tensor initial, torch::Tensor output,
+    torch::Tensor output_gradient) {
   check_coordinate_inputs(coordinates, generators, scale, initial);
   const int batch = coordinates.size(0), length = coordinates.size(1);
   const int channels = coordinates.size(2);
   const int factors = coordinates.size(3);
+  TORCH_CHECK(drive.is_cuda() && drive.scalar_type() == torch::kFloat32 &&
+      drive.is_contiguous() && drive.device() == coordinates.device() &&
+      drive.sizes() == torch::IntArrayRef({batch, length, channels, 3, 8}),
+      "drive must be contiguous CUDA float32 with shape (B,L,C,3,8)");
   TORCH_CHECK(output.is_cuda() && output_gradient.is_cuda() &&
       output.is_contiguous() && output_gradient.is_contiguous() &&
       output.device() == coordinates.device() &&
@@ -532,8 +561,9 @@ std::vector<torch::Tensor> coordinate_factorized_backward_cuda(
   coordinate_factorized_backward_kernel<<<batch * channels, 32, 0,
       at::cuda::getCurrentCUDAStream()>>>(
       coordinates.data_ptr<float>(), generators.data_ptr<float>(),
-      scale.data_ptr<float>(), initial.data_ptr<float>(), output.data_ptr<float>(),
-      output_gradient.data_ptr<float>(), coordinate_gradient.data_ptr<float>(),
+      scale.data_ptr<float>(), drive.data_ptr<float>(), initial.data_ptr<float>(),
+      output.data_ptr<float>(), output_gradient.data_ptr<float>(),
+      coordinate_gradient.data_ptr<float>(),
       scale_gradient.data_ptr<float>(), drive_gradient.data_ptr<float>(),
       initial_gradient.data_ptr<float>(), length, channels, factors);
   C10_CUDA_KERNEL_LAUNCH_CHECK();

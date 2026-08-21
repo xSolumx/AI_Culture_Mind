@@ -127,6 +127,50 @@ def test_raw_cuda_coordinate_full_gradient_parity() -> None:
 
 
 @pytest.mark.skipif(not torch.cuda.is_available(), reason="CUDA is unavailable")
+def test_raw_cuda_coordinate_zero_scale_fallback_gradient_parity() -> None:
+    features, weight, bias, generators, scale, drive, initial, gate = (
+        controller_inputs()
+    )
+    channels = scale.shape[-1]
+    coordinates = torch.nn.functional.linear(features, weight, bias).reshape(
+        *features.shape[:2], channels, 28
+    )
+    coordinates = coordinates * gate[..., None, None]
+    scale[:, 1, 0] = 0.0
+    scale[:, 3, 1] = 1.0e-9
+    base = (coordinates, generators, scale, drive, initial)
+    triton_inputs = tuple(
+        tensor.detach().clone().requires_grad_(index != 1)
+        for index, tensor in enumerate(base)
+    )
+    raw_inputs = tuple(
+        tensor.detach().clone().requires_grad_(index != 1)
+        for index, tensor in enumerate(base)
+    )
+    from pure_spin8_ssm.factorized_scan import factorized_coordinate_spin8_scan
+
+    triton_output = factorized_coordinate_spin8_scan(
+        *triton_inputs, backend="triton"
+    )
+    raw_output = raw_cuda_coordinate_factorized_scan(*raw_inputs)
+    output_gradient = torch.randn_like(raw_output)
+    differentiable = (0, 2, 3, 4)
+    triton_gradients = torch.autograd.grad(
+        triton_output,
+        tuple(triton_inputs[index] for index in differentiable),
+        output_gradient,
+    )
+    raw_gradients = torch.autograd.grad(
+        raw_output,
+        tuple(raw_inputs[index] for index in differentiable),
+        output_gradient,
+    )
+    torch.testing.assert_close(raw_output, triton_output, rtol=4e-5, atol=4e-5)
+    for actual, expected in zip(raw_gradients, triton_gradients, strict=True):
+        torch.testing.assert_close(actual, expected, rtol=9e-4, atol=2e-3)
+
+
+@pytest.mark.skipif(not torch.cuda.is_available(), reason="CUDA is unavailable")
 def test_nested_spin3_subgroup_matches_zero_padded_spin8() -> None:
     _, _, _, generators, scale, drive, initial, _ = controller_inputs()
     indices = tuple(

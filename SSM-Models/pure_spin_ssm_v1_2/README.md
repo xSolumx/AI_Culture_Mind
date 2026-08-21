@@ -88,13 +88,15 @@ recorded shape. It is a one-shape result, not a general speed claim, and the
 scalar 8-by-8 kernel is not a Tensor-Core implementation.
 
 See [`FRONTIER_TRAINING_RESULTS.md`](FRONTIER_TRAINING_RESULTS.md) for the
-three-seed matched result and algebra-to-silicon design, and
+guarded-backward kernel result, the separately scoped steady-step and
+natural-data evidence, and the algebra-to-silicon design. See
 [`REUSE_ATLAS.md`](REUSE_ATLAS.md) for the repository-wide component audit
 and the exact mechanism/claim boundary for every reused subsystem.
 
 The original three-seed natural-data result is retained as historical evidence
-in [`NATURAL_DATA_RESULTS.md`](NATURAL_DATA_RESULTS.md). The frontier backend
-cuts the mean Mamba-2 throughput lead from 4.87x to 1.091x, but Mamba-2 still
-wins quality, speed, and peak training memory. Pure Spin's smaller streaming
-state remains a design advantage; a complete incremental convolution wrapper
-is still open.
+in [`NATURAL_DATA_RESULTS.md`](NATURAL_DATA_RESULTS.md). The pre-reconstruction
+frontier backend cut the mean Mamba-2 throughput lead from 4.87x to 1.091x.
+The current order-balanced steady-step test still has Mamba-2 ahead by 1.075x,
+and Mamba-2 retains the established quality and peak-memory advantages. Pure
+Spin's smaller streaming state remains a design advantage; a complete
+incremental convolution wrapper is still open.

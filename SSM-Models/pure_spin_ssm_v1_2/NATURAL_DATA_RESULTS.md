@@ -2,11 +2,13 @@
 
 **Status:** historical initial-backend comparison; superseded for throughput
 
-The model/data conclusion remains valid, but the hardware conclusion below is
-superseded by [`FRONTIER_TRAINING_RESULTS.md`](FRONTIER_TRAINING_RESULTS.md).
-The raw coordinate backend plus exact nested-group ladder now measures 80,697
-tokens/s across three seeds versus 87,991 for fused Mamba-2, rather than the
-4.87x gap recorded here.
+The model/data conclusion remains valid, but the hardware conclusion below was
+superseded by the later, pre-reconstruction frontier result in
+[`FRONTIER_TRAINING_RESULTS.md`](FRONTIER_TRAINING_RESULTS.md). That exact
+three-seed source version measured 80,697 tokens/s for the raw coordinate
+ladder versus 87,991 for fused Mamba-2, rather than the 4.87x gap recorded
+here. Current CUDA timing is reported separately there and is not retrofitted
+onto this historical natural-data artifact.
 
 **Dataset:** raw UTF-8 bytes from `Salesforce/wikitext`, configuration
 `wikitext-2-raw-v1`

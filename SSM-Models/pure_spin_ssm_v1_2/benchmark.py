@@ -281,12 +281,15 @@ def main() -> int:
             "mamba2_fused": fused_mamba2_available(),
         },
         "implementation_sha256": {
-            path.name: file_sha256(path)
+            path.relative_to(Path(__file__).parent).as_posix(): file_sha256(path)
             for path in (
                 Path(__file__),
                 Path(__file__).with_name("model.py"),
                 Path(__file__).with_name("mamba2_baseline.py"),
                 Path(__file__).with_name("data.py"),
+                Path(__file__).with_name("raw_cuda.py"),
+                Path(__file__).with_name("csrc") / "spin_scan.cpp",
+                Path(__file__).with_name("csrc") / "spin_scan_cuda.cu",
             )
         },
         "results": [run_one(name, config, train_stream, validation, device) for name in args.models],

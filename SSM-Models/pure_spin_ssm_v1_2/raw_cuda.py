@@ -69,6 +69,7 @@ class _RawCudaControllerFactorized(torch.autograd.Function):
             contiguous[2],
             contiguous[3],
             contiguous[4],
+            contiguous[5],
             contiguous[6],
             contiguous[7],
             output,
@@ -77,7 +78,7 @@ class _RawCudaControllerFactorized(torch.autograd.Function):
 
     @staticmethod
     def backward(ctx, output_gradient):
-        features, weight, bias, generators, scale, initial, gate, output = (
+        features, weight, bias, generators, scale, drive, initial, gate, output = (
             ctx.saved_tensors
         )
         gradients = extension().controller_backward(
@@ -86,6 +87,7 @@ class _RawCudaControllerFactorized(torch.autograd.Function):
             bias,
             generators,
             scale,
+            drive,
             initial,
             gate,
             output,
@@ -105,17 +107,23 @@ class _RawCudaCoordinateFactorized(torch.autograd.Function):
         contiguous = tuple(tensor.contiguous() for tensor in tensors)
         output = extension().coordinate_forward(*contiguous)
         ctx.save_for_backward(
-            contiguous[0], contiguous[1], contiguous[2], contiguous[4], output
+            contiguous[0],
+            contiguous[1],
+            contiguous[2],
+            contiguous[3],
+            contiguous[4],
+            output,
         )
         return output
 
     @staticmethod
     def backward(ctx, output_gradient):
-        coordinates, generators, scale, initial, output = ctx.saved_tensors
+        coordinates, generators, scale, drive, initial, output = ctx.saved_tensors
         gradients = extension().coordinate_backward(
             coordinates,
             generators,
             scale,
+            drive,
             initial,
             output,
             output_gradient.contiguous(),
@@ -133,7 +141,12 @@ def raw_cuda_controller_factorized_scan(
     initial,
     gate,
 ):
-    """Raw-CUDA fused coefficient controller, 28 factors, and full backward."""
+    """Raw-CUDA fused controller, 28 factors, and full backward.
+
+    Backward normally reconstructs each pre-affine rotated state as
+    ``(output-drive) / scale``. Zero or tiny scales take an exact factor-replay
+    fallback so the public backend remains well-defined for arbitrary scales.
+    """
     return _RawCudaControllerFactorized.apply(
         features,
         weight,
@@ -149,7 +162,10 @@ def raw_cuda_controller_factorized_scan(
 def raw_cuda_coordinate_factorized_scan(
     coordinates, generators, scale, drive, initial
 ):
-    """Raw-CUDA 28-factor recurrence with coordinate-level backward."""
+    """Raw-CUDA factor recurrence with coordinate-level backward.
+
+    Uses the same guarded reconstruction as the controller backend.
+    """
     return _RawCudaCoordinateFactorized.apply(
         coordinates, generators, scale, drive, initial
     )

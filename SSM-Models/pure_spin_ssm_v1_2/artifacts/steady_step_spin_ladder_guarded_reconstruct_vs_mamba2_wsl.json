@@ -1,0 +1,252 @@
+{
+  "aggregate": {
+    "mamba2_fused": {
+      "cycle_medians_tokens_per_second": [
+        86256.71646702138,
+        88976.6687849421,
+        85004.41400903043,
+        85404.39941276005
+      ],
+      "median_of_cycle_medians_tokens_per_second": 85830.55793989071
+    },
+    "mamba2_throughput_over_spin": 1.07535875397972,
+    "pure_spin_v1_2": {
+      "cycle_medians_tokens_per_second": [
+        81138.86509217204,
+        79350.93595723608,
+        80280.550041732,
+        68223.34695112417
+      ],
+      "median_of_cycle_medians_tokens_per_second": 79815.74299948403
+    },
+    "spin_throughput_over_mamba2": 0.929922220188537
+  },
+  "claim_scope": "order-balanced fixed-batch GPU training-step throughput; not a convergence or general superiority claim",
+  "config": {
+    "batch_size": 8,
+    "cycles": 4,
+    "seed": 17,
+    "sequence_length": 256,
+    "spin_backend": "raw_cuda_factorized",
+    "spin_group_schedule": [
+      3,
+      4,
+      6,
+      8
+    ],
+    "steps_per_window": 10,
+    "warmup_steps": 10,
+    "windows": 5
+  },
+  "cycles": [
+    {
+      "cycle": 1,
+      "order": [
+        "pure_spin_v1_2",
+        "mamba2_fused"
+      ],
+      "results": [
+        {
+          "final_training_loss": 0.009993784129619598,
+          "name": "pure_spin_v1_2",
+          "tokens_per_second": {
+            "maximum": 87338.11347652767,
+            "mean": 81414.394224173,
+            "median": 81138.86509217204,
+            "minimum": 78050.4616232026
+          },
+          "window_milliseconds": [
+            258.8970947265625,
+            234.49098205566406,
+            252.4067840576172,
+            251.47427368164062,
+            262.39434814453125
+          ]
+        },
+        {
+          "final_training_loss": 0.004397411830723286,
+          "name": "mamba2_fused",
+          "tokens_per_second": {
+            "maximum": 91187.13156721347,
+            "mean": 86540.98413926424,
+            "median": 86256.71646702138,
+            "minimum": 82750.08680829572
+          },
+          "window_milliseconds": [
+            237.4307861328125,
+            247.4921875,
+            239.9607391357422,
+            224.5930938720703,
+            234.96022033691406
+          ]
+        }
+      ]
+    },
+    {
+      "cycle": 2,
+      "order": [
+        "mamba2_fused",
+        "pure_spin_v1_2"
+      ],
+      "results": [
+        {
+          "final_training_loss": 0.00439741276204586,
+          "name": "mamba2_fused",
+          "tokens_per_second": {
+            "maximum": 92430.50619195707,
+            "mean": 87822.02134785084,
+            "median": 88976.6687849421,
+            "minimum": 83566.36032828152
+          },
+          "window_milliseconds": [
+            245.07469177246094,
+            241.84080505371094,
+            221.57186889648438,
+            230.17269897460938,
+            228.94764709472656
+          ]
+        },
+        {
+          "final_training_loss": 0.009993784129619598,
+          "name": "pure_spin_v1_2",
+          "tokens_per_second": {
+            "maximum": 82878.86864909541,
+            "mean": 79263.48298044289,
+            "median": 79350.93595723608,
+            "minimum": 75800.59193459465
+          },
+          "window_milliseconds": [
+            267.8796081542969,
+            250.26039123535156,
+            258.093994140625,
+            270.1825866699219,
+            247.1076202392578
+          ]
+        }
+      ]
+    },
+    {
+      "cycle": 3,
+      "order": [
+        "pure_spin_v1_2",
+        "mamba2_fused"
+      ],
+      "results": [
+        {
+          "final_training_loss": 0.009993784129619598,
+          "name": "pure_spin_v1_2",
+          "tokens_per_second": {
+            "maximum": 81488.76705505526,
+            "mean": 78364.02057563218,
+            "median": 80280.550041732,
+            "minimum": 71475.14479260513
+          },
+          "window_milliseconds": [
+            255.10537719726562,
+            251.95724487304688,
+            286.5331726074219,
+            251.32298278808594,
+            264.96917724609375
+          ]
+        },
+        {
+          "final_training_loss": 0.004397411830723286,
+          "name": "mamba2_fused",
+          "tokens_per_second": {
+            "maximum": 88247.40462304038,
+            "mean": 83878.67438171734,
+            "median": 85004.41400903043,
+            "minimum": 79625.89552469026
+          },
+          "window_milliseconds": [
+            240.9286651611328,
+            255.0221710205078,
+            237.56243896484375,
+            232.07481384277344,
+            257.2027587890625
+          ]
+        }
+      ]
+    },
+    {
+      "cycle": 4,
+      "order": [
+        "mamba2_fused",
+        "pure_spin_v1_2"
+      ],
+      "results": [
+        {
+          "final_training_loss": 0.004397411830723286,
+          "name": "mamba2_fused",
+          "tokens_per_second": {
+            "maximum": 90031.63972782106,
+            "mean": 86723.4869116555,
+            "median": 85404.39941276005,
+            "minimum": 85045.18743618889
+          },
+          "window_milliseconds": [
+            240.11062622070312,
+            240.8131561279297,
+            239.80029296875,
+            227.4755859375,
+            233.14537048339844
+          ]
+        },
+        {
+          "final_training_loss": 0.009993784129619598,
+          "name": "pure_spin_v1_2",
+          "tokens_per_second": {
+            "maximum": 86046.77364334118,
+            "mean": 71426.09501917826,
+            "median": 68223.34695112417,
+            "minimum": 59324.331193254286
+          },
+          "window_milliseconds": [
+            238.0100860595703,
+            261.37603759765625,
+            300.19049072265625,
+            314.1996765136719,
+            345.2209167480469
+          ]
+        }
+      ]
+    }
+  ],
+  "environment": {
+    "compute_capability": [
+      7,
+      5
+    ],
+    "cuda": "13.0",
+    "gpu": "NVIDIA GeForce RTX 2070 SUPER",
+    "mamba2_fused": [
+      true,
+      "2.3.2.post1"
+    ],
+    "torch": "2.10.0+cu130",
+    "triton": "3.6.0"
+  },
+  "implementation_sha256": {
+    "benchmark.py": "9fdf5795fccd4f6d6a2221627a82d7af9d8b2f1095ae96b0c16f22697b14caad",
+    "benchmark_steady_step.py": "3bceb0199c2d704fdeecb7ac1476435252a13f670810b0157ad9b3b3c7915c4b",
+    "csrc/spin_scan.cpp": "5cc0356727d5806ba97525e6b5255d233ffef1f1bc28975c43c0a39005a6c92e",
+    "csrc/spin_scan_cuda.cu": "ca98a49172be0fa3f758c2d8c1b4af4b5b470ea9bf92c9abb61ad0c2d26b2082",
+    "mamba2_baseline.py": "e8c20220bad4c848adc7c795611c664bb209679a5da66102fb19d2f151686604",
+    "model.py": "5fc273ba9557d9bc8704ee007818617516dd26117a77090118afca32b3d6a8c5",
+    "raw_cuda.py": "35b0efe1975d8466757a9bdc34bac2012071f206ce2dc3c6e2609db0e2e2e782"
+  },
+  "parameter_match": {
+    "counts": {
+      "mamba2_fused": 623740,
+      "pure_spin_v1_2": 626516
+    },
+    "denominator": "larger model",
+    "relative_gap": 0.004430852524117501
+  },
+  "schema_version": 1,
+  "timing": {
+    "excludes": "data loading, host-to-device copies, and validation",
+    "includes": "forward, backward, gradient clipping, and AdamW update",
+    "method": "CUDA events around windows of complete training steps"
+  }
+}
