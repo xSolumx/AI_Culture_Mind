@@ -92,8 +92,10 @@ proof-search products and private working notes are intentionally absent.
   centered local charts and do not constitute a positivity theorem.
 - [Spin(9) Candidate Invariant Normal Form](experiments/SPIN9_CANDIDATE_NORMAL_FORM.md)
   — exact square factorization of the `Q(sqrt(241))` equality quartic and
-  positive first mixed radial coefficient at all four graph preimages; an
-  explicit finite collar remains open.
+  positive first mixed radial coefficient at all four graph preimages.
+- [Spin(9) Explicit Candidate Collars](experiments/SPIN9_CANDIDATE_EXPLICIT_COLLARS.md)
+  — exact Cartan blow-up and rational bounds proving four explicit
+  finite-radius candidate neighborhoods; the compact complement remains open.
 - [Clifford Signature Extension](manuscripts/CLIFFORD_SIGNATURE_EXTENSION.md)
   — exact faithful \(\mathrm{Cl}(1,4)\) matrix image, its even algebra, the
   \(\mathrm{Cl}(3,0)\) inclusion, and Spin(8) branching controls.

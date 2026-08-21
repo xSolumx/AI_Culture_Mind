@@ -26,7 +26,9 @@ module, and the information geometry of one, two, or three spinor probes.
   coupled first-`V1 + V5` finite-radius graph has a characteristic-zero
   determinant identity and exact global `21/20` bound. The pure-`V1` line is
   pulled back exactly to the symmetric curve and has four classified candidate
-  preimages. These are graph-slice theorems, not the unrestricted optimum.
+  preimages. Exact Cartan blow-up certificates now prove finite-radius collars
+  around all four preimages. These are graph-slice theorems, not the
+  unrestricted optimum.
 - The spinor-probe ranks `15,28,36` give stabilizer dimensions `21,8,0`,
   consistent with the orbit ladder `Spin(7) -> SU(3) -> 1`. This ladder is
   representation-specific and is not the defining-vector `3 -> 5 -> 7`
@@ -43,8 +45,9 @@ review. External review remains pending.
 
 The unrestricted global exact three-spinor optimum is not proved. The remaining
 gates are exact maximality of the algebraic symmetric candidate on the mixed
-first-`V1 + V5` slice, control of the second supported `V5`, and passage from
-the graph chart to the unrestricted quotient. The bounded multistart screen is
+first-`V1 + V5` slice outside the four certified local collars, control of the
+second supported `V5`, and passage from the graph chart to the unrestricted
+quotient. The bounded multistart screen is
 counterexample-search evidence only. The 9-to-16 binding
 identity is an exact mechanism, but it expands width and therefore does not
 establish a same-state Spin(9) memory or sequence-model advantage. Its current
@@ -73,6 +76,8 @@ The first candidate-centered bridge is now exact: the pure-line gap contains
 the square of the `Q(sqrt(241))` quartic equality fiber, and the first mixed
 `V5` radial coefficient is positive at all four roots. See
 [`SPIN9_CANDIDATE_NORMAL_FORM.md`](../../Spin-Space-Research/docs/experiments/SPIN9_CANDIDATE_NORMAL_FORM.md).
+The corresponding quantitative neighborhoods are certified in
+[`SPIN9_CANDIDATE_EXPLICIT_COLLARS.md`](../../Spin-Space-Research/docs/experiments/SPIN9_CANDIDATE_EXPLICIT_COLLARS.md).
 The memory boundary and executable gate are reported in
 [`SPIN8_SPIN9_HIERARCHICAL_MEMORY_RESULTS.md`](../../Spin-Space-Research/docs/experiments/SPIN8_SPIN9_HIERARCHICAL_MEMORY_RESULTS.md).
 

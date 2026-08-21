@@ -87,8 +87,11 @@ certificate.
 The follow-on
 [`SPIN9_CANDIDATE_NORMAL_FORM.md`](SPIN9_CANDIDATE_NORMAL_FORM.md) exactly
 factors the candidate fiber and proves positive first mixed radial coefficient
-at all four algebraic preimages. It is a qualitative local bridge, not yet an
-explicit finite-radius collar.
+at all four algebraic preimages. The quantitative continuation
+[`SPIN9_CANDIDATE_EXPLICIT_COLLARS.md`](SPIN9_CANDIDATE_EXPLICIT_COLLARS.md)
+uses an exact Cartan blow-up to certify explicit finite-radius collars around
+all four preimages. Candidate maximality on the compact complement remains
+open.
 
 - **Theorem or exact identity:** derived symbolically or checked by exact
   arithmetic under an explicitly stated domain.
