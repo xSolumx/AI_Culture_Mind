@@ -84,6 +84,11 @@ The current Spin(9) candidate-maximality handoff is recorded separately in
 [`SPIN9_CANDIDATE_COLLAR_DIAGNOSTIC.md`](SPIN9_CANDIDATE_COLLAR_DIAGNOSTIC.md).
 It is an exact partial atlas with retained boxes, not a promoted positivity
 certificate.
+The follow-on
+[`SPIN9_CANDIDATE_NORMAL_FORM.md`](SPIN9_CANDIDATE_NORMAL_FORM.md) exactly
+factors the candidate fiber and proves positive first mixed radial coefficient
+at all four algebraic preimages. It is a qualitative local bridge, not yet an
+explicit finite-radius collar.
 
 - **Theorem or exact identity:** derived symbolically or checked by exact
   arithmetic under an explicitly stated domain.

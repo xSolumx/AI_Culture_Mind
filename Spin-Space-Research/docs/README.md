@@ -90,6 +90,10 @@ proof-search products and private working notes are intentionally absent.
   — exact depth-six localization at `26201/25000`, about `1.08e-7` above the
   algebraic candidate; 29 retained boxes identify the need for candidate-
   centered local charts and do not constitute a positivity theorem.
+- [Spin(9) Candidate Invariant Normal Form](experiments/SPIN9_CANDIDATE_NORMAL_FORM.md)
+  — exact square factorization of the `Q(sqrt(241))` equality quartic and
+  positive first mixed radial coefficient at all four graph preimages; an
+  explicit finite collar remains open.
 - [Clifford Signature Extension](manuscripts/CLIFFORD_SIGNATURE_EXTENSION.md)
   — exact faithful \(\mathrm{Cl}(1,4)\) matrix image, its even algebra, the
   \(\mathrm{Cl}(3,0)\) inclusion, and Spin(8) branching controls.

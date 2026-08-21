@@ -69,6 +69,10 @@ The cross-representation probe atlas is in
 The near-candidate rational collar and the resulting local-chart proof route
 are recorded without theorem promotion in
 [`SPIN9_CANDIDATE_COLLAR_DIAGNOSTIC.md`](../../Spin-Space-Research/docs/experiments/SPIN9_CANDIDATE_COLLAR_DIAGNOSTIC.md).
+The first candidate-centered bridge is now exact: the pure-line gap contains
+the square of the `Q(sqrt(241))` quartic equality fiber, and the first mixed
+`V5` radial coefficient is positive at all four roots. See
+[`SPIN9_CANDIDATE_NORMAL_FORM.md`](../../Spin-Space-Research/docs/experiments/SPIN9_CANDIDATE_NORMAL_FORM.md).
 The memory boundary and executable gate are reported in
 [`SPIN8_SPIN9_HIERARCHICAL_MEMORY_RESULTS.md`](../../Spin-Space-Research/docs/experiments/SPIN8_SPIN9_HIERARCHICAL_MEMORY_RESULTS.md).
 

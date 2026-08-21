@@ -203,6 +203,9 @@ module name. Editable installation adds this directory to the Python path.
 - `spin9_candidate_collar_diagnostic.py`: exact depth-limited Bernstein atlas
   at the rational `26201/25000` collar immediately above the algebraic
   candidate; retained boxes are local-chart handoffs, not a candidate theorem.
+- `spin9_candidate_normal_form.py`: exact `Q(sqrt(241))` factor-square theorem
+  for the four candidate preimages and positive mixed radial coefficient at
+  each root, using width-`10^-140` rational Sturm cells where necessary.
 - `spin9_v1_v5_screen.py`: reproducible float64 multistart, compactified
   random, and projective-boundary falsification screen. It finds no candidate
   counterexample but exactly rejects pointwise monotonicity in the \(V_5\)
