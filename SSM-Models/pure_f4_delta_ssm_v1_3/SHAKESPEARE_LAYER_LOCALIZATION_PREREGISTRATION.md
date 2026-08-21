@@ -1,6 +1,6 @@
 # Prospective Shakespeare layer-localization gate
 
-**Frozen:** 2026-08-21, after seed-17 discovery and before fresh-seed runs  
+**Frozen:** 2026-08-21, after seed-17 discovery and before fresh-seed runs
 **Status:** prospective development gate
 
 ## Question

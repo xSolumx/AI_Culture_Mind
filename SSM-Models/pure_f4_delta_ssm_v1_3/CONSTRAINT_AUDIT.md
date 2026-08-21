@@ -97,6 +97,14 @@ the normalized direction but adds trace, log-energy, and bounded cubic
 determinant channels. A regression test verifies that positive rescaling is no
 longer invisible and that gradients reach the full read.
 
+The seed-17 Shakespeare screen then suggested placing E6 only in the first of
+two layers. That post-hoc signal was not promoted. A decision rule was committed
+before five fresh seeds were run; the candidate won only 2/5 and its mean paired
+effect was `-0.0093` bpb. Identity transport is therefore the supported default
+for generic natural-text development at this scale. This does not remove the
+exceptional actions; it prevents a valid algebra from being mistaken for an
+empirically justified universal language prior.
+
 ## Still deliberate, not accidental
 
 - The language model is causal because it is an autoregressive SSM.

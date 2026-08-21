@@ -44,17 +44,25 @@ and caller-supplied generator banks are controls.
 ## Status
 
 This is a semantic PyTorch implementation, not yet an optimized CUDA backend
-or a promoted trained model. The algebra and model suite currently has 26
+or a promoted trained model. The algebra and model suite currently has 28
 tests. The generated audit separates exact-data, numerical, empirical, and
 open claims in `artifacts/algebra_audit.json`.
 
-The default action is now the direct 78-coordinate E6 chart. Polar and Cartan
+When E6 is selected, the default geometry is now the direct 78-coordinate
+chart. Polar and Cartan
 charts remain first-class falsifiers rather than defaults: a pinned Tiny
 Shakespeare screen found no early quality separation between direct and polar
 E6, while direct was cheaper. The no-action control was also essentially tied
 at the tested budget, so this is architecture evidence, not evidence of a
 language-model advantage. See
 [`SHAKESPEARE_DEVELOPMENT_RESULTS.md`](SHAKESPEARE_DEVELOPMENT_RESULTS.md).
+
+For generic Shakespeare language modeling, however, the supported development
+default is identity transport. A post-discovery, prospectively frozen five-
+seed gate rejected the apparent `E6 -> identity` improvement (2/5 wins; mean
+effect `-0.0093` bpb). Exceptional actions remain available for explicit
+symmetry and sparse-transport experiments. See
+[`SHAKESPEARE_LAYER_LOCALIZATION_RESULTS.md`](SHAKESPEARE_LAYER_LOCALIZATION_RESULTS.md).
 
 Run from the repository root:
 

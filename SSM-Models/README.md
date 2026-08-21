@@ -18,9 +18,10 @@
 > not yet a promoted CUDA backend or trained quality result. Its new natural-
 > data development evidence uses only a pinned Tiny Shakespeare corpus on both
 > train and validation sides; it does not inherit v1.2's WikiText artifacts.
-> The no-action control remains essentially tied at the short gate. The
-> folder's constraint audit records which older gates were retained,
-> generalized, or removed.
+> The no-action control remains essentially tied at the short gate, and a
+> prospectively frozen five-seed layer-localization follow-up rejected the
+> apparent seed-17 E6 gain. The folder's constraint audit records which older
+> gates were retained, generalized, or removed.
 
 > **2026-08-10 programme boundary.** The theorem tree now has a
 > completed hierarchical memory-core campaign and an official FLA chunk-kernel

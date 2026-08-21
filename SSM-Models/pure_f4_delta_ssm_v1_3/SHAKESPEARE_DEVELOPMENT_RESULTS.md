@@ -1,6 +1,6 @@
 # Tiny Shakespeare development results
 
-**Date:** 2026-08-21  
+**Date:** 2026-08-21
 **Status:** development evidence; no promoted language-quality claim
 
 ## Data contract
@@ -81,6 +81,8 @@ is better”:
 
 The prospective fresh-seed decision rule is frozen in
 [`SHAKESPEARE_LAYER_LOCALIZATION_PREREGISTRATION.md`](SHAKESPEARE_LAYER_LOCALIZATION_PREREGISTRATION.md).
+That gate subsequently failed; see
+[`SHAKESPEARE_LAYER_LOCALIZATION_RESULTS.md`](SHAKESPEARE_LAYER_LOCALIZATION_RESULTS.md).
 
 ## Artifacts and nonclaims
 
