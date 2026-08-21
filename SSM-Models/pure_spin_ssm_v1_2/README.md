@@ -12,8 +12,10 @@ Each causal block contains:
 2. causal depthwise convolution for local token mixing;
 3. the maintained bounded Spin(8) recurrence with shared `8v/8+/8-` triality
    action and a fixed-size recurrent cache;
-4. the fused controller-to-28-factor-to-recurrence CUDA lowering when available;
-5. gated residual readout and a SwiGLU channel mixer.
+4. a selectable exact nested-group ladder
+   `Spin(3) -> Spin(4) -> Spin(6) -> Spin(8)`;
+5. raw CUDA controller-fused and GEMM-plus-factorized training lowerings;
+6. gated residual readout and a SwiGLU channel mixer.
 
 The recurrence is not Mamba-2 under different notation. Its state transition is
 a selective contractive affine Spin(8) action. Local convolution and SwiGLU are
@@ -46,7 +48,8 @@ bash install_wsl.sh
 cd ..
 PYTHONPATH=. python -m pytest -q pure_spin_ssm_v1_2/test_model.py
 cd pure_spin_ssm_v1_2
-PYTHONPATH=.. python benchmark.py --steps 300 --batch-size 8 --sequence-length 256
+PYTHONPATH=.. python benchmark.py --steps 300 --batch-size 8 --sequence-length 256 \
+  --spin-backend raw_cuda_factorized --spin-group-schedule 3 4 6 8
 ```
 
 The validated local tuple is Python 3.10, Torch 2.10.0+cu130, Triton 3.6.0,
@@ -71,16 +74,11 @@ unavailable.
 
 ## Raw CUDA comparison
 
-`csrc/spin_scan_cuda.cu` is a raw CUDA forward kernel for the materialized
-shared-action recurrence. One block owns one `(batch, channel, representation)`
-state, keeps its eight coordinates in shared memory, and scans the complete
-sequence in one launch. `benchmark_raw_cuda.py` compares it with the maintained
-Triton scalar kernel and PyTorch oracle using synchronized median latency and
-explicit numerical parity.
-
-This kernel is intentionally not used for training yet: it has no backward and
-refuses gradient-bearing inputs. It measures recurrence lowering, not
-end-to-end Pure Spin versus Mamba-2 performance.
+`csrc/spin_scan_cuda.cu` contains the historical materialized-action forward
+kernel plus two full FP32 training schedules. The fastest schedule uses a dense
+GEMM controller followed by a register-resident raw CUDA ordered-factor
+recurrence. Exact backward, current-stream behavior, subgroup restriction, and
+full-model gradient parity are maintained tests.
 
 The first RTX 2070 SUPER comparison is reported in
 [`RAW_CUDA_RESULTS.md`](RAW_CUDA_RESULTS.md): after current-stream integration
@@ -89,12 +87,14 @@ microseconds in FP32, and 121.6 versus 183.2 microseconds in FP16, on the
 recorded shape. It is a one-shape result, not a general speed claim, and the
 scalar 8-by-8 kernel is not a Tensor-Core implementation.
 
-See [`REUSE_ATLAS.md`](REUSE_ATLAS.md) for the repository-wide component audit
+See [`FRONTIER_TRAINING_RESULTS.md`](FRONTIER_TRAINING_RESULTS.md) for the
+three-seed matched result and algebra-to-silicon design, and
+[`REUSE_ATLAS.md`](REUSE_ATLAS.md) for the repository-wide component audit
 and the exact mechanism/claim boundary for every reused subsystem.
 
-The completed three-seed natural-data result and its negative findings are in
-[`NATURAL_DATA_RESULTS.md`](NATURAL_DATA_RESULTS.md). The current model learns
-WikiText bytes but does not beat the official fused Mamba-2 control in quality,
-training speed, or peak training memory. Its clearly measured architectural
-advantage is much smaller streaming state; the incremental wrapper needed to
-realize that advantage end to end remains open.
+The original three-seed natural-data result is retained as historical evidence
+in [`NATURAL_DATA_RESULTS.md`](NATURAL_DATA_RESULTS.md). The frontier backend
+cuts the mean Mamba-2 throughput lead from 4.87x to 1.091x, but Mamba-2 still
+wins quality, speed, and peak training memory. Pure Spin's smaller streaming
+state remains a design advantage; a complete incremental convolution wrapper
+is still open.

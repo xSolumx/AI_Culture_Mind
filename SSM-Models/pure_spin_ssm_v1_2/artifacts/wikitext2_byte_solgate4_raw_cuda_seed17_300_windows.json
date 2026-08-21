@@ -1,0 +1,70 @@
+{
+  "claim_scope": "matched natural-data training run; empirical, not a general superiority claim",
+  "config": {
+    "batch_size": 8,
+    "d_model": 128,
+    "gradient_clip": 1.0,
+    "layers": 4,
+    "learning_rate": 0.003,
+    "mamba_d_model": 144,
+    "mamba_d_state": 64,
+    "maximum_parameter_gap": 0.05,
+    "seed": 17,
+    "sequence_length": 256,
+    "spin_backend": "raw_cuda_controller",
+    "spin_channels": 2,
+    "spin_expansion": 1,
+    "spin_mixer": "sol_bounded_quadratic",
+    "steps": 300,
+    "validation_batches": 16,
+    "weight_decay": 0.01
+  },
+  "dataset": {
+    "encoding": "raw UTF-8 bytes",
+    "name": "Salesforce/wikitext wikitext-2-raw-v1",
+    "train_sha256": "fb23ad9643a34514eec5cb85ec2a6f49d1a33e6a3d5077dff5a403e1d18f5047",
+    "validation_sha256": "f3714de012180492efbcf4f0380322389a27f735ddb63e8c016a6a6285f50408"
+  },
+  "environment": {
+    "causal_conv1d": "unavailable",
+    "compute_capability": [
+      7,
+      5
+    ],
+    "cuda": "13.0",
+    "gpu": "NVIDIA GeForce RTX 2070 SUPER",
+    "mamba2_fused": [
+      false,
+      "ModuleNotFoundError(\"No module named 'mamba_ssm'\")"
+    ],
+    "python": "3.12.10",
+    "torch": "2.12.0+cu130",
+    "total_cuda_bytes": 8589606912,
+    "triton": "3.7.1.post27"
+  },
+  "implementation_sha256": {
+    "benchmark.py": "d31cf20414b51fcab56ff8bbe07ba3b011b99874eac645bcdf65fde83d9e0541",
+    "data.py": "b422398a759bb03e47ad0a8fc7eb0bf49150616120b47829d41d4654ceaff909",
+    "mamba2_baseline.py": "e8c20220bad4c848adc7c795611c664bb209679a5da66102fb19d2f151686604",
+    "model.py": "48193d2a8f32fc9de09c937f030bd1936fd16189af0d8925c13ae5672f201d87"
+  },
+  "parameter_match": null,
+  "results": [
+    {
+      "final_bits_per_byte": 2.7359451123757488,
+      "final_nats_per_byte": 1.8964126408100128,
+      "initial_nats_per_byte": 5.59651592373848,
+      "name": "pure_spin_v1_2",
+      "parameters": 445392,
+      "peak_cuda_bytes": 123974656,
+      "sampled_training_losses": {
+        "1": 5.594429969787598,
+        "150": 2.0369653701782227,
+        "300": 1.9224203824996948
+      },
+      "training_seconds": 25.80717580000055,
+      "training_tokens_per_second": 23807.331912699527
+    }
+  ],
+  "schema_version": 1
+}

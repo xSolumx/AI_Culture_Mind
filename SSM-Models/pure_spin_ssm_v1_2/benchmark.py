@@ -33,6 +33,10 @@ class BenchmarkConfig:
     d_model: int = 128
     layers: int = 4
     spin_channels: int = 2
+    spin_backend: str = "compiled_controller"
+    spin_mixer: str = "swiglu"
+    spin_expansion: int = 2
+    spin_group_schedule: tuple[int, ...] | None = None
     mamba_d_model: int = 144
     mamba_d_state: int = 64
     maximum_parameter_gap: float = 0.05
@@ -50,6 +54,15 @@ def file_sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def package_version(*distribution_names: str) -> str:
+    for name in distribution_names:
+        try:
+            return importlib.metadata.version(name)
+        except importlib.metadata.PackageNotFoundError:
+            pass
+    return "unavailable"
+
+
 def build_model(name: str, config: BenchmarkConfig) -> torch.nn.Module:
     if name == "pure_spin_v1_2":
         return PureSpinSSMV12(
@@ -57,6 +70,9 @@ def build_model(name: str, config: BenchmarkConfig) -> torch.nn.Module:
                 d_model=config.d_model,
                 num_layers=config.layers,
                 spin_channels=config.spin_channels,
+                mixer=config.spin_mixer,
+                expansion=config.spin_expansion,
+                group_schedule=config.spin_group_schedule,
             )
         )
     if name == "mamba2_fused":
@@ -90,13 +106,14 @@ def evaluate(
     batches: list[tuple[torch.Tensor, torch.Tensor]],
     device: torch.device,
     name: str,
+    spin_backend: str,
 ) -> float:
     model.eval()
     loss_sum = 0.0
     token_count = 0
     for inputs, targets in batches:
         inputs, targets = inputs.to(device), targets.to(device)
-        kwargs = {"scan_mode": "compiled_controller"} if name == "pure_spin_v1_2" else {}
+        kwargs = {"scan_mode": spin_backend} if name == "pure_spin_v1_2" else {}
         logits = model(inputs, **kwargs)["logits"]
         loss_sum += float(F.cross_entropy(logits.flatten(0, 1), targets.flatten(), reduction="sum"))
         token_count += targets.numel()
@@ -116,7 +133,7 @@ def run_one(
         model.parameters(), lr=config.learning_rate, weight_decay=config.weight_decay
     )
     generator = torch.Generator().manual_seed(config.seed)
-    initial_loss = evaluate(model, validation, device, name)
+    initial_loss = evaluate(model, validation, device, name, config.spin_backend)
     warmup_generator = torch.Generator().manual_seed(config.seed + 2)
     warmup_inputs, warmup_targets = random_batch(
         train_stream,
@@ -127,7 +144,7 @@ def run_one(
     warmup_inputs, warmup_targets = warmup_inputs.to(device), warmup_targets.to(device)
     model.train()
     optimizer.zero_grad(set_to_none=True)
-    warmup_kwargs = {"scan_mode": "compiled_controller"} if name == "pure_spin_v1_2" else {}
+    warmup_kwargs = {"scan_mode": config.spin_backend} if name == "pure_spin_v1_2" else {}
     warmup_logits = model(warmup_inputs, **warmup_kwargs)["logits"]
     F.cross_entropy(warmup_logits.flatten(0, 1), warmup_targets.flatten()).backward()
     optimizer.zero_grad(set_to_none=True)
@@ -145,7 +162,7 @@ def run_one(
         )
         inputs, targets = inputs.to(device), targets.to(device)
         optimizer.zero_grad(set_to_none=True)
-        kwargs = {"scan_mode": "compiled_controller"} if name == "pure_spin_v1_2" else {}
+        kwargs = {"scan_mode": config.spin_backend} if name == "pure_spin_v1_2" else {}
         logits = model(inputs, **kwargs)["logits"]
         loss = F.cross_entropy(logits.flatten(0, 1), targets.flatten())
         loss.backward()
@@ -157,7 +174,7 @@ def run_one(
             sampled_losses[str(step)] = float(loss.detach())
     torch.cuda.synchronize()
     seconds = time.perf_counter() - start
-    final_loss = evaluate(model, validation, device, name)
+    final_loss = evaluate(model, validation, device, name, config.spin_backend)
     tokens = config.steps * config.batch_size * config.sequence_length
     return {
         "name": name,
@@ -179,6 +196,25 @@ def main() -> int:
     parser.add_argument("--sequence-length", type=int, default=256)
     parser.add_argument("--validation-batches", type=int, default=16)
     parser.add_argument("--seed", type=int, default=17)
+    parser.add_argument(
+        "--spin-backend",
+        choices=[
+            "compiled_controller",
+            "compiled_factorized",
+            "raw_cuda_controller",
+            "raw_cuda_factorized",
+        ],
+        default="compiled_controller",
+    )
+    parser.add_argument(
+        "--spin-mixer",
+        choices=["swiglu", "sol_bounded_quadratic", "sol_self_gate"],
+        default="swiglu",
+    )
+    parser.add_argument("--spin-expansion", type=int, default=2)
+    parser.add_argument("--spin-d-model", type=int, default=128)
+    parser.add_argument("--spin-group-schedule", type=int, nargs="+")
+    parser.add_argument("--layers", type=int, default=4)
     parser.add_argument("--models", nargs="+", default=["pure_spin_v1_2", "mamba2_fused"])
     parser.add_argument("--offline", action="store_true")
     parser.add_argument("--output", type=Path, default=Path("artifacts/wikitext2_byte_300.json"))
@@ -194,6 +230,16 @@ def main() -> int:
         batch_size=args.batch_size,
         sequence_length=args.sequence_length,
         validation_batches=args.validation_batches,
+        spin_backend=args.spin_backend,
+        spin_mixer=args.spin_mixer,
+        spin_expansion=args.spin_expansion,
+        d_model=args.spin_d_model,
+        spin_group_schedule=(
+            tuple(args.spin_group_schedule)
+            if args.spin_group_schedule is not None
+            else None
+        ),
+        layers=args.layers,
         seed=args.seed,
     )
     train, train_sha = wikitext_bytes("train", offline=args.offline)
@@ -230,8 +276,8 @@ def main() -> int:
             "gpu": torch.cuda.get_device_name(),
             "compute_capability": list(torch.cuda.get_device_capability()),
             "total_cuda_bytes": torch.cuda.get_device_properties(0).total_memory,
-            "triton": importlib.metadata.version("triton"),
-            "causal_conv1d": importlib.metadata.version("causal-conv1d"),
+            "triton": package_version("triton", "triton-windows"),
+            "causal_conv1d": package_version("causal-conv1d"),
             "mamba2_fused": fused_mamba2_available(),
         },
         "implementation_sha256": {

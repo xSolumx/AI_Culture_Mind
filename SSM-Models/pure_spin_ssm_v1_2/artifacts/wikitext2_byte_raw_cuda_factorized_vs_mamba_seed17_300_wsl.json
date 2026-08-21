@@ -1,0 +1,92 @@
+{
+  "claim_scope": "matched natural-data training run; empirical, not a general superiority claim",
+  "config": {
+    "batch_size": 8,
+    "d_model": 128,
+    "gradient_clip": 1.0,
+    "layers": 4,
+    "learning_rate": 0.003,
+    "mamba_d_model": 144,
+    "mamba_d_state": 64,
+    "maximum_parameter_gap": 0.05,
+    "seed": 17,
+    "sequence_length": 256,
+    "spin_backend": "raw_cuda_factorized",
+    "spin_channels": 2,
+    "spin_expansion": 2,
+    "spin_mixer": "swiglu",
+    "steps": 300,
+    "validation_batches": 16,
+    "weight_decay": 0.01
+  },
+  "dataset": {
+    "encoding": "raw UTF-8 bytes",
+    "name": "Salesforce/wikitext wikitext-2-raw-v1",
+    "train_sha256": "fb23ad9643a34514eec5cb85ec2a6f49d1a33e6a3d5077dff5a403e1d18f5047",
+    "validation_sha256": "f3714de012180492efbcf4f0380322389a27f735ddb63e8c016a6a6285f50408"
+  },
+  "environment": {
+    "causal_conv1d": "1.7.0",
+    "compute_capability": [
+      7,
+      5
+    ],
+    "cuda": "13.0",
+    "gpu": "NVIDIA GeForce RTX 2070 SUPER",
+    "mamba2_fused": [
+      true,
+      "2.3.2.post1"
+    ],
+    "python": "3.10.12",
+    "torch": "2.10.0+cu130",
+    "total_cuda_bytes": 8589606912,
+    "triton": "3.6.0"
+  },
+  "implementation_sha256": {
+    "benchmark.py": "42042baa390eb0e5948512027817c20fa51cc6da0d7322032225007ec6b0a277",
+    "data.py": "b422398a759bb03e47ad0a8fc7eb0bf49150616120b47829d41d4654ceaff909",
+    "mamba2_baseline.py": "e8c20220bad4c848adc7c795611c664bb209679a5da66102fb19d2f151686604",
+    "model.py": "8b9cc553f0910082b39fe8314ec6e2caaff8c0f730d61767de6768c40ebbba6a"
+  },
+  "parameter_match": {
+    "counts": {
+      "mamba2_fused": 623740,
+      "pure_spin_v1_2": 641996
+    },
+    "denominator": "larger model",
+    "relative_gap": 0.028436314244948566
+  },
+  "results": [
+    {
+      "final_bits_per_byte": 2.7279378258788056,
+      "final_nats_per_byte": 1.890862412750721,
+      "initial_nats_per_byte": 5.5949645936489105,
+      "name": "pure_spin_v1_2",
+      "parameters": 641996,
+      "peak_cuda_bytes": 151110656,
+      "sampled_training_losses": {
+        "1": 5.6060051918029785,
+        "150": 2.015448570251465,
+        "300": 1.910304307937622
+      },
+      "training_seconds": 11.076450930000007,
+      "training_tokens_per_second": 55469.03099944484
+    },
+    {
+      "final_bits_per_byte": 2.4995167786163264,
+      "final_nats_per_byte": 1.7325330078601837,
+      "initial_nats_per_byte": 5.592678904533386,
+      "name": "mamba2_fused",
+      "parameters": 623740,
+      "peak_cuda_bytes": 117968896,
+      "sampled_training_losses": {
+        "1": 5.598058223724365,
+        "150": 1.8556647300720215,
+        "300": 1.761856198310852
+      },
+      "training_seconds": 7.136771574000008,
+      "training_tokens_per_second": 86089.34637032833
+    }
+  ],
+  "schema_version": 1
+}

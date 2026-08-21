@@ -1,6 +1,6 @@
 # Raw CUDA recurrence comparison
 
-**Status:** completed forward-kernel comparison; no CUDA backward yet
+**Status:** historical materialized-forward comparison; training backend now complete
 
 **Hardware:** NVIDIA GeForce RTX 2070 SUPER, compute capability 7.5
 
@@ -32,7 +32,7 @@ product with scalar operations and FP32 shared-state accumulation, writing FP16
 between time steps. Its FP16 timing is therefore evidence about this CUDA-core
 schedule, not a Tensor-Core implementation claim.
 
-The comparison covers the materialized-action forward recurrence only. The raw
-CUDA kernel has no backward, controller fusion, or 28-factor action
-construction. Triton's full-gradient controller-fused kernel remains the v1.2
-training backend.
+This table covers only the original materialized-action forward recurrence.
+The source now also includes raw CUDA forward/backward for controller-fused and
+coordinate-factorized training. The promoted end-to-end evidence is in
+[`FRONTIER_TRAINING_RESULTS.md`](FRONTIER_TRAINING_RESULTS.md).

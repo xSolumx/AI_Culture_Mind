@@ -1,0 +1,142 @@
+{
+  "aggregate": {
+    "mamba2_bits_per_byte": {
+      "maximum": 2.499954592700845,
+      "mean": 2.4899277927602017,
+      "minimum": 2.470131478924605,
+      "sample_standard_deviation": 0.017144593320793336
+    },
+    "mamba2_minus_spin_bits_per_byte": {
+      "maximum": -0.21801930006215153,
+      "mean": -0.242379445844256,
+      "minimum": -0.26197676500388845,
+      "sample_standard_deviation": 0.022362425385069565
+    },
+    "mamba2_throughput_over_spin": {
+      "maximum": 1.1347587231309617,
+      "mean": 1.0909480902780484,
+      "minimum": 1.0654238510837677,
+      "sample_standard_deviation": 0.038113321361815826
+    },
+    "mamba2_tokens_per_second": {
+      "maximum": 89111.1658368025,
+      "mean": 87990.68979527464,
+      "minimum": 86263.66330342095,
+      "sample_standard_deviation": 1517.562274174086
+    },
+    "pure_spin_bits_per_byte": {
+      "maximum": 2.747096865167573,
+      "mean": 2.7323072386044576,
+      "minimum": 2.7177166067173055,
+      "sample_standard_deviation": 0.014691140044663877
+    },
+    "pure_spin_tokens_per_second": {
+      "maximum": 82595.6967838249,
+      "mean": 80696.98411875154,
+      "minimum": 78528.73392409977,
+      "sample_standard_deviation": 2046.8352609539259
+    }
+  },
+  "by_seed": [
+    {
+      "mamba2_bits_per_byte": 2.499697306655154,
+      "mamba2_minus_spin_bits_per_byte": -0.21801930006215153,
+      "mamba2_throughput_over_spin": 1.0654238510837677,
+      "mamba2_tokens_per_second": 86263.66330342095,
+      "pure_spin_bits_per_byte": 2.7177166067173055,
+      "pure_spin_tokens_per_second": 80966.52164832996,
+      "seed": 17
+    },
+    {
+      "mamba2_bits_per_byte": 2.470131478924605,
+      "mamba2_minus_spin_bits_per_byte": -0.26197676500388845,
+      "mamba2_throughput_over_spin": 1.072661696619416,
+      "mamba2_tokens_per_second": 88597.24024560046,
+      "pure_spin_bits_per_byte": 2.7321082439284936,
+      "pure_spin_tokens_per_second": 82595.6967838249,
+      "seed": 29
+    },
+    {
+      "mamba2_bits_per_byte": 2.499954592700845,
+      "mamba2_minus_spin_bits_per_byte": -0.24714227246672804,
+      "mamba2_throughput_over_spin": 1.1347587231309617,
+      "mamba2_tokens_per_second": 89111.1658368025,
+      "pure_spin_bits_per_byte": 2.747096865167573,
+      "pure_spin_tokens_per_second": 78528.73392409977,
+      "seed": 43
+    }
+  ],
+  "claim_scope": "three-seed matched WikiText-2 byte-LM comparison",
+  "config_except_seed": {
+    "batch_size": 8,
+    "d_model": 128,
+    "gradient_clip": 1.0,
+    "layers": 4,
+    "learning_rate": 0.003,
+    "mamba_d_model": 144,
+    "mamba_d_state": 64,
+    "maximum_parameter_gap": 0.05,
+    "sequence_length": 256,
+    "spin_backend": "raw_cuda_factorized",
+    "spin_channels": 2,
+    "spin_expansion": 2,
+    "spin_group_schedule": [
+      3,
+      4,
+      6,
+      8
+    ],
+    "spin_mixer": "swiglu",
+    "steps": 300,
+    "validation_batches": 16,
+    "weight_decay": 0.01
+  },
+  "dataset": {
+    "encoding": "raw UTF-8 bytes",
+    "name": "Salesforce/wikitext wikitext-2-raw-v1",
+    "train_sha256": "fb23ad9643a34514eec5cb85ec2a6f49d1a33e6a3d5077dff5a403e1d18f5047",
+    "validation_sha256": "f3714de012180492efbcf4f0380322389a27f735ddb63e8c016a6a6285f50408"
+  },
+  "environment": {
+    "causal_conv1d": "1.7.0",
+    "compute_capability": [
+      7,
+      5
+    ],
+    "cuda": "13.0",
+    "gpu": "NVIDIA GeForce RTX 2070 SUPER",
+    "mamba2_fused": [
+      true,
+      "2.3.2.post1"
+    ],
+    "python": "3.10.12",
+    "torch": "2.10.0+cu130",
+    "total_cuda_bytes": 8589606912,
+    "triton": "3.6.0"
+  },
+  "implementation_sha256": {
+    "benchmark.py": "2314545e214f86a10f7dbf19626fe15bf0d2c9edc1fe04a6be01e1c3e84f8608",
+    "data.py": "b422398a759bb03e47ad0a8fc7eb0bf49150616120b47829d41d4654ceaff909",
+    "mamba2_baseline.py": "e8c20220bad4c848adc7c795611c664bb209679a5da66102fb19d2f151686604",
+    "model.py": "5fc273ba9557d9bc8704ee007818617516dd26117a77090118afca32b3d6a8c5"
+  },
+  "input_artifacts": {
+    "wikitext2_byte_spin_ladder_vs_mamba_seed17_300_wsl.json": "807402b7d7ac4177cf7e2ad078605f1d7a31641009d9cc15d0298f75db5042fb",
+    "wikitext2_byte_spin_ladder_vs_mamba_seed29_300_wsl.json": "423f3db2269be95e73d1fc23306166b647be40717b68c76a04720fe4d2fb5d51",
+    "wikitext2_byte_spin_ladder_vs_mamba_seed43_300_wsl.json": "c324b32b98178cac596adbe16929f01364ec627d28d4dbad5d0f6a932b52cb83"
+  },
+  "parameter_match": {
+    "counts": {
+      "mamba2_fused": 623740,
+      "pure_spin_v1_2": 626516
+    },
+    "denominator": "larger model",
+    "relative_gap": 0.004430852524117501
+  },
+  "schema_version": 1,
+  "seeds": [
+    17,
+    29,
+    43
+  ]
+}

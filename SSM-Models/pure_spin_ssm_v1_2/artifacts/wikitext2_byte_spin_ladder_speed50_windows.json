@@ -1,0 +1,76 @@
+{
+  "claim_scope": "matched natural-data training run; empirical, not a general superiority claim",
+  "config": {
+    "batch_size": 8,
+    "d_model": 128,
+    "gradient_clip": 1.0,
+    "layers": 4,
+    "learning_rate": 0.003,
+    "mamba_d_model": 144,
+    "mamba_d_state": 64,
+    "maximum_parameter_gap": 0.05,
+    "seed": 17,
+    "sequence_length": 256,
+    "spin_backend": "raw_cuda_factorized",
+    "spin_channels": 2,
+    "spin_expansion": 2,
+    "spin_group_schedule": [
+      3,
+      4,
+      6,
+      8
+    ],
+    "spin_mixer": "swiglu",
+    "steps": 50,
+    "validation_batches": 16,
+    "weight_decay": 0.01
+  },
+  "dataset": {
+    "encoding": "raw UTF-8 bytes",
+    "name": "Salesforce/wikitext wikitext-2-raw-v1",
+    "train_sha256": "fb23ad9643a34514eec5cb85ec2a6f49d1a33e6a3d5077dff5a403e1d18f5047",
+    "validation_sha256": "f3714de012180492efbcf4f0380322389a27f735ddb63e8c016a6a6285f50408"
+  },
+  "environment": {
+    "causal_conv1d": "unavailable",
+    "compute_capability": [
+      7,
+      5
+    ],
+    "cuda": "13.0",
+    "gpu": "NVIDIA GeForce RTX 2070 SUPER",
+    "mamba2_fused": [
+      false,
+      "ModuleNotFoundError(\"No module named 'mamba_ssm'\")"
+    ],
+    "python": "3.12.10",
+    "torch": "2.12.0+cu130",
+    "total_cuda_bytes": 8589606912,
+    "triton": "3.7.1.post27"
+  },
+  "implementation_sha256": {
+    "benchmark.py": "2314545e214f86a10f7dbf19626fe15bf0d2c9edc1fe04a6be01e1c3e84f8608",
+    "data.py": "b422398a759bb03e47ad0a8fc7eb0bf49150616120b47829d41d4654ceaff909",
+    "mamba2_baseline.py": "e8c20220bad4c848adc7c795611c664bb209679a5da66102fb19d2f151686604",
+    "model.py": "61836a987a4c44be10127c05713af22f37bf3e3858020b6cf8b004647be70b67"
+  },
+  "parameter_match": null,
+  "results": [
+    {
+      "final_bits_per_byte": 3.450001277852082,
+      "final_nats_per_byte": 2.391358658671379,
+      "initial_nats_per_byte": 5.554641842842102,
+      "name": "pure_spin_v1_2",
+      "parameters": 626516,
+      "peak_cuda_bytes": 136352256,
+      "sampled_training_losses": {
+        "1": 5.5561699867248535,
+        "25": 2.5620384216308594,
+        "50": 2.453705310821533
+      },
+      "training_seconds": 1.9266319000016665,
+      "training_tokens_per_second": 53149.74801357303
+    }
+  ],
+  "schema_version": 1
+}

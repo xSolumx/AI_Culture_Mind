@@ -1,6 +1,12 @@
 # Natural-data comparison
 
-**Status:** completed three-seed, parameter-matched training comparison
+**Status:** historical initial-backend comparison; superseded for throughput
+
+The model/data conclusion remains valid, but the hardware conclusion below is
+superseded by [`FRONTIER_TRAINING_RESULTS.md`](FRONTIER_TRAINING_RESULTS.md).
+The raw coordinate backend plus exact nested-group ladder now measures 80,697
+tokens/s across three seeds versus 87,991 for fused Mamba-2, rather than the
+4.87x gap recorded here.
 
 **Dataset:** raw UTF-8 bytes from `Salesforce/wikitext`, configuration
 `wikitext-2-raw-v1`
@@ -48,11 +54,13 @@ falsifies the immediate claim that the current controller/action construction
 is competitive with a mature fused Mamba-2 implementation at this scale and
 training budget.
 
-The remaining hardware opportunity is sharply localized. The raw CUDA
+At the time of this artifact, the remaining hardware opportunity was sharply
+localized. The raw CUDA
 materialized recurrence can beat the maintained Triton scalar recurrence at the
 recorded shape, but v1.2 training still constructs and differentiates 28 plane
-factors inside every layer. End-to-end performance therefore needs a fused raw
-CUDA forward/backward controller kernel, not merely a faster final recurrence.
+factors inside every layer. The later implementation showed that a GEMM
+controller plus raw coordinate-factor recurrence was faster than placing the
+controller dot products inside the low-occupancy recurrent warp.
 
 The cache audit identifies a separate advantage worth preserving. Official
 Mamba-2 allocates 80,384 streaming-state scalars per sequence for this matched
