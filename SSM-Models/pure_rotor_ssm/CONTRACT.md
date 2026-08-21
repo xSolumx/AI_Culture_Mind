@@ -5,9 +5,10 @@ parameterization; version 2.1 expands the default physical rotor-angle chart
 from `pi/2` to the full open `pi` range. A v2.0 checkpoint remains loadable
 because its saved model configuration records the old explicit angle limit.
 
-Documentation last reconciled: **2026-08-16T21:19:20+02:00**. The adjacent
+Documentation last reconciled: **2026-08-21T14:36:14+02:00**. The adjacent
 PyTorch-only `schur_parallel` scan mode is execution-compatible and opt-in, and
-`spin_scan.py`, `motor_scan.py`, and `octonion_operator_scan.py` are explicitly
+`spin_scan.py`, `motor_scan.py`, `octonion_operator_scan.py`, and
+`dense_so8_cayley_scan.py` are explicitly
 experimental companions. The optional `octonion_operator_triton.py` backend is
 WSL/Linux CUDA-only. None alters this model version, parameter layout, or
 checkpoint contract.
@@ -176,6 +177,17 @@ A post-protocol legal first-prefix least-squares estimator makes the dense map
 numerically exact, so the dense failure is optimization rather than capacity.
 None of these experimental weights or 64-scalar full-operator targets changes
 the maintained eight-scalar acted-on-state cache contract.
+
+`dense_so8_cayley_scan.py` is a fourth separate PyTorch experiment. It uses
+the exact seven grade-one plus 21 grade-two Clifford directions underlying the
+mixed monomial--golden dense-\(SO(8)\) theorem as a full 28-dimensional
+skew-tangent basis, then applies a Cayley retraction and the same bounded
+affine scan pattern. Its eight-scalar state cache represents only an acted-on
+vector, not a recovered group element. Float64 algebra, scan, cache, mask,
+gradient, and state-bound tests pass; a WSL2 CUDA forward/backward smoke on
+the local RTX 2070 SUPER passes at float32 tolerance. It is not part of v2.1
+weights or checkpoints, and has no training, benchmark, throughput, or
+Tensor-Core performance claim.
 
 A model cache is one `(batch, channels, 8)` tensor per layer, independent of
 context length. It denotes the state *after* the last supplied token. Supplying

@@ -1,6 +1,6 @@
 # Group and Number-Structure Catalogue
 
-**Last audited:** 2026-08-17T00:43:30+02:00
+**Last audited:** 2026-08-21T14:29:36+02:00
 **Scope:** claim-bearing groups, loops, and additive finite structures actually
 defined, generated, or used as experimental targets in this repository. Casual
 literature mentions are excluded unless code or a theorem depends on them.
@@ -90,26 +90,30 @@ rather than calling both `G2`.
 - The union of the three \(D_4\) minuscule weight orbits is the 24-cell. The
   code proves the order-three triality map but does not yet enumerate the
   generated \(W(D_4):C_3\) subgroup or the full \(W(F_4)\) automorphism group.
-- The subgroup generated jointly by the 21,504-element monomial group and an
-  exact golden-field `2.A5` embedding has not been classified. A spectral
-  root-of-unity test must precede any finite-closure attempt.
+- The subgroup generated jointly by the nine published generators of the
+  21,504-element monomial normalizer and the golden-field vector `2.A5` pair
+  has topological closure **\(SO(8)\)**. The exact proof combines a
+  non-cyclotomic length-three witness with the irreducible \(7\oplus21\)
+  normalizer action on \(\mathfrak{so}(8)\); see
+  [`SPIN8_MIXED_CLOSURE_SO8_THEOREM.md`](../../Spin-Space-Research/docs/experiments/SPIN8_MIXED_CLOSURE_SO8_THEOREM.md).
+  Its abstract presentation and finite quotients remain open.
 - Exceptional nonprincipal continuous five-probe stabilizers remain only
   partially classified.
 
-## Strongest next novelty test
+## Strongest next model-relevant test
 
-The best unresolved candidate is now the **mixed monomial/golden closure**:
+The mixed monomial/golden closure is now exactly known to be dense in \(SO(8)\). The next decisive question is whether that expressive closure can be converted into a useful, stable, scan-compatible parameterization:
 
 1. place the 21,504-element signed-monomial group and the exact
    golden-field `2.A5` matrices in one fixed eight-dimensional basis;
-2. search short mixed words for a characteristic polynomial with a
-   non-cyclotomic rational norm, which would prove the closure infinite;
-3. check whether either 120-point \(H_4\) orbit, an \(E_8\)-type lattice, or
-   another finite spanning configuration is preserved;
-4. only if every spectral gate remains cyclotomic, construct a faithful
-   permutation action before attempting a closure;
-5. if the closure is finite, compute order, center, derived series, conjugacy
-   classes, and GAP/ATLAS identifiers before making a novelty claim.
+2. parameterize local increments in a retraction chart that can approach the
+   dense closure without unstable repeated dense matrix exponentials;
+3. compare associative matrix scans, Givens products, and Cayley charts on
+   matched long-context group-tracking tasks with a dense-closure ablation;
+4. seek finite quotients only as quotients of this dense group, with an
+   explicit kernel rather than a misleading finite matrix closure;
+5. compare any resulting presentation or quotient against GAP/ATLAS data and
+   separate a known extension from a genuinely new result.
 
 This is a search for an unclassified **embedding-generated subgroup**, not a
 promise of a new abstract finite group. Standard finite groups are extensively

@@ -86,8 +86,10 @@ quotient structure, and representation-specific memory controls.
   improves sample efficiency or generalization.
 - Any model-level advantage attributable specifically to triality or Clifford
   structure.
-- Classification of the subgroup generated jointly by the monomial operator
-  group and a golden-field `2.A5` embedding.
+- A stable, trainable scan-compatible parameterization that exploits the
+  now-proved dense \(SO(8)\) closure of the monomial/golden generator system.
+  The exact closure theorem is documented in
+  [`SPIN8_MIXED_CLOSURE_SO8_THEOREM.md`](../../Spin-Space-Research/docs/experiments/SPIN8_MIXED_CLOSURE_SO8_THEOREM.md).
 
 ## Dependencies
 

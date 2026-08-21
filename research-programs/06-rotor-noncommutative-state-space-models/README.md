@@ -57,6 +57,11 @@ and from representation-theorem claims made without a trained model.
   work-efficient, and WSL/Triton paths. Under terminal-only training, an
   L2/L4/L8/L16 curriculum recovers 9/9 structured and 9/9 dense laws; an odd
   holdout exposes the even-depth `G2 union -G2` ambiguity.
+- The experimental Dense SO(8) Cayley scan exposes all 28 exact Clifford
+  tangent directions from the monomial/golden dense-closure theorem while
+  retaining an eight-scalar bounded affine cache. Its float64 structural
+  contracts and one WSL2 RTX 2070 SUPER CUDA forward/backward feasibility
+  smoke pass. This is neither training evidence nor a speed comparison.
 
 ## Open Claims
 
@@ -69,6 +74,8 @@ and from representation-theorem claims made without a trained model.
   separately matched parameter, recurrent-state, and optimized-compute rows.
 - Odd/even, unseen-basis octonion-law recovery without supplied local algebra
   coordinates.
+- Matched-task evidence that the full dense-SO(8) Cayley control chart is more
+  useful than restricted, octonion, Givens/Householder, or modern SSM controls.
 
 ## Dependencies
 
@@ -116,4 +123,5 @@ and from representation-theorem claims made without a trained model.
 - [Spin/2.A5 multi-relation result](../../SSM-Models/experiments/SPIN_2A5_MULTIRELATION_RESULTS.md)
 - [Motor implementation and identification result](../../SSM-Models/experiments/SPIN_MOTOR_RIGID_2A5_RESULTS.md)
 - [Octonion operator-scan result](../../SSM-Models/experiments/OCTONION_OPERATOR_SCAN_RESULTS.md)
+- [Dense SO(8) Cayley scan design and CUDA feasibility gate](../../SSM-Models/experiments/DENSE_SO8_CAYLEY_SCAN_DESIGN.md)
 - [Final-only octonion-law result](../../SSM-Models/experiments/OCTONION_FINAL_ONLY_RESULTS.md)
