@@ -30,6 +30,7 @@ v1.3 preserves those principles and removes the rest as hard constraints.
 | compact/orthogonal transport | Spin/rotor stability and inverse-backward kernels | useful special case, not required by the co-moving theorem | (E_{6(-26)}) noncompact action implemented; generic invertible scan law |
 | exactly 28 plane factors | Spin(8) factor compiler | profitable representation-specific lowering on RTX 2070 SUPER | not a semantic limit; 28/36/52/78/custom banks supported |
 | one exponential per token | initial (F_4) proposal | sufficient for compact connected (F_4), not a guaranteed global chart for noncompact (E_6) | configurable ordered products of exponentials |
+| one undifferentiated E6 chart | first v1.3 implementation | locally valid but hides compact frame versus noncompact content | direct, polar `K exp(P)`, and rank-two Cartan `KAK` hypotheses are executable |
 | monotone group schedule | v1.2 `Spin(3)->Spin(4)->Spin(6)->Spin(8)` benchmark | architectural hypothesis only | removed; schedules may move up, down, repeat, or stay fixed |
 | scalar/rank-one update | available affine and fused DeltaRule paths | scan-compatible, not an optimality theorem | configurable rank (r) block update |
 | tied erase/write address | classical DeltaRule kernel | valid control; local notes explicitly identify independent write/erase as a candidate | independent bounded default; tied and unconstrained controls |
@@ -39,6 +40,7 @@ v1.3 preserves those principles and removes the rest as hard constraints.
 | action shared across copies | triality and compiler reuse | legal only when semantics really share the action | no implicit inference; custom banks and per-layer choices are explicit |
 | Tensor-Core packing | isotypic-to-silicon audit | won only selected high-occupancy cells | future dispatch policy, never an architecture axiom |
 | projective memory state | Riemann-sphere/PGL prompt | quotient removes amplitude required by write/erase memory | rejected for core state; implemented only as a router control |
+| RMS-normalized read only | inherited stable readout | deletes magnitude even though overwrite strength is meaningful | direction plus trace, log-energy, and bounded Albert determinant |
 | causal ordering | SSM task definition | genuine semantic requirement | retained |
 | associative transition summaries | parallel prefix execution | genuine algebraic requirement | retained; raw octonion/Jordan multiplication is never scanned |
 
@@ -81,6 +83,19 @@ The first draft also returned only the exceptional memory matrix as recurrent
 state while using a causal convolution. That understated the cache and broke
 exact chunk continuation. The state now contains both memory and convolution
 history; a full-model chunk equivalence test protects the contract.
+
+The next draft exposed polar and Cartan E6 charts, then tested them rather than
+declaring the most elaborate chart superior. Direct and polar E6 were
+indistinguishable at the short Shakespeare quality gate while direct completed
+more training tokens per second. Direct is therefore the development default;
+the other charts remain controls for hypotheses requiring explicit factor
+separation.
+
+Finally, the original read path applied RMS normalization to all 27 Albert
+coordinates and silently removed read amplitude. The revised readout retains
+the normalized direction but adds trace, log-energy, and bounded cubic
+determinant channels. A regression test verifies that positive rescaling is no
+longer invisible and that gradients reach the full read.
 
 ## Still deliberate, not accidental
 

@@ -17,8 +17,8 @@ import torch
 from torch import nn
 from torch.nn import functional as F
 
-from .action import ExceptionalAction
-from .albert import ALBERT_DIM, jordan_product
+from .action import build_exceptional_action
+from .albert import ALBERT_DIM, albert_determinant, albert_trace, jordan_product
 from .scan import compile_delta_transition, parallel_delta_scan, recurrent_delta_scan
 
 __version__ = "1.3.0-dev"
@@ -31,13 +31,17 @@ class ExceptionalDeltaConfig:
     num_layers: int = 4
     memory_width: int = 8
     update_rank: int = 2
-    action_algebra: Literal["spin8", "spin9", "f4", "e6"] = "e6"
-    action_schedule: tuple[Literal["spin8", "spin9", "f4", "e6"], ...] | None = None
+    action_algebra: Literal["identity", "spin8", "spin9", "f4", "e6"] = "e6"
+    action_geometry: Literal["direct", "polar", "cartan"] = "direct"
+    action_schedule: (
+        tuple[Literal["identity", "spin8", "spin9", "f4", "e6"], ...] | None
+    ) = None
     action_coordinate_scale: float = 0.02
     action_factors: int = 1
     d_conv: int = 4
     local_mixer: Literal["depthwise_conv", "none"] = "depthwise_conv"
     channel_mixer: Literal["swiglu", "jordan", "none"] = "jordan"
+    readout_mode: Literal["auto", "vector", "albert_invariants"] = "auto"
     expansion: int = 2
     key_parameterization: Literal[
         "independent_bounded", "tied_delta", "unconstrained"
@@ -163,11 +167,31 @@ class AlbertJordanMixer(nn.Module):
         )
 
 
+class AlbertInvariantReadout(nn.Module):
+    """Preserve direction and expose three scale/invariant summary channels."""
+
+    output_dim = ALBERT_DIM + 3
+
+    def __init__(self) -> None:
+        super().__init__()
+        self.direction_norm = nn.RMSNorm(ALBERT_DIM)
+
+    def forward(self, value: torch.Tensor) -> torch.Tensor:
+        if value.shape[-1] != ALBERT_DIM:
+            raise ValueError("Albert invariant readout requires 27D values")
+        trace = albert_trace(value) / (3.0**0.5)
+        log_energy = torch.log1p(value.square().mean(dim=-1))
+        determinant = albert_determinant(value)
+        bounded_determinant = determinant * torch.rsqrt(1.0 + determinant.square())
+        scalars = torch.stack((trace, log_energy, bounded_determinant), dim=-1)
+        return torch.cat((self.direction_norm(value), scalars), dim=-1)
+
+
 class ExceptionalDeltaBlock(nn.Module):
     def __init__(
         self,
         config: ExceptionalDeltaConfig,
-        action_algebra: Literal["spin8", "spin9", "f4", "e6"] | None = None,
+        action_algebra: Literal["identity", "spin8", "spin9", "f4", "e6"] | None = None,
         generators: torch.Tensor | None = None,
     ) -> None:
         super().__init__()
@@ -179,8 +203,10 @@ class ExceptionalDeltaBlock(nn.Module):
             if config.local_mixer == "depthwise_conv"
             else None
         )
-        self.action = ExceptionalAction(
-            action_algebra or config.action_algebra, generators=generators
+        self.action = build_exceptional_action(
+            action_algebra or config.action_algebra,
+            geometry=config.action_geometry,
+            generators=generators,
         )
         h = config.memory_width
         r = config.update_rank
@@ -196,8 +222,18 @@ class ExceptionalDeltaBlock(nn.Module):
             "query": h,
         }
         self.controller = nn.Linear(config.d_model, sum(self._segments.values()))
-        self.read_norm = nn.RMSNorm(v)
-        self.output_projection = nn.Linear(v, config.d_model, bias=False)
+        use_invariants = config.readout_mode == "albert_invariants" or (
+            config.readout_mode == "auto" and v == ALBERT_DIM
+        )
+        if config.readout_mode == "albert_invariants" and v != ALBERT_DIM:
+            raise ValueError("albert_invariants readout requires a 27D action")
+        if use_invariants:
+            self.read_features = AlbertInvariantReadout()
+            read_dimension = self.read_features.output_dim
+        else:
+            self.read_features = nn.RMSNorm(v)
+            read_dimension = v
+        self.output_projection = nn.Linear(read_dimension, config.d_model, bias=False)
         self.residual_scale = nn.Parameter(torch.tensor(-2.0))
         if config.channel_mixer == "swiglu":
             self.channel_norm = nn.RMSNorm(config.d_model)
@@ -293,7 +329,7 @@ class ExceptionalDeltaBlock(nn.Module):
         hidden: torch.Tensor,
         state: ExceptionalDeltaState | None = None,
         *,
-        scan_mode: Literal["recurrent", "parallel"] = "recurrent",
+        scan_mode: Literal["auto", "recurrent", "parallel"] = "auto",
         valid_mask: torch.Tensor | None = None,
     ) -> tuple[torch.Tensor, ExceptionalDeltaState]:
         value, gate = self.input_projection(self.norm(hidden)).chunk(2, dim=-1)
@@ -320,11 +356,13 @@ class ExceptionalDeltaBlock(nn.Module):
         memory = None if state is None else state.memory
         if memory is None:
             memory = value.new_zeros((value.shape[0], *self.state_shape))
+        if scan_mode == "auto":
+            scan_mode = "parallel" if value.shape[1] > 1 else "recurrent"
         scanner = parallel_delta_scan if scan_mode == "parallel" else recurrent_delta_scan
         reads, _, final_memory = scanner(transition, memory, fields["query"])
         if reads is None:
             raise AssertionError("query was supplied but scan returned no reads")
-        update = self.output_projection(self.read_norm(reads)) * torch.sigmoid(gate)
+        update = self.output_projection(self.read_features(reads)) * torch.sigmoid(gate)
         hidden = hidden + torch.sigmoid(self.residual_scale) * self.dropout(update)
         if self.channel is not None:
             hidden = hidden + self.dropout(self.channel(self.channel_norm(hidden)))
@@ -382,7 +420,7 @@ class ExceptionalDeltaLM(nn.Module):
         token_ids: torch.Tensor,
         states: Sequence[ExceptionalDeltaState | None] | None = None,
         *,
-        scan_mode: Literal["recurrent", "parallel"] = "recurrent",
+        scan_mode: Literal["auto", "recurrent", "parallel"] = "auto",
         valid_mask: torch.Tensor | None = None,
     ) -> dict[str, Any]:
         if token_ids.ndim != 2 or token_ids.shape[1] < 1:
@@ -425,6 +463,7 @@ def parameter_count(model: nn.Module) -> int:
 
 
 __all__ = [
+    "AlbertInvariantReadout",
     "AlbertJordanMixer",
     "ExceptionalDeltaBlock",
     "ExceptionalDeltaConfig",

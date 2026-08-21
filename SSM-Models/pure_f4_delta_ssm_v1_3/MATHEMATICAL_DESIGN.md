@@ -58,6 +58,35 @@ R_t=\exp(A_{t,m})\cdots\exp(A_{t,1}).
 
 The factor count is a model choice, not a theorem baked into the scan.
 
+For the Cartan decomposition
+
+\[
+\mathfrak e_{6(-26)}=\mathfrak f_4\oplus\mathfrak p,
+\]
+
+v1.3 also provides two structured global-action hypotheses. The polar chart is
+
+\[
+R=K\exp(P),\qquad K\in F_4,\quad P\in\mathfrak p,
+\]
+
+and the Cartan/KAK chart is
+
+\[
+R=K_1 A K_2,
+\]
+
+where the implemented two-dimensional (A) is the diagonal determinant-one
+radial subgroup. These charts expose compact frame transport separately from
+noncompact content scaling. They do not assert uniqueness of the factors.
+
+The direct chart remains the default. This is not a retreat to a global-chart
+claim: successive tokens compose their exponentials in the recurrent action,
+so temporal depth already generates products of Lie exponentials. On the
+local GPU, the direct chart matched polar E6 at the 50-update Shakespeare gate
+and reduced complete training cost. Polar and KAK remain executable whenever
+explicit within-token factor separation is the hypothesis under test.
+
 ## Rank-r independent delta memory
 
 Let (S_t\in\mathbb R^{H\times V}), with (V=27) for the built-in
@@ -80,6 +109,24 @@ o_t=S_t^{\mathsf T}q_t.
 Tying (e_{t,j}=\beta_{t,j}k_{t,j}) recovers block DeltaRule. The default
 keeps erase and write directions independent because the local evidence never
 proved tying optimal.
+
+## Readout keeps both direction and exceptional scale
+
+Plain RMS normalization quotients away the magnitude of a memory read. That is
+an accidental restriction for overwrite memory, not an exceptional-algebra
+principle. The default Albert readout therefore concatenates
+
+\[
+\operatorname{RMSNorm}(x),\quad
+\frac{\operatorname{tr}(x)}{\sqrt 3},\quad
+\log(1+\|x\|_2^2/27),\quad
+\frac{\det(x)}{\sqrt{1+\det(x)^2}}.
+\]
+
+The first term supplies a stable 27D direction; the three scalar channels
+restore linear scale, energy, and the bounded cubic exceptional invariant.
+This is an architectural hypothesis with gradient tests, not a claim that
+these are sufficient statistics for language.
 
 ## The actual associative object
 

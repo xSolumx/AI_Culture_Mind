@@ -15,9 +15,12 @@
 > erase/write memory, ordered Lie exponentials, associative two-sided prefix
 > scans, complete convolution-plus-memory streaming state, and projective
 > router controls. Its algebra/model suite and deterministic audit pass. It is
-> not yet a promoted CUDA backend or trained quality result, and it does not
-> inherit v1.2's natural-data artifacts. The folder's constraint audit records
-> which older gates were retained, generalized, or removed.
+> not yet a promoted CUDA backend or trained quality result. Its new natural-
+> data development evidence uses only a pinned Tiny Shakespeare corpus on both
+> train and validation sides; it does not inherit v1.2's WikiText artifacts.
+> The no-action control remains essentially tied at the short gate. The
+> folder's constraint audit records which older gates were retained,
+> generalized, or removed.
 
 > **2026-08-10 programme boundary.** The theorem tree now has a
 > completed hierarchical memory-core campaign and an official FLA chunk-kernel
