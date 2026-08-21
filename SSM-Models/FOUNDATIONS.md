@@ -22,7 +22,7 @@ approximate that contract and have the explicit qualifications below.
 > separate 24-scalar faithful triality cache, implementation contract, and
 > checkpoint schema. Its addition does not alter the equations or load format
 > below. See `pure_spin8_ssm/CONTRACT.md` and
-> `experiments/PURE_SPIN8_VS_MAMBA2_RESULTS.md`.
+> `experiments/PURE_SPIN8_CONTINUOUS_OBSERVATION_RESULTS.md`.
 
 ## Canonical pure state transition
 
@@ -595,6 +595,115 @@ model-quality result, or a reason to rewrite the maintained v2.1 recurrence.
 The reusable PyTorch primitive therefore lives in the explicitly experimental
 `pure_rotor_ssm/spin_scan.py`; the authoritative measurements and artifact hash
 are in `experiments/PURE_ROTOR_2A5_CENTER_PILOT300_RESULTS.md`.
+
+The later Pure Spin(8) latent-increment gate removes the supplied-coordinate
+shortcut. Eight symbolic tokens have hidden faithful triality actions;
+training supervises every prefix but excludes `a,a`, whose square is the
+nontrivial center. In fresh seeds 1--3, a 892-parameter token router plus the
+frozen maintained Spin(8) transport identifies all local actions and achieves
+100% center/identity row correctness through L128. Its six L128 post-relation
+MSEs are `2.66e-5`--`2.87e-4`; parameter-near unfused Mamba-2 and GRU controls
+remain near chance on the central distinction. This proves finite-dictionary
+latent action identification under the recorded every-prefix supervision, not
+state/compute-matched or natural-task superiority. The result and exact claim
+boundary are in `experiments/PURE_SPIN8_LATENT_INCREMENT_RESULTS.md`.
+
+Once identified, a finite dictionary need not reconstruct 28 plane factors at
+every occurrence. Pure Spin(8) v1.1 compiles the eight learned actions into a
+frozen `[8,3,8,8]` table and scans them with one register-resident Triton
+program per batch/representation. The compiled seed-1 model preserves all
+center signatures and is 30.7x--67.1x faster than its dynamic source over the
+recorded local grid. This is a serial streaming recurrence and frozen-table
+inference result, not a parallel-prefix or fused-training claim; see
+`experiments/PURE_SPIN8_COMPILED_TOKEN_SCAN_RESULTS.md`.
+
+The subsequent frozen continuation removes the dictionary rather than merely
+compiling it. A 930-parameter router receives only unique 12-real noisy
+observations of hidden seven-coordinate actions under a different nonlinear
+chart per seed. Fresh seeds 1--3 identify the action family and compose an
+excluded adjacent center relation through L128. Against a capable
+957-parameter, exactly 24-state independent `SO(8)^3` action tracker, the shared
+Spin(8) row reduces median L128 post-relation MSE from `0.06129` to `0.01860`.
+A separately frozen RTX 2070 SUPER update allocation matches all model-update
+walls within 2.97% and preserves the ordering. Both cohorts strictly rehash and
+reload 18 checkpoints. This is online continuous action identification for an
+injective, every-prefix synthetic task, not evidence for natural inputs, sparse
+supervision, all 28 tangent coordinates, fused Mamba, or language modelling;
+see `experiments/PURE_SPIN8_CONTINUOUS_OBSERVATION_RESULTS.md`.
+
+The next frozen cohort removes every intermediate state target. Each length-16
+training sequence supplies only its final signed 24-real triality state, and a
+unit contract verifies exactly zero loss gradient at every nonfinal prediction.
+Across fresh seeds 1--3, shared Spin(8) retains 100% L128 center/identity row
+correctness and median post-relation MSE `0.01296`, versus `0.06268` for the
+capable exactly state-matched independent family at 2,000 equal updates. A
+separately pre-frozen local update-wall allocation preserves the ordering at
+`0.01296` versus `0.09080`, with all row walls within 1.97% of shared. This
+establishes endpoint-only action identification only for the fixed injective,
+seven-coordinate, signed synthetic system; it does not solve unsigned, partial,
+noninjective, natural-input, all-28-coordinate, or fused-modern-SSM training.
+See `experiments/PURE_SPIN8_ENDPOINT_SUPERVISION_RESULTS.md`.
+
+The partial-readout successor distinguishes local observability from global
+cover selection. Exact rational ranks of the maintained infinitesimal action
+on one through eight basis probes are `7,13,18,22,25,27,28,28` in each of
+`8v`, `8s+`, and `8s-`. A single signed half-spin endpoint empirically trains
+the shared router into all three views in every fresh seed, with all-view L128
+MSE below `0.02520`. The frozen all-mask cohort still fails: vector-only
+supervision misses at least one exact hidden-spinor row in every seed, and one
+independent positive-only control fails its capability gate. This is consistent
+with the center action `(+I,-I,-I)`. More sharply, identical vector quotient
+inputs from coordinates `0` and `2*pi` have opposite spinor labels, proving
+balanced hidden-lift Bayes MSE `1/8` and accuracy `1/2`. See
+`experiments/PURE_SPIN8_ENDPOINT_OBSERVABILITY_RESULTS.md`.
+
+The pre-frozen repair separates information sufficiency from chart
+conditioning. For unit half-spin endpoint `y`, the deterministic adaptive chart
+`j=argmax_k |y_k|`, `b=sign(y_j)` has `j(-y)=j(y)`, `b(-y)=-b(y)`, and
+`|y_j|>=1/sqrt(8)`. Its full calibration word is a three-bit address plus one
+lift-odd bit, not one total bit. Across untouched seeds 4--6, the shared router
+passes every frozen seedwise gate: action RMSE is `0.012825--0.013633`, all-view
+L128 MSE is `0.009198--0.026986`, and all L128 lift and spinor-center rows are
+exact. A fixed-coordinate sign is worse than vector-only, confirming that the
+bit must be presented in a well-conditioned chart. The address and bit remain
+external supervision, so this does not recover a lift from the vector endpoint
+alone or construct a global continuous section. See
+`experiments/PURE_SPIN8_LIFT_BIT_CALIBRATION_RESULTS.md`.
+
+An exact optimizer-trace certificate separates missing information from a
+generic optimization story. Under the adaptive loss, all 252 weights and 28
+biases in the independent negative-specific head have zero data gradient, and
+the final block equals the exact 2,000-step AdamW decay-only counterfactual with
+residual `0.0` in every frozen seed. All 28 shared Spin(8) coordinate rows have
+nonzero gradient. Merely extending the same independent training therefore
+cannot directly identify that negative head, although the shared trunk can
+still change its predictions indirectly. See
+`experiments/PURE_SPIN8_LIFT_GRADIENT_IDENTIFIABILITY_RESULTS.md`.
+
+The pre-frozen shared-latent scrambled-alignment control removes that gradient-
+route confound while keeping the same 24-scalar state and router initialization;
+it adds 56 legal Spin(8) alignment parameters and is capable under full
+supervision. The strict seeds 7--9 aggregate **fails** because the scrambled
+control slightly beats the maintained model on two seed-7 vector-L128 cells.
+Without rescuing the protocol, the supported stratum is: correct alignment wins
+all `9/9` action, `12/12` spinor-L128, and `6/6` completely hidden negative-
+L128 comparisons, but only `4/6` directly supervised vector-L128 comparisons.
+Adaptive negative alignment follows decay only; full supervision updates it and
+repairs the negative action. Thus correct triality alignment supplies bounded
+cross-view spinor transfer, not universal inference superiority. See
+`experiments/PURE_SPIN8_SCRAMBLED_ALIGNMENT_RESULTS.md`.
+
+The negative-only calibration-rank successor separates exact identifiability
+from that noisy task comparison. For `m` ordered basis probes, the fiber is
+`SO(8-m)` and the rank is `28-(8-m)(7-m)/2`, giving
+`0,7,13,18,22,25,27,28,28`. Exact rational quarter-turn witnesses inside the
+unobserved complement prove global action non-identifiability for `m<=6`;
+`SO(1)` is trivial, so seven probes globally determine the `SO(8)` action and
+the eighth is redundant. All fresh rank-28 rows recover the aligned metrics,
+with bitwise-identical routers and no negative endpoint targets. The frozen
+empirical aggregate nevertheless fails two seed-10 effect-size gates because a
+small rank-27 residual is masked by the common router floor. See
+`experiments/PURE_SPIN8_ALIGNMENT_CALIBRATION_RANK_RESULTS.md`.
 
 An evaluation-only follow-up then applies a deterministic input-only selector
 to the frozen schedules. The shortest locally reduced identity/center pair

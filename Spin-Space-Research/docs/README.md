@@ -36,6 +36,7 @@ proof-search products and private working notes are intentionally absent.
 | Review the Clifford signature chain | [Clifford signature theorem](manuscripts/CLIFFORD_SIGNATURE_EXTENSION.md) | [Spin(9) ledger](../../research-programs/05-information-geometry-and-dirac-gram-sensing/SPIN9_DIRAC_CLIFFORD_LEDGER.md) |
 | Review finite groups in the octonion operator lift | [Exact operator-group result](experiments/OCTONION_OPERATOR_GROUP_RESULTS.md) | [Repository group catalogue](../../research-programs/04-triality-clifford-representation-dynamics/GROUP_AND_NUMBER_STRUCTURE_CATALOGUE.md) |
 | Review the binary-icosahedral triality closure | [Exact order-864,000 closure](experiments/SPIN8_TRIALITY_2A5_CLOSURE_RESULTS.md) | [Repository group catalogue](../../research-programs/04-triality-clifford-representation-dynamics/GROUP_AND_NUMBER_STRUCTURE_CATALOGUE.md) |
+| Review the mixed monomial/golden group | [Exact SO(8)-density theorem](experiments/MIXED_MONOMIAL_GOLDEN_CLOSURE_RESULTS.md), [low-degree mixing bounds](experiments/MIXED_MONOMIAL_GOLDEN_MIXING_RESULTS.md), [higher-weight Cayley bottleneck](experiments/MIXED_MONOMIAL_GOLDEN_HIGHER_WEIGHT_RESULTS.md), [macro compiler](experiments/MIXED_MONOMIAL_GOLDEN_MACRO_COMPILER_RESULTS.md), [every-prefix chunks](experiments/MIXED_MONOMIAL_GOLDEN_CHUNK_SCAN_RESULTS.md), [parallel forward/backward scan](experiments/MIXED_MONOMIAL_GOLDEN_PARALLEL_CHUNK_SCAN_RESULTS.md), [fused indexed expansion](experiments/MIXED_MONOMIAL_GOLDEN_TRITON_LOCAL_PREFIX_RESULTS.md), and [register-resident recurrence](experiments/MIXED_MONOMIAL_GOLDEN_TRITON_CHUNK_RECURRENCE_RESULTS.md) | [Repository group catalogue](../../research-programs/04-triality-clifford-representation-dynamics/GROUP_AND_NUMBER_STRUCTURE_CATALOGUE.md) |
 | Referee one compact theorem | [Cayley-spectrum referee package](../referee/cayley-information-spectrum/README.md) | [LaTeX paper](../papers/cayley-information-spectrum/README.md) |
 | Review the maintained sequence-model architecture | [Canonical Pure Rotor foundations](../../SSM-Models/FOUNDATIONS.md) | [Historical Spin-Space foundations](FOUNDATIONS.md) and [Triality experiment](SPIN8_TRIALITY_EXPERIMENT.md) |
 | Review memory scanning and hierarchical retrieval | [Memory benchmark atlas and FLA fit](experiments/MEMORY_BENCHMARK_ATLAS.md) | [Large-slot semantic hierarchy and fused gather](experiments/LARGE_SLOT_SEMANTIC_HIERARCHY_RESULTS.md) |
@@ -92,6 +93,32 @@ proof-search products and private working notes are intentionally absent.
 
 ### Triality geometry and sensing
 
+- [Mixed Monomial/Golden Register-Resident Chunk Recurrence](experiments/MIXED_MONOMIAL_GOLDEN_TRITON_CHUNK_RECURRENCE_RESULTS.md)
+  — one-kernel frozen-dictionary recurrence and initial-state reverse pass;
+  every recorded CUDA cell beats the eager parallel controls, but this is not
+  a parallel-prefix or model-quality result.
+- [Mixed Monomial/Golden Fused Local-Prefix Expansion](experiments/MIXED_MONOMIAL_GOLDEN_TRITON_LOCAL_PREFIX_RESULTS.md)
+  — indexed `24x8` Triton forward/state-backward and the endpoint-tree
+  bottleneck localization that motivated the register-resident continuation.
+- [Mixed Monomial/Golden Parallel Chunk Scan](experiments/MIXED_MONOMIAL_GOLDEN_PARALLEL_CHUNK_SCAN_RESULTS.md)
+  — work-efficient `3C -> C` endpoint-tree reduction, parallel local expansion,
+  all-input gradient parity, and local forward/initial-state-backward timing.
+- [Mixed Monomial/Golden Every-Prefix Chunk Scan](experiments/MIXED_MONOMIAL_GOLDEN_CHUNK_SCAN_RESULTS.md)
+  — exact stacked local-prefix operators and a recurrent 3–192-step CPU/CUDA
+  benchmark; later custom kernels cover frozen-label state backward, while a
+  fused logarithmic-depth scan and table/model backward remain open.
+- [Mixed Monomial/Golden Macro Compiler](experiments/MIXED_MONOMIAL_GOLDEN_MACRO_COMPILER_RESULTS.md)
+  — exact finite dictionary/multiplicity contract plus local single-thread CPU
+  and synchronized CUDA timing, with every-prefix scan speed left open.
+- [Mixed Monomial/Golden Higher-Weight Bottleneck](experiments/MIXED_MONOMIAL_GOLDEN_HIGHER_WEIGHT_RESULTS.md)
+  — exact dimension-56 and Hodge `35+35` extension, unique fixed Cayley line,
+  and the claim-scoped compiled `N-H-N` macro improvement.
+- [Mixed Monomial/Golden Low-Degree Mixing](experiments/MIXED_MONOMIAL_GOLDEN_MIXING_RESULTS.md)
+  — exact contraction bounds in the defining `8`, adjoint `28`, and
+  traceless-symmetric `35`; no full `L2(SO(8))` gap is claimed.
+- [Mixed Monomial/Golden Closure](experiments/MIXED_MONOMIAL_GOLDEN_CLOSURE_RESULTS.md)
+  — exact common length-three infinite-order witness plus a Clifford-adjoint
+  proof that the vector and both half-spin mixed groups are dense in `SO(8)`.
 - [Binary-Icosahedral Triality Closure](experiments/SPIN8_TRIALITY_2A5_CLOSURE_RESULTS.md)
   — exact reducible closure of order 864,000, with a 600-cell rotation block,
   one binary-icosahedral block, and independent block-sign center.

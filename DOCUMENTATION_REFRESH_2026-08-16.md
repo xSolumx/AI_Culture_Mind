@@ -1,14 +1,15 @@
 # Documentation reconciliation — 2026-08-16
 
 Reconciliation opened at **2026-08-16T16:05:27+02:00** and latest
-research status reconciliation completed at **2026-08-16T22:15:19+02:00**
+research status reconciliation completed at **2026-08-17T03:47:29+02:00**
 (`Africa/Johannesburg`, UTC+02:00).
 
 ## Scope and method
 
 This pass inventories the documentation visible in this checkout, rather than
-retroactively rewriting historical reports. The latest `rg --files` inventory
-is 186 Markdown/RST files, including this timestamped ledger. It covers the
+retroactively rewriting historical reports. After integration with the
+flattened theorem tree, the latest `rg --files` inventory is 443 Markdown/RST
+files, including this timestamped ledger. It covers the
 maintained Pure Rotor and Pure Spin(8) sources and tests, frozen comparison
 artifacts, exact representation programmes, and the public programme front
 doors.
@@ -22,9 +23,11 @@ relevant, they now receive a dated pointer instead of an edited result table.
 - The canonical trainable implementation remains
   `SSM-Models/pure_rotor_ssm/`, version 2.1.0. `ga_ssm.py` is a training shell
   and `rotor_ssm_torch.py` is an import-compatibility shell.
-- `SSM-Models/pure_spin8_ssm/`, version 1.0.0, is a second maintained model
+- `SSM-Models/pure_spin8_ssm/`, version 1.1.0, is a second maintained model
   family with a separate checkpoint schema. It does not replace or silently
-  upgrade Pure Rotor v2.1.
+  upgrade Pure Rotor v2.1. Version 1.1 adds an opt-in frozen finite-token
+  action compiler and Triton recurrence; the continuous maintained layer and
+  its older checkpoint family remain separate.
 - PyTorch exposes opt-in `scan_mode="schur_parallel"`. It is equivalent to the
   maintained direct recurrence within tested numerical tolerance, including
   forward, first-order gradients, padding, cache continuation, and CUDA. It is
@@ -51,12 +54,21 @@ relevant, they now receive a dated pointer instead of an edited result table.
   historical `SpinorModel` implementations remain separate model families.
   No smoke artifact or theory result transfers across those boundaries without
   an explicit bridge experiment or theorem.
+- The fresh three-seed latent-token gate removes supplied Lie coordinates for
+  one finite eight-token dictionary and passes every frozen unseen-center
+  relation gate. The v1.1 compiler then freezes the learned actions and runs a
+  register-resident Triton recurrence. These are respectively a synthetic
+  every-prefix identification result and a local inference systems result,
+  not a natural-task, state/compute-matched, or fused-Mamba claim.
 
 ## Documentation changed in this reconciliation
 
 - Root research map: `README.md`.
-- Programme status maps: `research-programs/01-rotor-state-space-models/` and
-  `research-programs/07-controlled-model-benchmarks/`.
+- Programme status maps:
+  `research-programs/01-associative-scan-algebra-and-compilers/`,
+  `research-programs/04-triality-clifford-representation-dynamics/`, and
+  `research-programs/06-rotor-noncommutative-state-space-models/`, plus
+  `research-programs/SUPPORTING_TRACKS.md` for controlled benchmarks.
 - Maintained-model contract and foundations: `SSM-Models/README.md`,
   `SSM-Models/FOUNDATIONS.md`, and `SSM-Models/pure_rotor_ssm/CONTRACT.md`.
 - Historical/context boundaries: `SSM-Models/FOUNDATIONS_VALIDITY_AUDIT_2026-08-06.md`,
@@ -71,7 +83,7 @@ unless they were a front door or directly named the maintained Pure Rotor,
 Schur, or Mamba comparison. Their original date and result interpretation are
 part of the provenance record.
 
-## Verification and remaining checkout limitation
+## Initial verification and later topology reconciliation
 
 - `python -m pytest SSM-Models/test_pure_rotor_ssm.py -k schur -q`: passed
   (2 tests).
@@ -80,18 +92,12 @@ part of the provenance record.
 - `ruff check SSM-Models/benchmark_pure_rotor_vs_mamba2.py
   SSM-Models/test_pure_rotor_vs_mamba2_benchmark.py` and Python compilation:
   passed.
-- A local Markdown link scan found 16 real unresolved links, all targeting the
-  `Spin8-Triality-Research` Git submodule. In this checkout that directory is
-  present but empty, so the links cannot resolve locally. They are preserved as
-  submodule-relative provenance links; initialize the declared submodule before
-  treating that subtree as locally verified:
-
-  ```powershell
-  git submodule update --init --recursive
-  ```
-
-  The scan's other apparent missing target, `x_t` in `SSM-Models/FOUNDATIONS.md`,
-  is a LaTex delimiter false positive, not a documentation link.
+- The first local Markdown scan was run before the 2026-08-11 topology commits
+  reached this branch and therefore reported 16 missing submodule-relative
+  paths plus the LaTeX `x_t` false positive. Integration with current `main`
+  vendors the theorem tree as `Spin-Space-Research/`, removes the submodule,
+  and updates the canonical programme taxonomy. The initial missing-link count
+  is historical, not the final checkout status.
 
 This reconciliation does not establish any new mathematical theorem, trained
 model quality, or production-kernel throughput result.
@@ -365,8 +371,8 @@ Verification completed at **2026-08-16T19:03:06+02:00**:
   conversion warnings;
 - a repository Markdown scan checked 221 local links. No new-scope link is
   missing. The 17 reported entries remain the 16 known paths into the
-  uninitialized `Spin8-Triality-Research` submodule plus the known LaTeX `x_t`
-  false positive in `FOUNDATIONS.md`.
+  then-uninitialized theorem submodule plus the known LaTeX `x_t` false
+  positive in `FOUNDATIONS.md`; this predates the flattening integration.
 
 ## Multi-relation and motor verification
 
@@ -383,8 +389,7 @@ The later research additions were verified at
 - both new authoritative artifact hashes replay exactly;
 - 170 local links in the changed/current-status documentation were checked.
   The only two unresolved targets are the already-known links into the
-  uninitialized `Spin8-Triality-Research` submodule; no new-scope link is
-  missing.
+  then-uninitialized theorem submodule; this is a pre-flattening snapshot.
 
 ## Rigid learned/identification verification
 
@@ -402,28 +407,512 @@ Verification completed at **2026-08-16T20:25:40+02:00**:
   passed for the new runner/identifier/replicator, layers, and tests; Git emitted
   only the existing LF-to-CRLF warnings;
 - 12 current/front-door documents were link-checked. The only unresolved links
-  are the two known paths into the uninitialized `Spin8-Triality-Research`
-  submodule and the known LaTeX `x_t` false positive in `FOUNDATIONS.md`; no
-  new-scope link is missing.
+  were two then-unavailable theorem-tree paths and the known LaTeX `x_t` false
+  positive in `FOUNDATIONS.md`; this is a pre-flattening snapshot.
 
 ## Whole-SSM and final Spin(8) verification
 
-Verification completed at **2026-08-16T22:15:19+02:00**:
+Final integrated verification completed at **2026-08-16T22:37:10+02:00**:
 
 - `python -m pytest -q SSM-Models`: 262 tests and 79 subtests passed in
-  271.73 seconds; the two warnings are an upstream `pytz` deprecation and a
+  274.59 seconds on the release-integration tree; the two warnings are an
+  upstream `pytz` deprecation and a
   recorded JAX future dtype-cast warning;
 - the Ubuntu WSL custom-CUDA shard passed 5/5 Triton operator and benchmark
-  tests in 5.55 seconds;
+  tests against the same release commit in 7.43 seconds;
 - Ruff formatting and checks passed across all 59 changed/new Python files;
 - Python compilation and `git diff --check` passed; Git emitted only the
   checkout's existing LF-to-CRLF conversion warnings;
+- a detached fresh checkout reproduced the frozen WSL Triton, Pure Spin(8)
+  comparison, and octonion parity-audit SHA-256 values exactly and passed their
+  10/10 focused evidence tests; `.gitattributes` now pins the intended JSON
+  line endings and treats PyTorch checkpoints as binary;
 - the maintained Pure Spin(8), frozen comparison, final-only, and parity-audit
   tests rehash and reload their committed artifacts/checkpoints; and
 - all 169 compact PyTorch checkpoints (approximately 13.6 MB) were inspected
   for machine-local path strings before the explicit distribution decision in
   `PUBLICATION_SCOPE.md`; no such path was found; and
-- a repository-wide scan checked 300 local Markdown targets. The 17 unresolved
-  entries are exactly the 16 known links into the uninitialized
-  `Spin8-Triality-Research` submodule plus the known LaTeX `x_t` false positive;
-  no new-scope link is missing.
+- after integration with current `main`, a repository-wide scan checked 1,168
+  local Markdown targets. Its only reports are the intentionally non-public
+  `.private/` directory named by `REPOSITORY_MAP.md` and the known LaTeX `x_t`
+  false positive in `FOUNDATIONS.md`; no real local link is missing.
+
+## Exact adjacent-octet determinant continuation
+
+At **2026-08-17T00:02:40+02:00**, the maintained Spin-Space theorem tree was
+reconciled with three new exact computer-assisted results:
+
+- all ten coordinate faces of the five-variable adjacent endpoint-octet
+  determinant are nonnegative; nine reduce to one-mode perfect squares and
+  the tenth replays the hash-bound `Z=X^2` endpoint identity;
+- strict Walsh diagonal dominance holds on the complete central cube
+  `[1/4,3/4]^5`; and
+- an adaptive 2,140-leaf exact atlas extends that strict result to
+  `[1/8,7/8]^5`, with no unresolved leaf and exact minimum physical margin
+  `320281275533252594456507202812099057 /
+  5316911983139663491615228241121378304`.
+
+The corresponding artifact SHA-256 values are, respectively,
+`9a8988673ce4c5af4e0dca4b822b818b0f14e58364656bcc5e884e6f7edcbbec`,
+`26611845fd3f5a5b5e63be145c04ede664e4ed033091fc74284381cb9c308fe2`, and
+`cab3e87fb0c0c0ff9abb1c21cf2ea32bec9a92edc6364e225a5a66720486f762`.
+The authoritative reports are
+[`SPIN8_DIRAC_OCTET_DETERMINANT_BOUNDARY_RESULTS.md`](Spin-Space-Research/docs/experiments/SPIN8_DIRAC_OCTET_DETERMINANT_BOUNDARY_RESULTS.md)
+and
+[`SPIN8_DIRAC_OCTET_EXTENDED_CORE_DOMINANCE_RESULTS.md`](Spin-Space-Research/docs/experiments/SPIN8_DIRAC_OCTET_EXTENDED_CORE_DOMINANCE_RESULTS.md).
+
+The complete `Spin-Space-Research/tests` suite passed **398 tests, 224
+subtests, and one expected skip** in 2,165.47 seconds. Targeted theorem-chain,
+artifact, gate-contract, Ruff, compilation, and documentation audits also
+passed. These results do not cover the remaining width-`1/8` collars, the
+unrestricted seven-variable Dirac--Gram inequality, or global five-query
+D-optimality.
+
+## Exact octonion-operator group classification
+
+At **2026-08-17T00:20:13+02:00**, the finite groups implicit in the maintained
+associative octonion-operator lift were classified. The seven imaginary-basis
+left operators generate the plus-extraspecial group `2_+^(1+6)` of order 128.
+All signed Fano-basis automorphisms form the non-split group
+`2^3.PSL(2,7)` of order 1,344. Their order-eight intersection yields a split,
+perfect, orientation-preserving group `2_+^(1+6):PSL(2,7)` of order 21,504.
+
+The result is an exact identification of the repository's fixed matrix
+embedding, not discovery of a new abstract finite group. The authoritative
+report is
+[`OCTONION_OPERATOR_GROUP_RESULTS.md`](Spin-Space-Research/docs/experiments/OCTONION_OPERATOR_GROUP_RESULTS.md),
+and the broader inventory is
+[`GROUP_AND_NUMBER_STRUCTURE_CATALOGUE.md`](research-programs/04-triality-clifford-representation-dynamics/GROUP_AND_NUMBER_STRUCTURE_CATALOGUE.md).
+The exact replay additionally exhausts all 384 lifts of a fixed quotient
+generating pair: 192 have product order seven and 64 also have commutator
+order four; at least one of the latter generates an explicit split complement.
+The artifact SHA-256 is
+`835d0535d7827834ecd6b707984a7f3ae0eeac651f6fec4c3ff6f4ba74796a92`.
+
+## Exact binary-icosahedral triality closure
+
+At **2026-08-17T00:43:30+02:00**, the previously open closure of the vector
+and two half-spin views of the fixed `2.A5` embedding was classified exactly.
+The six common-carrier matrices preserve two four-dimensional blocks and two
+spanning 120-point `H4` root orbits. Their faithful degree-240 permutation
+action has order 864,000 and structure
+`((2.A5 x 2.A5)/C2_diagonal) x 2.A5`.
+
+The first block image is the order-7,200 orientation-preserving 600-cell
+symmetry group; the second is one order-120 binary-icosahedral image. Equality
+between the full order and the product of the two projection orders proves the
+direct-product conclusion. The group is perfect, and its center is exactly the
+Klein four-group of independent signs on the two blocks.
+
+This proves that the fixed triality closure is finite but reducible. It is not
+a new abstract finite group, an irreducible eight-dimensional exceptional
+group, or evidence of sequence-model advantage. The authoritative report is
+[`SPIN8_TRIALITY_2A5_CLOSURE_RESULTS.md`](Spin-Space-Research/docs/experiments/SPIN8_TRIALITY_2A5_CLOSURE_RESULTS.md),
+and the artifact SHA-256 is
+`ff238d047c94362136d70a9c57ae41c832d63bf15fb6263d0019456a9351cfc9`.
+
+## Exact mixed monomial/golden SO(8) density
+
+At **2026-08-17T01:29:02+02:00**, the next open embedding-generated group
+question was resolved negatively. Adjoining the maintained order-21,504
+monomial octonion-operator group to the vector, positive-half-spin, or
+negative-half-spin golden image produces a topologically dense subgroup of
+`SO(8)` in all three cases.
+
+The same shortest witness word `FanoA FanoB b` works in every view. Exact
+characteristic polynomials over `Q(sqrt(5))` contain the coefficient
+`(1-sqrt(5))/4`, which lies outside `Z[(1+sqrt(5))/2]`; their rational
+characteristic norms have coefficient denominators `{1,2,4}` and therefore
+cannot be cyclotomic products. An exhaustive exact audit first verifies that
+all 187 symmetric mixed words of length two have finite order.
+
+An exact adjoint calculation then decomposes `so(8)` into irreducible
+dimensions `7+21`, with commutant-system ranks 48, 440, and 782. The
+seven-dimensional summand is not bracket closed; the 21-dimensional summand is
+a Lie algebra but is not normalized by golden `b` in any view. Since infinitude
+forces a nonzero identity component, the full `so(8)` algebra is the only
+remaining possibility. This proves density but no quantitative spectral gap or
+mixing rate. The authoritative report is
+[`MIXED_MONOMIAL_GOLDEN_CLOSURE_RESULTS.md`](Spin-Space-Research/docs/experiments/MIXED_MONOMIAL_GOLDEN_CLOSURE_RESULTS.md),
+and the artifact SHA-256 is
+`4d6840bd89a0c58ac086c308e88f823928cc4d3206450f24bcc035f499d6d8c7`.
+
+## Exact low-degree mixing band for the dense mixed groups
+
+At **2026-08-17T01:53:16+02:00**, the first quantitative continuation of the
+density theorem was completed. The fixed uniform symmetric labelled measures
+have exact strict contraction certificates in the defining `8`, adjoint `28`,
+and traceless-symmetric `35` representations. Sturm root counts prove the
+defining bounds; exact `Q(sqrt(5))` LDL pivots prove both signed radius forms in
+dimensions 28 and 35. The half-spin alphabets retain cross-source label
+multiplicity: 21 labels represent 19 distinct matrices.
+
+The result is explicitly finite-band. It does not promote to a spectral gap on
+the full mean-zero `L2(SO(8))`, a total-variation mixing theorem, optimized
+generator weights, or a model advantage. The authoritative report is
+[`MIXED_MONOMIAL_GOLDEN_MIXING_RESULTS.md`](Spin-Space-Research/docs/experiments/MIXED_MONOMIAL_GOLDEN_MIXING_RESULTS.md),
+and the artifact SHA-256 is
+`0082b9df621dfe4b14c41a26cc914f124cebde37abb38974ed79c19411f7eac9`.
+
+## Higher-weight Cayley bottleneck and compiled sandwich
+
+At **2026-08-17T02:13:30+02:00**, exact spectral coverage was extended through
+`Lambda^3` dimension 56 and both 35-dimensional Hodge halves of `Lambda^4`.
+The maintained monomial subgroup has a one-dimensional fixed space in the
+orientation-labelled Hodge-minus sector: an explicit Cayley-form line proved
+by a rank-34 exact system. Sparse Rayleigh witnesses show that this sector, not
+the earlier `8+28+35` band, is the first quantitative bottleneck.
+
+A symmetric compiled `N-H-N` distribution now has exact six-band gaps greater
+than `3/20` in the vector view and `3/100` in both half-spin views. Against the
+exact original-walk witness bounds, these are strict macro-step improvements
+above `3x` and `56/25x`. The boundary is explicit: one macro contains three
+primitive letters unless a finite dictionary of at most 867 or 1,156 matrices
+is precompiled, so no primitive-cost, full `L2(SO(8))`, or model advantage is
+claimed. The authoritative report is
+[`MIXED_MONOMIAL_GOLDEN_HIGHER_WEIGHT_RESULTS.md`](Spin-Space-Research/docs/experiments/MIXED_MONOMIAL_GOLDEN_HIGHER_WEIGHT_RESULTS.md),
+and the artifact SHA-256 is
+`d5b3fb35092d2fae603c546530502a95e04eb31ac1566035ef866fc7e033b1d6`.
+
+## Exact macro compiler and local CPU/CUDA benchmark
+
+At **2026-08-17T02:24:00+02:00**, the `N-H-N` sandwich was compiled into exact
+finite dictionaries. The 867 vector labels reduce to 530 matrices; each 1,156
+half-spin set reduces to 394. Multiplicity-weighted inverse symmetry and exact
+equality with `M_N M_H M_N` are replayed, so the implementation does not
+silently replace the theorem's labelled measure with uniform distinct-matrix
+sampling.
+
+On the reference single-thread CPU and synchronized RTX 2070 SUPER float32
+benchmark, the direct labelled table beat online construction in all 24
+view/device/batch cells: transition materialization improved by `1.92-8.07x`
+and final-state application by `1.60-3.14x`, with maximum sampled error
+`4.76837158203125e-7`. This is endpoint-only local evidence. Every-prefix scan,
+backward, training, and end-to-end SSM speed remain open. The authoritative
+report is
+[`MIXED_MONOMIAL_GOLDEN_MACRO_COMPILER_RESULTS.md`](Spin-Space-Research/docs/experiments/MIXED_MONOMIAL_GOLDEN_MACRO_COMPILER_RESULTS.md).
+Exact compiler SHA-256:
+`9595578918bd46387ce5773607d1ded3d6117b11cb2b2353b586a1c6fc0cd438`.
+Empirical benchmark SHA-256:
+`93103d6fa5b4c36a43c89d8cac012d22deaa41a020c516d4c2b9ad9fc2bd8add`.
+
+## Exact every-prefix chunk compiler and recurrent benchmark
+
+At **2026-08-17T02:35:43+02:00**, the endpoint-only limitation was removed for
+the fixed discrete `N-H-N` alphabet. Each labelled triple has an exact `24x8`
+operator with row blocks `R`, `H R`, and `L H R`, so one application emits all
+three causal prefix states. The full FP32 tables remain below 0.9 MB per view.
+
+On recurrent sequences of 3–192 primitive steps, compiled endpoint execution
+was `1.565-2.688x` faster and compiled every-prefix execution was
+`1.007-2.394x` faster across all 72 recorded CPU/CUDA cells. Maximum recurrent
+float32 error was `2.1457672119140625e-6`. The `1.007x` minimum is explicitly
+near break-even; at that stage this was not a fused parallel-scan, backward,
+training, or continuous-transition result. The later custom-kernel sections
+below supersede only that implementation frontier. The authoritative report is
+[`MIXED_MONOMIAL_GOLDEN_CHUNK_SCAN_RESULTS.md`](Spin-Space-Research/docs/experiments/MIXED_MONOMIAL_GOLDEN_CHUNK_SCAN_RESULTS.md).
+Exact compiler SHA-256:
+`ed1ae7e8ac98c5e037be4e45d10f22ec3236e7d6f8337fbc2b9f9a499e13e5de`.
+Empirical benchmark SHA-256:
+`35aef11f6e2577ac5848c800d5afb1dcbd38def2db3dcb5f3deb4dc820793f74`.
+
+## Two-stage parallel chunk scan and initial-state backward
+
+At **2026-08-17T02:49:15+02:00**, the compiled every-prefix path was promoted
+from sequential recurrence to the maintained ordered work-efficient scan. The
+primitive control scans `3C` matrices; the compiled path scans `C` endpoints
+and applies all selected `24x8` local operators in parallel. At 64 chunks this
+reduces tree compositions from 766 to 190.
+
+Float64 tests match sequential recurrence, Hillis--Steele, and work-efficient
+trees, including gradients with respect to `L`, `H`, `R`, and the initial
+state. On the final single-thread CPU/synchronized CUDA artifact, forward wins
+are `1.160-3.984x` and forward-plus-initial-state-backward wins are
+`1.012-3.392x`; the minimum is explicitly near break-even. Maximum forward
+error is `2.384185791015625e-6`, and maximum initial-state gradient error is
+`7.450580596923828e-9`. This is eager PyTorch, not a fused kernel or full-model
+backward. The authoritative report is
+[`MIXED_MONOMIAL_GOLDEN_PARALLEL_CHUNK_SCAN_RESULTS.md`](Spin-Space-Research/docs/experiments/MIXED_MONOMIAL_GOLDEN_PARALLEL_CHUNK_SCAN_RESULTS.md),
+and the artifact SHA-256 is
+`73816cbcf8733ad9e2a4be8a87376ebfa96e369be64b3aa4093b3f0cafa93900`.
+
+## Fused indexed local-prefix expansion
+
+At **2026-08-17T03:02:51+02:00**, the selected `24x8` table lookup and local
+matrix-vector product were fused into one Triton program per `(batch, chunk)`.
+A custom transpose-matvec backward covers the incoming state; CPU,
+unsupported dtype, and trainable-table inputs retain eager semantics.
+
+Across the 27 synchronized CUDA cells, isolated forward beat realistic
+indexed eager in 26 cells (`0.950-3.238x`, median `1.245x`) and isolated state
+backward won 25 (`0.958-1.409x`, median `1.051x`). In the complete two-stage
+pipeline this fell to 16/27 forward and 14/27 backward wins, locating the
+eager endpoint tree as the remaining bottleneck. Maximum errors were
+`4.76837158203125e-7` forward and `3.725290298461914e-9` for the measured
+state gradient. The authoritative report is
+[`MIXED_MONOMIAL_GOLDEN_TRITON_LOCAL_PREFIX_RESULTS.md`](Spin-Space-Research/docs/experiments/MIXED_MONOMIAL_GOLDEN_TRITON_LOCAL_PREFIX_RESULTS.md),
+and the artifact SHA-256 is
+`b124288e9e68d0513e66f39e5fd20c5c831b49d824be28d73ae76305040c6f17`.
+
+## Register-resident compiled chunk recurrence
+
+At **2026-08-17T03:10:03+02:00**, the bottleneck result was followed by a
+one-program-per-sequence Triton recurrence. It retains the eight-state in
+registers, walks frozen exact labels, emits all three causal prefixes, and
+implements a reverse recurrence for the initial state.
+
+Against the optimistic pre-gathered parallel control, all 27 forward cells won
+by `4.709-19.861x` (median `8.344x`) and all 27 forward-plus-initial-backward
+cells won by `2.213-6.465x` (median `2.755x`). Maximum errors were
+`2.384185791015625e-6` forward and `1.4901161193847656e-8` for the initial
+gradient. The kernel is serial in chunk depth, tested through 64 chunks, and
+does not train the table or selector; it is not a parallel-prefix theorem or
+end-to-end SSM comparison. The authoritative report is
+[`MIXED_MONOMIAL_GOLDEN_TRITON_CHUNK_RECURRENCE_RESULTS.md`](Spin-Space-Research/docs/experiments/MIXED_MONOMIAL_GOLDEN_TRITON_CHUNK_RECURRENCE_RESULTS.md),
+and the artifact SHA-256 is
+`b6897f60a011f2dcb0788fccc32195277a54c600f87199d8d13f75b043f37a7d`.
+
+## Latent Pure Spin(8) identification and compiled model runtime
+
+At **2026-08-17T03:39:19+02:00**, the frozen latent-increment cohort completed
+fresh seeds 1--3. Training sees every token and every ordered pair except
+`a,a`, while every prefix in all three triality representations is supervised.
+All three Pure Spin(8) routers identify the local action table, achieve 100%
+center/identity row correctness through L128, and record six L128 post-relation
+MSEs in `2.66e-5`--`2.87e-4`. Parameter-near Mamba-2 and GRU references remain
+near chance on the central distinction. The aggregate artifact SHA-256 is
+`c3d49145fb710c43aa087262212e4005f887995ffb67f399a49afb57e8ae51a2`.
+This is finite-dictionary every-prefix identification, not natural-input,
+state/compute-matched, or generic language-model superiority.
+
+At **2026-08-17T03:46:46+02:00**, Pure Spin(8) v1.1 compiled the passing seed-1
+router into a frozen `[8,3,8,8]` faithful action table. A register-resident
+Triton recurrence preserves every held-out relation signature and matches the
+dynamic source within `1.32e-5` over the benchmark grid. Synchronized local
+forward speedups are `30.7x--67.1x`, with median `42.75x`; at B8/L1024 peak
+allocation falls from 509.6 MB to 11.0 MB. Artifact SHA-256:
+`aa19ba66e5e2d17967f189c4744a1f1c165e0181b11c999f6cd0e4329dd6fb55`.
+The runtime is serial in sequence depth and inference-only; it is not a
+parallel-prefix, fused-training, continuous-routing, or fused-Mamba result.
+
+## Noisy continuous Pure Spin(8) identification
+
+At **2026-08-17T04:27:24.147531+02:00**, the frozen continuous-observation
+cohort completed fresh seeds 1--3. Unique 12-real noisy observations hide seven
+active Spin(8) coordinates behind a different injective nonlinear chart per
+seed. Training excludes adjacent half-center pairs and supervises every
+24-real triality prefix. All 135 frozen per-seed gates pass, including strict
+rehash/reload of 18 checkpoints. Shared Spin(8) action RMSE is
+`0.01334--0.01468`, every L128 center/identity row is correct, and its six L128
+post-relation MSEs are `0.01216--0.02814`. A capable 957-parameter, exactly
+24-state independent `SO(8)^3` control also classifies every relation but has
+`3.295x` larger median MSE. Aggregate artifact SHA-256:
+`34238a1d98fa467e8f8f38b1f90d1a24bc2495cc510934b4327cba81e09ebc6`.
+
+At **2026-08-17T04:40:35.261975+02:00**, the separately frozen measured-wall
+continuation completed. One maximal schedule per seed supplies identical
+prefixes, schedule construction is excluded from timing, and all 3,381,248
+observations per seed are unique. Frozen candidate allocations from 636 to
+6,604 updates land within `1.99--2.97%` of shared update wall on the RTX 2070
+SUPER. Shared median L128 MSE remains `0.01860`, versus `0.07476` independent,
+`0.13288` Mamba-2, `0.13707` parameter-near GRU, `0.13181` state-matched GRU,
+and `0.14099` observation-only. A second independent adjudicator rehashes and
+strictly reloads all 18 wall checkpoints. Aggregate artifact SHA-256:
+`262be117892cc2b511eaa3edde0ccea6695533dd9a621312d43c42dafaf33a02`.
+
+This upgrades the local evidence from finite-token identification to online
+noisy continuous action inference and isolates a shared-action inductive-bias
+advantage from parameter count, recurrent-state size, and local measured update
+wall. At this adjudication stage it remained an injective seven-coordinate,
+every-prefix synthetic task; the endpoint-only successor below removes that
+specific supervision dependency. The Mamba row is unfused, and natural data,
+unsigned/partial observations, all 28 tangent coordinates, fused training, and
+language-model utility remain open. The
+authoritative report is
+[`PURE_SPIN8_CONTINUOUS_OBSERVATION_RESULTS.md`](SSM-Models/experiments/PURE_SPIN8_CONTINUOUS_OBSERVATION_RESULTS.md).
+
+## Endpoint-only continuous Pure Spin(8) identification
+
+Documentation reconciled: **2026-08-17T05:46:54.0059683+02:00**
+
+At **2026-08-17T05:17:13.461565+02:00**, the frozen endpoint-only cohort
+completed fresh seeds 1--3. It retains the earlier noisy observation charts,
+hidden seven-coordinate action family, architectures, and excluded adjacent
+center relation, but removes every intermediate target. Each length-16 sequence
+exposes only its final signed 24-real triality state: 64,000 endpoint targets
+for 1,024,000 unique observations per seed. The batch schema has no prefix-
+target field, model inputs contain observations only, and the unit contract
+requires exactly zero loss gradient at every nonfinal prediction.
+
+All 51 frozen checks pass independently in each seed. Shared Spin(8) records
+median L128 post-relation MSE `0.01296` over `0.00840--0.02014`, versus
+`0.06268` over `0.04161--0.09505` for the capable 957-parameter, exactly
+24-state independent `SO(8)^3` family. Both structured rows achieve 100%
+classification and row correctness on every L128 split. Mamba-2,
+parameter-near GRU, observation-only, and state-matched GRU medians remain
+`0.12813--0.13301`. The independent/shared median ratio is `4.8365x`.
+All 18 primary checkpoints strictly rehash and reload. Aggregate SHA-256:
+`1cf51a4af05303bc3ca9e781478e2352e8dbb077d1c9b367f46af2f384653880`.
+
+At **2026-08-17T05:40:55.849697+02:00**, the separately pre-frozen measured-
+wall continuation completed. Each seed uses one maximal deterministic schedule
+with 7,926,784 unique observations, 495,424 endpoint targets, no intermediate
+targets, and zero excluded adjacent pairs. Candidate allocations of
+1,558--15,482 updates land within `1.33--1.97%` of the shared model-update wall
+on the RTX 2070 SUPER. Shared median L128 MSE remains `0.01296`, versus
+`0.09080` independent, `0.12753` Mamba-2, `0.12787` observation-only,
+`0.15422` parameter-near GRU, and `0.15049` state-matched GRU. Extra GRU
+updates reduce some training losses but can worsen L128 extrapolation. All 18
+wall checkpoints strictly rehash and reload. Aggregate SHA-256:
+`538a3bdbddfd76863a5bef5507a6d0019a114b35021d7b5b9d1223d31983ac64`.
+
+This closes the dense every-prefix-supervision objection for this fixed,
+injective, signed synthetic teacher family. It does not establish unsigned or
+partial observation recovery, noninjective/chart-shift robustness, all 28
+tangent coordinates, natural-task utility, fused modern-SSM parity, FLOP or
+energy equality, or language-model superiority. The authoritative report is
+[`PURE_SPIN8_ENDPOINT_SUPERVISION_RESULTS.md`](SSM-Models/experiments/PURE_SPIN8_ENDPOINT_SUPERVISION_RESULTS.md).
+
+## Endpoint observability and the double-cover information boundary
+
+Documentation reconciled: **2026-08-17T06:41:37.6166325+02:00**
+
+At **2026-08-17T06:11:01.888654+02:00**, the exact endpoint-observability
+certificate completed. Multiplying the maintained triality generators by two
+makes them integral; exact SymPy ranks over the rationals on one through eight
+basis probes are `7,13,18,22,25,27,28,28` in `8v`, `8s+`, and `8s-`. The
+tested center acts as `(+I,-I,-I)`. Plane-0 coordinates `0` and `2*pi` give
+identical vector actions and opposite positive-spinor targets, proving balanced
+hidden-lift Bayes MSE `1/8` and accuracy `1/2`. Certificate SHA-256:
+`fa29a9d74a927993c17328b7dffb5f96c7f42f308b2e30450d4f714a9ce89a53`.
+
+At **2026-08-17T06:39:25.816374+02:00**, the frozen partial-readout cohort was
+adjudicated and **failed** without median rescue. Seeds 1--3 pass `37/40`,
+`39/40`, and `39/40` gates. Vector-only shared supervision misses at least one
+exact hidden-spinor center row in every seed; minimum center accuracy is
+`0.984375`. Seed 1 also leaves the independent positive-only supervised control
+near chance, failing its capability and center gates.
+
+The failed aggregate contains a strong but narrower replicated stratum. With
+only eight final `8s+` or `8s-` scalars in the loss, shared Spin(8) transfers
+the action into all three views in all seeds. Positive-only all-view L128 MSE
+spans `0.00974--0.02492`; negative-only spans `0.00932--0.02520`; every shared
+spinor center row is correct. Paired-spinor and full-readout masks pass every
+gate. These strata do not rescue the failed all-mask protocol.
+
+The independent validator regenerates all three 1,024,000-observation training
+schedules and all 18 evaluation schedules, reproduces their hashes, and
+strictly rehashes/reloads all 30 fresh checkpoints. Every integrity gate passes.
+Failed aggregate SHA-256:
+`baed378d569391e86c46df731cfc72db4f0c0a24d21883bb17a4604db9e5c987`.
+The authoritative report is
+[`PURE_SPIN8_ENDPOINT_OBSERVABILITY_RESULTS.md`](SSM-Models/experiments/PURE_SPIN8_ENDPOINT_OBSERVABILITY_RESULTS.md).
+
+## Adaptive lift-bit calibration
+
+Documentation reconciled: **2026-08-17T07:34:13.2082201+02:00**
+
+The successor protocol was frozen at
+**2026-08-17T07:05:22.8794763+02:00**, before fresh seeds 4--6. It tests the
+minimum lift-odd repair while preserving the endpoint teacher, noisy injective
+chart, excluded relation, L16 final-only supervision, optimizer, 2,000 updates,
+and L128 tests. For unit half-spin endpoint `y`, the address/sign chart
+`j=argmax |y_j|`, `b=sign(y_j)` has lift-invariant address, a sign that flips
+on `{y,-y}`, and selected magnitude at least `1/sqrt(8)`. The complete
+calibration word has three address bits plus one sign bit; only the sign bit
+contains lift information.
+
+At **2026-08-17T07:32:36.941651+02:00**, the strict fresh cohort was
+adjudicated and **passed**. Every one of 13 gates passes independently in each
+seed, with no median rescue. Shared adaptive action RMSE spans
+`0.012825--0.013633`; all-view L128 MSE spans `0.009198--0.026986`; every L128
+adaptive bit, half-spin center row, and relation address/opposite-bit check is
+exact. Relative to identically initialized vector-only training, median action
+RMSE falls by `73.4%--73.7%` and median L128 MSE by `73.3%--78.0%` across
+views. The fixed-coordinate sign ablation is worse than vector-only, with L128
+MSE as high as `0.191420`.
+
+The validator regenerates all three 1,024,000-observation schedules, the
+observation systems, addresses, bits, and all 18 evaluation schedules; it
+rehashes/reloads all 30 checkpoints and recomputes every metric. Aggregate
+SHA-256:
+`fb89fd75d5aa7c3b16448844225baf838aeb4bdf40cb62ba1276f07ac7503b69`.
+
+This closes the frozen empirical failure only with an externally supplied
+four-bit calibration interface. It does not infer the address or bit from
+`8v`, construct a global continuous section, cover chart-boundary noise,
+unknown initial lifts, natural inputs, all 28 trained coordinates, or fused
+modern-SSM throughput. The authoritative report is
+[`PURE_SPIN8_LIFT_BIT_CALIBRATION_RESULTS.md`](SSM-Models/experiments/PURE_SPIN8_LIFT_BIT_CALIBRATION_RESULTS.md).
+
+## Lift-gradient and scrambled-alignment boundary
+
+Documentation reconciled: **2026-08-17T08:58:51.9207930+02:00**
+
+The exact gradient certificate regenerates the first frozen adaptive batch for
+seeds 4--6 and traces the final checkpoints. All independent vector/positive
+head weights and all 108 shared-trunk weights receive nonzero gradient; all 252
+negative-head weights and 28 biases have bitwise-zero data gradient. After
+2,000 AdamW updates, that negative block equals the exact repeated decay-only
+counterfactual with residual `0.0` in every seed. All 28 shared Spin(8)
+coordinate rows receive nonzero gradient. Certificate SHA-256:
+`dee7c22e94bd627704609b7cad58939532e11c583a483e0e73987149f9339ab5`.
+
+The stronger protocol froze at **2026-08-17T08:40:40.5270068+02:00**. Its
+scrambled control keeps the shared model's 12-to-22-to-28 router initialization
+and 24-scalar state, adds 56 trainable legal Spin(8) alignment parameters, and
+is independently capable under full supervision. At
+**2026-08-17T08:54:32.136060+02:00**, the strict seeds 7--9 aggregate
+**failed**: exactly one of 36 seedwise gates is false because seed 7 scrambled
+alignment slightly beats the maintained model in two directly supervised
+vector-L128 cells. No median rescue is applied.
+
+The preserved narrower stratum is exact across the cohort: correct alignment
+wins `9/9` action, `12/12` spinor-L128, and `6/6` completely hidden negative-
+L128 comparisons, but only `4/6` vector-L128 comparisons. Median adaptive
+negative action RMSE is `0.013999` shared versus `0.185325` scrambled; full
+supervision repairs scrambled negative action to `0.011859`. The adaptive
+negative alignment follows decay only, while full supervision updates both
+alignments. This supports bounded cross-view spinor transfer and disproves the
+frozen universal all-view headline. Aggregate SHA-256:
+`ec6802d9c55f318aa85aaacb9ce4030df697f716158a3bdc5752432394f044a7`.
+
+Authoritative reports:
+[`PURE_SPIN8_LIFT_GRADIENT_IDENTIFIABILITY_RESULTS.md`](SSM-Models/experiments/PURE_SPIN8_LIFT_GRADIENT_IDENTIFIABILITY_RESULTS.md)
+and
+[`PURE_SPIN8_SCRAMBLED_ALIGNMENT_RESULTS.md`](SSM-Models/experiments/PURE_SPIN8_SCRAMBLED_ALIGNMENT_RESULTS.md).
+
+## Exact alignment-calibration threshold
+
+Documentation reconciled: **2026-08-17T10:34:43.2866889+02:00**
+
+The negative-only calibration protocol froze at
+**2026-08-17T09:52:34.5014289+02:00**, before fresh seeds 10--12. It keeps the
+maintained 930-parameter router and 24-scalar state bitwise matched, adds one
+28-parameter negative-view alignment, and transfers only external ordered
+basis probes to the alignment optimizer. No negative sequence endpoint target
+is used.
+
+The exact probe map `T -> (T e_1,...,T e_m)` has fiber `SO(8-m)` and ranks
+`0,7,13,18,22,25,27,28,28`. Rational quarter-turn stabilizers now certify
+global action non-identifiability for every `m<=6`; seven probes globally
+determine the `SO(8)` action and eight are redundant. This does not determine
+factorized coordinates or a discrete Spin-cover lift. Exact certificate
+SHA-256:
+`0a1c6ea0107aa732a0656bbb739b1e1eab650eabf40d64ad6229f42810255124`.
+
+At **2026-08-17T10:34:43.2866889+02:00**, strict fresh adjudication completed.
+Every source, schedule, observation, evaluation, checkpoint, reload, replay,
+and router-identity check passes. Seeds 11 and 12 pass all 14 frozen gates;
+seed 10 passes 12/14. Its nonzero rank-27 frame residual is small enough that
+total action error remains near the common router floor, failing the frozen
+factor-of-two gate, and it narrowly wins one late-L128 cell. No aggregate
+statistic rescues the failed headline.
+
+The surviving empirical stratum is replicated: every nonzero probe frame is
+fit, every seven-probe alignment has full-frame RMSE at most `1.255e-21`, and
+seven/eight probes reproduce the aligned action and L128 metrics in every
+seed. Failed aggregate SHA-256:
+`1708d2932cce32f0b1715c1563af35686aa096e7020fe0cbd80ed7f67a2bad2a`.
+The authoritative report is
+[`PURE_SPIN8_ALIGNMENT_CALIBRATION_RANK_RESULTS.md`](SSM-Models/experiments/PURE_SPIN8_ALIGNMENT_CALIBRATION_RANK_RESULTS.md).

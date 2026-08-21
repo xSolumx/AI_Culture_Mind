@@ -92,6 +92,18 @@ evidence about implementations of that algebra.
   The optional WSL/Triton recurrence passes custom forward/backward and local
   L4096 gates. Task-quality and law-identification conclusions remain routed
   to Programme 06.
+- The exact mixed monomial/golden `N-H-N` compiler now has two CUDA execution
+  continuations. Indexed `24x8` local expansion has a custom state-gradient
+  kernel, and a register-resident frozen-dictionary recurrence emits every
+  prefix with an initial-state reverse pass. On the bounded reference grid the
+  latter beats the eager parallel controls in every cell, but it has serial
+  chunk depth and does not train the table or selector.
+- The Pure Spin(8) v1.1 model-level compiler instantiates the same finite-table
+  principle after learning: it evaluates an eight-token latent router once,
+  freezes the resulting `[8,3,8,8]` faithful action table, and uses one Triton
+  program per batch/representation for every-prefix recurrence. The recorded
+  30.7x--67.1x speedup is a bounded model-forward result; continuous routing,
+  table gradients, fused training, and parallel-prefix depth remain open.
 - Quaternion and unit-dual-quaternion composition now provide associative
   compact scans for the double covers of `SO(3)` and `SE(3)`, including exact
   identity padding and streaming cache continuation. Their eager-kernel and
@@ -107,8 +119,9 @@ evidence about implementations of that algebra.
   towers, non-real embeddings, and robust detection from approximate or noisy
   floating-point generators remain open. The compiler still refuses when its
   exact idempotent search cannot certify a division leaf.
-- Production competitiveness requires fused, cross-device comparisons; eager
-  scan wins and one local GPU do not establish a general systems result.
+- Production competitiveness requires cross-device and end-to-end model
+  comparisons; one local GPU kernel result does not establish a general
+  systems or task-quality result.
 - No general no-go theorem covers every nonlinear coordinate system for cyclic
   feedback.
 
@@ -146,6 +159,10 @@ evidence about implementations of that algebra.
 - [Exact Gaussian phase-lattice audit](GAUSSIAN_PHASE_LATTICE_AUDIT.md)
 - [Octonion operator-lift implementation result](../../SSM-Models/experiments/OCTONION_OPERATOR_SCAN_RESULTS.md)
 - [Dual-quaternion motor implementation result](../../SSM-Models/experiments/MOTOR_PATH_DEVELOPMENT_RESULTS.md)
+- [Mixed exact-table parallel scan](../../Spin-Space-Research/docs/experiments/MIXED_MONOMIAL_GOLDEN_PARALLEL_CHUNK_SCAN_RESULTS.md)
+- [Fused indexed local-prefix expansion](../../Spin-Space-Research/docs/experiments/MIXED_MONOMIAL_GOLDEN_TRITON_LOCAL_PREFIX_RESULTS.md)
+- [Register-resident compiled chunk recurrence](../../Spin-Space-Research/docs/experiments/MIXED_MONOMIAL_GOLDEN_TRITON_CHUNK_RECURRENCE_RESULTS.md)
+- [Pure Spin(8) learned finite-token compiler](../../SSM-Models/experiments/PURE_SPIN8_COMPILED_TOKEN_SCAN_RESULTS.md)
 
 The final two reports are cross-program evidence. Their algebra/compiler claims
 belong here; their retrieval and hardware conclusions belong to Programme 03.

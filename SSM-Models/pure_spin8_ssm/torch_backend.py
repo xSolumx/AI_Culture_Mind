@@ -17,6 +17,10 @@ from pathlib import Path
 from typing import Any, Literal
 
 import torch
+from torch import nn
+from torch.nn import functional as F
+
+from pure_spin8_ssm import __version__
 from spin8_triality import (
     SPIN8_BIVECTOR_DIM,
     SPIN8_DIM,
@@ -25,10 +29,6 @@ from spin8_triality import (
     torch_triality_generators,
 )
 from spin8_triality_lift import triality_tensor
-from torch import nn
-from torch.nn import functional as F
-
-from pure_spin8_ssm import __version__
 
 ActionMode = Literal["factorized", "exponential"]
 ScanMode = Literal["work_efficient", "hillis_steele", "recurrent"]

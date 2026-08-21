@@ -1,0 +1,523 @@
+{
+  "aggregate": {
+    "maximum_grid_source_vs_triton_abs_error": 1.3232231140136719e-05,
+    "triton_speedup_vs_source_dynamic_median": 42.74899738234338,
+    "triton_speedup_vs_source_dynamic_range": [
+      30.70414572864322,
+      67.07866623502751
+    ]
+  },
+  "algorithm": {
+    "compiled": "router evaluated once per vocabulary item; one Triton program per batch/representation walks frozen 8x8 actions in registers",
+    "depth_tradeoff": "compiled recurrence is serial in sequence length inside each program; it is a streaming recurrence, not a parallel prefix kernel",
+    "source": "embedding/router, 28 ordered factorized triality actions per token, then work-efficient affine prefix scan"
+  },
+  "benchmark_rows": [
+    {
+      "batch_size": 1,
+      "compiled_eager_vs_triton_max_abs": 3.8743019104003906e-07,
+      "peak_cuda_memory_bytes": {
+        "compiled_eager_recurrence": 8579072,
+        "compiled_triton_recurrence": 8571392,
+        "source_dynamic_factorized_work_efficient": 9546240
+      },
+      "sequence_length": 16,
+      "source_vs_compiled_eager_max_abs": 3.5762786865234375e-07,
+      "source_vs_compiled_triton_max_abs": 3.5762786865234375e-07,
+      "timings": {
+        "compiled_eager_recurrence": {
+          "median_microseconds": 1755.95,
+          "minimum_microseconds": 1717.2,
+          "p10_microseconds": 1723.17,
+          "p90_microseconds": 2569.0500000000006,
+          "repeats": 100,
+          "warmups": 10
+        },
+        "compiled_triton_recurrence": {
+          "median_microseconds": 117.75,
+          "minimum_microseconds": 115.6,
+          "p10_microseconds": 116.39,
+          "p90_microseconds": 125.05000000000001,
+          "repeats": 100,
+          "warmups": 10
+        },
+        "source_dynamic_factorized_work_efficient": {
+          "median_microseconds": 4689.95,
+          "minimum_microseconds": 4481.2,
+          "p10_microseconds": 4535.0,
+          "p90_microseconds": 5041.839999999999,
+          "repeats": 100,
+          "warmups": 10
+        }
+      },
+      "triton_speedup_vs_source_dynamic": 39.82972399150743
+    },
+    {
+      "batch_size": 1,
+      "compiled_eager_vs_triton_max_abs": 7.748603820800781e-07,
+      "peak_cuda_memory_bytes": {
+        "compiled_eager_recurrence": 8658432,
+        "compiled_triton_recurrence": 8604160,
+        "source_dynamic_factorized_work_efficient": 16395264
+      },
+      "sequence_length": 128,
+      "source_vs_compiled_eager_max_abs": 1.4901161193847656e-06,
+      "source_vs_compiled_triton_max_abs": 1.8477439880371094e-06,
+      "timings": {
+        "compiled_eager_recurrence": {
+          "median_microseconds": 13683.5,
+          "minimum_microseconds": 13188.0,
+          "p10_microseconds": 13334.609999999999,
+          "p90_microseconds": 16037.02,
+          "repeats": 100,
+          "warmups": 10
+        },
+        "compiled_triton_recurrence": {
+          "median_microseconds": 117.7,
+          "minimum_microseconds": 115.5,
+          "p10_microseconds": 116.2,
+          "p90_microseconds": 127.47000000000004,
+          "repeats": 100,
+          "warmups": 10
+        },
+        "source_dynamic_factorized_work_efficient": {
+          "median_microseconds": 6962.700000000001,
+          "minimum_microseconds": 6635.6,
+          "p10_microseconds": 6691.52,
+          "p90_microseconds": 9489.44,
+          "repeats": 100,
+          "warmups": 10
+        }
+      },
+      "triton_speedup_vs_source_dynamic": 59.15632965165676
+    },
+    {
+      "batch_size": 1,
+      "compiled_eager_vs_triton_max_abs": 7.927417755126953e-06,
+      "peak_cuda_memory_bytes": {
+        "compiled_eager_recurrence": 9296384,
+        "compiled_triton_recurrence": 8869376,
+        "source_dynamic_factorized_work_efficient": 73291776
+      },
+      "sequence_length": 1024,
+      "source_vs_compiled_eager_max_abs": 7.867813110351562e-06,
+      "source_vs_compiled_triton_max_abs": 7.927417755126953e-06,
+      "timings": {
+        "compiled_eager_recurrence": {
+          "median_microseconds": 114664.9,
+          "minimum_microseconds": 106471.2,
+          "p10_microseconds": 108756.7,
+          "p90_microseconds": 126876.48,
+          "repeats": 50,
+          "warmups": 10
+        },
+        "compiled_triton_recurrence": {
+          "median_microseconds": 284.4,
+          "minimum_microseconds": 276.8,
+          "p10_microseconds": 277.98,
+          "p90_microseconds": 455.18000000000006,
+          "repeats": 50,
+          "warmups": 10
+        },
+        "source_dynamic_factorized_work_efficient": {
+          "median_microseconds": 8991.5,
+          "minimum_microseconds": 8594.8,
+          "p10_microseconds": 8659.49,
+          "p90_microseconds": 12987.790000000003,
+          "repeats": 50,
+          "warmups": 10
+        }
+      },
+      "triton_speedup_vs_source_dynamic": 31.61568213783404
+    },
+    {
+      "batch_size": 8,
+      "compiled_eager_vs_triton_max_abs": 5.364418029785156e-07,
+      "peak_cuda_memory_bytes": {
+        "compiled_eager_recurrence": 8614400,
+        "compiled_triton_recurrence": 8605184,
+        "source_dynamic_factorized_work_efficient": 16395264
+      },
+      "sequence_length": 16,
+      "source_vs_compiled_eager_max_abs": 4.470348358154297e-07,
+      "source_vs_compiled_triton_max_abs": 4.76837158203125e-07,
+      "timings": {
+        "compiled_eager_recurrence": {
+          "median_microseconds": 1793.95,
+          "minimum_microseconds": 1739.1,
+          "p10_microseconds": 1746.3200000000002,
+          "p90_microseconds": 2003.3400000000001,
+          "repeats": 100,
+          "warmups": 10
+        },
+        "compiled_triton_recurrence": {
+          "median_microseconds": 159.2,
+          "minimum_microseconds": 156.2,
+          "p10_microseconds": 157.28000000000003,
+          "p90_microseconds": 163.38,
+          "repeats": 100,
+          "warmups": 10
+        },
+        "source_dynamic_factorized_work_efficient": {
+          "median_microseconds": 4888.1,
+          "minimum_microseconds": 4662.4,
+          "p10_microseconds": 4712.52,
+          "p90_microseconds": 7576.330000000001,
+          "repeats": 100,
+          "warmups": 10
+        }
+      },
+      "triton_speedup_vs_source_dynamic": 30.70414572864322
+    },
+    {
+      "batch_size": 8,
+      "compiled_eager_vs_triton_max_abs": 1.8477439880371094e-06,
+      "peak_cuda_memory_bytes": {
+        "compiled_eager_recurrence": 8908288,
+        "compiled_triton_recurrence": 8870400,
+        "source_dynamic_factorized_work_efficient": 73291776
+      },
+      "sequence_length": 128,
+      "source_vs_compiled_eager_max_abs": 1.6689300537109375e-06,
+      "source_vs_compiled_triton_max_abs": 1.9669532775878906e-06,
+      "timings": {
+        "compiled_eager_recurrence": {
+          "median_microseconds": 13740.25,
+          "minimum_microseconds": 13211.5,
+          "p10_microseconds": 13294.21,
+          "p90_microseconds": 16192.550000000001,
+          "repeats": 50,
+          "warmups": 10
+        },
+        "compiled_triton_recurrence": {
+          "median_microseconds": 155.85,
+          "minimum_microseconds": 153.2,
+          "p10_microseconds": 154.19,
+          "p90_microseconds": 259.78000000000003,
+          "repeats": 50,
+          "warmups": 10
+        },
+        "source_dynamic_factorized_work_efficient": {
+          "median_microseconds": 7117.4,
+          "minimum_microseconds": 6655.3,
+          "p10_microseconds": 6820.28,
+          "p90_microseconds": 9776.070000000003,
+          "repeats": 50,
+          "warmups": 10
+        }
+      },
+      "triton_speedup_vs_source_dynamic": 45.66827077317934
+    },
+    {
+      "batch_size": 8,
+      "compiled_eager_vs_triton_max_abs": 1.0073184967041016e-05,
+      "peak_cuda_memory_bytes": {
+        "compiled_eager_recurrence": 11259392,
+        "compiled_triton_recurrence": 10992128,
+        "source_dynamic_factorized_work_efficient": 509589504
+      },
+      "sequence_length": 1024,
+      "source_vs_compiled_eager_max_abs": 1.3530254364013672e-05,
+      "source_vs_compiled_triton_max_abs": 1.3232231140136719e-05,
+      "timings": {
+        "compiled_eager_recurrence": {
+          "median_microseconds": 111743.6,
+          "minimum_microseconds": 105602.3,
+          "p10_microseconds": 106733.41,
+          "p90_microseconds": 116642.76,
+          "repeats": 20,
+          "warmups": 5
+        },
+        "compiled_triton_recurrence": {
+          "median_microseconds": 319.3,
+          "minimum_microseconds": 314.0,
+          "p10_microseconds": 314.57,
+          "p90_microseconds": 451.3100000000001,
+          "repeats": 20,
+          "warmups": 5
+        },
+        "source_dynamic_factorized_work_efficient": {
+          "median_microseconds": 18277.1,
+          "minimum_microseconds": 17485.7,
+          "p10_microseconds": 17508.94,
+          "p90_microseconds": 18872.93,
+          "repeats": 20,
+          "warmups": 5
+        }
+      },
+      "triton_speedup_vs_source_dynamic": 57.24115252113999
+    },
+    {
+      "batch_size": 32,
+      "compiled_eager_vs_triton_max_abs": 7.748603820800781e-07,
+      "peak_cuda_memory_bytes": {
+        "compiled_eager_recurrence": 8742400,
+        "compiled_triton_recurrence": 8720896,
+        "source_dynamic_factorized_work_efficient": 39880704
+      },
+      "sequence_length": 16,
+      "source_vs_compiled_eager_max_abs": 6.556510925292969e-07,
+      "source_vs_compiled_triton_max_abs": 6.854534149169922e-07,
+      "timings": {
+        "compiled_eager_recurrence": {
+          "median_microseconds": 1838.45,
+          "minimum_microseconds": 1761.4,
+          "p10_microseconds": 1808.25,
+          "p90_microseconds": 1931.51,
+          "repeats": 50,
+          "warmups": 10
+        },
+        "compiled_triton_recurrence": {
+          "median_microseconds": 158.7,
+          "minimum_microseconds": 155.7,
+          "p10_microseconds": 156.69,
+          "p90_microseconds": 175.08,
+          "repeats": 50,
+          "warmups": 10
+        },
+        "source_dynamic_factorized_work_efficient": {
+          "median_microseconds": 4878.0,
+          "minimum_microseconds": 4669.4,
+          "p10_microseconds": 4689.59,
+          "p90_microseconds": 5226.7,
+          "repeats": 50,
+          "warmups": 10
+        }
+      },
+      "triton_speedup_vs_source_dynamic": 30.73724007561437
+    },
+    {
+      "batch_size": 32,
+      "compiled_eager_vs_triton_max_abs": 2.6226043701171875e-06,
+      "peak_cuda_memory_bytes": {
+        "compiled_eager_recurrence": 9803264,
+        "compiled_triton_recurrence": 9781760,
+        "source_dynamic_factorized_work_efficient": 259078144
+      },
+      "sequence_length": 128,
+      "source_vs_compiled_eager_max_abs": 1.9669532775878906e-06,
+      "source_vs_compiled_triton_max_abs": 2.3245811462402344e-06,
+      "timings": {
+        "compiled_eager_recurrence": {
+          "median_microseconds": 13488.45,
+          "minimum_microseconds": 13225.1,
+          "p10_microseconds": 13275.009999999998,
+          "p90_microseconds": 18879.170000000002,
+          "repeats": 20,
+          "warmups": 5
+        },
+        "compiled_triton_recurrence": {
+          "median_microseconds": 154.45,
+          "minimum_microseconds": 153.2,
+          "p10_microseconds": 153.3,
+          "p90_microseconds": 156.55,
+          "repeats": 20,
+          "warmups": 5
+        },
+        "source_dynamic_factorized_work_efficient": {
+          "median_microseconds": 10360.3,
+          "minimum_microseconds": 9129.8,
+          "p10_microseconds": 9237.32,
+          "p90_microseconds": 11228.01,
+          "repeats": 20,
+          "warmups": 5
+        }
+      },
+      "triton_speedup_vs_source_dynamic": 67.07866623502751
+    }
+  ],
+  "checks": {
+    "all_metrics_finite": true,
+    "all_relation_signatures_preserved": true,
+    "compiled_checkpoint_rehashes": true,
+    "compiled_checkpoint_reload_exact": true,
+    "grid_output_parity_below_5e_5": true,
+    "relation_output_parity_below_5e_5": true,
+    "source_artifact_passed": true
+  },
+  "claim_scope": {
+    "empirical": [
+      "output parity, center-relation preservation, latency, and allocation on the recorded workstation grid"
+    ],
+    "not_claimed": [
+      "action-table gradients in the Triton path",
+      "a parallel prefix implementation",
+      "fused training or optimizer-step throughput",
+      "a fused-Mamba comparison",
+      "speedup generalization beyond the recorded GPU and grid"
+    ],
+    "validated_implementation": [
+      "frozen learned token actions compiled into one faithful triality table",
+      "one-kernel CUDA float32 every-prefix recurrence",
+      "strict compiled-checkpoint roundtrip and initial-state backward"
+    ]
+  },
+  "compiled_checkpoint": {
+    "action_table_and_initial_sha256": "1bc5982e0bb684a77c371021232e48acd6a4082e1908817569497f13ff86065c",
+    "action_table_shape": [
+      8,
+      3,
+      8,
+      8
+    ],
+    "path": "C:\\Users\\HaydenLocal\\Programming\\AI_Culture_Mind-integration\\SSM-Models\\checkpoints\\pure_spin8_compiled_token_scan\\compiled_latent_pure_spin8_seed1.pt",
+    "recurrent_state_scalars": 24,
+    "sha256": "40d71f4e93b957e2ece9b308c02b95c58c46b0e55c9d2f60969e9924a0aa2305",
+    "trainable_parameters": 0
+  },
+  "experiment": "compiled latent Pure Spin8 token-action recurrence",
+  "passed": true,
+  "pure_spin8_version": "1.1.0",
+  "recorded_at": "2026-08-17T03:46:46.149345+02:00",
+  "relation_parity": {
+    "compiled_metrics": {
+      "early_L128": {
+        "all_prefix_mse": 2.6384409769282986e-05,
+        "center_classification_accuracy": 1.0,
+        "center_rows_correct": 1.0,
+        "final_mse": 5.5160640234438084e-05,
+        "identity_rows_correct": 1.0,
+        "post_relation_mse": 2.657472989534143e-05,
+        "predicted_spinor_negation_rmse": 0.00033001693974490064,
+        "predicted_vector_pair_rmse": 0.0003029670380711157,
+        "teacher_spinor_negation_max_abs": 2.384185791015625e-07,
+        "teacher_vector_pair_max_abs": 1.1920928955078125e-07
+      },
+      "early_L16": {
+        "all_prefix_mse": 2.953344240571217e-06,
+        "center_classification_accuracy": 1.0,
+        "center_rows_correct": 1.0,
+        "final_mse": 4.970663212588988e-06,
+        "identity_rows_correct": 1.0,
+        "post_relation_mse": 3.002661914150748e-06,
+        "predicted_spinor_negation_rmse": 0.0003300107389047081,
+        "predicted_vector_pair_rmse": 0.00030296893774249664,
+        "teacher_spinor_negation_max_abs": 1.7881393432617188e-07,
+        "teacher_vector_pair_max_abs": 8.940696716308594e-08
+      },
+      "early_L64": {
+        "all_prefix_mse": 1.1930086960395178e-05,
+        "center_classification_accuracy": 1.0,
+        "center_rows_correct": 1.0,
+        "final_mse": 2.499561863563334e-05,
+        "identity_rows_correct": 1.0,
+        "post_relation_mse": 1.208431816723927e-05,
+        "predicted_spinor_negation_rmse": 0.0003300133010715515,
+        "predicted_vector_pair_rmse": 0.00030297382758255696,
+        "teacher_spinor_negation_max_abs": 2.384185791015625e-07,
+        "teacher_vector_pair_max_abs": 1.1920928955078125e-07
+      },
+      "late_L128": {
+        "all_prefix_mse": 2.4891150436208893e-05,
+        "center_classification_accuracy": 1.0,
+        "center_rows_correct": 1.0,
+        "final_mse": 5.0474064967905484e-05,
+        "identity_rows_correct": 1.0,
+        "post_relation_mse": 5.0474064967905484e-05,
+        "predicted_spinor_negation_rmse": 0.000496727071923907,
+        "predicted_vector_pair_rmse": 0.00045441106672772165,
+        "teacher_spinor_negation_max_abs": 1.1920928955078125e-07,
+        "teacher_vector_pair_max_abs": 1.7881393432617188e-07
+      },
+      "late_L16": {
+        "all_prefix_mse": 3.2893361397630847e-06,
+        "center_classification_accuracy": 1.0,
+        "center_rows_correct": 1.0,
+        "final_mse": 4.547471993040138e-06,
+        "identity_rows_correct": 1.0,
+        "post_relation_mse": 4.547471993040138e-06,
+        "predicted_spinor_negation_rmse": 0.0004883014767432274,
+        "predicted_vector_pair_rmse": 0.0003894551434467758,
+        "teacher_spinor_negation_max_abs": 1.7881393432617188e-07,
+        "teacher_vector_pair_max_abs": 1.4901161193847656e-07
+      },
+      "late_L64": {
+        "all_prefix_mse": 1.3432141713565215e-05,
+        "center_classification_accuracy": 1.0,
+        "center_rows_correct": 1.0,
+        "final_mse": 2.5560186865429085e-05,
+        "identity_rows_correct": 1.0,
+        "post_relation_mse": 2.5560186865429085e-05,
+        "predicted_spinor_negation_rmse": 0.0004941802658308448,
+        "predicted_vector_pair_rmse": 0.0004385993114451952,
+        "teacher_spinor_negation_max_abs": 1.1920928955078125e-07,
+        "teacher_vector_pair_max_abs": 1.7881393432617188e-07
+      }
+    },
+    "source_vs_compiled_max_abs": 2.562999725341797e-06,
+    "source_vs_compiled_max_abs_by_split": {
+      "early_L128": 2.562999725341797e-06,
+      "early_L16": 7.152557373046875e-07,
+      "early_L64": 1.6093254089355469e-06,
+      "late_L128": 2.4437904357910156e-06,
+      "late_L16": 7.748603820800781e-07,
+      "late_L64": 1.2516975402832031e-06
+    }
+  },
+  "schema_version": 1,
+  "settings": {
+    "cuda_synchronized_each_complete_call": true,
+    "dtype": "float32",
+    "grid": [
+      [
+        1,
+        16
+      ],
+      [
+        1,
+        128
+      ],
+      [
+        1,
+        1024
+      ],
+      [
+        8,
+        16
+      ],
+      [
+        8,
+        128
+      ],
+      [
+        8,
+        1024
+      ],
+      [
+        32,
+        16
+      ],
+      [
+        32,
+        128
+      ]
+    ],
+    "index_dtype": "int64",
+    "timing_excludes": "one-time checkpoint load and action compilation",
+    "timing_includes": "every-prefix model forward"
+  },
+  "source": {
+    "artifact": "C:\\Users\\HaydenLocal\\Programming\\AI_Culture_Mind-integration\\SSM-Models\\experiments\\artifacts\\pure_spin8_latent_increment_validation_seed1.json",
+    "artifact_sha256": "a06260a56df6817742ec25ddf2267a448f695bda4ff45295dafc0e41859acbe2",
+    "checkpoint": "C:\\Users\\HaydenLocal\\Programming\\AI_Culture_Mind-integration\\SSM-Models\\checkpoints\\pure_spin8_latent_increment_validation\\latent_pure_spin8_seed1_step500.pt",
+    "checkpoint_sha256": "b578270d0d0737a190d41b0363d9a7ee16611db28e737e9caab455e1cb4962fa",
+    "seed": 1
+  },
+  "system": {
+    "cuda_device": {
+      "compute_capability": [
+        7,
+        5
+      ],
+      "name": "NVIDIA GeForce RTX 2070 SUPER",
+      "total_memory_bytes": 8589606912
+    },
+    "platform": "Windows-11-10.0.22631-SP0",
+    "python": "3.12.10",
+    "torch": "2.12.0+cu130",
+    "torch_cpu_threads": 1,
+    "torch_cuda": "13.0",
+    "torch_interop_threads": 1,
+    "triton": "3.7.1"
+  }
+}
