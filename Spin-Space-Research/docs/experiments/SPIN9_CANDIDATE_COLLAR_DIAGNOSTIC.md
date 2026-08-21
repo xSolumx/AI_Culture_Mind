@@ -49,10 +49,12 @@ charts. An unresolved box is neither a failed inequality nor a counterexample.
 Generic global subdivision is not the economical path to the exact candidate.
 The equality set already consists of four pure-`V1` graph preimages over
 `Q(sqrt(241))`, while the local quotient Hessian is strictly negative modulo
-Spin(9). The next proof object should therefore blow up the mixed variables
-around that algebraic fiber and use the exact Hessian as the leading positive
-form. After those local collars are certified, the existing compact atlas can
-cover their complement.
+Spin(9). That local handoff has now been completed: the exact Cartan blow-up in
+[`SPIN9_CANDIDATE_EXPLICIT_COLLARS.md`](SPIN9_CANDIDATE_EXPLICIT_COLLARS.md)
+certifies finite-radius neighborhoods around all four algebraic preimages. The
+remaining first-graph gate is therefore the compact complement of those
+collars at the exact algebraic target. It should reuse the existing compact
+atlas only after explicitly excising the certified root cells.
 
 This does not yet control the second supported `V5` or the unrestricted
 quotient. Those remain later gates even if mixed candidate maximality on the
