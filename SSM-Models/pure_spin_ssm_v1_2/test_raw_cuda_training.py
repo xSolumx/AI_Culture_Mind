@@ -19,6 +19,8 @@ from pure_spin8_ssm.factorized_scan import triton_controller_factorized_scan
 from raw_cuda import (
     raw_cuda_controller_factorized_scan,
     raw_cuda_coordinate_factorized_scan,
+    raw_cuda_hybrid_coordinate_scan,
+    raw_cuda_isotypic_coordinate_scan,
 )
 from spin8_triality import torch_triality_generators
 
@@ -167,6 +169,60 @@ def test_raw_cuda_coordinate_zero_scale_fallback_gradient_parity() -> None:
     )
     torch.testing.assert_close(raw_output, triton_output, rtol=4e-5, atol=4e-5)
     for actual, expected in zip(raw_gradients, triton_gradients, strict=True):
+        torch.testing.assert_close(actual, expected, rtol=9e-4, atol=2e-3)
+
+
+@pytest.mark.skipif(not torch.cuda.is_available(), reason="CUDA is unavailable")
+@pytest.mark.parametrize("factor_count", [3, 6, 15, 28])
+def test_raw_cuda_isotypic_full_gradient_parity(factor_count: int) -> None:
+    _, _, _, generators, scale, drive, initial, _ = controller_inputs()
+    coordinates = 0.03 * torch.randn(
+        *scale.shape, factor_count, device="cuda"
+    )
+    base = (
+        coordinates,
+        generators[:, :factor_count].contiguous(),
+        scale,
+        drive,
+        initial,
+    )
+    packed_inputs = tuple(
+        tensor.detach().clone().requires_grad_(index != 1)
+        for index, tensor in enumerate(base)
+    )
+    split_inputs = tuple(
+        tensor.detach().clone().requires_grad_(index != 1)
+        for index, tensor in enumerate(base)
+    )
+    packed_output = raw_cuda_coordinate_factorized_scan(*packed_inputs)
+    split_output = raw_cuda_isotypic_coordinate_scan(*split_inputs)
+    hybrid_inputs = tuple(
+        tensor.detach().clone().requires_grad_(index != 1)
+        for index, tensor in enumerate(base)
+    )
+    hybrid_output = raw_cuda_hybrid_coordinate_scan(*hybrid_inputs)
+    output_gradient = torch.randn_like(split_output)
+    differentiable = (0, 2, 3, 4)
+    packed_gradients = torch.autograd.grad(
+        packed_output,
+        tuple(packed_inputs[index] for index in differentiable),
+        output_gradient,
+    )
+    split_gradients = torch.autograd.grad(
+        split_output,
+        tuple(split_inputs[index] for index in differentiable),
+        output_gradient,
+    )
+    hybrid_gradients = torch.autograd.grad(
+        hybrid_output,
+        tuple(hybrid_inputs[index] for index in differentiable),
+        output_gradient,
+    )
+    torch.testing.assert_close(split_output, packed_output, rtol=4e-5, atol=4e-5)
+    torch.testing.assert_close(hybrid_output, packed_output, rtol=4e-5, atol=4e-5)
+    for actual, expected in zip(split_gradients, packed_gradients, strict=True):
+        torch.testing.assert_close(actual, expected, rtol=9e-4, atol=2e-3)
+    for actual, expected in zip(hybrid_gradients, packed_gradients, strict=True):
         torch.testing.assert_close(actual, expected, rtol=9e-4, atol=2e-3)
 
 

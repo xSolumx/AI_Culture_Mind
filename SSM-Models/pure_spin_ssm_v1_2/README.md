@@ -90,8 +90,21 @@ scalar 8-by-8 kernel is not a Tensor-Core implementation.
 See [`FRONTIER_TRAINING_RESULTS.md`](FRONTIER_TRAINING_RESULTS.md) for the
 guarded-backward kernel result, the separately scoped steady-step and
 natural-data evidence, and the algebra-to-silicon design. See
+[`CHUNK_PARALLEL_COMPILER_RESULTS.md`](CHUNK_PARALLEL_COMPILER_RESULTS.md) for
+the continuous associative chunk compiler, full-gradient oracle, CUDA
+composition benchmark, and the hybrid isotypic-forward/packed-backward
+schedule. The latter is the recommended raw training backend and measured
+1.54% faster than the packed backend on order-balanced complete steps. See
 [`REUSE_ATLAS.md`](REUSE_ATLAS.md) for the repository-wide component audit
 and the exact mechanism/claim boundary for every reused subsystem.
+
+The chunk report also records the algebra-selection audit prompted by the
+quaternion, Spin(9), and benchmark results. Quaternion conjugation is retained
+as the compact `SO(3)` rotation law; center-sensitive quaternion left action
+is a valid `Spin(3)` control, but is not representation-equivalent to the
+triality state. Spin(9)'s coupled repeated-`V5` block motivates Schur-legal
+multiplicity mixing only where equivalent copies are present. Neither result
+is converted into an untested language-model claim.
 
 The original three-seed natural-data result is retained as historical evidence
 in [`NATURAL_DATA_RESULTS.md`](NATURAL_DATA_RESULTS.md). The pre-reconstruction

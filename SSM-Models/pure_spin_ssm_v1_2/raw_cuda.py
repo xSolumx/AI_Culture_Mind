@@ -131,6 +131,66 @@ class _RawCudaCoordinateFactorized(torch.autograd.Function):
         return gradients[0], None, *gradients[1:]
 
 
+class _RawCudaIsotypicCoordinateFactorized(torch.autograd.Function):
+    """Schedule each inequivalent triality representation as its own warp."""
+
+    @staticmethod
+    def forward(ctx, coordinates, generators, scale, drive, initial):
+        tensors = (coordinates, generators, scale, drive, initial)
+        if any(tensor.device.type != "cuda" for tensor in tensors):
+            raise ValueError("raw isotypic backend requires CUDA tensors")
+        if any(tensor.dtype != torch.float32 for tensor in tensors):
+            raise ValueError("raw isotypic backend requires float32 tensors")
+        contiguous = tuple(tensor.contiguous() for tensor in tensors)
+        output = extension().isotypic_coordinate_forward(*contiguous)
+        ctx.save_for_backward(*contiguous, output)
+        return output
+
+    @staticmethod
+    def backward(ctx, output_gradient):
+        coordinates, generators, scale, drive, initial, output = ctx.saved_tensors
+        gradients = extension().isotypic_coordinate_backward(
+            coordinates,
+            generators,
+            scale,
+            drive,
+            initial,
+            output,
+            output_gradient.contiguous(),
+        )
+        return gradients[0], None, *gradients[1:]
+
+
+class _RawCudaHybridCoordinateFactorized(torch.autograd.Function):
+    """Use isotypic forward occupancy and packed shared-gradient backward."""
+
+    @staticmethod
+    def forward(ctx, coordinates, generators, scale, drive, initial):
+        tensors = (coordinates, generators, scale, drive, initial)
+        if any(tensor.device.type != "cuda" for tensor in tensors):
+            raise ValueError("raw hybrid backend requires CUDA tensors")
+        if any(tensor.dtype != torch.float32 for tensor in tensors):
+            raise ValueError("raw hybrid backend requires float32 tensors")
+        contiguous = tuple(tensor.contiguous() for tensor in tensors)
+        output = extension().isotypic_coordinate_forward(*contiguous)
+        ctx.save_for_backward(*contiguous, output)
+        return output
+
+    @staticmethod
+    def backward(ctx, output_gradient):
+        coordinates, generators, scale, drive, initial, output = ctx.saved_tensors
+        gradients = extension().coordinate_backward(
+            coordinates,
+            generators,
+            scale,
+            drive,
+            initial,
+            output,
+            output_gradient.contiguous(),
+        )
+        return gradients[0], None, *gradients[1:]
+
+
 def raw_cuda_controller_factorized_scan(
     features,
     weight,
@@ -167,5 +227,23 @@ def raw_cuda_coordinate_factorized_scan(
     Uses the same guarded reconstruction as the controller backend.
     """
     return _RawCudaCoordinateFactorized.apply(
+        coordinates, generators, scale, drive, initial
+    )
+
+
+def raw_cuda_isotypic_coordinate_scan(
+    coordinates, generators, scale, drive, initial
+):
+    """Coordinate recurrence with one CUDA warp per real-Schur triality block."""
+    return _RawCudaIsotypicCoordinateFactorized.apply(
+        coordinates, generators, scale, drive, initial
+    )
+
+
+def raw_cuda_hybrid_coordinate_scan(
+    coordinates, generators, scale, drive, initial
+):
+    """Isotypic-split forward followed by packed-warp reverse mode."""
+    return _RawCudaHybridCoordinateFactorized.apply(
         coordinates, generators, scale, drive, initial
     )

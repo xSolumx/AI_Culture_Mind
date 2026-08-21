@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import copy
 import sys
 from pathlib import Path
 
@@ -70,3 +71,26 @@ def test_sol_self_gate_is_finite_and_has_bounded_local_slope_factor() -> None:
     output.square().mean().backward()
     assert torch.isfinite(output).all()
     assert torch.isfinite(inputs.grad).all()
+
+
+def test_chunk_parallel_full_model_gradient_parity() -> None:
+    torch.manual_seed(20_260_821)
+    recurrent = tiny_model()
+    chunked = copy.deepcopy(recurrent)
+    tokens = torch.randint(0, 256, (2, 5))
+    expected = recurrent(tokens, scan_mode="compiled_factorized")["logits"]
+    actual = chunked(tokens, scan_mode="chunk_parallel")["logits"]
+    output_gradient = torch.randn_like(actual)
+    expected_gradients = torch.autograd.grad(
+        expected, tuple(recurrent.parameters()), output_gradient
+    )
+    actual_gradients = torch.autograd.grad(
+        actual, tuple(chunked.parameters()), output_gradient
+    )
+    torch.testing.assert_close(actual, expected, rtol=5e-5, atol=5e-5)
+    for actual_gradient, expected_gradient in zip(
+        actual_gradients, expected_gradients, strict=True
+    ):
+        torch.testing.assert_close(
+            actual_gradient, expected_gradient, rtol=1e-3, atol=3e-3
+        )

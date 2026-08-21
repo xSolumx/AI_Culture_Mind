@@ -159,8 +159,14 @@ PYTHONPATH=.. python benchmark_steady_step.py \
   --output artifacts/steady_step_spin_ladder_guarded_reconstruct_vs_mamba2_wsl.json
 ```
 
-The next speed frontier is a chunk-parallel associative affine scan. The
-current kernel still assigns one warp to an entire sequence, so sequence length
-remains serial inside each `(batch, channel)`. The next quality frontier is
+The semantic chunk-parallel associative affine compiler is now implemented and
+documented in
+[`CHUNK_PARALLEL_COMPILER_RESULTS.md`](CHUNK_PARALLEL_COMPILER_RESULTS.md).
+It reduces eager matrix-composition work and wins the materialized forward
+control, but remains much slower than the factor-direct raw kernel. The same
+work also produced `raw_cuda_hybrid`: isotypic-split forward plus packed
+backward, measuring 1.54% faster than packed raw CUDA on order-balanced
+complete steps. The next speed frontier is therefore fused factor-to-chunk
+compilation, not another eager tree. The next quality frontier remains
 controller and readout design; the hardware result does not erase the observed
 0.242 bpb gap.

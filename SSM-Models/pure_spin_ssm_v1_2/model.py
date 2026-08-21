@@ -32,6 +32,7 @@ class PureSpinV12Config:
     group_schedule: tuple[int, ...] | None = None
     dropout: float = 0.0
     min_retention_logit: float = 2.0
+    scan_chunk_size: int = 32
     tie_embeddings: bool = True
 
     def __post_init__(self) -> None:
@@ -46,6 +47,8 @@ class PureSpinV12Config:
             raise ValueError("all model dimensions must be positive")
         if not 0 <= self.dropout < 1:
             raise ValueError("dropout must lie in [0,1)")
+        if self.scan_chunk_size < 1:
+            raise ValueError("scan_chunk_size must be positive")
         if self.mixer not in (
             "swiglu",
             "sol_bounded_quadratic",
@@ -155,6 +158,7 @@ class PureSpinV12Block(nn.Module):
             if left < group_dimension and right < group_dimension
         )
         self.group_dimension = group_dimension
+        self.scan_chunk_size = config.scan_chunk_size
         self.subgroup_indices = subgroup_indices
         self.register_buffer(
             "subgroup_generators",
@@ -211,8 +215,17 @@ class PureSpinV12Block(nn.Module):
             )
             states = self.spin.triality_readout(raw_states)
             final_state = raw_states[:, -1]
-        elif scan_mode == "raw_cuda_factorized":
-            from raw_cuda import raw_cuda_coordinate_factorized_scan
+        elif scan_mode in {
+            "raw_cuda_factorized",
+            "raw_cuda_isotypic",
+            "raw_cuda_hybrid",
+            "chunk_parallel",
+        }:
+            from raw_cuda import (
+                raw_cuda_coordinate_factorized_scan,
+                raw_cuda_hybrid_coordinate_scan,
+                raw_cuda_isotypic_coordinate_scan,
+            )
 
             if state is None:
                 state = self.spin.initial_cache(value.shape[0], value)
@@ -224,15 +237,42 @@ class PureSpinV12Block(nn.Module):
                 value.shape[0], value.shape[1], self.spin.channels, factor_count
             )
             coordinates = coordinates * coordinate_gate[..., None, None]
-            raw_states = raw_cuda_coordinate_factorized_scan(
-                coordinates,
-                self.subgroup_generators.to(value),
-                scale,
-                drive,
-                state,
-            )
+            if scan_mode == "chunk_parallel":
+                from chunk_parallel_scan import (
+                    chunk_parallel_spin8_scan,
+                    factorized_triality_actions,
+                )
+                from pure_spin8_ssm.torch_backend import Spin8AffineTransition
+
+                transition = Spin8AffineTransition(
+                    scale=scale,
+                    action=factorized_triality_actions(
+                        coordinates, self.subgroup_generators.to(value)
+                    ),
+                    drive=drive,
+                )
+                raw_states, final_state = chunk_parallel_spin8_scan(
+                    transition, state, chunk_size=self.scan_chunk_size
+                )
+            else:
+                scan = (
+                    raw_cuda_hybrid_coordinate_scan
+                    if scan_mode == "raw_cuda_hybrid"
+                    else (
+                        raw_cuda_isotypic_coordinate_scan
+                        if scan_mode == "raw_cuda_isotypic"
+                        else raw_cuda_coordinate_factorized_scan
+                    )
+                )
+                raw_states = scan(
+                    coordinates,
+                    self.subgroup_generators.to(value),
+                    scale,
+                    drive,
+                    state,
+                )
+                final_state = raw_states[:, -1]
             states = self.spin.triality_readout(raw_states)
-            final_state = raw_states[:, -1]
         else:
             if self.group_dimension != 8:
                 raise ValueError(

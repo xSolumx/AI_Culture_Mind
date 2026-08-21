@@ -132,6 +132,54 @@ __device__ __forceinline__ float factor_derivative(
   return -0.5f * sine * state_before + cosine * first;
 }
 
+// In the isotypic schedule one warp owns only one of 8v, 8+, or 8-. The
+// representation's eight state coordinates therefore live in lanes 0..7
+// instead of occupying a representation-dependent octet of one packed warp.
+__device__ __forceinline__ float isotypic_generator_product(
+    const float* generators, int representation, int coordinate, int row,
+    float value, int factors) {
+  float result = 0.0f;
+  const int base = ((representation * factors + coordinate) * 8 + row) * 8;
+#pragma unroll
+  for (int source = 0; source < 8; ++source) {
+    result = fmaf(__ldg(generators + base + source),
+        __shfl_sync(FULL_WARP, value, source), result);
+  }
+  return result;
+}
+
+__device__ __forceinline__ float isotypic_apply_factor(
+    const float* generators, int representation, int coordinate, int row,
+    float state, float angle, int factors) {
+  const float first = isotypic_generator_product(
+      generators, representation, coordinate, row, state, factors);
+  const float second = isotypic_generator_product(
+      generators, representation, coordinate, row, first, factors);
+  float sine, cosine;
+  if (representation == 0) {
+    sincosf(angle, &sine, &cosine);
+    return state + sine * first + (1.0f - cosine) * second;
+  }
+  sincosf(0.5f * angle, &sine, &cosine);
+  return cosine * state + (2.0f * sine) * first;
+}
+
+__device__ __forceinline__ float isotypic_factor_derivative(
+    const float* generators, int representation, int coordinate, int row,
+    float state_before, float angle, int factors) {
+  const float first = isotypic_generator_product(
+      generators, representation, coordinate, row, state_before, factors);
+  const float second = isotypic_generator_product(
+      generators, representation, coordinate, row, first, factors);
+  float sine, cosine;
+  if (representation == 0) {
+    sincosf(angle, &sine, &cosine);
+    return cosine * first + sine * second;
+  }
+  sincosf(0.5f * angle, &sine, &cosine);
+  return -0.5f * sine * state_before + cosine * first;
+}
+
 __global__ void controller_factorized_forward_kernel(
     const float* features, const float* weight, const float* bias,
     const float* generators, const float* scale, const float* drive,
@@ -393,6 +441,133 @@ __global__ void coordinate_factorized_backward_kernel(
   if (active) initial_gradient[initial_base + lane] = carry;
 }
 
+__global__ void isotypic_coordinate_forward_kernel(
+    const float* coordinates, const float* generators, const float* scale,
+    const float* drive, const float* initial, float* output, int length,
+    int channels, int factors) {
+  const int lane = threadIdx.x;
+  const int representation = blockIdx.x % 3;
+  const int sequence = blockIdx.x / 3;
+  const int channel = sequence % channels;
+  const int batch = sequence / channels;
+  const bool active = lane < 8;
+  const int row = active ? lane : 0;
+  const int initial_base =
+      (((batch * channels + channel) * 3 + representation) * 8);
+  float state = active ? initial[initial_base + lane] : 0.0f;
+
+  for (int position = 0; position < length; ++position) {
+    const int scalar_offset = (batch * length + position) * channels + channel;
+    const int coordinate_base = scalar_offset * factors;
+#pragma unroll 4
+    for (int coordinate = 0; coordinate < factors; ++coordinate) {
+      const float angle = coordinates[coordinate_base + coordinate];
+      const float next_state = isotypic_apply_factor(
+          generators, representation, coordinate, row, state, angle, factors);
+      if (active) state = next_state;
+      __syncwarp();
+    }
+    if (active) {
+      const int output_base =
+          ((scalar_offset * 3 + representation) * 8);
+      state = scale[scalar_offset] * state + drive[output_base + lane];
+      output[output_base + lane] = state;
+    }
+    __syncwarp();
+  }
+}
+
+__global__ void isotypic_coordinate_backward_kernel(
+    const float* coordinates, const float* generators, const float* scale,
+    const float* drive, const float* initial, const float* output,
+    const float* output_gradient, float* coordinate_gradient_by_representation,
+    float* scale_gradient_by_representation, float* drive_gradient,
+    float* initial_gradient, int length, int channels, int factors,
+    int coordinate_elements, int scale_elements) {
+  const int lane = threadIdx.x;
+  const int representation = blockIdx.x % 3;
+  const int sequence = blockIdx.x / 3;
+  const int channel = sequence % channels;
+  const int batch = sequence / channels;
+  const bool active = lane < 8;
+  const int row = active ? lane : 0;
+  const int initial_base =
+      (((batch * channels + channel) * 3 + representation) * 8);
+  float carry = 0.0f;
+
+  for (int reverse_position = 0; reverse_position < length; ++reverse_position) {
+    const int position = length - 1 - reverse_position;
+    const int scalar_offset = (batch * length + position) * channels + channel;
+    const int coordinate_base = scalar_offset * factors;
+    const int output_base = ((scalar_offset * 3 + representation) * 8);
+    float direct = active ? output_gradient[output_base + lane] + carry : 0.0f;
+    const float scale_value = scale[scalar_offset];
+    float rotated = 0.0f;
+    if (fabsf(scale_value) > 1.0e-7f) {
+      rotated = active
+          ? (output[output_base + lane] - drive[output_base + lane]) /
+                scale_value
+          : 0.0f;
+    } else {
+      rotated = active
+          ? (position == 0
+                ? initial[initial_base + lane]
+                : output[output_base - channels * 3 * 8 + lane])
+          : 0.0f;
+#pragma unroll 4
+      for (int coordinate = 0; coordinate < factors; ++coordinate) {
+        const float angle = coordinates[coordinate_base + coordinate];
+        const float next_rotated = isotypic_apply_factor(
+            generators, representation, coordinate, row, rotated, angle,
+            factors);
+        if (active) rotated = next_rotated;
+        __syncwarp();
+      }
+    }
+
+    const float scale_term = warp_sum(active ? direct * rotated : 0.0f);
+    if (lane == 0) {
+      scale_gradient_by_representation[
+          representation * scale_elements + scalar_offset] = scale_term;
+    }
+    if (active) drive_gradient[output_base + lane] = direct;
+    float adjoint = active ? scale_value * direct : 0.0f;
+    float state_after = rotated;
+
+#pragma unroll 4
+    for (int reverse_coordinate = 0; reverse_coordinate < factors;
+         ++reverse_coordinate) {
+      const int coordinate = factors - 1 - reverse_coordinate;
+      const float angle = coordinates[coordinate_base + coordinate];
+      const float state_before_raw = isotypic_apply_factor(
+          generators, representation, coordinate, row, state_after, -angle,
+          factors);
+      const float state_before = active ? state_before_raw : 0.0f;
+      __syncwarp();
+      const float derivative_raw = isotypic_factor_derivative(
+          generators, representation, coordinate, row, state_before, angle,
+          factors);
+      const float angle_gradient = warp_sum(
+          active ? adjoint * derivative_raw : 0.0f);
+      if (lane == 0) {
+        coordinate_gradient_by_representation[
+            representation * coordinate_elements + coordinate_base + coordinate]
+            = angle_gradient;
+      }
+      const float inverse_adjoint = isotypic_apply_factor(
+          generators, representation, coordinate, row, adjoint, -angle,
+          factors);
+      if (active) {
+        adjoint = inverse_adjoint;
+        state_after = state_before;
+      }
+      __syncwarp();
+    }
+    carry = adjoint;
+  }
+  if (active) initial_gradient[initial_base + lane] = carry;
+}
+
 void check_controller_inputs(
     const torch::Tensor& features, const torch::Tensor& weight,
     const torch::Tensor& bias, const torch::Tensor& generators,
@@ -567,5 +742,72 @@ std::vector<torch::Tensor> coordinate_factorized_backward_cuda(
       scale_gradient.data_ptr<float>(), drive_gradient.data_ptr<float>(),
       initial_gradient.data_ptr<float>(), length, channels, factors);
   C10_CUDA_KERNEL_LAUNCH_CHECK();
+  return {coordinate_gradient, scale_gradient, drive_gradient, initial_gradient};
+}
+
+torch::Tensor isotypic_coordinate_forward_cuda(
+    torch::Tensor coordinates, torch::Tensor generators, torch::Tensor scale,
+    torch::Tensor drive, torch::Tensor initial) {
+  check_coordinate_inputs(coordinates, generators, scale, initial);
+  const int batch = coordinates.size(0), length = coordinates.size(1);
+  const int channels = coordinates.size(2);
+  const int factors = coordinates.size(3);
+  TORCH_CHECK(drive.is_cuda() && drive.scalar_type() == torch::kFloat32 &&
+      drive.is_contiguous() && drive.device() == coordinates.device() &&
+      drive.sizes() == torch::IntArrayRef({batch, length, channels, 3, 8}),
+      "drive must be contiguous CUDA float32 with shape (B,L,C,3,8)");
+  auto output = torch::empty_like(drive);
+  const c10::cuda::CUDAGuard guard(coordinates.device());
+  isotypic_coordinate_forward_kernel<<<batch * channels * 3, 32, 0,
+      at::cuda::getCurrentCUDAStream()>>>(
+      coordinates.data_ptr<float>(), generators.data_ptr<float>(),
+      scale.data_ptr<float>(), drive.data_ptr<float>(), initial.data_ptr<float>(),
+      output.data_ptr<float>(), length, channels, factors);
+  C10_CUDA_KERNEL_LAUNCH_CHECK();
+  return output;
+}
+
+std::vector<torch::Tensor> isotypic_coordinate_backward_cuda(
+    torch::Tensor coordinates, torch::Tensor generators, torch::Tensor scale,
+    torch::Tensor drive, torch::Tensor initial, torch::Tensor output,
+    torch::Tensor output_gradient) {
+  check_coordinate_inputs(coordinates, generators, scale, initial);
+  const int batch = coordinates.size(0), length = coordinates.size(1);
+  const int channels = coordinates.size(2);
+  const int factors = coordinates.size(3);
+  TORCH_CHECK(drive.is_cuda() && drive.scalar_type() == torch::kFloat32 &&
+      drive.is_contiguous() && drive.device() == coordinates.device() &&
+      drive.sizes() == torch::IntArrayRef({batch, length, channels, 3, 8}),
+      "drive must be contiguous CUDA float32 with shape (B,L,C,3,8)");
+  TORCH_CHECK(output.is_cuda() && output_gradient.is_cuda() &&
+      output.is_contiguous() && output_gradient.is_contiguous() &&
+      output.device() == coordinates.device() &&
+      output_gradient.device() == coordinates.device(),
+      "output tensors must be contiguous and on the coordinate device");
+  TORCH_CHECK(output.sizes() == torch::IntArrayRef({batch, length, channels, 3, 8}) &&
+      output_gradient.sizes() == torch::IntArrayRef({batch, length, channels, 3, 8}),
+      "output tensors must be (B,L,C,3,8)");
+  const int coordinate_elements = coordinates.numel();
+  const int scale_elements = scale.numel();
+  auto coordinate_gradient_by_representation = torch::empty(
+      {3, coordinate_elements}, coordinates.options());
+  auto scale_gradient_by_representation = torch::empty(
+      {3, scale_elements}, scale.options());
+  auto drive_gradient = torch::empty_like(output);
+  auto initial_gradient = torch::empty_like(initial);
+  const c10::cuda::CUDAGuard guard(coordinates.device());
+  isotypic_coordinate_backward_kernel<<<batch * channels * 3, 32, 0,
+      at::cuda::getCurrentCUDAStream()>>>(
+      coordinates.data_ptr<float>(), generators.data_ptr<float>(),
+      scale.data_ptr<float>(), drive.data_ptr<float>(), initial.data_ptr<float>(),
+      output.data_ptr<float>(), output_gradient.data_ptr<float>(),
+      coordinate_gradient_by_representation.data_ptr<float>(),
+      scale_gradient_by_representation.data_ptr<float>(),
+      drive_gradient.data_ptr<float>(), initial_gradient.data_ptr<float>(),
+      length, channels, factors, coordinate_elements, scale_elements);
+  C10_CUDA_KERNEL_LAUNCH_CHECK();
+  auto coordinate_gradient =
+      coordinate_gradient_by_representation.sum(0).view_as(coordinates);
+  auto scale_gradient = scale_gradient_by_representation.sum(0).view_as(scale);
   return {coordinate_gradient, scale_gradient, drive_gradient, initial_gradient};
 }

@@ -37,6 +37,7 @@ class BenchmarkConfig:
     spin_mixer: str = "swiglu"
     spin_expansion: int = 2
     spin_group_schedule: tuple[int, ...] | None = None
+    spin_chunk_size: int = 32
     mamba_d_model: int = 144
     mamba_d_state: int = 64
     maximum_parameter_gap: float = 0.05
@@ -73,6 +74,7 @@ def build_model(name: str, config: BenchmarkConfig) -> torch.nn.Module:
                 mixer=config.spin_mixer,
                 expansion=config.spin_expansion,
                 group_schedule=config.spin_group_schedule,
+                scan_chunk_size=config.spin_chunk_size,
             )
         )
     if name == "mamba2_fused":
@@ -203,6 +205,9 @@ def main() -> int:
             "compiled_factorized",
             "raw_cuda_controller",
             "raw_cuda_factorized",
+            "raw_cuda_isotypic",
+            "raw_cuda_hybrid",
+            "chunk_parallel",
         ],
         default="compiled_controller",
     )
@@ -214,6 +219,7 @@ def main() -> int:
     parser.add_argument("--spin-expansion", type=int, default=2)
     parser.add_argument("--spin-d-model", type=int, default=128)
     parser.add_argument("--spin-group-schedule", type=int, nargs="+")
+    parser.add_argument("--spin-chunk-size", type=int, default=32)
     parser.add_argument("--layers", type=int, default=4)
     parser.add_argument("--models", nargs="+", default=["pure_spin_v1_2", "mamba2_fused"])
     parser.add_argument("--offline", action="store_true")
@@ -239,6 +245,7 @@ def main() -> int:
             if args.spin_group_schedule is not None
             else None
         ),
+        spin_chunk_size=args.spin_chunk_size,
         layers=args.layers,
         seed=args.seed,
     )
@@ -288,6 +295,7 @@ def main() -> int:
                 Path(__file__).with_name("mamba2_baseline.py"),
                 Path(__file__).with_name("data.py"),
                 Path(__file__).with_name("raw_cuda.py"),
+                Path(__file__).with_name("chunk_parallel_scan.py"),
                 Path(__file__).with_name("csrc") / "spin_scan.cpp",
                 Path(__file__).with_name("csrc") / "spin_scan_cuda.cu",
             )

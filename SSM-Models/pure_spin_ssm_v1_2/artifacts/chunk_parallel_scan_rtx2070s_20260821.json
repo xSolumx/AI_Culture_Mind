@@ -1,0 +1,107 @@
+{
+  "claim_scope": "continuous learned Spin affine chunk compiler semantic and local CUDA performance gate; not an end-to-end model claim",
+  "compute_capability": [
+    7,
+    5
+  ],
+  "cuda": "13.0",
+  "gpu": "NVIDIA GeForce RTX 2070 SUPER",
+  "implementation_sha256": {
+    "benchmark_chunk_parallel_scan.py": "23d5a2fe5050128c5f8b60d2334045c7c6ee09c98fdbc71686db917a0dbce1a2",
+    "chunk_parallel_scan.py": "a8249908475a7793f6f9d2d185f652bd220a60cf1ea6783ae0373490232a4be1",
+    "csrc/spin_scan.cpp": "d29953677682cc80f39c4fe15072544023241a663cc50a3eb59abdaa02b1ea59",
+    "csrc/spin_scan_cuda.cu": "f0c80221dd992f511539b470646306711b6026cbf4a43b052ce29aa93e884679",
+    "raw_cuda.py": "4eb99908f131f158b6dd2c392b13e56a85bfb164277d845d1873d9890ae0028c"
+  },
+  "passed": true,
+  "schema_version": 1,
+  "shape": {
+    "batch": 8,
+    "channels": 2,
+    "factors": 28,
+    "length": 256,
+    "representations": 3,
+    "state_dimension": 8
+  },
+  "timing": {
+    "baselines": {
+      "materialized_full_tree": {
+        "forward_backward_microseconds": 41314.30435180664,
+        "forward_microseconds": 8756.064414978027
+      },
+      "raw_serial": {
+        "forward_backward_microseconds": 4571.51985168457,
+        "forward_microseconds": 1190.0800466537476
+      }
+    },
+    "chunk_rows": [
+      {
+        "chunk_over_full_composition_work": 0.49869451697127937,
+        "chunk_size": 4,
+        "composition_count": {
+          "chunk_endpoint_tree_matrix_compositions": 190,
+          "chunk_local_matrix_compositions": 192,
+          "chunks": 64,
+          "full_tree_matrix_compositions": 766,
+          "padded_length": 256
+        },
+        "median_forward_backward_microseconds": 36544.38400268555,
+        "median_forward_microseconds": 7539.040088653564,
+        "slowdown_over_raw": {
+          "forward": 6.334901681489194,
+          "forward_backward": 7.993924381454719
+        },
+        "speedup_over_full_tree": {
+          "forward": 1.1614296133212123,
+          "forward_backward": 1.1305240320584022
+        }
+      },
+      {
+        "chunk_over_full_composition_work": 0.4151436031331593,
+        "chunk_size": 8,
+        "composition_count": {
+          "chunk_endpoint_tree_matrix_compositions": 94,
+          "chunk_local_matrix_compositions": 224,
+          "chunks": 32,
+          "full_tree_matrix_compositions": 766,
+          "padded_length": 256
+        },
+        "median_forward_backward_microseconds": 37599.29656982422,
+        "median_forward_microseconds": 9006.719589233398,
+        "slowdown_over_raw": {
+          "forward": 7.568162842960339,
+          "forward_backward": 8.224681897852673
+        },
+        "speedup_over_full_tree": {
+          "forward": 0.97217020339403,
+          "forward_backward": 1.0988052469301766
+        }
+      },
+      {
+        "chunk_over_full_composition_work": 0.3733681462140992,
+        "chunk_size": 16,
+        "composition_count": {
+          "chunk_endpoint_tree_matrix_compositions": 46,
+          "chunk_local_matrix_compositions": 240,
+          "chunks": 16,
+          "full_tree_matrix_compositions": 766,
+          "padded_length": 256
+        },
+        "median_forward_backward_microseconds": 42711.96746826172,
+        "median_forward_microseconds": 8029.055595397949,
+        "slowdown_over_raw": {
+          "forward": 6.746651721431637,
+          "forward_backward": 9.343056325681859
+        },
+        "speedup_over_full_tree": {
+          "forward": 1.0905472394532654,
+          "forward_backward": 0.9672770139307292
+        }
+      }
+    ],
+    "method": "CUDA events on current stream",
+    "repetitions": 5,
+    "warmups": 2
+  },
+  "torch": "2.10.0+cu130"
+}
