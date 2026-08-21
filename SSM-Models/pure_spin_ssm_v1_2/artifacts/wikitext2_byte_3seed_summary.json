@@ -1,0 +1,133 @@
+{
+  "aggregate": {
+    "mamba2_bits_per_byte": {
+      "maximum": 2.500004274189113,
+      "mean": 2.4899472805443277,
+      "minimum": 2.470131629409425,
+      "sample_standard_deviation": 0.017161505573242045
+    },
+    "mamba2_minus_spin_bits_per_byte": {
+      "maximum": -0.21793207261141667,
+      "mean": -0.24170539209094613,
+      "minimum": -0.2690412103620541,
+      "sample_standard_deviation": 0.025740134782735815
+    },
+    "mamba2_throughput_over_spin": {
+      "maximum": 5.388087309722633,
+      "mean": 4.87388971353355,
+      "minimum": 4.291379153131828,
+      "sample_standard_deviation": 0.5515362100468455
+    },
+    "mamba2_tokens_per_second": {
+      "maximum": 81031.49863893117,
+      "mean": 73072.63693308615,
+      "minimum": 63907.86897815458,
+      "sample_standard_deviation": 8625.272784152763
+    },
+    "pure_spin_bits_per_byte": {
+      "maximum": 2.739172839771479,
+      "mean": 2.7316526726352737,
+      "minimum": 2.717638010645861,
+      "sample_standard_deviation": 0.01214788310431654
+    },
+    "pure_spin_tokens_per_second": {
+      "maximum": 15039.009945646647,
+      "mean": 14986.867494453514,
+      "minimum": 14892.151613197571,
+      "sample_standard_deviation": 82.16577853897239
+    }
+  },
+  "by_seed": [
+    {
+      "mamba2_bits_per_byte": 2.4997059380344444,
+      "mamba2_minus_spin_bits_per_byte": -0.21793207261141667,
+      "mamba2_throughput_over_spin": 4.942202677746186,
+      "mamba2_tokens_per_second": 74278.54318217268,
+      "pure_spin_bits_per_byte": 2.717638010645861,
+      "pure_spin_tokens_per_second": 15029.440924516322,
+      "seed": 17
+    },
+    {
+      "mamba2_bits_per_byte": 2.470131629409425,
+      "mamba2_minus_spin_bits_per_byte": -0.2690412103620541,
+      "mamba2_throughput_over_spin": 4.291379153131828,
+      "mamba2_tokens_per_second": 63907.86897815458,
+      "pure_spin_bits_per_byte": 2.739172839771479,
+      "pure_spin_tokens_per_second": 14892.151613197571,
+      "seed": 29
+    },
+    {
+      "mamba2_bits_per_byte": 2.500004274189113,
+      "mamba2_minus_spin_bits_per_byte": -0.23814289329936766,
+      "mamba2_throughput_over_spin": 5.388087309722633,
+      "mamba2_tokens_per_second": 81031.49863893117,
+      "pure_spin_bits_per_byte": 2.7381471674884805,
+      "pure_spin_tokens_per_second": 15039.009945646647,
+      "seed": 43
+    }
+  ],
+  "claim_scope": "three-seed matched WikiText-2 byte-LM comparison",
+  "config_except_seed": {
+    "batch_size": 8,
+    "d_model": 128,
+    "gradient_clip": 1.0,
+    "layers": 4,
+    "learning_rate": 0.003,
+    "mamba_d_model": 144,
+    "mamba_d_state": 64,
+    "maximum_parameter_gap": 0.05,
+    "sequence_length": 256,
+    "spin_channels": 2,
+    "steps": 300,
+    "validation_batches": 16,
+    "weight_decay": 0.01
+  },
+  "dataset": {
+    "encoding": "raw UTF-8 bytes",
+    "name": "Salesforce/wikitext wikitext-2-raw-v1",
+    "train_sha256": "fb23ad9643a34514eec5cb85ec2a6f49d1a33e6a3d5077dff5a403e1d18f5047",
+    "validation_sha256": "f3714de012180492efbcf4f0380322389a27f735ddb63e8c016a6a6285f50408"
+  },
+  "environment": {
+    "causal_conv1d": "1.7.0",
+    "compute_capability": [
+      7,
+      5
+    ],
+    "cuda": "13.0",
+    "gpu": "NVIDIA GeForce RTX 2070 SUPER",
+    "mamba2_fused": [
+      true,
+      "2.3.2.post1"
+    ],
+    "python": "3.10.12",
+    "torch": "2.10.0+cu130",
+    "total_cuda_bytes": 8589606912,
+    "triton": "3.6.0"
+  },
+  "implementation_sha256": {
+    "benchmark.py": "01c89480c7ad27c2764211308cb350b3aabf50d02fa5417ccbbb3688f238f55e",
+    "data.py": "b422398a759bb03e47ad0a8fc7eb0bf49150616120b47829d41d4654ceaff909",
+    "mamba2_baseline.py": "e8c20220bad4c848adc7c795611c664bb209679a5da66102fb19d2f151686604",
+    "model.py": "6001317cf2e0de596fa5e1c8aa38953d6f528b3666faa31e97d036c4327c453f"
+  },
+  "input_artifacts": {
+    "wikitext2_byte_seed17_300.json": "9ae5acea48feb04d35eab9cece0d3af1146b3088b6e453e2a3f92f756e2d8e86",
+    "wikitext2_byte_seed29_300.json": "666b47b3902706f5e95f7d4b6bdf4bbf5b0a67ac2202b99b6efc85e6d6680570",
+    "wikitext2_byte_seed43_300.json": "18b764d89f95cd5917013d1f3e455f5b32190e2c058abd854e4d11c9d400d0b4"
+  },
+  "parameter_match": {
+    "counts": {
+      "mamba2_fused": 623740,
+      "pure_spin_v1_2": 641996
+    },
+    "denominator": "larger model",
+    "relative_gap": 0.028436314244948566
+  },
+  "schema_version": 1,
+  "seeds": [
+    17,
+    29,
+    43
+  ]
+}

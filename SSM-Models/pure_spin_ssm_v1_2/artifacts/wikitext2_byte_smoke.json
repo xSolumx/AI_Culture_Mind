@@ -1,0 +1,72 @@
+{
+  "claim_scope": "matched natural-data training run; empirical, not a general superiority claim",
+  "config": {
+    "batch_size": 2,
+    "d_model": 128,
+    "gradient_clip": 1.0,
+    "layers": 4,
+    "learning_rate": 0.003,
+    "mamba_d_model": 144,
+    "mamba_d_state": 64,
+    "maximum_parameter_gap": 0.05,
+    "seed": 17,
+    "sequence_length": 32,
+    "spin_channels": 2,
+    "steps": 1,
+    "validation_batches": 16,
+    "weight_decay": 0.01
+  },
+  "dataset": {
+    "encoding": "raw UTF-8 bytes",
+    "name": "Salesforce/wikitext wikitext-2-raw-v1",
+    "train_sha256": "fb23ad9643a34514eec5cb85ec2a6f49d1a33e6a3d5077dff5a403e1d18f5047",
+    "validation_sha256": "f3714de012180492efbcf4f0380322389a27f735ddb63e8c016a6a6285f50408"
+  },
+  "environment": {
+    "cuda": "13.0",
+    "gpu": "NVIDIA GeForce RTX 2070 SUPER",
+    "mamba2_fused": [
+      true,
+      "2.3.2.post1"
+    ],
+    "python": "3.10.12",
+    "torch": "2.10.0+cu130"
+  },
+  "parameter_match": {
+    "counts": {
+      "mamba2_fused": 623740,
+      "pure_spin_v1_2": 641996
+    },
+    "denominator": "larger model",
+    "relative_gap": 0.028436314244948566
+  },
+  "results": [
+    {
+      "final_bits_per_byte": 7.523507039285321,
+      "final_nats_per_byte": 5.214897692203522,
+      "initial_nats_per_byte": 5.605354696512222,
+      "name": "pure_spin_v1_2",
+      "parameters": 641996,
+      "peak_cuda_bytes": 31221248,
+      "sampled_training_losses": {
+        "1": 5.638065814971924
+      },
+      "training_seconds": 0.1796778979996816,
+      "training_tokens_per_second": 356.19294700405175
+    },
+    {
+      "final_bits_per_byte": 7.519771189147616,
+      "final_nats_per_byte": 5.212308198213577,
+      "initial_nats_per_byte": 5.591679662466049,
+      "name": "mamba2_fused",
+      "parameters": 623740,
+      "peak_cuda_bytes": 30760960,
+      "sampled_training_losses": {
+        "1": 5.623425483703613
+      },
+      "training_seconds": 0.042799700000159646,
+      "training_tokens_per_second": 1495.3375841363672
+    }
+  ],
+  "schema_version": 1
+}

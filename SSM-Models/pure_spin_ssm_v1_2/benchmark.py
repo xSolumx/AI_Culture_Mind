@@ -1,0 +1,255 @@
+"""Matched WikiText-2 byte-LM training for Pure Spin v1.2 and fused Mamba-2."""
+
+from __future__ import annotations
+
+import argparse
+import hashlib
+import importlib.metadata
+import json
+import math
+import platform
+import random
+import time
+from dataclasses import asdict, dataclass
+from pathlib import Path
+
+import numpy as np
+import torch
+from data import random_batch, wikitext_bytes
+from mamba2_baseline import OfficialMamba2LM, fused_mamba2_available
+from model import PureSpinSSMV12, PureSpinV12Config, parameter_count
+from torch.nn import functional as F
+
+
+@dataclass(frozen=True)
+class BenchmarkConfig:
+    steps: int = 300
+    batch_size: int = 8
+    sequence_length: int = 256
+    validation_batches: int = 16
+    learning_rate: float = 3e-3
+    weight_decay: float = 0.01
+    gradient_clip: float = 1.0
+    d_model: int = 128
+    layers: int = 4
+    spin_channels: int = 2
+    mamba_d_model: int = 144
+    mamba_d_state: int = 64
+    maximum_parameter_gap: float = 0.05
+    seed: int = 17
+
+
+def seed_all(seed: int) -> None:
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed_all(seed)
+
+
+def file_sha256(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def build_model(name: str, config: BenchmarkConfig) -> torch.nn.Module:
+    if name == "pure_spin_v1_2":
+        return PureSpinSSMV12(
+            PureSpinV12Config(
+                d_model=config.d_model,
+                num_layers=config.layers,
+                spin_channels=config.spin_channels,
+            )
+        )
+    if name == "mamba2_fused":
+        return OfficialMamba2LM(
+            vocab_size=256,
+            d_model=config.mamba_d_model,
+            num_layers=config.layers,
+            d_state=config.mamba_d_state,
+            headdim=32,
+        )
+    raise ValueError(f"unknown model {name!r}")
+
+
+def parameter_match(config: BenchmarkConfig) -> dict[str, object]:
+    """Construct both candidates and fail unless trainable counts are matched."""
+    counts = {
+        name: parameter_count(build_model(name, config))
+        for name in ("pure_spin_v1_2", "mamba2_fused")
+    }
+    gap = abs(counts["pure_spin_v1_2"] - counts["mamba2_fused"]) / max(counts.values())
+    if gap > config.maximum_parameter_gap:
+        raise RuntimeError(
+            f"parameter gap {gap:.3%} exceeds {config.maximum_parameter_gap:.3%}: {counts}"
+        )
+    return {"counts": counts, "relative_gap": gap, "denominator": "larger model"}
+
+
+@torch.no_grad()
+def evaluate(
+    model: torch.nn.Module,
+    batches: list[tuple[torch.Tensor, torch.Tensor]],
+    device: torch.device,
+    name: str,
+) -> float:
+    model.eval()
+    loss_sum = 0.0
+    token_count = 0
+    for inputs, targets in batches:
+        inputs, targets = inputs.to(device), targets.to(device)
+        kwargs = {"scan_mode": "compiled_controller"} if name == "pure_spin_v1_2" else {}
+        logits = model(inputs, **kwargs)["logits"]
+        loss_sum += float(F.cross_entropy(logits.flatten(0, 1), targets.flatten(), reduction="sum"))
+        token_count += targets.numel()
+    return loss_sum / token_count
+
+
+def run_one(
+    name: str,
+    config: BenchmarkConfig,
+    train_stream: torch.Tensor,
+    validation: list[tuple[torch.Tensor, torch.Tensor]],
+    device: torch.device,
+) -> dict[str, object]:
+    seed_all(config.seed)
+    model = build_model(name, config).to(device)
+    optimizer = torch.optim.AdamW(
+        model.parameters(), lr=config.learning_rate, weight_decay=config.weight_decay
+    )
+    generator = torch.Generator().manual_seed(config.seed)
+    initial_loss = evaluate(model, validation, device, name)
+    warmup_generator = torch.Generator().manual_seed(config.seed + 2)
+    warmup_inputs, warmup_targets = random_batch(
+        train_stream,
+        batch_size=config.batch_size,
+        sequence_length=config.sequence_length,
+        generator=warmup_generator,
+    )
+    warmup_inputs, warmup_targets = warmup_inputs.to(device), warmup_targets.to(device)
+    model.train()
+    optimizer.zero_grad(set_to_none=True)
+    warmup_kwargs = {"scan_mode": "compiled_controller"} if name == "pure_spin_v1_2" else {}
+    warmup_logits = model(warmup_inputs, **warmup_kwargs)["logits"]
+    F.cross_entropy(warmup_logits.flatten(0, 1), warmup_targets.flatten()).backward()
+    optimizer.zero_grad(set_to_none=True)
+    torch.cuda.synchronize()
+    torch.cuda.reset_peak_memory_stats()
+    start = time.perf_counter()
+    sampled_losses = {}
+    model.train()
+    for step in range(1, config.steps + 1):
+        inputs, targets = random_batch(
+            train_stream,
+            batch_size=config.batch_size,
+            sequence_length=config.sequence_length,
+            generator=generator,
+        )
+        inputs, targets = inputs.to(device), targets.to(device)
+        optimizer.zero_grad(set_to_none=True)
+        kwargs = {"scan_mode": "compiled_controller"} if name == "pure_spin_v1_2" else {}
+        logits = model(inputs, **kwargs)["logits"]
+        loss = F.cross_entropy(logits.flatten(0, 1), targets.flatten())
+        loss.backward()
+        gradient_norm = torch.nn.utils.clip_grad_norm_(model.parameters(), config.gradient_clip)
+        if not torch.isfinite(gradient_norm):
+            raise FloatingPointError(f"nonfinite gradient at step {step}")
+        optimizer.step()
+        if step in {1, config.steps // 2, config.steps}:
+            sampled_losses[str(step)] = float(loss.detach())
+    torch.cuda.synchronize()
+    seconds = time.perf_counter() - start
+    final_loss = evaluate(model, validation, device, name)
+    tokens = config.steps * config.batch_size * config.sequence_length
+    return {
+        "name": name,
+        "parameters": parameter_count(model),
+        "initial_nats_per_byte": initial_loss,
+        "final_nats_per_byte": final_loss,
+        "final_bits_per_byte": final_loss / math.log(2),
+        "sampled_training_losses": sampled_losses,
+        "training_seconds": seconds,
+        "training_tokens_per_second": tokens / seconds,
+        "peak_cuda_bytes": torch.cuda.max_memory_allocated(),
+    }
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--steps", type=int, default=300)
+    parser.add_argument("--batch-size", type=int, default=8)
+    parser.add_argument("--sequence-length", type=int, default=256)
+    parser.add_argument("--validation-batches", type=int, default=16)
+    parser.add_argument("--seed", type=int, default=17)
+    parser.add_argument("--models", nargs="+", default=["pure_spin_v1_2", "mamba2_fused"])
+    parser.add_argument("--offline", action="store_true")
+    parser.add_argument("--output", type=Path, default=Path("artifacts/wikitext2_byte_300.json"))
+    args = parser.parse_args()
+    if not torch.cuda.is_available():
+        raise RuntimeError("the fused comparison requires CUDA")
+    if "mamba2_fused" in args.models:
+        available, detail = fused_mamba2_available()
+        if not available:
+            raise RuntimeError(f"official fused Mamba-2 unavailable: {detail}")
+    config = BenchmarkConfig(
+        steps=args.steps,
+        batch_size=args.batch_size,
+        sequence_length=args.sequence_length,
+        validation_batches=args.validation_batches,
+        seed=args.seed,
+    )
+    train, train_sha = wikitext_bytes("train", offline=args.offline)
+    valid, valid_sha = wikitext_bytes("validation", offline=args.offline)
+    train_stream = torch.from_numpy(train)
+    generator = torch.Generator().manual_seed(config.seed + 1)
+    validation = [
+        random_batch(
+            torch.from_numpy(valid),
+            batch_size=config.batch_size,
+            sequence_length=config.sequence_length,
+            generator=generator,
+        )
+        for _ in range(config.validation_batches)
+    ]
+    device = torch.device("cuda")
+    report = {
+        "schema_version": 1,
+        "claim_scope": "matched natural-data training run; empirical, not a general superiority claim",
+        "config": asdict(config),
+        "dataset": {
+            "name": "Salesforce/wikitext wikitext-2-raw-v1",
+            "encoding": "raw UTF-8 bytes",
+            "train_sha256": train_sha,
+            "validation_sha256": valid_sha,
+        },
+        "parameter_match": parameter_match(config)
+        if set(args.models) == {"pure_spin_v1_2", "mamba2_fused"}
+        else None,
+        "environment": {
+            "python": platform.python_version(),
+            "torch": torch.__version__,
+            "cuda": torch.version.cuda,
+            "gpu": torch.cuda.get_device_name(),
+            "compute_capability": list(torch.cuda.get_device_capability()),
+            "total_cuda_bytes": torch.cuda.get_device_properties(0).total_memory,
+            "triton": importlib.metadata.version("triton"),
+            "causal_conv1d": importlib.metadata.version("causal-conv1d"),
+            "mamba2_fused": fused_mamba2_available(),
+        },
+        "implementation_sha256": {
+            path.name: file_sha256(path)
+            for path in (
+                Path(__file__),
+                Path(__file__).with_name("model.py"),
+                Path(__file__).with_name("mamba2_baseline.py"),
+                Path(__file__).with_name("data.py"),
+            )
+        },
+        "results": [run_one(name, config, train_stream, validation, device) for name in args.models],
+    }
+    args.output.parent.mkdir(parents=True, exist_ok=True)
+    args.output.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n")
+    print(json.dumps(report, indent=2, sort_keys=True))
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
