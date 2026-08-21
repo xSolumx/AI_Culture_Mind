@@ -58,6 +58,12 @@ and from representation-theorem claims made without a trained model.
   24-state faithful cache and the held-out relation while recording a
   30.7x--67.1x local model-forward speedup. It is inference-only, serial in
   sequence depth, workstation-specific, and not a fused-Mamba comparison.
+- A separate SM75 hardware audit compiles repeated real eight-dimensional
+  isotypic copies to an FP16 Triton `mma.sync` recurrence. PTX proves genuine
+  Tensor-Core execution, but the optimized scalar register path wins six of
+  eight bounded cells and remains the default for the multiplicity-one
+  `(8v,8s+,8s-)` cache. One high-parallelism cell records a 1.147x win, so the
+  supported conclusion is shape-dependent hybrid dispatch.
 - A frozen noisy continuous-observation continuation removes the finite token
   dictionary. Fresh seeds 1--3 identify unique nonlinear/noisy local actions,
   retain exact center/identity correctness through L128, and give shared
@@ -209,6 +215,7 @@ and from representation-theorem claims made without a trained model.
 - [Pure Spin(8) versus Mamba-2 result](../../SSM-Models/experiments/PURE_SPIN8_VS_MAMBA2_RESULTS.md)
 - [Pure Spin(8) latent-increment validation](../../SSM-Models/experiments/PURE_SPIN8_LATENT_INCREMENT_RESULTS.md)
 - [Pure Spin(8) compiled token scan](../../SSM-Models/experiments/PURE_SPIN8_COMPILED_TOKEN_SCAN_RESULTS.md)
+- [Spin(8) isotypic Tensor-Core dispatch audit](../../SSM-Models/experiments/SPIN8_ISOTYPIC_TENSOR_CORE_AUDIT.md)
 - [Pure Spin(8) noisy continuous-observation validation](../../SSM-Models/experiments/PURE_SPIN8_CONTINUOUS_OBSERVATION_RESULTS.md)
 - [Pure Spin(8) endpoint-only continuous identification](../../SSM-Models/experiments/PURE_SPIN8_ENDPOINT_SUPERVISION_RESULTS.md)
 - [Pure Spin(8) endpoint observability boundary](../../SSM-Models/experiments/PURE_SPIN8_ENDPOINT_OBSERVABILITY_RESULTS.md)

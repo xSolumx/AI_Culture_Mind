@@ -104,6 +104,13 @@ evidence about implementations of that algebra.
   program per batch/representation for every-prefix recurrence. The recorded
   30.7x--67.1x speedup is a bounded model-forward result; continuous routing,
   table gradients, fused training, and parallel-prefix depth remain open.
+- The exact isotypic layout now has a direct hardware audit: aligned copies of
+  an eight-dimensional real block supply the column axis for a Triton FP16
+  matrix-matrix recurrence, and compiled PTX confirms actual `mma.sync`
+  dispatch on the RTX 2070 SUPER. A register-resident scalar comparator wins
+  most recorded cells; only one high-parallelism cell records a modest 1.147x
+  Tensor-Core win. This establishes a valid compiler target and rejects a
+  universal Tensor-Core policy.
 - Quaternion and unit-dual-quaternion composition now provide associative
   compact scans for the double covers of `SO(3)` and `SE(3)`, including exact
   identity padding and streaming cache continuation. Their eager-kernel and
@@ -122,6 +129,9 @@ evidence about implementations of that algebra.
 - Production competitiveness requires cross-device and end-to-end model
   comparisons; one local GPU kernel result does not establish a general
   systems or task-quality result.
+- Hardware scheduling from isotypic type is not yet automatic. Complex and
+  quaternionic layouts, per-device autotuning, precision certification, and
+  integration into trained continuous-action models remain open.
 - No general no-go theorem covers every nonlinear coordinate system for cyclic
   feedback.
 
@@ -163,6 +173,7 @@ evidence about implementations of that algebra.
 - [Fused indexed local-prefix expansion](../../Spin-Space-Research/docs/experiments/MIXED_MONOMIAL_GOLDEN_TRITON_LOCAL_PREFIX_RESULTS.md)
 - [Register-resident compiled chunk recurrence](../../Spin-Space-Research/docs/experiments/MIXED_MONOMIAL_GOLDEN_TRITON_CHUNK_RECURRENCE_RESULTS.md)
 - [Pure Spin(8) learned finite-token compiler](../../SSM-Models/experiments/PURE_SPIN8_COMPILED_TOKEN_SCAN_RESULTS.md)
+- [Spin(8) isotypic Tensor-Core dispatch audit](../../SSM-Models/experiments/SPIN8_ISOTYPIC_TENSOR_CORE_AUDIT.md)
 
 The final two reports are cross-program evidence. Their algebra/compiler claims
 belong here; their retrieval and hardware conclusions belong to Programme 03.
