@@ -334,6 +334,21 @@ model, dataset, and training horizon; the implementation remains a research
 control. See
 [`RETENTION_SCALED_BLOCK_RESULTS.md`](RETENTION_SCALED_BLOCK_RESULTS.md).
 
+## Dynamic isotypic retention
+
+The next model-level intervention removed an accidental timescale tying while
+leaving the independent Spin actions unchanged. Because `8v`, `8+`, and `8-`
+are inequivalent irreducible modules, Spin(8)-equivariant scalar retention may
+differ across them. A centered token-dependent residual implemented this
+freedom with exact zero-start pairing and full raw-CUDA gradients.
+
+It improved seeds 271 and 277 by `0.02529` and `0.01668` bpb, but regressed seed
+281 by `0.03472`. The mean gain was only `0.00242`, below the frozen `0.0100`
+threshold, so no speed gate or default promotion followed. The variance
+motivates a smaller continuous-time spectrum—static positive sector rates
+multiplying one token-dependent step—rather than another transport mechanism.
+See [`ISOTYPIC_RETENTION_RESULTS.md`](ISOTYPIC_RETENTION_RESULTS.md).
+
 ## Channel-mixer falsification
 
 Two custom non-exponential candidates were implemented:
