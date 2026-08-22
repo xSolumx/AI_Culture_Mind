@@ -49,6 +49,14 @@ def variants(stage: str, base: BenchmarkConfig) -> tuple[tuple[str, BenchmarkCon
     )
     if stage == "frontier":
         return (("independent_v1_2", independent), ("shared_orthogonal", orthogonal))
+    if stage == "independent_block":
+        block = replace(
+            base,
+            spin_backend="raw_cuda_block",
+            spin_recurrence="independent_block",
+            spin_recurrent_multiplicity="orthogonal",
+        )
+        return (("independent_v1_2", independent), ("independent_block", block))
     return (("independent_v1_2", independent), ("shared_identity", shared))
 
 
@@ -56,7 +64,12 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--stage",
-        choices=["multiplicity", "frontier", "compression"],
+        choices=[
+            "multiplicity",
+            "frontier",
+            "compression",
+            "independent_block",
+        ],
         required=True,
     )
     parser.add_argument("--steps", type=int, default=300)

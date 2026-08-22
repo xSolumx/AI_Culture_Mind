@@ -737,6 +737,173 @@ __global__ void coupled_coordinate_backward_kernel(
   }
 }
 
+// General block-affine recurrence with one independently controlled Spin
+// action per multiplicity copy.  The scalar 2x2 left action mixes the rotated
+// copies and preserves the contraction bound, while one warp still owns the
+// complete 2 x (8v + 8+ + 8-) state.
+__global__ void independent_block_forward_kernel(
+    const float* coordinates, const float* generators, const float* left,
+    const float* drive, const float* initial, float* output, int length,
+    int factors) {
+  const int lane = threadIdx.x;
+  const int batch = blockIdx.x;
+  const bool active = lane < 24;
+  const int representation = active ? lane >> 3 : 0;
+  const int row = lane & 7;
+  const int initial_base = batch * 48;
+  float state0 = active ? initial[initial_base + lane] : 0.0f;
+  float state1 = active ? initial[initial_base + 24 + lane] : 0.0f;
+
+  for (int position = 0; position < length; ++position) {
+    const int step = batch * length + position;
+    const int coordinate_base0 = step * 2 * factors;
+    const int coordinate_base1 = coordinate_base0 + factors;
+#pragma unroll 4
+    for (int coordinate = 0; coordinate < factors; ++coordinate) {
+      const float next0 = apply_factor(generators, representation, coordinate,
+          row, state0, coordinates[coordinate_base0 + coordinate], factors);
+      const float next1 = apply_factor(generators, representation, coordinate,
+          row, state1, coordinates[coordinate_base1 + coordinate], factors);
+      if (active) {
+        state0 = next0;
+        state1 = next1;
+      }
+      __syncwarp();
+    }
+    if (active) {
+      const int left_base = step * 4;
+      const int output_base = step * 48;
+      const float rotated0 = state0;
+      const float rotated1 = state1;
+      state0 = left[left_base] * rotated0 + left[left_base + 1] * rotated1 +
+          drive[output_base + lane];
+      state1 = left[left_base + 2] * rotated0 + left[left_base + 3] * rotated1 +
+          drive[output_base + 24 + lane];
+      output[output_base + lane] = state0;
+      output[output_base + 24 + lane] = state1;
+    }
+    __syncwarp();
+  }
+}
+
+__global__ void independent_block_backward_kernel(
+    const float* coordinates, const float* generators, const float* left,
+    const float* drive, const float* initial, const float* output,
+    const float* output_gradient, float* coordinate_gradient,
+    float* left_gradient, float* drive_gradient, float* initial_gradient,
+    int length, int factors) {
+  const int lane = threadIdx.x;
+  const int batch = blockIdx.x;
+  const bool active = lane < 24;
+  const int representation = active ? lane >> 3 : 0;
+  const int row = lane & 7;
+  const int initial_base = batch * 48;
+  float carry0 = 0.0f;
+  float carry1 = 0.0f;
+
+  for (int reverse_position = 0; reverse_position < length; ++reverse_position) {
+    const int position = length - 1 - reverse_position;
+    const int step = batch * length + position;
+    const int coordinate_base0 = step * 2 * factors;
+    const int coordinate_base1 = coordinate_base0 + factors;
+    const int left_base = step * 4;
+    const int output_base = step * 48;
+    const float direct0 = active
+        ? output_gradient[output_base + lane] + carry0
+        : 0.0f;
+    const float direct1 = active
+        ? output_gradient[output_base + 24 + lane] + carry1
+        : 0.0f;
+    float rotated0 = active
+        ? (position == 0 ? initial[initial_base + lane]
+                         : output[output_base - 48 + lane])
+        : 0.0f;
+    float rotated1 = active
+        ? (position == 0 ? initial[initial_base + 24 + lane]
+                         : output[output_base - 24 + lane])
+        : 0.0f;
+#pragma unroll 4
+    for (int coordinate = 0; coordinate < factors; ++coordinate) {
+      const float next0 = apply_factor(generators, representation, coordinate,
+          row, rotated0, coordinates[coordinate_base0 + coordinate], factors);
+      const float next1 = apply_factor(generators, representation, coordinate,
+          row, rotated1, coordinates[coordinate_base1 + coordinate], factors);
+      if (active) {
+        rotated0 = next0;
+        rotated1 = next1;
+      }
+      __syncwarp();
+    }
+
+    const float left00 = warp_sum(active ? direct0 * rotated0 : 0.0f);
+    const float left01 = warp_sum(active ? direct0 * rotated1 : 0.0f);
+    const float left10 = warp_sum(active ? direct1 * rotated0 : 0.0f);
+    const float left11 = warp_sum(active ? direct1 * rotated1 : 0.0f);
+    if (lane == 0) {
+      left_gradient[left_base] = left00;
+      left_gradient[left_base + 1] = left01;
+      left_gradient[left_base + 2] = left10;
+      left_gradient[left_base + 3] = left11;
+    }
+    if (active) {
+      drive_gradient[output_base + lane] = direct0;
+      drive_gradient[output_base + 24 + lane] = direct1;
+    }
+    const float l00 = left[left_base];
+    const float l01 = left[left_base + 1];
+    const float l10 = left[left_base + 2];
+    const float l11 = left[left_base + 3];
+    float adjoint0 = active ? l00 * direct0 + l10 * direct1 : 0.0f;
+    float adjoint1 = active ? l01 * direct0 + l11 * direct1 : 0.0f;
+    float state_after0 = rotated0;
+    float state_after1 = rotated1;
+
+#pragma unroll 4
+    for (int reverse_coordinate = 0; reverse_coordinate < factors;
+         ++reverse_coordinate) {
+      const int coordinate = factors - 1 - reverse_coordinate;
+      const float angle0 = coordinates[coordinate_base0 + coordinate];
+      const float angle1 = coordinates[coordinate_base1 + coordinate];
+      const float state_before0_raw = apply_factor(generators, representation,
+          coordinate, row, state_after0, -angle0, factors);
+      const float state_before1_raw = apply_factor(generators, representation,
+          coordinate, row, state_after1, -angle1, factors);
+      const float state_before0 = active ? state_before0_raw : 0.0f;
+      const float state_before1 = active ? state_before1_raw : 0.0f;
+      __syncwarp();
+      const float derivative0 = factor_derivative(generators, representation,
+          coordinate, row, state_before0, angle0, factors);
+      const float derivative1 = factor_derivative(generators, representation,
+          coordinate, row, state_before1, angle1, factors);
+      const float angle_gradient0 = warp_sum(
+          active ? adjoint0 * derivative0 : 0.0f);
+      const float angle_gradient1 = warp_sum(
+          active ? adjoint1 * derivative1 : 0.0f);
+      if (lane == 0) {
+        coordinate_gradient[coordinate_base0 + coordinate] = angle_gradient0;
+        coordinate_gradient[coordinate_base1 + coordinate] = angle_gradient1;
+      }
+      const float inverse0 = apply_factor(generators, representation,
+          coordinate, row, adjoint0, -angle0, factors);
+      const float inverse1 = apply_factor(generators, representation,
+          coordinate, row, adjoint1, -angle1, factors);
+      if (active) {
+        adjoint0 = inverse0;
+        adjoint1 = inverse1;
+        state_after0 = state_before0;
+        state_after1 = state_before1;
+      }
+      __syncwarp();
+    }
+    carry0 = adjoint0;
+    carry1 = adjoint1;
+  }
+  if (active) {
+    initial_gradient[initial_base + lane] = carry0;
+    initial_gradient[initial_base + 24 + lane] = carry1;
+  }
+}
+
 void check_controller_inputs(
     const torch::Tensor& features, const torch::Tensor& weight,
     const torch::Tensor& bias, const torch::Tensor& generators,
@@ -808,6 +975,32 @@ void check_coupled_inputs(
       coordinates.size(2) <= 28, "coordinates must be (B,L,F), 1 <= F <= 28");
   const auto batch = coordinates.size(0), length = coordinates.size(1);
   const auto factors = coordinates.size(2);
+  TORCH_CHECK(generators.sizes() == torch::IntArrayRef({3, factors, 8, 8}),
+      "generators must be (3,F,8,8)");
+  TORCH_CHECK(left.sizes() == torch::IntArrayRef({batch, length, 2, 2}),
+      "left must be (B,L,2,2)");
+  TORCH_CHECK(drive.sizes() == torch::IntArrayRef({batch, length, 2, 3, 8}),
+      "drive must be (B,L,2,3,8)");
+  TORCH_CHECK(initial.sizes() == torch::IntArrayRef({batch, 2, 3, 8}),
+      "initial must be (B,2,3,8)");
+}
+
+void check_independent_block_inputs(
+    const torch::Tensor& coordinates, const torch::Tensor& generators,
+    const torch::Tensor& left, const torch::Tensor& drive,
+    const torch::Tensor& initial) {
+  for (const auto& tensor : {coordinates, generators, left, drive, initial}) {
+    TORCH_CHECK(tensor.is_cuda() && tensor.scalar_type() == torch::kFloat32,
+        "independent-block tensors must be CUDA float32");
+    TORCH_CHECK(tensor.device() == coordinates.device(), "devices must match");
+    TORCH_CHECK(tensor.is_contiguous(),
+        "independent-block tensors must be contiguous");
+  }
+  TORCH_CHECK(coordinates.dim() == 4 && coordinates.size(2) == 2 &&
+      coordinates.size(3) >= 1 && coordinates.size(3) <= 28,
+      "coordinates must be (B,L,2,F), 1 <= F <= 28");
+  const auto batch = coordinates.size(0), length = coordinates.size(1);
+  const auto factors = coordinates.size(3);
   TORCH_CHECK(generators.sizes() == torch::IntArrayRef({3, factors, 8, 8}),
       "generators must be (3,F,8,8)");
   TORCH_CHECK(left.sizes() == torch::IntArrayRef({batch, length, 2, 2}),
@@ -1043,6 +1236,55 @@ std::vector<torch::Tensor> coupled_coordinate_backward_cuda(
   auto initial_gradient = torch::empty_like(initial);
   const c10::cuda::CUDAGuard guard(coordinates.device());
   coupled_coordinate_backward_kernel<<<batch, 32, 0,
+      at::cuda::getCurrentCUDAStream()>>>(
+      coordinates.data_ptr<float>(), generators.data_ptr<float>(),
+      left.data_ptr<float>(), drive.data_ptr<float>(), initial.data_ptr<float>(),
+      output.data_ptr<float>(), output_gradient.data_ptr<float>(),
+      coordinate_gradient.data_ptr<float>(), left_gradient.data_ptr<float>(),
+      drive_gradient.data_ptr<float>(), initial_gradient.data_ptr<float>(),
+      length, factors);
+  C10_CUDA_KERNEL_LAUNCH_CHECK();
+  return {coordinate_gradient, left_gradient, drive_gradient, initial_gradient};
+}
+
+torch::Tensor independent_block_forward_cuda(
+    torch::Tensor coordinates, torch::Tensor generators, torch::Tensor left,
+    torch::Tensor drive, torch::Tensor initial) {
+  check_independent_block_inputs(coordinates, generators, left, drive, initial);
+  const int batch = coordinates.size(0), length = coordinates.size(1);
+  const int factors = coordinates.size(3);
+  auto output = torch::empty_like(drive);
+  const c10::cuda::CUDAGuard guard(coordinates.device());
+  independent_block_forward_kernel<<<batch, 32, 0,
+      at::cuda::getCurrentCUDAStream()>>>(
+      coordinates.data_ptr<float>(), generators.data_ptr<float>(),
+      left.data_ptr<float>(), drive.data_ptr<float>(), initial.data_ptr<float>(),
+      output.data_ptr<float>(), length, factors);
+  C10_CUDA_KERNEL_LAUNCH_CHECK();
+  return output;
+}
+
+std::vector<torch::Tensor> independent_block_backward_cuda(
+    torch::Tensor coordinates, torch::Tensor generators, torch::Tensor left,
+    torch::Tensor drive, torch::Tensor initial, torch::Tensor output,
+    torch::Tensor output_gradient) {
+  check_independent_block_inputs(coordinates, generators, left, drive, initial);
+  const int batch = coordinates.size(0), length = coordinates.size(1);
+  const int factors = coordinates.size(3);
+  TORCH_CHECK(output.is_cuda() && output_gradient.is_cuda() &&
+      output.is_contiguous() && output_gradient.is_contiguous() &&
+      output.device() == coordinates.device() &&
+      output_gradient.device() == coordinates.device(),
+      "output tensors must be contiguous and on the coordinate device");
+  TORCH_CHECK(output.sizes() == drive.sizes() &&
+      output_gradient.sizes() == drive.sizes(),
+      "output tensors must be (B,L,2,3,8)");
+  auto coordinate_gradient = torch::empty_like(coordinates);
+  auto left_gradient = torch::empty_like(left);
+  auto drive_gradient = torch::empty_like(drive);
+  auto initial_gradient = torch::empty_like(initial);
+  const c10::cuda::CUDAGuard guard(coordinates.device());
+  independent_block_backward_kernel<<<batch, 32, 0,
       at::cuda::getCurrentCUDAStream()>>>(
       coordinates.data_ptr<float>(), generators.data_ptr<float>(),
       left.data_ptr<float>(), drive.data_ptr<float>(), initial.data_ptr<float>(),

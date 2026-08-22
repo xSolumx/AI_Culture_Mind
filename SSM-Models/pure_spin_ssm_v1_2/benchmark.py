@@ -229,6 +229,7 @@ def main() -> int:
             "raw_cuda_isotypic",
             "raw_cuda_hybrid",
             "raw_cuda_coupled",
+            "raw_cuda_block",
             "chunk_parallel",
         ],
         default="raw_cuda_hybrid",
@@ -250,7 +251,7 @@ def main() -> int:
     )
     parser.add_argument(
         "--spin-recurrence",
-        choices=["independent", "coupled_isotypic"],
+        choices=["independent", "coupled_isotypic", "independent_block"],
         default="independent",
     )
     parser.add_argument(

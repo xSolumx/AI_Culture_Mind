@@ -31,6 +31,13 @@ std::vector<torch::Tensor> coupled_coordinate_backward_cuda(
     torch::Tensor coordinates, torch::Tensor generators, torch::Tensor left,
     torch::Tensor drive, torch::Tensor initial, torch::Tensor output,
     torch::Tensor output_gradient);
+torch::Tensor independent_block_forward_cuda(
+    torch::Tensor coordinates, torch::Tensor generators, torch::Tensor left,
+    torch::Tensor drive, torch::Tensor initial);
+std::vector<torch::Tensor> independent_block_backward_cuda(
+    torch::Tensor coordinates, torch::Tensor generators, torch::Tensor left,
+    torch::Tensor drive, torch::Tensor initial, torch::Tensor output,
+    torch::Tensor output_gradient);
 
 PYBIND11_MODULE(TORCH_EXTENSION_NAME, module) {
   module.def("forward", &spin8_scan_cuda, "Spin(8) recurrent scan forward (CUDA)");
@@ -50,4 +57,8 @@ PYBIND11_MODULE(TORCH_EXTENSION_NAME, module) {
       "Coupled-isotypic Spin(8) coordinate recurrence forward (CUDA)");
   module.def("coupled_coordinate_backward", &coupled_coordinate_backward_cuda,
       "Coupled-isotypic Spin(8) coordinate recurrence backward (CUDA)");
+  module.def("independent_block_forward", &independent_block_forward_cuda,
+      "Independent-action block-coupled Spin(8) recurrence forward (CUDA)");
+  module.def("independent_block_backward", &independent_block_backward_cuda,
+      "Independent-action block-coupled Spin(8) recurrence backward (CUDA)");
 }
