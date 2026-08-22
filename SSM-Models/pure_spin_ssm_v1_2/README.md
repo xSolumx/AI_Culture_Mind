@@ -11,6 +11,8 @@ The current local execution contract is documented in the
 only large weights plus download/dataset caches belong on E:.
 The [`pre-BIOS handoff`](PRE_BIOS_HANDOFF_2026-08-22.md) records the repaired
 WSL user session, frozen environment, and mandatory post-firmware smoke checks.
+The [`post-BIOS validation`](POST_BIOS_VALIDATION_2026-08-22.md) records the
+accepted F14a, Secure Boot, DDR4-3200, systemd, and CUDA readiness state.
 
 ## Architecture
 

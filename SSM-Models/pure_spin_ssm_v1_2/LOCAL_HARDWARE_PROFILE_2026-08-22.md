@@ -13,7 +13,7 @@ copied into the repository.
 | scan | HWiNFO-style snapshot taken 2026-08-22 10:02; volatile clocks, temperatures, free space, and link power states are point-in-time values |
 | operating system | Windows 11 Pro x64, build 26200.9168 (25H2); UEFI boot; Secure Boot enabled |
 | motherboard | Gigabyte Z390 AORUS PRO WIFI-CF, Intel Z390 chipset; PCIe 3.0; USB 3.1 |
-| firmware/security | Pre-update snapshot: AMI UEFI F12 dated 2021-11-05; hardware TPM 2.0; Hyper-V active; HVCI disabled |
+| firmware/security | Current post-update state: AMI UEFI F14a dated 2025-06-12; UEFI Secure Boot enabled; Hyper-V active. The pre-update scan reported hardware TPM 2.0 and HVCI disabled. |
 | CPU cooling/peripherals | Corsair H100i RGB Platinum USB cooler and Lighting Node Pro reported; SteelSeries Rival 5 and Corsair K70 RGB MK.2 attached |
 | display | Samsung display identified only as EDID code `SAM0F58`; the scan does not provide a reliable model/resolution entry |
 | audio | Realtek ALC1220 motherboard audio plus NVIDIA TU104 HDMI/DisplayPort audio |
@@ -107,8 +107,10 @@ retroactively.
   Ubuntu desktop-installer Subiquity snap service was also disabled, without
   uninstalling the snap, because it waited indefinitely on cloud-init at every
   WSL boot.
-- BIOS F12 is the pre-update state. Gigabyte lists F14a for the Z390 AORUS PRO
-  WIFI rev. 1.0 with file size 6.80 MB, checksum `40F6`, date 2025-06-11, and
-  security-fix release notes. The physical board revision and downloaded file
-  must be checked before flashing. After any firmware update, this hardware
-  profile and all performance assumptions require a fresh probe.
+- BIOS F14a is installed. Its first boot had reset Secure Boot and reduced the
+  configured memory rate to 3100 MT/s; both were restored before validation.
+  The accepted post-update state is UEFI Secure Boot enabled, Hyper-V active,
+  and all three DIMMs configured at 3200 MT/s. A cold WSL start, the complete
+  24-test v1.2 suite, llama.cpp CUDA discovery, and an FP16 GPU-load smoke test
+  passed with PCIe Gen3 x16. This is a readiness result, not a replacement for
+  the earlier matched throughput artifacts.
