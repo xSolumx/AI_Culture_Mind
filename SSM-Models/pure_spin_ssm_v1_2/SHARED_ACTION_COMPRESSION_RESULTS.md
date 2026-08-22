@@ -46,6 +46,10 @@ actions. Any cross-channel recurrence then needs either a general block-affine
 compiler or an explicitly transported/gauge-covariant low-rank coupling; it
 cannot inherit the cheap Kronecker closure of the shared-action candidate.
 
+That direction is now implemented as the independent-action block-affine
+recurrence, with its theorem boundary and frozen gate in
+`INDEPENDENT_BLOCK_RECURRENCE_PREREGISTRATION.md`.
+
 The machine-readable verdict is
 [`artifacts/shared_action_compression_summary.json`](artifacts/shared_action_compression_summary.json),
 and the frozen protocol is

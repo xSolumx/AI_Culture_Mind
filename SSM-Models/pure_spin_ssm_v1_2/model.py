@@ -32,7 +32,9 @@ class PureSpinV12Config:
     readout: Literal["direction", "triality_invariants"] = "direction"
     multiplicity_router: Literal["none", "orthogonal_query"] = "none"
     multiplicity_angle_limit: float = 1.5707963267948966
-    recurrence: Literal["independent", "coupled_isotypic"] = "independent"
+    recurrence: Literal[
+        "independent", "coupled_isotypic", "independent_block"
+    ] = "independent"
     recurrent_multiplicity: Literal["identity", "orthogonal"] = "identity"
     group_schedule: tuple[int, ...] | None = None
     dropout: float = 0.0
@@ -69,7 +71,11 @@ class PureSpinV12Config:
             raise ValueError("unknown multiplicity router")
         if self.multiplicity_angle_limit < 0.0:
             raise ValueError("multiplicity_angle_limit must be nonnegative")
-        if self.recurrence not in ("independent", "coupled_isotypic"):
+        if self.recurrence not in (
+            "independent",
+            "coupled_isotypic",
+            "independent_block",
+        ):
             raise ValueError("unknown recurrence")
         if self.recurrent_multiplicity not in ("identity", "orthogonal"):
             raise ValueError("unknown recurrent multiplicity mode")
@@ -77,7 +83,7 @@ class PureSpinV12Config:
             self.recurrence == "independent"
             and self.recurrent_multiplicity != "identity"
         ):
-            raise ValueError("recurrent multiplicity requires coupled_isotypic")
+            raise ValueError("recurrent multiplicity requires a coupled recurrence")
         if self.group_schedule is not None:
             if len(self.group_schedule) != self.num_layers:
                 raise ValueError("group_schedule must have one entry per layer")
@@ -213,6 +219,8 @@ class PureSpinV12Block(nn.Module):
             nn.init.zeros_(self.spin.coefficient_controller.bias)
             if self.spin.channels < 2:
                 raise ValueError("coupled_isotypic requires at least two channels")
+        if self.recurrence_mode == "independent_block" and self.spin.channels < 2:
+            raise ValueError("independent_block requires at least two channels")
         self.recurrent_pairs = tuple(combinations(range(self.spin.channels), 2))
         if self.recurrent_multiplicity == "orthogonal":
             with torch.random.fork_rng(devices=[]):
@@ -328,7 +336,68 @@ class PureSpinV12Block(nn.Module):
     ) -> tuple[torch.Tensor, torch.Tensor]:
         value, gate = self.input_projection(self.norm(hidden)).chunk(2, dim=-1)
         value = F.silu(self.local_conv(value))
-        if self.recurrence_mode == "coupled_isotypic":
+        if self.recurrence_mode == "independent_block":
+            if scan_mode not in {
+                "block_recurrent",
+                "block_parallel",
+                "raw_cuda_block",
+            }:
+                raise ValueError(
+                    "independent_block requires block_recurrent, block_parallel, "
+                    "or raw_cuda_block"
+                )
+            from chunk_parallel_scan import factorized_triality_actions
+            from coupled_isotypic_scan import contractive_givens_left
+            from independent_block_scan import (
+                parallel_independent_block_scan,
+                recurrent_independent_block_scan,
+            )
+
+            if state is None:
+                state = self.spin.initial_cache(value.shape[0], value)
+            normalized, scale, drive, coordinate_gate = (
+                self.spin._normalized_control_fields(value, valid_mask)
+            )
+            factor_count = len(self.subgroup_indices)
+            coordinates = self.spin.coefficient_controller(normalized).reshape(
+                value.shape[0], value.shape[1], self.spin.channels, factor_count
+            )
+            coordinates = coordinates * coordinate_gate[..., None, None]
+            if self.recurrent_multiplicity_controller is None:
+                angles = value.new_zeros(*value.shape[:2], len(self.recurrent_pairs))
+            else:
+                angles = self.multiplicity_angle_limit * torch.tanh(
+                    self.recurrent_multiplicity_controller(normalized)
+                )
+                angles = angles * coordinate_gate[..., None]
+            left = contractive_givens_left(scale, angles, self.recurrent_pairs)
+            if scan_mode == "raw_cuda_block":
+                if self.spin.channels != 2:
+                    raise ValueError(
+                        "raw_cuda_block currently requires exactly two channels"
+                    )
+                from raw_cuda import raw_cuda_independent_block_scan
+
+                raw_states = raw_cuda_independent_block_scan(
+                    coordinates,
+                    self.subgroup_generators.to(value),
+                    left,
+                    drive,
+                    state,
+                )
+                final_state = raw_states[:, -1]
+            else:
+                actions = factorized_triality_actions(
+                    coordinates, self.subgroup_generators.to(value)
+                )
+                scanner = (
+                    parallel_independent_block_scan
+                    if scan_mode == "block_parallel"
+                    else recurrent_independent_block_scan
+                )
+                raw_states, final_state = scanner(left, actions, drive, state)
+            states = self.spin.triality_readout(raw_states)
+        elif self.recurrence_mode == "coupled_isotypic":
             if scan_mode not in {
                 "coupled_recurrent",
                 "coupled_parallel",

@@ -233,6 +233,73 @@ def test_recurrent_multiplicity_candidate_has_paired_identity_initialization() -
     torch.testing.assert_close(actual, expected, rtol=0.0, atol=0.0)
 
 
+def test_independent_block_candidate_reduces_to_v12_and_learns_coupling() -> None:
+    base = {
+        "d_model": 16,
+        "num_layers": 1,
+        "spin_channels": 2,
+        "dropout": 0.0,
+    }
+    torch.manual_seed(202_608_36)
+    maintained = PureSpinSSMV12(PureSpinV12Config(**base)).eval()
+    torch.manual_seed(202_608_36)
+    candidate = PureSpinSSMV12(
+        PureSpinV12Config(
+            **base,
+            recurrence="independent_block",
+            recurrent_multiplicity="orthogonal",
+        )
+    ).eval()
+    candidate_state = candidate.state_dict()
+    for name, value in maintained.state_dict().items():
+        assert torch.equal(value, candidate_state[name]), name
+    tokens = torch.randint(0, 256, (2, 7))
+    expected = maintained(tokens, scan_mode="chunk_parallel")["logits"]
+    actual = candidate(tokens, scan_mode="block_recurrent")["logits"]
+    torch.testing.assert_close(actual, expected, rtol=5e-5, atol=5e-5)
+    actual.square().mean().backward()
+    for block in candidate.blocks:
+        gradient = block.recurrent_multiplicity_controller.weight.grad
+        assert gradient is not None
+        assert torch.isfinite(gradient).all()
+        assert torch.count_nonzero(gradient) > 0
+
+
+def test_independent_block_full_model_parallel_gradient_parity() -> None:
+    torch.manual_seed(202_608_37)
+    config = PureSpinV12Config(
+        d_model=16,
+        num_layers=1,
+        spin_channels=2,
+        recurrence="independent_block",
+        recurrent_multiplicity="orthogonal",
+    )
+    recurrent = PureSpinSSMV12(config)
+    parallel = copy.deepcopy(recurrent)
+    with torch.no_grad():
+        recurrent.blocks[0].recurrent_multiplicity_controller.weight.normal_(
+            std=0.02
+        )
+        parallel.load_state_dict(recurrent.state_dict())
+    tokens = torch.randint(0, 256, (2, 7))
+    expected = recurrent(tokens, scan_mode="block_recurrent")["logits"]
+    actual = parallel(tokens, scan_mode="block_parallel")["logits"]
+    output_gradient = torch.randn_like(actual)
+    expected_gradients = torch.autograd.grad(
+        expected, tuple(recurrent.parameters()), output_gradient
+    )
+    actual_gradients = torch.autograd.grad(
+        actual, tuple(parallel.parameters()), output_gradient
+    )
+    torch.testing.assert_close(actual, expected, rtol=8e-5, atol=8e-5)
+    for actual_gradient, expected_gradient in zip(
+        actual_gradients, expected_gradients, strict=True
+    ):
+        torch.testing.assert_close(
+            actual_gradient, expected_gradient, rtol=4e-3, atol=5e-3
+        )
+
+
 def test_fused_mamba_probe_never_claims_fallback() -> None:
     available, detail = fused_mamba2_available()
     assert isinstance(available, bool)

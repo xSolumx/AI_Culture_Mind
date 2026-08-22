@@ -257,6 +257,36 @@ class _RawCudaCoupledCoordinateFactorized(torch.autograd.Function):
         return gradients[0], None, *gradients[1:]
 
 
+class _RawCudaIndependentBlockFactorized(torch.autograd.Function):
+    """Independent Spin actions followed by a learned 2x2 left action."""
+
+    @staticmethod
+    def forward(ctx, coordinates, generators, left, drive, initial):
+        tensors = (coordinates, generators, left, drive, initial)
+        if any(tensor.device.type != "cuda" for tensor in tensors):
+            raise ValueError("raw independent-block backend requires CUDA tensors")
+        if any(tensor.dtype != torch.float32 for tensor in tensors):
+            raise ValueError("raw independent-block backend requires float32 tensors")
+        contiguous = tuple(tensor.contiguous() for tensor in tensors)
+        output = extension().independent_block_forward(*contiguous)
+        ctx.save_for_backward(*contiguous, output)
+        return output
+
+    @staticmethod
+    def backward(ctx, output_gradient):
+        coordinates, generators, left, drive, initial, output = ctx.saved_tensors
+        gradients = extension().independent_block_backward(
+            coordinates,
+            generators,
+            left,
+            drive,
+            initial,
+            output,
+            output_gradient.contiguous(),
+        )
+        return gradients[0], None, *gradients[1:]
+
+
 def raw_cuda_controller_factorized_scan(
     features,
     weight,
@@ -325,5 +355,14 @@ def raw_cuda_coupled_coordinate_scan(
     representations and one shared ordered Spin factorization.
     """
     return _RawCudaCoupledCoordinateFactorized.apply(
+        coordinates, generators, left, drive, initial
+    )
+
+
+def raw_cuda_independent_block_scan(
+    coordinates, generators, left, drive, initial
+):
+    """Full-training CUDA lowering of the independent-action block monoid."""
+    return _RawCudaIndependentBlockFactorized.apply(
         coordinates, generators, left, drive, initial
     )

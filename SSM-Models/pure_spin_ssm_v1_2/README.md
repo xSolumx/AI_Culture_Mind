@@ -53,6 +53,14 @@ non-inferiority, showing that the independent channel controllers are useful at
 this scale. See
 [`SHARED_ACTION_COMPRESSION_RESULTS.md`](SHARED_ACTION_COMPRESSION_RESULTS.md).
 
+The resulting frontier preserves both independent Spin controllers and inserts
+an identity-start `SO(2)` mixer after their tokenwise actions. Its exact closure
+is a 16-dimensional block-affine monoid per triality sector, while the raw CUDA
+streaming path evaluates the structured factors directly with the original
+48-scalar cache. This is an experimental control pending its frozen Shakespeare
+gate; it is not the maintained default. See
+[`INDEPENDENT_BLOCK_RECURRENCE_PREREGISTRATION.md`](INDEPENDENT_BLOCK_RECURRENCE_PREREGISTRATION.md).
+
 The recurrence is not Mamba-2 under different notation. Its state transition is
 a selective contractive affine Spin(8) action. Local convolution and SwiGLU are
 included because the old pure recurrence lacked the local/channel mixing needed
