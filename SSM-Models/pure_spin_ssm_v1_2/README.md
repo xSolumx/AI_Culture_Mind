@@ -9,6 +9,8 @@ The current local execution contract is documented in the
 [`storage audit`](STORAGE_AUDIT_2026-08-22.md): WSL is authoritative, CUDA
 12.6 targets native `sm_75`, source/build/environments stay on WSL ext4, and
 only large weights plus download/dataset caches belong on E:.
+The [`pre-BIOS handoff`](PRE_BIOS_HANDOFF_2026-08-22.md) records the repaired
+WSL user session, frozen environment, and mandatory post-firmware smoke checks.
 
 ## Architecture
 

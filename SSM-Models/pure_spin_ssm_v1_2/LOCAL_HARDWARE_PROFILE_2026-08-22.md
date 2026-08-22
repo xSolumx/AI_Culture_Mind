@@ -13,7 +13,7 @@ copied into the repository.
 | scan | HWiNFO-style snapshot taken 2026-08-22 10:02; volatile clocks, temperatures, free space, and link power states are point-in-time values |
 | operating system | Windows 11 Pro x64, build 26200.9168 (25H2); UEFI boot; Secure Boot enabled |
 | motherboard | Gigabyte Z390 AORUS PRO WIFI-CF, Intel Z390 chipset; PCIe 3.0; USB 3.1 |
-| firmware/security | AMI UEFI F12 dated 2021-11-05; hardware TPM 2.0; Hyper-V active; HVCI disabled |
+| firmware/security | Pre-update snapshot: AMI UEFI F12 dated 2021-11-05; hardware TPM 2.0; Hyper-V active; HVCI disabled |
 | CPU cooling/peripherals | Corsair H100i RGB Platinum USB cooler and Lighting Node Pro reported; SteelSeries Rival 5 and Corsair K70 RGB MK.2 attached |
 | display | Samsung display identified only as EDID code `SAM0F58`; the scan does not provide a reliable model/resolution entry |
 | audio | Realtek ALC1220 motherboard audio plus NVIDIA TU104 HDMI/DisplayPort audio |
@@ -62,6 +62,11 @@ For GGUF inference, 10 GiB also bounds which partially offloaded models are
 credible. Swap completion is not a performance result; any benchmark that
 pages is invalid.
 
+The maintained WSL runtime was upgraded on 2026-08-22 from WSL 2.6.1/kernel
+6.6.87.2 to WSL 2.7.12/kernel 6.18.33.2 using `wsl --update`. Systemd remains
+enabled. Five consecutive cold boots plus the complete CUDA test suite started
+`user@1000.service` successfully after the update.
+
 ## Storage
 
 | drive | hardware / live free space | role |
@@ -95,9 +100,15 @@ retroactively.
 
 - Windows Hyper-V is active, as required by WSL2; bare-metal timing is outside
   the project scope.
-- The WSL `user@1000.service` currently fails with `status=219/CGROUP` while
-  command-line CUDA remains functional. This should be repaired or systemd
-  disabled separately; it is not silently counted as a model failure.
-- BIOS F12 dates to 2021. Firmware changes, memory topology changes, ReBAR, and
-  power-limit changes are system administration experiments, not model-code
-  optimizations, and require their own stability checks.
+- The prior intermittent WSL 2.6.1 `user@1000.service` failure was reproduced
+  exactly as `Failed to attach to cgroup ... Device or resource busy`, status
+  `219/CGROUP`. The official WSL 2.7.12 update resolved the reproduced failure;
+  no cgroup override and no systemd disablement was introduced. The unrelated
+  Ubuntu desktop-installer Subiquity snap service was also disabled, without
+  uninstalling the snap, because it waited indefinitely on cloud-init at every
+  WSL boot.
+- BIOS F12 is the pre-update state. Gigabyte lists F14a for the Z390 AORUS PRO
+  WIFI rev. 1.0 with file size 6.80 MB, checksum `40F6`, date 2025-06-11, and
+  security-fix release notes. The physical board revision and downloaded file
+  must be checked before flashing. After any firmware update, this hardware
+  profile and all performance assumptions require a fresh probe.
