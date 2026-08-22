@@ -13,11 +13,10 @@ import sys
 from pathlib import Path
 
 import torch
-from torch.utils.cpp_extension import is_ninja_available
-
 from data import tiny_shakespeare_bytes
 from mamba2_baseline import fused_mamba2_available
 from raw_cuda import _extension_name, extension
+from torch.utils.cpp_extension import is_ninja_available
 
 EXPECTED_DISTRIBUTIONS = {
     "causal-conv1d": "1.7.0",

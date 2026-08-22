@@ -14,11 +14,17 @@ ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT.parent))
 
+from chunk_parallel_scan import factorized_triality_actions
+from coupled_isotypic_scan import (
+    CoupledIsotypicTransition,
+    recurrent_coupled_scan,
+)
 from model import PureSpinSSMV12, PureSpinV12Config
 from pure_spin8_ssm.factorized_scan import triton_controller_factorized_scan
 from raw_cuda import (
     raw_cuda_controller_factorized_scan,
     raw_cuda_coordinate_factorized_scan,
+    raw_cuda_coupled_coordinate_scan,
     raw_cuda_hybrid_coordinate_scan,
     raw_cuda_isotypic_coordinate_scan,
 )
@@ -39,6 +45,66 @@ def controller_inputs() -> tuple[torch.Tensor, ...]:
         [[1.0, 1.0, 1.0, 0.0, 0.0], [1.0] * length], device="cuda"
     )
     return features, weight, bias, generators, scale, drive, initial, gate
+
+
+def coupled_inputs(factor_count: int = 6) -> tuple[torch.Tensor, ...]:
+    torch.manual_seed(20_260_824)
+    batch, length = 2, 5
+    coordinates = 0.03 * torch.randn(
+        batch, length, factor_count, device="cuda"
+    )
+    generators = torch_triality_generators(device="cuda")[:, :factor_count]
+    angles = 0.1 * torch.randn(batch, length, device="cuda")
+    cosine, sine = torch.cos(angles), torch.sin(angles)
+    scale = 0.75 + 0.15 * torch.rand(batch, length, 2, device="cuda")
+    rotation = torch.stack(
+        (cosine, -sine, sine, cosine), dim=-1
+    ).reshape(batch, length, 2, 2)
+    left = scale[..., :, None] * rotation
+    drive = 0.01 * torch.randn(batch, length, 2, 3, 8, device="cuda")
+    initial = torch.randn(batch, 2, 3, 8, device="cuda")
+    return coordinates, generators.contiguous(), left, drive, initial
+
+
+@pytest.mark.skipif(not torch.cuda.is_available(), reason="CUDA is unavailable")
+@pytest.mark.parametrize("factor_count", [3, 6, 15, 28])
+def test_raw_cuda_coupled_full_gradient_parity(factor_count: int) -> None:
+    base = coupled_inputs(factor_count)
+    semantic_inputs = tuple(
+        tensor.detach().clone().requires_grad_(index != 1)
+        for index, tensor in enumerate(base)
+    )
+    raw_inputs = tuple(
+        tensor.detach().clone().requires_grad_(index != 1)
+        for index, tensor in enumerate(base)
+    )
+    actions = factorized_triality_actions(
+        semantic_inputs[0].unsqueeze(-2), semantic_inputs[1]
+    ).squeeze(-4)
+    transition = CoupledIsotypicTransition(
+        semantic_inputs[2], actions, semantic_inputs[3]
+    )
+    expected, _ = recurrent_coupled_scan(transition, semantic_inputs[4])
+    actual = raw_cuda_coupled_coordinate_scan(*raw_inputs)
+    output_gradient = torch.randn_like(actual)
+    differentiable = (0, 2, 3, 4)
+    expected_gradients = torch.autograd.grad(
+        expected,
+        tuple(semantic_inputs[index] for index in differentiable),
+        output_gradient,
+    )
+    actual_gradients = torch.autograd.grad(
+        actual,
+        tuple(raw_inputs[index] for index in differentiable),
+        output_gradient,
+    )
+    torch.testing.assert_close(actual, expected, rtol=4e-5, atol=4e-5)
+    for raw_gradient, semantic_gradient in zip(
+        actual_gradients, expected_gradients, strict=True
+    ):
+        torch.testing.assert_close(
+            raw_gradient, semantic_gradient, rtol=1e-3, atol=3e-3
+        )
 
 
 @pytest.mark.skipif(not torch.cuda.is_available(), reason="CUDA is unavailable")
@@ -317,6 +383,38 @@ def test_raw_cuda_factorized_full_model_gradient_parity() -> None:
     torch.testing.assert_close(raw_output, triton_output, rtol=5e-5, atol=5e-5)
     for actual, expected in zip(raw_gradients, triton_gradients, strict=True):
         torch.testing.assert_close(actual, expected, rtol=1e-3, atol=3e-3)
+
+
+@pytest.mark.skipif(not torch.cuda.is_available(), reason="CUDA is unavailable")
+def test_raw_cuda_coupled_full_model_gradient_parity() -> None:
+    torch.manual_seed(20_260_825)
+    config = PureSpinV12Config(
+        d_model=16,
+        num_layers=1,
+        spin_channels=2,
+        d_conv=3,
+        recurrence="coupled_isotypic",
+        recurrent_multiplicity="orthogonal",
+    )
+    semantic_model = PureSpinSSMV12(config).cuda()
+    raw_model = copy.deepcopy(semantic_model)
+    tokens = torch.randint(0, 256, (2, 5), device="cuda")
+    expected = semantic_model(tokens, scan_mode="coupled_recurrent")["logits"]
+    actual = raw_model(tokens, scan_mode="raw_cuda_coupled")["logits"]
+    output_gradient = torch.randn_like(actual)
+    semantic_gradients = torch.autograd.grad(
+        expected, tuple(semantic_model.parameters()), output_gradient
+    )
+    raw_gradients = torch.autograd.grad(
+        actual, tuple(raw_model.parameters()), output_gradient
+    )
+    torch.testing.assert_close(actual, expected, rtol=5e-5, atol=5e-5)
+    for raw_gradient, semantic_gradient in zip(
+        raw_gradients, semantic_gradients, strict=True
+    ):
+        torch.testing.assert_close(
+            raw_gradient, semantic_gradient, rtol=1e-3, atol=3e-3
+        )
 
 
 @pytest.mark.skipif(not torch.cuda.is_available(), reason="CUDA is unavailable")
