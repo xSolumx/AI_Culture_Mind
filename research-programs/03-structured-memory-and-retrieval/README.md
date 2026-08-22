@@ -93,7 +93,11 @@ representation.
   points, and minimum query-event F1 remained zero. Query-slot identification
   did improve, so gradient restoration is real but insufficient. The next gate
   is temporal observability of the desired controller under final-only loss,
-  not another continuation schedule.
+  not another continuation schedule. That audit proved exact non-final zeros
+  for one block and nonzero indirect paths through a second block, but the
+  resulting descent directions were near chance with respect to the desired
+  event grammar. The explicit binary query event is therefore not an
+  identifiable latent factor under this objective.
 
 ## Dependencies
 
@@ -127,6 +131,7 @@ representation.
 - [Label-free curriculum result](../../SSM-Models/pure_spin_ssm_v1_2/SPIN_DELTA_LABEL_FREE_CURRICULUM_RESULTS.md)
 - [Query gradient-topology result](../../SSM-Models/pure_spin_ssm_v1_2/SPIN_DELTA_QUERY_GRADIENT_TOPOLOGY_RESULTS.md)
 - [Query-event continuation result](../../SSM-Models/pure_spin_ssm_v1_2/SPIN_DELTA_QUERY_CONTINUATION_RESULTS.md)
+- [Temporal query observability result](../../SSM-Models/pure_spin_ssm_v1_2/SPIN_DELTA_TEMPORAL_OBSERVABILITY_RESULTS.md)
 
 The Spin-labelled reports remain at their provenance paths. Their routing,
 update-law, and kernel conclusions are classified here; representation-specific
