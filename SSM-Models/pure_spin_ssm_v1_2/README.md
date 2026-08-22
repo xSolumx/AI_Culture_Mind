@@ -194,9 +194,13 @@ immediate authoritative routing. It is therefore the frozen intervention for
 the next separately preregistered training gate; no quality claim has yet been
 made. See
 [`SPIN_DELTA_QUERY_GRADIENT_TOPOLOGY_RESULTS.md`](SPIN_DELTA_QUERY_GRADIENT_TOPOLOGY_RESULTS.md).
-The selected intervention is now prospectively frozen as a fresh paired 3x3
-soft-to-hard training cohort in
-[`SPIN_DELTA_QUERY_CONTINUATION_PREREGISTRATION.md`](SPIN_DELTA_QUERY_CONTINUATION_PREREGISTRATION.md).
+The selected soft-to-hard intervention then failed a fresh paired 3x3 training
+gate: mean 16-write retrieval fell 9.08 points, the worst regression was 52.88
+points, and minimum query-event F1 remained zero. Minimum query-slot accuracy
+did improve by 13.62 points, confirming the restored gradient was real but
+insufficient. The next justified step is a temporal observability audit, not
+another annealing schedule. See
+[`SPIN_DELTA_QUERY_CONTINUATION_RESULTS.md`](SPIN_DELTA_QUERY_CONTINUATION_RESULTS.md).
 
 The recurrence is not Mamba-2 under different notation. Its state transition is
 a selective contractive affine Spin(8) action. Local convolution and SwiGLU are

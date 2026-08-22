@@ -88,7 +88,12 @@ representation.
   while multiplying the query-slot gradient by zero. Both isolated repairs
   restored slot credit, but soft event continuation perturbed initial logits
   `2,840x`--`4,076x` less than immediate authority across all three paired
-  seeds. This selects the next intervention; training quality remains open.
+  seeds. The resulting fresh 3x3 training intervention nevertheless failed:
+  mean 16-write retrieval fell 9.08 points, its worst regression was 52.88
+  points, and minimum query-event F1 remained zero. Query-slot identification
+  did improve, so gradient restoration is real but insufficient. The next gate
+  is temporal observability of the desired controller under final-only loss,
+  not another continuation schedule.
 
 ## Dependencies
 
@@ -121,6 +126,7 @@ representation.
 - [Learned-router curriculum-transfer result](../../SSM-Models/pure_spin_ssm_v1_2/SPIN_DELTA_ROUTER_CURRICULUM_TRANSFER_RESULTS.md)
 - [Label-free curriculum result](../../SSM-Models/pure_spin_ssm_v1_2/SPIN_DELTA_LABEL_FREE_CURRICULUM_RESULTS.md)
 - [Query gradient-topology result](../../SSM-Models/pure_spin_ssm_v1_2/SPIN_DELTA_QUERY_GRADIENT_TOPOLOGY_RESULTS.md)
+- [Query-event continuation result](../../SSM-Models/pure_spin_ssm_v1_2/SPIN_DELTA_QUERY_CONTINUATION_RESULTS.md)
 
 The Spin-labelled reports remain at their provenance paths. Their routing,
 update-law, and kernel conclusions are classified here; representation-specific
