@@ -85,6 +85,10 @@ irreducible Spin(8) modules. The residual is exactly zero-start, all common
 parameters and initial logits are bitwise paired, and the semantic plus raw
 CUDA paths pass 69 WSL/cu126 tests. Its frozen gate is documented in
 [`ISOTYPIC_RETENTION_PREREGISTRATION.md`](ISOTYPIC_RETENTION_PREREGISTRATION.md).
+That dynamic candidate subsequently won 2/3 seeds but improved by only
+`+0.00242` mean bpb because seed 281 regressed by `0.03472`; it is not
+promoted. See
+[`ISOTYPIC_RETENTION_RESULTS.md`](ISOTYPIC_RETENTION_RESULTS.md).
 
 The recurrence is not Mamba-2 under different notation. Its state transition is
 a selective contractive affine Spin(8) action. Local convolution and SwiGLU are

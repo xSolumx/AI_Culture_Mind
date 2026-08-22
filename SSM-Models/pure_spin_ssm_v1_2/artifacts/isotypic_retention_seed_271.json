@@ -1,0 +1,136 @@
+{
+  "claim_scope": "paired coupled-isotypic v1.2 quality gate; sequential timers are diagnostic and not an order-balanced throughput claim",
+  "config": {
+    "batch_size": 8,
+    "d_model": 128,
+    "gradient_clip": 1.0,
+    "layers": 4,
+    "learning_rate": 0.003,
+    "mamba_d_model": 144,
+    "mamba_d_state": 64,
+    "maximum_parameter_gap": 0.05,
+    "seed": 271,
+    "sequence_length": 256,
+    "spin_backend": "raw_cuda_hybrid",
+    "spin_channels": 2,
+    "spin_chunk_size": 32,
+    "spin_expansion": 2,
+    "spin_group_schedule": [
+      3,
+      4,
+      6,
+      8
+    ],
+    "spin_mixer": "swiglu",
+    "spin_multiplicity_router": "none",
+    "spin_readout": "direction",
+    "spin_recurrence": "independent",
+    "spin_recurrent_coupling_scale": "unit",
+    "spin_recurrent_multiplicity": "identity",
+    "spin_retention_mode": "shared",
+    "steps": 300,
+    "validation_batches": 16,
+    "weight_decay": 0.01
+  },
+  "dataset": {
+    "encoding": "raw UTF-8 bytes",
+    "name": "tiny_shakespeare",
+    "source": {
+      "full_sha256": "86c4e6aa9db7c042ec79f339dcb96d42b0075e16b8fc2e86bf0ca57e2dc565ed",
+      "revision": "6f9487a6fe5b420b7ca9afb0d7c078e37c1d1b4e",
+      "url": "https://raw.githubusercontent.com/karpathy/char-rnn/6f9487a6fe5b420b7ca9afb0d7c078e37c1d1b4e/data/tinyshakespeare/input.txt"
+    },
+    "split": "90/5/5 contiguous bytes",
+    "train_sha256": "a9e24e23a1ec77744dad26844bfd5a09b6e041954e1eef0000e7f24cba6db735",
+    "validation_sha256": "c64e90c160750d91a9d2d9b1ace5eab1a440f5a1701d32a8e97a179b7839f1c8"
+  },
+  "environment": {
+    "compute_capability": [
+      7,
+      5
+    ],
+    "cuda": "12.6",
+    "gpu": "NVIDIA GeForce RTX 2070 SUPER",
+    "mamba2_fused": [
+      true,
+      "2.3.2.post1"
+    ],
+    "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.35",
+    "torch": "2.10.0+cu126",
+    "triton": "3.6.0"
+  },
+  "implementation_sha256": {
+    "pure_spin8_ssm/torch_backend.py": "6c12d6b0d0c6e665ece1ccb391ddbb43e61d2d9ee5c198861471aa135cbd2f6e",
+    "pure_spin_ssm_v1_2/benchmark.py": "3a88108e3148aa3f87922ec34789aea1f871b8579841579e3c94fb4e64797ef2",
+    "pure_spin_ssm_v1_2/benchmark_coupled_isotypic_gate.py": "fe776b9b854d7d64fcf3bcd694ec447999cdfe791a0a343f258edcc8baaa5a71",
+    "pure_spin_ssm_v1_2/chunk_parallel_scan.py": "6dcb8331944bd8cd271705aedf9ef5d90af53254cb28100d454562fb9bd63a1a",
+    "pure_spin_ssm_v1_2/coupled_isotypic_scan.py": "f461eaa9f652e180a834c1e95267f8fefb19d4d7495a04f8f85a2ec1221e0c99",
+    "pure_spin_ssm_v1_2/csrc/spin_scan.cpp": "a8f6a3d566ca21c0bb1371e787ebbda8e249db7e38747fb3d7da37516bb862e2",
+    "pure_spin_ssm_v1_2/csrc/spin_scan_cuda.cu": "11c385e6efded6e9fa5d28c2c10a6fa73431a0ef2e4641f27aae2513d1946cc2",
+    "pure_spin_ssm_v1_2/model.py": "202ed8c01941986794cc1364bbacc20b5409d88dd174f74b2c631dafefe883c1",
+    "pure_spin_ssm_v1_2/raw_cuda.py": "2dd6e0c891e4089b03cfd8d020199e6a5a20bf9e3e10a1bb1663e6ca8eb78477"
+  },
+  "initial_pairing": {
+    "common_parameters_bitwise_equal": true,
+    "maximum_absolute_logit_difference": 0.0
+  },
+  "parameter_counts": {
+    "isotypic_retention": 629612,
+    "mamba2_fused_reference": 623740,
+    "shared_retention": 626516
+  },
+  "results": [
+    {
+      "final_bits_per_byte": 2.8122918227294176,
+      "final_nats_per_byte": 1.9493321478366852,
+      "initial_nats_per_byte": 5.556808233261108,
+      "name": "pure_spin_v1_2",
+      "parameters": 626516,
+      "peak_cuda_bytes": 156814848,
+      "sampled_training_losses": {
+        "1": 5.572809219360352,
+        "150": 1.9374613761901855,
+        "300": 1.7822368144989014
+      },
+      "training_seconds": 7.926080614,
+      "training_tokens_per_second": 77516.24414654232,
+      "variant": "shared_retention",
+      "variant_config": {
+        "spin_backend": "raw_cuda_hybrid",
+        "spin_recurrence": "independent",
+        "spin_recurrent_coupling_scale": "unit",
+        "spin_recurrent_multiplicity": "identity",
+        "spin_retention_mode": "shared"
+      }
+    },
+    {
+      "final_bits_per_byte": 2.7870016556819692,
+      "final_nats_per_byte": 1.9318023398518562,
+      "initial_nats_per_byte": 5.556808233261108,
+      "name": "pure_spin_v1_2",
+      "parameters": 629612,
+      "peak_cuda_bytes": 157251072,
+      "sampled_training_losses": {
+        "1": 5.572809219360352,
+        "150": 1.9651501178741455,
+        "300": 1.769301176071167
+      },
+      "training_seconds": 8.467700452999992,
+      "training_tokens_per_second": 72558.06973926745,
+      "variant": "isotypic_retention",
+      "variant_config": {
+        "spin_backend": "raw_cuda_hybrid",
+        "spin_recurrence": "independent",
+        "spin_recurrent_coupling_scale": "unit",
+        "spin_recurrent_multiplicity": "identity",
+        "spin_retention_mode": "isotypic"
+      }
+    }
+  ],
+  "schema_version": 1,
+  "stage": "isotypic_retention",
+  "variant_order": [
+    "shared_retention",
+    "isotypic_retention"
+  ]
+}
