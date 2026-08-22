@@ -200,18 +200,27 @@ class PureSpinV12Block(nn.Module):
         self.recurrence_mode = config.recurrence
         self.recurrent_multiplicity = config.recurrent_multiplicity
         if self.recurrence_mode == "coupled_isotypic":
-            self.spin.coefficient_controller = nn.Linear(
-                config.d_model, len(subgroup_indices)
-            )
+            # The replacement is an experimental branch, so constructing it
+            # must not shift initialization of later parameters relative to
+            # the maintained model under the same seed.
+            with torch.random.fork_rng(devices=[]):
+                coefficient_controller = nn.Linear(
+                    config.d_model, len(subgroup_indices)
+                )
+            self.spin.coefficient_controller = coefficient_controller
+            self.spin.coefficient_controller._pure_spin_zero_init = True
             nn.init.zeros_(self.spin.coefficient_controller.weight)
             nn.init.zeros_(self.spin.coefficient_controller.bias)
             if self.spin.channels < 2:
                 raise ValueError("coupled_isotypic requires at least two channels")
         self.recurrent_pairs = tuple(combinations(range(self.spin.channels), 2))
         if self.recurrent_multiplicity == "orthogonal":
-            self.recurrent_multiplicity_controller = nn.Linear(
-                config.d_model, len(self.recurrent_pairs)
-            )
+            with torch.random.fork_rng(devices=[]):
+                recurrent_controller = nn.Linear(
+                    config.d_model, len(self.recurrent_pairs)
+                )
+            self.recurrent_multiplicity_controller = recurrent_controller
+            self.recurrent_multiplicity_controller._pure_spin_zero_init = True
             nn.init.zeros_(self.recurrent_multiplicity_controller.weight)
             nn.init.zeros_(self.recurrent_multiplicity_controller.bias)
         else:
@@ -222,9 +231,12 @@ class PureSpinV12Block(nn.Module):
         self.multiplicity_angle_limit = config.multiplicity_angle_limit
         self.multiplicity_pairs = tuple(combinations(range(self.spin.channels), 2))
         if self.multiplicity_router == "orthogonal_query":
-            self.multiplicity_controller = nn.Linear(
-                config.d_model, len(self.multiplicity_pairs)
-            )
+            with torch.random.fork_rng(devices=[]):
+                multiplicity_controller = nn.Linear(
+                    config.d_model, len(self.multiplicity_pairs)
+                )
+            self.multiplicity_controller = multiplicity_controller
+            self.multiplicity_controller._pure_spin_zero_init = True
             nn.init.zeros_(self.multiplicity_controller.weight)
             nn.init.zeros_(self.multiplicity_controller.bias)
         else:
@@ -540,7 +552,10 @@ def parameter_count(model: nn.Module) -> int:
 
 def _initialize_language_model_module(module: nn.Module) -> None:
     if isinstance(module, (nn.Embedding, nn.Linear)):
-        nn.init.normal_(module.weight, mean=0.0, std=0.02)
+        if getattr(module, "_pure_spin_zero_init", False):
+            nn.init.zeros_(module.weight)
+        else:
+            nn.init.normal_(module.weight, mean=0.0, std=0.02)
         if isinstance(module, nn.Linear) and module.bias is not None:
             nn.init.zeros_(module.bias)
 
