@@ -286,6 +286,15 @@ not promoted and the conditional established-v1.2 comparison was not run. The
 exact compiler is retained independently of the negative quality result. See
 [`COUPLED_ISOTYPIC_RESULTS.md`](COUPLED_ISOTYPIC_RESULTS.md).
 
+The remaining shared-action identity model was then frozen as a 1.071%
+parameter-compression candidate against established independent-action v1.2.
+It lost all seeds 179, 181, and 191, with improvements of -0.01348, -0.04506,
+and -0.01393 bpb (mean -0.02415). It failed quality non-inferiority, so the
+conditional order-balanced throughput gate was not run. This closes simple
+action tying: future coupling must preserve independently learned channel
+actions. See
+[`SHARED_ACTION_COMPRESSION_RESULTS.md`](SHARED_ACTION_COMPRESSION_RESULTS.md).
+
 ## Channel-mixer falsification
 
 Two custom non-exponential candidates were implemented:

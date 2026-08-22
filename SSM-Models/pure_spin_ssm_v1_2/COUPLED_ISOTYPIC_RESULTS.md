@@ -72,11 +72,13 @@ Measured only on the frozen small Shakespeare campaign:
 
 Still open:
 
-- whether the lower-parameter shared-action identity recurrence is a useful
-  compression/speed architecture relative to established independent v1.2;
 - fused chunk-level composition of the two-sided affine transition;
 - higher multiplicity and structured non-orthogonal contractions, which need
   new gates rather than reinterpretation of this failed candidate.
+
+The lower-parameter shared-action identity question was subsequently closed
+negative: it lost all three frozen seeds by 0.02415 mean bpb, so its conditional
+speed gate was not run. See `SHARED_ACTION_COMPRESSION_RESULTS.md`.
 
 The machine-readable decision is
 [`artifacts/coupled_isotypic_stage_a_summary.json`](artifacts/coupled_isotypic_stage_a_summary.json).

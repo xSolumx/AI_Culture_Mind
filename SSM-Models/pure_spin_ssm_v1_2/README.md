@@ -47,6 +47,11 @@ two-sided affine prefix algebra and full raw-CUDA backward. Its valid paired
 gate won 2/3 seeds but regressed by 0.00214 mean bpb, so recurrent mixing is not
 promoted. The compiler remains supported research machinery; the maintained
 architecture remains the independent-action `raw_cuda_hybrid` model.
+The shared-action identity model was then tested separately as a compression
+candidate. It lost all three seeds by 0.02415 mean bpb and failed quality
+non-inferiority, showing that the independent channel controllers are useful at
+this scale. See
+[`SHARED_ACTION_COMPRESSION_RESULTS.md`](SHARED_ACTION_COMPRESSION_RESULTS.md).
 
 The recurrence is not Mamba-2 under different notation. Its state transition is
 a selective contractive affine Spin(8) action. Local convolution and SwiGLU are
