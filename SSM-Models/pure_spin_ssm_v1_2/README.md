@@ -160,6 +160,11 @@ condition: its worst 16-write cell rose from 93.51% to 99.37%, its mean paired
 change was +1.11 points, and its largest factorial range fell from 6.49 to
 0.63 points while using 24.52% fewer training tokens. See
 [`SPIN_DELTA_WRITE_CURRICULUM_RESULTS.md`](SPIN_DELTA_WRITE_CURRICULUM_RESULTS.md).
+The autonomous transfer gate now freezes one supervised causal router, clones
+its untouched core into fixed-depth and curriculum arms, and audits every
+phase-B hard control without supplying oracle controls to the model. Its
+prospective protocol is
+[`SPIN_DELTA_ROUTER_CURRICULUM_TRANSFER_PREREGISTRATION.md`](SPIN_DELTA_ROUTER_CURRICULUM_TRANSFER_PREREGISTRATION.md).
 
 The recurrence is not Mamba-2 under different notation. Its state transition is
 a selective contractive affine Spin(8) action. Local convolution and SwiGLU are
