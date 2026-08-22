@@ -41,7 +41,7 @@ from pure_spin8_ssm.factorized_scan import (
 )
 
 ActionMode = Literal["factorized", "exponential"]
-RetentionMode = Literal["shared", "isotypic"]
+RetentionMode = Literal["shared", "isotypic", "isotypic_spectrum"]
 ScanMode = Literal[
     "work_efficient",
     "hillis_steele",
@@ -426,7 +426,7 @@ class PureSpin8SSMLayer(nn.Module):
             raise ValueError("unknown triality representation")
         if action_mode not in ("factorized", "exponential"):
             raise ValueError("unknown action mode")
-        if retention_mode not in ("shared", "isotypic"):
+        if retention_mode not in ("shared", "isotypic", "isotypic_spectrum"):
             raise ValueError("unknown retention mode")
 
         self.input_size = input_size
@@ -464,6 +464,12 @@ class PureSpin8SSMLayer(nn.Module):
                 nn.init.zeros_(self.retention_offset_controller.bias)
             else:
                 self.retention_offset_controller = None
+            if retention_mode == "isotypic_spectrum":
+                self.retention_log_rates = nn.Parameter(
+                    torch.zeros(channels, len(representations))
+                )
+            else:
+                self.retention_log_rates = None
             self.write_controller = nn.Linear(input_size, channels)
             self.drive_controller = nn.Linear(
                 input_size, channels * len(representations) * SPIN8_DIM
@@ -537,6 +543,18 @@ class PureSpin8SSMLayer(nn.Module):
                 scale = torch.sigmoid(retention_logits[..., None] + offsets)
             else:
                 scale = torch.sigmoid(retention_logits)
+                if self.retention_log_rates is not None:
+                    centered_log_rates = self.retention_log_rates - (
+                        self.retention_log_rates.mean(dim=-1, keepdim=True)
+                    )
+                    rate_delta = torch.expm1(centered_log_rates)
+                    safe_scale = scale.clamp_min(torch.finfo(scale.dtype).tiny)
+                    modulation = torch.exp(
+                        torch.log(safe_scale)[..., None] * rate_delta
+                    )
+                    # At zero log-rate residual, modulation is exactly one and
+                    # the shared recurrence is recovered bitwise.
+                    scale = scale[..., None] * modulation
             write = torch.sigmoid(self.write_controller(normalized))
             raw_drive = self.drive_controller(normalized).reshape(
                 batch,

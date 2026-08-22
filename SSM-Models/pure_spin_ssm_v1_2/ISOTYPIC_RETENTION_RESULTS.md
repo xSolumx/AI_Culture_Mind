@@ -1,6 +1,6 @@
 # Dynamic isotypic-retention result
 
-**Closed:** 2026-08-22  
+**Closed:** 2026-08-22
 **Verdict:** failed the frozen mean-improvement threshold; shared retention
 remains the maintained default.
 

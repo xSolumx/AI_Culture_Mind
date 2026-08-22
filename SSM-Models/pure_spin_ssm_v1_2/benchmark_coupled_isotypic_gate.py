@@ -78,6 +78,14 @@ def variants(stage: str, base: BenchmarkConfig) -> tuple[tuple[str, BenchmarkCon
                 replace(independent, spin_retention_mode="isotypic"),
             ),
         )
+    if stage == "isotypic_spectrum":
+        return (
+            ("shared_retention", independent),
+            (
+                "isotypic_spectrum",
+                replace(independent, spin_retention_mode="isotypic_spectrum"),
+            ),
+        )
     return (("independent_v1_2", independent), ("shared_identity", shared))
 
 
@@ -92,6 +100,7 @@ def main() -> int:
             "independent_block",
             "retention_block",
             "isotypic_retention",
+            "isotypic_spectrum",
         ],
         required=True,
     )

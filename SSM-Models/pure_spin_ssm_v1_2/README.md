@@ -89,6 +89,10 @@ That dynamic candidate subsequently won 2/3 seeds but improved by only
 `+0.00242` mean bpb because seed 281 regressed by `0.03472`; it is not
 promoted. See
 [`ISOTYPIC_RETENTION_RESULTS.md`](ISOTYPIC_RETENTION_RESULTS.md).
+The lower-variance successor factors retention into a token-dependent shared
+step and a learned static positive decay spectrum on `8v/8+/8-`. It adds only
+24 model parameters and is prospectively frozen in
+[`ISOTYPIC_SPECTRUM_PREREGISTRATION.md`](ISOTYPIC_SPECTRUM_PREREGISTRATION.md).
 
 The recurrence is not Mamba-2 under different notation. Its state transition is
 a selective contractive affine Spin(8) action. Local convolution and SwiGLU are

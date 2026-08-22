@@ -95,6 +95,42 @@ def test_isotypic_retention_is_exact_zero_start_and_learns_sector_offsets() -> N
     assert torch.linalg.vector_norm(offset.weight.grad) > 0.0
 
 
+def test_isotypic_spectrum_is_exact_zero_start_and_learns_static_rates() -> None:
+    shared_config = PureSpinV12Config(
+        d_model=16,
+        num_layers=1,
+        spin_channels=2,
+        d_conv=3,
+        retention_mode="shared",
+    )
+    spectrum_config = PureSpinV12Config(
+        d_model=16,
+        num_layers=1,
+        spin_channels=2,
+        d_conv=3,
+        retention_mode="isotypic_spectrum",
+    )
+    torch.manual_seed(20_260_830)
+    shared = PureSpinSSMV12(shared_config)
+    torch.manual_seed(20_260_830)
+    spectrum = PureSpinSSMV12(spectrum_config)
+    shared_state = shared.state_dict()
+    spectrum_state = spectrum.state_dict()
+    for name, expected in shared_state.items():
+        torch.testing.assert_close(spectrum_state[name], expected, rtol=0.0, atol=0.0)
+    log_rates = spectrum.blocks[0].spin.retention_log_rates
+    assert log_rates is not None
+    assert torch.count_nonzero(log_rates) == 0
+
+    tokens = torch.randint(0, 256, (2, 7))
+    expected = shared(tokens, scan_mode="chunk_parallel")["logits"]
+    actual = spectrum(tokens, scan_mode="chunk_parallel")["logits"]
+    torch.testing.assert_close(actual, expected, rtol=0.0, atol=0.0)
+    actual.square().mean().backward()
+    assert log_rates.grad is not None
+    assert torch.linalg.vector_norm(log_rates.grad) > 0.0
+
+
 def test_triality_invariant_readout_restores_scale_and_has_finite_gradients() -> None:
     torch.manual_seed(202_608_22)
     config = PureSpinV12Config(

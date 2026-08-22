@@ -37,7 +37,9 @@ class PureSpinV12Config:
     ] = "independent"
     recurrent_multiplicity: Literal["identity", "orthogonal"] = "identity"
     recurrent_coupling_scale: Literal["unit", "retention_step"] = "unit"
-    retention_mode: Literal["shared", "isotypic"] = "shared"
+    retention_mode: Literal[
+        "shared", "isotypic", "isotypic_spectrum"
+    ] = "shared"
     group_schedule: tuple[int, ...] | None = None
     dropout: float = 0.0
     min_retention_logit: float = 2.0
@@ -83,7 +85,11 @@ class PureSpinV12Config:
             raise ValueError("unknown recurrent multiplicity mode")
         if self.recurrent_coupling_scale not in ("unit", "retention_step"):
             raise ValueError("unknown recurrent coupling scale")
-        if self.retention_mode not in ("shared", "isotypic"):
+        if self.retention_mode not in (
+            "shared",
+            "isotypic",
+            "isotypic_spectrum",
+        ):
             raise ValueError("unknown retention mode")
         if (
             self.recurrent_coupling_scale != "unit"
@@ -479,7 +485,7 @@ class PureSpinV12Block(nn.Module):
         elif scan_mode == "raw_cuda_controller":
             from raw_cuda import raw_cuda_controller_factorized_scan
 
-            if self.retention_mode == "isotypic":
+            if self.retention_mode != "shared":
                 raise ValueError(
                     "isotypic retention requires raw_cuda_hybrid, "
                     "raw_cuda_isotypic, or chunk_parallel"
@@ -518,7 +524,7 @@ class PureSpinV12Block(nn.Module):
             normalized, scale, drive, coordinate_gate = (
                 self.spin._normalized_control_fields(value, valid_mask)
             )
-            if self.retention_mode == "isotypic" and scan_mode in {
+            if self.retention_mode != "shared" and scan_mode in {
                 "raw_cuda_controller",
                 "raw_cuda_factorized",
             }:
