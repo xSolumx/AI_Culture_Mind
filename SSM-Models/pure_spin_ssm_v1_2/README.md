@@ -71,7 +71,8 @@ an unpromoted control pending the frozen gate in
 It has now passed quality with 3/3 wins and +0.01427 mean bpb; default promotion
 remains conditional on systems evidence. Its first packed-warp speed gate
 failed at 0.7642x maintained throughput. The mathematically equivalent
-isotypic-forward rescue is frozen but not yet timed. See
+isotypic-forward rescue improved this to 0.8049x but also failed its frozen
+0.90x boundary. The model remains a quality-positive research control. See
 [`RETENTION_SCALED_BLOCK_RESULTS.md`](RETENTION_SCALED_BLOCK_RESULTS.md).
 
 The recurrence is not Mamba-2 under different notation. Its state transition is

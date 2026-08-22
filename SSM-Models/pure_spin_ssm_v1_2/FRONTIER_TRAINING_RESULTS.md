@@ -316,6 +316,22 @@ the local update `1-s_t`, the first-order continuous-time step proxy, rather
 than another arbitrary global angle cap. See
 [`INDEPENDENT_BLOCK_RECURRENCE_RESULTS.md`](INDEPENDENT_BLOCK_RECURRENCE_RESULTS.md).
 
+## Retention-scaled independent block coupling
+
+Scaling the multiplicity angle by `1-geometric_mean(scale)` passed its frozen
+Tiny Shakespeare quality gate: all seeds 211, 223, and 227 improved, with mean
+gain +0.01427 bpb and only 516 additional parameters (0.0824%). This is the
+first positive quality gate in the independent-action coupling line.
+
+It has not passed the systems gate. The original packed-forward kernel reached
+0.7642x maintained complete-step throughput. A prospectively frozen
+triality-isotypic forward schedule raised this to 0.8049x, but remained below
+the 0.90x boundary, so neither run authorized confirmation or default
+promotion. The quality result is retained as empirical evidence at the fixed
+model, dataset, and training horizon; the implementation remains a research
+control. See
+[`RETENTION_SCALED_BLOCK_RESULTS.md`](RETENTION_SCALED_BLOCK_RESULTS.md).
+
 ## Channel-mixer falsification
 
 Two custom non-exponential candidates were implemented:
