@@ -327,7 +327,9 @@ It has not passed the systems gate. The original packed-forward kernel reached
 0.7642x maintained complete-step throughput. A prospectively frozen
 triality-isotypic forward schedule raised this to 0.8049x, but remained below
 the 0.90x boundary, so neither run authorized confirmation or default
-promotion. The quality result is retained as empirical evidence at the fixed
+promotion. A third guarded-reconstruction schedule removed one ordinary-path
+backward replay but reached only 0.7879x, falsifying replay arithmetic as the
+dominant complete-step bottleneck at this shape. The quality result is retained as empirical evidence at the fixed
 model, dataset, and training horizon; the implementation remains a research
 control. See
 [`RETENTION_SCALED_BLOCK_RESULTS.md`](RETENTION_SCALED_BLOCK_RESULTS.md).

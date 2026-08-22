@@ -100,3 +100,21 @@ rank-deficient-left fallback case. Its fresh seed-257 timing protocol is frozen
 in
 [`RETENTION_SCALED_BLOCK_GUARDED_RECONSTRUCTION_PREREGISTRATION.md`](RETENTION_SCALED_BLOCK_GUARDED_RECONSTRUCTION_PREREGISTRATION.md).
 No timing result is claimed yet.
+
+## Guarded-reconstruction verdict: failed
+
+The guarded reconstruction reached 65,340 tok/s versus 82,934 tok/s for
+maintained v1.2, a ratio of 0.7879. It failed the 0.90x boundary, so the
+authorized seed-263 confirmation was not run. The artifact is
+[`artifacts/retention_scaled_block_guarded_reconstruct_speed.json`](artifacts/retention_scaled_block_guarded_reconstruct_speed.json).
+
+Removing the unconditional replay did not improve complete-step throughput
+over the isotypic-only result (0.8049x). This falsifies the working hypothesis
+that replay arithmetic was the dominant end-to-end bottleneck at batch 8,
+length 256. The guarded code remains semantically valid and protects singular
+inputs, but the model is not promoted.
+
+The next honest systems step is measurement-led attribution across the
+multiplicity controller, left-map construction/autograd, and recurrent kernel,
+followed by fusion only if a component dominates. Additional schedule changes
+without such attribution are not authorized by these results.

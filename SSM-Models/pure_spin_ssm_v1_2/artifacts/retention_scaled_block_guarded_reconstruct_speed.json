@@ -1,0 +1,289 @@
+{
+  "aggregate": {
+    "maintained": {
+      "cycle_medians_tokens_per_second": [
+        81172.02240535726,
+        82622.90488263342,
+        83245.31996093072,
+        83521.98677913306
+      ],
+      "median_of_cycle_medians_tokens_per_second": 82934.11242178208
+    },
+    "maximum_allowed_regression": 0.1,
+    "passes_no_more_than_ten_percent_regression": false,
+    "retention_scaled": {
+      "cycle_medians_tokens_per_second": [
+        67649.82583226773,
+        64434.509675901696,
+        65362.76951154552,
+        65317.537077405854
+      ],
+      "median_of_cycle_medians_tokens_per_second": 65340.15329447569
+    },
+    "retention_scaled_over_maintained": 0.7878561834986799
+  },
+  "claim_scope": "order-balanced fixed-batch complete GPU training steps; not a convergence, end-to-end, or cross-device speed claim",
+  "config": {
+    "batch_size": 8,
+    "cycles": 4,
+    "d_model": 128,
+    "gradient_clip": 1.0,
+    "layers": 4,
+    "learning_rate": 0.003,
+    "mamba_d_model": 144,
+    "mamba_d_state": 64,
+    "maximum_parameter_gap": 0.05,
+    "seed": 257,
+    "sequence_length": 256,
+    "spin_backend": "raw_cuda_hybrid",
+    "spin_channels": 2,
+    "spin_chunk_size": 32,
+    "spin_expansion": 2,
+    "spin_group_schedule": [
+      3,
+      4,
+      6,
+      8
+    ],
+    "spin_mixer": "swiglu",
+    "spin_multiplicity_router": "none",
+    "spin_readout": "direction",
+    "spin_recurrence": "independent",
+    "spin_recurrent_coupling_scale": "unit",
+    "spin_recurrent_multiplicity": "identity",
+    "steps": 300,
+    "steps_per_window": 10,
+    "validation_batches": 16,
+    "warmup_steps": 10,
+    "weight_decay": 0.01,
+    "windows": 5
+  },
+  "cycles": [
+    {
+      "cycle": 1,
+      "order": [
+        "maintained",
+        "retention_scaled"
+      ],
+      "results": [
+        {
+          "backend": "raw_cuda_hybrid",
+          "final_training_loss": 0.009301155805587769,
+          "parameters": 626516,
+          "tokens_per_second": {
+            "maximum": 85907.96695629999,
+            "mean": 81101.56617264445,
+            "median": 81172.02240535726,
+            "minimum": 73956.63451612685
+          },
+          "variant": "maintained",
+          "window_milliseconds": [
+            257.711181640625,
+            238.3946533203125,
+            252.30368041992188,
+            240.9343719482422,
+            276.9190368652344
+          ]
+        },
+        {
+          "backend": "raw_cuda_block",
+          "final_training_loss": 0.007673740852624178,
+          "parameters": 627032,
+          "tokens_per_second": {
+            "maximum": 67941.63136986355,
+            "mean": 65027.486591117944,
+            "median": 67649.82583226773,
+            "minimum": 56733.98774234302
+          },
+          "variant": "retention_scaled",
+          "window_milliseconds": [
+            314.4768371582031,
+            302.5649108886719,
+            301.4352111816406,
+            302.7354431152344,
+            360.98291015625
+          ]
+        }
+      ]
+    },
+    {
+      "cycle": 2,
+      "order": [
+        "retention_scaled",
+        "maintained"
+      ],
+      "results": [
+        {
+          "backend": "raw_cuda_block",
+          "final_training_loss": 0.007673740852624178,
+          "parameters": 627032,
+          "tokens_per_second": {
+            "maximum": 67747.71820792895,
+            "mean": 62986.63536970114,
+            "median": 64434.509675901696,
+            "minimum": 56964.834081488676
+          },
+          "variant": "retention_scaled",
+          "window_milliseconds": [
+            336.2472839355469,
+            302.2980041503906,
+            317.84210205078125,
+            359.5200500488281,
+            315.66668701171875
+          ]
+        },
+        {
+          "backend": "raw_cuda_hybrid",
+          "final_training_loss": 0.009301155805587769,
+          "parameters": 626516,
+          "tokens_per_second": {
+            "maximum": 88361.47843066514,
+            "mean": 83799.71520668917,
+            "median": 82622.90488263342,
+            "minimum": 82031.83747275567
+          },
+          "variant": "maintained",
+          "window_milliseconds": [
+            248.57565307617188,
+            244.99673461914062,
+            249.65916442871094,
+            247.87315368652344,
+            231.77520751953125
+          ]
+        }
+      ]
+    },
+    {
+      "cycle": 3,
+      "order": [
+        "maintained",
+        "retention_scaled"
+      ],
+      "results": [
+        {
+          "backend": "raw_cuda_hybrid",
+          "final_training_loss": 0.009301155805587769,
+          "parameters": 626516,
+          "tokens_per_second": {
+            "maximum": 83819.51682620039,
+            "mean": 81246.5249225106,
+            "median": 83245.31996093072,
+            "minimum": 72572.16164346556
+          },
+          "variant": "maintained",
+          "window_milliseconds": [
+            246.01983642578125,
+            244.33450317382812,
+            282.2018737792969,
+            244.74620056152344,
+            246.99366760253906
+          ]
+        },
+        {
+          "backend": "raw_cuda_block",
+          "final_training_loss": 0.007673740852624178,
+          "parameters": 627032,
+          "tokens_per_second": {
+            "maximum": 67292.18136046217,
+            "mean": 65754.27250569778,
+            "median": 65362.76951154552,
+            "minimum": 64587.91376159698
+          },
+          "variant": "retention_scaled",
+          "window_milliseconds": [
+            313.3282165527344,
+            308.3802185058594,
+            317.0871887207031,
+            314.51092529296875,
+            304.34442138671875
+          ]
+        }
+      ]
+    },
+    {
+      "cycle": 4,
+      "order": [
+        "retention_scaled",
+        "maintained"
+      ],
+      "results": [
+        {
+          "backend": "raw_cuda_block",
+          "final_training_loss": 0.007673740852624178,
+          "parameters": 627032,
+          "tokens_per_second": {
+            "maximum": 67480.01759276372,
+            "mean": 64683.90553194438,
+            "median": 65317.537077405854,
+            "minimum": 59414.391363581155
+          },
+          "variant": "retention_scaled",
+          "window_milliseconds": [
+            316.5504150390625,
+            313.5451965332031,
+            307.9229431152344,
+            303.49725341796875,
+            344.6976318359375
+          ]
+        },
+        {
+          "backend": "raw_cuda_hybrid",
+          "final_training_loss": 0.009301155805587769,
+          "parameters": 626516,
+          "tokens_per_second": {
+            "maximum": 86458.47912954123,
+            "mean": 82435.41871074335,
+            "median": 83521.98677913306,
+            "minimum": 74513.96497062639
+          },
+          "variant": "maintained",
+          "window_milliseconds": [
+            239.4658203125,
+            249.2728271484375,
+            274.8478088378906,
+            236.876708984375,
+            245.20489501953125
+          ]
+        }
+      ]
+    }
+  ],
+  "environment": {
+    "compute_capability": [
+      7,
+      5
+    ],
+    "cuda": "12.6",
+    "gpu": "NVIDIA GeForce RTX 2070 SUPER",
+    "torch": "2.10.0+cu126"
+  },
+  "implementation_sha256": {
+    "benchmark.py": "9596536d8d737791334496cede20ee082ce2546b65bae310808d4e75a2ef282b",
+    "benchmark_retention_scaled_speed.py": "c0ffc62d3f7fdb8a1435f261de6866ba71163d38468e3dcda1d929f4033a0ac7",
+    "coupled_isotypic_scan.py": "f461eaa9f652e180a834c1e95267f8fefb19d4d7495a04f8f85a2ec1221e0c99",
+    "csrc/spin_scan.cpp": "a8f6a3d566ca21c0bb1371e787ebbda8e249db7e38747fb3d7da37516bb862e2",
+    "csrc/spin_scan_cuda.cu": "17acb6ebea77160ae145425e35f3ddd24ecd90beb161df61738d99fbe8a85b46",
+    "model.py": "ef5fb08b12fcb9375928ecfb120449e4e86a76d9bcc0d1e6a4a9d5c74b5eb094",
+    "raw_cuda.py": "4a110dbacc3e265abf73b49ed1fd1e17935bdb566f12d72d0109cf333c0a097a"
+  },
+  "schema_version": 1,
+  "timing": {
+    "excludes": "data loading, host-to-device copies, and validation",
+    "includes": "forward, backward, gradient clipping, and AdamW update",
+    "method": "CUDA events around windows of complete training steps"
+  },
+  "variant_configs": {
+    "maintained": {
+      "backend": "raw_cuda_hybrid",
+      "recurrence": "independent",
+      "recurrent_coupling_scale": "unit",
+      "recurrent_multiplicity": "identity"
+    },
+    "retention_scaled": {
+      "backend": "raw_cuda_block",
+      "recurrence": "independent_block",
+      "recurrent_coupling_scale": "retention_step",
+      "recurrent_multiplicity": "orthogonal"
+    }
+  }
+}
