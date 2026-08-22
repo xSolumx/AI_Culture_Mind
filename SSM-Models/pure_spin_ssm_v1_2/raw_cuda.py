@@ -215,7 +215,12 @@ class _RawCudaHybridCoordinateFactorized(torch.autograd.Function):
     @staticmethod
     def backward(ctx, output_gradient):
         coordinates, generators, scale, drive, initial, output = ctx.saved_tensors
-        gradients = extension().coordinate_backward(
+        backward = (
+            extension().isotypic_coordinate_backward
+            if scale.ndim == 4
+            else extension().coordinate_backward
+        )
+        gradients = backward(
             coordinates,
             generators,
             scale,

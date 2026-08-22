@@ -87,7 +87,8 @@ def _pad_transition(
 ) -> Spin8AffineTransition:
     if padding == 0:
         return transition
-    batch, _, channels = transition.scale.shape
+    batch, _, channels = transition.scale.shape[:3]
+    scale_tail = transition.scale.shape[2:]
     representations = transition.action.shape[-3]
     identity = torch.eye(
         STATE_DIMENSION,
@@ -96,7 +97,10 @@ def _pad_transition(
     ).expand(batch, padding, channels, representations, -1, -1)
     return Spin8AffineTransition(
         scale=torch.cat(
-            (transition.scale, transition.scale.new_ones(batch, padding, channels)),
+            (
+                transition.scale,
+                transition.scale.new_ones(batch, padding, *scale_tail),
+            ),
             dim=1,
         ),
         action=torch.cat((transition.action, identity), dim=1),
@@ -126,9 +130,9 @@ def chunk_parallel_spin8_scan(
 
     if chunk_size < 1:
         raise ValueError("chunk_size must be positive")
-    if transition.scale.ndim != 3:
-        raise ValueError("scale must have shape (B,L,C)")
-    batch, length, channels = transition.scale.shape
+    if transition.scale.ndim not in (3, 4):
+        raise ValueError("scale must have shape (B,L,C) or (B,L,C,R)")
+    batch, length, channels = transition.scale.shape[:3]
     if length < 1:
         raise ValueError("sequence length must be positive")
     representations = transition.action.shape[-3]
@@ -149,6 +153,8 @@ def chunk_parallel_spin8_scan(
         STATE_DIMENSION,
     ):
         raise ValueError("drive has incompatible shape")
+    if transition.scale.ndim == 4 and transition.scale.shape[-1] != representations:
+        raise ValueError("isotypic scale must match the representation count")
     if initial_state.shape != (
         batch,
         channels,
@@ -161,7 +167,9 @@ def chunk_parallel_spin8_scan(
     padded_length = chunks * chunk_size
     padded = _pad_transition(transition, padded_length - length)
     chunked = Spin8AffineTransition(
-        scale=padded.scale.reshape(batch, chunks, chunk_size, channels),
+        scale=padded.scale.reshape(
+            batch, chunks, chunk_size, *transition.scale.shape[2:]
+        ),
         action=padded.action.reshape(
             batch,
             chunks,
@@ -205,7 +213,10 @@ def chunk_parallel_spin8_scan(
     rotated = torch.einsum(
         "bqkcrij,bqcrj->bqkcri", local.action, incoming
     )
-    states = local.scale[..., None, None] * rotated + local.drive
+    scale_on_state = local.scale
+    while scale_on_state.ndim < rotated.ndim:
+        scale_on_state = scale_on_state.unsqueeze(-1)
+    states = scale_on_state * rotated + local.drive
     states = states.reshape(
         batch, padded_length, channels, representations, STATE_DIMENSION
     )[:, :length]

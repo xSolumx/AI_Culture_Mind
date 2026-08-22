@@ -22,6 +22,7 @@ from coupled_isotypic_scan import (
 from independent_block_scan import recurrent_independent_block_scan
 from model import PureSpinSSMV12, PureSpinV12Config
 from pure_spin8_ssm.factorized_scan import triton_controller_factorized_scan
+from pure_spin8_ssm.torch_backend import Spin8AffineTransition, recurrent_spin8_scan
 from raw_cuda import (
     raw_cuda_controller_factorized_scan,
     raw_cuda_coordinate_factorized_scan,
@@ -137,6 +138,57 @@ def test_raw_cuda_independent_block_full_gradient_parity(
         semantic_inputs[2], actions, semantic_inputs[3], semantic_inputs[4]
     )
     actual = raw_cuda_independent_block_scan(*raw_inputs)
+    output_gradient = torch.randn_like(actual)
+    differentiable = (0, 2, 3, 4)
+    expected_gradients = torch.autograd.grad(
+        expected,
+        tuple(semantic_inputs[index] for index in differentiable),
+        output_gradient,
+    )
+    actual_gradients = torch.autograd.grad(
+        actual,
+        tuple(raw_inputs[index] for index in differentiable),
+        output_gradient,
+    )
+    torch.testing.assert_close(actual, expected, rtol=4e-5, atol=4e-5)
+    for raw_gradient, semantic_gradient in zip(
+        actual_gradients, expected_gradients, strict=True
+    ):
+        torch.testing.assert_close(
+            raw_gradient, semantic_gradient, rtol=1e-3, atol=3e-3
+        )
+
+
+@pytest.mark.skipif(not torch.cuda.is_available(), reason="CUDA is unavailable")
+@pytest.mark.parametrize("factor_count", [3, 6, 15, 28])
+def test_raw_cuda_isotypic_retention_full_gradient_parity(
+    factor_count: int,
+) -> None:
+    torch.manual_seed(20_260_829 + factor_count)
+    batch, length, channels = 2, 5, 2
+    base = (
+        0.03
+        * torch.randn(batch, length, channels, factor_count, device="cuda"),
+        torch_triality_generators(device="cuda")[:, :factor_count].contiguous(),
+        0.75 + 0.15 * torch.rand(batch, length, channels, 3, device="cuda"),
+        0.01 * torch.randn(batch, length, channels, 3, 8, device="cuda"),
+        torch.randn(batch, channels, 3, 8, device="cuda"),
+    )
+    semantic_inputs = tuple(
+        tensor.detach().clone().requires_grad_(index != 1)
+        for index, tensor in enumerate(base)
+    )
+    raw_inputs = tuple(
+        tensor.detach().clone().requires_grad_(index != 1)
+        for index, tensor in enumerate(base)
+    )
+    transition = Spin8AffineTransition(
+        semantic_inputs[2],
+        factorized_triality_actions(semantic_inputs[0], semantic_inputs[1]),
+        semantic_inputs[3],
+    )
+    expected, _ = recurrent_spin8_scan(transition, semantic_inputs[4])
+    actual = raw_cuda_hybrid_coordinate_scan(*raw_inputs)
     output_gradient = torch.randn_like(actual)
     differentiable = (0, 2, 3, 4)
     expected_gradients = torch.autograd.grad(
@@ -473,6 +525,42 @@ def test_raw_cuda_factorized_full_model_gradient_parity() -> None:
     torch.testing.assert_close(raw_output, triton_output, rtol=5e-5, atol=5e-5)
     for actual, expected in zip(raw_gradients, triton_gradients, strict=True):
         torch.testing.assert_close(actual, expected, rtol=1e-3, atol=3e-3)
+
+
+@pytest.mark.skipif(not torch.cuda.is_available(), reason="CUDA is unavailable")
+def test_raw_cuda_isotypic_retention_full_model_gradient_parity() -> None:
+    torch.manual_seed(20_260_829)
+    config = PureSpinV12Config(
+        d_model=16,
+        num_layers=1,
+        spin_channels=2,
+        d_conv=3,
+        retention_mode="isotypic",
+    )
+    semantic_model = PureSpinSSMV12(config).cuda()
+    raw_model = copy.deepcopy(semantic_model)
+    with torch.no_grad():
+        offset = semantic_model.blocks[0].spin.retention_offset_controller
+        assert offset is not None
+        offset.weight.normal_(std=0.02)
+        raw_model.load_state_dict(semantic_model.state_dict())
+    tokens = torch.randint(0, 256, (2, 5), device="cuda")
+    expected = semantic_model(tokens, scan_mode="chunk_parallel")["logits"]
+    actual = raw_model(tokens, scan_mode="raw_cuda_hybrid")["logits"]
+    output_gradient = torch.randn_like(actual)
+    semantic_gradients = torch.autograd.grad(
+        expected, tuple(semantic_model.parameters()), output_gradient
+    )
+    raw_gradients = torch.autograd.grad(
+        actual, tuple(raw_model.parameters()), output_gradient
+    )
+    torch.testing.assert_close(actual, expected, rtol=5e-5, atol=5e-5)
+    for raw_gradient, semantic_gradient in zip(
+        raw_gradients, semantic_gradients, strict=True
+    ):
+        torch.testing.assert_close(
+            raw_gradient, semantic_gradient, rtol=1e-3, atol=3e-3
+        )
 
 
 @pytest.mark.skipif(not torch.cuda.is_available(), reason="CUDA is unavailable")

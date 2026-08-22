@@ -77,6 +77,15 @@ backward replay, but its 0.7879x gate also failed. The model remains a
 quality-positive research control, not the default. See
 [`RETENTION_SCALED_BLOCK_RESULTS.md`](RETENTION_SCALED_BLOCK_RESULTS.md).
 
+The next model-level candidate steps away from cross-channel kernel rescue. It
+keeps the maintained independent Spin actions but removes an accidental
+timescale tying: `8v`, `8+`, and `8-` receive centered, independently learned
+retention offsets, which are legal because the sectors are inequivalent
+irreducible Spin(8) modules. The residual is exactly zero-start, all common
+parameters and initial logits are bitwise paired, and the semantic plus raw
+CUDA paths pass 69 WSL/cu126 tests. Its frozen gate is documented in
+[`ISOTYPIC_RETENTION_PREREGISTRATION.md`](ISOTYPIC_RETENTION_PREREGISTRATION.md).
+
 The recurrence is not Mamba-2 under different notation. Its state transition is
 a selective contractive affine Spin(8) action. Local convolution and SwiGLU are
 included because the old pure recurrence lacked the local/channel mixing needed
