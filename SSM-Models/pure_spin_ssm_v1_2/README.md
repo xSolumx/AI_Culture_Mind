@@ -107,6 +107,10 @@ two-copy kernel over a flattened `(batch, transport_head)` grid and passes
 semantic plus full-model gradient parity across the Spin(3/4/6/8) ladder. The
 frozen natural-data decision is specified in
 [`SPIN_DELTA_PREREGISTRATION.md`](SPIN_DELTA_PREREGISTRATION.md).
+The corrected frozen cohort subsequently won only 1/3 seeds, regressed by
+`0.02521` mean bpb, and exceeded the maximum allowed single-seed regression.
+It is not promoted and no speed gate is authorized. See
+[`SPIN_DELTA_RESULTS.md`](SPIN_DELTA_RESULTS.md).
 
 The recurrence is not Mamba-2 under different notation. Its state transition is
 a selective contractive affine Spin(8) action. Local convolution and SwiGLU are

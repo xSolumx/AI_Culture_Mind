@@ -167,10 +167,13 @@ audited singular-safe forward/backward instead of cloning CUDA code.
 Semantic output, state, and full-gradient parity pass at factor counts
 3/6/15/28, and full language-model gradient parity passes for Spin(3), Spin(4),
 Spin(6), and Spin(8) layers. The complete WSL/cu126 suite now passes 90 tests.
-The frozen Shakespeare gate is specified in
-`SPIN_DELTA_PREREGISTRATION.md`. Until that quality gate closes, Spin-Delta is
-an implemented experimental recurrence, not v1.2_x and not a claimed
-improvement.
+The frozen Shakespeare gate was specified in
+`SPIN_DELTA_PREREGISTRATION.md`. The corrected cohort has now closed
+negatively: 1/3 wins,
+`-0.02520726` mean bpb, and `-0.05938958` worst improvement. Spin-Delta is not
+promoted and no speed gate is authorized. See `SPIN_DELTA_RESULTS.md`. The
+compiler remains supported research infrastructure, separated from the failed
+model claim.
 
 On the pinned WSL Python 3.10 / Torch 2.10.0+cu126 environment, a deliberately
 non-evidentiary two-update
