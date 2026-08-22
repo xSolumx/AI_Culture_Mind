@@ -528,21 +528,29 @@ def test_raw_cuda_factorized_full_model_gradient_parity() -> None:
 
 
 @pytest.mark.skipif(not torch.cuda.is_available(), reason="CUDA is unavailable")
-def test_raw_cuda_isotypic_retention_full_model_gradient_parity() -> None:
+@pytest.mark.parametrize("retention_mode", ["isotypic", "isotypic_spectrum"])
+def test_raw_cuda_isotypic_retention_full_model_gradient_parity(
+    retention_mode: str,
+) -> None:
     torch.manual_seed(20_260_829)
     config = PureSpinV12Config(
         d_model=16,
         num_layers=1,
         spin_channels=2,
         d_conv=3,
-        retention_mode="isotypic",
+        retention_mode=retention_mode,
     )
     semantic_model = PureSpinSSMV12(config).cuda()
     raw_model = copy.deepcopy(semantic_model)
     with torch.no_grad():
-        offset = semantic_model.blocks[0].spin.retention_offset_controller
-        assert offset is not None
-        offset.weight.normal_(std=0.02)
+        if retention_mode == "isotypic":
+            offset = semantic_model.blocks[0].spin.retention_offset_controller
+            assert offset is not None
+            offset.weight.normal_(std=0.02)
+        else:
+            log_rates = semantic_model.blocks[0].spin.retention_log_rates
+            assert log_rates is not None
+            log_rates.normal_(std=0.02)
         raw_model.load_state_dict(semantic_model.state_dict())
     tokens = torch.randint(0, 256, (2, 5), device="cuda")
     expected = semantic_model(tokens, scan_mode="chunk_parallel")["logits"]

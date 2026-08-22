@@ -270,7 +270,7 @@ def main() -> int:
     )
     parser.add_argument(
         "--spin-retention-mode",
-        choices=["shared", "isotypic"],
+        choices=["shared", "isotypic", "isotypic_spectrum"],
         default="shared",
     )
     parser.add_argument("--spin-expansion", type=int, default=2)
