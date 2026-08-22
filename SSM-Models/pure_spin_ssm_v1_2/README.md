@@ -93,6 +93,10 @@ The lower-variance successor factors retention into a token-dependent shared
 step and a learned static positive decay spectrum on `8v/8+/8-`. It adds only
 24 model parameters and is prospectively frozen in
 [`ISOTYPIC_SPECTRUM_PREREGISTRATION.md`](ISOTYPIC_SPECTRUM_PREREGISTRATION.md).
+That spectrum lost all three frozen seeds by `0.01364` mean bpb, closing
+sector-retention refinement as the immediate successor. The next architecture
+separates independent Spin transport heads from addressable delta-memory slots;
+see [`SPIN_DELTA_SUCCESSOR_DESIGN.md`](SPIN_DELTA_SUCCESSOR_DESIGN.md).
 
 The recurrence is not Mamba-2 under different notation. Its state transition is
 a selective contractive affine Spin(8) action. Local convolution and SwiGLU are
