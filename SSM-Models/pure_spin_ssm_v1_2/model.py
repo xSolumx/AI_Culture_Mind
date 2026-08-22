@@ -396,11 +396,16 @@ class PureSpinV12Block(nn.Module):
         valid_mask: torch.Tensor | None = None,
         scan_mode: str = "compiled_controller",
         delta_oracle_slots: torch.Tensor | None = None,
+        delta_router_controls: torch.Tensor | None = None,
     ) -> tuple[torch.Tensor, torch.Tensor]:
         value, gate = self.input_projection(self.norm(hidden)).chunk(2, dim=-1)
         value = F.silu(self.local_conv(value))
         if delta_oracle_slots is not None and self.recurrence_mode != "spin_delta":
             raise ValueError("oracle slots are only defined for Spin-Delta")
+        if delta_router_controls is not None and self.recurrence_mode != "spin_delta":
+            raise ValueError("router controls are only defined for Spin-Delta")
+        if delta_oracle_slots is not None and delta_router_controls is not None:
+            raise ValueError("oracle slots and learned router controls are exclusive")
         if self.recurrence_mode == "spin_delta":
             if scan_mode not in {
                 "delta_recurrent",
@@ -493,6 +498,40 @@ class PureSpinV12Block(nn.Module):
                 drive = drive * write_mask[..., None, None, None].to(value)
                 query = torch.where(
                     query_mask[..., None, None], oracle_query, query
+                )
+            elif delta_router_controls is not None:
+                expected_router_shape = (*value.shape[:2], 6)
+                if delta_router_controls.shape != expected_router_shape:
+                    raise ValueError(
+                        "delta_router_controls must have shape "
+                        f"{expected_router_shape}"
+                    )
+                if delta_router_controls.device != value.device:
+                    raise ValueError("router controls must share the model device")
+                controls = delta_router_controls.to(value)
+                write_event = controls[..., 0]
+                routed_write = controls[..., 1:3]
+                query_event = controls[..., 3]
+                routed_query = controls[..., 4:6]
+                routed_write = routed_write[..., None, :].expand(
+                    -1, -1, self.spin.channels, -1
+                )
+                routed_query = routed_query[..., None, :].expand(
+                    -1, -1, self.spin.channels, -1
+                )
+                # Zero-weight dependencies keep the bypassed experimental
+                # controllers in the autograd graph for full-parameter audits.
+                write_key = routed_write + 0.0 * write_key
+                erase_key = routed_write + 0.0 * erase_key
+                erase_strength = write_event[..., None].expand(
+                    -1, -1, self.spin.channels
+                ) + 0.0 * erase_strength
+                drive = drive * write_event[..., None, None, None]
+                query_event = query_event[..., None, None]
+                query = (
+                    query_event * routed_query
+                    + (1.0 - query_event) * query
+                    + 0.0 * routed_query
                 )
             delta_left = contractive_delta_left(scale, erase_key, erase_strength)
             delta_drive = route_delta_drive(write_key, drive)
@@ -791,6 +830,7 @@ class PureSpinSSMV12(nn.Module):
         valid_mask: torch.Tensor | None = None,
         scan_mode: str = "compiled_controller",
         delta_oracle_slots: torch.Tensor | None = None,
+        delta_router_controls: torch.Tensor | None = None,
     ) -> dict[str, Any]:
         if token_ids.ndim != 2 or token_ids.shape[1] == 0:
             raise ValueError("token_ids must have nonempty shape (batch,length)")
@@ -807,6 +847,7 @@ class PureSpinSSMV12(nn.Module):
                 valid_mask=valid_mask,
                 scan_mode=scan_mode,
                 delta_oracle_slots=delta_oracle_slots,
+                delta_router_controls=delta_router_controls,
             )
             next_states.append(state)
         return {"logits": self.lm_head(self.final_norm(hidden)), "states": next_states}
