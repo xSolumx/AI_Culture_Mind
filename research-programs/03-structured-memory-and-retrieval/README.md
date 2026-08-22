@@ -74,7 +74,10 @@ representation.
   24.52% fewer training tokens. Transfer through the learned causal router is
   still open. The first transfer cohort failed its bitwise router-replication
   gate before quality summarization; a fresh single-router-execution repair is
-  prospectively frozen.
+  prospectively frozen. That v2 repair passed: the autonomous learned-router
+  curriculum raised the worst 16-write cell from 78.96% to 97.02% and reduced
+  the largest factorial range from 21.00 to 2.83 points. Removing router-label
+  supervision remains open.
 
 ## Dependencies
 
@@ -104,6 +107,7 @@ representation.
 - [Historical Task B replay provenance failure](../../Spin-Space-Research/docs/experiments/TASK_B_DELTA_ACTION_REPLAY_RESULTS.md)
 - [Spin-Delta mechanism reuse audit](../../SSM-Models/pure_spin_ssm_v1_2/SPIN_DELTA_MECHANISM_REUSE_AUDIT.md)
 - [Spin-Delta write-curriculum result](../../SSM-Models/pure_spin_ssm_v1_2/SPIN_DELTA_WRITE_CURRICULUM_RESULTS.md)
+- [Learned-router curriculum-transfer result](../../SSM-Models/pure_spin_ssm_v1_2/SPIN_DELTA_ROUTER_CURRICULUM_TRANSFER_RESULTS.md)
 
 The Spin-labelled reports remain at their provenance paths. Their routing,
 update-law, and kernel conclusions are classified here; representation-specific

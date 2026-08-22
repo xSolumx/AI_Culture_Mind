@@ -171,6 +171,11 @@ single-router-execution repair are documented in
 [`SPIN_DELTA_ROUTER_CURRICULUM_TRANSFER_COMMISSIONING_FAILURE.md`](SPIN_DELTA_ROUTER_CURRICULUM_TRANSFER_COMMISSIONING_FAILURE.md)
 and prospectively frozen in
 [`SPIN_DELTA_ROUTER_CURRICULUM_TRANSFER_V2_PREREGISTRATION.md`](SPIN_DELTA_ROUTER_CURRICULUM_TRANSFER_V2_PREREGISTRATION.md).
+V2 passed every frozen condition. With perfect learned causal controls, the
+curriculum raised worst 16-write accuracy from 78.96% to 97.02%, improved the
+nine-cell mean by 4.30 points, and contracted the largest factorial range from
+21.00 to 2.83 points. See
+[`SPIN_DELTA_ROUTER_CURRICULUM_TRANSFER_RESULTS.md`](SPIN_DELTA_ROUTER_CURRICULUM_TRANSFER_RESULTS.md).
 
 The recurrence is not Mamba-2 under different notation. Its state transition is
 a selective contractive affine Spin(8) action. Local convolution and SwiGLU are
