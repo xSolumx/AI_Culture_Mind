@@ -1,0 +1,538 @@
+{
+  "claim_scope": "matched joint-versus-phase-separated optimization on a synthetic grammar; not a natural-language claim",
+  "config": {
+    "auxiliary_weight": 1.0,
+    "batch_size": 128,
+    "d_model": 64,
+    "evaluation_batches": 32,
+    "evaluation_writes": [
+      8,
+      16,
+      32
+    ],
+    "gradient_clip": 1.0,
+    "layers": 2,
+    "learning_rate": 0.003,
+    "phase_a_steps": 100,
+    "phase_b_steps": 800,
+    "router_kernel_size": 3,
+    "router_temperature": 1.0,
+    "router_width": 32,
+    "seed": 467,
+    "training_writes": 8,
+    "weight_decay": 0.01
+  },
+  "environment": {
+    "compute_capability": [
+      7,
+      5
+    ],
+    "cuda": "12.6",
+    "gpu": "NVIDIA GeForce RTX 2070 SUPER",
+    "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.35",
+    "torch": "2.10.0+cu126",
+    "triton": "3.6.0"
+  },
+  "implementation_sha256": {
+    "csrc/spin_scan.cpp": "a8f6a3d566ca21c0bb1371e787ebbda8e249db7e38747fb3d7da37516bb862e2",
+    "csrc/spin_scan_cuda.cu": "11c385e6efded6e9fa5d28c2c10a6fa73431a0ef2e4641f27aae2513d1946cc2",
+    "model.py": "e0926fe52806d36f6ba995219140f795ce7624e31ec2741a9e91c5fa481b7d0f",
+    "raw_cuda.py": "434d93b499756a66b69befcaba17fea126a7313d3fc5ccafb32ee08d156510d1",
+    "spin_delta_causal_router_gate.py": "65f7c7a5f1b25f2d2f41c13dc212915db2c9a77121f9e4603b8d7fa624d23c5a",
+    "spin_delta_phased_router_gate.py": "813160b1f51a2f379e93f9233d5a6a057d1aeb04b1d92f41f77b781b41f91b97",
+    "spin_delta_router.py": "19fed53e3a603fe6981428dfa424d1eb3c86818e65ab1c744f0cbf80dacd081d",
+    "spin_delta_scan.py": "09a1f20de7302243dd2e83c640ad3dc1833bd27c8daef25deba11769f1707ad1"
+  },
+  "intervention": {
+    "evaluation_inputs": "token IDs only",
+    "joint": "900 joint retrieval-plus-auxiliary updates",
+    "phased": "100 router-only then 800 frozen-router core-only updates",
+    "unchanged": [
+      "model tensors at initialization",
+      "causal hard-ST router architecture",
+      "Spin-Delta recurrence and raw CUDA compiler",
+      "phase-specific training batches",
+      "evaluation batches"
+    ]
+  },
+  "pairing": {
+    "all_initial_tensors_bitwise_equal": true,
+    "parameter_count": 115932,
+    "phase_a_batches_equal": true,
+    "phase_b_batches_equal": true
+  },
+  "protocol": "SPIN_DELTA_PHASED_ROUTER_PREREGISTRATION.md",
+  "results": [
+    {
+      "autonomous_evaluation": true,
+      "final": {
+        "16": {
+          "accuracy": 0.9765625,
+          "bits_per_query": 0.3143523662002984,
+          "nats_per_query": 0.21789245633408427,
+          "queries": 4096,
+          "router": {
+            "query_event_f1": 1.0,
+            "query_false_negative": 0,
+            "query_false_positive": 0,
+            "query_slot_accuracy": 1.0,
+            "query_slot_correct": 4096,
+            "query_slot_total": 4096,
+            "query_true_positive": 4096,
+            "write_event_f1": 1.0,
+            "write_false_negative": 0,
+            "write_false_positive": 0,
+            "write_slot_accuracy": 1.0,
+            "write_slot_correct": 65536,
+            "write_slot_total": 65536,
+            "write_true_positive": 65536
+          }
+        },
+        "32": {
+          "accuracy": 0.9755859375,
+          "bits_per_query": 0.30757830548642734,
+          "nats_per_query": 0.21319703524932265,
+          "queries": 4096,
+          "router": {
+            "query_event_f1": 1.0,
+            "query_false_negative": 0,
+            "query_false_positive": 0,
+            "query_slot_accuracy": 1.0,
+            "query_slot_correct": 4096,
+            "query_slot_total": 4096,
+            "query_true_positive": 4096,
+            "write_event_f1": 1.0,
+            "write_false_negative": 0,
+            "write_false_positive": 0,
+            "write_slot_accuracy": 1.0,
+            "write_slot_correct": 131072,
+            "write_slot_total": 131072,
+            "write_true_positive": 131072
+          }
+        },
+        "8": {
+          "accuracy": 0.97119140625,
+          "bits_per_query": 0.30265260278402956,
+          "nats_per_query": 0.20978279830887914,
+          "queries": 4096,
+          "router": {
+            "query_event_f1": 1.0,
+            "query_false_negative": 0,
+            "query_false_positive": 0,
+            "query_slot_accuracy": 1.0,
+            "query_slot_correct": 4096,
+            "query_slot_total": 4096,
+            "query_true_positive": 4096,
+            "write_event_f1": 1.0,
+            "write_false_negative": 0,
+            "write_false_positive": 0,
+            "write_slot_accuracy": 1.0,
+            "write_slot_correct": 32768,
+            "write_slot_total": 32768,
+            "write_true_positive": 32768
+          }
+        }
+      },
+      "initial": {
+        "16": {
+          "accuracy": 0.0,
+          "bits_per_query": 8.041546386899563,
+          "nats_per_query": 5.573975205421448,
+          "queries": 4096,
+          "router": {
+            "query_event_f1": 0.0,
+            "query_false_negative": 4096,
+            "query_false_positive": 0,
+            "query_slot_accuracy": 0.921875,
+            "query_slot_correct": 3776,
+            "query_slot_total": 4096,
+            "query_true_positive": 0,
+            "write_event_f1": 0.0,
+            "write_false_negative": 65536,
+            "write_false_positive": 0,
+            "write_slot_accuracy": 0.4708099365234375,
+            "write_slot_correct": 30855,
+            "write_slot_total": 65536,
+            "write_true_positive": 0
+          }
+        },
+        "32": {
+          "accuracy": 0.0,
+          "bits_per_query": 8.032868292821846,
+          "nats_per_query": 5.567960008978844,
+          "queries": 4096,
+          "router": {
+            "query_event_f1": 0.0,
+            "query_false_negative": 4096,
+            "query_false_positive": 0,
+            "query_slot_accuracy": 0.93408203125,
+            "query_slot_correct": 3826,
+            "query_slot_total": 4096,
+            "query_true_positive": 0,
+            "write_event_f1": 0.0,
+            "write_false_negative": 131072,
+            "write_false_positive": 0,
+            "write_slot_accuracy": 0.46756744384765625,
+            "write_slot_correct": 61285,
+            "write_slot_total": 131072,
+            "write_true_positive": 0
+          }
+        },
+        "8": {
+          "accuracy": 0.0,
+          "bits_per_query": 8.054909567858592,
+          "nats_per_query": 5.583237856626511,
+          "queries": 4096,
+          "router": {
+            "query_event_f1": 0.0,
+            "query_false_negative": 4096,
+            "query_false_positive": 0,
+            "query_slot_accuracy": 0.915771484375,
+            "query_slot_correct": 3751,
+            "query_slot_total": 4096,
+            "query_true_positive": 0,
+            "write_event_f1": 0.0,
+            "write_false_negative": 32768,
+            "write_false_positive": 0,
+            "write_slot_accuracy": 0.465911865234375,
+            "write_slot_correct": 15267,
+            "write_slot_total": 32768,
+            "write_true_positive": 0
+          }
+        }
+      },
+      "parameters": 115932,
+      "peak_cuda_bytes": 148379136,
+      "phase_a_router": {
+        "16": {
+          "accuracy": 0.0791015625,
+          "bits_per_query": 4.1307665466225885,
+          "nats_per_query": 2.8632291853427887,
+          "queries": 4096,
+          "router": {
+            "query_event_f1": 1.0,
+            "query_false_negative": 0,
+            "query_false_positive": 0,
+            "query_slot_accuracy": 1.0,
+            "query_slot_correct": 4096,
+            "query_slot_total": 4096,
+            "query_true_positive": 4096,
+            "write_event_f1": 1.0,
+            "write_false_negative": 0,
+            "write_false_positive": 0,
+            "write_slot_accuracy": 1.0,
+            "write_slot_correct": 65536,
+            "write_slot_total": 65536,
+            "write_true_positive": 65536
+          }
+        },
+        "32": {
+          "accuracy": 0.071044921875,
+          "bits_per_query": 4.134681419950925,
+          "nats_per_query": 2.865942768752575,
+          "queries": 4096,
+          "router": {
+            "query_event_f1": 1.0,
+            "query_false_negative": 0,
+            "query_false_positive": 0,
+            "query_slot_accuracy": 1.0,
+            "query_slot_correct": 4096,
+            "query_slot_total": 4096,
+            "query_true_positive": 4096,
+            "write_event_f1": 1.0,
+            "write_false_negative": 0,
+            "write_false_positive": 0,
+            "write_slot_accuracy": 1.0,
+            "write_slot_correct": 131072,
+            "write_slot_total": 131072,
+            "write_true_positive": 131072
+          }
+        },
+        "8": {
+          "accuracy": 0.07470703125,
+          "bits_per_query": 4.134672251125851,
+          "nats_per_query": 2.8659364134073257,
+          "queries": 4096,
+          "router": {
+            "query_event_f1": 1.0,
+            "query_false_negative": 0,
+            "query_false_positive": 0,
+            "query_slot_accuracy": 1.0,
+            "query_slot_correct": 4096,
+            "query_slot_total": 4096,
+            "query_true_positive": 4096,
+            "write_event_f1": 1.0,
+            "write_false_negative": 0,
+            "write_false_positive": 0,
+            "write_slot_accuracy": 1.0,
+            "write_slot_correct": 32768,
+            "write_slot_total": 32768,
+            "write_true_positive": 32768
+          }
+        }
+      },
+      "sampled_training_losses": {
+        "1": {
+          "auxiliary": 0.9369681477546692,
+          "retrieval": 5.595858573913574,
+          "total": 6.532826900482178
+        },
+        "100": {
+          "auxiliary": 0.0015209491830319166,
+          "retrieval": 2.876154899597168,
+          "total": 2.877675771713257
+        },
+        "900": {
+          "auxiliary": 0.00041630849591456354,
+          "retrieval": 0.2509971261024475,
+          "total": 0.2514134347438812
+        }
+      },
+      "training_examples_per_second": 3570.3392313312293,
+      "training_seconds": 32.26584157299999,
+      "variant": "joint_schedule"
+    },
+    {
+      "autonomous_evaluation": true,
+      "final": {
+        "16": {
+          "accuracy": 0.999755859375,
+          "bits_per_query": 0.027398023239856854,
+          "nats_per_query": 0.018990862561622635,
+          "queries": 4096,
+          "router": {
+            "query_event_f1": 1.0,
+            "query_false_negative": 0,
+            "query_false_positive": 0,
+            "query_slot_accuracy": 1.0,
+            "query_slot_correct": 4096,
+            "query_slot_total": 4096,
+            "query_true_positive": 4096,
+            "write_event_f1": 1.0,
+            "write_false_negative": 0,
+            "write_false_positive": 0,
+            "write_slot_accuracy": 1.0,
+            "write_slot_correct": 65536,
+            "write_slot_total": 65536,
+            "write_true_positive": 65536
+          }
+        },
+        "32": {
+          "accuracy": 0.999755859375,
+          "bits_per_query": 0.02737614537554662,
+          "nats_per_query": 0.018975697981659323,
+          "queries": 4096,
+          "router": {
+            "query_event_f1": 1.0,
+            "query_false_negative": 0,
+            "query_false_positive": 0,
+            "query_slot_accuracy": 1.0,
+            "query_slot_correct": 4096,
+            "query_slot_total": 4096,
+            "query_true_positive": 4096,
+            "write_event_f1": 1.0,
+            "write_false_negative": 0,
+            "write_false_positive": 0,
+            "write_slot_accuracy": 1.0,
+            "write_slot_correct": 131072,
+            "write_slot_total": 131072,
+            "write_true_positive": 131072
+          }
+        },
+        "8": {
+          "accuracy": 1.0,
+          "bits_per_query": 0.02615911367370391,
+          "nats_per_query": 0.018132115888874978,
+          "queries": 4096,
+          "router": {
+            "query_event_f1": 1.0,
+            "query_false_negative": 0,
+            "query_false_positive": 0,
+            "query_slot_accuracy": 1.0,
+            "query_slot_correct": 4096,
+            "query_slot_total": 4096,
+            "query_true_positive": 4096,
+            "write_event_f1": 1.0,
+            "write_false_negative": 0,
+            "write_false_positive": 0,
+            "write_slot_accuracy": 1.0,
+            "write_slot_correct": 32768,
+            "write_slot_total": 32768,
+            "write_true_positive": 32768
+          }
+        }
+      },
+      "initial": {
+        "16": {
+          "accuracy": 0.0,
+          "bits_per_query": 8.041546386899563,
+          "nats_per_query": 5.573975205421448,
+          "queries": 4096,
+          "router": {
+            "query_event_f1": 0.0,
+            "query_false_negative": 4096,
+            "query_false_positive": 0,
+            "query_slot_accuracy": 0.921875,
+            "query_slot_correct": 3776,
+            "query_slot_total": 4096,
+            "query_true_positive": 0,
+            "write_event_f1": 0.0,
+            "write_false_negative": 65536,
+            "write_false_positive": 0,
+            "write_slot_accuracy": 0.4708099365234375,
+            "write_slot_correct": 30855,
+            "write_slot_total": 65536,
+            "write_true_positive": 0
+          }
+        },
+        "32": {
+          "accuracy": 0.0,
+          "bits_per_query": 8.032868292821846,
+          "nats_per_query": 5.567960008978844,
+          "queries": 4096,
+          "router": {
+            "query_event_f1": 0.0,
+            "query_false_negative": 4096,
+            "query_false_positive": 0,
+            "query_slot_accuracy": 0.93408203125,
+            "query_slot_correct": 3826,
+            "query_slot_total": 4096,
+            "query_true_positive": 0,
+            "write_event_f1": 0.0,
+            "write_false_negative": 131072,
+            "write_false_positive": 0,
+            "write_slot_accuracy": 0.46756744384765625,
+            "write_slot_correct": 61285,
+            "write_slot_total": 131072,
+            "write_true_positive": 0
+          }
+        },
+        "8": {
+          "accuracy": 0.0,
+          "bits_per_query": 8.054909567858592,
+          "nats_per_query": 5.583237856626511,
+          "queries": 4096,
+          "router": {
+            "query_event_f1": 0.0,
+            "query_false_negative": 4096,
+            "query_false_positive": 0,
+            "query_slot_accuracy": 0.915771484375,
+            "query_slot_correct": 3751,
+            "query_slot_total": 4096,
+            "query_true_positive": 0,
+            "write_event_f1": 0.0,
+            "write_false_negative": 32768,
+            "write_false_positive": 0,
+            "write_slot_accuracy": 0.465911865234375,
+            "write_slot_correct": 15267,
+            "write_slot_total": 32768,
+            "write_true_positive": 0
+          }
+        }
+      },
+      "parameters": 115932,
+      "peak_cuda_bytes": 148082176,
+      "phase_a_core_untouched": true,
+      "phase_a_router": {
+        "16": {
+          "accuracy": 0.0,
+          "bits_per_query": 8.031770377076569,
+          "nats_per_query": 5.567198991775513,
+          "queries": 4096,
+          "router": {
+            "query_event_f1": 1.0,
+            "query_false_negative": 0,
+            "query_false_positive": 0,
+            "query_slot_accuracy": 1.0,
+            "query_slot_correct": 4096,
+            "query_slot_total": 4096,
+            "query_true_positive": 4096,
+            "write_event_f1": 1.0,
+            "write_false_negative": 0,
+            "write_false_positive": 0,
+            "write_slot_accuracy": 1.0,
+            "write_slot_correct": 65536,
+            "write_slot_total": 65536,
+            "write_true_positive": 65536
+          }
+        },
+        "32": {
+          "accuracy": 0.0,
+          "bits_per_query": 8.0277675238734,
+          "nats_per_query": 5.564424425363541,
+          "queries": 4096,
+          "router": {
+            "query_event_f1": 1.0,
+            "query_false_negative": 0,
+            "query_false_positive": 0,
+            "query_slot_accuracy": 1.0,
+            "query_slot_correct": 4096,
+            "query_slot_total": 4096,
+            "query_true_positive": 4096,
+            "write_event_f1": 1.0,
+            "write_false_negative": 0,
+            "write_false_positive": 0,
+            "write_slot_accuracy": 1.0,
+            "write_slot_correct": 131072,
+            "write_slot_total": 131072,
+            "write_true_positive": 131072
+          }
+        },
+        "8": {
+          "accuracy": 0.0,
+          "bits_per_query": 8.033030021007152,
+          "nats_per_query": 5.568072110414505,
+          "queries": 4096,
+          "router": {
+            "query_event_f1": 1.0,
+            "query_false_negative": 0,
+            "query_false_positive": 0,
+            "query_slot_accuracy": 1.0,
+            "query_slot_correct": 4096,
+            "query_slot_total": 4096,
+            "query_true_positive": 4096,
+            "write_event_f1": 1.0,
+            "write_false_negative": 0,
+            "write_false_positive": 0,
+            "write_slot_accuracy": 1.0,
+            "write_slot_correct": 32768,
+            "write_slot_total": 32768,
+            "write_true_positive": 32768
+          }
+        }
+      },
+      "router_frozen_during_phase_b": true,
+      "sampled_training_losses": {
+        "core_1": {
+          "auxiliary": null,
+          "retrieval": 5.562392711639404,
+          "total": 5.562392711639404
+        },
+        "core_800": {
+          "auxiliary": null,
+          "retrieval": 0.017274687066674232,
+          "total": 0.017274687066674232
+        },
+        "router_1": {
+          "auxiliary": 0.9369681477546692,
+          "retrieval": null,
+          "total": 0.9369681477546692
+        },
+        "router_100": {
+          "auxiliary": 0.001747199916280806,
+          "retrieval": null,
+          "total": 0.001747199916280806
+        }
+      },
+      "training_examples_per_second": 5258.885332953578,
+      "training_seconds": 21.905782824,
+      "variant": "phase_separated_schedule"
+    }
+  ],
+  "schema_version": 1,
+  "stage": "spin_delta_phased_router_gate",
+  "variant_order": [
+    "joint_schedule",
+    "phase_separated_schedule"
+  ]
+}

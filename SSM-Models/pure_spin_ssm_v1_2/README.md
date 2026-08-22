@@ -135,6 +135,12 @@ therefore no longer the unresolved variable; joint router/recurrence
 co-adaptation is. See
 [`SPIN_DELTA_CAUSAL_ROUTER_RESULTS.md`](SPIN_DELTA_CAUSAL_ROUTER_RESULTS.md).
 
+Training that perfect router first and freezing it before exposing a pristine
+core raised the three-seed mean above 97%, but one seed still missed the 95%
+8/16-write threshold and the schedule did not beat joint training. Early
+routing noise is therefore not the whole optimization defect. See
+[`SPIN_DELTA_PHASED_ROUTER_RESULTS.md`](SPIN_DELTA_PHASED_ROUTER_RESULTS.md).
+
 The recurrence is not Mamba-2 under different notation. Its state transition is
 a selective contractive affine Spin(8) action. Local convolution and SwiGLU are
 included because the old pure recurrence lacked the local/channel mixing needed

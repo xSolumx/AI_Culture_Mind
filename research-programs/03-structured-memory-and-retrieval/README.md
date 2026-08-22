@@ -58,8 +58,9 @@ representation.
   campaign. Joint frame/layout discovery remains open.
 - Comparisons with current fused Gated DeltaNet/DeltaProduct, p-BIM,
   Householder-product, and sparse-attention systems remain necessary.
-- Phase-separated router then recurrence training has not yet tested whether
-  early address noise causes the observed hard-router seed instability.
+- A frozen phase-separated follow-up rejected early address noise as a
+  complete explanation: the perfect frozen-router core still missed its robust
+  gate in one seed. Initialization-versus-minibatch sensitivity remains open.
 
 ## Dependencies
 
