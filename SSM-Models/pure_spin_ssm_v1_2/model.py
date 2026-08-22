@@ -29,6 +29,7 @@ class PureSpinV12Config:
         "sol_bounded_quadratic",
         "sol_self_gate",
     ] = "swiglu"
+    readout: Literal["direction", "triality_invariants"] = "direction"
     group_schedule: tuple[int, ...] | None = None
     dropout: float = 0.0
     min_retention_logit: float = 2.0
@@ -36,14 +37,17 @@ class PureSpinV12Config:
     tie_embeddings: bool = True
 
     def __post_init__(self) -> None:
-        if min(
-            self.vocab_size,
-            self.d_model,
-            self.num_layers,
-            self.spin_channels,
-            self.d_conv,
-            self.expansion,
-        ) < 1:
+        if (
+            min(
+                self.vocab_size,
+                self.d_model,
+                self.num_layers,
+                self.spin_channels,
+                self.d_conv,
+                self.expansion,
+            )
+            < 1
+        ):
             raise ValueError("all model dimensions must be positive")
         if not 0 <= self.dropout < 1:
             raise ValueError("dropout must lie in [0,1)")
@@ -55,6 +59,8 @@ class PureSpinV12Config:
             "sol_self_gate",
         ):
             raise ValueError("unknown channel mixer")
+        if self.readout not in ("direction", "triality_invariants"):
+            raise ValueError("unknown state readout")
         if self.group_schedule is not None:
             if len(self.group_schedule) != self.num_layers:
                 raise ValueError("group_schedule must have one entry per layer")
@@ -141,7 +147,9 @@ class PureSpinV12Block(nn.Module):
     def __init__(self, config: PureSpinV12Config, group_dimension: int = 8) -> None:
         super().__init__()
         self.norm = nn.RMSNorm(config.d_model)
-        self.input_projection = nn.Linear(config.d_model, 2 * config.d_model, bias=False)
+        self.input_projection = nn.Linear(
+            config.d_model, 2 * config.d_model, bias=False
+        )
         self.local_conv = CausalDepthwiseConv1d(config.d_model, config.d_conv)
         self.spin = PureSpin8SSMLayer(
             config.d_model,
@@ -173,7 +181,14 @@ class PureSpinV12Block(nn.Module):
             nn.init.zeros_(self.spin.coefficient_controller.weight)
             nn.init.zeros_(self.spin.coefficient_controller.bias)
         self.state_norm = nn.RMSNorm(self.spin.output_size)
-        self.output_projection = nn.Linear(self.spin.output_size, config.d_model, bias=False)
+        self.readout_mode = config.readout
+        read_dimension = self.spin.output_size
+        if self.readout_mode == "triality_invariants":
+            # One energy per 8D triality sector and one cubic contraction per
+            # channel. These scalars restore amplitude without choosing a
+            # non-equivariant direction inside an irreducible Spin(8) module.
+            read_dimension += 4 * self.spin.channels
+        self.output_projection = nn.Linear(read_dimension, config.d_model, bias=False)
         self.residual_scale = nn.Parameter(torch.tensor(-2.0))
         self.ffn_norm = nn.RMSNorm(config.d_model)
         mixer_types = {
@@ -184,6 +199,39 @@ class PureSpinV12Block(nn.Module):
         mixer_type = mixer_types[config.mixer]
         self.ffn = mixer_type(config.d_model, config.expansion)
         self.dropout = nn.Dropout(config.dropout)
+
+    def _read_features(self, states: torch.Tensor) -> torch.Tensor:
+        expected = (
+            self.spin.channels,
+            len(self.spin.representations),
+            8,
+        )
+        if states.shape[-3:] != expected:
+            raise ValueError(f"triality states must end in {expected}")
+        direction = self.state_norm(states.flatten(start_dim=-3))
+        if self.readout_mode == "direction":
+            return direction
+
+        indices = {
+            name: self.spin.representations.index(name)
+            for name in ("vector", "positive", "negative")
+        }
+        vector = states[..., indices["vector"], :]
+        positive = states[..., indices["positive"], :]
+        negative = states[..., indices["negative"], :]
+        energy = torch.log1p(states.square().mean(dim=-1))
+        cubic = torch.einsum(
+            "...v,...j,vji,...i->...",
+            vector,
+            negative,
+            self.spin.rho.to(states),
+            positive,
+        )
+        bounded_cubic = cubic * torch.rsqrt(1.0 + cubic.square())
+        invariant_scalars = torch.cat(
+            (energy.flatten(start_dim=-2), bounded_cubic), dim=-1
+        )
+        return torch.cat((direction, invariant_scalars), dim=-1)
 
     def forward(
         self,
@@ -284,7 +332,7 @@ class PureSpinV12Block(nn.Module):
                 valid_mask=valid_mask,
                 scan_mode=scan_mode,
             )
-        update = self.output_projection(self.state_norm(states.flatten(start_dim=-3)))
+        update = self.output_projection(self._read_features(states))
         update = update * torch.sigmoid(gate)
         hidden = hidden + torch.sigmoid(self.residual_scale) * self.dropout(update)
         return hidden + self.dropout(self.ffn(self.ffn_norm(hidden))), final_state
@@ -299,8 +347,7 @@ class PureSpinSSMV12(nn.Module):
         self.embedding = nn.Embedding(config.vocab_size, config.d_model)
         schedule = config.group_schedule or (8,) * config.num_layers
         self.blocks = nn.ModuleList(
-            PureSpinV12Block(config, group_dimension)
-            for group_dimension in schedule
+            PureSpinV12Block(config, group_dimension) for group_dimension in schedule
         )
         self.final_norm = nn.RMSNorm(config.d_model)
         self.lm_head = nn.Linear(config.d_model, config.vocab_size, bias=False)
@@ -345,7 +392,9 @@ class PureSpinSSMV12(nn.Module):
                 "model_type": "pure_spin_ssm_v1_2",
                 "model_version": __version__,
                 "config": asdict(self.config),
-                "state_dict": {k: v.detach().cpu() for k, v in self.state_dict().items()},
+                "state_dict": {
+                    k: v.detach().cpu() for k, v in self.state_dict().items()
+                },
                 "metadata": metadata,
             },
             Path(path),

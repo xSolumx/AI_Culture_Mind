@@ -12,7 +12,8 @@ sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT.parent))
 
 from mamba2_baseline import fused_mamba2_available
-from model import PureSpinSSMV12, PureSpinV12Config, SolSelfGate
+from model import PureSpinSSMV12, PureSpinV12Block, PureSpinV12Config, SolSelfGate
+from pure_spin8_ssm.torch_backend import spin8_group_actions
 
 
 def tiny_model() -> PureSpinSSMV12:
@@ -29,7 +30,10 @@ def test_shape_backward_and_finite_state() -> None:
     assert result["logits"].shape == (2, 7, 256)
     assert all(torch.isfinite(state).all() for state in result["states"])
     result["logits"].square().mean().backward()
-    assert all(parameter.grad is None or torch.isfinite(parameter.grad).all() for parameter in model.parameters())
+    assert all(
+        parameter.grad is None or torch.isfinite(parameter.grad).all()
+        for parameter in model.parameters()
+    )
 
 
 def test_causality() -> None:
@@ -52,6 +56,52 @@ def test_initial_language_model_loss_has_sane_scale() -> None:
     logits = model(inputs, scan_mode="compiled_controller")["logits"]
     loss = F.cross_entropy(logits.flatten(0, 1), targets.flatten())
     assert 4.5 < float(loss.detach()) < 6.5
+
+
+def test_triality_invariant_readout_restores_scale_and_has_finite_gradients() -> None:
+    torch.manual_seed(202_608_22)
+    config = PureSpinV12Config(
+        d_model=16,
+        num_layers=1,
+        spin_channels=2,
+        readout="triality_invariants",
+    )
+    block = PureSpinV12Block(config)
+    states = torch.randn(2, 5, 2, 3, 8, requires_grad=True)
+    features = block._read_features(states)
+    scaled = block._read_features(2.0 * states)
+    assert features.shape == (2, 5, 56)
+    torch.testing.assert_close(
+        features[..., :48], scaled[..., :48], rtol=2e-5, atol=2e-5
+    )
+    assert torch.linalg.vector_norm(features[..., 48:] - scaled[..., 48:]) > 0.1
+    features.square().mean().backward()
+    assert states.grad is not None
+    assert torch.isfinite(states.grad).all()
+
+
+def test_triality_summary_scalars_are_spin8_invariant() -> None:
+    torch.manual_seed(202_608_23)
+    config = PureSpinV12Config(
+        d_model=16,
+        num_layers=1,
+        spin_channels=1,
+        readout="triality_invariants",
+    )
+    block = PureSpinV12Block(config).double()
+    states = torch.randn(2, 3, 1, 3, 8, dtype=torch.float64)
+    coordinates = 0.2 * torch.randn(2, 3, 1, 28, dtype=torch.float64)
+    actions = spin8_group_actions(
+        coordinates,
+        block.spin.generators.to(dtype=torch.float64),
+        block.spin.representations,
+        mode="exponential",
+    )
+    transformed = torch.einsum("...rij,...rj->...ri", actions, states)
+    direction_dimension = block.spin.output_size
+    expected = block._read_features(states)[..., direction_dimension:]
+    actual = block._read_features(transformed)[..., direction_dimension:]
+    torch.testing.assert_close(actual, expected, rtol=2e-8, atol=2e-8)
 
 
 def test_fused_mamba_probe_never_claims_fallback() -> None:

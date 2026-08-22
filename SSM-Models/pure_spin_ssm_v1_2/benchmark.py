@@ -15,8 +15,6 @@ from pathlib import Path
 
 import numpy as np
 import torch
-from torch.nn import functional as F
-
 from data import (
     TINY_SHAKESPEARE_REVISION,
     TINY_SHAKESPEARE_SHA256,
@@ -27,6 +25,7 @@ from data import (
 )
 from mamba2_baseline import OfficialMamba2LM, fused_mamba2_available
 from model import PureSpinSSMV12, PureSpinV12Config, parameter_count
+from torch.nn import functional as F
 
 
 @dataclass(frozen=True)
@@ -43,6 +42,7 @@ class BenchmarkConfig:
     spin_channels: int = 2
     spin_backend: str = "raw_cuda_hybrid"
     spin_mixer: str = "swiglu"
+    spin_readout: str = "direction"
     spin_expansion: int = 2
     spin_group_schedule: tuple[int, ...] | None = None
     spin_chunk_size: int = 32
@@ -80,6 +80,7 @@ def build_model(name: str, config: BenchmarkConfig) -> torch.nn.Module:
                 num_layers=config.layers,
                 spin_channels=config.spin_channels,
                 mixer=config.spin_mixer,
+                readout=config.spin_readout,
                 expansion=config.spin_expansion,
                 group_schedule=config.spin_group_schedule,
                 scan_chunk_size=config.spin_chunk_size,
@@ -125,7 +126,9 @@ def evaluate(
         inputs, targets = inputs.to(device), targets.to(device)
         kwargs = {"scan_mode": spin_backend} if name == "pure_spin_v1_2" else {}
         logits = model(inputs, **kwargs)["logits"]
-        loss_sum += float(F.cross_entropy(logits.flatten(0, 1), targets.flatten(), reduction="sum"))
+        loss_sum += float(
+            F.cross_entropy(logits.flatten(0, 1), targets.flatten(), reduction="sum")
+        )
         token_count += targets.numel()
     return loss_sum / token_count
 
@@ -154,7 +157,9 @@ def run_one(
     warmup_inputs, warmup_targets = warmup_inputs.to(device), warmup_targets.to(device)
     model.train()
     optimizer.zero_grad(set_to_none=True)
-    warmup_kwargs = {"scan_mode": config.spin_backend} if name == "pure_spin_v1_2" else {}
+    warmup_kwargs = (
+        {"scan_mode": config.spin_backend} if name == "pure_spin_v1_2" else {}
+    )
     warmup_logits = model(warmup_inputs, **warmup_kwargs)["logits"]
     F.cross_entropy(warmup_logits.flatten(0, 1), warmup_targets.flatten()).backward()
     optimizer.zero_grad(set_to_none=True)
@@ -176,7 +181,9 @@ def run_one(
         logits = model(inputs, **kwargs)["logits"]
         loss = F.cross_entropy(logits.flatten(0, 1), targets.flatten())
         loss.backward()
-        gradient_norm = torch.nn.utils.clip_grad_norm_(model.parameters(), config.gradient_clip)
+        gradient_norm = torch.nn.utils.clip_grad_norm_(
+            model.parameters(), config.gradient_clip
+        )
         if not torch.isfinite(gradient_norm):
             raise FloatingPointError(f"nonfinite gradient at step {step}")
         optimizer.step()
@@ -224,12 +231,19 @@ def main() -> int:
         choices=["swiglu", "sol_bounded_quadratic", "sol_self_gate"],
         default="swiglu",
     )
+    parser.add_argument(
+        "--spin-readout",
+        choices=["direction", "triality_invariants"],
+        default="direction",
+    )
     parser.add_argument("--spin-expansion", type=int, default=2)
     parser.add_argument("--spin-d-model", type=int, default=128)
     parser.add_argument("--spin-group-schedule", type=int, nargs="+")
     parser.add_argument("--spin-chunk-size", type=int, default=32)
     parser.add_argument("--layers", type=int, default=4)
-    parser.add_argument("--models", nargs="+", default=["pure_spin_v1_2", "mamba2_fused"])
+    parser.add_argument(
+        "--models", nargs="+", default=["pure_spin_v1_2", "mamba2_fused"]
+    )
     parser.add_argument(
         "--dataset",
         choices=["tiny_shakespeare", "wikitext2_legacy"],
@@ -253,6 +267,7 @@ def main() -> int:
         validation_batches=args.validation_batches,
         spin_backend=args.spin_backend,
         spin_mixer=args.spin_mixer,
+        spin_readout=args.spin_readout,
         spin_expansion=args.spin_expansion,
         d_model=args.spin_d_model,
         spin_group_schedule=(
@@ -266,9 +281,7 @@ def main() -> int:
     )
     if args.dataset == "tiny_shakespeare":
         train, train_sha = tiny_shakespeare_bytes("train", offline=args.offline)
-        valid, valid_sha = tiny_shakespeare_bytes(
-            "validation", offline=args.offline
-        )
+        valid, valid_sha = tiny_shakespeare_bytes("validation", offline=args.offline)
         dataset = {
             "name": "tiny_shakespeare",
             "encoding": "raw UTF-8 bytes",
@@ -336,7 +349,10 @@ def main() -> int:
                 Path(__file__).with_name("csrc") / "spin_scan_cuda.cu",
             )
         },
-        "results": [run_one(name, config, train_stream, validation, device) for name in args.models],
+        "results": [
+            run_one(name, config, train_stream, validation, device)
+            for name in args.models
+        ],
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n")
