@@ -201,6 +201,9 @@ did improve by 13.62 points, confirming the restored gradient was real but
 insufficient. The next justified step is a temporal observability audit, not
 another annealing schedule. See
 [`SPIN_DELTA_QUERY_CONTINUATION_RESULTS.md`](SPIN_DELTA_QUERY_CONTINUATION_RESULTS.md).
+A prospectively frozen temporal Jacobian audit now tests whether final-only
+loss can directly or indirectly observe that tokenwise query grammar:
+[`SPIN_DELTA_TEMPORAL_OBSERVABILITY_PREREGISTRATION.md`](SPIN_DELTA_TEMPORAL_OBSERVABILITY_PREREGISTRATION.md).
 
 The recurrence is not Mamba-2 under different notation. Its state transition is
 a selective contractive affine Spin(8) action. Local convolution and SwiGLU are
