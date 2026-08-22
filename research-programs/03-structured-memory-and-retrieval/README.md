@@ -40,6 +40,11 @@ representation.
   controls across the tested grid.
 - The reported direct, native-delta, gathered, and fused rows are tied to
   complete structured artifacts and explicit hardware/protocol boundaries.
+- In the Spin-Delta two-key grammar, a causal width-three hard router with
+  auxiliary labels identifies all write/query events and slots perfectly over
+  three seeds and 8/16/32-write evaluation. Joint end-to-end retrieval still
+  fails its robust gate, localizing the remaining defect to co-adaptation or
+  recurrent optimization rather than final address classification.
 
 ## Open Claims
 
@@ -53,6 +58,8 @@ representation.
   campaign. Joint frame/layout discovery remains open.
 - Comparisons with current fused Gated DeltaNet/DeltaProduct, p-BIM,
   Householder-product, and sparse-attention systems remain necessary.
+- Phase-separated router then recurrence training has not yet tested whether
+  early address noise causes the observed hard-router seed instability.
 
 ## Dependencies
 

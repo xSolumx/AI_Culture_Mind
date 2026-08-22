@@ -1,0 +1,300 @@
+{
+  "claim_scope": "autonomous evaluation with train-time synthetic grammar labels; not a natural-language or parameter-matched superiority claim",
+  "config": {
+    "auxiliary_weight": 1.0,
+    "batch_size": 128,
+    "d_model": 64,
+    "evaluation_batches": 32,
+    "evaluation_writes": [
+      8,
+      16,
+      32
+    ],
+    "gradient_clip": 1.0,
+    "layers": 2,
+    "learning_rate": 0.003,
+    "router_kernel_size": 3,
+    "router_temperature": 1.0,
+    "router_width": 32,
+    "seed": 457,
+    "steps": 800,
+    "training_writes": 8,
+    "weight_decay": 0.01
+  },
+  "environment": {
+    "compute_capability": [
+      7,
+      5
+    ],
+    "cuda": "12.6",
+    "gpu": "NVIDIA GeForce RTX 2070 SUPER",
+    "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.35",
+    "torch": "2.10.0+cu126",
+    "triton": "3.6.0"
+  },
+  "implementation_sha256": {
+    "csrc/spin_scan.cpp": "a8f6a3d566ca21c0bb1371e787ebbda8e249db7e38747fb3d7da37516bb862e2",
+    "csrc/spin_scan_cuda.cu": "11c385e6efded6e9fa5d28c2c10a6fa73431a0ef2e4641f27aae2513d1946cc2",
+    "model.py": "e0926fe52806d36f6ba995219140f795ce7624e31ec2741a9e91c5fa481b7d0f",
+    "raw_cuda.py": "434d93b499756a66b69befcaba17fea126a7313d3fc5ccafb32ee08d156510d1",
+    "spin_delta_capability_gate.py": "694c039ee9db14866a1a98b6ebb9213308be962a187b8bc4d2acb17f7ac2c6b2",
+    "spin_delta_causal_router_gate.py": "65f7c7a5f1b25f2d2f41c13dc212915db2c9a77121f9e4603b8d7fa624d23c5a",
+    "spin_delta_router.py": "19fed53e3a603fe6981428dfa424d1eb3c86818e65ab1c744f0cbf80dacd081d",
+    "spin_delta_scan.py": "09a1f20de7302243dd2e83c640ad3dc1833bd27c8daef25deba11769f1707ad1"
+  },
+  "intervention": {
+    "evaluation_inputs": "token IDs only",
+    "router": "token embedding, causal width-three convolution, hard-ST heads",
+    "training_labels": "causal synthetic event and slot labels only",
+    "unchanged": [
+      "Spin-Delta two-slot state",
+      "independent Spin transports",
+      "value drive",
+      "raw CUDA recurrence and backward",
+      "readout and language head"
+    ]
+  },
+  "pairing": {
+    "all_core_tensors_bitwise_equal": true,
+    "candidate_extra_parameters": 11494,
+    "initial_logit_equality_required": false,
+    "reason": "the learned causal router is the architectural intervention"
+  },
+  "protocol": "SPIN_DELTA_CAUSAL_ROUTER_PREREGISTRATION.md",
+  "results": [
+    {
+      "autonomous_evaluation": true,
+      "final": {
+        "16": {
+          "accuracy": 0.879150390625,
+          "bits_per_query": 0.6436771402439894,
+          "nats_per_query": 0.44616299495100975,
+          "queries": 4096
+        },
+        "32": {
+          "accuracy": 0.880126953125,
+          "bits_per_query": 0.6340888373918814,
+          "nats_per_query": 0.4395168898627162,
+          "queries": 4096
+        },
+        "8": {
+          "accuracy": 0.880126953125,
+          "bits_per_query": 0.624892238463258,
+          "nats_per_query": 0.4331422932446003,
+          "queries": 4096
+        }
+      },
+      "initial": {
+        "16": {
+          "accuracy": 0.0,
+          "bits_per_query": 8.054151747805397,
+          "nats_per_query": 5.582712575793266,
+          "queries": 4096
+        },
+        "32": {
+          "accuracy": 0.0,
+          "bits_per_query": 8.052470294925742,
+          "nats_per_query": 5.5815470814704895,
+          "queries": 4096
+        },
+        "8": {
+          "accuracy": 0.0,
+          "bits_per_query": 8.041161790696572,
+          "nats_per_query": 5.57370862364769,
+          "queries": 4096
+        }
+      },
+      "parameters": 104438,
+      "peak_cuda_bytes": 145654784,
+      "sampled_training_losses": {
+        "1": {
+          "auxiliary": null,
+          "retrieval": 5.558300971984863,
+          "total": 5.558300971984863
+        },
+        "400": {
+          "auxiliary": null,
+          "retrieval": 1.5083494186401367,
+          "total": 1.5083494186401367
+        },
+        "800": {
+          "auxiliary": null,
+          "retrieval": 0.4353024363517761,
+          "total": 0.4353024363517761
+        }
+      },
+      "training_examples_per_second": 3386.6117998831483,
+      "training_seconds": 30.23671033200003,
+      "training_uses_router_labels": false,
+      "variant": "learned_continuous"
+    },
+    {
+      "autonomous_evaluation": true,
+      "final": {
+        "16": {
+          "accuracy": 0.984619140625,
+          "bits_per_query": 0.23319154872271397,
+          "nats_per_query": 0.1616360645275563,
+          "queries": 4096,
+          "router": {
+            "query_event_f1": 1.0,
+            "query_false_negative": 0,
+            "query_false_positive": 0,
+            "query_slot_accuracy": 1.0,
+            "query_slot_correct": 4096,
+            "query_slot_total": 4096,
+            "query_true_positive": 4096,
+            "write_event_f1": 1.0,
+            "write_false_negative": 0,
+            "write_false_positive": 0,
+            "write_slot_accuracy": 1.0,
+            "write_slot_correct": 65536,
+            "write_slot_total": 65536,
+            "write_true_positive": 65536
+          }
+        },
+        "32": {
+          "accuracy": 0.99072265625,
+          "bits_per_query": 0.2226061358078914,
+          "nats_per_query": 0.1542988154105842,
+          "queries": 4096,
+          "router": {
+            "query_event_f1": 1.0,
+            "query_false_negative": 0,
+            "query_false_positive": 0,
+            "query_slot_accuracy": 1.0,
+            "query_slot_correct": 4096,
+            "query_slot_total": 4096,
+            "query_true_positive": 4096,
+            "write_event_f1": 1.0,
+            "write_false_negative": 0,
+            "write_false_positive": 0,
+            "write_slot_accuracy": 1.0,
+            "write_slot_correct": 131072,
+            "write_slot_total": 131072,
+            "write_true_positive": 131072
+          }
+        },
+        "8": {
+          "accuracy": 0.98388671875,
+          "bits_per_query": 0.232148069181375,
+          "nats_per_query": 0.1609127796255052,
+          "queries": 4096,
+          "router": {
+            "query_event_f1": 1.0,
+            "query_false_negative": 0,
+            "query_false_positive": 0,
+            "query_slot_accuracy": 1.0,
+            "query_slot_correct": 4096,
+            "query_slot_total": 4096,
+            "query_true_positive": 4096,
+            "write_event_f1": 1.0,
+            "write_false_negative": 0,
+            "write_false_positive": 0,
+            "write_slot_accuracy": 1.0,
+            "write_slot_correct": 32768,
+            "write_slot_total": 32768,
+            "write_true_positive": 32768
+          }
+        }
+      },
+      "initial": {
+        "16": {
+          "accuracy": 0.0,
+          "bits_per_query": 8.068435164933529,
+          "nats_per_query": 5.592613086104393,
+          "queries": 4096,
+          "router": {
+            "query_event_f1": 0.0,
+            "query_false_negative": 4096,
+            "query_false_positive": 0,
+            "query_slot_accuracy": 0.16845703125,
+            "query_slot_correct": 690,
+            "query_slot_total": 4096,
+            "query_true_positive": 0,
+            "write_event_f1": 0.0,
+            "write_false_negative": 65536,
+            "write_false_positive": 0,
+            "write_slot_accuracy": 0.592071533203125,
+            "write_slot_correct": 38802,
+            "write_slot_total": 65536,
+            "write_true_positive": 0
+          }
+        },
+        "32": {
+          "accuracy": 0.0,
+          "bits_per_query": 8.068675747164255,
+          "nats_per_query": 5.592779844999313,
+          "queries": 4096,
+          "router": {
+            "query_event_f1": 0.0,
+            "query_false_negative": 4096,
+            "query_false_positive": 0,
+            "query_slot_accuracy": 0.17529296875,
+            "query_slot_correct": 718,
+            "query_slot_total": 4096,
+            "query_true_positive": 0,
+            "write_event_f1": 0.0,
+            "write_false_negative": 131072,
+            "write_false_positive": 0,
+            "write_slot_accuracy": 0.59185791015625,
+            "write_slot_correct": 77576,
+            "write_slot_total": 131072,
+            "write_true_positive": 0
+          }
+        },
+        "8": {
+          "accuracy": 0.0,
+          "bits_per_query": 8.045724533419625,
+          "nats_per_query": 5.576871275901794,
+          "queries": 4096,
+          "router": {
+            "query_event_f1": 0.0,
+            "query_false_negative": 4096,
+            "query_false_positive": 0,
+            "query_slot_accuracy": 0.174072265625,
+            "query_slot_correct": 713,
+            "query_slot_total": 4096,
+            "query_true_positive": 0,
+            "write_event_f1": 0.0,
+            "write_false_negative": 32768,
+            "write_false_positive": 0,
+            "write_slot_accuracy": 0.5946044921875,
+            "write_slot_correct": 19484,
+            "write_slot_total": 32768,
+            "write_true_positive": 0
+          }
+        }
+      },
+      "parameters": 115932,
+      "peak_cuda_bytes": 146964480,
+      "sampled_training_losses": {
+        "1": {
+          "auxiliary": 0.9392027258872986,
+          "retrieval": 5.567220687866211,
+          "total": 6.506423473358154
+        },
+        "400": {
+          "auxiliary": 0.0005792409647256136,
+          "retrieval": 0.9351224899291992,
+          "total": 0.9357017278671265
+        },
+        "800": {
+          "auxiliary": 0.0003832719230558723,
+          "retrieval": 0.15078958868980408,
+          "total": 0.15117286145687103
+        }
+      },
+      "training_examples_per_second": 3462.1614434719763,
+      "training_seconds": 29.57689919200004,
+      "training_uses_router_labels": true,
+      "variant": "causal_discrete_aux"
+    }
+  ],
+  "schema_version": 1,
+  "stage": "spin_delta_causal_router_gate",
+  "variant_order": [
+    "learned_continuous",
+    "causal_discrete_aux"
+  ]
+}

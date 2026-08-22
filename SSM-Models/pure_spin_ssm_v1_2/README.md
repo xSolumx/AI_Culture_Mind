@@ -128,6 +128,13 @@ points on average. The recurrence has sufficient overwrite capacity; the
 autonomous failure lies in causal write/query event and slot inference. See
 [`SPIN_DELTA_ORACLE_ADDRESS_RESULTS.md`](SPIN_DELTA_ORACLE_ADDRESS_RESULTS.md).
 
+The follow-up autonomous causal router learned every synthetic event and slot
+perfectly across three seeds and all lengths, but end-to-end retrieval remained
+seed-unstable and lost 1.60 points on average at 16 writes. Identification is
+therefore no longer the unresolved variable; joint router/recurrence
+co-adaptation is. See
+[`SPIN_DELTA_CAUSAL_ROUTER_RESULTS.md`](SPIN_DELTA_CAUSAL_ROUTER_RESULTS.md).
+
 The recurrence is not Mamba-2 under different notation. Its state transition is
 a selective contractive affine Spin(8) action. Local convolution and SwiGLU are
 included because the old pure recurrence lacked the local/channel mixing needed
