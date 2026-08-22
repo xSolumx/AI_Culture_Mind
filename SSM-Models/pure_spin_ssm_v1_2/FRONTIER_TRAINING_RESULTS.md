@@ -295,6 +295,27 @@ action tying: future coupling must preserve independently learned channel
 actions. See
 [`SHARED_ACTION_COMPRESSION_RESULTS.md`](SHARED_ACTION_COMPRESSION_RESULTS.md).
 
+## Independent-action block-affine coupling
+
+The next compiler preserved both independent Spin trajectories and inserted a
+zero-start `SO(2)` multiplicity action after token transport. Its exact closure
+is a 16-dimensional affine block per triality sector, while the full-training
+CUDA path evaluates the structured factors directly with the original cache.
+All 57 WSL/cu126 tests passed before training.
+
+| seed | maintained bpb | block-coupled bpb | improvement |
+|---:|---:|---:|---:|
+| 193 | **2.73694** | 2.75145 | -0.01451 |
+| 197 | **2.67546** | 2.71187 | -0.03641 |
+| 199 | 2.70813 | **2.70418** | +0.00396 |
+| mean | **2.70685** | 2.72250 | -0.01565 |
+
+The free tokenwise angle failed promotion and no speed gate was run. The
+equivariant compiler remains valid. The failure motivates coupling scaled by
+the local update `1-s_t`, the first-order continuous-time step proxy, rather
+than another arbitrary global angle cap. See
+[`INDEPENDENT_BLOCK_RECURRENCE_RESULTS.md`](INDEPENDENT_BLOCK_RECURRENCE_RESULTS.md).
+
 ## Channel-mixer falsification
 
 Two custom non-exponential candidates were implemented:
