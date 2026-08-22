@@ -16,6 +16,7 @@ from benchmark import (
     package_version,
     parameter_count,
     run_one,
+    seed_all,
 )
 from data import (
     TINY_SHAKESPEARE_REVISION,
@@ -69,6 +70,14 @@ def variants(stage: str, base: BenchmarkConfig) -> tuple[tuple[str, BenchmarkCon
             ("independent_v1_2", independent),
             ("retention_scaled_block", block),
         )
+    if stage == "isotypic_retention":
+        return (
+            ("shared_retention", independent),
+            (
+                "isotypic_retention",
+                replace(independent, spin_retention_mode="isotypic"),
+            ),
+        )
     return (("independent_v1_2", independent), ("shared_identity", shared))
 
 
@@ -82,6 +91,7 @@ def main() -> int:
             "compression",
             "independent_block",
             "retention_block",
+            "isotypic_retention",
         ],
         required=True,
     )
@@ -122,6 +132,31 @@ def main() -> int:
         for _ in range(args.validation_batches)
     ]
     device = torch.device("cuda")
+    pairing_models = []
+    for _, config in candidates:
+        seed_all(args.seed)
+        pairing_models.append(build_model("pure_spin_v1_2", config).to(device).eval())
+    shared_state = pairing_models[0].state_dict()
+    candidate_state = pairing_models[1].state_dict()
+    common_parameters_bitwise_equal = all(
+        torch.equal(candidate_state[name], value)
+        for name, value in shared_state.items()
+    )
+    pairing_inputs = validation[0][0].to(device)
+    with torch.no_grad():
+        pairing_logits = [
+            model(pairing_inputs, scan_mode=config.spin_backend)["logits"]
+            for model, (_, config) in zip(pairing_models, candidates, strict=True)
+        ]
+    maximum_initial_logit_difference = float(
+        (pairing_logits[0] - pairing_logits[1]).abs().max()
+    )
+    if not common_parameters_bitwise_equal or maximum_initial_logit_difference != 0.0:
+        raise RuntimeError(
+            "paired variants must have bitwise-equal common parameters and logits"
+        )
+    del pairing_logits, pairing_models
+    torch.cuda.empty_cache()
     results = []
     counts = {}
     for label, config in candidates:
@@ -133,6 +168,7 @@ def main() -> int:
             "spin_recurrence": config.spin_recurrence,
             "spin_recurrent_multiplicity": config.spin_recurrent_multiplicity,
             "spin_recurrent_coupling_scale": config.spin_recurrent_coupling_scale,
+            "spin_retention_mode": config.spin_retention_mode,
         }
         results.append(result)
     mamba_count = parameter_count(build_model("mamba2_fused", base))
@@ -141,10 +177,12 @@ def main() -> int:
         Path(__file__),
         ROOT / "benchmark.py",
         ROOT / "model.py",
+        ROOT / "chunk_parallel_scan.py",
         ROOT / "coupled_isotypic_scan.py",
         ROOT / "raw_cuda.py",
         ROOT / "csrc" / "spin_scan.cpp",
         ROOT / "csrc" / "spin_scan_cuda.cu",
+        ROOT.parent / "pure_spin8_ssm" / "torch_backend.py",
     )
     report = {
         "schema_version": 1,
@@ -156,6 +194,10 @@ def main() -> int:
         "config": asdict(base),
         "variant_order": [label for label, _ in candidates],
         "parameter_counts": {**counts, "mamba2_fused_reference": mamba_count},
+        "initial_pairing": {
+            "common_parameters_bitwise_equal": common_parameters_bitwise_equal,
+            "maximum_absolute_logit_difference": maximum_initial_logit_difference,
+        },
         "dataset": {
             "name": "tiny_shakespeare",
             "encoding": "raw UTF-8 bytes",
@@ -179,7 +221,7 @@ def main() -> int:
         },
         "results": results,
         "implementation_sha256": {
-            path.relative_to(ROOT).as_posix(): file_sha256(path)
+            path.relative_to(ROOT.parent).as_posix(): file_sha256(path)
             for path in implementation_paths
         },
     }

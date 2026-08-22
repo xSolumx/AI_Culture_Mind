@@ -37,6 +37,7 @@ class PureSpinV12Config:
     ] = "independent"
     recurrent_multiplicity: Literal["identity", "orthogonal"] = "identity"
     recurrent_coupling_scale: Literal["unit", "retention_step"] = "unit"
+    retention_mode: Literal["shared", "isotypic"] = "shared"
     group_schedule: tuple[int, ...] | None = None
     dropout: float = 0.0
     min_retention_logit: float = 2.0
@@ -82,6 +83,8 @@ class PureSpinV12Config:
             raise ValueError("unknown recurrent multiplicity mode")
         if self.recurrent_coupling_scale not in ("unit", "retention_step"):
             raise ValueError("unknown recurrent coupling scale")
+        if self.retention_mode not in ("shared", "isotypic"):
+            raise ValueError("unknown retention mode")
         if (
             self.recurrent_coupling_scale != "unit"
             and self.recurrent_multiplicity != "orthogonal"
@@ -189,6 +192,7 @@ class PureSpinV12Block(nn.Module):
             min_retention_logit=config.min_retention_logit,
             triality_coupling=True,
             normalize_inputs=True,
+            retention_mode=config.retention_mode,
         )
         generator_pairs = tuple(combinations(range(8), 2))
         subgroup_indices = tuple(
@@ -214,6 +218,7 @@ class PureSpinV12Block(nn.Module):
         self.recurrence_mode = config.recurrence
         self.recurrent_multiplicity = config.recurrent_multiplicity
         self.recurrent_coupling_scale = config.recurrent_coupling_scale
+        self.retention_mode = config.retention_mode
         if self.recurrence_mode == "coupled_isotypic":
             # The replacement is an experimental branch, so constructing it
             # must not shift initialization of later parameters relative to
@@ -474,6 +479,11 @@ class PureSpinV12Block(nn.Module):
         elif scan_mode == "raw_cuda_controller":
             from raw_cuda import raw_cuda_controller_factorized_scan
 
+            if self.retention_mode == "isotypic":
+                raise ValueError(
+                    "isotypic retention requires raw_cuda_hybrid, "
+                    "raw_cuda_isotypic, or chunk_parallel"
+                )
             if state is None:
                 state = self.spin.initial_cache(value.shape[0], value)
             normalized, scale, drive, coordinate_gate = (
@@ -508,6 +518,14 @@ class PureSpinV12Block(nn.Module):
             normalized, scale, drive, coordinate_gate = (
                 self.spin._normalized_control_fields(value, valid_mask)
             )
+            if self.retention_mode == "isotypic" and scan_mode in {
+                "raw_cuda_controller",
+                "raw_cuda_factorized",
+            }:
+                raise ValueError(
+                    "isotypic retention requires raw_cuda_hybrid, "
+                    "raw_cuda_isotypic, or chunk_parallel"
+                )
             factor_count = len(self.subgroup_indices)
             coordinates = self.spin.coefficient_controller(normalized).reshape(
                 value.shape[0], value.shape[1], self.spin.channels, factor_count

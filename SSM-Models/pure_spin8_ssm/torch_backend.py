@@ -41,6 +41,7 @@ from pure_spin8_ssm.factorized_scan import (
 )
 
 ActionMode = Literal["factorized", "exponential"]
+RetentionMode = Literal["shared", "isotypic"]
 ScanMode = Literal[
     "work_efficient",
     "hillis_steele",
@@ -196,10 +197,13 @@ def compose_spin8_affine(
 
     action = after.action @ before.action
     rotated_drive = torch.einsum("...crij,...crj->...cri", after.action, before.drive)
+    scale_on_state = after.scale
+    while scale_on_state.ndim < rotated_drive.ndim:
+        scale_on_state = scale_on_state.unsqueeze(-1)
     return Spin8AffineTransition(
         scale=after.scale * before.scale,
         action=action,
-        drive=after.drive + after.scale[..., None, None] * rotated_drive,
+        drive=after.drive + scale_on_state * rotated_drive,
     )
 
 
@@ -207,7 +211,10 @@ def apply_spin8_affine(
     transition: Spin8AffineTransition, state: torch.Tensor
 ) -> torch.Tensor:
     rotated = torch.einsum("...crij,...crj->...cri", transition.action, state)
-    return transition.scale[..., None, None] * rotated + transition.drive
+    scale_on_state = transition.scale
+    while scale_on_state.ndim < rotated.ndim:
+        scale_on_state = scale_on_state.unsqueeze(-1)
+    return scale_on_state * rotated + transition.drive
 
 
 def _identity_transition(
@@ -215,7 +222,7 @@ def _identity_transition(
 ) -> Spin8AffineTransition:
     batch, _, channels = reference.scale.shape[:3]
     representations = reference.action.shape[-3]
-    scale = reference.scale.new_ones(batch, length, channels)
+    scale = reference.scale.new_ones(batch, length, *reference.scale.shape[2:])
     action = _identity(
         reference.action,
         batch,
@@ -259,11 +266,11 @@ def _odd(transition: Spin8AffineTransition) -> Spin8AffineTransition:
 def _interleave(
     left: Spin8AffineTransition, right: Spin8AffineTransition
 ) -> Spin8AffineTransition:
-    batch, nodes, channels = left.scale.shape
+    batch, nodes, channels = left.scale.shape[:3]
     representations = left.action.shape[-3]
     return Spin8AffineTransition(
         scale=torch.stack((left.scale, right.scale), dim=2).reshape(
-            batch, 2 * nodes, channels
+            batch, 2 * nodes, *left.scale.shape[2:]
         ),
         action=torch.stack((left.action, right.action), dim=2).reshape(
             batch,
@@ -407,6 +414,7 @@ class PureSpin8SSMLayer(nn.Module):
         triality_coupling: bool = True,
         transport_only: bool = False,
         normalize_inputs: bool = True,
+        retention_mode: RetentionMode = "shared",
     ) -> None:
         super().__init__()
         if input_size < 1 or channels < 1:
@@ -418,6 +426,8 @@ class PureSpin8SSMLayer(nn.Module):
             raise ValueError("unknown triality representation")
         if action_mode not in ("factorized", "exponential"):
             raise ValueError("unknown action mode")
+        if retention_mode not in ("shared", "isotypic"):
+            raise ValueError("unknown retention mode")
 
         self.input_size = input_size
         self.channels = channels
@@ -427,6 +437,7 @@ class PureSpin8SSMLayer(nn.Module):
         self.triality_coupling = triality_coupling
         self.transport_only = transport_only
         self.normalize_inputs = normalize_inputs
+        self.retention_mode = retention_mode
         self.input_norm = nn.RMSNorm(input_size) if normalize_inputs else nn.Identity()
         self.coefficient_controller = nn.Linear(
             input_size, channels * SPIN8_BIVECTOR_DIM
@@ -439,6 +450,20 @@ class PureSpin8SSMLayer(nn.Module):
             self.drive_controller = None
         else:
             self.retention_controller = nn.Linear(input_size, channels)
+            if retention_mode == "isotypic":
+                # This is a zero-start residual around the maintained shared
+                # controller.  Forking construction preserves the random
+                # stream and therefore every common parameter in paired runs.
+                with torch.random.fork_rng(devices=[]):
+                    retention_offset_controller = nn.Linear(
+                        input_size, channels * len(representations)
+                    )
+                self.retention_offset_controller = retention_offset_controller
+                self.retention_offset_controller._pure_spin_zero_init = True
+                nn.init.zeros_(self.retention_offset_controller.weight)
+                nn.init.zeros_(self.retention_offset_controller.bias)
+            else:
+                self.retention_offset_controller = None
             self.write_controller = nn.Linear(input_size, channels)
             self.drive_controller = nn.Linear(
                 input_size, channels * len(representations) * SPIN8_DIM
@@ -495,9 +520,23 @@ class PureSpin8SSMLayer(nn.Module):
             assert self.retention_controller is not None
             assert self.write_controller is not None
             assert self.drive_controller is not None
-            scale = torch.sigmoid(
+            retention_logits = (
                 self.min_retention_logit + self.retention_controller(normalized)
             )
+            if self.retention_offset_controller is not None:
+                offsets = self.retention_offset_controller(normalized).reshape(
+                    batch,
+                    length,
+                    self.channels,
+                    len(self.representations),
+                )
+                # Only relative sector timescales are new.  Removing the mean
+                # keeps the maintained shared controller responsible for the
+                # common retention mode and removes a redundant direction.
+                offsets = offsets - offsets.mean(dim=-1, keepdim=True)
+                scale = torch.sigmoid(retention_logits[..., None] + offsets)
+            else:
+                scale = torch.sigmoid(retention_logits)
             write = torch.sigmoid(self.write_controller(normalized))
             raw_drive = self.drive_controller(normalized).reshape(
                 batch,
@@ -506,11 +545,11 @@ class PureSpin8SSMLayer(nn.Module):
                 len(self.representations),
                 SPIN8_DIM,
             )
-            drive = (
-                (1.0 - scale)[..., None, None]
-                * write[..., None, None]
-                * unit_ball(raw_drive)
-            )
+            if scale.ndim == 4:
+                retention_step = (1.0 - scale)[..., None]
+            else:
+                retention_step = (1.0 - scale)[..., None, None]
+            drive = retention_step * write[..., None, None] * unit_ball(raw_drive)
         coordinate_gate = torch.ones(
             batch, length, dtype=inputs.dtype, device=inputs.device
         )
@@ -518,7 +557,10 @@ class PureSpin8SSMLayer(nn.Module):
             if valid_mask.shape != (batch, length):
                 raise ValueError("valid_mask must have shape (batch,length)")
             valid = valid_mask.bool()
-            scale = torch.where(valid[..., None], scale, torch.ones_like(scale))
+            valid_scale = valid
+            while valid_scale.ndim < scale.ndim:
+                valid_scale = valid_scale.unsqueeze(-1)
+            scale = torch.where(valid_scale, scale, torch.ones_like(scale))
             drive = torch.where(
                 valid[..., None, None, None], drive, torch.zeros_like(drive)
             )

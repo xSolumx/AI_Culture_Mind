@@ -58,6 +58,43 @@ def test_initial_language_model_loss_has_sane_scale() -> None:
     assert 4.5 < float(loss.detach()) < 6.5
 
 
+def test_isotypic_retention_is_exact_zero_start_and_learns_sector_offsets() -> None:
+    shared_config = PureSpinV12Config(
+        d_model=16,
+        num_layers=1,
+        spin_channels=2,
+        d_conv=3,
+        retention_mode="shared",
+    )
+    isotypic_config = PureSpinV12Config(
+        d_model=16,
+        num_layers=1,
+        spin_channels=2,
+        d_conv=3,
+        retention_mode="isotypic",
+    )
+    torch.manual_seed(20_260_829)
+    shared = PureSpinSSMV12(shared_config)
+    torch.manual_seed(20_260_829)
+    isotypic = PureSpinSSMV12(isotypic_config)
+    shared_state = shared.state_dict()
+    isotypic_state = isotypic.state_dict()
+    for name, expected in shared_state.items():
+        torch.testing.assert_close(isotypic_state[name], expected, rtol=0.0, atol=0.0)
+    offset = isotypic.blocks[0].spin.retention_offset_controller
+    assert offset is not None
+    assert torch.count_nonzero(offset.weight) == 0
+    assert torch.count_nonzero(offset.bias) == 0
+
+    tokens = torch.randint(0, 256, (2, 7))
+    expected = shared(tokens, scan_mode="chunk_parallel")["logits"]
+    actual = isotypic(tokens, scan_mode="chunk_parallel")["logits"]
+    torch.testing.assert_close(actual, expected, rtol=0.0, atol=0.0)
+    actual.square().mean().backward()
+    assert offset.weight.grad is not None
+    assert torch.linalg.vector_norm(offset.weight.grad) > 0.0
+
+
 def test_triality_invariant_readout_restores_scale_and_has_finite_gradients() -> None:
     torch.manual_seed(202_608_22)
     config = PureSpinV12Config(

@@ -444,7 +444,7 @@ __global__ void coordinate_factorized_backward_kernel(
 __global__ void isotypic_coordinate_forward_kernel(
     const float* coordinates, const float* generators, const float* scale,
     const float* drive, const float* initial, float* output, int length,
-    int channels, int factors) {
+    int channels, int factors, int isotypic_scale) {
   const int lane = threadIdx.x;
   const int representation = blockIdx.x % 3;
   const int sequence = blockIdx.x / 3;
@@ -470,7 +470,10 @@ __global__ void isotypic_coordinate_forward_kernel(
     if (active) {
       const int output_base =
           ((scalar_offset * 3 + representation) * 8);
-      state = scale[scalar_offset] * state + drive[output_base + lane];
+      const int scale_offset = isotypic_scale
+          ? scalar_offset * 3 + representation
+          : scalar_offset;
+      state = scale[scale_offset] * state + drive[output_base + lane];
       output[output_base + lane] = state;
     }
     __syncwarp();
@@ -483,7 +486,7 @@ __global__ void isotypic_coordinate_backward_kernel(
     const float* output_gradient, float* coordinate_gradient_by_representation,
     float* scale_gradient_by_representation, float* drive_gradient,
     float* initial_gradient, int length, int channels, int factors,
-    int coordinate_elements, int scale_elements) {
+    int coordinate_elements, int scale_elements, int isotypic_scale) {
   const int lane = threadIdx.x;
   const int representation = blockIdx.x % 3;
   const int sequence = blockIdx.x / 3;
@@ -501,7 +504,10 @@ __global__ void isotypic_coordinate_backward_kernel(
     const int coordinate_base = scalar_offset * factors;
     const int output_base = ((scalar_offset * 3 + representation) * 8);
     float direct = active ? output_gradient[output_base + lane] + carry : 0.0f;
-    const float scale_value = scale[scalar_offset];
+    const int scale_offset = isotypic_scale
+        ? scalar_offset * 3 + representation
+        : scalar_offset;
+    const float scale_value = scale[scale_offset];
     float rotated = 0.0f;
     if (fabsf(scale_value) > 1.0e-7f) {
       rotated = active
@@ -528,7 +534,7 @@ __global__ void isotypic_coordinate_backward_kernel(
     const float scale_term = warp_sum(active ? direct * rotated : 0.0f);
     if (lane == 0) {
       scale_gradient_by_representation[
-          representation * scale_elements + scalar_offset] = scale_term;
+          representation * scale_elements + scale_offset] = scale_term;
     }
     if (active) drive_gradient[output_base + lane] = direct;
     float adjoint = active ? scale_value * direct : 0.0f;
@@ -1033,8 +1039,12 @@ void check_coordinate_inputs(
       coordinates.size(3) <= 28, "coordinates must be (B,L,C,F), 1 <= F <= 28");
   const auto batch = coordinates.size(0), length = coordinates.size(1);
   const auto channels = coordinates.size(2);
-  TORCH_CHECK(scale.sizes() == torch::IntArrayRef({batch, length, channels}),
-      "scale must be (B,L,C)");
+  const bool shared_scale =
+      scale.sizes() == torch::IntArrayRef({batch, length, channels});
+  const bool isotypic_scale =
+      scale.sizes() == torch::IntArrayRef({batch, length, channels, 3});
+  TORCH_CHECK(shared_scale || isotypic_scale,
+      "scale must be (B,L,C) or (B,L,C,3)");
   const auto factors = coordinates.size(3);
   TORCH_CHECK(generators.sizes() == torch::IntArrayRef({3, factors, 8, 8}),
       "generators must be (3,F,8,8)");
@@ -1157,6 +1167,8 @@ torch::Tensor coordinate_factorized_forward_cuda(
     torch::Tensor coordinates, torch::Tensor generators, torch::Tensor scale,
     torch::Tensor drive, torch::Tensor initial) {
   check_coordinate_inputs(coordinates, generators, scale, initial);
+  TORCH_CHECK(scale.dim() == 3,
+      "packed coordinate forward requires shared scale (B,L,C)");
   const int batch = coordinates.size(0), length = coordinates.size(1);
   const int channels = coordinates.size(2);
   const int factors = coordinates.size(3);
@@ -1180,6 +1192,8 @@ std::vector<torch::Tensor> coordinate_factorized_backward_cuda(
     torch::Tensor drive, torch::Tensor initial, torch::Tensor output,
     torch::Tensor output_gradient) {
   check_coordinate_inputs(coordinates, generators, scale, initial);
+  TORCH_CHECK(scale.dim() == 3,
+      "packed coordinate backward requires shared scale (B,L,C)");
   const int batch = coordinates.size(0), length = coordinates.size(1);
   const int channels = coordinates.size(2);
   const int factors = coordinates.size(3);
@@ -1229,7 +1243,7 @@ torch::Tensor isotypic_coordinate_forward_cuda(
       at::cuda::getCurrentCUDAStream()>>>(
       coordinates.data_ptr<float>(), generators.data_ptr<float>(),
       scale.data_ptr<float>(), drive.data_ptr<float>(), initial.data_ptr<float>(),
-      output.data_ptr<float>(), length, channels, factors);
+      output.data_ptr<float>(), length, channels, factors, scale.dim() == 4);
   C10_CUDA_KERNEL_LAUNCH_CHECK();
   return output;
 }
@@ -1258,8 +1272,9 @@ std::vector<torch::Tensor> isotypic_coordinate_backward_cuda(
   const int scale_elements = scale.numel();
   auto coordinate_gradient_by_representation = torch::empty(
       {3, coordinate_elements}, coordinates.options());
-  auto scale_gradient_by_representation = torch::empty(
-      {3, scale_elements}, scale.options());
+  auto scale_gradient_by_representation = scale.dim() == 4
+      ? torch::zeros({3, scale_elements}, scale.options())
+      : torch::empty({3, scale_elements}, scale.options());
   auto drive_gradient = torch::empty_like(output);
   auto initial_gradient = torch::empty_like(initial);
   const c10::cuda::CUDAGuard guard(coordinates.device());
@@ -1271,7 +1286,8 @@ std::vector<torch::Tensor> isotypic_coordinate_backward_cuda(
       coordinate_gradient_by_representation.data_ptr<float>(),
       scale_gradient_by_representation.data_ptr<float>(),
       drive_gradient.data_ptr<float>(), initial_gradient.data_ptr<float>(),
-      length, channels, factors, coordinate_elements, scale_elements);
+      length, channels, factors, coordinate_elements, scale_elements,
+      scale.dim() == 4);
   C10_CUDA_KERNEL_LAUNCH_CHECK();
   auto coordinate_gradient =
       coordinate_gradient_by_representation.sum(0).view_as(coordinates);
