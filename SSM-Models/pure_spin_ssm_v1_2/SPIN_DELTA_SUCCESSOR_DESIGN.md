@@ -1,7 +1,7 @@
 # Spin-Delta successor design
 
-**Status:** model architecture target derived from closed v1.2/v1.3 gates;
-not yet a promoted model or preregistered natural-data claim.
+**Status:** semantic compiler and v1.2 model path implemented on 2026-08-22;
+correctness gates pass, but this is not yet a promoted natural-data model.
 
 ## Reassessed objective
 
@@ -49,16 +49,26 @@ transported[g,a,r] = rho_r(g_t[g]) H[g,a,r].
 Within a head, a rank-one safe delta update acts on the slot axis:
 
 ```text
-L[g] = (I - beta[g] k[g] k[g]^T) diag(s[g]),
-H'[g,:,r] = L[g] transported[g,:,r] + k[g] z[g,r]^T,
+L[g] = s[g] (I - beta[g] e[g] e[g]^T),
+H'[g,:,r] = L[g] transported[g,:,r] + w[g] z[g,r]^T,
 y[g,r] = q[g]^T H'[g,:,r].
 ```
 
-Here `k` and `q` are normalized two-slot keys/queries, `0 <= beta <= 1`, and
-`0 < s < 1`. Tying erase to the write key is deliberate in the first gate:
-`I-beta k k^T` has spectral norm at most one, so the left update remains
-contractive. Independent erase/write keys stay a later falsifier rather than
-silently weakening the stability theorem.
+Here `e` and `w` are normalized two-slot erase/write keys, `q` is a bounded
+affine read probe, `0 <= beta <= 1`, and `0 < s < 1`. The implemented first
+gate uses independent erase and write directions. This changes no stability
+claim: `I-beta e e^T` still has spectral norm at most one, while the write is
+an affine drive and does not enter the homogeneous operator.
+
+This is a deliberate correction to the paper design, not scope drift. Exact
+zero erase, global boundedness, smooth parameterization, and a nonzero
+first-order erase gradient cannot all hold simultaneously: a differentiable
+map into `[0,1]` attaining zero is at a local minimum and therefore has zero
+derivative. A hard-clamp subgradient could hide that incompatibility but would
+introduce a dead negative half-line. The implemented smooth staged embedding
+instead starts with `e=(0,1)`, safely erasing only the empty auxiliary slot,
+and `beta=1/2`. Write direction, erase direction, and query are first-order
+live; erase strength becomes live after the erase direction moves.
 
 The readout concatenates the two queried 24-dimensional triality values and
 uses the maintained direction interface initially. Triality invariants remain
@@ -93,25 +103,30 @@ than inventing another recurrence kernel from scratch: one warp owns one
 
 ## Exact baseline embedding
 
-The candidate must reduce bitwise to maintained v1.2 at initialization:
+The candidate must reduce algebraically to maintained v1.2 at initialization:
 
 - slot zero contains the maintained learned initial state;
 - slot one starts at zero;
-- the initial query selects slot zero;
-- delta erase strength starts at zero;
-- maintained drive writes into slot zero;
+- the initial bounded probe is `(1,1)`, which reads slot zero because slot one
+  is exactly empty;
+- the initial erase direction is `(0,1)` with strength `1/2`;
+- maintained drive writes with `w=(1,0)` into slot zero;
 - every new controller is zero initialized under an RNG fork;
 - both independent Spin controllers and every common model tensor are copied
   exactly.
 
-The gate runner must refuse training if common parameters or initial logits
-differ.
+Every common parameter must be bitwise identical. The two recurrences are the
+same map over the reals. The generic two-slot float32 contraction may differ
+from the scalar maintained path by a final-rounding ulp because it sums an
+extra exact-zero term; the gate records and bounds that numerical residual
+instead of mislabeling it as an architectural difference.
 
 ## Acceptance sequence
 
 1. Semantic recurrent equation and affine composition associativity.
-2. Exact baseline embedding plus nonzero gradients into key, query, erase, and
-   second-slot write controls.
+2. Algebraically exact baseline embedding; immediate nonzero gradients into
+   write address, erase direction, and query; and a perturbation test proving
+   the staged erase-strength path becomes live.
 3. Recurrent/parallel output, state, and full-gradient parity in float64.
 4. Boundedness and long-sequence finite-state falsifiers.
 5. Raw-CUDA output and full-model gradient parity at factor counts 3/6/15/28.
@@ -125,3 +140,31 @@ No Tensor-Core or Mamba-superiority claim is attached to the design. The first
 question is narrower and decisive: does explicit addressable overwrite recover
 materially more than the hundredth-bit effects of transport, readout, and
 retention modifications?
+
+## Implemented evidence
+
+The implementation is split so that the mathematical oracle is independent of
+the language-model wrapper:
+
+- `spin_delta_scan.py` defines the affine transition, chronological
+  composition, sequential recurrence, parallel Hillis-Steele prefix scan,
+  safe rank-one left map, drive routing, and query contraction;
+- `model.py` exposes `recurrence="spin_delta"` with two slots and the scan
+  modes `delta_recurrent` and `delta_parallel`;
+- `test_spin_delta_scan.py` checks associativity, output and full-gradient
+  scan parity in float64, contraction, routing, exact one-step embedding, and
+  the staged gradient structure;
+- `test_model.py` checks paired parameter identity, near-bitwise float32 model
+  embedding, full-model output/gradient parity, causal masking behavior, and a
+  384-token finite-state falsifier.
+
+The raw-CUDA lowering and frozen Shakespeare quality gate remain open. Until
+both close, Spin-Delta is an implemented experimental recurrence, not v1.2_x
+and not a claimed improvement.
+
+On the pinned WSL Python 3.10 / Torch 2.10.0+cu126 environment, the complete
+v1.2 suite passes `80 passed`. A deliberately non-evidentiary two-update
+Tiny Shakespeare smoke (`B=1`, `L=32`, `d_model=16`, one Spin(3) layer) also
+completed forward, backward, optimizer update, validation, and JSON provenance
+on the RTX 2070 SUPER. Its loss and throughput are commissioning diagnostics,
+not a quality result or a comparison.

@@ -33,8 +33,9 @@ class PureSpinV12Config:
     multiplicity_router: Literal["none", "orthogonal_query"] = "none"
     multiplicity_angle_limit: float = 1.5707963267948966
     recurrence: Literal[
-        "independent", "coupled_isotypic", "independent_block"
+        "independent", "coupled_isotypic", "independent_block", "spin_delta"
     ] = "independent"
+    delta_slots: int = 2
     recurrent_multiplicity: Literal["identity", "orthogonal"] = "identity"
     recurrent_coupling_scale: Literal["unit", "retention_step"] = "unit"
     retention_mode: Literal[
@@ -79,8 +80,11 @@ class PureSpinV12Config:
             "independent",
             "coupled_isotypic",
             "independent_block",
+            "spin_delta",
         ):
             raise ValueError("unknown recurrence")
+        if self.delta_slots != 2:
+            raise ValueError("the first Spin-Delta compiler requires delta_slots=2")
         if self.recurrent_multiplicity not in ("identity", "orthogonal"):
             raise ValueError("unknown recurrent multiplicity mode")
         if self.recurrent_coupling_scale not in ("unit", "retention_step"):
@@ -101,6 +105,13 @@ class PureSpinV12Config:
             and self.recurrent_multiplicity != "identity"
         ):
             raise ValueError("recurrent multiplicity requires a coupled recurrence")
+        if self.recurrence == "spin_delta" and self.retention_mode != "shared":
+            raise ValueError("Spin-Delta currently requires shared retention")
+        if (
+            self.recurrence == "spin_delta"
+            and self.recurrent_multiplicity != "identity"
+        ):
+            raise ValueError("Spin-Delta owns its slot mixing and requires identity")
         if self.group_schedule is not None:
             if len(self.group_schedule) != self.num_layers:
                 raise ValueError("group_schedule must have one entry per layer")
@@ -225,6 +236,37 @@ class PureSpinV12Block(nn.Module):
         self.recurrent_multiplicity = config.recurrent_multiplicity
         self.recurrent_coupling_scale = config.recurrent_coupling_scale
         self.retention_mode = config.retention_mode
+        self.delta_slots = config.delta_slots
+        if self.recurrence_mode == "spin_delta":
+            # These experimental controls must not advance the random stream,
+            # so every maintained parameter remains exactly paired by seed.
+            with torch.random.fork_rng(devices=[]):
+                self.delta_write_controller = nn.Linear(
+                    config.d_model, self.spin.channels
+                )
+                self.delta_erase_controller = nn.Linear(
+                    config.d_model, self.spin.channels
+                )
+                self.delta_erase_strength_controller = nn.Linear(
+                    config.d_model, self.spin.channels
+                )
+                self.delta_query_controller = nn.Linear(
+                    config.d_model, self.spin.channels
+                )
+            for controller in (
+                self.delta_write_controller,
+                self.delta_erase_controller,
+                self.delta_erase_strength_controller,
+                self.delta_query_controller,
+            ):
+                controller._pure_spin_zero_init = True
+                nn.init.zeros_(controller.weight)
+                nn.init.zeros_(controller.bias)
+        else:
+            self.delta_write_controller = None
+            self.delta_erase_controller = None
+            self.delta_erase_strength_controller = None
+            self.delta_query_controller = None
         if self.recurrence_mode == "coupled_isotypic":
             # The replacement is an experimental branch, so constructing it
             # must not shift initialization of later parameters relative to
@@ -356,7 +398,74 @@ class PureSpinV12Block(nn.Module):
     ) -> tuple[torch.Tensor, torch.Tensor]:
         value, gate = self.input_projection(self.norm(hidden)).chunk(2, dim=-1)
         value = F.silu(self.local_conv(value))
-        if self.recurrence_mode == "independent_block":
+        if self.recurrence_mode == "spin_delta":
+            if scan_mode not in {"delta_recurrent", "delta_parallel"}:
+                raise ValueError(
+                    "spin_delta requires delta_recurrent or delta_parallel"
+                )
+            from chunk_parallel_scan import factorized_triality_actions
+            from spin_delta_scan import (
+                SpinDeltaTransition,
+                contractive_delta_left,
+                parallel_spin_delta_scan,
+                read_delta_state,
+                recurrent_spin_delta_scan,
+                route_delta_drive,
+            )
+
+            if state is None:
+                base_state = self.spin.initial_cache(value.shape[0], value)
+                state = torch.stack((base_state, torch.zeros_like(base_state)), dim=2)
+            normalized, scale, drive, coordinate_gate = (
+                self.spin._normalized_control_fields(value, valid_mask)
+            )
+            factor_count = len(self.subgroup_indices)
+            coordinates = self.spin.coefficient_controller(normalized).reshape(
+                value.shape[0], value.shape[1], self.spin.channels, factor_count
+            )
+            coordinates = coordinates * coordinate_gate[..., None, None]
+            actions = factorized_triality_actions(
+                coordinates, self.subgroup_generators.to(value)
+            )
+            assert self.delta_write_controller is not None
+            assert self.delta_erase_controller is not None
+            assert self.delta_erase_strength_controller is not None
+            assert self.delta_query_controller is not None
+            write_angle = self.multiplicity_angle_limit * torch.tanh(
+                self.delta_write_controller(normalized)
+            )
+            erase_angle = self.multiplicity_angle_limit * torch.tanh(
+                self.delta_erase_controller(normalized)
+            )
+            write_key = torch.stack(
+                (torch.cos(write_angle), torch.sin(write_angle)), dim=-1
+            )
+            # The erase direction begins on the empty auxiliary slot.  This
+            # preserves the maintained recurrence despite nonzero safe erase.
+            erase_key = torch.stack(
+                (torch.sin(erase_angle), torch.cos(erase_angle)), dim=-1
+            )
+            erase_strength = torch.sigmoid(
+                self.delta_erase_strength_controller(normalized)
+            ) * coordinate_gate[..., None]
+            query_delta = torch.tanh(self.delta_query_controller(normalized))
+            query = torch.stack(
+                (1.0 + query_delta, 1.0 - query_delta), dim=-1
+            )
+            transition = SpinDeltaTransition(
+                left=contractive_delta_left(scale, erase_key, erase_strength),
+                action=actions,
+                drive=route_delta_drive(write_key, drive),
+            )
+            scanner = (
+                parallel_spin_delta_scan
+                if scan_mode == "delta_parallel"
+                else recurrent_spin_delta_scan
+            )
+            raw_slot_states, final_state = scanner(transition, state)
+            raw_states = read_delta_state(raw_slot_states, query)
+            states = self.spin.triality_readout(raw_states)
+        elif self.recurrence_mode == "independent_block":
             if scan_mode not in {
                 "block_recurrent",
                 "block_parallel",
@@ -538,11 +647,12 @@ class PureSpinV12Block(nn.Module):
             )
             coordinates = coordinates * coordinate_gate[..., None, None]
             if scan_mode == "chunk_parallel":
+                from pure_spin8_ssm.torch_backend import Spin8AffineTransition
+
                 from chunk_parallel_scan import (
                     chunk_parallel_spin8_scan,
                     factorized_triality_actions,
                 )
-                from pure_spin8_ssm.torch_backend import Spin8AffineTransition
 
                 transition = Spin8AffineTransition(
                     scale=scale,
@@ -609,7 +719,11 @@ class PureSpinSSMV12(nn.Module):
 
     @property
     def cache_scalars(self) -> int:
-        return sum(block.spin.cache_scalars for block in self.blocks)
+        return sum(
+            block.spin.cache_scalars
+            * (block.delta_slots if block.recurrence_mode == "spin_delta" else 1)
+            for block in self.blocks
+        )
 
     def forward(
         self,

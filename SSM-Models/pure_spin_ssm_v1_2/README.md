@@ -96,7 +96,13 @@ step and a learned static positive decay spectrum on `8v/8+/8-`. It adds only
 That spectrum lost all three frozen seeds by `0.01364` mean bpb, closing
 sector-retention refinement as the immediate successor. The next architecture
 separates independent Spin transport heads from addressable delta-memory slots;
-see [`SPIN_DELTA_SUCCESSOR_DESIGN.md`](SPIN_DELTA_SUCCESSOR_DESIGN.md).
+see [`SPIN_DELTA_SUCCESSOR_DESIGN.md`](SPIN_DELTA_SUCCESSOR_DESIGN.md). Its
+semantic compiler and model path are now implemented with
+`recurrence="spin_delta"`: two independent transport heads each carry two
+addressable triality slots, with a contractive rank-one erase, routed write,
+and bounded read probe. Sequential/parallel output and gradient parity,
+baseline embedding, and long-sequence finiteness are tested. It has no quality
+or speed promotion yet; raw CUDA and the frozen Shakespeare gate remain open.
 
 The recurrence is not Mamba-2 under different notation. Its state transition is
 a selective contractive affine Spin(8) action. Local convolution and SwiGLU are

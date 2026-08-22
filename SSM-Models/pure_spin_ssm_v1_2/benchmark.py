@@ -15,6 +15,8 @@ from pathlib import Path
 
 import numpy as np
 import torch
+from torch.nn import functional as F
+
 from data import (
     TINY_SHAKESPEARE_REVISION,
     TINY_SHAKESPEARE_SHA256,
@@ -25,7 +27,6 @@ from data import (
 )
 from mamba2_baseline import OfficialMamba2LM, fused_mamba2_available
 from model import PureSpinSSMV12, PureSpinV12Config, parameter_count
-from torch.nn import functional as F
 
 
 @dataclass(frozen=True)
@@ -235,6 +236,8 @@ def main() -> int:
             "raw_cuda_coupled",
             "raw_cuda_block",
             "chunk_parallel",
+            "delta_recurrent",
+            "delta_parallel",
         ],
         default="raw_cuda_hybrid",
     )
@@ -255,7 +258,12 @@ def main() -> int:
     )
     parser.add_argument(
         "--spin-recurrence",
-        choices=["independent", "coupled_isotypic", "independent_block"],
+        choices=[
+            "independent",
+            "coupled_isotypic",
+            "independent_block",
+            "spin_delta",
+        ],
         default="independent",
     )
     parser.add_argument(
@@ -361,7 +369,10 @@ def main() -> int:
     device = torch.device("cuda")
     report = {
         "schema_version": 1,
-        "claim_scope": "matched natural-data training run; empirical, not a general superiority claim",
+        "claim_scope": (
+            "natural-data training run; matched only when parameter_match is "
+            "present; empirical, not a general superiority claim"
+        ),
         "config": asdict(config),
         "dataset": dataset,
         "parameter_match": parameter_match(config)
@@ -387,6 +398,7 @@ def main() -> int:
                 Path(__file__).with_name("data.py"),
                 Path(__file__).with_name("raw_cuda.py"),
                 Path(__file__).with_name("chunk_parallel_scan.py"),
+                Path(__file__).with_name("spin_delta_scan.py"),
                 Path(__file__).with_name("csrc") / "spin_scan.cpp",
                 Path(__file__).with_name("csrc") / "spin_scan_cuda.cu",
             )

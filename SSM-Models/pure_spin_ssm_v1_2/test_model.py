@@ -11,9 +11,10 @@ ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT.parent))
 
+from pure_spin8_ssm.torch_backend import spin8_group_actions
+
 from mamba2_baseline import fused_mamba2_available
 from model import PureSpinSSMV12, PureSpinV12Block, PureSpinV12Config, SolSelfGate
-from pure_spin8_ssm.torch_backend import spin8_group_actions
 
 
 def tiny_model() -> PureSpinSSMV12:
@@ -371,6 +372,137 @@ def test_independent_block_full_model_parallel_gradient_parity() -> None:
         torch.testing.assert_close(
             actual_gradient, expected_gradient, rtol=4e-3, atol=5e-3
         )
+
+
+def test_spin_delta_exactly_embeds_v12_and_has_live_address_controls() -> None:
+    base = {
+        "d_model": 16,
+        "num_layers": 1,
+        "spin_channels": 2,
+        "dropout": 0.0,
+    }
+    torch.manual_seed(202_608_41)
+    maintained = PureSpinSSMV12(PureSpinV12Config(**base)).eval()
+    torch.manual_seed(202_608_41)
+    candidate = PureSpinSSMV12(
+        PureSpinV12Config(**base, recurrence="spin_delta")
+    ).eval()
+    candidate_state = candidate.state_dict()
+    for name, value in maintained.state_dict().items():
+        assert torch.equal(value, candidate_state[name]), name
+    assert candidate.cache_scalars == 2 * maintained.cache_scalars
+
+    tokens = torch.randint(0, 256, (2, 1))
+    expected = maintained(tokens, scan_mode="chunk_parallel")
+    actual = candidate(tokens, scan_mode="delta_recurrent")
+    # The affine maps are identical over the reals.  The generic two-slot
+    # matrix contraction adds one zero term, so float32 differs by at most a
+    # final-rounding ulp from the scalar maintained path.
+    torch.testing.assert_close(
+        actual["logits"], expected["logits"], rtol=2e-5, atol=5e-8
+    )
+    torch.testing.assert_close(
+        actual["states"][0][:, :, 0],
+        expected["states"][0],
+        rtol=2e-6,
+        atol=2e-8,
+    )
+    assert torch.count_nonzero(actual["states"][0][:, :, 1]) == 0
+
+    actual["logits"].square().mean().backward()
+    block = candidate.blocks[0]
+    for controller in (
+        block.delta_write_controller,
+        block.delta_erase_controller,
+        block.delta_query_controller,
+    ):
+        assert controller is not None and controller.weight.grad is not None
+        assert torch.isfinite(controller.weight.grad).all()
+        assert torch.count_nonzero(controller.weight.grad) > 0
+    strength = block.delta_erase_strength_controller
+    assert strength is not None and strength.weight.grad is not None
+    assert torch.count_nonzero(strength.weight.grad) == 0
+
+    candidate.zero_grad(set_to_none=True)
+    assert block.delta_erase_controller is not None
+    with torch.no_grad():
+        block.delta_erase_controller.bias.fill_(0.1)
+    perturbed = candidate(tokens, scan_mode="delta_recurrent")["logits"]
+    perturbed.square().mean().backward()
+    assert strength.weight.grad is not None
+    assert torch.count_nonzero(strength.weight.grad) > 0
+
+
+def test_spin_delta_full_model_parallel_gradient_parity() -> None:
+    torch.manual_seed(202_608_43)
+    config = PureSpinV12Config(
+        d_model=16,
+        num_layers=1,
+        spin_channels=2,
+        recurrence="spin_delta",
+    )
+    recurrent = PureSpinSSMV12(config)
+    parallel = copy.deepcopy(recurrent)
+    with torch.no_grad():
+        for controller in (
+            recurrent.blocks[0].delta_write_controller,
+            recurrent.blocks[0].delta_erase_controller,
+            recurrent.blocks[0].delta_erase_strength_controller,
+            recurrent.blocks[0].delta_query_controller,
+        ):
+            assert controller is not None
+            controller.weight.normal_(std=0.02)
+        parallel.load_state_dict(recurrent.state_dict())
+    tokens = torch.randint(0, 256, (2, 7))
+    expected = recurrent(tokens, scan_mode="delta_recurrent")["logits"]
+    actual = parallel(tokens, scan_mode="delta_parallel")["logits"]
+    output_gradient = torch.randn_like(actual)
+    expected_gradients = torch.autograd.grad(
+        expected, tuple(recurrent.parameters()), output_gradient
+    )
+    actual_gradients = torch.autograd.grad(
+        actual, tuple(parallel.parameters()), output_gradient
+    )
+    torch.testing.assert_close(actual, expected, rtol=8e-5, atol=8e-5)
+    for actual_gradient, expected_gradient in zip(
+        actual_gradients, expected_gradients, strict=True
+    ):
+        torch.testing.assert_close(
+            actual_gradient, expected_gradient, rtol=5e-3, atol=7e-3
+        )
+
+
+def test_spin_delta_is_causal_and_finite_on_a_long_sequence() -> None:
+    torch.manual_seed(202_608_47)
+    model = PureSpinSSMV12(
+        PureSpinV12Config(
+            d_model=16,
+            num_layers=1,
+            spin_channels=2,
+            recurrence="spin_delta",
+        )
+    ).eval()
+    block = model.blocks[0]
+    with torch.no_grad():
+        for controller in (
+            block.delta_write_controller,
+            block.delta_erase_controller,
+            block.delta_erase_strength_controller,
+            block.delta_query_controller,
+        ):
+            assert controller is not None
+            controller.weight.normal_(std=0.03)
+    left = torch.randint(0, 256, (1, 384))
+    right = left.clone()
+    right[:, 250:] = torch.randint(0, 256, (1, 134))
+    with torch.no_grad():
+        expected = model(left, scan_mode="delta_recurrent")
+        actual = model(right, scan_mode="delta_recurrent")
+    torch.testing.assert_close(
+        actual["logits"][:, :250], expected["logits"][:, :250]
+    )
+    assert torch.isfinite(actual["logits"]).all()
+    assert all(torch.isfinite(state).all() for state in actual["states"])
 
 
 def test_fused_mamba_probe_never_claims_fallback() -> None:
