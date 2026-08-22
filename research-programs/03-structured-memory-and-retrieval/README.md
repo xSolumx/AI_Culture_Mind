@@ -64,6 +64,10 @@ representation.
 - A fresh exact-control 3x3 factorial then detected both initialization and
   minibatch-order sensitivity, including sign-changing interactions. The open
   mechanism is core optimization geometry, not final event/slot inference.
+- A repository-wide mechanism audit ranks short-to-long write-depth curriculum
+  as the next falsifier, ahead of local reconstruction credit and an
+  action-coordinate optimizer audit. It explicitly rejects more routing,
+  slots, exceptional transport, or compiler tuning as the immediate repair.
 
 ## Dependencies
 
@@ -91,6 +95,7 @@ representation.
 - [Large-slot semantic hierarchy and fused gather](../../Spin-Space-Research/docs/experiments/LARGE_SLOT_SEMANTIC_HIERARCHY_RESULTS.md)
 - [Memory benchmark atlas and FLA hybrid-model fit](../../Spin-Space-Research/docs/experiments/MEMORY_BENCHMARK_ATLAS.md)
 - [Historical Task B replay provenance failure](../../Spin-Space-Research/docs/experiments/TASK_B_DELTA_ACTION_REPLAY_RESULTS.md)
+- [Spin-Delta mechanism reuse audit](../../SSM-Models/pure_spin_ssm_v1_2/SPIN_DELTA_MECHANISM_REUSE_AUDIT.md)
 
 The Spin-labelled reports remain at their provenance paths. Their routing,
 update-law, and kernel conclusions are classified here; representation-specific

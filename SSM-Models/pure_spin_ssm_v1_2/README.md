@@ -146,6 +146,13 @@ order. Sixteen-write accuracy ranged from 91.41% to 100%; both factors crossed
 the preregistered five-point sensitivity threshold, with a strong sign-changing
 interaction. The remaining frontier is core training geometry, not routing.
 See [`SPIN_DELTA_PERFECT_CONTROL_FACTORIAL_RESULTS.md`](SPIN_DELTA_PERFECT_CONTROL_FACTORIAL_RESULTS.md).
+The repository-wide
+[`mechanism reuse audit`](SPIN_DELTA_MECHANISM_REUSE_AUDIT.md) then traced the
+relevant memory, curriculum, optimizer, representation, readout, and compiler
+experiments before selecting another intervention. Its evidence-ranked next
+gate is a fresh exact-control short-to-long write curriculum; local
+reconstruction credit and coordinate-covariant optimizer controls follow only
+if that gate fails. No new architecture claim is attached to the audit.
 
 The recurrence is not Mamba-2 under different notation. Its state transition is
 a selective contractive affine Spin(8) action. Local convolution and SwiGLU are
