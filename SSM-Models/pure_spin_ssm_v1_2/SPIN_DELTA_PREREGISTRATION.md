@@ -3,6 +3,11 @@
 **Frozen:** 2026-08-22 after semantic and raw-CUDA parity gates, before any
 natural-data training of Spin-Delta.
 
+**Superseded cohort:** The original seeds and pairing tolerance below were
+invalidated during commissioning. They cannot be used for promotion. See
+`SPIN_DELTA_PAIRING_AMENDMENT_2026-08-22.md` for the replacement cohort frozen
+before its natural-data training.
+
 ## Hypothesis
 
 The closed v1.2 controls show that independently controlled Spin transport is

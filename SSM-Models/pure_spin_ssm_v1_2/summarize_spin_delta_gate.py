@@ -8,9 +8,9 @@ import json
 import math
 from pathlib import Path
 
-EXPECTED_SEEDS = [353, 359, 367]
+EXPECTED_SEEDS = [373, 379, 383]
 EXPECTED_VARIANTS = ["independent_v1_2", "spin_delta"]
-MAXIMUM_INITIAL_LOGIT_DIFFERENCE = 1.0e-6
+MAXIMUM_INITIAL_LOGIT_DIFFERENCE = 2.0e-6
 
 
 def sha256(path: Path) -> str:

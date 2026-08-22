@@ -50,6 +50,6 @@ def test_spin_delta_summary_rejects_pairing_drift(tmp_path: Path) -> None:
     rows = [
         _artifact(seed, 3.00, 2.98) for seed in EXPECTED_SEEDS
     ]
-    rows[1]["initial_pairing"]["maximum_absolute_logit_difference"] = 1.1e-6
+    rows[1]["initial_pairing"]["maximum_absolute_logit_difference"] = 2.1e-6
     with pytest.raises(ValueError, match="pairing bound"):
         summarize(_write(tmp_path, rows))

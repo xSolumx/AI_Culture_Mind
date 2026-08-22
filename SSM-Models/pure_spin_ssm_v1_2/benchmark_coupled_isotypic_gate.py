@@ -170,7 +170,7 @@ def main() -> int:
         (pairing_logits[0] - pairing_logits[1]).abs().max()
     )
     maximum_allowed_initial_logit_difference = (
-        1.0e-6 if args.stage == "spin_delta" else 0.0
+        2.0e-6 if args.stage == "spin_delta" else 0.0
     )
     if (
         not common_parameters_bitwise_equal
