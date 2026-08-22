@@ -72,7 +72,9 @@ representation.
   repair condition. Its worst 16-write cell rose from 93.51% to 99.37%, and
   maximum factorial sensitivity contracted from 6.49 to 0.63 points despite
   24.52% fewer training tokens. Transfer through the learned causal router is
-  still open; a fresh paired transfer factorial is prospectively frozen.
+  still open. The first transfer cohort failed its bitwise router-replication
+  gate before quality summarization; a fresh single-router-execution repair is
+  prospectively frozen.
 
 ## Dependencies
 

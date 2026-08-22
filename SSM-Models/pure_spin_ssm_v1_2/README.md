@@ -165,6 +165,12 @@ its untouched core into fixed-depth and curriculum arms, and audits every
 phase-B hard control without supplying oracle controls to the model. Its
 prospective protocol is
 [`SPIN_DELTA_ROUTER_CURRICULUM_TRANSFER_PREREGISTRATION.md`](SPIN_DELTA_ROUTER_CURRICULUM_TRANSFER_PREREGISTRATION.md).
+The first commissioning cohort failed its bitwise post-router replication gate
+before summarization; its quality fields are not evidence. The failure and the
+single-router-execution repair are documented in
+[`SPIN_DELTA_ROUTER_CURRICULUM_TRANSFER_COMMISSIONING_FAILURE.md`](SPIN_DELTA_ROUTER_CURRICULUM_TRANSFER_COMMISSIONING_FAILURE.md)
+and prospectively frozen in
+[`SPIN_DELTA_ROUTER_CURRICULUM_TRANSFER_V2_PREREGISTRATION.md`](SPIN_DELTA_ROUTER_CURRICULUM_TRANSFER_V2_PREREGISTRATION.md).
 
 The recurrence is not Mamba-2 under different notation. Its state transition is
 a selective contractive affine Spin(8) action. Local convolution and SwiGLU are
