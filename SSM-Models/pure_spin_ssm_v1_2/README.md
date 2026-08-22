@@ -35,8 +35,18 @@ threshold. See
 [`TRIALITY_INVARIANT_READOUT_RESULTS.md`](TRIALITY_INVARIANT_READOUT_RESULTS.md).
 The subsequent Schur-legal `orthogonal_query` control rotates the two-copy
 multiplicity axis without disturbing the shared Spin(8) action. It also failed
-promotion (1/3 wins; +0.00084 mean bpb), so `multiplicity_router=none` remains
-the default. See [`MULTIPLICITY_QUERY_RESULTS.md`](MULTIPLICITY_QUERY_RESULTS.md).
+promotion in its original run (1/3 wins; +0.00084 mean bpb), so
+`multiplicity_router=none` remains the default. A later initialization audit
+found that this was not the claimed exactly paired identity-start ablation; the
+artifact is retained but is no longer treated as a strict falsification. See
+[`COUPLED_ISOTYPIC_RESULTS.md`](COUPLED_ISOTYPIC_RESULTS.md).
+
+The stronger recurrence-level candidate is now fully compiled. It uses one
+shared Spin action and a contractive `SO(2)` multiplicity action, with an exact
+two-sided affine prefix algebra and full raw-CUDA backward. Its valid paired
+gate won 2/3 seeds but regressed by 0.00214 mean bpb, so recurrent mixing is not
+promoted. The compiler remains supported research machinery; the maintained
+architecture remains the independent-action `raw_cuda_hybrid` model.
 
 The recurrence is not Mamba-2 under different notation. Its state transition is
 a selective contractive affine Spin(8) action. Local convolution and SwiGLU are
@@ -99,6 +109,9 @@ the task-specific `PURE_SPIN_V12_*` variables documented in that script.
   recorded run; the preserved WikiText tables are historical results.
 - Optional mechanisms remain controls when they fail their frozen promotion
   threshold, even if their mean effect has the favorable sign.
+- An artifact whose commissioning audit violates its pairing contract is
+  labeled invalid or non-decisive; a negative outcome is not retroactively
+  upgraded into a falsification.
 - No quality, speed, Tensor-Core, or scaling advantage is claimed before a
   complete artifact exists for both candidates on the same environment.
 - Parameter matching is measured before training and the harness fails closed

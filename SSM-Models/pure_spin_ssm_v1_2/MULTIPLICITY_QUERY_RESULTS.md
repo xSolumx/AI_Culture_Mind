@@ -1,5 +1,13 @@
 # Schur-legal multiplicity-query result
 
+> **2026-08-22 initialization audit:** this historical run did not satisfy its
+> claimed exact identity-start pairing. The model-wide initializer randomized
+> the optional controller after constructor zeroing and shifted later common
+> weights. The artifacts remain accurate records of what executed and the
+> candidate was never promoted, but this table is non-decisive rather than a
+> strict falsification. See `COUPLED_ISOTYPIC_RESULTS.md` for the repaired
+> initialization contract and valid recurrence-level gate.
+
 **Date:** 2026-08-22
 
 **Verdict:** failed the prospective gate; no readout router remains the
@@ -7,11 +15,12 @@ maintained default.
 
 ## Complete result
 
-The candidate is a zero-initialized, token-conditioned SO(2) rotation across
+The intended candidate was a zero-initialized, token-conditioned SO(2) rotation across
 the two equivalent triality channels, shared across `8v`, `8+`, and `8-`.
-Tests establish exact identity initialization, nonzero finite gradients, and
-commutation with the shared Spin(8) action. The protocol was committed and
-pushed as `a5eba7c` before training.
+The local mechanism tests established identity behavior when the controller
+was zero, nonzero finite gradients, and commutation with the shared Spin(8)
+action, but they did not catch the later model-wide reinitialization. The
+protocol was committed and pushed as `a5eba7c` before training.
 
 | seed | no router bpb | orthogonal query bpb | improvement |
 |---:|---:|---:|---:|

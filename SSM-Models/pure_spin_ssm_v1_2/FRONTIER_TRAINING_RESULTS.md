@@ -259,13 +259,32 @@ parameters. Commit `a5eba7c` froze seeds 83, 89, and 97 before training.
 | mean | **2.70336** | 2.70252 | +0.00084 |
 
 The candidate won only one seed and missed the +0.0100 mean threshold, so no
-router remains the default. This falsifies readout-only multiplicity routing,
-not the isotypic algebra. The next nontrivial mechanism must put a contractive
-multiplicity operator inside the recurrence, where it changes retention and
-write dynamics; doing that honestly requires a new associative semantic scan
-and CUDA backward. See
+router remains the default. A later initialization audit found that the
+optional controller was re-randomized by the model-wide initializer and shifted
+later common weights. These artifacts therefore record the executed models but
+do not constitute the claimed exactly paired identity-start falsification. See
 [`MULTIPLICITY_QUERY_RESULTS.md`](MULTIPLICITY_QUERY_RESULTS.md) and the
 [`summary artifact`](artifacts/shakespeare_multiplicity_router_gate_summary_cu126_f14a.json).
+
+## Coupled isotypic recurrence gate
+
+The stronger mechanism was subsequently implemented as
+`H_t = L_t H_{t-1} R_t^T + D_t`, with a shared Spin action, a contractive
+two-copy multiplicity action, an associative prefix oracle, and full raw-CUDA
+backward. The commissioning run exposed and repaired the initialization issue;
+the valid seeds 149, 151, and 157 have exactly matched initial logits.
+
+| seed | shared identity bpb | shared orthogonal bpb | improvement |
+|---:|---:|---:|---:|
+| 149 | 2.68414 | **2.68358** | +0.00056 |
+| 151 | 2.69022 | **2.67668** | +0.01354 |
+| 157 | **2.68159** | 2.70210 | -0.02051 |
+| mean | **2.68532** | 2.68745 | -0.00214 |
+
+It won 2/3 but failed the frozen mean threshold, so learned recurrent mixing is
+not promoted and the conditional established-v1.2 comparison was not run. The
+exact compiler is retained independently of the negative quality result. See
+[`COUPLED_ISOTYPIC_RESULTS.md`](COUPLED_ISOTYPIC_RESULTS.md).
 
 ## Channel-mixer falsification
 
