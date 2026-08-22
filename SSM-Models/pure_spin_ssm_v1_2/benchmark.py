@@ -46,6 +46,7 @@ class BenchmarkConfig:
     spin_multiplicity_router: str = "none"
     spin_recurrence: str = "independent"
     spin_recurrent_multiplicity: str = "identity"
+    spin_recurrent_coupling_scale: str = "unit"
     spin_expansion: int = 2
     spin_group_schedule: tuple[int, ...] | None = None
     spin_chunk_size: int = 32
@@ -87,6 +88,7 @@ def build_model(name: str, config: BenchmarkConfig) -> torch.nn.Module:
                 multiplicity_router=config.spin_multiplicity_router,
                 recurrence=config.spin_recurrence,
                 recurrent_multiplicity=config.spin_recurrent_multiplicity,
+                recurrent_coupling_scale=config.spin_recurrent_coupling_scale,
                 expansion=config.spin_expansion,
                 group_schedule=config.spin_group_schedule,
                 scan_chunk_size=config.spin_chunk_size,
@@ -259,6 +261,11 @@ def main() -> int:
         choices=["identity", "orthogonal"],
         default="identity",
     )
+    parser.add_argument(
+        "--spin-recurrent-coupling-scale",
+        choices=["unit", "retention_step"],
+        default="unit",
+    )
     parser.add_argument("--spin-expansion", type=int, default=2)
     parser.add_argument("--spin-d-model", type=int, default=128)
     parser.add_argument("--spin-group-schedule", type=int, nargs="+")
@@ -294,6 +301,7 @@ def main() -> int:
         spin_multiplicity_router=args.spin_multiplicity_router,
         spin_recurrence=args.spin_recurrence,
         spin_recurrent_multiplicity=args.spin_recurrent_multiplicity,
+        spin_recurrent_coupling_scale=args.spin_recurrent_coupling_scale,
         spin_expansion=args.spin_expansion,
         d_model=args.spin_d_model,
         spin_group_schedule=(

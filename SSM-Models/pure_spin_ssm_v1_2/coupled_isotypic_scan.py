@@ -134,6 +134,17 @@ def contractive_givens_left(
     return scale[..., :, None] * rotation
 
 
+def retention_step_from_scale(scale: torch.Tensor) -> torch.Tensor:
+    """Return ``1 - geometric_mean(scale)`` as a bounded local-step proxy."""
+
+    if scale.ndim < 1 or scale.shape[-1] < 1:
+        raise ValueError("scale must have a nonempty multiplicity axis")
+    if torch.any(scale <= 0.0):
+        raise ValueError("retention-step scaling requires positive retention")
+    geometric_retention = torch.exp(torch.mean(torch.log(scale), dim=-1))
+    return 1.0 - geometric_retention
+
+
 __all__ = [
     "CoupledIsotypicTransition",
     "apply_coupled_transition",
@@ -142,4 +153,5 @@ __all__ = [
     "coupled_transition_prefix_scan",
     "parallel_coupled_scan",
     "recurrent_coupled_scan",
+    "retention_step_from_scale",
 ]

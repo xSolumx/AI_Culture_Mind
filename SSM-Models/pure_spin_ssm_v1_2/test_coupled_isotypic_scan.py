@@ -11,6 +11,7 @@ from pure_spin_ssm_v1_2.coupled_isotypic_scan import (
     contractive_givens_left,
     parallel_coupled_scan,
     recurrent_coupled_scan,
+    retention_step_from_scale,
 )
 
 
@@ -116,3 +117,17 @@ def test_zero_angle_reduces_to_independent_shared_action_and_is_contractive() ->
     )
     expected = scale[:, 0, :, None, None] * state + drive
     torch.testing.assert_close(actual, expected, rtol=0.0, atol=0.0)
+
+
+def test_retention_step_matches_exponential_time_discretization() -> None:
+    decay = torch.tensor([0.7, 1.3], dtype=torch.float64)
+    delta = torch.tensor([0.0, 1.0e-6, 0.2], dtype=torch.float64)
+    scale = torch.exp(-delta[:, None] * decay)
+    actual = retention_step_from_scale(scale)
+    expected = 1.0 - torch.exp(-delta * decay.mean())
+    torch.testing.assert_close(actual, expected, rtol=2e-12, atol=2e-12)
+    torch.testing.assert_close(
+        actual[1] / delta[1], decay.mean(), rtol=2e-6, atol=2e-6
+    )
+    assert actual[0] == 0.0
+    assert torch.all((actual >= 0.0) & (actual < 1.0))
