@@ -469,7 +469,10 @@ def test_raw_cuda_coupled_full_model_gradient_parity() -> None:
 
 
 @pytest.mark.skipif(not torch.cuda.is_available(), reason="CUDA is unavailable")
-def test_raw_cuda_independent_block_full_model_gradient_parity() -> None:
+@pytest.mark.parametrize("coupling_scale", ["unit", "retention_step"])
+def test_raw_cuda_independent_block_full_model_gradient_parity(
+    coupling_scale: str,
+) -> None:
     torch.manual_seed(20_260_827)
     config = PureSpinV12Config(
         d_model=16,
@@ -478,6 +481,7 @@ def test_raw_cuda_independent_block_full_model_gradient_parity() -> None:
         d_conv=3,
         recurrence="independent_block",
         recurrent_multiplicity="orthogonal",
+        recurrent_coupling_scale=coupling_scale,
     )
     semantic_model = PureSpinSSMV12(config).cuda()
     raw_model = copy.deepcopy(semantic_model)

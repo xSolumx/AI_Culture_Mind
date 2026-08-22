@@ -57,6 +57,18 @@ def variants(stage: str, base: BenchmarkConfig) -> tuple[tuple[str, BenchmarkCon
             spin_recurrent_multiplicity="orthogonal",
         )
         return (("independent_v1_2", independent), ("independent_block", block))
+    if stage == "retention_block":
+        block = replace(
+            base,
+            spin_backend="raw_cuda_block",
+            spin_recurrence="independent_block",
+            spin_recurrent_multiplicity="orthogonal",
+            spin_recurrent_coupling_scale="retention_step",
+        )
+        return (
+            ("independent_v1_2", independent),
+            ("retention_scaled_block", block),
+        )
     return (("independent_v1_2", independent), ("shared_identity", shared))
 
 
@@ -69,6 +81,7 @@ def main() -> int:
             "frontier",
             "compression",
             "independent_block",
+            "retention_block",
         ],
         required=True,
     )
@@ -119,6 +132,7 @@ def main() -> int:
             "spin_backend": config.spin_backend,
             "spin_recurrence": config.spin_recurrence,
             "spin_recurrent_multiplicity": config.spin_recurrent_multiplicity,
+            "spin_recurrent_coupling_scale": config.spin_recurrent_coupling_scale,
         }
         results.append(result)
     mamba_count = parameter_count(build_model("mamba2_fused", base))

@@ -63,6 +63,11 @@ gate; it is not the maintained default. See
 Its free-angle gate subsequently won 1/3 seeds and regressed by 0.01565 mean
 bpb, so it remains research-only. See
 [`INDEPENDENT_BLOCK_RECURRENCE_RESULTS.md`](INDEPENDENT_BLOCK_RECURRENCE_RESULTS.md).
+The prospective successor scales that coupling by the local retention-derived
+step `1-geometric_mean(s)`, matching the first-order continuous-time
+discretization rather than applying a full rotation at every token. It remains
+an unpromoted control pending the frozen gate in
+[`RETENTION_SCALED_BLOCK_PREREGISTRATION.md`](RETENTION_SCALED_BLOCK_PREREGISTRATION.md).
 
 The recurrence is not Mamba-2 under different notation. Its state transition is
 a selective contractive affine Spin(8) action. Local convolution and SwiGLU are

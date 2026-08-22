@@ -36,6 +36,7 @@ class PureSpinV12Config:
         "independent", "coupled_isotypic", "independent_block"
     ] = "independent"
     recurrent_multiplicity: Literal["identity", "orthogonal"] = "identity"
+    recurrent_coupling_scale: Literal["unit", "retention_step"] = "unit"
     group_schedule: tuple[int, ...] | None = None
     dropout: float = 0.0
     min_retention_logit: float = 2.0
@@ -79,6 +80,13 @@ class PureSpinV12Config:
             raise ValueError("unknown recurrence")
         if self.recurrent_multiplicity not in ("identity", "orthogonal"):
             raise ValueError("unknown recurrent multiplicity mode")
+        if self.recurrent_coupling_scale not in ("unit", "retention_step"):
+            raise ValueError("unknown recurrent coupling scale")
+        if (
+            self.recurrent_coupling_scale != "unit"
+            and self.recurrent_multiplicity != "orthogonal"
+        ):
+            raise ValueError("coupling scale requires orthogonal multiplicity")
         if (
             self.recurrence == "independent"
             and self.recurrent_multiplicity != "identity"
@@ -205,6 +213,7 @@ class PureSpinV12Block(nn.Module):
             nn.init.zeros_(self.spin.coefficient_controller.bias)
         self.recurrence_mode = config.recurrence
         self.recurrent_multiplicity = config.recurrent_multiplicity
+        self.recurrent_coupling_scale = config.recurrent_coupling_scale
         if self.recurrence_mode == "coupled_isotypic":
             # The replacement is an experimental branch, so constructing it
             # must not shift initialization of later parameters relative to
@@ -347,7 +356,10 @@ class PureSpinV12Block(nn.Module):
                     "or raw_cuda_block"
                 )
             from chunk_parallel_scan import factorized_triality_actions
-            from coupled_isotypic_scan import contractive_givens_left
+            from coupled_isotypic_scan import (
+                contractive_givens_left,
+                retention_step_from_scale,
+            )
             from independent_block_scan import (
                 parallel_independent_block_scan,
                 recurrent_independent_block_scan,
@@ -370,6 +382,8 @@ class PureSpinV12Block(nn.Module):
                     self.recurrent_multiplicity_controller(normalized)
                 )
                 angles = angles * coordinate_gate[..., None]
+                if self.recurrent_coupling_scale == "retention_step":
+                    angles = angles * retention_step_from_scale(scale)[..., None]
             left = contractive_givens_left(scale, angles, self.recurrent_pairs)
             if scan_mode == "raw_cuda_block":
                 if self.spin.channels != 2:
