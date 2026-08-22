@@ -60,6 +60,9 @@ streaming path evaluates the structured factors directly with the original
 48-scalar cache. This is an experimental control pending its frozen Shakespeare
 gate; it is not the maintained default. See
 [`INDEPENDENT_BLOCK_RECURRENCE_PREREGISTRATION.md`](INDEPENDENT_BLOCK_RECURRENCE_PREREGISTRATION.md).
+Its free-angle gate subsequently won 1/3 seeds and regressed by 0.01565 mean
+bpb, so it remains research-only. See
+[`INDEPENDENT_BLOCK_RECURRENCE_RESULTS.md`](INDEPENDENT_BLOCK_RECURRENCE_RESULTS.md).
 
 The recurrence is not Mamba-2 under different notation. Its state transition is
 a selective contractive affine Spin(8) action. Local convolution and SwiGLU are

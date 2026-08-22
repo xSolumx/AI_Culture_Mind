@@ -1,0 +1,124 @@
+{
+  "claim_scope": "paired coupled-isotypic v1.2 quality gate; sequential timers are diagnostic and not an order-balanced throughput claim",
+  "config": {
+    "batch_size": 8,
+    "d_model": 128,
+    "gradient_clip": 1.0,
+    "layers": 4,
+    "learning_rate": 0.003,
+    "mamba_d_model": 144,
+    "mamba_d_state": 64,
+    "maximum_parameter_gap": 0.05,
+    "seed": 197,
+    "sequence_length": 256,
+    "spin_backend": "raw_cuda_hybrid",
+    "spin_channels": 2,
+    "spin_chunk_size": 32,
+    "spin_expansion": 2,
+    "spin_group_schedule": [
+      3,
+      4,
+      6,
+      8
+    ],
+    "spin_mixer": "swiglu",
+    "spin_multiplicity_router": "none",
+    "spin_readout": "direction",
+    "spin_recurrence": "independent",
+    "spin_recurrent_multiplicity": "identity",
+    "steps": 300,
+    "validation_batches": 16,
+    "weight_decay": 0.01
+  },
+  "dataset": {
+    "encoding": "raw UTF-8 bytes",
+    "name": "tiny_shakespeare",
+    "source": {
+      "full_sha256": "86c4e6aa9db7c042ec79f339dcb96d42b0075e16b8fc2e86bf0ca57e2dc565ed",
+      "revision": "6f9487a6fe5b420b7ca9afb0d7c078e37c1d1b4e",
+      "url": "https://raw.githubusercontent.com/karpathy/char-rnn/6f9487a6fe5b420b7ca9afb0d7c078e37c1d1b4e/data/tinyshakespeare/input.txt"
+    },
+    "split": "90/5/5 contiguous bytes",
+    "train_sha256": "a9e24e23a1ec77744dad26844bfd5a09b6e041954e1eef0000e7f24cba6db735",
+    "validation_sha256": "c64e90c160750d91a9d2d9b1ace5eab1a440f5a1701d32a8e97a179b7839f1c8"
+  },
+  "environment": {
+    "compute_capability": [
+      7,
+      5
+    ],
+    "cuda": "12.6",
+    "gpu": "NVIDIA GeForce RTX 2070 SUPER",
+    "mamba2_fused": [
+      true,
+      "2.3.2.post1"
+    ],
+    "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.35",
+    "torch": "2.10.0+cu126",
+    "triton": "3.6.0"
+  },
+  "implementation_sha256": {
+    "benchmark.py": "5edf97cfaeca70ec7d975adf52acb444ad0a56d8f5f8aab4aab4d93040c552a8",
+    "benchmark_coupled_isotypic_gate.py": "6f8e1ddbc9a799de6f23d126596c49006e33b81d8d262db7c7ba0e1016c55d6e",
+    "coupled_isotypic_scan.py": "296693f0a6d1bf08409951cf0b2ab4c2db18a405969ad3335e6a5c40ecf75c0c",
+    "csrc/spin_scan.cpp": "63a4639da3a2ad4b9b59ee023c1483e140270d4898ec6a171e6bbbab9c63d390",
+    "csrc/spin_scan_cuda.cu": "ec5c32a2107bfde1bfde40eebfea2f84c880e14e2068088f15c8879b2791179e",
+    "model.py": "770639905df1c86d061edceae4661f3a872cb3a33afea158fef4fff44868a704",
+    "raw_cuda.py": "0c350d78520f35dabe98a37dc226c31c7f882779a3e19fe436038b2e163baa4e"
+  },
+  "parameter_counts": {
+    "independent_block": 627032,
+    "independent_v1_2": 626516,
+    "mamba2_fused_reference": 623740
+  },
+  "results": [
+    {
+      "final_bits_per_byte": 2.675457459703923,
+      "final_nats_per_byte": 1.8544857949018478,
+      "initial_nats_per_byte": 5.496694892644882,
+      "name": "pure_spin_v1_2",
+      "parameters": 626516,
+      "peak_cuda_bytes": 151556608,
+      "sampled_training_losses": {
+        "1": 5.488886833190918,
+        "150": 1.9267656803131104,
+        "300": 1.6746094226837158
+      },
+      "training_seconds": 7.893797864,
+      "training_tokens_per_second": 77833.25727176234,
+      "variant": "independent_v1_2",
+      "variant_config": {
+        "spin_backend": "raw_cuda_hybrid",
+        "spin_recurrence": "independent",
+        "spin_recurrent_multiplicity": "identity"
+      }
+    },
+    {
+      "final_bits_per_byte": 2.7118715291026723,
+      "final_nats_per_byte": 1.879726104438305,
+      "initial_nats_per_byte": 5.496694922447205,
+      "name": "pure_spin_v1_2",
+      "parameters": 627032,
+      "peak_cuda_bytes": 151898624,
+      "sampled_training_losses": {
+        "1": 5.488886833190918,
+        "150": 1.9343143701553345,
+        "300": 1.6764869689941406
+      },
+      "training_seconds": 9.237825750000006,
+      "training_tokens_per_second": 66509.15665950936,
+      "variant": "independent_block",
+      "variant_config": {
+        "spin_backend": "raw_cuda_block",
+        "spin_recurrence": "independent_block",
+        "spin_recurrent_multiplicity": "orthogonal"
+      }
+    }
+  ],
+  "schema_version": 1,
+  "stage": "independent_block",
+  "variant_order": [
+    "independent_v1_2",
+    "independent_block"
+  ]
+}
