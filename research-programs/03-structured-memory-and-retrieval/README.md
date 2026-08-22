@@ -77,7 +77,9 @@ representation.
   prospectively frozen. That v2 repair passed: the autonomous learned-router
   curriculum raised the worst 16-write cell from 78.96% to 97.02% and reduced
   the largest factorial range from 21.00 to 2.83 points. Removing router-label
-  supervision remains open.
+  supervision remains open; a retrieval-only joint curriculum gate is now
+  prospectively frozen with slot identities scored modulo their global
+  permutation symmetry.
 
 ## Dependencies
 

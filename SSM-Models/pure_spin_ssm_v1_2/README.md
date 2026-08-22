@@ -176,6 +176,10 @@ curriculum raised worst 16-write accuracy from 78.96% to 97.02%, improved the
 nine-cell mean by 4.30 points, and contracted the largest factorial range from
 21.00 to 2.83 points. See
 [`SPIN_DELTA_ROUTER_CURRICULUM_TRANSFER_RESULTS.md`](SPIN_DELTA_ROUTER_CURRICULUM_TRANSFER_RESULTS.md).
+The next gate removes router commissioning labels entirely and jointly trains
+router plus core from retrieval loss. Its slot-identification decision is
+defined modulo the unavoidable global two-slot permutation. See
+[`SPIN_DELTA_LABEL_FREE_CURRICULUM_PREREGISTRATION.md`](SPIN_DELTA_LABEL_FREE_CURRICULUM_PREREGISTRATION.md).
 
 The recurrence is not Mamba-2 under different notation. Its state transition is
 a selective contractive affine Spin(8) action. Local convolution and SwiGLU are
