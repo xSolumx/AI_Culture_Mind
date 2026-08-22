@@ -68,6 +68,9 @@ representation.
   as the next falsifier, ahead of local reconstruction credit and an
   action-coordinate optimizer audit. It explicitly rejects more routing,
   slots, exceptional transport, or compiler tuning as the immediate repair.
+- The resulting exact-control paired 3x3 curriculum gate is prospectively
+  frozen across fresh initialization and data-order seeds; its outcome remains
+  pending until all fixed-depth and curriculum artifacts are complete.
 
 ## Dependencies
 

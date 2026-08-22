@@ -152,7 +152,10 @@ relevant memory, curriculum, optimizer, representation, readout, and compiler
 experiments before selecting another intervention. Its evidence-ranked next
 gate is a fresh exact-control short-to-long write curriculum; local
 reconstruction credit and coordinate-covariant optimizer controls follow only
-if that gate fails. No new architecture claim is attached to the audit.
+if that gate fails. No new architecture claim is attached to the audit. The
+paired 3x3 implementation and frozen decision are in
+[`SPIN_DELTA_WRITE_CURRICULUM_PREREGISTRATION.md`](SPIN_DELTA_WRITE_CURRICULUM_PREREGISTRATION.md);
+no result is claimed before all 18 artifacts are complete.
 
 The recurrence is not Mamba-2 under different notation. Its state transition is
 a selective contractive affine Spin(8) action. Local convolution and SwiGLU are
