@@ -68,6 +68,9 @@ step `1-geometric_mean(s)`, matching the first-order continuous-time
 discretization rather than applying a full rotation at every token. It remains
 an unpromoted control pending the frozen gate in
 [`RETENTION_SCALED_BLOCK_PREREGISTRATION.md`](RETENTION_SCALED_BLOCK_PREREGISTRATION.md).
+It has now passed quality with 3/3 wins and +0.01427 mean bpb; default promotion
+remains conditional on the frozen complete-step speed gate. See
+[`RETENTION_SCALED_BLOCK_RESULTS.md`](RETENTION_SCALED_BLOCK_RESULTS.md).
 
 The recurrence is not Mamba-2 under different notation. Its state transition is
 a selective contractive affine Spin(8) action. Local convolution and SwiGLU are
