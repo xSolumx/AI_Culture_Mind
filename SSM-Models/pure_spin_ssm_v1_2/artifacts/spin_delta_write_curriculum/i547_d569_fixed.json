@@ -1,0 +1,103 @@
+{
+  "config": {
+    "arm": "fixed",
+    "batch_size": 128,
+    "d_model": 64,
+    "data_seed": 569,
+    "evaluation_batches": 16,
+    "evaluation_writes": [
+      8,
+      16,
+      32
+    ],
+    "gradient_clip": 1.0,
+    "init_seed": 547,
+    "layers": 2,
+    "learning_rate": 0.003,
+    "steps": 800,
+    "weight_decay": 0.01
+  },
+  "environment": {
+    "compute_capability": [
+      7,
+      5
+    ],
+    "cuda": "12.6",
+    "gpu": "NVIDIA GeForce RTX 2070 SUPER",
+    "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.35",
+    "torch": "2.10.0+cu126",
+    "triton": "3.6.0"
+  },
+  "final": {
+    "16": {
+      "accuracy": 1.0,
+      "bits_per_query": 0.000930790035001177,
+      "nats_per_query": 0.0006451744884543587,
+      "queries": 2048
+    },
+    "32": {
+      "accuracy": 1.0,
+      "bits_per_query": 0.0009404281856558304,
+      "nats_per_query": 0.0006518551454064436,
+      "queries": 2048
+    },
+    "8": {
+      "accuracy": 1.0,
+      "bits_per_query": 0.0009481742962172576,
+      "nats_per_query": 0.0006572243401024025,
+      "queries": 2048
+    }
+  },
+  "implementation_sha256": {
+    "csrc/spin_scan.cpp": "a8f6a3d566ca21c0bb1371e787ebbda8e249db7e38747fb3d7da37516bb862e2",
+    "csrc/spin_scan_cuda.cu": "11c385e6efded6e9fa5d28c2c10a6fa73431a0ef2e4641f27aae2513d1946cc2",
+    "model.py": "e0926fe52806d36f6ba995219140f795ce7624e31ec2741a9e91c5fa481b7d0f",
+    "raw_cuda.py": "434d93b499756a66b69befcaba17fea126a7313d3fc5ccafb32ee08d156510d1",
+    "spin_delta_capability_gate.py": "694c039ee9db14866a1a98b6ebb9213308be962a187b8bc4d2acb17f7ac2c6b2",
+    "spin_delta_oracle_gate.py": "931686bfcce44cc783b9eb86375d03a830d68d64c3cef4684c48f4fa438e7765",
+    "spin_delta_scan.py": "09a1f20de7302243dd2e83c640ad3dc1833bd27c8daef25deba11769f1707ad1",
+    "spin_delta_write_curriculum_gate.py": "b98767b4c0ea41be200b1c0d90de0bae739f4c545b1bd97d6058d8f2496fb924"
+  },
+  "initial": {
+    "16": {
+      "accuracy": 0.0,
+      "bits_per_query": 7.97909540178332,
+      "nats_per_query": 5.530687481164932,
+      "queries": 2048
+    },
+    "32": {
+      "accuracy": 0.0,
+      "bits_per_query": 7.991181052616077,
+      "nats_per_query": 5.5390646159648895,
+      "queries": 2048
+    },
+    "8": {
+      "accuracy": 0.0,
+      "bits_per_query": 7.9819701777838175,
+      "nats_per_query": 5.532680124044418,
+      "queries": 2048
+    }
+  },
+  "initial_state_sha256": "e79dece9b2df8b50a8e04734e502b55df46418d1565ef6971d2b3b01eae990c9",
+  "intervention": "exact controls with fixed-depth or write-depth curriculum",
+  "parameters": 104438,
+  "peak_cuda_bytes": 122959872,
+  "protocol": "SPIN_DELTA_WRITE_CURRICULUM_PREREGISTRATION.md",
+  "sampled_training_losses": {
+    "800": {
+      "loss": 0.0006458546267822385,
+      "writes": 8
+    }
+  },
+  "schema_version": 1,
+  "stage": "spin_delta_write_curriculum",
+  "training_examples": 102400,
+  "training_schedule": [
+    {
+      "steps": 800,
+      "writes": 8
+    }
+  ],
+  "training_seconds": 31.766598649000002,
+  "training_tokens": 2662400
+}

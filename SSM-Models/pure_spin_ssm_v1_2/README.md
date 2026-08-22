@@ -155,7 +155,11 @@ reconstruction credit and coordinate-covariant optimizer controls follow only
 if that gate fails. No new architecture claim is attached to the audit. The
 paired 3x3 implementation and frozen decision are in
 [`SPIN_DELTA_WRITE_CURRICULUM_PREREGISTRATION.md`](SPIN_DELTA_WRITE_CURRICULUM_PREREGISTRATION.md);
-no result is claimed before all 18 artifacts are complete.
+all 18 artifacts subsequently completed. The curriculum passed every frozen
+condition: its worst 16-write cell rose from 93.51% to 99.37%, its mean paired
+change was +1.11 points, and its largest factorial range fell from 6.49 to
+0.63 points while using 24.52% fewer training tokens. See
+[`SPIN_DELTA_WRITE_CURRICULUM_RESULTS.md`](SPIN_DELTA_WRITE_CURRICULUM_RESULTS.md).
 
 The recurrence is not Mamba-2 under different notation. Its state transition is
 a selective contractive affine Spin(8) action. Local convolution and SwiGLU are

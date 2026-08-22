@@ -68,9 +68,11 @@ representation.
   as the next falsifier, ahead of local reconstruction credit and an
   action-coordinate optimizer audit. It explicitly rejects more routing,
   slots, exceptional transport, or compiler tuning as the immediate repair.
-- The resulting exact-control paired 3x3 curriculum gate is prospectively
-  frozen across fresh initialization and data-order seeds; its outcome remains
-  pending until all fixed-depth and curriculum artifacts are complete.
+- The resulting exact-control paired 3x3 curriculum gate passed every frozen
+  repair condition. Its worst 16-write cell rose from 93.51% to 99.37%, and
+  maximum factorial sensitivity contracted from 6.49 to 0.63 points despite
+  24.52% fewer training tokens. Transfer through the learned causal router is
+  still open.
 
 ## Dependencies
 
@@ -99,6 +101,7 @@ representation.
 - [Memory benchmark atlas and FLA hybrid-model fit](../../Spin-Space-Research/docs/experiments/MEMORY_BENCHMARK_ATLAS.md)
 - [Historical Task B replay provenance failure](../../Spin-Space-Research/docs/experiments/TASK_B_DELTA_ACTION_REPLAY_RESULTS.md)
 - [Spin-Delta mechanism reuse audit](../../SSM-Models/pure_spin_ssm_v1_2/SPIN_DELTA_MECHANISM_REUSE_AUDIT.md)
+- [Spin-Delta write-curriculum result](../../SSM-Models/pure_spin_ssm_v1_2/SPIN_DELTA_WRITE_CURRICULUM_RESULTS.md)
 
 The Spin-labelled reports remain at their provenance paths. Their routing,
 update-law, and kernel conclusions are classified here; representation-specific
