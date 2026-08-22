@@ -243,6 +243,30 @@ gap to Mamba-2 and does not justify a speed gate or default change. See
 and
 [`artifacts/shakespeare_triality_readout_gate_summary_cu126_f14a.json`](artifacts/shakespeare_triality_readout_gate_summary_cu126_f14a.json).
 
+## Schur-legal multiplicity-query gate
+
+Programme 1 licenses arbitrary mixing on the multiplicity factor of equivalent
+representation copies. The next candidate applied a zero-initialized,
+token-conditioned SO(2) query across v1.2's two triality channels immediately
+before readout. It commutes with the shared Spin(8) action and adds only 516
+parameters. Commit `a5eba7c` froze seeds 83, 89, and 97 before training.
+
+| seed | no router bpb | orthogonal query bpb | improvement |
+|---:|---:|---:|---:|
+| 83 | **2.69083** | 2.69376 | -0.00294 |
+| 89 | **2.67697** | 2.68622 | -0.00925 |
+| 97 | 2.74228 | **2.72758** | +0.01471 |
+| mean | **2.70336** | 2.70252 | +0.00084 |
+
+The candidate won only one seed and missed the +0.0100 mean threshold, so no
+router remains the default. This falsifies readout-only multiplicity routing,
+not the isotypic algebra. The next nontrivial mechanism must put a contractive
+multiplicity operator inside the recurrence, where it changes retention and
+write dynamics; doing that honestly requires a new associative semantic scan
+and CUDA backward. See
+[`MULTIPLICITY_QUERY_RESULTS.md`](MULTIPLICITY_QUERY_RESULTS.md) and the
+[`summary artifact`](artifacts/shakespeare_multiplicity_router_gate_summary_cu126_f14a.json).
+
 ## Channel-mixer falsification
 
 Two custom non-exponential candidates were implemented:

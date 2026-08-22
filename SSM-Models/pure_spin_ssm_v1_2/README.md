@@ -33,6 +33,10 @@ and the cubic Spin(8) invariant, but its prospectively frozen three-seed gate
 improved all seeds by only 0.00661 mean bpb, below the 0.0100 promotion
 threshold. See
 [`TRIALITY_INVARIANT_READOUT_RESULTS.md`](TRIALITY_INVARIANT_READOUT_RESULTS.md).
+The subsequent Schur-legal `orthogonal_query` control rotates the two-copy
+multiplicity axis without disturbing the shared Spin(8) action. It also failed
+promotion (1/3 wins; +0.00084 mean bpb), so `multiplicity_router=none` remains
+the default. See [`MULTIPLICITY_QUERY_RESULTS.md`](MULTIPLICITY_QUERY_RESULTS.md).
 
 The recurrence is not Mamba-2 under different notation. Its state transition is
 a selective contractive affine Spin(8) action. Local convolution and SwiGLU are

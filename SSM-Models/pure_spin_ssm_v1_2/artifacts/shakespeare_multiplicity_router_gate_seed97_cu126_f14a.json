@@ -1,0 +1,111 @@
+{
+  "claim_scope": "paired internal v1.2 multiplicity-router quality gate; sequential timers are not an order-balanced speed claim",
+  "config": {
+    "batch_size": 8,
+    "d_model": 128,
+    "gradient_clip": 1.0,
+    "layers": 4,
+    "learning_rate": 0.003,
+    "mamba_d_model": 144,
+    "mamba_d_state": 64,
+    "maximum_parameter_gap": 0.05,
+    "seed": 97,
+    "sequence_length": 256,
+    "spin_backend": "raw_cuda_hybrid",
+    "spin_channels": 2,
+    "spin_chunk_size": 32,
+    "spin_expansion": 2,
+    "spin_group_schedule": [
+      3,
+      4,
+      6,
+      8
+    ],
+    "spin_mixer": "swiglu",
+    "spin_multiplicity_router": "none",
+    "spin_readout": "direction",
+    "steps": 300,
+    "validation_batches": 16,
+    "weight_decay": 0.01
+  },
+  "dataset": {
+    "encoding": "raw UTF-8 bytes",
+    "name": "tiny_shakespeare",
+    "source": {
+      "full_sha256": "86c4e6aa9db7c042ec79f339dcb96d42b0075e16b8fc2e86bf0ca57e2dc565ed",
+      "revision": "6f9487a6fe5b420b7ca9afb0d7c078e37c1d1b4e",
+      "url": "https://raw.githubusercontent.com/karpathy/char-rnn/6f9487a6fe5b420b7ca9afb0d7c078e37c1d1b4e/data/tinyshakespeare/input.txt"
+    },
+    "split": "90/5/5 contiguous bytes",
+    "train_sha256": "a9e24e23a1ec77744dad26844bfd5a09b6e041954e1eef0000e7f24cba6db735",
+    "validation_sha256": "c64e90c160750d91a9d2d9b1ace5eab1a440f5a1701d32a8e97a179b7839f1c8"
+  },
+  "environment": {
+    "compute_capability": [
+      7,
+      5
+    ],
+    "cuda": "12.6",
+    "gpu": "NVIDIA GeForce RTX 2070 SUPER",
+    "mamba2_fused": [
+      true,
+      "2.3.2.post1"
+    ],
+    "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.35",
+    "torch": "2.10.0+cu126",
+    "triton": "3.6.0"
+  },
+  "implementation_sha256": {
+    "benchmark.py": "93105d0794c92dd6879ea25dd8eba87ce3c747f66e58efffcf84bbdad54d390a",
+    "benchmark_multiplicity_router_gate.py": "a7ffa8816a821fc11295d96289073da48adbdbc93d11ac08eadf3cd8d13077d5",
+    "csrc/spin_scan.cpp": "d29953677682cc80f39c4fe15072544023241a663cc50a3eb59abdaa02b1ea59",
+    "csrc/spin_scan_cuda.cu": "f0c80221dd992f511539b470646306711b6026cbf4a43b052ce29aa93e884679",
+    "data.py": "688ac0e64e989caabe3b86141d2132f2f9e39b7cc8101b84985ed5f1c6327035",
+    "model.py": "cf954a112646e352e740966fe1fc187fadf3977b5bc5c127a034b05dab3c4e05",
+    "raw_cuda.py": "12b171eba77e6960dde8f1242333a67cd559ee4a2cb46144e8508dc0c169d02e"
+  },
+  "parameter_counts": {
+    "mamba2_fused_reference": 623740,
+    "none": 626516,
+    "orthogonal_query": 627032
+  },
+  "results": [
+    {
+      "final_bits_per_byte": 2.7422848873366727,
+      "final_nats_per_byte": 1.900807037949562,
+      "initial_nats_per_byte": 5.558565467596054,
+      "multiplicity_router": "none",
+      "name": "pure_spin_v1_2",
+      "parameters": 626516,
+      "peak_cuda_bytes": 151556608,
+      "sampled_training_losses": {
+        "1": 5.573027610778809,
+        "150": 1.9534125328063965,
+        "300": 1.775255560874939
+      },
+      "training_seconds": 7.980822227999994,
+      "training_tokens_per_second": 76984.54901606918
+    },
+    {
+      "final_bits_per_byte": 2.7275766193163307,
+      "final_nats_per_byte": 1.890612043440342,
+      "initial_nats_per_byte": 5.554182022809982,
+      "multiplicity_router": "orthogonal_query",
+      "name": "pure_spin_v1_2",
+      "parameters": 627032,
+      "peak_cuda_bytes": 157467136,
+      "sampled_training_losses": {
+        "1": 5.565350532531738,
+        "150": 1.9381237030029297,
+        "300": 1.7640912532806396
+      },
+      "training_seconds": 9.606450927999987,
+      "training_tokens_per_second": 63957.02269286612
+    }
+  ],
+  "routers": [
+    "none",
+    "orthogonal_query"
+  ],
+  "schema_version": 1
+}
