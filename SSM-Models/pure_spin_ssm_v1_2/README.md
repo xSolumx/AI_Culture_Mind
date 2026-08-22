@@ -194,6 +194,9 @@ immediate authoritative routing. It is therefore the frozen intervention for
 the next separately preregistered training gate; no quality claim has yet been
 made. See
 [`SPIN_DELTA_QUERY_GRADIENT_TOPOLOGY_RESULTS.md`](SPIN_DELTA_QUERY_GRADIENT_TOPOLOGY_RESULTS.md).
+The selected intervention is now prospectively frozen as a fresh paired 3x3
+soft-to-hard training cohort in
+[`SPIN_DELTA_QUERY_CONTINUATION_PREREGISTRATION.md`](SPIN_DELTA_QUERY_CONTINUATION_PREREGISTRATION.md).
 
 The recurrence is not Mamba-2 under different notation. Its state transition is
 a selective contractive affine Spin(8) action. Local convolution and SwiGLU are
