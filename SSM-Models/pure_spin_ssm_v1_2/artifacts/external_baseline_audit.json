@@ -1,0 +1,190 @@
+{
+  "baselines": [
+    {
+      "boundary": "Different tokenizer, training corpus, scale, and license; never mix its pretrained loss with the from-scratch Shakespeare table.",
+      "comparison_tiers": [
+        "native_checkpoint_inference"
+      ],
+      "family": "Falcon Mamba",
+      "hf_repo": "tiiuae/falcon-mamba-7b",
+      "id": "falcon_mamba_7b",
+      "implementation": "transformers.FalconMambaForCausalLM",
+      "local_plan": "quantized_or_cpu_offload_only",
+      "observed": {
+        "config_path": "/mnt/e/AI_Culture_Mind_Large/pure_spin_ssm_v1_2/external_metadata/tiiuae/falcon-mamba-7b/config.json",
+        "config_sha256": "08ec4cda33510a27a3a8cd760d27086bbab0c27a3773583f17f9b61bb8016298",
+        "hub_revision": "080ad94b3619e2c2d0afa59bafdc6113465b7006",
+        "hub_weight_bytes": 14545401832,
+        "metadata_bytes": 70873
+      },
+      "revision": "080ad94b3619e2c2d0afa59bafdc6113465b7006",
+      "variant": "7B base",
+      "weight_bytes": 14545401832
+    },
+    {
+      "boundary": "The matched layer must be trained from scratch; the official 187M checkpoint belongs only in native-tokenizer inference tests.",
+      "comparison_tiers": [
+        "matched_shakespeare_training",
+        "native_checkpoint_inference"
+      ],
+      "family": "Mamba-3",
+      "hf_repo": "state-spaces/mamba3-siso-187m",
+      "id": "mamba3_siso_187m",
+      "implementation": "state-spaces/mamba Mamba3(is_mimo=False)",
+      "local_plan": "separate_mamba3_environment",
+      "observed": {
+        "config_path": "/mnt/e/AI_Culture_Mind_Large/pure_spin_ssm_v1_2/external_metadata/state-spaces/mamba3-siso-187m/config.json",
+        "config_sha256": "642a36b583d7625f456623555c4974758ab132687bdeee97a362e44e5efff545",
+        "hub_revision": "6792c27c00f3bb41506db1066dcd1c51bb0f4b02",
+        "hub_weight_bytes": 373744619,
+        "metadata_bytes": 4158
+      },
+      "revision": "6792c27c00f3bb41506db1066dcd1c51bb0f4b02",
+      "variant": "SISO 187M",
+      "weight_bytes": 373744619
+    },
+    {
+      "boundary": "MIMO uses a TileLang kernel and must not add or upgrade packages in the frozen Torch 2.10 Mamba-2 environment.",
+      "comparison_tiers": [
+        "matched_shakespeare_training",
+        "native_checkpoint_inference"
+      ],
+      "family": "Mamba-3",
+      "hf_repo": "state-spaces/mamba3-mimo-187m",
+      "id": "mamba3_mimo_187m",
+      "implementation": "state-spaces/mamba Mamba3(is_mimo=True)",
+      "local_plan": "separate_tilelang_mamba3_environment",
+      "observed": {
+        "config_path": "/mnt/e/AI_Culture_Mind_Large/pure_spin_ssm_v1_2/external_metadata/state-spaces/mamba3-mimo-187m/config.json",
+        "config_sha256": "0b766219b33011cd1767802920bc801354bf2cf87286c51d20e89e58b9ce4a99",
+        "hub_revision": "8fd6e9eb7b795f2e15d7f6353251d0137980c43e",
+        "hub_weight_bytes": 374640827,
+        "metadata_bytes": 4194
+      },
+      "revision": "8fd6e9eb7b795f2e15d7f6353251d0137980c43e",
+      "variant": "MIMO 187M",
+      "weight_bytes": 374640827
+    },
+    {
+      "boundary": "The official 8B BF16 checkpoint exceeds local VRAM and published factory tests target A100/H200; only a separately validated small layer belongs in a local matched run.",
+      "comparison_tiers": [
+        "matched_shakespeare_training",
+        "remote_native_checkpoint_reference"
+      ],
+      "family": "Gated KalmaNet",
+      "hf_repo": "amazon/GKA-primed-HQwen3-8B-Instruct",
+      "id": "gka_primed_qwen3_8b",
+      "implementation": "awslabs/hybrid-model-factory",
+      "local_plan": "small_layer_only_on_turing",
+      "observed": {
+        "config_path": "/mnt/e/AI_Culture_Mind_Large/pure_spin_ssm_v1_2/external_metadata/amazon/GKA-primed-HQwen3-8B-Instruct/config.json",
+        "config_sha256": "26c11da3b0fce830f75c9d5ba7e304dd86a5b8e975a167e606261ad329263564",
+        "hub_revision": "497c163ef7757b1df66f9a63ca28a603a8aa0ab5",
+        "hub_weight_bytes": 17000556608,
+        "metadata_bytes": 69885
+      },
+      "revision": "497c163ef7757b1df66f9a63ca28a603a8aa0ab5",
+      "variant": "50% GKA primed HQwen3 8B",
+      "weight_bytes": 17000556608
+    },
+    {
+      "boundary": "The official 8B BF16 checkpoint exceeds local VRAM; an FLA or factory layer must first pass Turing forward/backward parity.",
+      "comparison_tiers": [
+        "matched_shakespeare_training",
+        "remote_native_checkpoint_reference"
+      ],
+      "family": "Gated DeltaNet",
+      "hf_repo": "amazon/GDN-primed-HQwen3-8B-Instruct",
+      "id": "gdn_primed_qwen3_8b",
+      "implementation": "awslabs/hybrid-model-factory",
+      "local_plan": "small_layer_only_on_turing",
+      "observed": {
+        "config_path": "/mnt/e/AI_Culture_Mind_Large/pure_spin_ssm_v1_2/external_metadata/amazon/GDN-primed-HQwen3-8B-Instruct/config.json",
+        "config_sha256": "f2a8bcd5b95c447ce0f1bf9497e2b2fa4bbb50c0d0269c00e0acef6db05d54e7",
+        "hub_revision": "4324333ef4a23f39a6a15f50b8548c14490056cf",
+        "hub_weight_bytes": 16995829952,
+        "metadata_bytes": 62180
+      },
+      "revision": "4324333ef4a23f39a6a15f50b8548c14490056cf",
+      "variant": "50% GDN primed HQwen3 8B",
+      "weight_bytes": 16995829952
+    },
+    {
+      "boundary": "The original requested Jamba lineage is far beyond an 8 GB GPU; paper/model-card numbers remain external references, not local runs.",
+      "comparison_tiers": [
+        "remote_native_checkpoint_reference"
+      ],
+      "family": "AI21 Jamba",
+      "hf_repo": "ai21labs/Jamba-v0.1",
+      "id": "jamba_v0_1",
+      "implementation": "transformers.JambaForCausalLM",
+      "local_plan": "metadata_only",
+      "observed": {
+        "config_path": "/mnt/e/AI_Culture_Mind_Large/pure_spin_ssm_v1_2/external_metadata/ai21labs/Jamba-v0.1/config.json",
+        "config_sha256": "98d005b3bdb7b4d3104ed3f8e6e8e45fa484846703012a11010d43aad768e984",
+        "hub_revision": "9efd11575ba791d9e3d25d4c8b670e78506b2df7",
+        "hub_weight_bytes": 103148144224,
+        "metadata_bytes": 132998
+      },
+      "revision": "9efd11575ba791d9e3d25d4c8b670e78506b2df7",
+      "variant": "v0.1 12B-active/52B-total",
+      "weight_bytes": 103148144224
+    },
+    {
+      "boundary": "BF16 weights alone consume most local VRAM; runtime feasibility must be proved before recording throughput.",
+      "comparison_tiers": [
+        "native_checkpoint_inference"
+      ],
+      "family": "AI21 Jamba",
+      "hf_repo": "ai21labs/AI21-Jamba2-3B",
+      "id": "jamba2_3b",
+      "implementation": "transformers.JambaForCausalLM",
+      "local_plan": "quantized_or_cpu_offload_validation_first",
+      "observed": {
+        "config_path": "/mnt/e/AI_Culture_Mind_Large/pure_spin_ssm_v1_2/external_metadata/ai21labs/AI21-Jamba2-3B/config.json",
+        "config_sha256": "40ac492a8a89e9010340ef417e7a91b3a8a9bcd4b19df84d49262eaa0304e31f",
+        "hub_revision": "525c6c8e1d9f5bddedfbdc1dbb0ade2df84230c9",
+        "hub_weight_bytes": 6394271296,
+        "metadata_bytes": 45415
+      },
+      "revision": "525c6c8e1d9f5bddedfbdc1dbb0ade2df84230c9",
+      "variant": "Jamba2 3B",
+      "weight_bytes": 6394271296
+    }
+  ],
+  "comparison_contract": {
+    "matched_shakespeare_training": "same byte stream, batches, optimizer budget, parameter tolerance, precision, and measured local environment",
+    "native_checkpoint_inference": "each official tokenizer and checkpoint; throughput and memory only, with quality reported on a shared downstream evaluation",
+    "prohibited": "placing pretrained checkpoint loss beside the 300-step byte-LM loss"
+  },
+  "github_sources": {
+    "flash_linear_attention": {
+      "current_main": "27967b970eaaf982a6960abf6cba8add9c34c7cc",
+      "revision": "27967b970eaaf982a6960abf6cba8add9c34c7cc",
+      "url": "https://github.com/fla-org/flash-linear-attention.git"
+    },
+    "hybrid_model_factory": {
+      "current_main": "04b6242b8a87e4496e4ade65eb2ec6a8b23b262a",
+      "revision": "04b6242b8a87e4496e4ade65eb2ec6a8b23b262a",
+      "url": "https://github.com/awslabs/hybrid-model-factory.git"
+    },
+    "mamba": {
+      "current_main": "e9594ce1c732d97440f0332fdc43170a2294dbfa",
+      "revision": "e9594ce1c732d97440f0332fdc43170a2294dbfa",
+      "url": "https://github.com/state-spaces/mamba.git"
+    }
+  },
+  "hardware": {
+    "bfloat16_emulation_or_native": true,
+    "compute_capability": [
+      7,
+      5
+    ],
+    "device": "NVIDIA GeForce RTX 2070 SUPER",
+    "native_bfloat16": false,
+    "vram_bytes": 8589606912
+  },
+  "live_source_verification": true,
+  "schema_version": 1,
+  "status": "passed"
+}

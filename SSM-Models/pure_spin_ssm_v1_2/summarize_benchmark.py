@@ -60,7 +60,7 @@ def main() -> int:
         )
     report = {
         "schema_version": 1,
-        "claim_scope": "three-seed matched WikiText-2 byte-LM comparison",
+        "claim_scope": "multi-seed matched natural byte-LM comparison",
         "seeds": [item["seed"] for item in by_seed],
         "dataset": reference["dataset"],
         "config_except_seed": {

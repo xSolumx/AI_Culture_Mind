@@ -3,7 +3,7 @@
 **Status:** implemented and gradient-validated; current throughput claims are
 separated into isolated-kernel, steady-step, and end-to-end measurements
 
-**Natural-data baseline artifact (pre-reconstruction backend):**
+**Historical WikiText natural-data artifact (pre-reconstruction backend):**
 [`artifacts/wikitext2_byte_spin_ladder_3seed_summary.json`](artifacts/wikitext2_byte_spin_ladder_3seed_summary.json)
 
 **Current guarded-backward artifacts:**
@@ -81,9 +81,9 @@ plane coordinates set exactly to zero, for outputs and gradients.
 ## Matched natural-data result
 
 The table in this section is the last fully provenance-captured three-seed
-natural-data comparison before guarded backward reconstruction. It remains the
-quality baseline; it must not be relabelled as a timing result for the current
-CUDA source.
+WikiText comparison before guarded backward reconstruction. It is preserved as
+historical evidence; it must not be relabelled as a Tiny Shakespeare result or
+as a timing result for the current CUDA source.
 
 Both candidates used the same immutable WikiText-2 UTF-8 byte streams, batches,
 optimizer, 300 steps, batch size 8, sequence length 256, RTX 2070 SUPER, Torch
@@ -102,13 +102,15 @@ throughput rose from 14,987 to 80,697 tokens/s, or 5.38x. Relative to the first
 raw controller implementation measured in the final WSL environment at seed
 17, the ladder rose from 23,564 to 80,967 tokens/s, or 3.44x.
 
-This does not beat Mamba-2: its mean throughput remains 9.1% lower and its mean
+This historical run does not beat Mamba-2: its mean throughput remains 9.1%
+lower and its mean
 validation result remains worse by 0.242 bits/byte. It also makes no comparison
-claim against Jamba, Samba, Nemotron, or any unverified architecture called
-"Mamba-4"; those are differently scaled hybrid systems, not matched local
-controls.
+claim against Jamba or Falcon-Mamba; those are differently scaled pretrained
+systems, not matched local controls. The current external programme also pins
+Mamba-3 SISO/MIMO, GKA, and GDN, but no speed or quality row is promoted until
+its separately isolated implementation passes the same matched-run contract.
 
-## Current steady-step result
+## Current CUDA 12.6 steady-step result
 
 The current implementation was also measured with four alternating execution
 cycles: Spin then Mamba, followed by Mamba then Spin, repeated twice. Every
@@ -116,17 +118,42 @@ model/cycle used ten warmup steps and five ten-step CUDA-event windows. The
 timed region includes forward, backward, gradient clipping, and AdamW; it
 excludes data loading, host-to-device transfer, and validation.
 
-| implementation | cycle medians (tokens/s) | median of cycle medians |
-|---|---:|---:|
-| Pure Spin ladder | 81,139; 79,351; 80,281; 68,223 | **79,816** |
-| official fused Mamba-2 | 86,257; 88,977; 85,004; 85,404 | **85,831** |
+| environment | Spin median | Mamba-2 median | Mamba / Spin |
+|---|---:|---:|---:|
+| Torch 2.10 cu126 | **70,615** | 70,255 | 0.995x |
+| Torch 2.10 cu130 control | 57,434 | **63,598** | 1.107x |
 
-Mamba-2 is 1.075x faster on this final controlled measurement. An earlier
-four-cycle run of the unguarded kernel appeared to put Spin ahead, but the
-result did not replicate after the safety guard and GPU timing shifted
-materially between runs. It is retained neither as a claim nor as a promoted
-artifact. The correct conclusion is that the isolated scan kernel has improved
-substantially while whole-model superiority has not been established.
+These are current-code A/B runs with identical source hashes and protocol.
+cu126 improves Spin throughput by 23.0% and Mamba-2 throughput by 10.5% over
+cu130 on this machine. Within cu126, the 0.51% Spin lead is too small relative
+to observed cycle variation to support a model-speed superiority claim. It
+does establish cu126 as the better local runtime. Exact artifacts are
+[`artifacts/steady_step_spin_ladder_vs_mamba2_cu126.json`](artifacts/steady_step_spin_ladder_vs_mamba2_cu126.json)
+and
+[`artifacts/steady_step_spin_ladder_vs_mamba2_cu130_current.json`](artifacts/steady_step_spin_ladder_vs_mamba2_cu130_current.json).
+
+## Current Tiny Shakespeare result
+
+The first complete post-migration run used seed 17, 300 optimizer steps, batch
+size 8, sequence length 256, the pinned disjoint Tiny Shakespeare byte splits,
+and the current `raw_cuda_hybrid` Spin ladder. Both candidates were constructed
+before training and used the same batches and validation windows.
+
+| run | Spin bpb | Mamba-2 bpb | Spin tok/s | Mamba-2 tok/s |
+|---|---:|---:|---:|---:|
+| cu126 first | 2.7263 | **2.4606** | **67,259** | 53,386 |
+| cu126 repeat | 2.7263 | **2.4606** | 56,713 | **56,877** |
+| preserved cu130 | 2.7263 | **2.4606** | 42,831 | **49,133** |
+
+The parameter gap is 0.443%. Mamba-2 improves validation by 0.2657 bits/byte
+and uses about 22% less peak CUDA memory (118.0 versus 151.6 MB). Sequential
+timing varies enough to reverse the speed ordering, which is why the
+order-balanced table above is authoritative for throughput. These remain
+single-seed convergence results, but they directly falsify any claim that the
+present v1.2 wins matched Shakespeare quality. The cu126 artifacts are
+[`artifacts/shakespeare_byte_spin_ladder_vs_mamba2_seed17_300_wsl_cu126.json`](artifacts/shakespeare_byte_spin_ladder_vs_mamba2_seed17_300_wsl_cu126.json)
+and
+[`artifacts/shakespeare_byte_spin_ladder_vs_mamba2_seed17_300_wsl_cu126_repeat.json`](artifacts/shakespeare_byte_spin_ladder_vs_mamba2_seed17_300_wsl_cu126_repeat.json).
 
 ## Channel-mixer falsification
 
@@ -145,19 +172,23 @@ SwiGLU on the matched quality/speed criteria. The closest small model used
 ## Reproduction
 
 ```bash
-export HF_HOME=/home/local/pure-spin-v12-cache/huggingface
-export CUDA_HOME="$VIRTUAL_ENV/lib/python3.10/site-packages/nvidia/cu13"
-export PATH="$CUDA_HOME/bin:$PATH"
-export LD_LIBRARY_PATH="$CUDA_HOME/lib:${LD_LIBRARY_PATH:-}"
-PYTHONPATH=.. python benchmark.py --offline \
+source wsl_env.sh
+bash run_wsl_tests.sh
+python benchmark.py --dataset tiny_shakespeare --offline \
   --steps 300 --batch-size 8 --sequence-length 256 --seed 17 \
-  --spin-backend raw_cuda_factorized \
+  --spin-backend raw_cuda_hybrid \
   --spin-group-schedule 3 4 6 8
 
-PYTHONPATH=.. python benchmark_steady_step.py \
+python benchmark_steady_step.py \
   --cycles 4 --windows 5 --steps-per-window 10 --warmup-steps 10 \
   --output artifacts/steady_step_spin_ladder_guarded_reconstruct_vs_mamba2_wsl.json
 ```
+
+To replay the historical dataset, request
+`--dataset wikitext2_legacy` explicitly and retain the original stream hashes.
+The current default is pinned Tiny Shakespeare. External checkpoint metadata
+and exact source revisions are audited by
+`python external_baselines/audit.py --live`; that command downloads no weights.
 
 The semantic chunk-parallel associative affine compiler is now implemented and
 documented in

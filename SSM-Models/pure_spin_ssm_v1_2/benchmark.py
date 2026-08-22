@@ -1,4 +1,4 @@
-"""Matched WikiText-2 byte-LM training for Pure Spin v1.2 and fused Mamba-2."""
+"""Matched Shakespeare byte-LM training for Pure Spin v1.2 and fused Mamba-2."""
 
 from __future__ import annotations
 
@@ -15,10 +15,18 @@ from pathlib import Path
 
 import numpy as np
 import torch
-from data import random_batch, wikitext_bytes
+from torch.nn import functional as F
+
+from data import (
+    TINY_SHAKESPEARE_REVISION,
+    TINY_SHAKESPEARE_SHA256,
+    TINY_SHAKESPEARE_URL,
+    random_batch,
+    tiny_shakespeare_bytes,
+    wikitext_bytes,
+)
 from mamba2_baseline import OfficialMamba2LM, fused_mamba2_available
 from model import PureSpinSSMV12, PureSpinV12Config, parameter_count
-from torch.nn import functional as F
 
 
 @dataclass(frozen=True)
@@ -33,7 +41,7 @@ class BenchmarkConfig:
     d_model: int = 128
     layers: int = 4
     spin_channels: int = 2
-    spin_backend: str = "compiled_controller"
+    spin_backend: str = "raw_cuda_hybrid"
     spin_mixer: str = "swiglu"
     spin_expansion: int = 2
     spin_group_schedule: tuple[int, ...] | None = None
@@ -209,7 +217,7 @@ def main() -> int:
             "raw_cuda_hybrid",
             "chunk_parallel",
         ],
-        default="compiled_controller",
+        default="raw_cuda_hybrid",
     )
     parser.add_argument(
         "--spin-mixer",
@@ -222,8 +230,15 @@ def main() -> int:
     parser.add_argument("--spin-chunk-size", type=int, default=32)
     parser.add_argument("--layers", type=int, default=4)
     parser.add_argument("--models", nargs="+", default=["pure_spin_v1_2", "mamba2_fused"])
+    parser.add_argument(
+        "--dataset",
+        choices=["tiny_shakespeare", "wikitext2_legacy"],
+        default="tiny_shakespeare",
+    )
     parser.add_argument("--offline", action="store_true")
-    parser.add_argument("--output", type=Path, default=Path("artifacts/wikitext2_byte_300.json"))
+    parser.add_argument(
+        "--output", type=Path, default=Path("artifacts/shakespeare_byte_300.json")
+    )
     args = parser.parse_args()
     if not torch.cuda.is_available():
         raise RuntimeError("the fused comparison requires CUDA")
@@ -249,13 +264,39 @@ def main() -> int:
         layers=args.layers,
         seed=args.seed,
     )
-    train, train_sha = wikitext_bytes("train", offline=args.offline)
-    valid, valid_sha = wikitext_bytes("validation", offline=args.offline)
-    train_stream = torch.from_numpy(train)
+    if args.dataset == "tiny_shakespeare":
+        train, train_sha = tiny_shakespeare_bytes("train", offline=args.offline)
+        valid, valid_sha = tiny_shakespeare_bytes(
+            "validation", offline=args.offline
+        )
+        dataset = {
+            "name": "tiny_shakespeare",
+            "encoding": "raw UTF-8 bytes",
+            "split": "90/5/5 contiguous bytes",
+            "source": {
+                "url": TINY_SHAKESPEARE_URL,
+                "revision": TINY_SHAKESPEARE_REVISION,
+                "full_sha256": TINY_SHAKESPEARE_SHA256,
+            },
+            "train_sha256": train_sha,
+            "validation_sha256": valid_sha,
+        }
+    else:
+        train, train_sha = wikitext_bytes("train", offline=args.offline)
+        valid, valid_sha = wikitext_bytes("validation", offline=args.offline)
+        dataset = {
+            "name": "Salesforce/wikitext wikitext-2-raw-v1",
+            "encoding": "raw UTF-8 bytes",
+            "status": "legacy replay only",
+            "train_sha256": train_sha,
+            "validation_sha256": valid_sha,
+        }
+    train_stream = torch.as_tensor(train, dtype=torch.long)
+    valid_stream = torch.as_tensor(valid, dtype=torch.long)
     generator = torch.Generator().manual_seed(config.seed + 1)
     validation = [
         random_batch(
-            torch.from_numpy(valid),
+            valid_stream,
             batch_size=config.batch_size,
             sequence_length=config.sequence_length,
             generator=generator,
@@ -267,12 +308,7 @@ def main() -> int:
         "schema_version": 1,
         "claim_scope": "matched natural-data training run; empirical, not a general superiority claim",
         "config": asdict(config),
-        "dataset": {
-            "name": "Salesforce/wikitext wikitext-2-raw-v1",
-            "encoding": "raw UTF-8 bytes",
-            "train_sha256": train_sha,
-            "validation_sha256": valid_sha,
-        },
+        "dataset": dataset,
         "parameter_match": parameter_match(config)
         if set(args.models) == {"pure_spin_v1_2", "mamba2_fused"}
         else None,

@@ -1,6 +1,8 @@
 """JIT loader for the raw CUDA materialized-action recurrence."""
 
+import hashlib
 import os
+import platform
 from functools import lru_cache
 from pathlib import Path
 
@@ -8,6 +10,39 @@ import torch
 from torch.utils.cpp_extension import load
 
 ROOT = Path(__file__).resolve().parent
+
+
+def _cuda_dependency_include_paths() -> list[str]:
+    """Expose CUDA math headers bundled beside the active PyTorch wheel.
+
+    CUDA 12's minimal nvcc package contains the compiler and runtime headers,
+    while PyTorch owns the matching cuBLAS/cuSPARSE/cuSOLVER/cuDNN packages.
+    Reusing those headers avoids a second, nearly gigabyte-sized system SDK.
+    """
+
+    nvidia_root = Path(torch.__file__).resolve().parent.parent / "nvidia"
+    candidates = (
+        nvidia_root / "cublas" / "include",
+        nvidia_root / "cusparse" / "include",
+        nvidia_root / "cusolver" / "include",
+        nvidia_root / "cudnn" / "include",
+        nvidia_root / "cuda_runtime" / "include",
+    )
+    return [str(path) for path in candidates if path.is_dir()]
+
+
+def _extension_name() -> str:
+    """Use a source/ABI-qualified name so stale binary modules cannot survive."""
+
+    sources = (ROOT / "csrc" / "spin_scan.cpp", ROOT / "csrc" / "spin_scan_cuda.cu")
+    digest = hashlib.sha256()
+    for source in sources:
+        digest.update(source.read_bytes())
+    digest.update(torch.__version__.encode())
+    digest.update(str(torch.version.cuda).encode())
+    digest.update(platform.python_version().encode())
+    digest.update(os.name.encode())
+    return f"pure_spin_v12_raw_cuda_{digest.hexdigest()[:16]}"
 
 
 @lru_cache(maxsize=1)
@@ -20,11 +55,12 @@ def extension():
         cuda_flags.append("-Xcompiler=/Zc:preprocessor")
         cxx_flags = ["/O2", "/Zc:preprocessor"]
     return load(
-        name="pure_spin_v12_raw_cuda",
+        name=_extension_name(),
         sources=[
             str(ROOT / "csrc" / "spin_scan.cpp"),
             str(ROOT / "csrc" / "spin_scan_cuda.cu"),
         ],
+        extra_include_paths=_cuda_dependency_include_paths(),
         extra_cuda_cflags=cuda_flags,
         extra_cflags=cxx_flags,
         verbose=False,

@@ -21,7 +21,17 @@ self-contained natural-data harness.
 The official baseline follows the maintained
 [`state-spaces/mamba`](https://github.com/state-spaces/mamba) implementation and
 its `Mamba2(..., use_mem_eff_path=True)` fused SSD route. The architecture is
-described in [Transformers are SSMs](https://arxiv.org/abs/2405.21060). Natural
-data comes from the versioned
+described in [Transformers are SSMs](https://arxiv.org/abs/2405.21060).
+Current natural data is the exact Tiny Shakespeare payload from a pinned
+[`karpathy/char-rnn`](https://github.com/karpathy/char-rnn) commit, split into
+disjoint chronological train/validation/test byte ranges and checked by
+SHA-256. The old versioned
 [`Salesforce/wikitext`](https://huggingface.co/datasets/Salesforce/wikitext)
-dataset rather than generated sequence tasks.
+runs remain historical artifacts and require an explicit legacy flag.
+
+The external comparison registry reuses official source boundaries rather than
+copying implementations: `state-spaces/mamba` for Mamba-2/3,
+`awslabs/hybrid-model-factory` for GKA/GDN, `fla-org/flash-linear-attention` as
+the independent GDN kernel route, TII's Falcon-Mamba checkpoint, and AI21's
+Jamba checkpoints. Its first product is a source/feasibility audit, not an
+inherited performance claim.

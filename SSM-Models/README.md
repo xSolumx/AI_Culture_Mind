@@ -8,6 +8,14 @@
 > live in the root-owned `Spin-Space-Research` tree. The maintained
 > Cl(3,0) implementation described below remains in this folder.
 
+> **2026-08-22 local CUDA policy.** New RTX 2070 SUPER work defaults to the
+> validated WSL CUDA 12.6 / native `sm_75` toolchain documented in the
+> [Pure Spin v1.2 hardware profile](pure_spin_ssm_v1_2/LOCAL_HARDWARE_PROFILE_2026-08-22.md).
+> Existing cu130 reports and JSON files remain historical evidence under their
+> actual runtime. A model is migrated retroactively only by rerunning its
+> environment, correctness, gradient, and matched-performance gates on cu126;
+> artifact labels are never rewritten in place.
+
 > **2026-08-21 Pure Exceptional Delta SSM v1.3 development boundary.**
 > [`pure_f4_delta_ssm_v1_3/`](pure_f4_delta_ssm_v1_3/) now contains an isolated
 > semantic PyTorch implementation of the full Albert-algebra hierarchy
@@ -17,7 +25,8 @@
 > router controls. Its algebra/model suite and deterministic audit pass. It is
 > not yet a promoted CUDA backend or trained quality result. Its new natural-
 > data development evidence uses only a pinned Tiny Shakespeare corpus on both
-> train and validation sides; it does not inherit v1.2's WikiText artifacts.
+> train and validation sides; it inherits neither v1.2's historical WikiText
+> artifacts nor v1.2's independently trained Shakespeare measurements.
 > The no-action control remains essentially tied at the short gate, and a
 > prospectively frozen five-seed layer-localization follow-up rejected the
 > apparent seed-17 E6 gain. The folder's constraint audit records which older

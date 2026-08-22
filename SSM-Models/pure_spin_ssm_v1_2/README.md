@@ -4,6 +4,12 @@ This folder is the isolated implementation and evidence boundary for Pure Spin
 SSM v1.2. It does not inherit empirical claims from older rotor, Spin(8), or
 synthetic-memory experiments.
 
+The current local execution contract is documented in the
+[`hardware profile`](LOCAL_HARDWARE_PROFILE_2026-08-22.md) and
+[`storage audit`](STORAGE_AUDIT_2026-08-22.md): WSL is authoritative, CUDA
+12.6 targets native `sm_75`, source/build/environments stay on WSL ext4, and
+only large weights plus download/dataset caches belong on E:.
+
 ## Architecture
 
 Each causal block contains:
@@ -24,13 +30,15 @@ for a credible language-model comparison.
 
 ## Required comparison
 
-`benchmark.py` trains both candidates on the identical immutable UTF-8 byte
-stream from `Salesforce/wikitext`, configuration `wikitext-2-raw-v1`. It records
-stream hashes, parameter counts, bits per byte, throughput, peak CUDA memory,
-software versions, and the exact GPU. The default comparison uses a 128-wide
-Pure Spin model and a 144-wide Mamba-2 model; it constructs both candidates up
-front and refuses the run unless trainable parameter counts differ by at most
-five percent.
+`benchmark.py` trains both candidates on identical windows from a pinned Tiny
+Shakespeare UTF-8 byte stream. The exact upstream commit and full-file SHA-256
+are fixed in `data.py`; deterministic chronological 90/5/5 slices keep
+training, validation, and test bytes disjoint. The harness records all split
+hashes, parameter counts, bits per byte, throughput, peak CUDA memory, software
+versions, and the exact GPU. The default comparison uses a 128-wide Pure Spin
+model and a 144-wide Mamba-2 model; it constructs both candidates up front and
+refuses the run unless trainable parameter counts differ by at most five
+percent. `--dataset wikitext2_legacy` exists only to replay older artifacts.
 
 The baseline imports `mamba_ssm.Mamba2` with `use_mem_eff_path=True`. The run
 fails closed when the official fused SSD kernel is unavailable; Transformers'
@@ -40,37 +48,56 @@ Run under WSL/Linux because the official Mamba package requires Linux and an
 NVIDIA CUDA environment:
 
 ```bash
-python3 -m venv ~/.venvs/pure-spin-v12
-source ~/.venvs/pure-spin-v12/bin/activate
-cd /mnt/c/Users/HaydenLocal/Programming/AI_Culture_Mind/SSM-Models
-cd pure_spin_ssm_v1_2
+cd /mnt/c/Users/HaydenLocal/Programming/AI_Culture_Mind/SSM-Models/pure_spin_ssm_v1_2
+# One time, from Windows PowerShell:
+wsl.exe -d Ubuntu -u root -- bash /mnt/c/Users/HaydenLocal/Programming/AI_Culture_Mind/SSM-Models/pure_spin_ssm_v1_2/bootstrap_cuda126_wsl.sh
+# Then inside WSL:
 bash install_wsl.sh
-cd ..
-PYTHONPATH=. python -m pytest -q pure_spin_ssm_v1_2/test_model.py
-cd pure_spin_ssm_v1_2
-PYTHONPATH=.. python benchmark.py --steps 300 --batch-size 8 --sequence-length 256 \
-  --spin-backend raw_cuda_factorized --spin-group-schedule 3 4 6 8
+source wsl_env.sh
+bash run_wsl_tests.sh
+python benchmark.py --dataset tiny_shakespeare --offline \
+  --steps 300 --batch-size 8 --sequence-length 256 \
+  --spin-backend raw_cuda_hybrid --spin-group-schedule 3 4 6 8
 ```
 
-The validated local tuple is Python 3.10, Torch 2.10.0+cu130, Triton 3.6.0,
+The validated local tuple is Python 3.10, Torch 2.10.0+cu126, Triton 3.6.0,
 official `mamba_ssm` 2.3.2.post1, and official `causal-conv1d` 1.7.0.
 `install_wsl.sh` installs and probes that exact tuple. Its wheel URLs encode the
 CUDA, Torch, ABI, Python, OS, and architecture match explicitly; `--no-deps`
 prevents backend packages not exercised by this benchmark from replacing the
 pinned runtime. The install probe then imports the exact fused SSD symbol.
-Set `HF_HOME` to a writable task-specific cache when the default WSL cache is
-unavailable.
+`wsl_env.sh` keeps the native venv and latency-sensitive compiler caches on
+WSL ext4 for compiled-wheel, symlink, and small-file performance. It fails
+closed unless E: is mounted read/write. Dataset, Hub, and pip download caches
+default to `E:\AI_Culture_Mind_Large\pure_spin_ssm_v1_2`; Torch-extension,
+Triton, Inductor, and CUDA compilation caches stay under
+`/home/local/.cache/pure_spin_ssm_v1_2`. This prevents new large downloads
+from consuming C: without slowing compiler metadata traffic. Override only
+the task-specific `PURE_SPIN_V12_*` variables documented in that script.
 
 ## Claim ledger
 
 - Algebraic Spin(8) action, bounded recurrence, and scan identities are inherited
   only from their maintained exact/unit-tested modules.
 - Shape, causality, gradient-finiteness, and fallback-refusal are unit tests.
-- WikiText losses and throughput are empirical properties of a recorded run.
+- Tiny Shakespeare losses and throughput are empirical properties of a
+  recorded run; the preserved WikiText tables are historical results.
 - No quality, speed, Tensor-Core, or scaling advantage is claimed before a
   complete artifact exists for both candidates on the same environment.
 - Parameter matching is measured before training and the harness fails closed
   when the raw trainable counts differ by more than five percent.
+- Falcon-Mamba-7B, Mamba-3 SISO/MIMO, GKA, GDN, and Jamba source pins and
+  hardware-feasibility boundaries live in
+  [`external_baselines/`](external_baselines/). Metadata auditing is not a
+  performance result, and pretrained-system losses are not comparable to this
+  small from-scratch byte-LM loss.
+
+The current seed-17, 300-step Tiny Shakespeare artifact does not show a v1.2
+quality win: official fused Mamba-2 reaches 2.4606 versus 2.7263 bits/byte and
+uses less peak CUDA memory. Order-balanced cu126 timing is effectively tied
+(Spin +0.51%), while sequential timers reverse ordering across repeats. See
+[`FRONTIER_TRAINING_RESULTS.md`](FRONTIER_TRAINING_RESULTS.md) for the complete
+scope and provenance.
 
 ## Raw CUDA comparison
 
