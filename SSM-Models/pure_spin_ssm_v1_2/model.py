@@ -395,9 +395,12 @@ class PureSpinV12Block(nn.Module):
         *,
         valid_mask: torch.Tensor | None = None,
         scan_mode: str = "compiled_controller",
+        delta_oracle_slots: torch.Tensor | None = None,
     ) -> tuple[torch.Tensor, torch.Tensor]:
         value, gate = self.input_projection(self.norm(hidden)).chunk(2, dim=-1)
         value = F.silu(self.local_conv(value))
+        if delta_oracle_slots is not None and self.recurrence_mode != "spin_delta":
+            raise ValueError("oracle slots are only defined for Spin-Delta")
         if self.recurrence_mode == "spin_delta":
             if scan_mode not in {
                 "delta_recurrent",
@@ -454,6 +457,43 @@ class PureSpinV12Block(nn.Module):
             query = torch.stack(
                 (1.0 + query_delta, 1.0 - query_delta), dim=-1
             )
+            if delta_oracle_slots is not None:
+                expected_oracle_shape = (*value.shape[:2], 2)
+                if delta_oracle_slots.shape != expected_oracle_shape:
+                    raise ValueError(
+                        f"delta_oracle_slots must have shape {expected_oracle_shape}"
+                    )
+                if delta_oracle_slots.device != value.device:
+                    raise ValueError("delta_oracle_slots must share the model device")
+                write_slot = delta_oracle_slots[..., 0]
+                query_slot = delta_oracle_slots[..., 1]
+                write_mask = write_slot >= 0
+                query_mask = query_slot >= 0
+                oracle_write = F.one_hot(
+                    write_slot.clamp_min(0).long(), self.delta_slots
+                ).to(value)
+                oracle_query = F.one_hot(
+                    query_slot.clamp_min(0).long(), self.delta_slots
+                ).to(value)
+                oracle_write = oracle_write[..., None, :].expand(
+                    -1, -1, self.spin.channels, -1
+                )
+                oracle_query = oracle_query[..., None, :].expand(
+                    -1, -1, self.spin.channels, -1
+                )
+                write_key = torch.where(
+                    write_mask[..., None, None], oracle_write, write_key
+                )
+                erase_key = torch.where(
+                    write_mask[..., None, None], oracle_write, erase_key
+                )
+                erase_strength = write_mask[..., None].to(value).expand(
+                    -1, -1, self.spin.channels
+                ) + 0.0 * erase_strength
+                drive = drive * write_mask[..., None, None, None].to(value)
+                query = torch.where(
+                    query_mask[..., None, None], oracle_query, query
+                )
             delta_left = contractive_delta_left(scale, erase_key, erase_strength)
             delta_drive = route_delta_drive(write_key, drive)
             if scan_mode == "raw_cuda_delta":
@@ -750,6 +790,7 @@ class PureSpinSSMV12(nn.Module):
         *,
         valid_mask: torch.Tensor | None = None,
         scan_mode: str = "compiled_controller",
+        delta_oracle_slots: torch.Tensor | None = None,
     ) -> dict[str, Any]:
         if token_ids.ndim != 2 or token_ids.shape[1] == 0:
             raise ValueError("token_ids must have nonempty shape (batch,length)")
@@ -765,6 +806,7 @@ class PureSpinSSMV12(nn.Module):
                 state,
                 valid_mask=valid_mask,
                 scan_mode=scan_mode,
+                delta_oracle_slots=delta_oracle_slots,
             )
             next_states.append(state)
         return {"logits": self.lm_head(self.final_norm(hidden)), "states": next_states}

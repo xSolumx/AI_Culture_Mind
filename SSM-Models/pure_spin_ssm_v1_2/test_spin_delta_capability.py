@@ -43,6 +43,21 @@ def test_overwrite_batch_is_reproducible_and_covers_both_keys() -> None:
     assert torch.all(keys.max(dim=1).values == 1)
 
 
+def test_oracle_slots_mark_only_value_writes_and_final_query() -> None:
+    inputs, _, oracle = overwrite_retrieval_batch(
+        16,
+        8,
+        generator=torch.Generator().manual_seed(79),
+        return_oracle=True,
+    )
+    assert torch.equal(oracle[:, 2:24:3, 0], inputs[:, 1:24:3])
+    assert torch.equal(oracle[:, -1, 1], inputs[:, -1])
+    write_mask = oracle[..., 0] >= 0
+    query_mask = oracle[..., 1] >= 0
+    assert torch.all(write_mask.sum(dim=1) == 8)
+    assert torch.all(query_mask.sum(dim=1) == 1)
+
+
 def _artifact(seed: int, baseline: float, candidate: float) -> dict[str, object]:
     metrics = lambda accuracy: {
         str(writes): {"accuracy": accuracy, "nats_per_query": 0.1}

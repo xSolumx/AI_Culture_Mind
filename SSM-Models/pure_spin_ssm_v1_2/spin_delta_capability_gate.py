@@ -51,7 +51,11 @@ def overwrite_retrieval_batch(
     *,
     generator: torch.Generator,
     device: torch.device | str = "cpu",
-) -> tuple[torch.Tensor, torch.Tensor]:
+    return_oracle: bool = False,
+) -> (
+    tuple[torch.Tensor, torch.Tensor]
+    | tuple[torch.Tensor, torch.Tensor, torch.Tensor]
+):
     """Generate balanced two-key streams and the latest queried value.
 
     Each episode is ``[WRITE,key,value] * writes + [QUERY,key]``.  The first
@@ -79,7 +83,12 @@ def overwrite_retrieval_batch(
     sequence[:, 2 : 3 * writes : 3] = values
     sequence[:, -2] = QUERY_TOKEN
     sequence[:, -1] = query
-    return sequence.to(device), target.to(device)
+    if not return_oracle:
+        return sequence.to(device), target.to(device)
+    oracle = torch.full((batch_size, sequence.shape[1], 2), -1, dtype=torch.long)
+    oracle[:, 2 : 3 * writes : 3, 0] = keys
+    oracle[:, -1, 1] = query
+    return sequence.to(device), target.to(device), oracle.to(device)
 
 
 def benchmark_config(config: CapabilityConfig, variant: str) -> BenchmarkConfig:

@@ -119,6 +119,9 @@ but the other two seeds failed the frozen trained-length capability boundary
 and maintained v1.2 had higher mean accuracy. This establishes possible but
 non-robust capability and no differential advantage. See
 [`SPIN_DELTA_CAPABILITY_RESULTS.md`](SPIN_DELTA_CAPABILITY_RESULTS.md).
+The next causal control supplies only exact write/query slot identities while
+leaving the Spin-Delta model and CUDA recurrence unchanged; its frozen protocol
+is [`SPIN_DELTA_ORACLE_ADDRESS_PREREGISTRATION.md`](SPIN_DELTA_ORACLE_ADDRESS_PREREGISTRATION.md).
 
 The recurrence is not Mamba-2 under different notation. Its state transition is
 a selective contractive affine Spin(8) action. Local convolution and SwiGLU are

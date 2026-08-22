@@ -4,6 +4,7 @@ import copy
 import sys
 from pathlib import Path
 
+import pytest
 import torch
 from torch.nn import functional as F
 
@@ -503,6 +504,42 @@ def test_spin_delta_is_causal_and_finite_on_a_long_sequence() -> None:
     )
     assert torch.isfinite(actual["logits"]).all()
     assert all(torch.isfinite(state).all() for state in actual["states"])
+
+
+def test_spin_delta_oracle_slots_are_causal_side_information() -> None:
+    torch.manual_seed(202_608_59)
+    model = PureSpinSSMV12(
+        PureSpinV12Config(
+            d_model=16,
+            num_layers=1,
+            spin_channels=2,
+            recurrence="spin_delta",
+        )
+    )
+    tokens = torch.randint(0, 256, (2, 11))
+    oracle = torch.full((2, 11, 2), -1, dtype=torch.long)
+    oracle[:, 2, 0] = 0
+    oracle[:, 5, 0] = 1
+    oracle[:, -1, 1] = torch.tensor([0, 1])
+    result = model(
+        tokens,
+        scan_mode="delta_recurrent",
+        delta_oracle_slots=oracle,
+    )
+    assert result["logits"].shape == (2, 11, 256)
+    result["logits"][:, -1].square().mean().backward()
+    assert all(
+        parameter.grad is None or torch.isfinite(parameter.grad).all()
+        for parameter in model.parameters()
+    )
+
+    maintained = tiny_model()
+    with pytest.raises(ValueError, match="only defined for Spin-Delta"):
+        maintained(
+            tokens,
+            scan_mode="compiled_controller",
+            delta_oracle_slots=oracle,
+        )
 
 
 def test_fused_mamba_probe_never_claims_fallback() -> None:

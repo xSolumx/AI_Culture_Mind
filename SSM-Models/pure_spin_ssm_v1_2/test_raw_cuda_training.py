@@ -751,6 +751,50 @@ def test_raw_cuda_spin_delta_full_model_gradient_parity(
 
 
 @pytest.mark.skipif(not torch.cuda.is_available(), reason="CUDA is unavailable")
+def test_raw_cuda_spin_delta_oracle_full_model_gradient_parity() -> None:
+    torch.manual_seed(20_260_861)
+    config = PureSpinV12Config(
+        d_model=16,
+        num_layers=1,
+        spin_channels=2,
+        d_conv=3,
+        recurrence="spin_delta",
+        group_schedule=(4,),
+    )
+    semantic_model = PureSpinSSMV12(config).cuda()
+    raw_model = copy.deepcopy(semantic_model)
+    tokens = torch.randint(0, 256, (2, 7), device="cuda")
+    oracle = torch.full((2, 7, 2), -1, dtype=torch.long, device="cuda")
+    oracle[:, 2, 0] = 0
+    oracle[:, 5, 0] = 1
+    oracle[:, -1, 1] = torch.tensor([0, 1], device="cuda")
+    expected = semantic_model(
+        tokens,
+        scan_mode="delta_recurrent",
+        delta_oracle_slots=oracle,
+    )["logits"]
+    actual = raw_model(
+        tokens,
+        scan_mode="raw_cuda_delta",
+        delta_oracle_slots=oracle,
+    )["logits"]
+    output_gradient = torch.randn_like(actual)
+    semantic_gradients = torch.autograd.grad(
+        expected, tuple(semantic_model.parameters()), output_gradient
+    )
+    raw_gradients = torch.autograd.grad(
+        actual, tuple(raw_model.parameters()), output_gradient
+    )
+    torch.testing.assert_close(actual, expected, rtol=5e-5, atol=5e-5)
+    for raw_gradient, semantic_gradient in zip(
+        raw_gradients, semantic_gradients, strict=True
+    ):
+        torch.testing.assert_close(
+            raw_gradient, semantic_gradient, rtol=1e-3, atol=3e-3
+        )
+
+
+@pytest.mark.skipif(not torch.cuda.is_available(), reason="CUDA is unavailable")
 def test_nested_group_schedule_full_model_backward() -> None:
     model = PureSpinSSMV12(
         PureSpinV12Config(
