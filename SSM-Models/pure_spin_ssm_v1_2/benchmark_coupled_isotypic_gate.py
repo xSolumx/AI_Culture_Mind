@@ -47,12 +47,18 @@ def variants(stage: str, base: BenchmarkConfig) -> tuple[tuple[str, BenchmarkCon
         spin_recurrence="independent",
         spin_recurrent_multiplicity="identity",
     )
-    return (("independent_v1_2", independent), ("shared_orthogonal", orthogonal))
+    if stage == "frontier":
+        return (("independent_v1_2", independent), ("shared_orthogonal", orthogonal))
+    return (("independent_v1_2", independent), ("shared_identity", shared))
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--stage", choices=["multiplicity", "frontier"], required=True)
+    parser.add_argument(
+        "--stage",
+        choices=["multiplicity", "frontier", "compression"],
+        required=True,
+    )
     parser.add_argument("--steps", type=int, default=300)
     parser.add_argument("--batch-size", type=int, default=8)
     parser.add_argument("--sequence-length", type=int, default=256)
