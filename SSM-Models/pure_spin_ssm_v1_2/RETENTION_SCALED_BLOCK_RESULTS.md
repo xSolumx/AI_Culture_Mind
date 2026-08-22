@@ -69,3 +69,24 @@ The prospective mechanism is documented in
 [`RETENTION_SCALED_BLOCK_PREREGISTRATION.md`](RETENTION_SCALED_BLOCK_PREREGISTRATION.md).
 The compiler-only rescue is frozen separately in
 [`RETENTION_SCALED_BLOCK_KERNEL_PREREGISTRATION.md`](RETENTION_SCALED_BLOCK_KERNEL_PREREGISTRATION.md).
+
+## Isotypic kernel-rescue verdict: failed
+
+The representation-split schedule improved the candidate from 0.7642x to
+0.8049x maintained throughput, but still missed the frozen 0.90x boundary:
+
+| implementation | maintained tok/s | candidate tok/s | ratio |
+|---|---:|---:|---:|
+| packed forward | 83,881 | 64,101 | 0.7642 |
+| isotypic forward | 81,816 | 65,856 | 0.8049 |
+
+The rescue therefore failed and no confirmatory repeat was run. The artifact is
+[`artifacts/retention_scaled_block_isotypic_speed.json`](artifacts/retention_scaled_block_isotypic_speed.json).
+
+The remaining asymmetry is backward reconstruction. Maintained v1.2 recovers
+the rotated pre-affine state from its scalar retention, whereas the block
+kernel replays both complete forward Spin actions because a general learned
+left map may be singular. Here the left map has the stronger form
+`diag(scale) @ Q`; a guarded analytic `2x2` inverse can take the ordinary path
+and retain exact replay only near singularity. That is the next bounded
+compiler optimization, not evidence for default promotion.
