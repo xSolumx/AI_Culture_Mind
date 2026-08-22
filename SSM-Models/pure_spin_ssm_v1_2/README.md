@@ -180,6 +180,12 @@ The next gate removes router commissioning labels entirely and jointly trains
 router plus core from retrieval loss. Its slot-identification decision is
 defined modulo the unavoidable global two-slot permutation. See
 [`SPIN_DELTA_LABEL_FREE_CURRICULUM_PREREGISTRATION.md`](SPIN_DELTA_LABEL_FREE_CURRICULUM_PREREGISTRATION.md).
+The frozen cohort closed negatively: curriculum mean 16-write accuracy was
+34.30% versus 62.84% at fixed depth, with 93-point factorial ranges. Query-event
+F1 stayed zero in every curriculum cell even when retrieval reached 98.19%,
+exposing the internal-query fallback as an optimization bypass rather than
+recovering the explicit grammar. See
+[`SPIN_DELTA_LABEL_FREE_CURRICULUM_RESULTS.md`](SPIN_DELTA_LABEL_FREE_CURRICULUM_RESULTS.md).
 
 The recurrence is not Mamba-2 under different notation. Its state transition is
 a selective contractive affine Spin(8) action. Local convolution and SwiGLU are
