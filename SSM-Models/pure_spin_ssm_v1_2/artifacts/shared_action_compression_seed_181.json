@@ -1,0 +1,124 @@
+{
+  "claim_scope": "paired coupled-isotypic v1.2 quality gate; sequential timers are diagnostic and not an order-balanced throughput claim",
+  "config": {
+    "batch_size": 8,
+    "d_model": 128,
+    "gradient_clip": 1.0,
+    "layers": 4,
+    "learning_rate": 0.003,
+    "mamba_d_model": 144,
+    "mamba_d_state": 64,
+    "maximum_parameter_gap": 0.05,
+    "seed": 181,
+    "sequence_length": 256,
+    "spin_backend": "raw_cuda_hybrid",
+    "spin_channels": 2,
+    "spin_chunk_size": 32,
+    "spin_expansion": 2,
+    "spin_group_schedule": [
+      3,
+      4,
+      6,
+      8
+    ],
+    "spin_mixer": "swiglu",
+    "spin_multiplicity_router": "none",
+    "spin_readout": "direction",
+    "spin_recurrence": "independent",
+    "spin_recurrent_multiplicity": "identity",
+    "steps": 300,
+    "validation_batches": 16,
+    "weight_decay": 0.01
+  },
+  "dataset": {
+    "encoding": "raw UTF-8 bytes",
+    "name": "tiny_shakespeare",
+    "source": {
+      "full_sha256": "86c4e6aa9db7c042ec79f339dcb96d42b0075e16b8fc2e86bf0ca57e2dc565ed",
+      "revision": "6f9487a6fe5b420b7ca9afb0d7c078e37c1d1b4e",
+      "url": "https://raw.githubusercontent.com/karpathy/char-rnn/6f9487a6fe5b420b7ca9afb0d7c078e37c1d1b4e/data/tinyshakespeare/input.txt"
+    },
+    "split": "90/5/5 contiguous bytes",
+    "train_sha256": "a9e24e23a1ec77744dad26844bfd5a09b6e041954e1eef0000e7f24cba6db735",
+    "validation_sha256": "c64e90c160750d91a9d2d9b1ace5eab1a440f5a1701d32a8e97a179b7839f1c8"
+  },
+  "environment": {
+    "compute_capability": [
+      7,
+      5
+    ],
+    "cuda": "12.6",
+    "gpu": "NVIDIA GeForce RTX 2070 SUPER",
+    "mamba2_fused": [
+      true,
+      "2.3.2.post1"
+    ],
+    "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.35",
+    "torch": "2.10.0+cu126",
+    "triton": "3.6.0"
+  },
+  "implementation_sha256": {
+    "benchmark.py": "56d9c68366a880cbbd9ecc7916e01b046099e852f2f38701f6b68b3da46b4afb",
+    "benchmark_coupled_isotypic_gate.py": "a17caac9ae9a21f6e0eb416a2031792df3c2f3fe4ebf8bcd239ac81f647ed370",
+    "coupled_isotypic_scan.py": "296693f0a6d1bf08409951cf0b2ab4c2db18a405969ad3335e6a5c40ecf75c0c",
+    "csrc/spin_scan.cpp": "becb44abb1f6637a7b02c6d4d923ef20a075101c6d4bf507a9ef14cb8560e6ef",
+    "csrc/spin_scan_cuda.cu": "a8dc8df06dce56455a2375c6835c9ac2bffa48124712ea2c5feb31a97b247919",
+    "model.py": "4fae2ea50b3fb454cbc635e5195cc95717b8e6ab58d78116a04cb111b839fbcd",
+    "raw_cuda.py": "2105c6179e242640ce6eb960dbfe5703838603202e7184d19e20c88caa2068f5"
+  },
+  "parameter_counts": {
+    "independent_v1_2": 626516,
+    "mamba2_fused_reference": 623740,
+    "shared_identity": 619808
+  },
+  "results": [
+    {
+      "final_bits_per_byte": 2.6502611736860144,
+      "final_nats_per_byte": 1.8370210602879524,
+      "initial_nats_per_byte": 5.561581641435623,
+      "name": "pure_spin_v1_2",
+      "parameters": 626516,
+      "peak_cuda_bytes": 151556608,
+      "sampled_training_losses": {
+        "1": 5.555574417114258,
+        "150": 1.9762333631515503,
+        "300": 1.738265037536621
+      },
+      "training_seconds": 9.421759866999999,
+      "training_tokens_per_second": 65210.7471080806,
+      "variant": "independent_v1_2",
+      "variant_config": {
+        "spin_backend": "raw_cuda_hybrid",
+        "spin_recurrence": "independent",
+        "spin_recurrent_multiplicity": "identity"
+      }
+    },
+    {
+      "final_bits_per_byte": 2.695316887589414,
+      "final_nats_per_byte": 1.8682513013482094,
+      "initial_nats_per_byte": 5.4988903403282166,
+      "name": "pure_spin_v1_2",
+      "parameters": 619808,
+      "peak_cuda_bytes": 151312896,
+      "sampled_training_losses": {
+        "1": 5.507608413696289,
+        "150": 1.9777860641479492,
+        "300": 1.7532436847686768
+      },
+      "training_seconds": 9.744641307000002,
+      "training_tokens_per_second": 63050.037517404526,
+      "variant": "shared_identity",
+      "variant_config": {
+        "spin_backend": "raw_cuda_coupled",
+        "spin_recurrence": "coupled_isotypic",
+        "spin_recurrent_multiplicity": "identity"
+      }
+    }
+  ],
+  "schema_version": 1,
+  "stage": "compression",
+  "variant_order": [
+    "independent_v1_2",
+    "shared_identity"
+  ]
+}
