@@ -104,6 +104,57 @@ def test_triality_summary_scalars_are_spin8_invariant() -> None:
     torch.testing.assert_close(actual, expected, rtol=2e-8, atol=2e-8)
 
 
+def test_multiplicity_router_is_identity_initialized_and_receives_gradient() -> None:
+    torch.manual_seed(202_608_24)
+    config = PureSpinV12Config(
+        d_model=16,
+        num_layers=1,
+        spin_channels=2,
+        multiplicity_router="orthogonal_query",
+    )
+    block = PureSpinV12Block(config)
+    states = torch.randn(2, 4, 2, 3, 8)
+    query = torch.randn(2, 4, 16, requires_grad=True)
+    routed = block._route_multiplicity(states, query)
+    torch.testing.assert_close(routed, states, rtol=0.0, atol=0.0)
+    features = block._read_features(states, query)
+    loss = (features * torch.randn_like(features)).sum()
+    loss.backward()
+    assert block.multiplicity_controller is not None
+    assert block.multiplicity_controller.weight.grad is not None
+    assert torch.isfinite(block.multiplicity_controller.weight.grad).all()
+    assert torch.linalg.vector_norm(block.multiplicity_controller.weight.grad) > 0.0
+
+
+def test_multiplicity_router_commutes_with_shared_spin8_action() -> None:
+    torch.manual_seed(202_608_25)
+    config = PureSpinV12Config(
+        d_model=16,
+        num_layers=1,
+        spin_channels=2,
+        multiplicity_router="orthogonal_query",
+    )
+    block = PureSpinV12Block(config).double()
+    assert block.multiplicity_controller is not None
+    torch.nn.init.normal_(block.multiplicity_controller.weight, std=0.2)
+    states = torch.randn(2, 3, 2, 3, 8, dtype=torch.float64)
+    query = torch.randn(2, 3, 16, dtype=torch.float64)
+    coordinates = 0.2 * torch.randn(2, 3, 1, 28, dtype=torch.float64)
+    action = spin8_group_actions(
+        coordinates,
+        block.spin.generators.to(dtype=torch.float64),
+        block.spin.representations,
+        mode="exponential",
+    ).expand(-1, -1, 2, -1, -1, -1)
+
+    def act(value: torch.Tensor) -> torch.Tensor:
+        return torch.einsum("...rij,...rj->...ri", action, value)
+
+    expected = act(block._route_multiplicity(states, query))
+    actual = block._route_multiplicity(act(states), query)
+    torch.testing.assert_close(actual, expected, rtol=2e-8, atol=2e-8)
+
+
 def test_fused_mamba_probe_never_claims_fallback() -> None:
     available, detail = fused_mamba2_available()
     assert isinstance(available, bool)

@@ -27,6 +27,13 @@ Each causal block contains:
 5. raw CUDA controller-fused and GEMM-plus-factorized training lowerings;
 6. gated residual readout and a SwiGLU channel mixer.
 
+The maintained readout remains the normalized 48-dimensional triality
+direction. An optional `triality_invariants` control restores sector energies
+and the cubic Spin(8) invariant, but its prospectively frozen three-seed gate
+improved all seeds by only 0.00661 mean bpb, below the 0.0100 promotion
+threshold. See
+[`TRIALITY_INVARIANT_READOUT_RESULTS.md`](TRIALITY_INVARIANT_READOUT_RESULTS.md).
+
 The recurrence is not Mamba-2 under different notation. Its state transition is
 a selective contractive affine Spin(8) action. Local convolution and SwiGLU are
 included because the old pure recurrence lacked the local/channel mixing needed
@@ -86,6 +93,8 @@ the task-specific `PURE_SPIN_V12_*` variables documented in that script.
 - Shape, causality, gradient-finiteness, and fallback-refusal are unit tests.
 - Tiny Shakespeare losses and throughput are empirical properties of a
   recorded run; the preserved WikiText tables are historical results.
+- Optional mechanisms remain controls when they fail their frozen promotion
+  threshold, even if their mean effect has the favorable sign.
 - No quality, speed, Tensor-Core, or scaling advantage is claimed before a
   complete artifact exists for both candidates on the same environment.
 - Parameter matching is measured before training and the harness fails closed

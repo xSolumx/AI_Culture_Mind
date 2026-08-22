@@ -43,6 +43,7 @@ class BenchmarkConfig:
     spin_backend: str = "raw_cuda_hybrid"
     spin_mixer: str = "swiglu"
     spin_readout: str = "direction"
+    spin_multiplicity_router: str = "none"
     spin_expansion: int = 2
     spin_group_schedule: tuple[int, ...] | None = None
     spin_chunk_size: int = 32
@@ -81,6 +82,7 @@ def build_model(name: str, config: BenchmarkConfig) -> torch.nn.Module:
                 spin_channels=config.spin_channels,
                 mixer=config.spin_mixer,
                 readout=config.spin_readout,
+                multiplicity_router=config.spin_multiplicity_router,
                 expansion=config.spin_expansion,
                 group_schedule=config.spin_group_schedule,
                 scan_chunk_size=config.spin_chunk_size,
@@ -236,6 +238,11 @@ def main() -> int:
         choices=["direction", "triality_invariants"],
         default="direction",
     )
+    parser.add_argument(
+        "--spin-multiplicity-router",
+        choices=["none", "orthogonal_query"],
+        default="none",
+    )
     parser.add_argument("--spin-expansion", type=int, default=2)
     parser.add_argument("--spin-d-model", type=int, default=128)
     parser.add_argument("--spin-group-schedule", type=int, nargs="+")
@@ -268,6 +275,7 @@ def main() -> int:
         spin_backend=args.spin_backend,
         spin_mixer=args.spin_mixer,
         spin_readout=args.spin_readout,
+        spin_multiplicity_router=args.spin_multiplicity_router,
         spin_expansion=args.spin_expansion,
         d_model=args.spin_d_model,
         spin_group_schedule=(

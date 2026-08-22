@@ -30,6 +30,8 @@ class PureSpinV12Config:
         "sol_self_gate",
     ] = "swiglu"
     readout: Literal["direction", "triality_invariants"] = "direction"
+    multiplicity_router: Literal["none", "orthogonal_query"] = "none"
+    multiplicity_angle_limit: float = 1.5707963267948966
     group_schedule: tuple[int, ...] | None = None
     dropout: float = 0.0
     min_retention_logit: float = 2.0
@@ -61,6 +63,10 @@ class PureSpinV12Config:
             raise ValueError("unknown channel mixer")
         if self.readout not in ("direction", "triality_invariants"):
             raise ValueError("unknown state readout")
+        if self.multiplicity_router not in ("none", "orthogonal_query"):
+            raise ValueError("unknown multiplicity router")
+        if self.multiplicity_angle_limit < 0.0:
+            raise ValueError("multiplicity_angle_limit must be nonnegative")
         if self.group_schedule is not None:
             if len(self.group_schedule) != self.num_layers:
                 raise ValueError("group_schedule must have one entry per layer")
@@ -182,6 +188,17 @@ class PureSpinV12Block(nn.Module):
             nn.init.zeros_(self.spin.coefficient_controller.bias)
         self.state_norm = nn.RMSNorm(self.spin.output_size)
         self.readout_mode = config.readout
+        self.multiplicity_router = config.multiplicity_router
+        self.multiplicity_angle_limit = config.multiplicity_angle_limit
+        self.multiplicity_pairs = tuple(combinations(range(self.spin.channels), 2))
+        if self.multiplicity_router == "orthogonal_query":
+            self.multiplicity_controller = nn.Linear(
+                config.d_model, len(self.multiplicity_pairs)
+            )
+            nn.init.zeros_(self.multiplicity_controller.weight)
+            nn.init.zeros_(self.multiplicity_controller.bias)
+        else:
+            self.multiplicity_controller = None
         read_dimension = self.spin.output_size
         if self.readout_mode == "triality_invariants":
             # One energy per 8D triality sector and one cubic contraction per
@@ -200,7 +217,29 @@ class PureSpinV12Block(nn.Module):
         self.ffn = mixer_type(config.d_model, config.expansion)
         self.dropout = nn.Dropout(config.dropout)
 
-    def _read_features(self, states: torch.Tensor) -> torch.Tensor:
+    def _route_multiplicity(
+        self, states: torch.Tensor, query: torch.Tensor
+    ) -> torch.Tensor:
+        if self.multiplicity_controller is None:
+            return states
+        if query.shape[:-1] != states.shape[:-3]:
+            raise ValueError("multiplicity query must share state leading dimensions")
+        angles = self.multiplicity_angle_limit * torch.tanh(
+            self.multiplicity_controller(query)
+        )
+        routed = [states[..., index, :, :] for index in range(self.spin.channels)]
+        for factor, (left_index, right_index) in enumerate(self.multiplicity_pairs):
+            cosine = torch.cos(angles[..., factor])[..., None, None]
+            sine = torch.sin(angles[..., factor])[..., None, None]
+            left = routed[left_index]
+            right = routed[right_index]
+            routed[left_index] = cosine * left - sine * right
+            routed[right_index] = sine * left + cosine * right
+        return torch.stack(routed, dim=-3)
+
+    def _read_features(
+        self, states: torch.Tensor, query: torch.Tensor | None = None
+    ) -> torch.Tensor:
         expected = (
             self.spin.channels,
             len(self.spin.representations),
@@ -208,6 +247,10 @@ class PureSpinV12Block(nn.Module):
         )
         if states.shape[-3:] != expected:
             raise ValueError(f"triality states must end in {expected}")
+        if self.multiplicity_controller is not None:
+            if query is None:
+                raise ValueError("orthogonal multiplicity routing requires a query")
+            states = self._route_multiplicity(states, query)
         direction = self.state_norm(states.flatten(start_dim=-3))
         if self.readout_mode == "direction":
             return direction
@@ -332,7 +375,7 @@ class PureSpinV12Block(nn.Module):
                 valid_mask=valid_mask,
                 scan_mode=scan_mode,
             )
-        update = self.output_projection(self._read_features(states))
+        update = self.output_projection(self._read_features(states, value))
         update = update * torch.sigmoid(gate)
         hidden = hidden + torch.sigmoid(self.residual_scale) * self.dropout(update)
         return hidden + self.dropout(self.ffn(self.ffn_norm(hidden))), final_state

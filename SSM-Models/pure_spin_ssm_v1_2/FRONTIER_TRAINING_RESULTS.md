@@ -216,6 +216,33 @@ with each source artifact and SHA-256 embedded. The result identifies the next
 research target sharply: improve the selective controller/readout or state
 allocation while preserving the exact bounded Spin action and matched budget.
 
+## Triality-invariant amplitude readout gate
+
+The first theory-driven quality intervention transferred v1.3's amplitude
+lesson without importing its failed dense exceptional transport. The candidate
+kept the normalized triality direction and appended, per channel, the three
+sector log-energies and bounded cubic triality contraction. Tests verify the
+four scalars are invariant under the shared Spin(8) action and respond to
+positive state rescaling.
+
+The candidate adds 4,096 parameters (0.654%) and was frozen in commit
+`34c2ff8` before seeds 71, 73, and 79 were trained.
+
+| seed | direction bpb | invariant bpb | improvement |
+|---:|---:|---:|---:|
+| 71 | 2.71058 | **2.69516** | +0.01543 |
+| 73 | 2.72186 | **2.72010** | +0.00177 |
+| 79 | 2.72772 | **2.72510** | +0.00262 |
+| mean | 2.72006 | **2.71345** | +0.00661 |
+
+It won all three seeds and never regressed, but failed the separately required
+mean-improvement threshold of +0.0100 bpb. Direction therefore remains the
+default. The favorable effect closes only about 2.6% of the established mean
+gap to Mamba-2 and does not justify a speed gate or default change. See
+[`TRIALITY_INVARIANT_READOUT_RESULTS.md`](TRIALITY_INVARIANT_READOUT_RESULTS.md)
+and
+[`artifacts/shakespeare_triality_readout_gate_summary_cu126_f14a.json`](artifacts/shakespeare_triality_readout_gate_summary_cu126_f14a.json).
+
 ## Channel-mixer falsification
 
 Two custom non-exponential candidates were implemented:

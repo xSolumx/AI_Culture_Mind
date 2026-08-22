@@ -1,6 +1,6 @@
 # Triality-invariant readout promotion gate
 
-**Frozen before training:** 2026-08-22  
+**Frozen before training:** 2026-08-22
 **Status:** prospective internal v1.2 architecture gate
 
 ## Hypothesis selected from the research chain
