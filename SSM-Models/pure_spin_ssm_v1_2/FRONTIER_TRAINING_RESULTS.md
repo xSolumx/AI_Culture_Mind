@@ -349,6 +349,21 @@ motivates a smaller continuous-time spectrum—static positive sector rates
 multiplying one token-dependent step—rather than another transport mechanism.
 See [`ISOTYPIC_RETENTION_RESULTS.md`](ISOTYPIC_RETENTION_RESULTS.md).
 
+## Static isotypic spectrum
+
+The lower-variance follow-up represented shared retention as a selective
+continuous-time step and learned only 24 static positive decay-rate scalars
+across the triality sectors. It was exactly paired at initialization but lost
+all seeds 283, 293, and 307, with mean effect `-0.01364` bpb. This closes both
+dynamic and static sector-retention refinement as the next model.
+
+The combined audit points beyond transport and decay: v1.2 has independent
+Spin trajectories but no explicit addressable overwrite/query axis. The next
+design factors transport heads from delta-memory slots, preserving the former
+while adding the latter. See
+[`ISOTYPIC_SPECTRUM_RESULTS.md`](ISOTYPIC_SPECTRUM_RESULTS.md) and
+[`SPIN_DELTA_SUCCESSOR_DESIGN.md`](SPIN_DELTA_SUCCESSOR_DESIGN.md).
+
 ## Channel-mixer falsification
 
 Two custom non-exponential candidates were implemented:
