@@ -159,6 +159,45 @@ def test_raw_cuda_independent_block_full_gradient_parity(
 
 
 @pytest.mark.skipif(not torch.cuda.is_available(), reason="CUDA is unavailable")
+def test_raw_cuda_independent_block_singular_left_replay_parity() -> None:
+    base = list(independent_block_inputs(6))
+    base[2] = base[2].clone()
+    base[2][:, 1::2, 1] = 0.0
+    semantic_inputs = tuple(
+        tensor.detach().clone().requires_grad_(index != 1)
+        for index, tensor in enumerate(base)
+    )
+    raw_inputs = tuple(
+        tensor.detach().clone().requires_grad_(index != 1)
+        for index, tensor in enumerate(base)
+    )
+    actions = factorized_triality_actions(semantic_inputs[0], semantic_inputs[1])
+    expected, _ = recurrent_independent_block_scan(
+        semantic_inputs[2], actions, semantic_inputs[3], semantic_inputs[4]
+    )
+    actual = raw_cuda_independent_block_scan(*raw_inputs)
+    output_gradient = torch.randn_like(actual)
+    differentiable = (0, 2, 3, 4)
+    expected_gradients = torch.autograd.grad(
+        expected,
+        tuple(semantic_inputs[index] for index in differentiable),
+        output_gradient,
+    )
+    actual_gradients = torch.autograd.grad(
+        actual,
+        tuple(raw_inputs[index] for index in differentiable),
+        output_gradient,
+    )
+    torch.testing.assert_close(actual, expected, rtol=4e-5, atol=4e-5)
+    for raw_gradient, semantic_gradient in zip(
+        actual_gradients, expected_gradients, strict=True
+    ):
+        torch.testing.assert_close(
+            raw_gradient, semantic_gradient, rtol=1e-3, atol=3e-3
+        )
+
+
+@pytest.mark.skipif(not torch.cuda.is_available(), reason="CUDA is unavailable")
 def test_raw_cuda_controller_full_gradient_parity() -> None:
     inputs = controller_inputs()
     triton_inputs = tuple(

@@ -871,25 +871,53 @@ __global__ void independent_block_backward_kernel(
     const float direct1 = active
         ? output_gradient[output_base + 24 + lane] + carry1
         : 0.0f;
-    float rotated0 = active
-        ? (position == 0 ? initial[initial_base + lane]
-                         : output[output_base - 48 + lane])
-        : 0.0f;
-    float rotated1 = active
-        ? (position == 0 ? initial[initial_base + 24 + lane]
-                         : output[output_base - 24 + lane])
-        : 0.0f;
+    const float l00 = left[left_base];
+    const float l01 = left[left_base + 1];
+    const float l10 = left[left_base + 2];
+    const float l11 = left[left_base + 3];
+    const float determinant = fmaf(l00, l11, -l01 * l10);
+    float rotated0 = 0.0f;
+    float rotated1 = 0.0f;
+    if (fabsf(determinant) > 1.0e-7f) {
+      // output - drive = L * rotated.  The model constructs
+      // L = diag(scale) * Q, so this is the ordinary positive-retention path.
+      // The explicit 2x2 inverse removes one complete replay of both Spin
+      // actions from backward.
+      const float right0 = active
+          ? output[output_base + lane] - drive[output_base + lane]
+          : 0.0f;
+      const float right1 = active
+          ? output[output_base + 24 + lane] - drive[output_base + 24 + lane]
+          : 0.0f;
+      rotated0 = active
+          ? (l11 * right0 - l01 * right1) / determinant
+          : 0.0f;
+      rotated1 = active
+          ? (l00 * right1 - l10 * right0) / determinant
+          : 0.0f;
+    } else {
+      // Preserve the exact semantic route at zero retention or any nearly
+      // singular user-supplied left action.
+      rotated0 = active
+          ? (position == 0 ? initial[initial_base + lane]
+                           : output[output_base - 48 + lane])
+          : 0.0f;
+      rotated1 = active
+          ? (position == 0 ? initial[initial_base + 24 + lane]
+                           : output[output_base - 24 + lane])
+          : 0.0f;
 #pragma unroll 4
-    for (int coordinate = 0; coordinate < factors; ++coordinate) {
-      const float next0 = apply_factor(generators, representation, coordinate,
-          row, rotated0, coordinates[coordinate_base0 + coordinate], factors);
-      const float next1 = apply_factor(generators, representation, coordinate,
-          row, rotated1, coordinates[coordinate_base1 + coordinate], factors);
-      if (active) {
-        rotated0 = next0;
-        rotated1 = next1;
+      for (int coordinate = 0; coordinate < factors; ++coordinate) {
+        const float next0 = apply_factor(generators, representation, coordinate,
+            row, rotated0, coordinates[coordinate_base0 + coordinate], factors);
+        const float next1 = apply_factor(generators, representation, coordinate,
+            row, rotated1, coordinates[coordinate_base1 + coordinate], factors);
+        if (active) {
+          rotated0 = next0;
+          rotated1 = next1;
+        }
+        __syncwarp();
       }
-      __syncwarp();
     }
 
     const float left00 = warp_sum(active ? direct0 * rotated0 : 0.0f);
@@ -906,10 +934,6 @@ __global__ void independent_block_backward_kernel(
       drive_gradient[output_base + lane] = direct0;
       drive_gradient[output_base + 24 + lane] = direct1;
     }
-    const float l00 = left[left_base];
-    const float l01 = left[left_base + 1];
-    const float l10 = left[left_base + 2];
-    const float l11 = left[left_base + 3];
     float adjoint0 = active ? l00 * direct0 + l10 * direct1 : 0.0f;
     float adjoint1 = active ? l01 * direct0 + l11 * direct1 : 0.0f;
     float state_after0 = rotated0;
