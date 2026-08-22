@@ -186,10 +186,14 @@ F1 stayed zero in every curriculum cell even when retrieval reached 98.19%,
 exposing the internal-query fallback as an optimization bypass rather than
 recovering the explicit grammar. See
 [`SPIN_DELTA_LABEL_FREE_CURRICULUM_RESULTS.md`](SPIN_DELTA_LABEL_FREE_CURRICULUM_RESULTS.md).
-Before another quality gate, the query branch is being audited at one-step
-gradient resolution under current hard fallback, soft event continuation, and
-immediately authoritative routing. The prospective selector is
-[`SPIN_DELTA_QUERY_GRADIENT_TOPOLOGY_PREREGISTRATION.md`](SPIN_DELTA_QUERY_GRADIENT_TOPOLOGY_PREREGISTRATION.md).
+The subsequent one-step gradient audit proved the current hard query event
+leaves the event head trainable but makes the query-slot gradient exactly zero
+at initialization. Soft event continuation restored slot credit in all three
+fresh full-model seeds while perturbing logits `2,840x`--`4,076x` less than
+immediate authoritative routing. It is therefore the frozen intervention for
+the next separately preregistered training gate; no quality claim has yet been
+made. See
+[`SPIN_DELTA_QUERY_GRADIENT_TOPOLOGY_RESULTS.md`](SPIN_DELTA_QUERY_GRADIENT_TOPOLOGY_RESULTS.md).
 
 The recurrence is not Mamba-2 under different notation. Its state transition is
 a selective contractive affine Spin(8) action. Local convolution and SwiGLU are

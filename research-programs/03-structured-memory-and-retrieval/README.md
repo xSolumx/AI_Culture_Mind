@@ -83,7 +83,12 @@ representation.
   16 writes versus 62.84% at fixed depth, and query-event F1 stayed zero even
   in a 98.19%-accurate retrieval cell. The redundant internal-query fallback
   makes the explicit router factorization unidentifiable from final retrieval
-  loss alone.
+  loss alone. A prospectively frozen one-step audit then reproduced the exact
+  mechanism: the initialized hard query event leaves its own gradient nonzero
+  while multiplying the query-slot gradient by zero. Both isolated repairs
+  restored slot credit, but soft event continuation perturbed initial logits
+  `2,840x`--`4,076x` less than immediate authority across all three paired
+  seeds. This selects the next intervention; training quality remains open.
 
 ## Dependencies
 
@@ -115,6 +120,7 @@ representation.
 - [Spin-Delta write-curriculum result](../../SSM-Models/pure_spin_ssm_v1_2/SPIN_DELTA_WRITE_CURRICULUM_RESULTS.md)
 - [Learned-router curriculum-transfer result](../../SSM-Models/pure_spin_ssm_v1_2/SPIN_DELTA_ROUTER_CURRICULUM_TRANSFER_RESULTS.md)
 - [Label-free curriculum result](../../SSM-Models/pure_spin_ssm_v1_2/SPIN_DELTA_LABEL_FREE_CURRICULUM_RESULTS.md)
+- [Query gradient-topology result](../../SSM-Models/pure_spin_ssm_v1_2/SPIN_DELTA_QUERY_GRADIENT_TOPOLOGY_RESULTS.md)
 
 The Spin-labelled reports remain at their provenance paths. Their routing,
 update-law, and kernel conclusions are classified here; representation-specific

@@ -52,4 +52,3 @@ under the reverse strict ordering. Otherwise no repair is selected.
 
 This is a topology/initialization selector, not a quality promotion. The
 selected repair still requires a separately frozen multi-seed training gate.
-
