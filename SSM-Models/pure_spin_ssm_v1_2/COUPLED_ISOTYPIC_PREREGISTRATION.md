@@ -1,6 +1,16 @@
 # Coupled isotypic recurrence: algebra and frozen promotion gates
 
-**Frozen before training:** 2026-08-22
+**Frozen before valid training:** 2026-08-22
+
+An initial seed-109 commissioning run was excluded before applying any gate.
+Its unequal initial validation losses revealed that constructing the optional
+zero-initialized controller advanced PyTorch's RNG and shifted later common
+weights. The artifact is retained as
+`coupled_isotypic_commissioning_seed_109_invalid.json`; it is implementation
+diagnostic data, not evidence for either candidate. Controller construction is
+now RNG-neutral, and a regression test requires all common state-dict tensors
+and initial logits to be exactly equal. Because seed 109 was observed, the
+valid campaign uses entirely new seeds frozen below.
 
 ## Why this is the next recurrence
 
@@ -79,7 +89,7 @@ This isolates `Q_t` while holding the shared-action architecture fixed.
 - baseline: `coupled_isotypic`, `recurrent_multiplicity=identity`;
 - candidate: `coupled_isotypic`, `recurrent_multiplicity=orthogonal`;
 - backend: `raw_cuda_coupled` for both;
-- seeds: `109`, `113`, `127`;
+- seeds: `149`, `151`, `157`;
 - 300 steps, batch 8, length 256, 16 fixed validation batches;
 - Tiny Shakespeare raw UTF-8 bytes with the maintained 90/5/5 contiguous split;
 - group schedule `(3,4,6,8)`, direction readout, no readout router;
@@ -100,7 +110,7 @@ passes only if all hold:
 
 Stage B may be run only if Stage A passes. It compares the promoted coupled
 candidate with the established independent-action `raw_cuda_hybrid` v1.2 using
-fresh seeds `131`, `137`, and `139`; all other data and optimization settings
+fresh seeds `163`, `167`, and `173`; all other data and optimization settings
 remain identical. The coupled candidate has 6,192 fewer parameters than the
 626,516-parameter established model.
 

@@ -206,6 +206,33 @@ def test_coupled_isotypic_model_is_causal_and_controller_is_shared() -> None:
     torch.testing.assert_close(actual[:, :5], expected[:, :5], rtol=2e-5, atol=2e-5)
 
 
+def test_recurrent_multiplicity_candidate_has_paired_identity_initialization() -> None:
+    base = {
+        "d_model": 16,
+        "num_layers": 2,
+        "spin_channels": 2,
+        "recurrence": "coupled_isotypic",
+        "dropout": 0.0,
+    }
+    torch.manual_seed(202_608_31)
+    identity = PureSpinSSMV12(
+        PureSpinV12Config(**base, recurrent_multiplicity="identity")
+    ).eval()
+    torch.manual_seed(202_608_31)
+    orthogonal = PureSpinSSMV12(
+        PureSpinV12Config(**base, recurrent_multiplicity="orthogonal")
+    ).eval()
+    identity_state = identity.state_dict()
+    orthogonal_state = orthogonal.state_dict()
+    for name, value in identity_state.items():
+        assert torch.equal(value, orthogonal_state[name]), name
+    tokens = torch.randint(0, 256, (2, 7))
+    with torch.no_grad():
+        expected = identity(tokens, scan_mode="coupled_parallel")["logits"]
+        actual = orthogonal(tokens, scan_mode="coupled_parallel")["logits"]
+    torch.testing.assert_close(actual, expected, rtol=0.0, atol=0.0)
+
+
 def test_fused_mamba_probe_never_claims_fallback() -> None:
     available, detail = fused_mamba2_available()
     assert isinstance(available, bool)
