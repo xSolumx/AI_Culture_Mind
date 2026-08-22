@@ -60,7 +60,10 @@ representation.
   Householder-product, and sparse-attention systems remain necessary.
 - A frozen phase-separated follow-up rejected early address noise as a
   complete explanation: the perfect frozen-router core still missed its robust
-  gate in one seed. Initialization-versus-minibatch sensitivity remains open.
+  gate in one seed.
+- A fresh exact-control 3x3 factorial then detected both initialization and
+  minibatch-order sensitivity, including sign-changing interactions. The open
+  mechanism is core optimization geometry, not final event/slot inference.
 
 ## Dependencies
 

@@ -141,6 +141,12 @@ core raised the three-seed mean above 97%, but one seed still missed the 95%
 routing noise is therefore not the whole optimization defect. See
 [`SPIN_DELTA_PHASED_ROUTER_RESULTS.md`](SPIN_DELTA_PHASED_ROUTER_RESULTS.md).
 
+A subsequent exact-control 3x3 factorial separated initialization from batch
+order. Sixteen-write accuracy ranged from 91.41% to 100%; both factors crossed
+the preregistered five-point sensitivity threshold, with a strong sign-changing
+interaction. The remaining frontier is core training geometry, not routing.
+See [`SPIN_DELTA_PERFECT_CONTROL_FACTORIAL_RESULTS.md`](SPIN_DELTA_PERFECT_CONTROL_FACTORIAL_RESULTS.md).
+
 The recurrence is not Mamba-2 under different notation. Its state transition is
 a selective contractive affine Spin(8) action. Local convolution and SwiGLU are
 included because the old pure recurrence lacked the local/channel mixing needed

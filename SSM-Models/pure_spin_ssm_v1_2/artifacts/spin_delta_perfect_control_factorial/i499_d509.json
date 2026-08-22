@@ -1,0 +1,87 @@
+{
+  "config": {
+    "batch_size": 128,
+    "d_model": 64,
+    "data_seed": 509,
+    "evaluation_batches": 16,
+    "evaluation_writes": [
+      8,
+      16,
+      32
+    ],
+    "gradient_clip": 1.0,
+    "init_seed": 499,
+    "layers": 2,
+    "learning_rate": 0.003,
+    "steps": 800,
+    "training_writes": 8,
+    "weight_decay": 0.01
+  },
+  "environment": {
+    "compute_capability": [
+      7,
+      5
+    ],
+    "cuda": "12.6",
+    "gpu": "NVIDIA GeForce RTX 2070 SUPER",
+    "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.35",
+    "torch": "2.10.0+cu126",
+    "triton": "3.6.0"
+  },
+  "final": {
+    "16": {
+      "accuracy": 0.91650390625,
+      "bits_per_query": 0.4149718123777066,
+      "nats_per_query": 0.2876365417614579,
+      "queries": 2048
+    },
+    "32": {
+      "accuracy": 0.91357421875,
+      "bits_per_query": 0.4126991032986028,
+      "nats_per_query": 0.28606121987104416,
+      "queries": 2048
+    },
+    "8": {
+      "accuracy": 0.91845703125,
+      "bits_per_query": 0.41522307634338823,
+      "nats_per_query": 0.28781070467084646,
+      "queries": 2048
+    }
+  },
+  "implementation_sha256": {
+    "csrc/spin_scan.cpp": "a8f6a3d566ca21c0bb1371e787ebbda8e249db7e38747fb3d7da37516bb862e2",
+    "csrc/spin_scan_cuda.cu": "11c385e6efded6e9fa5d28c2c10a6fa73431a0ef2e4641f27aae2513d1946cc2",
+    "model.py": "e0926fe52806d36f6ba995219140f795ce7624e31ec2741a9e91c5fa481b7d0f",
+    "raw_cuda.py": "434d93b499756a66b69befcaba17fea126a7313d3fc5ccafb32ee08d156510d1",
+    "spin_delta_oracle_gate.py": "931686bfcce44cc783b9eb86375d03a830d68d64c3cef4684c48f4fa438e7765",
+    "spin_delta_perfect_control_factorial.py": "bcce35bf9170f822e6b8f0e35c7aecbf96c0bc663aa2309d9286b5df7a97f49d",
+    "spin_delta_scan.py": "09a1f20de7302243dd2e83c640ad3dc1833bd27c8daef25deba11769f1707ad1"
+  },
+  "initial": {
+    "16": {
+      "accuracy": 0.0,
+      "bits_per_query": 8.040656892629302,
+      "nats_per_query": 5.573358654975891,
+      "queries": 2048
+    },
+    "32": {
+      "accuracy": 0.0,
+      "bits_per_query": 8.033921751051874,
+      "nats_per_query": 5.568690210580826,
+      "queries": 2048
+    },
+    "8": {
+      "accuracy": 0.0,
+      "bits_per_query": 8.04509843057916,
+      "nats_per_query": 5.576437294483185,
+      "queries": 2048
+    }
+  },
+  "intervention": "exact causal controls from optimizer step one",
+  "parameters": 104438,
+  "peak_cuda_bytes": 122959872,
+  "protocol": "SPIN_DELTA_PERFECT_CONTROL_FACTORIAL_PREREGISTRATION.md",
+  "schema_version": 1,
+  "stage": "spin_delta_perfect_control_factorial",
+  "training_seconds": 27.041150947999995
+}
