@@ -73,8 +73,8 @@ remains conditional on systems evidence. Its first packed-warp speed gate
 failed at 0.7642x maintained throughput. The mathematically equivalent
 isotypic-forward rescue improved this to 0.8049x but also failed its frozen
 0.90x boundary. A guarded analytic reconstruction removes one ordinary-path
-backward replay and is frozen but not yet timed. The model remains a
-quality-positive research control. See
+backward replay, but its 0.7879x gate also failed. The model remains a
+quality-positive research control, not the default. See
 [`RETENTION_SCALED_BLOCK_RESULTS.md`](RETENTION_SCALED_BLOCK_RESULTS.md).
 
 The recurrence is not Mamba-2 under different notation. Its state transition is
