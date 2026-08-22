@@ -1,0 +1,166 @@
+{
+  "claim_scope": "matched synthetic two-key overwrite/retrieval capability; not a language-quality or general memory claim",
+  "config": {
+    "batch_size": 128,
+    "d_model": 64,
+    "evaluation_batches": 32,
+    "evaluation_writes": [
+      8,
+      16,
+      32
+    ],
+    "gradient_clip": 1.0,
+    "layers": 2,
+    "learning_rate": 0.003,
+    "seed": 419,
+    "steps": 800,
+    "training_writes": 8,
+    "weight_decay": 0.01
+  },
+  "environment": {
+    "compute_capability": [
+      7,
+      5
+    ],
+    "cuda": "12.6",
+    "gpu": "NVIDIA GeForce RTX 2070 SUPER",
+    "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.35",
+    "torch": "2.10.0+cu126",
+    "triton": "3.6.0"
+  },
+  "implementation_sha256": {
+    "csrc/spin_scan.cpp": "a8f6a3d566ca21c0bb1371e787ebbda8e249db7e38747fb3d7da37516bb862e2",
+    "csrc/spin_scan_cuda.cu": "11c385e6efded6e9fa5d28c2c10a6fa73431a0ef2e4641f27aae2513d1946cc2",
+    "model.py": "a27b0a1607887e6bcb59edb6389f361340ed44fcc4df879a54dbed0e72d6cfd1",
+    "raw_cuda.py": "434d93b499756a66b69befcaba17fea126a7313d3fc5ccafb32ee08d156510d1",
+    "spin_delta_capability_gate.py": "57ebd5f6aa93eafe363ce0e8a9abbfa89c9b1d60115f042957328295512a91f7",
+    "spin_delta_scan.py": "09a1f20de7302243dd2e83c640ad3dc1833bd27c8daef25deba11769f1707ad1"
+  },
+  "pairing": {
+    "common_parameters_bitwise_equal": true,
+    "maximum_absolute_logit_difference": 3.5762786865234375e-07,
+    "maximum_allowed_logit_difference": 2e-06
+  },
+  "protocol": "SPIN_DELTA_CAPABILITY_PREREGISTRATION.md",
+  "results": [
+    {
+      "backend": "raw_cuda_hybrid",
+      "final": {
+        "16": {
+          "accuracy": 0.876953125,
+          "bits_per_query": 0.657447941583394,
+          "nats_per_query": 0.45570818707346916,
+          "queries": 4096
+        },
+        "32": {
+          "accuracy": 0.880615234375,
+          "bits_per_query": 0.6551812586151428,
+          "nats_per_query": 0.45413704216480255,
+          "queries": 4096
+        },
+        "8": {
+          "accuracy": 0.868408203125,
+          "bits_per_query": 0.6798308346274045,
+          "nats_per_query": 0.4712228262796998,
+          "queries": 4096
+        }
+      },
+      "initial": {
+        "16": {
+          "accuracy": 0.0,
+          "bits_per_query": 8.02654494220408,
+          "nats_per_query": 5.5635769963264465,
+          "queries": 4096
+        },
+        "32": {
+          "accuracy": 0.0,
+          "bits_per_query": 8.03242014902936,
+          "nats_per_query": 5.567649379372597,
+          "queries": 4096
+        },
+        "8": {
+          "accuracy": 0.0,
+          "bits_per_query": 8.020872309443684,
+          "nats_per_query": 5.559645026922226,
+          "queries": 4096
+        }
+      },
+      "parameters": 103398,
+      "peak_cuda_bytes": 107750400,
+      "sampled_training_losses": {
+        "1": 5.560213088989258,
+        "400": 1.7061843872070312,
+        "800": 0.6881057024002075
+      },
+      "training_examples_per_second": 8154.316932675827,
+      "training_seconds": 12.557765517999997,
+      "variant": "independent_v1_2"
+    },
+    {
+      "backend": "raw_cuda_delta",
+      "final": {
+        "16": {
+          "accuracy": 0.757080078125,
+          "bits_per_query": 1.28249498593026,
+          "nats_per_query": 0.8889577835798264,
+          "queries": 4096
+        },
+        "32": {
+          "accuracy": 0.760986328125,
+          "bits_per_query": 1.2551977114792905,
+          "nats_per_query": 0.8700367547571659,
+          "queries": 4096
+        },
+        "8": {
+          "accuracy": 0.75830078125,
+          "bits_per_query": 1.266266579382315,
+          "nats_per_query": 0.8777091093361378,
+          "queries": 4096
+        }
+      },
+      "initial": {
+        "16": {
+          "accuracy": 0.0,
+          "bits_per_query": 8.026544920706248,
+          "nats_per_query": 5.563576981425285,
+          "queries": 4096
+        },
+        "32": {
+          "accuracy": 0.0,
+          "bits_per_query": 8.032420170527192,
+          "nats_per_query": 5.567649394273758,
+          "queries": 4096
+        },
+        "8": {
+          "accuracy": 0.0,
+          "bits_per_query": 8.02087241693284,
+          "nats_per_query": 5.559645101428032,
+          "queries": 4096
+        }
+      },
+      "parameters": 104438,
+      "peak_cuda_bytes": 122172416,
+      "sampled_training_losses": {
+        "1": 5.560213088989258,
+        "400": 1.1316375732421875,
+        "800": 1.0241107940673828
+      },
+      "training_examples_per_second": 5687.515760490105,
+      "training_seconds": 18.004345713000006,
+      "variant": "spin_delta"
+    }
+  ],
+  "schema_version": 1,
+  "stage": "spin_delta_overwrite_capability",
+  "task": {
+    "chance_accuracy": 0.03125,
+    "keys": 2,
+    "sequence": "[WRITE,key,value] * writes + [QUERY,key]",
+    "target": "latest value written to queried key",
+    "values": 32
+  },
+  "variant_order": [
+    "independent_v1_2",
+    "spin_delta"
+  ]
+}

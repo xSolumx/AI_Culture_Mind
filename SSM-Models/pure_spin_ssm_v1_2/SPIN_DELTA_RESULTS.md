@@ -58,3 +58,8 @@ full-gradient backend remain verified reusable components. It also does not
 falsify delta memory in other parameterizations, longer training, or tasks
 with explicit retrieval demands. Those are new hypotheses and require new
 preregistration; they cannot rescue this gate retroactively.
+
+The subsequent frozen two-key overwrite experiment is reported separately in
+`SPIN_DELTA_CAPABILITY_RESULTS.md`. One seed learned approximately 97%
+length-stable retrieval, proving empirical capability exists, but the frozen
+three-seed robustness and differential-advantage gates both failed.

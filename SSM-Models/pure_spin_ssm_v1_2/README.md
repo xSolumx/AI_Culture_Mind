@@ -114,6 +114,11 @@ It is not promoted and no speed gate is authorized. See
 The mechanism is being separated from that failed language claim in a frozen
 two-key overwrite/retrieval capability gate; see
 [`SPIN_DELTA_CAPABILITY_PREREGISTRATION.md`](SPIN_DELTA_CAPABILITY_PREREGISTRATION.md).
+That gate found one approximately 97%-accurate, length-stable Spin-Delta seed,
+but the other two seeds failed the frozen trained-length capability boundary
+and maintained v1.2 had higher mean accuracy. This establishes possible but
+non-robust capability and no differential advantage. See
+[`SPIN_DELTA_CAPABILITY_RESULTS.md`](SPIN_DELTA_CAPABILITY_RESULTS.md).
 
 The recurrence is not Mamba-2 under different notation. Its state transition is
 a selective contractive affine Spin(8) action. Local convolution and SwiGLU are
