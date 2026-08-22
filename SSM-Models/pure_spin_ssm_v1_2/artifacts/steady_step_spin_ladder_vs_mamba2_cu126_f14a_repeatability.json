@@ -1,0 +1,98 @@
+{
+  "analysis": {
+    "cycle_pair_count": 8,
+    "geometric_mean_paired_cycle_spin_over_mamba2": 0.9901643469457606,
+    "geometric_mean_run_spin_over_mamba2": 0.993519498798176,
+    "median_paired_cycle_spin_over_mamba2": 0.9960356700931339,
+    "ordering_reversed_across_repeats": true,
+    "paired_cycle_spin_over_mamba2": [
+      1.0186777630077741,
+      0.9618375892196355,
+      0.9228355336799918,
+      0.9741694280435185,
+      0.9845317547325217,
+      1.008320046105291,
+      1.0075395854537461,
+      1.0487468084371476
+    ],
+    "pooled_cycle_medians_tokens_per_second": {
+      "mamba2_fused": 71585.66165846286,
+      "pure_spin_v1_2": 71952.6210713004
+    },
+    "pooled_median_spin_over_mamba2": 1.0051261580089643,
+    "run_count": 2,
+    "run_spin_over_mamba2": [
+      0.9717103181784112,
+      1.0158181672317548
+    ],
+    "verdict": "throughput_ordering_unresolved_at_observed_repeatability"
+  },
+  "analysis_implementation_sha256": "db90f808536b6c23d05b1727d4dfb49400453acf3434aa6eb8078acf7cc1a5df",
+  "claim_scope": "repeatability analysis of compatible order-balanced fixed-batch training-step artifacts; not a convergence or superiority claim",
+  "compatibility": {
+    "config": {
+      "batch_size": 8,
+      "cycles": 4,
+      "seed": 17,
+      "sequence_length": 256,
+      "spin_backend": "raw_cuda_factorized",
+      "spin_group_schedule": [
+        3,
+        4,
+        6,
+        8
+      ],
+      "steps_per_window": 10,
+      "warmup_steps": 10,
+      "windows": 5
+    },
+    "environment": {
+      "compute_capability": [
+        7,
+        5
+      ],
+      "cuda": "12.6",
+      "gpu": "NVIDIA GeForce RTX 2070 SUPER",
+      "mamba2_fused": [
+        true,
+        "2.3.2.post1"
+      ],
+      "torch": "2.10.0+cu126",
+      "triton": "3.6.0"
+    },
+    "implementation_sha256": {
+      "benchmark.py": "367450cb10a35a05cc578f32ee6a3b85847695628488abf31ef9c28b276676e1",
+      "benchmark_steady_step.py": "3bceb0199c2d704fdeecb7ac1476435252a13f670810b0157ad9b3b3c7915c4b",
+      "csrc/spin_scan.cpp": "d29953677682cc80f39c4fe15072544023241a663cc50a3eb59abdaa02b1ea59",
+      "csrc/spin_scan_cuda.cu": "f0c80221dd992f511539b470646306711b6026cbf4a43b052ce29aa93e884679",
+      "mamba2_baseline.py": "e8c20220bad4c848adc7c795611c664bb209679a5da66102fb19d2f151686604",
+      "model.py": "dd3c4c52090e4e9676eb3edf87e5f3ac12e80bf1fc6c81232e882eae951f0005",
+      "raw_cuda.py": "12b171eba77e6960dde8f1242333a67cd559ee4a2cb46144e8508dc0c169d02e"
+    },
+    "parameter_match": {
+      "counts": {
+        "mamba2_fused": 623740,
+        "pure_spin_v1_2": 626516
+      },
+      "denominator": "larger model",
+      "relative_gap": 0.004430852524117501
+    }
+  },
+  "runs": [
+    {
+      "artifact": "artifacts/steady_step_spin_ladder_vs_mamba2_cu126_f14a.json",
+      "mamba2_tokens_per_second": 70317.7050485586,
+      "sha256": "a8a543e93d1aba7f625c26619e57c43f6aa2399e38381cd9b2488c1455adb7c2",
+      "spin_over_mamba2": 0.9717103181784112,
+      "spin_tokens_per_second": 68328.43954631055
+    },
+    {
+      "artifact": "artifacts/steady_step_spin_ladder_vs_mamba2_cu126_f14a_repeat.json",
+      "mamba2_tokens_per_second": 72479.22135500566,
+      "sha256": "e984e8351cc8a80a131f533993064573030cf2b664a567cf8dfd239219b01b87",
+      "spin_over_mamba2": 1.0158181672317548,
+      "spin_tokens_per_second": 73625.70979922652
+    }
+  ],
+  "schema_version": 1
+}

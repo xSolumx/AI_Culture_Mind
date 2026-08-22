@@ -41,12 +41,18 @@ in 8.40 seconds. A separate FP16 matrix-load smoke test passed; while sampled,
 the GPU reported P0, 54 degrees Celsius, and PCIe Gen3 x16. These readings show
 functional load behavior, not a stable performance comparison.
 
-## Claim boundary and next gate
+## Claim boundary and completed benchmark gates
 
 Historical cu126 and cu130 benchmark artifacts keep their original firmware,
 environment, and timing provenance. F14a readiness does not retroactively alter
-them. Any new speed statement requires the order-balanced matched benchmark to
-be rerun with clocks, temperature, power, parameter counts, and model quality
-recorded together. Until then, the last promoted quality conclusion remains:
-Mamba-2 won the 300-step Shakespeare quality comparison, while cu126
-order-balanced steady-step throughput was effectively tied.
+them.
+
+The next gates were subsequently run under the accepted environment. Two
+identical order-balanced steady-step repeats reversed the speed ordering, so
+the exact repeat analysis promotes no throughput winner. Three matched
+300-step Tiny Shakespeare seeds all favored fused Mamba-2, with mean validation
+2.4942 versus 2.7477 bits/byte. Exact artifacts, source hashes, compatibility
+checks, and the claim boundary are documented in
+[`FRONTIER_TRAINING_RESULTS.md`](FRONTIER_TRAINING_RESULTS.md). The resulting
+research frontier is controller/readout quality under the same matched budget,
+not another isolated scan-kernel speed claim.

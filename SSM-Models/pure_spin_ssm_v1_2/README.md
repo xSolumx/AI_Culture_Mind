@@ -96,10 +96,12 @@ the task-specific `PURE_SPIN_V12_*` variables documented in that script.
   performance result, and pretrained-system losses are not comparable to this
   small from-scratch byte-LM loss.
 
-The current seed-17, 300-step Tiny Shakespeare artifact does not show a v1.2
-quality win: official fused Mamba-2 reaches 2.4606 versus 2.7263 bits/byte and
-uses less peak CUDA memory. Order-balanced cu126 timing is effectively tied
-(Spin +0.51%), while sequential timers reverse ordering across repeats. See
+The current three-seed, 300-step Tiny Shakespeare result does not show a v1.2
+quality win: official fused Mamba-2 wins all three seeds and averages 2.4942
+versus 2.7477 bits/byte, while using 22% less peak allocated CUDA memory.
+Post-F14a order-balanced cu126 timing reverses ordering across identical
+repeats (Mamba +2.91%, then Spin +1.58%); the compatibility-checked verdict is
+that throughput ordering is unresolved at observed repeatability. See
 [`FRONTIER_TRAINING_RESULTS.md`](FRONTIER_TRAINING_RESULTS.md) for the complete
 scope and provenance.
 
@@ -137,10 +139,11 @@ triality state. Spin(9)'s coupled repeated-`V5` block motivates Schur-legal
 multiplicity mixing only where equivalent copies are present. Neither result
 is converted into an untested language-model claim.
 
-The original three-seed natural-data result is retained as historical evidence
+The original three-seed WikiText result is retained as historical evidence
 in [`NATURAL_DATA_RESULTS.md`](NATURAL_DATA_RESULTS.md). The pre-reconstruction
 frontier backend cut the mean Mamba-2 throughput lead from 4.87x to 1.091x.
-The current order-balanced steady-step test still has Mamba-2 ahead by 1.075x,
-and Mamba-2 retains the established quality and peak-memory advantages. Pure
-Spin's smaller streaming state remains a design advantage; a complete
-incremental convolution wrapper is still open.
+That historical timing is not the current result: the post-F14a steady-step
+repeats are unresolved, while the current three-seed Shakespeare quality and
+peak-memory advantages belong to Mamba-2. Pure Spin's smaller streaming state
+remains a design advantage; a complete incremental convolution wrapper is
+still open.

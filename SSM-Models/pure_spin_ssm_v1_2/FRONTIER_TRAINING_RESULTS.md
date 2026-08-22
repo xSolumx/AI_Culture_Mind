@@ -132,6 +132,40 @@ does establish cu126 as the better local runtime. Exact artifacts are
 and
 [`artifacts/steady_step_spin_ladder_vs_mamba2_cu130_current.json`](artifacts/steady_step_spin_ladder_vs_mamba2_cu130_current.json).
 
+### Post-F14a repeatability gate
+
+The same cu126 order-balanced protocol was rerun twice after the accepted F14a
+firmware, Secure Boot, and DDR4-3200 validation. The ordering reversed:
+
+| repeat | Spin median | Mamba-2 median | Spin / Mamba |
+|---|---:|---:|---:|
+| F14a run 1 | 68,328 | **70,318** | 0.9717x |
+| F14a run 2 | **73,626** | 72,479 | 1.0158x |
+
+Across runs, the geometric-mean Spin/Mamba ratio is 0.9935x. Across the eight
+paired execution cycles, ratios range from 0.9228x to 1.0487x, with median
+0.9960x. Pooling model cycle medians yields a different small ordering
+(1.0051x), demonstrating that sub-percent point estimates are not resolved by
+this protocol. The promoted verdict is therefore **throughput ordering
+unresolved at observed repeatability**. Neither run is selected as the speed
+claim.
+
+Bracketing telemetry also differed: run 1 moved from 56 to 60 degrees Celsius,
+P0, and 52.67 to 77.42 W; run 2 moved from 53 degrees Celsius/P3/40.90 W to 58
+degrees Celsius/P0/77.06 W. Both ended at 1,980 MHz core, 7,300 MHz memory, and
+PCIe Gen3 x16. These are pre/post samples rather than per-window traces, so they
+support the unresolved verdict but cannot apportion the cycle variance.
+
+The compatibility-checking analysis and exact inputs are:
+
+- [`artifacts/steady_step_spin_ladder_vs_mamba2_cu126_f14a_repeatability.json`](artifacts/steady_step_spin_ladder_vs_mamba2_cu126_f14a_repeatability.json)
+- [`artifacts/steady_step_spin_ladder_vs_mamba2_cu126_f14a.json`](artifacts/steady_step_spin_ladder_vs_mamba2_cu126_f14a.json)
+- [`artifacts/steady_step_spin_ladder_vs_mamba2_cu126_f14a_repeat.json`](artifacts/steady_step_spin_ladder_vs_mamba2_cu126_f14a_repeat.json)
+
+This closes the current low-level speed gate as a tie at the resolution of the
+local measurement. Architectural quality, not another scan-only timing, is the
+next model frontier.
+
 ## Current Tiny Shakespeare result
 
 The first complete post-migration run used seed 17, 300 optimizer steps, batch
@@ -154,6 +188,33 @@ present v1.2 wins matched Shakespeare quality. The cu126 artifacts are
 [`artifacts/shakespeare_byte_spin_ladder_vs_mamba2_seed17_300_wsl_cu126.json`](artifacts/shakespeare_byte_spin_ladder_vs_mamba2_seed17_300_wsl_cu126.json)
 and
 [`artifacts/shakespeare_byte_spin_ladder_vs_mamba2_seed17_300_wsl_cu126_repeat.json`](artifacts/shakespeare_byte_spin_ladder_vs_mamba2_seed17_300_wsl_cu126_repeat.json).
+
+### Post-F14a three-seed quality gate
+
+The accepted environment was then run at seeds 17, 29, and 43 with identical
+data, 300-step budget, optimizer, model construction, and 0.443% parameter gap.
+Sequential training timers are deliberately excluded from this summary; speed
+belongs to the order-balanced gate above.
+
+| seed | Pure Spin bpb | fused Mamba-2 bpb | Spin minus Mamba |
+|---:|---:|---:|---:|
+| 17 | 2.7263 | **2.4606** | +0.2657 |
+| 29 | 2.7433 | **2.5023** | +0.2410 |
+| 43 | 2.7736 | **2.5196** | +0.2539 |
+| mean | 2.7477 | **2.4942** | +0.2535 |
+
+Mamba-2 wins all three recorded seeds. Sample standard deviations are 0.0239
+bpb for Pure Spin and 0.0304 bpb for Mamba-2; the seedwise deficit remains
+positive throughout. Peak allocated CUDA memory is also unchanged at
+151,556,608 bytes for Pure Spin versus 117,968,896 for Mamba-2. This is a
+matched small-model, short-budget empirical result, not a general theorem, but
+it robustly closes the present v1.2 quality claim in Mamba-2's favor.
+
+The provenance-checked summary is
+[`artifacts/shakespeare_byte_spin_ladder_vs_mamba2_3seed_wsl_cu126_f14a_summary.json`](artifacts/shakespeare_byte_spin_ladder_vs_mamba2_3seed_wsl_cu126_f14a_summary.json),
+with each source artifact and SHA-256 embedded. The result identifies the next
+research target sharply: improve the selective controller/readout or state
+allocation while preserving the exact bounded Spin action and matched budget.
 
 ## Channel-mixer falsification
 
@@ -182,6 +243,15 @@ python benchmark.py --dataset tiny_shakespeare --offline \
 python benchmark_steady_step.py \
   --cycles 4 --windows 5 --steps-per-window 10 --warmup-steps 10 \
   --output artifacts/steady_step_spin_ladder_guarded_reconstruct_vs_mamba2_wsl.json
+
+python analyze_steady_step_repeats.py \
+  artifacts/steady_step_spin_ladder_vs_mamba2_cu126_f14a.json \
+  artifacts/steady_step_spin_ladder_vs_mamba2_cu126_f14a_repeat.json \
+  --output artifacts/steady_step_spin_ladder_vs_mamba2_cu126_f14a_repeatability.json
+
+python summarize_matched_runs.py \
+  artifacts/shakespeare_byte_spin_ladder_vs_mamba2_seed{17,29,43}_300_wsl_cu126_f14a.json \
+  --output artifacts/shakespeare_byte_spin_ladder_vs_mamba2_3seed_wsl_cu126_f14a_summary.json
 ```
 
 To replay the historical dataset, request
