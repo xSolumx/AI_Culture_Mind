@@ -90,3 +90,13 @@ left map may be singular. Here the left map has the stronger form
 `diag(scale) @ Q`; a guarded analytic `2x2` inverse can take the ordinary path
 and retain exact replay only near singularity. That is the next bounded
 compiler optimization, not evidence for default promotion.
+
+## Guarded-reconstruction rescue: frozen
+
+The next CUDA schedule uses an analytic inverse of the structured `2x2` left
+map on the ordinary positive-retention path and retains replay behind a
+`abs(det(L)) <= 1e-7` guard. Seven targeted CUDA tests pass, including a
+rank-deficient-left fallback case. Its fresh seed-257 timing protocol is frozen
+in
+[`RETENTION_SCALED_BLOCK_GUARDED_RECONSTRUCTION_PREREGISTRATION.md`](RETENTION_SCALED_BLOCK_GUARDED_RECONSTRUCTION_PREREGISTRATION.md).
+No timing result is claimed yet.
