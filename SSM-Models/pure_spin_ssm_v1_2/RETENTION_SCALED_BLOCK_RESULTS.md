@@ -23,27 +23,49 @@ supports the retention-scaled coupling rule over maintained v1.2; it does not
 establish superiority over Mamba-2 or a general theorem about continuous-time
 discretization.
 
-## Frozen speed protocol
+## First systems gate: failed
 
-Before timing, the conditional systems campaign is fixed as follows:
+The prospectively frozen packed-warp kernel reached 64,101 tok/s versus 83,881
+tok/s for maintained v1.2, or a throughput ratio of 0.7642. Its 23.58%
+regression failed the maximum 10% allowance, so no confirmatory repeat was run
+and the model was not promoted.
+
+The order-balanced four-cycle result is recorded in
+[`artifacts/retention_scaled_block_speed.json`](artifacts/retention_scaled_block_speed.json).
+It identifies a scheduling bottleneck: the candidate exposes only one
+sequential scan warp per batch item, while maintained v1.2 splits its forward
+work across channel and triality blocks.
+
+## Frozen kernel-rescue protocol
+
+The transition is block diagonal across `8v`, `8+`, and `8-`. An
+isotypic-split forward therefore launches three independent representation
+warps per batch item while retaining both coupled multiplicity copies in each
+warp. This changes scheduling, not recurrence values, and retains the existing
+packed backward. Six targeted semantic and full-gradient CUDA tests pass.
+
+Before timing this rescue, the conditional systems campaign is fixed as
+follows:
 
 - RTX 2070 SUPER, maintained WSL PyTorch 2.10/cu126 runtime;
 - batch 8 and sequence length 256;
 - complete forward, backward, gradient clipping, and AdamW update;
-- fixed seed 239 and fixed synthetic token/target tensors per model;
+- fresh seed 241 and fixed synthetic token/target tensors per model;
 - 10 untimed warmup steps;
 - five CUDA-event windows of 10 steps per model per cycle;
 - four cycles with alternating model order;
 - aggregate by the median of each cycle median;
 - pass only if candidate throughput is at least 90% of maintained throughput.
 
-The protocol compares `raw_cuda_hybrid` maintained v1.2 with
-`raw_cuda_block` retention-scaled coupling. Data loading, copies, and validation
-are excluded. A pass would still require a confirmatory repeat before default
-promotion. A failure retains the model as a quality-positive research control
-and makes block-kernel optimization the next systems frontier.
+The protocol compares `raw_cuda_hybrid` maintained v1.2 with the isotypic
+forward / packed backward `raw_cuda_block` retention-scaled coupling. Data
+loading, copies, and validation are excluded. A pass still requires one fresh
+seed-251 confirmatory repeat before default promotion. A failure retains the
+model as a quality-positive research control.
 
 The quality decision is
 [`artifacts/retention_scaled_block_quality_summary.json`](artifacts/retention_scaled_block_quality_summary.json).
 The prospective mechanism is documented in
 [`RETENTION_SCALED_BLOCK_PREREGISTRATION.md`](RETENTION_SCALED_BLOCK_PREREGISTRATION.md).
+The compiler-only rescue is frozen separately in
+[`RETENTION_SCALED_BLOCK_KERNEL_PREREGISTRATION.md`](RETENTION_SCALED_BLOCK_KERNEL_PREREGISTRATION.md).

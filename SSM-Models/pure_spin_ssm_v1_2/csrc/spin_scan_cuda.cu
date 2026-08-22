@@ -786,6 +786,63 @@ __global__ void independent_block_forward_kernel(
   }
 }
 
+// Occupancy-oriented lowering of the same recurrence.  Triality makes the
+// representation index block diagonal, so each warp can own one 8-dimensional
+// representation while retaining both coupled multiplicity copies.  This is
+// exactly the same map as independent_block_forward_kernel; only scheduling
+// and the lane placement of the representation coordinates differ.
+__global__ void independent_block_isotypic_forward_kernel(
+    const float* coordinates, const float* generators, const float* left,
+    const float* drive, const float* initial, float* output, int length,
+    int factors) {
+  const int lane = threadIdx.x;
+  const int representation = blockIdx.x % 3;
+  const int batch = blockIdx.x / 3;
+  const bool active = lane < 8;
+  const int row = active ? lane : 0;
+  const int initial_base = batch * 48;
+  const int representation_offset = representation * 8;
+  float state0 = active
+      ? initial[initial_base + representation_offset + lane]
+      : 0.0f;
+  float state1 = active
+      ? initial[initial_base + 24 + representation_offset + lane]
+      : 0.0f;
+
+  for (int position = 0; position < length; ++position) {
+    const int step = batch * length + position;
+    const int coordinate_base0 = step * 2 * factors;
+    const int coordinate_base1 = coordinate_base0 + factors;
+#pragma unroll 4
+    for (int coordinate = 0; coordinate < factors; ++coordinate) {
+      const float next0 = isotypic_apply_factor(generators, representation,
+          coordinate, row, state0,
+          coordinates[coordinate_base0 + coordinate], factors);
+      const float next1 = isotypic_apply_factor(generators, representation,
+          coordinate, row, state1,
+          coordinates[coordinate_base1 + coordinate], factors);
+      if (active) {
+        state0 = next0;
+        state1 = next1;
+      }
+      __syncwarp();
+    }
+    if (active) {
+      const int left_base = step * 4;
+      const int output_base = step * 48 + representation_offset + lane;
+      const float rotated0 = state0;
+      const float rotated1 = state1;
+      state0 = left[left_base] * rotated0 + left[left_base + 1] * rotated1 +
+          drive[output_base];
+      state1 = left[left_base + 2] * rotated0 + left[left_base + 3] * rotated1 +
+          drive[output_base + 24];
+      output[output_base] = state0;
+      output[output_base + 24] = state1;
+    }
+    __syncwarp();
+  }
+}
+
 __global__ void independent_block_backward_kernel(
     const float* coordinates, const float* generators, const float* left,
     const float* drive, const float* initial, const float* output,
@@ -1256,6 +1313,23 @@ torch::Tensor independent_block_forward_cuda(
   auto output = torch::empty_like(drive);
   const c10::cuda::CUDAGuard guard(coordinates.device());
   independent_block_forward_kernel<<<batch, 32, 0,
+      at::cuda::getCurrentCUDAStream()>>>(
+      coordinates.data_ptr<float>(), generators.data_ptr<float>(),
+      left.data_ptr<float>(), drive.data_ptr<float>(), initial.data_ptr<float>(),
+      output.data_ptr<float>(), length, factors);
+  C10_CUDA_KERNEL_LAUNCH_CHECK();
+  return output;
+}
+
+torch::Tensor independent_block_isotypic_forward_cuda(
+    torch::Tensor coordinates, torch::Tensor generators, torch::Tensor left,
+    torch::Tensor drive, torch::Tensor initial) {
+  check_independent_block_inputs(coordinates, generators, left, drive, initial);
+  const int batch = coordinates.size(0), length = coordinates.size(1);
+  const int factors = coordinates.size(3);
+  auto output = torch::empty_like(drive);
+  const c10::cuda::CUDAGuard guard(coordinates.device());
+  independent_block_isotypic_forward_kernel<<<batch * 3, 32, 0,
       at::cuda::getCurrentCUDAStream()>>>(
       coordinates.data_ptr<float>(), generators.data_ptr<float>(),
       left.data_ptr<float>(), drive.data_ptr<float>(), initial.data_ptr<float>(),

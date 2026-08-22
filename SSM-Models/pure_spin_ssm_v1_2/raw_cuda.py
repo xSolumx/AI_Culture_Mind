@@ -268,7 +268,11 @@ class _RawCudaIndependentBlockFactorized(torch.autograd.Function):
         if any(tensor.dtype != torch.float32 for tensor in tensors):
             raise ValueError("raw independent-block backend requires float32 tensors")
         contiguous = tuple(tensor.contiguous() for tensor in tensors)
-        output = extension().independent_block_forward(*contiguous)
+        # The recurrence is block diagonal across 8v, 8+, and 8-, even though
+        # its two multiplicity copies are coupled.  Scheduling one warp per
+        # representation exposes three times as many forward warps while the
+        # packed backward retains its reduction-free coordinate gradients.
+        output = extension().independent_block_isotypic_forward(*contiguous)
         ctx.save_for_backward(*contiguous, output)
         return output
 
