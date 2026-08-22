@@ -70,3 +70,9 @@ Further tuning of this same two-head/two-slot construction would be post-hoc.
 Any follow-on must pose a new hypothesis—for example supplied orthogonal
 addresses versus learned addresses—and use new seeds. The verified compiler
 remains reusable independently of the closed model claim.
+
+The prospectively frozen oracle intervention subsequently localized the
+failure. Supplying causal write/query events and exact binary slots raised mean
+accuracy to 99.55--99.58% across all lengths and passed every seed. See
+`SPIN_DELTA_ORACLE_ADDRESS_RESULTS.md`. This proves recurrence capacity on the
+named task, while leaving autonomous address inference open.

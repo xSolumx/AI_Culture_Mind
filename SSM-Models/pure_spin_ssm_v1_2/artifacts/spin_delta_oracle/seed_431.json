@@ -1,0 +1,174 @@
+{
+  "claim_scope": "causal oracle-address intervention on the frozen two-key overwrite task; not a language-quality or autonomous-addressing claim",
+  "config": {
+    "batch_size": 128,
+    "d_model": 64,
+    "evaluation_batches": 32,
+    "evaluation_writes": [
+      8,
+      16,
+      32
+    ],
+    "gradient_clip": 1.0,
+    "layers": 2,
+    "learning_rate": 0.003,
+    "seed": 431,
+    "steps": 800,
+    "training_writes": 8,
+    "weight_decay": 0.01
+  },
+  "environment": {
+    "compute_capability": [
+      7,
+      5
+    ],
+    "cuda": "12.6",
+    "gpu": "NVIDIA GeForce RTX 2070 SUPER",
+    "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.35",
+    "torch": "2.10.0+cu126",
+    "triton": "3.6.0"
+  },
+  "implementation_sha256": {
+    "csrc/spin_scan.cpp": "a8f6a3d566ca21c0bb1371e787ebbda8e249db7e38747fb3d7da37516bb862e2",
+    "csrc/spin_scan_cuda.cu": "11c385e6efded6e9fa5d28c2c10a6fa73431a0ef2e4641f27aae2513d1946cc2",
+    "model.py": "080153ed71c4a8b6727e9709195a642a363de5d4083b138629c0cd91555bb686",
+    "raw_cuda.py": "434d93b499756a66b69befcaba17fea126a7313d3fc5ccafb32ee08d156510d1",
+    "spin_delta_capability_gate.py": "694c039ee9db14866a1a98b6ebb9213308be962a187b8bc4d2acb17f7ac2c6b2",
+    "spin_delta_oracle_gate.py": "931686bfcce44cc783b9eb86375d03a830d68d64c3cef4684c48f4fa438e7765",
+    "spin_delta_scan.py": "09a1f20de7302243dd2e83c640ad3dc1833bd27c8daef25deba11769f1707ad1"
+  },
+  "intervention": {
+    "erase_strength": 1.0,
+    "query_slot": "supplied only at final query key",
+    "unchanged": [
+      "model parameters",
+      "Spin transport",
+      "two-slot state",
+      "raw CUDA recurrence",
+      "optimizer",
+      "training and evaluation batches"
+    ],
+    "write_and_erase_slot": "supplied binary semantic key",
+    "write_timing": "value-token positions only"
+  },
+  "pairing": {
+    "all_parameters_bitwise_equal": true,
+    "initial_logit_equality_required": false,
+    "reason": "the supplied causal address tensor is the intervention"
+  },
+  "protocol": "SPIN_DELTA_ORACLE_ADDRESS_PREREGISTRATION.md",
+  "results": [
+    {
+      "final": {
+        "16": {
+          "accuracy": 0.795166015625,
+          "bits_per_query": 0.9535726089657324,
+          "nats_per_query": 0.6609661653637886,
+          "queries": 4096
+        },
+        "32": {
+          "accuracy": 0.776611328125,
+          "bits_per_query": 0.9778270427451067,
+          "nats_per_query": 0.6777780577540398,
+          "queries": 4096
+        },
+        "8": {
+          "accuracy": 0.788330078125,
+          "bits_per_query": 0.9726932773127552,
+          "nats_per_query": 0.6742196027189493,
+          "queries": 4096
+        }
+      },
+      "initial": {
+        "16": {
+          "accuracy": 0.0,
+          "bits_per_query": 8.05168990214962,
+          "nats_per_query": 5.581006154417992,
+          "queries": 4096
+        },
+        "32": {
+          "accuracy": 0.0,
+          "bits_per_query": 8.056020403800515,
+          "nats_per_query": 5.584007829427719,
+          "queries": 4096
+        },
+        "8": {
+          "accuracy": 0.0,
+          "bits_per_query": 8.038898907470013,
+          "nats_per_query": 5.572140112519264,
+          "queries": 4096
+        }
+      },
+      "oracle_intervention": false,
+      "parameters": 104438,
+      "peak_cuda_bytes": 131335168,
+      "sampled_training_losses": {
+        "1": 5.574851989746094,
+        "400": 1.8084986209869385,
+        "800": 0.8916311264038086
+      },
+      "training_examples_per_second": 5637.515950529702,
+      "training_seconds": 18.164028430000002,
+      "variant": "learned_addresses"
+    },
+    {
+      "final": {
+        "16": {
+          "accuracy": 0.999755859375,
+          "bits_per_query": 0.0014822872549928258,
+          "nats_per_query": 0.0010274432315782178,
+          "queries": 4096
+        },
+        "32": {
+          "accuracy": 1.0,
+          "bits_per_query": 0.001176580372549533,
+          "nats_per_query": 0.0008155433679348789,
+          "queries": 4096
+        },
+        "8": {
+          "accuracy": 1.0,
+          "bits_per_query": 0.001177305803642499,
+          "nats_per_query": 0.0008160461984516587,
+          "queries": 4096
+        }
+      },
+      "initial": {
+        "16": {
+          "accuracy": 0.0,
+          "bits_per_query": 8.051023791844997,
+          "nats_per_query": 5.5805444419384,
+          "queries": 4096
+        },
+        "32": {
+          "accuracy": 0.0,
+          "bits_per_query": 8.058043306735627,
+          "nats_per_query": 5.585409998893738,
+          "queries": 4096
+        },
+        "8": {
+          "accuracy": 0.0,
+          "bits_per_query": 8.051125691565634,
+          "nats_per_query": 5.580615073442459,
+          "queries": 4096
+        }
+      },
+      "oracle_intervention": true,
+      "parameters": 104438,
+      "peak_cuda_bytes": 131561472,
+      "sampled_training_losses": {
+        "1": 5.576818943023682,
+        "400": 0.1718979775905609,
+        "800": 0.0007729302160441875
+      },
+      "training_examples_per_second": 5367.024060394335,
+      "training_seconds": 19.079474742000002,
+      "variant": "oracle_addresses"
+    }
+  ],
+  "schema_version": 1,
+  "stage": "spin_delta_oracle_address_intervention",
+  "variant_order": [
+    "learned_addresses",
+    "oracle_addresses"
+  ]
+}

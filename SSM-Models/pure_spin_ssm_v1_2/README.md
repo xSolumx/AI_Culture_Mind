@@ -122,6 +122,11 @@ non-robust capability and no differential advantage. See
 The next causal control supplies only exact write/query slot identities while
 leaving the Spin-Delta model and CUDA recurrence unchanged; its frozen protocol
 is [`SPIN_DELTA_ORACLE_ADDRESS_PREREGISTRATION.md`](SPIN_DELTA_ORACLE_ADDRESS_PREREGISTRATION.md).
+That intervention passed every frozen gate: oracle addressing reached
+99.3--100% in all seeds and lengths and rescued 16-write accuracy by 13.55
+points on average. The recurrence has sufficient overwrite capacity; the
+autonomous failure lies in causal write/query event and slot inference. See
+[`SPIN_DELTA_ORACLE_ADDRESS_RESULTS.md`](SPIN_DELTA_ORACLE_ADDRESS_RESULTS.md).
 
 The recurrence is not Mamba-2 under different notation. Its state transition is
 a selective contractive affine Spin(8) action. Local convolution and SwiGLU are
