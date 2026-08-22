@@ -9,6 +9,7 @@ from dataclasses import asdict, replace
 from pathlib import Path
 
 import torch
+
 from benchmark import (
     BenchmarkConfig,
     build_model,
@@ -86,6 +87,13 @@ def variants(stage: str, base: BenchmarkConfig) -> tuple[tuple[str, BenchmarkCon
                 replace(independent, spin_retention_mode="isotypic_spectrum"),
             ),
         )
+    if stage == "spin_delta":
+        spin_delta = replace(
+            independent,
+            spin_backend="raw_cuda_delta",
+            spin_recurrence="spin_delta",
+        )
+        return (("independent_v1_2", independent), ("spin_delta", spin_delta))
     return (("independent_v1_2", independent), ("shared_identity", shared))
 
 
@@ -101,6 +109,7 @@ def main() -> int:
             "retention_block",
             "isotypic_retention",
             "isotypic_spectrum",
+            "spin_delta",
         ],
         required=True,
     )
@@ -160,9 +169,16 @@ def main() -> int:
     maximum_initial_logit_difference = float(
         (pairing_logits[0] - pairing_logits[1]).abs().max()
     )
-    if not common_parameters_bitwise_equal or maximum_initial_logit_difference != 0.0:
+    maximum_allowed_initial_logit_difference = (
+        1.0e-6 if args.stage == "spin_delta" else 0.0
+    )
+    if (
+        not common_parameters_bitwise_equal
+        or maximum_initial_logit_difference
+        > maximum_allowed_initial_logit_difference
+    ):
         raise RuntimeError(
-            "paired variants must have bitwise-equal common parameters and logits"
+            "paired variants violate the frozen parameter/logit pairing bound"
         )
     del pairing_logits, pairing_models
     torch.cuda.empty_cache()
@@ -188,6 +204,7 @@ def main() -> int:
         ROOT / "model.py",
         ROOT / "chunk_parallel_scan.py",
         ROOT / "coupled_isotypic_scan.py",
+        ROOT / "spin_delta_scan.py",
         ROOT / "raw_cuda.py",
         ROOT / "csrc" / "spin_scan.cpp",
         ROOT / "csrc" / "spin_scan_cuda.cu",
@@ -206,6 +223,9 @@ def main() -> int:
         "initial_pairing": {
             "common_parameters_bitwise_equal": common_parameters_bitwise_equal,
             "maximum_absolute_logit_difference": maximum_initial_logit_difference,
+            "maximum_allowed_logit_difference": (
+                maximum_allowed_initial_logit_difference
+            ),
         },
         "dataset": {
             "name": "tiny_shakespeare",

@@ -399,9 +399,14 @@ class PureSpinV12Block(nn.Module):
         value, gate = self.input_projection(self.norm(hidden)).chunk(2, dim=-1)
         value = F.silu(self.local_conv(value))
         if self.recurrence_mode == "spin_delta":
-            if scan_mode not in {"delta_recurrent", "delta_parallel"}:
+            if scan_mode not in {
+                "delta_recurrent",
+                "delta_parallel",
+                "raw_cuda_delta",
+            }:
                 raise ValueError(
-                    "spin_delta requires delta_recurrent or delta_parallel"
+                    "spin_delta requires delta_recurrent, delta_parallel, "
+                    "or raw_cuda_delta"
                 )
             from chunk_parallel_scan import factorized_triality_actions
             from spin_delta_scan import (
@@ -424,9 +429,6 @@ class PureSpinV12Block(nn.Module):
                 value.shape[0], value.shape[1], self.spin.channels, factor_count
             )
             coordinates = coordinates * coordinate_gate[..., None, None]
-            actions = factorized_triality_actions(
-                coordinates, self.subgroup_generators.to(value)
-            )
             assert self.delta_write_controller is not None
             assert self.delta_erase_controller is not None
             assert self.delta_erase_strength_controller is not None
@@ -452,17 +454,33 @@ class PureSpinV12Block(nn.Module):
             query = torch.stack(
                 (1.0 + query_delta, 1.0 - query_delta), dim=-1
             )
-            transition = SpinDeltaTransition(
-                left=contractive_delta_left(scale, erase_key, erase_strength),
-                action=actions,
-                drive=route_delta_drive(write_key, drive),
-            )
-            scanner = (
-                parallel_spin_delta_scan
-                if scan_mode == "delta_parallel"
-                else recurrent_spin_delta_scan
-            )
-            raw_slot_states, final_state = scanner(transition, state)
+            delta_left = contractive_delta_left(scale, erase_key, erase_strength)
+            delta_drive = route_delta_drive(write_key, drive)
+            if scan_mode == "raw_cuda_delta":
+                from raw_cuda import raw_cuda_spin_delta_scan
+
+                raw_slot_states = raw_cuda_spin_delta_scan(
+                    coordinates,
+                    self.subgroup_generators.to(value),
+                    delta_left,
+                    delta_drive,
+                    state,
+                )
+                final_state = raw_slot_states[:, -1]
+            else:
+                transition = SpinDeltaTransition(
+                    left=delta_left,
+                    action=factorized_triality_actions(
+                        coordinates, self.subgroup_generators.to(value)
+                    ),
+                    drive=delta_drive,
+                )
+                scanner = (
+                    parallel_spin_delta_scan
+                    if scan_mode == "delta_parallel"
+                    else recurrent_spin_delta_scan
+                )
+                raw_slot_states, final_state = scanner(transition, state)
             raw_states = read_delta_state(raw_slot_states, query)
             states = self.spin.triality_readout(raw_states)
         elif self.recurrence_mode == "independent_block":

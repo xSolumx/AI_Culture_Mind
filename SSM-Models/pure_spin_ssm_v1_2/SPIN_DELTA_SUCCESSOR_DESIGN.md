@@ -158,12 +158,22 @@ the language-model wrapper:
   embedding, full-model output/gradient parity, causal masking behavior, and a
   384-token finite-state falsifier.
 
-The raw-CUDA lowering and frozen Shakespeare quality gate remain open. Until
-both close, Spin-Delta is an implemented experimental recurrence, not v1.2_x
-and not a claimed improvement.
+The raw-CUDA lowering is now closed. The compiler flattens the independent
+`(batch, transport_head)` grid onto the existing two-copy coupled-isotypic
+kernel. Each launch unit therefore sees one head's two slots and one shared
+head action; no action or gradient is shared between heads. This reuses the
+audited singular-safe forward/backward instead of cloning CUDA code.
 
-On the pinned WSL Python 3.10 / Torch 2.10.0+cu126 environment, the complete
-v1.2 suite passes `80 passed`. A deliberately non-evidentiary two-update
+Semantic output, state, and full-gradient parity pass at factor counts
+3/6/15/28, and full language-model gradient parity passes for Spin(3), Spin(4),
+Spin(6), and Spin(8) layers. The complete WSL/cu126 suite now passes 90 tests.
+The frozen Shakespeare gate is specified in
+`SPIN_DELTA_PREREGISTRATION.md`. Until that quality gate closes, Spin-Delta is
+an implemented experimental recurrence, not v1.2_x and not a claimed
+improvement.
+
+On the pinned WSL Python 3.10 / Torch 2.10.0+cu126 environment, a deliberately
+non-evidentiary two-update
 Tiny Shakespeare smoke (`B=1`, `L=32`, `d_model=16`, one Spin(3) layer) also
 completed forward, backward, optimizer update, validation, and JSON provenance
 on the RTX 2070 SUPER. Its loss and throughput are commissioning diagnostics,

@@ -102,7 +102,11 @@ semantic compiler and model path are now implemented with
 addressable triality slots, with a contractive rank-one erase, routed write,
 and bounded read probe. Sequential/parallel output and gradient parity,
 baseline embedding, and long-sequence finiteness are tested. It has no quality
-or speed promotion yet; raw CUDA and the frozen Shakespeare gate remain open.
+or speed promotion yet. Its full-training raw-CUDA lowering reuses the audited
+two-copy kernel over a flattened `(batch, transport_head)` grid and passes
+semantic plus full-model gradient parity across the Spin(3/4/6/8) ladder. The
+frozen natural-data decision is specified in
+[`SPIN_DELTA_PREREGISTRATION.md`](SPIN_DELTA_PREREGISTRATION.md).
 
 The recurrence is not Mamba-2 under different notation. Its state transition is
 a selective contractive affine Spin(8) action. Local convolution and SwiGLU are

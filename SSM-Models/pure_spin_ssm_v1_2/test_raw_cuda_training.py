@@ -14,6 +14,10 @@ ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT.parent))
 
+from pure_spin8_ssm.factorized_scan import triton_controller_factorized_scan
+from pure_spin8_ssm.torch_backend import Spin8AffineTransition, recurrent_spin8_scan
+from spin8_triality import torch_triality_generators
+
 from chunk_parallel_scan import factorized_triality_actions
 from coupled_isotypic_scan import (
     CoupledIsotypicTransition,
@@ -21,8 +25,6 @@ from coupled_isotypic_scan import (
 )
 from independent_block_scan import recurrent_independent_block_scan
 from model import PureSpinSSMV12, PureSpinV12Config
-from pure_spin8_ssm.factorized_scan import triton_controller_factorized_scan
-from pure_spin8_ssm.torch_backend import Spin8AffineTransition, recurrent_spin8_scan
 from raw_cuda import (
     raw_cuda_controller_factorized_scan,
     raw_cuda_coordinate_factorized_scan,
@@ -30,8 +32,9 @@ from raw_cuda import (
     raw_cuda_hybrid_coordinate_scan,
     raw_cuda_independent_block_scan,
     raw_cuda_isotypic_coordinate_scan,
+    raw_cuda_spin_delta_scan,
 )
-from spin8_triality import torch_triality_generators
+from spin_delta_scan import SpinDeltaTransition, recurrent_spin_delta_scan
 
 
 def controller_inputs() -> tuple[torch.Tensor, ...]:
@@ -78,6 +81,24 @@ def independent_block_inputs(factor_count: int = 6) -> tuple[torch.Tensor, ...]:
     return independent_coordinates, generators, left, drive, initial
 
 
+def spin_delta_inputs(factor_count: int = 6) -> tuple[torch.Tensor, ...]:
+    torch.manual_seed(20_260_842 + factor_count)
+    batch, length, heads = 2, 5, 2
+    coordinates = 0.03 * torch.randn(
+        batch, length, heads, factor_count, device="cuda"
+    )
+    generators = torch_triality_generators(device="cuda")[:, :factor_count]
+    raw_left = 0.08 * torch.randn(
+        batch, length, heads, 2, 2, device="cuda"
+    )
+    left = 0.8 * torch.eye(2, device="cuda") + raw_left
+    drive = 0.01 * torch.randn(
+        batch, length, heads, 2, 3, 8, device="cuda"
+    )
+    initial = torch.randn(batch, heads, 2, 3, 8, device="cuda")
+    return coordinates, generators.contiguous(), left, drive, initial
+
+
 @pytest.mark.skipif(not torch.cuda.is_available(), reason="CUDA is unavailable")
 @pytest.mark.parametrize("factor_count", [3, 6, 15, 28])
 def test_raw_cuda_coupled_full_gradient_parity(factor_count: int) -> None:
@@ -98,6 +119,46 @@ def test_raw_cuda_coupled_full_gradient_parity(factor_count: int) -> None:
     )
     expected, _ = recurrent_coupled_scan(transition, semantic_inputs[4])
     actual = raw_cuda_coupled_coordinate_scan(*raw_inputs)
+    output_gradient = torch.randn_like(actual)
+    differentiable = (0, 2, 3, 4)
+    expected_gradients = torch.autograd.grad(
+        expected,
+        tuple(semantic_inputs[index] for index in differentiable),
+        output_gradient,
+    )
+    actual_gradients = torch.autograd.grad(
+        actual,
+        tuple(raw_inputs[index] for index in differentiable),
+        output_gradient,
+    )
+    torch.testing.assert_close(actual, expected, rtol=4e-5, atol=4e-5)
+    for raw_gradient, semantic_gradient in zip(
+        actual_gradients, expected_gradients, strict=True
+    ):
+        torch.testing.assert_close(
+            raw_gradient, semantic_gradient, rtol=1e-3, atol=3e-3
+        )
+
+
+@pytest.mark.skipif(not torch.cuda.is_available(), reason="CUDA is unavailable")
+@pytest.mark.parametrize("factor_count", [3, 6, 15, 28])
+def test_raw_cuda_spin_delta_full_gradient_parity(factor_count: int) -> None:
+    base = spin_delta_inputs(factor_count)
+    semantic_inputs = tuple(
+        tensor.detach().clone().requires_grad_(index != 1)
+        for index, tensor in enumerate(base)
+    )
+    raw_inputs = tuple(
+        tensor.detach().clone().requires_grad_(index != 1)
+        for index, tensor in enumerate(base)
+    )
+    transition = SpinDeltaTransition(
+        semantic_inputs[2],
+        factorized_triality_actions(semantic_inputs[0], semantic_inputs[1]),
+        semantic_inputs[3],
+    )
+    expected, _ = recurrent_spin_delta_scan(transition, semantic_inputs[4])
+    actual = raw_cuda_spin_delta_scan(*raw_inputs)
     output_gradient = torch.randn_like(actual)
     differentiable = (0, 2, 3, 4)
     expected_gradients = torch.autograd.grad(
@@ -628,6 +689,51 @@ def test_raw_cuda_independent_block_full_model_gradient_parity(
     tokens = torch.randint(0, 256, (2, 5), device="cuda")
     expected = semantic_model(tokens, scan_mode="block_recurrent")["logits"]
     actual = raw_model(tokens, scan_mode="raw_cuda_block")["logits"]
+    output_gradient = torch.randn_like(actual)
+    semantic_gradients = torch.autograd.grad(
+        expected, tuple(semantic_model.parameters()), output_gradient
+    )
+    raw_gradients = torch.autograd.grad(
+        actual, tuple(raw_model.parameters()), output_gradient
+    )
+    torch.testing.assert_close(actual, expected, rtol=5e-5, atol=5e-5)
+    for raw_gradient, semantic_gradient in zip(
+        raw_gradients, semantic_gradients, strict=True
+    ):
+        torch.testing.assert_close(
+            raw_gradient, semantic_gradient, rtol=1e-3, atol=3e-3
+        )
+
+
+@pytest.mark.skipif(not torch.cuda.is_available(), reason="CUDA is unavailable")
+@pytest.mark.parametrize("group_dimension", [3, 4, 6, 8])
+def test_raw_cuda_spin_delta_full_model_gradient_parity(
+    group_dimension: int,
+) -> None:
+    torch.manual_seed(20_260_849 + group_dimension)
+    config = PureSpinV12Config(
+        d_model=16,
+        num_layers=1,
+        spin_channels=2,
+        d_conv=3,
+        recurrence="spin_delta",
+        group_schedule=(group_dimension,),
+    )
+    semantic_model = PureSpinSSMV12(config).cuda()
+    raw_model = copy.deepcopy(semantic_model)
+    with torch.no_grad():
+        for controller in (
+            semantic_model.blocks[0].delta_write_controller,
+            semantic_model.blocks[0].delta_erase_controller,
+            semantic_model.blocks[0].delta_erase_strength_controller,
+            semantic_model.blocks[0].delta_query_controller,
+        ):
+            assert controller is not None
+            controller.weight.normal_(std=0.02)
+        raw_model.load_state_dict(semantic_model.state_dict())
+    tokens = torch.randint(0, 256, (2, 5), device="cuda")
+    expected = semantic_model(tokens, scan_mode="delta_recurrent")["logits"]
+    actual = raw_model(tokens, scan_mode="raw_cuda_delta")["logits"]
     output_gradient = torch.randn_like(actual)
     semantic_gradients = torch.autograd.grad(
         expected, tuple(semantic_model.parameters()), output_gradient

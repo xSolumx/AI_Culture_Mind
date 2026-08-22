@@ -368,6 +368,43 @@ def raw_cuda_coupled_coordinate_scan(
     )
 
 
+def raw_cuda_spin_delta_scan(coordinates, generators, left, drive, initial):
+    """Lower independent transport-head slot banks onto the coupled kernel.
+
+    Spin-Delta has shape ``(B,L,G,M,R,8)`` with exactly two slots.  Each head
+    has its own Spin coordinates but shares that action across its two slots,
+    which is precisely the coupled-isotypic kernel contract.  Flattening
+    ``(B,G)`` into its launch grid preserves head independence while reusing
+    the audited CUDA forward and backward without an inter-head reduction.
+    """
+
+    if coordinates.ndim != 4:
+        raise ValueError("coordinates must have shape (B,L,G,F)")
+    batch, length, heads, _ = coordinates.shape
+    if left.shape != (batch, length, heads, 2, 2):
+        raise ValueError("left must have shape (B,L,G,2,2)")
+    if drive.shape != (batch, length, heads, 2, 3, 8):
+        raise ValueError("drive must have shape (B,L,G,2,3,8)")
+    if initial.shape != (batch, heads, 2, 3, 8):
+        raise ValueError("initial must have shape (B,G,2,3,8)")
+    flat_coordinates = coordinates.permute(0, 2, 1, 3).reshape(
+        batch * heads, length, -1
+    )
+    flat_left = left.permute(0, 2, 1, 3, 4).reshape(
+        batch * heads, length, 2, 2
+    )
+    flat_drive = drive.permute(0, 2, 1, 3, 4, 5).reshape(
+        batch * heads, length, 2, 3, 8
+    )
+    flat_initial = initial.reshape(batch * heads, 2, 3, 8)
+    flat_output = _RawCudaCoupledCoordinateFactorized.apply(
+        flat_coordinates, generators, flat_left, flat_drive, flat_initial
+    )
+    return flat_output.reshape(batch, heads, length, 2, 3, 8).permute(
+        0, 2, 1, 3, 4, 5
+    ).contiguous()
+
+
 def raw_cuda_independent_block_scan(
     coordinates, generators, left, drive, initial
 ):

@@ -238,6 +238,7 @@ def main() -> int:
             "chunk_parallel",
             "delta_recurrent",
             "delta_parallel",
+            "raw_cuda_delta",
         ],
         default="raw_cuda_hybrid",
     )
