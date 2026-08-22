@@ -227,6 +227,36 @@ class _RawCudaHybridCoordinateFactorized(torch.autograd.Function):
         return gradients[0], None, *gradients[1:]
 
 
+class _RawCudaCoupledCoordinateFactorized(torch.autograd.Function):
+    """Shared Spin action plus a learned 2x2 multiplicity transition."""
+
+    @staticmethod
+    def forward(ctx, coordinates, generators, left, drive, initial):
+        tensors = (coordinates, generators, left, drive, initial)
+        if any(tensor.device.type != "cuda" for tensor in tensors):
+            raise ValueError("raw coupled backend requires CUDA tensors")
+        if any(tensor.dtype != torch.float32 for tensor in tensors):
+            raise ValueError("raw coupled backend requires float32 tensors")
+        contiguous = tuple(tensor.contiguous() for tensor in tensors)
+        output = extension().coupled_coordinate_forward(*contiguous)
+        ctx.save_for_backward(*contiguous, output)
+        return output
+
+    @staticmethod
+    def backward(ctx, output_gradient):
+        coordinates, generators, left, drive, initial, output = ctx.saved_tensors
+        gradients = extension().coupled_coordinate_backward(
+            coordinates,
+            generators,
+            left,
+            drive,
+            initial,
+            output,
+            output_gradient.contiguous(),
+        )
+        return gradients[0], None, *gradients[1:]
+
+
 def raw_cuda_controller_factorized_scan(
     features,
     weight,
@@ -282,4 +312,18 @@ def raw_cuda_hybrid_coordinate_scan(
     """Isotypic-split forward followed by packed-warp reverse mode."""
     return _RawCudaHybridCoordinateFactorized.apply(
         coordinates, generators, scale, drive, initial
+    )
+
+
+def raw_cuda_coupled_coordinate_scan(
+    coordinates, generators, left, drive, initial
+):
+    """Full-training CUDA lowering of ``H <- L H R^T + D``.
+
+    The current kernel deliberately fixes multiplicity to two copies, matching
+    the v1.2 architecture, while retaining all three inequivalent triality
+    representations and one shared ordered Spin factorization.
+    """
+    return _RawCudaCoupledCoordinateFactorized.apply(
+        coordinates, generators, left, drive, initial
     )

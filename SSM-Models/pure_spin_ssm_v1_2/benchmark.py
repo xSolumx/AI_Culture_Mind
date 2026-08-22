@@ -44,6 +44,8 @@ class BenchmarkConfig:
     spin_mixer: str = "swiglu"
     spin_readout: str = "direction"
     spin_multiplicity_router: str = "none"
+    spin_recurrence: str = "independent"
+    spin_recurrent_multiplicity: str = "identity"
     spin_expansion: int = 2
     spin_group_schedule: tuple[int, ...] | None = None
     spin_chunk_size: int = 32
@@ -83,6 +85,8 @@ def build_model(name: str, config: BenchmarkConfig) -> torch.nn.Module:
                 mixer=config.spin_mixer,
                 readout=config.spin_readout,
                 multiplicity_router=config.spin_multiplicity_router,
+                recurrence=config.spin_recurrence,
+                recurrent_multiplicity=config.spin_recurrent_multiplicity,
                 expansion=config.spin_expansion,
                 group_schedule=config.spin_group_schedule,
                 scan_chunk_size=config.spin_chunk_size,
@@ -224,6 +228,7 @@ def main() -> int:
             "raw_cuda_factorized",
             "raw_cuda_isotypic",
             "raw_cuda_hybrid",
+            "raw_cuda_coupled",
             "chunk_parallel",
         ],
         default="raw_cuda_hybrid",
@@ -242,6 +247,16 @@ def main() -> int:
         "--spin-multiplicity-router",
         choices=["none", "orthogonal_query"],
         default="none",
+    )
+    parser.add_argument(
+        "--spin-recurrence",
+        choices=["independent", "coupled_isotypic"],
+        default="independent",
+    )
+    parser.add_argument(
+        "--spin-recurrent-multiplicity",
+        choices=["identity", "orthogonal"],
+        default="identity",
     )
     parser.add_argument("--spin-expansion", type=int, default=2)
     parser.add_argument("--spin-d-model", type=int, default=128)
@@ -276,6 +291,8 @@ def main() -> int:
         spin_mixer=args.spin_mixer,
         spin_readout=args.spin_readout,
         spin_multiplicity_router=args.spin_multiplicity_router,
+        spin_recurrence=args.spin_recurrence,
+        spin_recurrent_multiplicity=args.spin_recurrent_multiplicity,
         spin_expansion=args.spin_expansion,
         d_model=args.spin_d_model,
         spin_group_schedule=(

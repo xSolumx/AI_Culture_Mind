@@ -155,6 +155,57 @@ def test_multiplicity_router_commutes_with_shared_spin8_action() -> None:
     torch.testing.assert_close(actual, expected, rtol=2e-8, atol=2e-8)
 
 
+def test_coupled_isotypic_full_model_parallel_gradient_parity() -> None:
+    torch.manual_seed(202_608_29)
+    config = PureSpinV12Config(
+        d_model=16,
+        num_layers=1,
+        spin_channels=2,
+        recurrence="coupled_isotypic",
+        recurrent_multiplicity="orthogonal",
+    )
+    recurrent = PureSpinSSMV12(config)
+    parallel = copy.deepcopy(recurrent)
+    tokens = torch.randint(0, 256, (2, 7))
+    expected = recurrent(tokens, scan_mode="coupled_recurrent")["logits"]
+    actual = parallel(tokens, scan_mode="coupled_parallel")["logits"]
+    output_gradient = torch.randn_like(actual)
+    expected_gradients = torch.autograd.grad(
+        expected, tuple(recurrent.parameters()), output_gradient
+    )
+    actual_gradients = torch.autograd.grad(
+        actual, tuple(parallel.parameters()), output_gradient
+    )
+    torch.testing.assert_close(actual, expected, rtol=5e-5, atol=5e-5)
+    for actual_gradient, expected_gradient in zip(
+        actual_gradients, expected_gradients, strict=True
+    ):
+        torch.testing.assert_close(
+            actual_gradient, expected_gradient, rtol=2e-3, atol=3e-3
+        )
+
+
+def test_coupled_isotypic_model_is_causal_and_controller_is_shared() -> None:
+    torch.manual_seed(202_608_30)
+    config = PureSpinV12Config(
+        d_model=16,
+        num_layers=1,
+        spin_channels=2,
+        recurrence="coupled_isotypic",
+        recurrent_multiplicity="orthogonal",
+    )
+    model = PureSpinSSMV12(config).eval()
+    block = model.blocks[0]
+    assert block.spin.coefficient_controller.out_features == 28
+    left = torch.randint(0, 256, (1, 8))
+    right = left.clone()
+    right[:, 5:] = torch.randint(0, 256, (1, 3))
+    with torch.no_grad():
+        expected = model(left, scan_mode="coupled_parallel")["logits"]
+        actual = model(right, scan_mode="coupled_parallel")["logits"]
+    torch.testing.assert_close(actual[:, :5], expected[:, :5], rtol=2e-5, atol=2e-5)
+
+
 def test_fused_mamba_probe_never_claims_fallback() -> None:
     available, detail = fused_mamba2_available()
     assert isinstance(available, bool)
