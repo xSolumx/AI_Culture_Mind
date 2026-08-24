@@ -230,6 +230,10 @@ ablating attention left 98.24%. Active-head filler retention was 0.99973.
 Because seed 1723 was already exposed, this is causal development evidence,
 not validation.
 
+G10 prospectively freezes the same retention-safe candidate and complete G9
+schedule on unseen seeds 1753/1759/1777. Every seed must reach at least 90% at
+both lengths. See [`G10_PREREGISTRATION.md`](G10_PREREGISTRATION.md).
+
 ## Validation
 
 From `SSM-Models`:

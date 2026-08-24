@@ -11,6 +11,7 @@ from hybrid_memory_v1_4.combined_validation import (
     COMBINED_SCHEDULE,
     schedule_label_counts,
 )
+from hybrid_memory_v1_4.retention_validation import VALIDATION_SEEDS
 from hybrid_memory_v1_4.successor_screen import (
     RETENTION_SAFE_INITIAL,
     RETENTION_SAFE_MINIMUM,
@@ -41,3 +42,8 @@ def test_retention_safe_successor_changes_only_decay_bounds() -> None:
     *_, retention = mixer._controls(inputs)
     assert bool((retention >= RETENTION_SAFE_MINIMUM).all())
     assert bool((retention < 1.0).all())
+
+
+def test_g10_fresh_seeds_are_frozen_and_exclude_exposed_seed() -> None:
+    assert VALIDATION_SEEDS == (1753, 1759, 1777)
+    assert 1723 not in VALIDATION_SEEDS

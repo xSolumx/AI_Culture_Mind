@@ -567,6 +567,10 @@ This supports the erasure diagnosis as a matched causal result, but seed 1723
 was selected because it failed. The candidate remains development-only until
 it passes a prospectively frozen unseen-seed cohort.
 
+G10 freezes the identical candidate and complete schedule on unseen seeds
+1753/1759/1777. Its all-seed 90% gate at L96 and L512 was declared before any
+of those checkpoints were trained.
+
 Evidence:
 [`artifacts/g9_retention_safe_exposed_seed_cuda_2026-08-25.json`](artifacts/g9_retention_safe_exposed_seed_cuda_2026-08-25.json)
 and

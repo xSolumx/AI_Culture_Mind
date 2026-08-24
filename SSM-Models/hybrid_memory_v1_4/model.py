@@ -10,9 +10,10 @@ from pathlib import Path
 from typing import Any, Literal, TypeAlias
 
 import torch
-from delta_product_reference import DeltaProductReferenceLayer, GatedMLP
 from torch import nn
 from torch.nn import functional as F
+
+from delta_product_reference import DeltaProductReferenceLayer, GatedMLP
 
 from .attention import AttentionConfig, AttentionState, CausalSelfAttention
 from .gated_delta import GatedDeltaConfig, GatedDeltaMemory

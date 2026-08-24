@@ -14,6 +14,8 @@ from dataclasses import dataclass
 from typing import Literal
 
 import torch
+from torch import nn
+
 from pure_spin8_ssm.torch_backend import (
     Spin8AffineTransition,
     apply_spin8_affine,
@@ -22,7 +24,6 @@ from pure_spin8_ssm.torch_backend import (
     unit_ball,
     work_efficient_spin8_scan,
 )
-from torch import nn
 
 try:
     from .selected_block import LowRankLinear

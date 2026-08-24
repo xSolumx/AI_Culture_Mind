@@ -15,9 +15,8 @@ SSM_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(SSM_ROOT))
 sys.path.insert(0, str(HYBRID_ROOT))
 
-from delta_product_reference import DeltaProductReferenceLayer
-
 import hybrid_memory_v1_4.audits as AUDITS
+from delta_product_reference import DeltaProductReferenceLayer
 from hybrid_memory_v1_4.model import (
     HybridMemoryConfig,
     HybridMemoryLM,
