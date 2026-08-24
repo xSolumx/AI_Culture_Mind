@@ -7,7 +7,6 @@ import time
 from pathlib import Path
 
 import torch
-
 from delta_product_reference import DeltaProductReferenceLayer
 
 from .audits import precision_horizon_audit

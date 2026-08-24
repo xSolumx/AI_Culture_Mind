@@ -1,13 +1,16 @@
 # Hybrid Memory SSM v1.4
 
-**Status:** structurally tested research prototype with a negative frozen G4a
-retrieval result. It is not a released successor to v1.2/v1.3, has no trained
-checkpoint, and has no quality or speed promotion.
+**Status:** v1.4.1 content-addressed successor under fresh-seed validation. The
+frozen G4a selected-memory result remains negative. A label-supervised Gated
+Delta commissioning run learned fresh 16-pair MQAR and produced retained
+development checkpoints; this is not yet a label-free, natural-language, or
+speed promotion.
 
-This track combines four explicit mixer kinds in one causal language-model
+This track combines five explicit mixer kinds in one causal language-model
 shell:
 
 - bounded sliding-window RoPE attention with a complete streaming KV cache;
+- content-addressed Gated DeltaNet fast-weight memory;
 - the maintained repository DeltaProduct reference;
 - hierarchical selected-block affine memory;
 - bounded rung-routed Spin(8) memory.
@@ -47,6 +50,26 @@ DeltaProduct shell also remained near chance, so this falsifies the frozen
 capability claim without isolating one memory architecture as the cause. See
 [`RESULTS.md`](RESULTS.md) for the complete adjudication.
 
+## v1.4.1 learning pivot
+
+The deeper G4a audit found that selected memory stored values but no key
+signatures. Its 16 static addresses per head had a last-write-wins oracle
+ceiling below the frozen 90% gate on 16-pair MQAR. G4a also supplied only
+19,200 scored query labels; its large token count was dominated by filler.
+
+The v1.4.1 default is now `gated_delta -> attention`. The Gated Delta state
+stores key-to-value bindings in a matrix, with learned write strength and
+retention. Exact recurrent and parallel affine scans, arbitrary-chunk replay,
+masked-state semantics, gradient paths, and cache bytes are tested.
+
+The development curriculum reached 94.34% at length 96 and 92.68% over a
+larger unseen 2,048-query length-512 cohort. A fresh length-512 continuation
+raised that cohort to 94.19%. Association and write events were explicitly
+supervised from synthetic task metadata, so these results prove commissioned
+rule learning, not label-free discovery. See
+[`LEARNABILITY_DIAGNOSIS.md`](LEARNABILITY_DIAGNOSIS.md) and the prospectively
+frozen [`G4B_PREREGISTRATION.md`](G4B_PREREGISTRATION.md).
+
 ## Implemented surfaces
 
 - [`tasks.py`](tasks.py): causal MQAR, overwrite retrieval, exact-distance
@@ -55,18 +78,22 @@ capability claim without isolating one memory architecture as the cause. See
 - [`selected_block.py`](selected_block.py): bounded affine memory with
   independent write/erase/read routes; sparse hard gather/scatter; dense hard,
   soft, and straight-through semantic modes; recurrent/parallel oracles.
+- [`gated_delta.py`](gated_delta.py): content-addressed matrix state with exact
+  recurrent/parallel semantics, learned write and retention controls, and
+  complete streaming state.
 - [`attention.py`](attention.py): bounded causal local attention and cache.
 - [`structured_tier.py`](structured_tier.py) and
   [`structured_memory.py`](structured_memory.py): data-routed subgroup ladder
   and a recurrent Spin(8) state that actually changes the model output.
-- [`model.py`](model.py): four-kind hybrid shell, local convolution caches,
+- [`model.py`](model.py): five-kind hybrid shell, local convolution caches,
   checkpointing, diagnostics, and exact cache-byte accounting.
 - [`fla_adapter.py`](fla_adapter.py): fail-closed semantic and optional official
   FLA DeltaRule operator adapters.
 - [`baselines.py`](baselines.py): precise implementation registry and claim
   boundaries. Static ProductKey memory is explicitly non-episodic; FLA
-  adapters are operators, not complete language models; official Mamba-2 is
-  used only when its exact availability probe passes.
+  adapters are operators, not complete language models; FlashRT fails closed
+  on SM75; actual Transformers Mamba-2 and OLMo Hybrid implementations have
+  separately labeled unfused rows.
 - [`audits.py`](audits.py): precision horizon, complete chunk replay, cache
   drift, structured rung/gauge, and temporal observability audits.
 - [`experiments.py`](experiments.py): fresh deterministic episodes, paired
@@ -83,6 +110,13 @@ capability claim without isolating one memory architecture as the cause. See
 - [`precision_screen.py`](precision_screen.py): direct-float64 fp16/fp32 error
   curves through length 65,536 for generic affine, selected-block, and
   maintained DeltaProduct transitions.
+- [`learnability_screen.py`](learnability_screen.py),
+  [`long_context_continuation.py`](long_context_continuation.py), and
+  [`validation_screen.py`](validation_screen.py): fixed-batch falsifier,
+  useful-label-accounted curriculum, retained checkpoints, continuation, and
+  prospectively frozen fresh-seed gate.
+- [`upstream_probe.py`](upstream_probe.py): actual FLA, Transformers, and
+  pretrained state-spaces Mamba-2 probes with explicit environment boundaries.
 
 ## Baseline boundary
 
@@ -93,6 +127,10 @@ semantic/systems controls, not silently promoted language models. Official
 Mamba-2 is an optional separate complete-model comparison and fails closed
 when unavailable.
 
+The exact pretrained `state-spaces/mamba2-130m` weights are pinned at revision
+`3a5aea0c25d0fb43cc360e2c2aac82c26e3eed49` in the external E: cache and were
+loaded through official `mamba_ssm` in WSL. They are not committed to Git.
+
 ## Validation
 
 From `SSM-Models`:
@@ -102,6 +140,8 @@ python -m pytest hybrid_memory_v1_4/tests -q
 python -m hybrid_memory_v1_4.temporal_observability_screen --output hybrid_memory_v1_4/artifacts/temporal_observability_2026-08-24.json
 python -m hybrid_memory_v1_4.precision_screen --output hybrid_memory_v1_4/artifacts/precision_horizon_65536_cpu_2026-08-24.json
 python -m hybrid_memory_v1_4.long_context_screen --device cuda --output hybrid_memory_v1_4/artifacts/mechanical_cuda_smoke_2026-08-24.json
+python -m hybrid_memory_v1_4.learnability_screen --output hybrid_memory_v1_4/artifacts/learnability.json --checkpoint hybrid_memory_v1_4/artifacts/checkpoints/learned.pt
+python -m hybrid_memory_v1_4.validation_screen --output hybrid_memory_v1_4/artifacts/validation.json --checkpoint-dir hybrid_memory_v1_4/artifacts/checkpoints
 ```
 
 The CUDA screen is a random-token mechanical smoke: finiteness, chunk replay,
@@ -113,7 +153,9 @@ matched speed evidence.
 - The frozen G4a retrieval capability claim failed in both routing cohorts.
 - The matched control also failed, so G4a does not isolate selected memory as
   the cause.
-- No trained checkpoint or successful model-quality result exists.
+- The positive v1.4.1 result uses explicit association/write labels and is not
+  evidence of label-free or natural-language learning.
+- The retained development checkpoints are not released pretrained models.
 - Straight-through routing establishes a gradient estimator, not successful
   label-free routing.
 - The selected-attention topology result establishes a causal gradient path,

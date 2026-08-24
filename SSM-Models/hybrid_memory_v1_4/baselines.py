@@ -11,17 +11,18 @@ cannot write or retain per-episode associations from an input sequence.
 
 from __future__ import annotations
 
+import importlib.util
+import platform
 from collections.abc import Callable
 from dataclasses import asdict, dataclass
 from typing import Any
 
 import torch
-from torch import nn
-
 from delta_product_reference import (
     DeltaProductReferenceLayer,
     DeltaProductReferenceModel,
 )
+from torch import nn
 
 from .fla_adapter import DeltaRuleAdapter, fla_available
 
@@ -374,6 +375,108 @@ def _mamba2_factory(**kwargs: Any) -> nn.Module:
     return model_type(**kwargs)
 
 
+def _transformers_availability(name: str, component: str) -> AvailabilityHook:
+    def check(device: torch.device, dtype: torch.dtype) -> BaselineAvailability:
+        reasons = _device_and_dtype_reasons(device, dtype)
+        detail: str | None = None
+        try:
+            import transformers
+
+            if not hasattr(transformers, component):
+                reasons.append(f"transformers does not expose {component}")
+            detail = f"transformers {transformers.__version__}"
+        except (ImportError, RuntimeError, OSError) as error:
+            reasons.append("transformers is unavailable")
+            detail = f"{type(error).__name__}: {error}"
+        return BaselineAvailability(
+            name=name,
+            available=not reasons,
+            device=str(device),
+            dtype=str(dtype).removeprefix("torch."),
+            reasons=tuple(reasons),
+            detail=detail,
+        )
+
+    return check
+
+
+def _transformers_mamba2_factory(**kwargs: Any) -> nn.Module:
+    from transformers import Mamba2Config, Mamba2ForCausalLM
+
+    return Mamba2ForCausalLM(Mamba2Config(**kwargs))
+
+
+def _transformers_olmo_hybrid_factory(**kwargs: Any) -> nn.Module:
+    from transformers import OlmoHybridConfig, OlmoHybridForCausalLM
+
+    return OlmoHybridForCausalLM(OlmoHybridConfig(**kwargs))
+
+
+_FLASHRT_REPOSITORY = "flashrt/gated-delta-attention"
+_FLASHRT_REVISION = "892f725c92033f8daf3de1329e1bba05b2747a39"
+_FLASHRT_KERNEL_VERSION = 6
+
+
+def _flashrt_gated_delta_availability(
+    device: torch.device, dtype: torch.dtype
+) -> BaselineAvailability:
+    reasons = _device_and_dtype_reasons(device, dtype)
+    if platform.system() != "Linux":
+        reasons.append("FlashRT artifact requires x86_64 Linux")
+    if device.type != "cuda":
+        reasons.append(f"FlashRT Gated Delta requires CUDA, got {device}")
+    elif torch.cuda.is_available():
+        index = torch.cuda.current_device() if device.index is None else device.index
+        capability = torch.cuda.get_device_capability(index)
+        if capability < (8, 0):
+            reasons.append(
+                "FlashRT artifact requires SM80 or newer; "
+                f"detected SM{capability[0]}{capability[1]}"
+            )
+    if dtype != torch.bfloat16:
+        reasons.append(f"FlashRT Gated Delta requires bfloat16 I/O, got {dtype}")
+    if importlib.util.find_spec("kernels") is None:
+        reasons.append("Hugging Face kernels package is unavailable")
+    return BaselineAvailability(
+        name="flashrt_gated_delta_kernel",
+        available=not reasons,
+        device=str(device),
+        dtype=str(dtype).removeprefix("torch."),
+        reasons=tuple(reasons),
+        detail=(
+            f"{_FLASHRT_REPOSITORY}@{_FLASHRT_REVISION}, "
+            f"kernel version {_FLASHRT_KERNEL_VERSION}"
+        ),
+    )
+
+
+def _flashrt_gated_delta_factory(**kwargs: Any) -> nn.Module:
+    if kwargs:
+        raise TypeError("flashrt_gated_delta_kernel accepts no model kwargs")
+    from kernels import get_kernel
+
+    # Kernel Hub returns an operator namespace rather than an nn.Module. Wrap it
+    # so the registry retains one common construction type without pretending it
+    # is a complete language model.
+    operator = get_kernel(
+        _FLASHRT_REPOSITORY,
+        version=_FLASHRT_KERNEL_VERSION,
+        trust_remote_code=True,
+    )
+
+    class FlashRTGatedDeltaOperator(nn.Module):
+        def __init__(self, loaded: object) -> None:
+            super().__init__()
+            self.operator = loaded
+
+        def forward(self, *args: Any, **call_kwargs: Any) -> Any:
+            return self.operator.gated_delta_recurrent_f32state_bf16io(
+                *args, **call_kwargs
+            )
+
+    return FlashRTGatedDeltaOperator(operator)
+
+
 _PRODUCT_KEY_BOUNDARY = (
     "Static learned parameter memory only; no per-episode writes, associations, "
     "or episodic recurrent state."
@@ -419,6 +522,19 @@ BASELINE_REGISTRY: dict[str, BaselineSpec] = {
         ),
         variable_cache_bytes=0,
     ),
+    "flashrt_gated_delta_kernel": BaselineSpec(
+        name="flashrt_gated_delta_kernel",
+        factory=_flashrt_gated_delta_factory,
+        availability_hook=_flashrt_gated_delta_availability,
+        official=True,
+        fused=True,
+        reference=False,
+        claim_boundary=(
+            "Pinned FlashRT Gated DeltaNet BF16 CUDA operator only; requires "
+            "x86_64 Linux and SM80+, and is not a complete language model."
+        ),
+        variable_cache_bytes=0,
+    ),
     "mamba2_official": BaselineSpec(
         name="mamba2_official",
         factory=_mamba2_factory,
@@ -429,6 +545,36 @@ BASELINE_REGISTRY: dict[str, BaselineSpec] = {
         claim_boundary=(
             "Repository wrapper around official fused mamba_ssm Mamba-2; valid only "
             "for environments passing the exact availability probe."
+        ),
+    ),
+    "transformers_mamba2": BaselineSpec(
+        name="transformers_mamba2",
+        factory=_transformers_mamba2_factory,
+        availability_hook=_transformers_availability(
+            "transformers_mamba2", "Mamba2ForCausalLM"
+        ),
+        official=True,
+        fused=False,
+        reference=False,
+        claim_boundary=(
+            "Actual Hugging Face Transformers Mamba-2 architecture. The local "
+            "fallback is unfused and random initialization is not a pretrained "
+            "state-spaces checkpoint."
+        ),
+    ),
+    "transformers_olmo_hybrid": BaselineSpec(
+        name="transformers_olmo_hybrid",
+        factory=_transformers_olmo_hybrid_factory,
+        availability_hook=_transformers_availability(
+            "transformers_olmo_hybrid", "OlmoHybridForCausalLM"
+        ),
+        official=True,
+        fused=False,
+        reference=False,
+        claim_boundary=(
+            "Actual Hugging Face Transformers OLMo Hybrid Gated DeltaNet plus "
+            "attention architecture. The local fallback is unfused and random "
+            "initialization is not a downloaded pretrained checkpoint."
         ),
     ),
     "product_key_static": BaselineSpec(

@@ -1,0 +1,179 @@
+{
+  "association_coefficient": 0.25,
+  "claim_status": "commissioning",
+  "config": {
+    "attention_heads": 4,
+    "attention_rope_base": 10000.0,
+    "attention_window_size": 1024,
+    "conv_kernel": 4,
+    "delta_allow_negative_eigenvalues": true,
+    "delta_heads": 4,
+    "delta_num_householder": 4,
+    "dropout": 0.0,
+    "expansion": 2,
+    "gated_delta_allow_negative_eigenvalues": false,
+    "gated_delta_heads": 4,
+    "gated_delta_initial_retention": 0.995,
+    "gated_delta_initial_write_strength": 0.1,
+    "gated_delta_key_dim": 16,
+    "gated_delta_minimum_retention": 0.9,
+    "gated_delta_value_dim": 16,
+    "layer_plan": [
+      "gated_delta",
+      "attention"
+    ],
+    "model_dim": 64,
+    "norm_epsilon": 1e-06,
+    "selected_blocks": 4,
+    "selected_controller_rank": null,
+    "selected_heads": 2,
+    "selected_retention_max": 0.99,
+    "selected_retention_min": 0.0,
+    "selected_slots_per_block": 2,
+    "selected_update_rank": 1,
+    "selected_value_dim": 16,
+    "structured_channels": 1,
+    "structured_controller_rank": null,
+    "structured_hard_eval": true,
+    "structured_retention_max": 0.99,
+    "structured_retention_min": 0.0,
+    "structured_rungs": [
+      3,
+      4,
+      6,
+      8
+    ],
+    "tie_embeddings": true,
+    "use_local_conv": true,
+    "vocab_size": 197
+  },
+  "curriculum": [
+    {
+      "length": 16,
+      "pairs": 2,
+      "queries": 2,
+      "updates": 30
+    },
+    {
+      "length": 24,
+      "pairs": 4,
+      "queries": 4,
+      "updates": 30
+    },
+    {
+      "length": 48,
+      "pairs": 8,
+      "queries": 8,
+      "updates": 40
+    },
+    {
+      "length": 96,
+      "pairs": 16,
+      "queries": 16,
+      "updates": 60
+    }
+  ],
+  "elapsed_wall_seconds": 8.195829399999639,
+  "environment": {
+    "cuda": "13.0",
+    "device": "cuda",
+    "device_name": "NVIDIA GeForce RTX 2070 SUPER",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "python": "3.12.10",
+    "torch": "2.12.0+cu130"
+  },
+  "evaluations": [
+    {
+      "bits_per_query": 5.730777514913117,
+      "exact_accuracy": 0.015625,
+      "exact_sequence_accuracy": 0.0,
+      "length": 96,
+      "pairs": 16,
+      "queries_per_sequence": 16,
+      "query_count": 256
+    },
+    {
+      "bits_per_query": 5.675128916590787,
+      "exact_accuracy": 0.03125,
+      "exact_sequence_accuracy": 0.0,
+      "length": 512,
+      "pairs": 16,
+      "queries_per_sequence": 4,
+      "query_count": 64
+    }
+  ],
+  "fixed_batch_control": {
+    "last_batch_accuracy": 1.0,
+    "mean_association_loss": 0.0,
+    "mean_retrieval_loss": 1.4221912672743202
+  },
+  "git": {
+    "commit": "6b79b599ae66c4e9840b2de9344ace583671421b",
+    "status": [
+      " M SSM-Models/hybrid_memory_v1_4/baselines.py",
+      " M SSM-Models/hybrid_memory_v1_4/experiments.py",
+      " M SSM-Models/hybrid_memory_v1_4/model.py",
+      "?? SSM-Models/hybrid_memory_v1_4/gated_delta.py",
+      "?? SSM-Models/hybrid_memory_v1_4/learnability_screen.py"
+    ]
+  },
+  "label_supervised_association": true,
+  "parameter_count": 116186,
+  "phase_traces": [
+    {
+      "last_batch_accuracy": 0.0,
+      "mean_association_loss": 1.022151561578115,
+      "mean_retrieval_loss": 4.864827887217204,
+      "phase": {
+        "length": 16,
+        "pairs": 2,
+        "queries": 2,
+        "updates": 30
+      }
+    },
+    {
+      "last_batch_accuracy": 0.046875,
+      "mean_association_loss": 0.4182423974076907,
+      "mean_retrieval_loss": 4.287777471542358,
+      "phase": {
+        "length": 24,
+        "pairs": 4,
+        "queries": 4,
+        "updates": 30
+      }
+    },
+    {
+      "last_batch_accuracy": 0.015625,
+      "mean_association_loss": 0.1814296565949917,
+      "mean_retrieval_loss": 4.185926342010498,
+      "phase": {
+        "length": 48,
+        "pairs": 8,
+        "queries": 8,
+        "updates": 40
+      }
+    },
+    {
+      "last_batch_accuracy": 0.06640625,
+      "mean_association_loss": 0.3379995693763097,
+      "mean_retrieval_loss": 4.103979460398356,
+      "phase": {
+        "length": 96,
+        "pairs": 16,
+        "queries": 16,
+        "updates": 60
+      }
+    }
+  ],
+  "presented_tokens": 142080,
+  "schema_version": 1,
+  "seed_base": 1401,
+  "selected_static_hash_oracle_ceiling": {
+    "16": 0.6640625,
+    "32": 0.890625,
+    "4": 0.21875,
+    "64": 1.0,
+    "8": 0.4921875
+  },
+  "useful_query_labels": 23360
+}

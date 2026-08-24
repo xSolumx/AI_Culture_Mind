@@ -1,9 +1,11 @@
 # Hybrid Memory v1.4 frontier results
 
 **Date:** 2026-08-24
-**Status:** repaired and mechanically validated research prototype; the frozen
-G4a retrieval campaign failed capability in both routing cohorts. There is no
-trained checkpoint, model-quality promotion, or matched-speed result.
+**Status:** v1.4.1 content-addressed development result awaiting prospectively
+frozen fresh-seed validation. The frozen G4a retrieval campaign remains a
+capability failure. Retained Gated Delta development checkpoints learned the
+synthetic rule under explicit association labels; there is no label-free,
+natural-language, or matched-speed promotion.
 
 ## Adjudication
 
@@ -134,14 +136,76 @@ Evidence:
 and
 [`artifacts/retrieval_g4a_q2_supervised_routing_cuda_2026-08-24.json`](artifacts/retrieval_g4a_q2_supervised_routing_cuda_2026-08-24.json).
 
+## G4b development diagnosis and pivot
+
+The selected candidate stored values but no key signatures. A perfect static
+key-mod-slot oracle therefore measured only 66.41% exact accuracy with 16
+slots in the development cohort; 32 slots reached 89.06%, and 64 slots reached
+100%. The exact values move with the cohort, but a 16-address value-only head
+cannot satisfy the frozen greater-than-90% gate.
+
+G4a also presented only 19,200 scored query labels. v1.4.1 replaced the primary
+selected tier with content-addressed Gated Delta matrix state and used a
+2/4/8/16-pair dense-query curriculum with 467,200 useful labels. The fixed
+16-pair batch overfit reached 100%, proving the training shell was live.
+
+Development results were:
+
+| Cohort | Exact query accuracy | Bits/query |
+|---|---:|---:|
+| fresh 16-pair, L96, 1,024 queries | 94.336% | 0.319 |
+| fresh 16-pair, L512, 256 queries | 89.844% | 0.560 |
+| disjoint L512 pre-continuation, 2,048 queries | 92.676% | 0.412 |
+| same cohort after 300 fresh continuation updates | 94.189% | 0.289 |
+
+The small post-continuation extrapolation cohorts reached 91.41% at L1,024 and
+96.88% at L2,048, each over 128 queries. They are too small for a long-context
+promotion.
+
+The association auxiliary explicitly aligns query vectors with matching write
+keys, labels write events, and discourages filler decay. The result is
+therefore a successful label-supervised commissioning result, not label-free
+learning. Fresh model seeds 1423/1427/1429 and the requirement that every seed
+reach at least 90% over 2,048 unseen L512 queries were frozen in
+[`G4B_PREREGISTRATION.md`](G4B_PREREGISTRATION.md) before those seeds ran.
+
+Evidence:
+[`LEARNABILITY_DIAGNOSIS.md`](LEARNABILITY_DIAGNOSIS.md),
+[`artifacts/learnability_g4b_seed1401_cuda_2026-08-24.json`](artifacts/learnability_g4b_seed1401_cuda_2026-08-24.json),
+and
+[`artifacts/learnability_g4b_long_continuation_seed2401_cuda_2026-08-24.json`](artifacts/learnability_g4b_long_continuation_seed2401_cuda_2026-08-24.json).
+
+## Actual upstream probes
+
+- FlashRT Gated Delta Attention was pinned at revision `892f725c...`, kernel
+  version 6. Its artifact requires BF16 x86_64 Linux and SM80+, so it correctly
+  fails closed on the local SM75 RTX 2070 SUPER.
+- Actual FLA 0.5.2 `chunk_gated_delta_rule` produced finite outputs and final
+  state in the WSL FLA environment.
+- Actual Transformers 5.9.0 `Mamba2ForCausalLM` and
+  `OlmoHybridForCausalLM` produced finite CUDA logits through their declared
+  unfused fallbacks.
+- The actual 128,989,632-parameter pretrained
+  `state-spaces/mamba2-130m` checkpoint at revision `3a5aea0c...` was downloaded
+  to the E: large cache and produced finite FP16 CUDA logits through official
+  `mamba_ssm` in WSL.
+
+These are implementation-availability probes across different runtimes, not a
+matched speed ranking or an MQAR quality comparison.
+
+Evidence:
+[`artifacts/upstream_fla_gated_delta_wsl_cuda_2026-08-24.json`](artifacts/upstream_fla_gated_delta_wsl_cuda_2026-08-24.json),
+[`artifacts/upstream_native_transformers_cuda_2026-08-24.json`](artifacts/upstream_native_transformers_cuda_2026-08-24.json),
+and
+[`artifacts/upstream_pretrained_mamba2_wsl_cuda_2026-08-24.json`](artifacts/upstream_pretrained_mamba2_wsl_cuda_2026-08-24.json).
+
 ## Validation record
 
-- `python -m pytest hybrid_memory_v1_4/tests -q`: **181 passed, 4 skipped**.
+- `python -m pytest hybrid_memory_v1_4/tests -q`: **189 passed, 4 skipped**.
 - `python -m ruff check hybrid_memory_v1_4`: passed.
 - `python -m ruff format --check hybrid_memory_v1_4`: passed.
-- The four skips are guarded optional official fused FLA/Mamba CUDA paths;
-  those dependencies were unavailable in the tested environment and no
-  fallback result was substituted.
+- The four native-suite skips are guarded optional fused FLA/Mamba paths; WSL
+  probes separately exercised the installed actual FLA and Mamba environments.
 - Frozen G4a executed at 107,552 parameters for the candidate and 112,290 for
   the common-shell DeltaProduct control, a 4.4053% gap under the 5% gate.
 
@@ -149,10 +213,12 @@ Artifact file hashes are recorded in [`ARTIFACTS.sha256`](ARTIFACTS.sha256).
 
 ## Nonclaims
 
-- G4a failed retrieval capability in both routing cohorts; no successful
-  retrieval result exists.
-- No trained checkpoint exists.
-- No retrieval, natural-language, or bits-per-byte claim exists.
+- G4a failed retrieval capability in both routing cohorts.
+- G4b development learned synthetic retrieval only with explicit association
+  and write-event labels; label-free retrieval remains open.
+- The retained checkpoints are development artifacts, not released pretrained
+  models.
+- No natural-language or bits-per-byte claim exists.
 - No fused-kernel, Tensor-Core, or matched speed claim exists.
 - No learned Spin(8) rung-use claim exists.
 - A straight-through estimator is not evidence that label-free routing learns.

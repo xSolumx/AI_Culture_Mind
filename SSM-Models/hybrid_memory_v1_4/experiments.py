@@ -329,7 +329,12 @@ def source_file_digests() -> tuple[SourceFileDigest, ...]:
         root / "temporal_observability_screen.py",
         root / "retrieval_screen.py",
         root / "precision_screen.py",
+        root / "learnability_screen.py",
+        root / "long_context_continuation.py",
+        root / "validation_screen.py",
+        root / "upstream_probe.py",
         root / "model.py",
+        root / "gated_delta.py",
         root / "tasks.py",
         root / "baselines.py",
         root / "selected_block.py",
@@ -339,6 +344,7 @@ def source_file_digests() -> tuple[SourceFileDigest, ...]:
         root / "fla_adapter.py",
         root / "audits.py",
         root / "PREREGISTRATION.md",
+        root / "G4B_PREREGISTRATION.md",
         root.parent / "delta_product_reference.py",
     )
     reports = []
@@ -603,6 +609,87 @@ def routing_auxiliary_loss(
 
 
 selected_block_router_auxiliary_loss = routing_auxiliary_loss
+
+
+def gated_delta_association_auxiliary_loss(
+    output: Mapping[str, Any],
+    batch: _tasks.RetrievalBatch,
+    *,
+    temperature: float = 0.10,
+    write_gate_weight: float = 1.0,
+    retention_weight: float = 0.05,
+) -> torch.Tensor:
+    """Commission content addressing with explicit synthetic-task labels.
+
+    The loss aligns query vectors with the key vector emitted when the matching
+    value was presented, supervises write strength only at value events, and
+    discourages filler decay.  It is an intentionally label-supervised
+    commissioning objective, not evidence of label-free learning.
+    """
+
+    logits = output.get("logits")
+    diagnostics = output.get("diagnostics")
+    if not isinstance(logits, torch.Tensor):
+        raise TypeError("output must contain tensor logits")
+    if not isinstance(diagnostics, Sequence):
+        raise TypeError("output must come from return_diagnostics=True")
+    if not math.isfinite(temperature) or temperature <= 0.0:
+        raise ValueError("temperature must be finite and positive")
+    write_gate_weight = _nonnegative_finite("write_gate_weight", write_gate_weight)
+    retention_weight = _nonnegative_finite("retention_weight", retention_weight)
+    write_keys, write_positions = _write_keys_and_positions(batch)
+    read_keys = batch.inputs.gather(1, batch.query_positions)
+
+    # Select the last matching write. This also gives overwrite tasks the
+    # correct target association while MQAR's unique keys remain unchanged.
+    matches = read_keys[:, :, None] == write_keys[:, None, :]
+    if not bool(matches.any(dim=-1).all()):
+        raise ValueError("every query key must match at least one stored key")
+    indices = torch.arange(write_keys.shape[1], device=write_keys.device)
+    target_write = torch.where(matches, indices, -1).amax(dim=-1)
+
+    losses: list[torch.Tensor] = []
+    for diagnostic in diagnostics:
+        if not isinstance(diagnostic, Mapping):
+            continue
+        if diagnostic.get("kind") != "gated_delta":
+            continue
+        query = diagnostic.get("query")
+        key = diagnostic.get("key")
+        write = diagnostic.get("write_strength")
+        retention = diagnostic.get("retention")
+        if not all(isinstance(item, torch.Tensor) for item in (query, key, write)):
+            raise TypeError("gated-delta diagnostics are incomplete")
+        assert isinstance(query, torch.Tensor)
+        assert isinstance(key, torch.Tensor)
+        assert isinstance(write, torch.Tensor)
+        query_at_reads = _time_gather(query, batch.query_positions)
+        key_at_writes = _time_gather(key, write_positions)
+        similarities = (
+            torch.einsum("bqhk,bphk->bhqp", query_at_reads, key_at_writes) / temperature
+        )
+        targets = target_write[:, None, :].expand(-1, similarities.shape[1], -1)
+        address_loss = F.cross_entropy(similarities.flatten(0, 2), targets.flatten())
+
+        events = torch.zeros_like(write)
+        event_index = write_positions[:, :, None].expand(-1, -1, write.shape[-1])
+        events.scatter_(1, event_index, 1.0)
+        write_max = 2.0 if float(write.detach().max()) > 1.0 else 1.0
+        probabilities = (write / write_max).clamp(
+            torch.finfo(write.dtype).eps, 1.0 - torch.finfo(write.dtype).eps
+        )
+        write_loss = F.binary_cross_entropy(probabilities, events)
+        layer_loss = address_loss + write_gate_weight * write_loss
+        if isinstance(retention, torch.Tensor):
+            nonwrite = 1.0 - events
+            retention_loss = (
+                (1.0 - retention).square() * nonwrite
+            ).sum() / nonwrite.sum().clamp_min(1.0)
+            layer_loss = layer_loss + retention_weight * retention_loss
+        losses.append(layer_loss)
+    if not losses:
+        return logits.sum() * 0.0
+    return torch.stack(losses).mean()
 
 
 def stream_model(
@@ -1157,6 +1244,7 @@ __all__ = [
     "confirm_chunk_replay",
     "delta_only_control",
     "environment_report",
+    "gated_delta_association_auxiliary_loss",
     "generate_task_batch",
     "git_commit",
     "git_status",

@@ -1,0 +1,132 @@
+{
+  "availability": {
+    "delta_product_reference": {
+      "available": true,
+      "detail": null,
+      "device": "cuda",
+      "dtype": "float32",
+      "name": "delta_product_reference",
+      "reasons": []
+    },
+    "fla_delta_fused": {
+      "available": false,
+      "detail": null,
+      "device": "cuda",
+      "dtype": "float32",
+      "name": "fla_delta_fused",
+      "reasons": [
+        "flash-linear-attention/fla-core is not installed",
+        "the pinned FLA CUDA tier is supported only on Linux",
+        "FLA DeltaRule requires torch.float16 or torch.bfloat16, got torch.float32"
+      ]
+    },
+    "fla_delta_semantic": {
+      "available": true,
+      "detail": null,
+      "device": "cuda",
+      "dtype": "float32",
+      "name": "fla_delta_semantic",
+      "reasons": []
+    },
+    "flashrt_gated_delta_kernel": {
+      "available": false,
+      "detail": "flashrt/gated-delta-attention@892f725c92033f8daf3de1329e1bba05b2747a39, kernel version 6",
+      "device": "cuda",
+      "dtype": "float32",
+      "name": "flashrt_gated_delta_kernel",
+      "reasons": [
+        "FlashRT artifact requires x86_64 Linux",
+        "FlashRT artifact requires SM80 or newer; detected SM75",
+        "FlashRT Gated Delta requires bfloat16 I/O, got torch.float32",
+        "Hugging Face kernels package is unavailable"
+      ]
+    },
+    "mamba2_official": {
+      "available": false,
+      "detail": "ModuleNotFoundError(\"No module named 'mamba_ssm'\")",
+      "device": "cuda",
+      "dtype": "float32",
+      "name": "mamba2_official",
+      "reasons": [
+        "official fused mamba_ssm Mamba-2 is unavailable"
+      ]
+    },
+    "product_key_static": {
+      "available": true,
+      "detail": null,
+      "device": "cuda",
+      "dtype": "float32",
+      "name": "product_key_static",
+      "reasons": []
+    },
+    "transformers_mamba2": {
+      "available": true,
+      "detail": "transformers 5.9.0",
+      "device": "cuda",
+      "dtype": "float32",
+      "name": "transformers_mamba2",
+      "reasons": []
+    },
+    "transformers_olmo_hybrid": {
+      "available": true,
+      "detail": "transformers 5.9.0",
+      "device": "cuda",
+      "dtype": "float32",
+      "name": "transformers_olmo_hybrid",
+      "reasons": []
+    }
+  },
+  "environment": {
+    "compute_capability": [
+      7,
+      5
+    ],
+    "cuda_version": "13.0",
+    "device": "cuda",
+    "device_name": "NVIDIA GeForce RTX 2070 SUPER",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "python": "3.12.10",
+    "torch": "2.12.0+cu130"
+  },
+  "models": {
+    "transformers_mamba2": {
+      "parameter_count": 82224,
+      "probe": {
+        "finite": true,
+        "mean_ms": 5.028920000040671,
+        "shape": [
+          2,
+          128,
+          197
+        ],
+        "tokens_per_second": 50905.56222766113
+      },
+      "type": "Mamba2ForCausalLM"
+    },
+    "transformers_olmo_hybrid": {
+      "parameter_count": 100376,
+      "probe": {
+        "finite": true,
+        "mean_ms": 19.83064000014565,
+        "shape": [
+          2,
+          128,
+          197
+        ],
+        "tokens_per_second": 12909.316088543777
+      },
+      "type": "OlmoHybridForCausalLM"
+    }
+  },
+  "probe": "native_transformers",
+  "sdpa": {
+    "flash_compiled": false,
+    "flash_usable": false,
+    "memory_efficient_usable": true
+  },
+  "timing_claim": "within-process smoke only; not a matched performance claim",
+  "upstream_pins": {
+    "flashrt/gated-delta-attention": "892f725c92033f8daf3de1329e1bba05b2747a39",
+    "state-spaces/mamba2-130m": "3a5aea0c25d0fb43cc360e2c2aac82c26e3eed49"
+  }
+}

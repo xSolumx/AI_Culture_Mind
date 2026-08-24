@@ -10,19 +10,23 @@ from pathlib import Path
 from typing import Any, Literal, TypeAlias
 
 import torch
+from delta_product_reference import DeltaProductReferenceLayer, GatedMLP
 from torch import nn
 from torch.nn import functional as F
 
-from delta_product_reference import DeltaProductReferenceLayer, GatedMLP
-
 from .attention import AttentionConfig, AttentionState, CausalSelfAttention
+from .gated_delta import GatedDeltaConfig, GatedDeltaMemory
 from .selected_block import RouteMode, SelectedBlockConfig, SelectedBlockMemory
 from .structured_memory import StructuredMemoryConfig, StructuredSpin8Memory
 
-__version__ = "1.4.0"
+__version__ = "1.4.1"
 
 LayerKind: TypeAlias = Literal[
-    "attention", "delta_product", "selected_block", "structured_spin8"
+    "attention",
+    "gated_delta",
+    "delta_product",
+    "selected_block",
+    "structured_spin8",
 ]
 DeltaScanMode: TypeAlias = Literal["recurrent", "parallel"]
 SelectedScanMode: TypeAlias = Literal[
@@ -32,6 +36,7 @@ StructuredScanMode: TypeAlias = Literal["recurrent", "parallel"]
 
 _LAYER_KINDS = (
     "attention",
+    "gated_delta",
     "delta_product",
     "selected_block",
     "structured_spin8",
@@ -72,7 +77,10 @@ class HybridMemoryConfig:
 
     vocab_size: int = 256
     model_dim: int = 64
-    layer_plan: tuple[LayerKind, ...] = ("selected_block",)
+    # The v1.4.1 default pivots the primary memory from value-only selected
+    # slots to content-addressed fast weights. Selected/Spin(8) tiers remain
+    # explicit experimental archive/transport options.
+    layer_plan: tuple[LayerKind, ...] = ("gated_delta", "attention")
 
     attention_heads: int = 4
     attention_window_size: int = 2048
@@ -81,6 +89,14 @@ class HybridMemoryConfig:
     delta_heads: int = 4
     delta_num_householder: int = 4
     delta_allow_negative_eigenvalues: bool = True
+
+    gated_delta_heads: int = 4
+    gated_delta_key_dim: int | None = None
+    gated_delta_value_dim: int | None = None
+    gated_delta_allow_negative_eigenvalues: bool = False
+    gated_delta_minimum_retention: float = 0.90
+    gated_delta_initial_retention: float = 0.995
+    gated_delta_initial_write_strength: float = 0.10
 
     selected_heads: int = 2
     selected_blocks: int = 4
@@ -113,6 +129,7 @@ class HybridMemoryConfig:
             "attention_window_size",
             "delta_heads",
             "delta_num_householder",
+            "gated_delta_heads",
             "selected_heads",
             "selected_blocks",
             "selected_slots_per_block",
@@ -132,6 +149,10 @@ class HybridMemoryConfig:
                 raise ValueError(f"layer_plan entries must be one of {_LAYER_KINDS}")
         if self.selected_controller_rank is not None:
             _positive_integer("selected_controller_rank", self.selected_controller_rank)
+        for name in ("gated_delta_key_dim", "gated_delta_value_dim"):
+            value = getattr(self, name)
+            if value is not None:
+                _positive_integer(name, value)
         if self.structured_controller_rank is not None:
             _positive_integer(
                 "structured_controller_rank", self.structured_controller_rank
@@ -140,6 +161,7 @@ class HybridMemoryConfig:
             "use_local_conv",
             "tie_embeddings",
             "delta_allow_negative_eigenvalues",
+            "gated_delta_allow_negative_eigenvalues",
             "structured_hard_eval",
         ):
             if type(getattr(self, name)) is not bool:
@@ -173,6 +195,20 @@ class HybridMemoryConfig:
             )
         if "delta_product" in self.layer_plan and self.model_dim % self.delta_heads:
             raise ValueError("model_dim must be divisible by delta_heads")
+        if "gated_delta" in self.layer_plan:
+            GatedDeltaConfig(
+                model_dim=self.model_dim,
+                heads=self.gated_delta_heads,
+                key_dim=self.gated_delta_key_dim,
+                value_dim=self.gated_delta_value_dim,
+                allow_negative_eigenvalues=(
+                    self.gated_delta_allow_negative_eigenvalues
+                ),
+                norm_epsilon=self.norm_epsilon,
+                minimum_retention=self.gated_delta_minimum_retention,
+                initial_retention=self.gated_delta_initial_retention,
+                initial_write_strength=self.gated_delta_initial_write_strength,
+            )
         StructuredMemoryConfig(
             model_dim=self.model_dim,
             channels=self.structured_channels,
@@ -191,6 +227,22 @@ class HybridMemoryConfig:
 @dataclass(frozen=True)
 class DeltaProductState:
     """Complete DeltaProduct streaming state, including local-convolution history."""
+
+    memory: torch.Tensor
+    convolution: torch.Tensor
+
+    @property
+    def actual_bytes(self) -> int:
+        return _tensor_bytes(self.memory) + _tensor_bytes(self.convolution)
+
+    @property
+    def nbytes(self) -> int:
+        return self.actual_bytes
+
+
+@dataclass(frozen=True)
+class GatedDeltaState:
+    """Complete Gated DeltaNet fast-weight and local-convolution state."""
 
     memory: torch.Tensor
     convolution: torch.Tensor
@@ -237,7 +289,11 @@ class StructuredSpin8State:
 
 
 LayerState: TypeAlias = (
-    AttentionState | DeltaProductState | SelectedBlockState | StructuredSpin8State
+    AttentionState
+    | GatedDeltaState
+    | DeltaProductState
+    | SelectedBlockState
+    | StructuredSpin8State
 )
 LayerDiagnostics: TypeAlias = dict[str, Any] | None
 
@@ -352,6 +408,27 @@ class HybridMemoryBlock(nn.Module):
                 )
             )
             self.local_conv = None
+        elif kind == "gated_delta":
+            self.mixer = GatedDeltaMemory(
+                GatedDeltaConfig(
+                    model_dim=config.model_dim,
+                    heads=config.gated_delta_heads,
+                    key_dim=config.gated_delta_key_dim,
+                    value_dim=config.gated_delta_value_dim,
+                    allow_negative_eigenvalues=(
+                        config.gated_delta_allow_negative_eigenvalues
+                    ),
+                    norm_epsilon=config.norm_epsilon,
+                    minimum_retention=config.gated_delta_minimum_retention,
+                    initial_retention=config.gated_delta_initial_retention,
+                    initial_write_strength=config.gated_delta_initial_write_strength,
+                )
+            )
+            self.local_conv = (
+                CausalDepthwiseConv1d(config.model_dim, config.conv_kernel)
+                if config.use_local_conv
+                else None
+            )
         elif kind == "delta_product":
             self.mixer = DeltaProductReferenceLayer(
                 hidden_size=config.model_dim,
@@ -463,7 +540,12 @@ class HybridMemoryBlock(nn.Module):
             self.config.model_dim,
             self.convolution_cache_width,
         )
-        if self.kind == "delta_product":
+        if self.kind == "gated_delta":
+            if not isinstance(state, GatedDeltaState):
+                raise TypeError("gated_delta layer state must be a GatedDeltaState")
+            assert isinstance(self.mixer, GatedDeltaMemory)
+            memory_shape = (batch_size, *self.mixer.config.state_shape)
+        elif self.kind == "delta_product":
             if not isinstance(state, DeltaProductState):
                 raise TypeError("delta_product layer state must be a DeltaProductState")
             assert isinstance(self.mixer, DeltaProductReferenceLayer)
@@ -562,7 +644,26 @@ class HybridMemoryBlock(nn.Module):
                     value, previous_convolution, valid_mask
                 )
             mixed_value = F.silu(mixed_value)
-            if self.kind == "delta_product":
+            if self.kind == "gated_delta":
+                assert isinstance(self.mixer, GatedDeltaMemory)
+                memory = state.memory if isinstance(state, GatedDeltaState) else None
+                if return_diagnostics:
+                    update, next_memory, diagnostics = self.mixer(
+                        mixed_value,
+                        memory,
+                        valid_mask=valid_mask,
+                        scan_mode=delta_scan_mode,
+                        return_diagnostics=True,
+                    )
+                else:
+                    update, next_memory = self.mixer(
+                        mixed_value,
+                        memory,
+                        valid_mask=valid_mask,
+                        scan_mode=delta_scan_mode,
+                    )
+                next_state = GatedDeltaState(next_memory, next_convolution)
+            elif self.kind == "delta_product":
                 assert isinstance(self.mixer, DeltaProductReferenceLayer)
                 memory = state.memory if isinstance(state, DeltaProductState) else None
                 update, next_memory = self.mixer(
@@ -812,7 +913,13 @@ class HybridMemoryLM(nn.Module):
         if isinstance(first, AttentionState):
             tensor = first.key_cache
         elif isinstance(
-            first, (DeltaProductState, SelectedBlockState, StructuredSpin8State)
+            first,
+            (
+                GatedDeltaState,
+                DeltaProductState,
+                SelectedBlockState,
+                StructuredSpin8State,
+            ),
         ):
             tensor = first.memory
         else:
@@ -900,7 +1007,12 @@ class HybridMemoryLM(nn.Module):
                     * block.convolution_cache_width
                     * element_size
                 )
-                if block.kind == "delta_product":
+                if block.kind == "gated_delta":
+                    assert isinstance(block.mixer, GatedDeltaMemory)
+                    memory_capacity = (
+                        batch_size * block.mixer.state_scalars * element_size
+                    )
+                elif block.kind == "delta_product":
                     assert isinstance(block.mixer, DeltaProductReferenceLayer)
                     memory_capacity = (
                         batch_size
@@ -929,6 +1041,7 @@ class HybridMemoryLM(nn.Module):
                     assert isinstance(
                         state,
                         (
+                            GatedDeltaState,
                             DeltaProductState,
                             SelectedBlockState,
                             StructuredSpin8State,
@@ -1047,6 +1160,7 @@ def subgroup_generator_indices(dimension: int) -> tuple[int, ...]:
 
 
 DeltaProductLayerState = DeltaProductState
+GatedDeltaLayerState = GatedDeltaState
 SelectedBlockLayerState = SelectedBlockState
 StructuredSpin8LayerState = StructuredSpin8State
 SwiGLU = GatedMLP
@@ -1057,6 +1171,8 @@ __all__ = [
     "CausalDepthwiseConv1d",
     "DeltaProductLayerState",
     "DeltaProductState",
+    "GatedDeltaLayerState",
+    "GatedDeltaState",
     "HybridMemoryBlock",
     "HybridMemoryConfig",
     "HybridMemoryLM",

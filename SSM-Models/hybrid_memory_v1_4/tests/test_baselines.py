@@ -11,8 +11,9 @@ import torch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-import hybrid_memory_v1_4.baselines as baselines_module
 from delta_product_reference import DeltaProductReferenceModel
+
+import hybrid_memory_v1_4.baselines as baselines_module
 from hybrid_memory_v1_4.baselines import (
     BASELINE_NAMES,
     BASELINE_REGISTRY,
@@ -30,7 +31,10 @@ EXPECTED_NAMES = (
     "delta_product_reference",
     "fla_delta_semantic",
     "fla_delta_fused",
+    "flashrt_gated_delta_kernel",
     "mamba2_official",
+    "transformers_mamba2",
+    "transformers_olmo_hybrid",
     "product_key_static",
 )
 
@@ -89,7 +93,9 @@ def test_availability_is_structured_and_unknown_names_fail() -> None:
         baseline_availability("automatic", "cpu", torch.float32)
 
 
-@pytest.mark.parametrize("name", ("fla_delta_fused", "mamba2_official"))
+@pytest.mark.parametrize(
+    "name", ("fla_delta_fused", "flashrt_gated_delta_kernel", "mamba2_official")
+)
 def test_official_baselines_fail_closed_without_cpu_substitution(name: str) -> None:
     report = baseline_availability(name, "cpu", torch.float32)
     assert not report
@@ -229,8 +235,51 @@ def test_common_metadata_preserves_implementation_and_claim_boundaries() -> None
     assert BASELINE_REGISTRY["fla_delta_fused"].fused
     assert not BASELINE_REGISTRY["fla_delta_fused"].reference
     assert BASELINE_REGISTRY["mamba2_official"].official
+    assert BASELINE_REGISTRY["flashrt_gated_delta_kernel"].official
+    assert BASELINE_REGISTRY["flashrt_gated_delta_kernel"].fused
+    assert BASELINE_REGISTRY["transformers_mamba2"].official
+    assert not BASELINE_REGISTRY["transformers_mamba2"].fused
+    assert BASELINE_REGISTRY["transformers_olmo_hybrid"].official
     assert not BASELINE_REGISTRY["delta_product_reference"].official
     assert BASELINE_REGISTRY["delta_product_reference"].reference
+
+
+def test_actual_transformers_architectures_build_without_fused_substitution() -> None:
+    pytest.importorskip("transformers")
+    mamba = build_baseline(
+        "transformers_mamba2",
+        vocab_size=31,
+        hidden_size=32,
+        state_size=8,
+        num_hidden_layers=1,
+        expand=2,
+        head_dim=8,
+        num_heads=8,
+        n_groups=4,
+        chunk_size=16,
+        use_cache=False,
+    )
+    olmo = build_baseline(
+        "transformers_olmo_hybrid",
+        vocab_size=31,
+        hidden_size=32,
+        intermediate_size=64,
+        num_hidden_layers=2,
+        num_attention_heads=4,
+        num_key_value_heads=4,
+        layer_types=["linear_attention", "full_attention"],
+        linear_num_key_heads=4,
+        linear_num_value_heads=4,
+        linear_key_head_dim=8,
+        linear_value_head_dim=8,
+        max_position_embeddings=64,
+        use_cache=False,
+        pad_token_id=0,
+        eos_token_id=1,
+    )
+    tokens = torch.randint(0, 31, (2, 16))
+    assert mamba(tokens, use_cache=False).logits.shape == (2, 16, 31)
+    assert olmo(tokens, use_cache=False).logits.shape == (2, 16, 31)
 
 
 def test_guarded_cuda_fla_registry_run() -> None:
