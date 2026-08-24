@@ -2,9 +2,11 @@
 
 **Status:** v1.4.4 tied-address successor passed prospectively frozen G4f with
 internal commissioning labels. The external causal reverse-binding route
-passed the prospectively frozen G8 target-distance continuation across all
-three G7 checkpoints. The frozen G4a selected-memory result remains negative;
-none of these results is a label-free, natural-language, or speed promotion.
+passed the G8 continuation but failed the fresh-from-scratch G9 gate: one of
+three fresh seeds fell below 90% at both L96 and L512. Diagnostics localize
+that failure to learned global filler decay, not a disconnected learning
+signal. The frozen G4a selected-memory result remains negative; none of these
+results is a label-free, natural-language, or speed promotion.
 
 This track combines five explicit mixer kinds in one causal language-model
 shell:
@@ -161,6 +163,10 @@ remains label-supervised with 774,400 useful query labels per seed.
   [`distance_consolidation.py`](distance_consolidation.py): fresh-seed external
   learning, competence-pacing falsification, and retained-optimizer L512
   consolidation.
+- [`combined_validation.py`](combined_validation.py) and
+  [`optimization_diagnostic.py`](optimization_diagnostic.py): the frozen G9
+  fresh combined schedule and causal/representation diagnostics for its weak
+  seed.
 
 ## Baseline boundary
 
@@ -202,11 +208,15 @@ tuning. It passed: L96 mean/minimum were 95.63%/93.69%, and L512 mean/minimum
 were 94.61%/92.29%. See
 [`G8_PREREGISTRATION.md`](G8_PREREGISTRATION.md).
 
-G9 freezes the complete successful external schedule from random
-initialization on three unseen seeds. It replaces G7's invalid competence gate
-with fixed counts equal to the maximum updates actually consumed across the
-exposed G7 phases, then appends the uniform G8 L512 phase. See
-[`G9_PREREGISTRATION.md`](G9_PREREGISTRATION.md).
+G9 froze the complete external schedule from random initialization on three
+unseen seeds. It failed: seeds 1721 and 1733 reached 98.54% and 95.36% at L512,
+but seed 1723 reached only 87.89% (and 88.27% at L96). The weak checkpoint had
+one head writing at 99.76% strength on filler while retaining only 90.04% per
+filler token. Even 416 such transitions erase essentially the entire old-state
+contribution. Retrieval gradients remained nonzero and removing the Gated
+Delta layer collapsed accuracy, so the present problem is unstable learned
+retention, not absent credit or an unused memory layer. See
+[`G9_PREREGISTRATION.md`](G9_PREREGISTRATION.md) and the retained G9 artifacts.
 
 ## Validation
 
@@ -234,6 +244,8 @@ matched speed evidence.
   evidence of label-free or natural-language learning.
 - G8 validates a continuation of exposed G7 checkpoints, not a fresh-from-
   scratch replay of the complete final schedule.
+- G9 failed the fresh combined-schedule gate; its 93.93% L512 mean cannot hide
+  the 87.89% weak seed.
 - The retained validation checkpoints are not released pretrained models.
 - Straight-through routing establishes a gradient estimator, not successful
   label-free routing.

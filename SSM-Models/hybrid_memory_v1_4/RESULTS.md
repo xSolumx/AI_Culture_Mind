@@ -501,6 +501,47 @@ Its fixed phase counts are 1,200/1,200/1,400/1,300 followed by the 600-update
 L512 phase. Fresh seeds 1721/1723/1733 must each exceed 90% at both lengths;
 the G8 continuation result is unchanged whatever G9 reports.
 
+## G9 failure: learned global decay is the unstable degree of freedom
+
+The fixed fresh-from-scratch schedule failed its all-seed gate:
+
+| Fresh seed | L96 exact | L512 exact |
+|---:|---:|---:|
+| 1721 | 99.146% | 98.535% |
+| 1723 | 88.269% | 87.891% |
+| 1733 | 96.106% | 95.361% |
+
+Mean accuracy was 94.507% at L96 and 93.929% at L512, but the seed-1723
+minimum failed both declared thresholds. This is not repaired by reporting the
+mean. The run began at clean preregistration commit `c0c05b2` and used
+1,292,800 retrieval plus 1,408,000 external reverse-binding labels per seed.
+
+The post-failure diagnostic isolates a concrete architectural instability.
+For seed 1723, one of four Gated Delta heads learned mean filler write strength
+0.9976 and mean filler retention 0.9004, effectively the configured hard floor
+of 0.90. Across roughly 416 filler transitions, that global retention factor
+alone removes effectively all old-state contribution. The strong seeds kept
+the corresponding filler retentions near one.
+
+The memory layer is nevertheless causally used: seed-1723 accuracy was 86.52%
+in the diagnostic cohort, fell to 1.95% when Gated Delta was ablated, and
+remained 85.35% when attention was ablated. Retrieval gradients into the
+memory parameters were finite and nonzero. Reverse-binding loss also converged
+for the weak seed. Thus the current learning problem is not disconnected
+credit, an unused memory layer, or failure to learn the external association
+target. It is a seed-dependent optimizer route in which unrestricted global
+decay erases episodic bindings on filler tokens.
+
+The next causal intervention changes only the retention range while holding
+architecture, initialization seed, data, optimizer, schedule, and evaluation
+fixed. Natural-text expansion remains blocked until that intervention passes
+an unseen-seed gate.
+
+Evidence:
+[`artifacts/g9_fresh_combined_validation_cuda_2026-08-25.json`](artifacts/g9_fresh_combined_validation_cuda_2026-08-25.json)
+and
+[`artifacts/g9_optimization_diagnostic_cuda_2026-08-25.json`](artifacts/g9_optimization_diagnostic_cuda_2026-08-25.json).
+
 ## Actual upstream probes
 
 - FlashRT Gated Delta Attention was pinned at revision `892f725c...`, kernel
@@ -544,6 +585,7 @@ Artifact file hashes are recorded in [`ARTIFACTS.sha256`](ARTIFACTS.sha256).
   write-event, and intermediate labels; label-free retrieval remains open.
 - G8 validates external causal-label target-distance continuation, not ordinary
   label-free next-token learning or a fresh combined-schedule cohort.
+- G9 failed its fresh combined-schedule all-seed gate.
 - The retained checkpoints are validation artifacts, not released pretrained
   models.
 - No natural-language or bits-per-byte claim exists.
