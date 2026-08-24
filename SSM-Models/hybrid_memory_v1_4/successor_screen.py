@@ -32,6 +32,8 @@ else:
     from hybrid_memory_v1_4.tasks import DEFAULT_VOCABULARY  # type: ignore[no-redef]
 
 DEVELOPMENT_SEEDS = (1401, 1429)
+RETENTION_SAFE_MINIMUM = 0.999
+RETENTION_SAFE_INITIAL = 0.9995
 
 
 def _sha256(path: Path) -> str:
@@ -82,6 +84,23 @@ def _tied_identity_config() -> HybridMemoryConfig:
         **{
             **asdict(_identity_config()),
             "gated_delta_tie_query_key": True,
+        }
+    )
+
+
+def _retention_safe_config() -> HybridMemoryConfig:
+    """Return the v1.4.5 candidate with a 512-token-safe decay floor.
+
+    This preserves the validated v1.4.4 tensor shapes and address geometry.
+    Only the range and initialization of the learned global retention control
+    change.  Content-selective DeltaNet overwrites remain unconstrained.
+    """
+
+    return HybridMemoryConfig(
+        **{
+            **asdict(_tied_identity_config()),
+            "gated_delta_minimum_retention": RETENTION_SAFE_MINIMUM,
+            "gated_delta_initial_retention": RETENTION_SAFE_INITIAL,
         }
     )
 

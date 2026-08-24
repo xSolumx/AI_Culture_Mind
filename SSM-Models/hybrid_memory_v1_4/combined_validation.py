@@ -116,6 +116,7 @@ def _train_schedule(
     *,
     model_seed: int,
     device: torch.device,
+    model_name: str = MODEL_NAME,
 ) -> tuple[list[dict[str, Any]], torch.optim.Optimizer]:
     optimizer = torch.optim.AdamW(model.parameters(), lr=3e-3, weight_decay=0.01)
     traces = []
@@ -141,7 +142,7 @@ def _train_schedule(
                 device=device,
             )
             optimizer.zero_grad(set_to_none=True)
-            logits = _forward_logits(MODEL_NAME, model, batch.inputs)
+            logits = _forward_logits(model_name, model, batch.inputs)
             retrieval, association = externally_observable_losses(
                 logits,
                 batch,

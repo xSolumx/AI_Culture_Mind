@@ -342,6 +342,7 @@ def source_file_digests() -> tuple[SourceFileDigest, ...]:
         root / "competence_validation.py",
         root / "distance_consolidation.py",
         root / "combined_validation.py",
+        root / "retention_successor_screen.py",
         root / "upstream_learning_comparison.py",
         root / "upstream_probe.py",
         root / "model.py",

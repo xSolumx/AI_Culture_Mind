@@ -24,7 +24,7 @@ if __package__:
     from .identity_validation import CURRICULUM
     from .learnability_screen import CurriculumPhase, _batch, _seed
     from .model import HybridMemoryLM
-    from .successor_screen import _tied_identity_config
+    from .successor_screen import _retention_safe_config, _tied_identity_config
     from .tasks import RetrievalBatch
 else:
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
@@ -44,6 +44,7 @@ else:
         HybridMemoryLM,
     )
     from hybrid_memory_v1_4.successor_screen import (  # type: ignore[no-redef]
+        _retention_safe_config,
         _tied_identity_config,
     )
     from hybrid_memory_v1_4.tasks import (  # type: ignore[no-redef]
@@ -88,6 +89,8 @@ def _git() -> tuple[str, list[str]]:
 def _build_model(name: str, device: torch.device) -> nn.Module:
     if name == "hybrid_v1_4_4":
         return HybridMemoryLM(_tied_identity_config()).to(device)
+    if name == "hybrid_v1_4_5":
+        return HybridMemoryLM(_retention_safe_config()).to(device)
     common = {
         "vocab_size": 197,
         "hidden_size": 64,
@@ -131,7 +134,7 @@ def _build_model(name: str, device: torch.device) -> nn.Module:
 
 
 def _forward_logits(name: str, model: nn.Module, inputs: torch.Tensor) -> torch.Tensor:
-    if name == "hybrid_v1_4_4":
+    if name.startswith("hybrid_v1_4_"):
         output = model(inputs, delta_scan_mode="parallel")
         return output["logits"]
     output = model(input_ids=inputs, use_cache=False)
