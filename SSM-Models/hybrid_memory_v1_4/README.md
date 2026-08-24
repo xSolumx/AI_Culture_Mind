@@ -180,7 +180,14 @@ to L512 (25.44%); Mamba-2 reached 17.97%/14.16%, and uncommissioned v1.4.4
 at the observed value event. All three models then learned L96; at L512,
 v1.4.4 reached 96.00%, Mamba-2 77.98%, and OLMo Hybrid 58.11%. This is one
 paired seed, not an upstream superiority claim. A three-fresh-seed v1.4.4 gate
-is frozen in [`G6_PREREGISTRATION.md`](G6_PREREGISTRATION.md).
+was frozen in [`G6_PREREGISTRATION.md`](G6_PREREGISTRATION.md).
+
+G6 failed because seed 1643 reached only 89.21% L96 and 83.40% L512. Its
+reverse-binding auxiliary was learned, but the fixed curriculum advanced while
+retrieval accuracy was still 12.5%, 17.2%, and 53.9% at the first three phase
+boundaries. G7 freezes a competence-paced curriculum: two consecutive fresh
+probes must clear 90% before a phase advances, subject to fixed caps. See
+[`G7_PREREGISTRATION.md`](G7_PREREGISTRATION.md).
 
 ## Validation
 

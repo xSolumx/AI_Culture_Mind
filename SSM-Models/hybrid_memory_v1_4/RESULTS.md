@@ -398,6 +398,42 @@ and an all-seed 90% L96/L512 gate are frozen in
 Evidence:
 [`artifacts/g5b_causal_reverse_binding_comparison_cuda_2026-08-24.json`](artifacts/g5b_causal_reverse_binding_comparison_cuda_2026-08-24.json).
 
+## G6 failure and competence-paced successor
+
+The three-seed external-learning gate did not pass:
+
+| Fresh seed | L96 exact | L512 exact | L512 bits/query |
+|---:|---:|---:|---:|
+| 1643 | 89.209% | 83.398% | 0.832 |
+| 1657 | 96.216% | 94.873% | 0.254 |
+| 1663 | 98.694% | 98.193% | 0.086 |
+
+Mean L512 accuracy was 92.155%, but seed 1643 failed both gates. G6 therefore
+does not validate robust external-label learning.
+
+The reverse-binding loss was low for every seed, including 0.0058 in weak seed
+1643. Its phase-ending retrieval accuracies, however, were only 12.5%, 17.2%,
+53.9%, and 87.1%. The fixed schedule advanced based on elapsed updates rather
+than acquired competence. Gated Delta ablation reduced the three diagnostic
+cohorts to 0-2.15%, while attention ablation left them almost unchanged, so the
+retrieval mechanism is the recurrent memory rather than the attention shell.
+
+The older privileged internal query/key top-1 diagnostic no longer tracks
+performance under external training: strong seed 1663 scored poorly on that
+metric while retrieving well. It is retained as a non-aligned diagnostic, not
+used to choose another internal auxiliary.
+
+G7 keeps the architecture and causal objective fixed but changes curriculum
+control. Every phase must reach two consecutive 90% fresh competence probes
+before advancing, with preregistered per-phase caps. Fresh seeds 1693/1697/1699
+and the final all-seed gate are frozen in
+[`G7_PREREGISTRATION.md`](G7_PREREGISTRATION.md).
+
+Evidence:
+[`artifacts/g6_external_reverse_binding_validation_cuda_2026-08-25.json`](artifacts/g6_external_reverse_binding_validation_cuda_2026-08-25.json)
+and
+[`artifacts/g6_optimization_diagnostic_cuda_2026-08-25.json`](artifacts/g6_optimization_diagnostic_cuda_2026-08-25.json).
+
 ## Actual upstream probes
 
 - FlashRT Gated Delta Attention was pinned at revision `892f725c...`, kernel
@@ -424,7 +460,7 @@ and
 
 ## Validation record
 
-- `python -m pytest hybrid_memory_v1_4/tests -q`: **195 passed, 4 skipped**.
+- `python -m pytest hybrid_memory_v1_4/tests -q`: **196 passed, 4 skipped**.
 - `python -m ruff check hybrid_memory_v1_4`: passed.
 - `python -m ruff format --check hybrid_memory_v1_4`: passed.
 - The four native-suite skips are guarded optional fused FLA/Mamba paths; WSL

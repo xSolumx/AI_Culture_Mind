@@ -228,8 +228,15 @@ G5b made all three actual architectures learn L96. v1.4.4 reached 97.38% L96
 and 96.00% L512; Mamba-2 reached 98.66% and 77.98%; OLMo Hybrid reached 100%
 and 58.11%. The present solution is therefore not more structure or more
 updates. It is a learnable causal event target plus a tied content-addressed
-state that preserves the commissioned binding. G6 tests whether that result
-survives three fresh local-model seeds.
+state that preserves the commissioned binding. G6 then tested that result on
+three fresh local-model seeds.
+
+G6 then failed that three-seed gate because seed 1643 reached only 89.21% L96
+and 83.40% L512. The external association target was already learned; the weak
+seed was still acquiring retrieval when each fixed phase ended. G7 therefore
+replaces the fixed clock with capped competence pacing. This directly imports
+the reliable lesson from Pure Spin v1.2: curriculum stages should represent
+mastered capabilities, not merely equal update counts.
 
 ## Current claim ledger
 
@@ -268,8 +275,8 @@ survives three fresh local-model seeds.
 
 - robust tied-address commissioning passed G4f; learning the same rule without
   internal association/write labels remains open;
-- whether G5b's one-seed causal reverse-binding result passes the frozen G6
-  three-seed local-model gate;
+- whether the competence-paced G7 successor eliminates the remaining
+  fixed-schedule seed failure;
 - label-free MQAR after a dense causal language-model pretraining phase;
 - matched natural-text quality versus actual Mamba-2 and Gated DeltaNet;
 - whether selected archive or Spin/F4/rotor transport adds value after the

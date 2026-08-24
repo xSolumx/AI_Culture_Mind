@@ -111,7 +111,10 @@ def diagnose(
     batch_size: int,
 ) -> dict[str, Any]:
     payload = torch.load(checkpoint, map_location="cpu", weights_only=False)
-    model = HybridMemoryLM(HybridMemoryConfig(**payload["config"])).to(device)
+    config_payload = payload.get("config", payload.get("model_config"))
+    if not isinstance(config_payload, dict):
+        raise TypeError("checkpoint must contain a config or model_config mapping")
+    model = HybridMemoryLM(HybridMemoryConfig(**config_payload)).to(device)
     model.load_state_dict(payload["model_state_dict"], strict=True)
     phase = CurriculumPhase(16, 4, 512, 0)
     cohort = [
@@ -331,6 +334,10 @@ def main() -> None:
         "--checkpoint-pattern",
         default="hybrid_v1_4_1_g4c_validation_seed{seed}.pt",
     )
+    parser.add_argument(
+        "--claim-status",
+        default="post-G4c optimization diagnostic",
+    )
     args = parser.parse_args()
     device = torch.device(args.device)
     reports = []
@@ -347,7 +354,7 @@ def main() -> None:
         )
     payload = {
         "schema_version": 1,
-        "claim_status": "post-G4c optimization diagnostic",
+        "claim_status": args.claim_status,
         "runs": reports,
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)
