@@ -25,8 +25,11 @@
 > final-only loss. Straight-through routing plus an explicit
 > `selected_block -> attention` schedule repairs that causal path, while the
 > failed gate remains recorded. Mechanical CUDA streaming and 65,536-step
-> numerical audits pass; no 600-update quality cohort, trained checkpoint, or
-> speed promotion exists. See the [v1.4 results](hybrid_memory_v1_4/RESULTS.md)
+> numerical audits pass. The frozen three-seed, 600-update MQAR campaign then
+> failed capability for both label-free and supervised routing; its matched
+> DeltaProduct control also stayed near chance, so the failure does not isolate
+> selected memory. No trained checkpoint, quality result, or speed promotion
+> exists. See the [v1.4 results](hybrid_memory_v1_4/RESULTS.md)
 > and [prospective G4a protocol](hybrid_memory_v1_4/PREREGISTRATION.md).
 
 > **2026-08-21 Pure Exceptional Delta SSM v1.3 development boundary.**

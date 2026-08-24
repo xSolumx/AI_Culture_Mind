@@ -112,8 +112,11 @@ is a structurally tested prototype, not a maintained-model promotion. Its
 original one-block temporal-observability gate was false; a straight-through
 selected-memory layer followed by bounded attention restores the missing
 non-final read path. Mechanical CUDA streaming and 65,536-step numerical
-screens pass, but no frozen 600-update quality cohort or trained checkpoint
-exists. See the [v1.4 result boundary](SSM-Models/hybrid_memory_v1_4/RESULTS.md).
+screens pass. Its frozen three-seed, 600-update MQAR campaign failed retrieval
+capability under both label-free and supervised routing; the common-shell
+DeltaProduct control also remained near chance. No trained checkpoint or
+quality promotion exists. See the
+[v1.4 result boundary](SSM-Models/hybrid_memory_v1_4/RESULTS.md).
 
 The 2026-08-17 follow-up hides those 28 coordinates behind eight symbolic
 tokens and excludes the center-producing pair `a,a` from training. Three fresh

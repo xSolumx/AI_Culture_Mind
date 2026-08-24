@@ -1,8 +1,8 @@
 # Hybrid Memory SSM v1.4
 
-**Status:** structurally tested research prototype. It is not a released
-successor to v1.2/v1.3, has no trained checkpoint, and has no quality or speed
-promotion.
+**Status:** structurally tested research prototype with a negative frozen G4a
+retrieval result. It is not a released successor to v1.2/v1.3, has no trained
+checkpoint, and has no quality or speed promotion.
 
 This track combines four explicit mixer kinds in one causal language-model
 shell:
@@ -39,6 +39,13 @@ separates three facts:
 See [`RESULTS.md`](RESULTS.md),
 [`PREREGISTRATION.md`](PREREGISTRATION.md), and the checked artifact
 [`artifacts/temporal_observability_2026-08-24.json`](artifacts/temporal_observability_2026-08-24.json).
+
+The subsequent three-seed, 600-update G4a MQAR campaign also failed. The
+label-free candidate reached only 1.563%--3.125% L512 accuracy per seed; the
+explicitly supervised-routing ablation reached 1.172%--2.344%. The matched
+DeltaProduct shell also remained near chance, so this falsifies the frozen
+capability claim without isolating one memory architecture as the cause. See
+[`RESULTS.md`](RESULTS.md) for the complete adjudication.
 
 ## Implemented surfaces
 
@@ -103,8 +110,10 @@ matched speed evidence.
 
 ## Nonclaims
 
-- No retrieval or natural-language quality claim exists yet.
-- No checkpoint or validated training experiment exists yet.
+- The frozen G4a retrieval capability claim failed in both routing cohorts.
+- The matched control also failed, so G4a does not isolate selected memory as
+  the cause.
+- No trained checkpoint or successful model-quality result exists.
 - Straight-through routing establishes a gradient estimator, not successful
   label-free routing.
 - The selected-attention topology result establishes a causal gradient path,
