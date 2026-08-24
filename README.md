@@ -107,6 +107,14 @@ classification, versus unfused Transformers Mamba-2 at `0.132`--`0.135` and
 superiority. See
 [`PURE_SPIN8_VS_MAMBA2_RESULTS.md`](SSM-Models/experiments/PURE_SPIN8_VS_MAMBA2_RESULTS.md).
 
+The separate [`hybrid_memory_v1_4`](SSM-Models/hybrid_memory_v1_4/) frontier
+is a structurally tested prototype, not a maintained-model promotion. Its
+original one-block temporal-observability gate was false; a straight-through
+selected-memory layer followed by bounded attention restores the missing
+non-final read path. Mechanical CUDA streaming and 65,536-step numerical
+screens pass, but no frozen 600-update quality cohort or trained checkpoint
+exists. See the [v1.4 result boundary](SSM-Models/hybrid_memory_v1_4/RESULTS.md).
+
 The 2026-08-17 follow-up hides those 28 coordinates behind eight symbolic
 tokens and excludes the center-producing pair `a,a` from training. Three fresh
 seeds identify the local actions and retain 100% center/identity correctness

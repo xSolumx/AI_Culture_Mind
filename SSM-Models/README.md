@@ -16,6 +16,19 @@
 > environment, correctness, gradient, and matched-performance gates on cu126;
 > artifact labels are never rewritten in place.
 
+> **2026-08-24 Hybrid Memory v1.4 research boundary.**
+> [`hybrid_memory_v1_4/`](hybrid_memory_v1_4/) is a structurally tested
+> prototype combining bounded local attention, the maintained DeltaProduct
+> reference, selected-block affine memory, and rung-routed Spin(8) memory. Its
+> original one-block temporal-observability gate was structurally false: hard
+> coarse routing disconnected its logits and non-final reads had no path to a
+> final-only loss. Straight-through routing plus an explicit
+> `selected_block -> attention` schedule repairs that causal path, while the
+> failed gate remains recorded. Mechanical CUDA streaming and 65,536-step
+> numerical audits pass; no 600-update quality cohort, trained checkpoint, or
+> speed promotion exists. See the [v1.4 results](hybrid_memory_v1_4/RESULTS.md)
+> and [prospective G4a protocol](hybrid_memory_v1_4/PREREGISTRATION.md).
+
 > **2026-08-21 Pure Exceptional Delta SSM v1.3 development boundary.**
 > [`pure_f4_delta_ssm_v1_3/`](pure_f4_delta_ssm_v1_3/) now contains an isolated
 > semantic PyTorch implementation of the full Albert-algebra hierarchy
