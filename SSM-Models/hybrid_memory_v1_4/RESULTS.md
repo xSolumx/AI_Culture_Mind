@@ -542,6 +542,36 @@ Evidence:
 and
 [`artifacts/g9_optimization_diagnostic_cuda_2026-08-25.json`](artifacts/g9_optimization_diagnostic_cuda_2026-08-25.json).
 
+## v1.4.5 development: retention-only intervention repairs the exposed seed
+
+The matched seed-1723 replay changed only the learned retention range:
+minimum/initial retention moved from 0.90/0.995 to 0.999/0.9995. Tensor shapes,
+tied address geometry, model seed, data namespaces, objective, schedule,
+optimizer, and evaluation cohorts were identical to G9. The hard floor now has
+a 692.8-token half-life instead of 6.58 tokens; content-selective delta
+overwrites remain trainable.
+
+| Exposed seed 1723 | v1.4.4 G9 | v1.4.5 retention-safe |
+|---|---:|---:|
+| L96 exact | 88.269% | 98.059% |
+| L512 exact | 87.891% | 96.289% |
+
+The phase losses stayed finite and the candidate cleared both development
+thresholds. A separate L512 diagnostic cohort reached 98.242%. Disabling the
+Gated Delta mixer collapsed accuracy to 0%; disabling attention left 98.242%,
+so this was not an attention workaround. The active write head retained
+0.99973 on filler rather than the failed model's 0.9004. Its filler write
+strength was 0.5592 rather than 0.9976.
+
+This supports the erasure diagnosis as a matched causal result, but seed 1723
+was selected because it failed. The candidate remains development-only until
+it passes a prospectively frozen unseen-seed cohort.
+
+Evidence:
+[`artifacts/g9_retention_safe_exposed_seed_cuda_2026-08-25.json`](artifacts/g9_retention_safe_exposed_seed_cuda_2026-08-25.json)
+and
+[`artifacts/g9_retention_safe_diagnostic_cuda_2026-08-25.json`](artifacts/g9_retention_safe_diagnostic_cuda_2026-08-25.json).
+
 ## Actual upstream probes
 
 - FlashRT Gated Delta Attention was pinned at revision `892f725c...`, kernel
@@ -586,6 +616,8 @@ Artifact file hashes are recorded in [`ARTIFACTS.sha256`](ARTIFACTS.sha256).
 - G8 validates external causal-label target-distance continuation, not ordinary
   label-free next-token learning or a fresh combined-schedule cohort.
 - G9 failed its fresh combined-schedule all-seed gate.
+- The retention-safe v1.4.5 result is an exposed-seed development intervention,
+  not fresh validation.
 - The retained checkpoints are validation artifacts, not released pretrained
   models.
 - No natural-language or bits-per-byte claim exists.

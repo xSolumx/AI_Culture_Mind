@@ -5,8 +5,10 @@ internal commissioning labels. The external causal reverse-binding route
 passed the G8 continuation but failed the fresh-from-scratch G9 gate: one of
 three fresh seeds fell below 90% at both L96 and L512. Diagnostics localize
 that failure to learned global filler decay, not a disconnected learning
-signal. The frozen G4a selected-memory result remains negative; none of these
-results is a label-free, natural-language, or speed promotion.
+signal. A retention-only v1.4.5 candidate repaired the exposed weak seed, but
+that is development evidence pending fresh validation. The frozen G4a
+selected-memory result remains negative; none of these results is a label-free,
+natural-language, or speed promotion.
 
 This track combines five explicit mixer kinds in one causal language-model
 shell:
@@ -167,6 +169,8 @@ remains label-supervised with 774,400 useful query labels per seed.
   [`optimization_diagnostic.py`](optimization_diagnostic.py): the frozen G9
   fresh combined schedule and causal/representation diagnostics for its weak
   seed.
+- [`retention_successor_screen.py`](retention_successor_screen.py): the matched
+  exposed-seed retention-only causal intervention for the v1.4.5 candidate.
 
 ## Baseline boundary
 
@@ -218,6 +222,14 @@ Delta layer collapsed accuracy, so the present problem is unstable learned
 retention, not absent credit or an unused memory layer. See
 [`G9_PREREGISTRATION.md`](G9_PREREGISTRATION.md) and the retained G9 artifacts.
 
+The v1.4.5 development candidate changes only minimum/initial retention from
+0.90/0.995 to 0.999/0.9995. On the exact seed-1723 replay it raised L96 from
+88.27% to 98.06% and L512 from 87.89% to 96.29%. In a separate diagnostic
+cohort it reached 98.24%; ablating Gated Delta reduced accuracy to 0%, while
+ablating attention left 98.24%. Active-head filler retention was 0.99973.
+Because seed 1723 was already exposed, this is causal development evidence,
+not validation.
+
 ## Validation
 
 From `SSM-Models`:
@@ -246,6 +258,8 @@ matched speed evidence.
   scratch replay of the complete final schedule.
 - G9 failed the fresh combined-schedule gate; its 93.93% L512 mean cannot hide
   the 87.89% weak seed.
+- The v1.4.5 retention-safe replay used an exposed failed seed and cannot pass
+  a fresh-seed gate by itself.
 - The retained validation checkpoints are not released pretrained models.
 - Straight-through routing establishes a gradient estimator, not successful
   label-free routing.
