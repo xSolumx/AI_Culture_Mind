@@ -1,6 +1,6 @@
 # Hybrid Memory SSM v1.4
 
-**Status:** v1.4.2 content-addressed successor under fresh-seed validation. The
+**Status:** v1.4.3 identity-path successor under fresh-seed validation. The
 frozen G4a selected-memory result remains negative. A label-supervised Gated
 Delta commissioning run learned fresh 16-pair MQAR and produced retained
 development checkpoints; this is not yet a label-free, natural-language, or
@@ -84,6 +84,14 @@ value injection, and directly supervises the post-memory readout. It reached
 97.17% and 92.68% at L512 on already exposed development seeds 1401 and 1429.
 Fresh seeds 1451/1453/1459 and the all-seed 90% gate are frozen in
 [`G4D_PREREGISTRATION.md`](G4D_PREREGISTRATION.md).
+
+G4d failed because fresh seed 1459 reached 86.33% at L512. v1.4.3 removes the
+remaining random value/readout basin with identity value and output
+projections, an identity-centered output gate, and a 0.5 initial memory
+residual. It raised prior weak seeds 1429 and 1459 to 95.56% and 90.38% in
+development. G4e freezes three new seeds and doubles the final 16-pair phase so
+the declared budget is 774,400 useful query labels per seed. See
+[`G4E_PREREGISTRATION.md`](G4E_PREREGISTRATION.md).
 
 ## Implemented surfaces
 

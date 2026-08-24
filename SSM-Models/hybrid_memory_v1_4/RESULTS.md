@@ -1,11 +1,10 @@
 # Hybrid Memory v1.4 frontier results
 
 **Date:** 2026-08-24
-**Status:** v1.4.2 content-addressed successor under prospectively frozen
-fresh-seed validation. G4a, strict G4b, and consolidation G4c all failed their
-declared gates. The interference-targeted v1.4.2 design passed its exposed-seed
-development falsifier; there is no label-free, natural-language, or matched-
-speed promotion.
+**Status:** v1.4.3 identity-path successor under prospectively frozen fresh-
+seed validation. G4a through G4d all failed their declared gates. The identity-
+preserving v1.4.3 design passed its exposed weak-seed development falsifier;
+there is no label-free, natural-language, or matched-speed promotion.
 
 ## Adjudication
 
@@ -242,6 +241,39 @@ Evidence:
 and
 [`artifacts/learnability_v1_4_2_successor_development_cuda_2026-08-24.json`](artifacts/learnability_v1_4_2_successor_development_cuda_2026-08-24.json).
 
+## G4d failure and v1.4.3 identity path
+
+v1.4.2 G4d again failed the strict all-seed gate:
+
+| Fresh seed | L96 exact | L512 exact |
+|---:|---:|---:|
+| 1451 | 94.543% | 92.090% |
+| 1453 | 95.532% | 93.018% |
+| 1459 | 91.284% | 86.328% |
+
+Mean L512 accuracy was 90.479%, but the 86.328% minimum blocks promotion. The
+interference repair improved the mean without eliminating the random value-
+path basin.
+
+v1.4.3 makes the memory read identity-preserving at initialization:
+
+- value projection starts as identity;
+- output projection starts as identity;
+- the gate starts as `1 + tanh(0) = 1`; and
+- the Gated Delta residual starts at sigmoid(0) = 0.5 instead of 0.119.
+
+At the unchanged development budget this raised prior weak seeds 1429 and 1459
+to 95.557% and 90.381% at L512. Because 1459 cleared narrowly and still had a
+high final-phase loss, G4e prospectively doubles the final 16-pair phase to
+1,200 updates. Fresh seeds 1481/1483/1487, 774,400 useful labels per seed, and
+the same all-seed 90% gate were frozen in
+[`G4E_PREREGISTRATION.md`](G4E_PREREGISTRATION.md).
+
+Evidence:
+[`artifacts/learnability_v1_4_2_g4d_validation_cuda_2026-08-24.json`](artifacts/learnability_v1_4_2_g4d_validation_cuda_2026-08-24.json)
+and
+[`artifacts/learnability_v1_4_3_identity_successor_development_cuda_2026-08-24.json`](artifacts/learnability_v1_4_3_identity_successor_development_cuda_2026-08-24.json).
+
 ## Actual upstream probes
 
 - FlashRT Gated Delta Attention was pinned at revision `892f725c...`, kernel
@@ -268,7 +300,7 @@ and
 
 ## Validation record
 
-- `python -m pytest hybrid_memory_v1_4/tests -q`: **189 passed, 4 skipped**.
+- `python -m pytest hybrid_memory_v1_4/tests -q`: **192 passed, 4 skipped**.
 - `python -m ruff check hybrid_memory_v1_4`: passed.
 - `python -m ruff format --check hybrid_memory_v1_4`: passed.
 - The four native-suite skips are guarded optional fused FLA/Mamba paths; WSL

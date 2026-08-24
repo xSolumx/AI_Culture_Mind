@@ -41,6 +41,8 @@ class GatedDeltaConfig:
     value_dim: int | None = None
     allow_negative_eigenvalues: bool = False
     normalize_values: bool = False
+    identity_value_path: bool = False
+    identity_output_gate: bool = False
     norm_epsilon: float = 1e-6
     minimum_retention: float = 0.90
     initial_retention: float = 0.995
@@ -57,8 +59,20 @@ class GatedDeltaConfig:
                 _positive_integer(name, value)
         if type(self.allow_negative_eigenvalues) is not bool:
             raise TypeError("allow_negative_eigenvalues must be a bool")
-        if type(self.normalize_values) is not bool:
-            raise TypeError("normalize_values must be a bool")
+        for name in (
+            "normalize_values",
+            "identity_value_path",
+            "identity_output_gate",
+        ):
+            if type(getattr(self, name)) is not bool:
+                raise TypeError(f"{name} must be a bool")
+        if (
+            self.identity_value_path
+            and self.heads * self.resolved_value_dim != self.model_dim
+        ):
+            raise ValueError(
+                "identity_value_path requires heads * value_dim == model_dim"
+            )
         if not math.isfinite(self.norm_epsilon) or self.norm_epsilon <= 0.0:
             raise ValueError("norm_epsilon must be finite and positive")
         if not 0.0 <= self.minimum_retention < 1.0:
@@ -165,14 +179,14 @@ class GatedDeltaMemory(nn.Module):
         return batch_size * self.state_scalars * probe.element_size()
 
     def reset_parameters(self) -> None:
-        for module in (
-            self.query_projection,
-            self.key_projection,
-            self.value_projection,
-            self.output_gate,
-            self.output_projection,
-        ):
+        for module in (self.query_projection, self.key_projection, self.output_gate):
             nn.init.normal_(module.weight, mean=0.0, std=0.02)
+        if self.config.identity_value_path:
+            nn.init.eye_(self.value_projection.weight)
+            nn.init.eye_(self.output_projection.weight)
+        else:
+            nn.init.normal_(self.value_projection.weight, mean=0.0, std=0.02)
+            nn.init.normal_(self.output_projection.weight, mean=0.0, std=0.02)
         nn.init.zeros_(self.write_projection.weight)
         write_max = 2.0 if self.config.allow_negative_eigenvalues else 1.0
         write_ratio = self.config.initial_write_strength / write_max
@@ -325,7 +339,12 @@ class GatedDeltaMemory(nn.Module):
                 transition, injection, initial_state
             )
         read = torch.einsum("bthk,bhtkv->bthv", query, states)
-        gated = self.output_norm(read) * F.silu(self.output_gate(inputs).view_as(read))
+        gate = self.output_gate(inputs).view_as(read)
+        if self.config.identity_output_gate:
+            gate = 1.0 + torch.tanh(gate)
+        else:
+            gate = F.silu(gate)
+        gated = self.output_norm(read) * gate
         output = self.output_projection(gated.flatten(start_dim=2))
         if valid_mask is not None:
             output = output * valid_mask[..., None].to(output.dtype)

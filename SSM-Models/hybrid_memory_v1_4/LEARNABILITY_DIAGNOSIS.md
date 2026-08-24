@@ -33,6 +33,13 @@ value injection, and directly supervises the post-memory readout. It repaired
 the previously weak seed in development; fresh-seed G4d validation remains the
 current gate.
 
+G4d showed that interference repair alone still left a random value/readout
+basin: fresh seed 1459 reached only 86.328%. v1.4.3 now initializes the value
+projection, output projection, output gate, and memory residual as an identity-
+preserving path. It repaired both previously weak seeds in development. G4e
+tests that design on fresh seeds with the larger useful-label budget frozen in
+advance.
+
 ## What the present learning problem actually is
 
 The task is not “remember a value for a long time.” It is four coupled
@@ -233,8 +240,9 @@ ranking is claimed.
 ### Open
 
 - G4b and G4c failed because seed 1429 remained below 90%; the
-  interference-targeted v1.4.2 successor passed only exposed-seed development,
-  and prospectively frozen G4d fresh-seed validation is the current gate;
+  interference-targeted v1.4.2 successor then failed G4d on seed 1459; the
+  identity-preserving v1.4.3 successor passed only exposed weak-seed
+  development, and prospectively frozen G4e is the current gate;
 - label-free MQAR after a dense causal language-model pretraining phase;
 - matched natural-text quality versus actual Mamba-2 and Gated DeltaNet;
 - whether selected archive or Spin/F4/rotor transport adds value after the

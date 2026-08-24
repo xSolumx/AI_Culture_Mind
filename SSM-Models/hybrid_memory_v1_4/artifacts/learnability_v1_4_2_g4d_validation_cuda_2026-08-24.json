@@ -1,0 +1,342 @@
+{
+  "aggregate": {
+    "512": {
+      "mean_exact_accuracy": 0.90478515625,
+      "minimum_exact_accuracy": 0.86328125
+    },
+    "96": {
+      "mean_exact_accuracy": 0.9378662109375,
+      "minimum_exact_accuracy": 0.912841796875
+    }
+  },
+  "association_coefficient": 0.25,
+  "batch_size": 32,
+  "claim_status": "failed v1.4.2 successor validation",
+  "config": {
+    "attention_heads": 4,
+    "attention_rope_base": 10000.0,
+    "attention_window_size": 1024,
+    "conv_kernel": 4,
+    "delta_allow_negative_eigenvalues": true,
+    "delta_heads": 4,
+    "delta_num_householder": 4,
+    "dropout": 0.0,
+    "expansion": 2,
+    "gated_delta_allow_negative_eigenvalues": false,
+    "gated_delta_heads": 4,
+    "gated_delta_initial_retention": 0.995,
+    "gated_delta_initial_write_strength": 0.1,
+    "gated_delta_key_dim": 32,
+    "gated_delta_minimum_retention": 0.9,
+    "gated_delta_normalize_values": true,
+    "gated_delta_value_dim": 16,
+    "layer_plan": [
+      "gated_delta",
+      "attention"
+    ],
+    "model_dim": 64,
+    "norm_epsilon": 1e-06,
+    "selected_blocks": 4,
+    "selected_controller_rank": null,
+    "selected_heads": 2,
+    "selected_retention_max": 0.99,
+    "selected_retention_min": 0.0,
+    "selected_slots_per_block": 2,
+    "selected_update_rank": 1,
+    "selected_value_dim": 16,
+    "structured_channels": 1,
+    "structured_controller_rank": null,
+    "structured_hard_eval": true,
+    "structured_retention_max": 0.99,
+    "structured_retention_min": 0.0,
+    "structured_rungs": [
+      3,
+      4,
+      6,
+      8
+    ],
+    "tie_embeddings": true,
+    "use_local_conv": true,
+    "vocab_size": 197
+  },
+  "curriculum": [
+    {
+      "length": 16,
+      "pairs": 2,
+      "queries": 2,
+      "updates": 300
+    },
+    {
+      "length": 24,
+      "pairs": 4,
+      "queries": 4,
+      "updates": 300
+    },
+    {
+      "length": 48,
+      "pairs": 8,
+      "queries": 8,
+      "updates": 400
+    },
+    {
+      "length": 96,
+      "pairs": 16,
+      "queries": 16,
+      "updates": 600
+    }
+  ],
+  "elapsed_wall_seconds": 252.23115660000258,
+  "environment": {
+    "cuda": "13.0",
+    "device": "cuda",
+    "device_name": "NVIDIA GeForce RTX 2070 SUPER",
+    "torch": "2.12.0+cu130"
+  },
+  "gate": "every fresh seed has exact query accuracy >= 0.90 at L96 and L512",
+  "git_commit_at_start": "11b2fc96b06865b6e4316bcb9187b6fa9f4db7d3",
+  "git_status_at_start": [],
+  "intermediate_retrieval_coefficient": 0.5,
+  "label_supervised": true,
+  "learning_rate": 0.003,
+  "passed": false,
+  "preregistration": "C:\\Users\\HaydenLocal\\Programming\\AI_Culture_Mind\\SSM-Models\\hybrid_memory_v1_4\\G4D_PREREGISTRATION.md",
+  "preregistration_sha256": "cdbb1cd9bb6592db8075c2c3ad6656da9deb083a103e90ad5dae8b52948534cd",
+  "runs": [
+    {
+      "checkpoint": "SSM-Models\\hybrid_memory_v1_4\\artifacts\\checkpoints\\hybrid_v1_4_2_g4d_seed1451.pt",
+      "checkpoint_sha256": "c8dfa0b52dd06066ec597671f866858d7363a8ed0e0a8527c6e850e3952fee9e",
+      "evaluations": [
+        {
+          "bits_per_query": 0.28054892961996,
+          "exact_accuracy": 0.9454345703125,
+          "exact_sequence_accuracy": 0.408203125,
+          "length": 96,
+          "pairs": 16,
+          "queries_per_sequence": 16,
+          "query_count": 8192
+        },
+        {
+          "bits_per_query": 0.39087432620338924,
+          "exact_accuracy": 0.9208984375,
+          "exact_sequence_accuracy": 0.71875,
+          "length": 512,
+          "pairs": 16,
+          "queries_per_sequence": 4,
+          "query_count": 2048
+        }
+      ],
+      "model_seed": 1451,
+      "parameter_count": 124378,
+      "phase_traces": [
+        {
+          "last_batch_accuracy": 0.828125,
+          "mean_association_loss": 0.2078921573360761,
+          "mean_intermediate_retrieval_loss": 2.409586945573489,
+          "mean_retrieval_loss": 2.402791416943073,
+          "phase": {
+            "length": 16,
+            "pairs": 2,
+            "queries": 2,
+            "updates": 300
+          }
+        },
+        {
+          "last_batch_accuracy": 0.8046875,
+          "mean_association_loss": 0.40676179274916646,
+          "mean_intermediate_retrieval_loss": 1.4003342423836391,
+          "mean_retrieval_loss": 1.3914493701855342,
+          "phase": {
+            "length": 24,
+            "pairs": 4,
+            "queries": 4,
+            "updates": 300
+          }
+        },
+        {
+          "last_batch_accuracy": 0.90234375,
+          "mean_association_loss": 0.7582198676466941,
+          "mean_intermediate_retrieval_loss": 0.7835365827009082,
+          "mean_retrieval_loss": 0.7801679553464055,
+          "phase": {
+            "length": 48,
+            "pairs": 8,
+            "queries": 8,
+            "updates": 400
+          }
+        },
+        {
+          "last_batch_accuracy": 0.931640625,
+          "mean_association_loss": 0.6336412236094475,
+          "mean_intermediate_retrieval_loss": 0.4219148510197798,
+          "mean_retrieval_loss": 0.4218567906320095,
+          "phase": {
+            "length": 96,
+            "pairs": 16,
+            "queries": 16,
+            "updates": 600
+          }
+        }
+      ]
+    },
+    {
+      "checkpoint": "SSM-Models\\hybrid_memory_v1_4\\artifacts\\checkpoints\\hybrid_v1_4_2_g4d_seed1453.pt",
+      "checkpoint_sha256": "2fddffd3c7a8ac861eea369218581091fc774dd5b438d4cfa99d57c68ed03871",
+      "evaluations": [
+        {
+          "bits_per_query": 0.23693901407152054,
+          "exact_accuracy": 0.955322265625,
+          "exact_sequence_accuracy": 0.498046875,
+          "length": 96,
+          "pairs": 16,
+          "queries_per_sequence": 16,
+          "query_count": 8192
+        },
+        {
+          "bits_per_query": 0.3432506506614027,
+          "exact_accuracy": 0.93017578125,
+          "exact_sequence_accuracy": 0.748046875,
+          "length": 512,
+          "pairs": 16,
+          "queries_per_sequence": 4,
+          "query_count": 2048
+        }
+      ],
+      "model_seed": 1453,
+      "parameter_count": 124378,
+      "phase_traces": [
+        {
+          "last_batch_accuracy": 0.953125,
+          "mean_association_loss": 0.21163853704929353,
+          "mean_intermediate_retrieval_loss": 2.5358473574121794,
+          "mean_retrieval_loss": 2.5233178652326265,
+          "phase": {
+            "length": 16,
+            "pairs": 2,
+            "queries": 2,
+            "updates": 300
+          }
+        },
+        {
+          "last_batch_accuracy": 0.9140625,
+          "mean_association_loss": 0.310068361411492,
+          "mean_intermediate_retrieval_loss": 1.051332809527715,
+          "mean_retrieval_loss": 1.0453255426883699,
+          "phase": {
+            "length": 24,
+            "pairs": 4,
+            "queries": 4,
+            "updates": 300
+          }
+        },
+        {
+          "last_batch_accuracy": 0.91015625,
+          "mean_association_loss": 0.6121272374689579,
+          "mean_intermediate_retrieval_loss": 0.497130406871438,
+          "mean_retrieval_loss": 0.4951763636618853,
+          "phase": {
+            "length": 48,
+            "pairs": 8,
+            "queries": 8,
+            "updates": 400
+          }
+        },
+        {
+          "last_batch_accuracy": 0.962890625,
+          "mean_association_loss": 0.6147861836353937,
+          "mean_intermediate_retrieval_loss": 0.4374680367236336,
+          "mean_retrieval_loss": 0.43683249842375516,
+          "phase": {
+            "length": 96,
+            "pairs": 16,
+            "queries": 16,
+            "updates": 600
+          }
+        }
+      ]
+    },
+    {
+      "checkpoint": "SSM-Models\\hybrid_memory_v1_4\\artifacts\\checkpoints\\hybrid_v1_4_2_g4d_seed1459.pt",
+      "checkpoint_sha256": "8fac9f6871f490fc474ea19307da93f14baf61d4cc49c7218b7eaf25a3851bfa",
+      "evaluations": [
+        {
+          "bits_per_query": 0.44947364027187353,
+          "exact_accuracy": 0.912841796875,
+          "exact_sequence_accuracy": 0.2578125,
+          "length": 96,
+          "pairs": 16,
+          "queries_per_sequence": 16,
+          "query_count": 8192
+        },
+        {
+          "bits_per_query": 0.7168529258468331,
+          "exact_accuracy": 0.86328125,
+          "exact_sequence_accuracy": 0.56640625,
+          "length": 512,
+          "pairs": 16,
+          "queries_per_sequence": 4,
+          "query_count": 2048
+        }
+      ],
+      "model_seed": 1459,
+      "parameter_count": 124378,
+      "phase_traces": [
+        {
+          "last_batch_accuracy": 0.6875,
+          "mean_association_loss": 0.25523868774374325,
+          "mean_intermediate_retrieval_loss": 2.823097262779872,
+          "mean_retrieval_loss": 2.8173206841945646,
+          "phase": {
+            "length": 16,
+            "pairs": 2,
+            "queries": 2,
+            "updates": 300
+          }
+        },
+        {
+          "last_batch_accuracy": 0.71875,
+          "mean_association_loss": 0.5004796608289083,
+          "mean_intermediate_retrieval_loss": 1.940557363430659,
+          "mean_retrieval_loss": 1.9194868900378546,
+          "phase": {
+            "length": 24,
+            "pairs": 4,
+            "queries": 4,
+            "updates": 300
+          }
+        },
+        {
+          "last_batch_accuracy": 0.83203125,
+          "mean_association_loss": 0.929633629322052,
+          "mean_intermediate_retrieval_loss": 1.3669888146221638,
+          "mean_retrieval_loss": 1.3328708133101463,
+          "phase": {
+            "length": 48,
+            "pairs": 8,
+            "queries": 8,
+            "updates": 400
+          }
+        },
+        {
+          "last_batch_accuracy": 0.9140625,
+          "mean_association_loss": 0.8191177880764008,
+          "mean_intermediate_retrieval_loss": 0.83712631739676,
+          "mean_retrieval_loss": 0.8309322178612153,
+          "phase": {
+            "length": 96,
+            "pairs": 16,
+            "queries": 16,
+            "updates": 600
+          }
+        }
+      ]
+    }
+  ],
+  "schema_version": 1,
+  "useful_query_labels_per_seed": 467200,
+  "validation_seeds": [
+    1451,
+    1453,
+    1459
+  ],
+  "weight_decay": 0.01
+}

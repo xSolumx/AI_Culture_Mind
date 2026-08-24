@@ -32,6 +32,8 @@ def test_config_rejects_invalid_dimensions_and_stability_bounds() -> None:
         GatedDeltaConfig(8, minimum_retention=0.9, initial_retention=0.9)
     with pytest.raises(ValueError, match="initial_write_strength"):
         GatedDeltaConfig(8, initial_write_strength=1.0)
+    with pytest.raises(ValueError, match="identity_value_path"):
+        GatedDeltaConfig(16, heads=2, value_dim=3, identity_value_path=True)
 
 
 def test_parallel_recurrent_and_arbitrary_chunk_replay_match() -> None:
@@ -104,6 +106,23 @@ def test_optional_value_normalization_fixes_each_head_norm() -> None:
     torch.testing.assert_close(value.norm(dim=-1), expected)
 
 
+def test_identity_value_path_and_gate_start_as_lossless_readout() -> None:
+    layer = GatedDeltaMemory(
+        GatedDeltaConfig(
+            16,
+            heads=2,
+            value_dim=8,
+            identity_value_path=True,
+            identity_output_gate=True,
+        )
+    )
+    torch.testing.assert_close(layer.value_projection.weight, torch.eye(16))
+    torch.testing.assert_close(layer.output_projection.weight, torch.eye(16))
+    inputs = torch.zeros(2, 3, 16)
+    gate = 1.0 + torch.tanh(layer.output_gate(inputs))
+    torch.testing.assert_close(gate, torch.ones_like(gate))
+
+
 def test_model_default_pivots_to_content_addressed_memory_plus_attention() -> None:
     config = HybridMemoryConfig(vocab_size=197, model_dim=32, attention_heads=4)
     assert config.layer_plan == ("gated_delta", "attention")
@@ -115,6 +134,19 @@ def test_model_default_pivots_to_content_addressed_memory_plus_attention() -> No
     report = model.state_byte_report(output["states"])
     assert report["layers"][0]["kind"] == "gated_delta"
     assert report["layers"][0]["capacity_components"]["memory"] > 0
+
+
+def test_gated_delta_residual_initialization_is_explicit() -> None:
+    model = HybridMemoryLM(
+        HybridMemoryConfig(
+            vocab_size=197,
+            model_dim=32,
+            layer_plan=("gated_delta", "attention"),
+            gated_delta_residual_scale_init=0.0,
+        )
+    )
+    assert float(model.blocks[0].residual_scale.detach()) == 0.0
+    assert float(model.blocks[1].residual_scale.detach()) == -2.0
 
 
 def test_association_auxiliary_aligns_matching_writes_and_supervises_events() -> None:

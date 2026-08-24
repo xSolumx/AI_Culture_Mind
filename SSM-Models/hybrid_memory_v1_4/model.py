@@ -19,7 +19,7 @@ from .gated_delta import GatedDeltaConfig, GatedDeltaMemory
 from .selected_block import RouteMode, SelectedBlockConfig, SelectedBlockMemory
 from .structured_memory import StructuredMemoryConfig, StructuredSpin8Memory
 
-__version__ = "1.4.2"
+__version__ = "1.4.3"
 
 LayerKind: TypeAlias = Literal[
     "attention",
@@ -95,6 +95,9 @@ class HybridMemoryConfig:
     gated_delta_value_dim: int | None = None
     gated_delta_allow_negative_eigenvalues: bool = False
     gated_delta_normalize_values: bool = False
+    gated_delta_identity_value_path: bool = False
+    gated_delta_identity_output_gate: bool = False
+    gated_delta_residual_scale_init: float = -2.0
     gated_delta_minimum_retention: float = 0.90
     gated_delta_initial_retention: float = 0.995
     gated_delta_initial_write_strength: float = 0.10
@@ -164,6 +167,8 @@ class HybridMemoryConfig:
             "delta_allow_negative_eigenvalues",
             "gated_delta_allow_negative_eigenvalues",
             "gated_delta_normalize_values",
+            "gated_delta_identity_value_path",
+            "gated_delta_identity_output_gate",
             "structured_hard_eval",
         ):
             if type(getattr(self, name)) is not bool:
@@ -172,6 +177,8 @@ class HybridMemoryConfig:
             raise ValueError("dropout must lie in [0, 1)")
         if not math.isfinite(self.norm_epsilon) or self.norm_epsilon <= 0.0:
             raise ValueError("norm_epsilon must be finite and positive")
+        if not math.isfinite(self.gated_delta_residual_scale_init):
+            raise ValueError("gated_delta_residual_scale_init must be finite")
         if (
             not math.isfinite(self.attention_rope_base)
             or self.attention_rope_base <= 0.0
@@ -207,6 +214,8 @@ class HybridMemoryConfig:
                     self.gated_delta_allow_negative_eigenvalues
                 ),
                 normalize_values=self.gated_delta_normalize_values,
+                identity_value_path=self.gated_delta_identity_value_path,
+                identity_output_gate=self.gated_delta_identity_output_gate,
                 norm_epsilon=self.norm_epsilon,
                 minimum_retention=self.gated_delta_minimum_retention,
                 initial_retention=self.gated_delta_initial_retention,
@@ -395,7 +404,10 @@ class HybridMemoryBlock(nn.Module):
         self.input_projection = nn.Linear(
             config.model_dim, 2 * config.model_dim, bias=False
         )
-        self.residual_scale = nn.Parameter(torch.tensor(-2.0))
+        residual_scale = (
+            config.gated_delta_residual_scale_init if kind == "gated_delta" else -2.0
+        )
+        self.residual_scale = nn.Parameter(torch.tensor(residual_scale))
         self.ffn_norm = nn.RMSNorm(config.model_dim, eps=config.norm_epsilon)
         self.ffn = GatedMLP(config.model_dim, config.model_dim * config.expansion)
         self.dropout = nn.Dropout(config.dropout)
@@ -422,6 +434,8 @@ class HybridMemoryBlock(nn.Module):
                         config.gated_delta_allow_negative_eigenvalues
                     ),
                     normalize_values=config.gated_delta_normalize_values,
+                    identity_value_path=config.gated_delta_identity_value_path,
+                    identity_output_gate=config.gated_delta_identity_output_gate,
                     norm_epsilon=config.norm_epsilon,
                     minimum_retention=config.gated_delta_minimum_retention,
                     initial_retention=config.gated_delta_initial_retention,

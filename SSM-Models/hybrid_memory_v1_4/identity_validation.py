@@ -1,4 +1,4 @@
-"""Development screen for the v1.4.2 normalized/deep-supervised successor."""
+"""Run the prospectively frozen v1.4.3 G4e identity-path validation."""
 
 from __future__ import annotations
 
@@ -14,67 +14,59 @@ from pathlib import Path
 import torch
 
 if __package__:
-    from .learnability_screen import DEFAULT_CURRICULUM, _train_steps, evaluate
-    from .model import HybridMemoryConfig, HybridMemoryLM, parameter_count
-    from .tasks import DEFAULT_VOCABULARY
+    from .learnability_screen import CurriculumPhase, _train_steps, evaluate
+    from .model import HybridMemoryLM, parameter_count
+    from .successor_screen import _identity_config
 else:
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
     from hybrid_memory_v1_4.learnability_screen import (  # type: ignore[no-redef]
-        DEFAULT_CURRICULUM,
+        CurriculumPhase,
         _train_steps,
         evaluate,
     )
     from hybrid_memory_v1_4.model import (  # type: ignore[no-redef]
-        HybridMemoryConfig,
         HybridMemoryLM,
         parameter_count,
     )
-    from hybrid_memory_v1_4.tasks import DEFAULT_VOCABULARY  # type: ignore[no-redef]
+    from hybrid_memory_v1_4.successor_screen import (  # type: ignore[no-redef]
+        _identity_config,
+    )
 
-DEVELOPMENT_SEEDS = (1401, 1429)
+PREREGISTRATION = Path(__file__).with_name("G4E_PREREGISTRATION.md")
+VALIDATION_SEEDS = (1481, 1483, 1487)
+CURRICULUM = (
+    CurriculumPhase(2, 2, 16, 300),
+    CurriculumPhase(4, 4, 24, 300),
+    CurriculumPhase(8, 8, 48, 400),
+    CurriculumPhase(16, 16, 96, 1200),
+)
 
 
 def _sha256(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(8 * 1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
 
 
-def _config() -> HybridMemoryConfig:
-    return HybridMemoryConfig(
-        vocab_size=DEFAULT_VOCABULARY.vocab_size,
-        model_dim=64,
-        layer_plan=("gated_delta", "attention"),
-        attention_heads=4,
-        attention_window_size=1024,
-        gated_delta_heads=4,
-        gated_delta_key_dim=32,
-        gated_delta_value_dim=16,
-        gated_delta_normalize_values=True,
-        use_local_conv=True,
-        conv_kernel=4,
-        expansion=2,
-        dropout=0.0,
-    )
-
-
-def _identity_config() -> HybridMemoryConfig:
-    return HybridMemoryConfig(
-        vocab_size=DEFAULT_VOCABULARY.vocab_size,
-        model_dim=64,
-        layer_plan=("gated_delta", "attention"),
-        attention_heads=4,
-        attention_window_size=1024,
-        gated_delta_heads=4,
-        gated_delta_key_dim=32,
-        gated_delta_value_dim=16,
-        gated_delta_normalize_values=True,
-        gated_delta_identity_value_path=True,
-        gated_delta_identity_output_gate=True,
-        gated_delta_residual_scale_init=0.0,
-        use_local_conv=True,
-        conv_kernel=4,
-        expansion=2,
-        dropout=0.0,
-    )
+def _git() -> tuple[str, list[str]]:
+    root = Path(__file__).resolve().parents[2]
+    commit = subprocess.run(
+        ["git", "rev-parse", "HEAD"],
+        cwd=root,
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout.strip()
+    status = subprocess.run(
+        ["git", "status", "--short", "--untracked-files=all"],
+        cwd=root,
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout.splitlines()
+    return commit, status
 
 
 def main() -> None:
@@ -84,33 +76,22 @@ def main() -> None:
     parser.add_argument(
         "--device", default="cuda" if torch.cuda.is_available() else "cpu"
     )
-    parser.add_argument("--identity", action="store_true")
-    parser.add_argument("--seeds", type=int, nargs="+", default=list(DEVELOPMENT_SEEDS))
     args = parser.parse_args()
     device = torch.device(args.device)
-    root = Path(__file__).resolve().parents[2]
-    git_commit = subprocess.run(
-        ["git", "rev-parse", "HEAD"],
-        cwd=root,
-        check=True,
-        capture_output=True,
-        text=True,
-    ).stdout.strip()
+    git_commit, git_status_start = _git()
     started = time.perf_counter()
     runs = []
-    development_seeds = tuple(args.seeds)
-    config_factory = _identity_config if args.identity else _config
-    version_label = "v1_4_3" if args.identity else "v1_4_2"
     args.checkpoint_dir.mkdir(parents=True, exist_ok=True)
-    for model_seed in development_seeds:
+    for model_seed in VALIDATION_SEEDS:
         torch.manual_seed(model_seed)
-        torch.cuda.manual_seed_all(model_seed)
-        config = config_factory()
+        if device.type == "cuda":
+            torch.cuda.manual_seed_all(model_seed)
+        config = _identity_config()
         model = HybridMemoryLM(config).to(device)
         optimizer = torch.optim.AdamW(model.parameters(), lr=3e-3, weight_decay=0.01)
         traces = []
         step_offset = 0
-        for phase in DEFAULT_CURRICULUM:
+        for phase in CURRICULUM:
             trace = _train_steps(
                 model,
                 optimizer,
@@ -132,7 +113,7 @@ def main() -> None:
                 queries=16,
                 batch_size=32,
                 batches=16,
-                seed_base=model_seed + 600_000,
+                seed_base=model_seed + 1_000_000,
                 device=device,
             ),
             evaluate(
@@ -142,19 +123,17 @@ def main() -> None:
                 queries=4,
                 batch_size=32,
                 batches=16,
-                seed_base=model_seed + 700_000,
+                seed_base=model_seed + 1_100_000,
                 device=device,
             ),
         ]
-        checkpoint = (
-            args.checkpoint_dir / f"hybrid_{version_label}_dev_seed{model_seed}.pt"
-        )
+        checkpoint = args.checkpoint_dir / f"hybrid_v1_4_3_g4e_seed{model_seed}.pt"
         torch.save(
             {
                 "model_state_dict": model.state_dict(),
                 "config": asdict(config),
                 "model_seed": model_seed,
-                "status": "development",
+                "preregistration_sha256": _sha256(PREREGISTRATION),
             },
             checkpoint,
         )
@@ -168,33 +147,53 @@ def main() -> None:
                 "checkpoint_sha256": _sha256(checkpoint),
             }
         )
-    length_512 = [
-        evaluation
+    passed = all(
+        evaluation["exact_accuracy"] >= 0.90
         for run in runs
         for evaluation in run["evaluations"]
-        if evaluation["length"] == 512
-    ]
+    )
     report = {
         "schema_version": 1,
-        "claim_status": "development objective and capacity screen",
-        "development_seeds_reused_from_prior_work": list(development_seeds),
-        "identity_preserving_value_path": args.identity,
-        "config": asdict(config_factory()),
-        "curriculum": [asdict(item) for item in DEFAULT_CURRICULUM],
+        "claim_status": "validated label-supervised v1.4.3 identity path"
+        if passed
+        else "failed v1.4.3 identity-path validation",
+        "passed": passed,
+        "gate": "every fresh seed has exact query accuracy >= 0.90 at L96 and L512",
+        "validation_seeds": list(VALIDATION_SEEDS),
+        "config": asdict(_identity_config()),
+        "curriculum": [asdict(item) for item in CURRICULUM],
         "batch_size": 32,
         "learning_rate": 3e-3,
+        "weight_decay": 0.01,
         "association_coefficient": 0.25,
         "intermediate_retrieval_coefficient": 0.50,
         "label_supervised": True,
+        "useful_query_labels_per_seed": sum(
+            phase.updates * 32 * phase.queries for phase in CURRICULUM
+        ),
         "runs": runs,
-        "aggregate_length_512": {
-            "mean_exact_accuracy": sum(item["exact_accuracy"] for item in length_512)
-            / len(length_512),
-            "minimum_exact_accuracy": min(
-                item["exact_accuracy"] for item in length_512
-            ),
+        "aggregate": {
+            str(length): {
+                "mean_exact_accuracy": sum(
+                    evaluation["exact_accuracy"]
+                    for run in runs
+                    for evaluation in run["evaluations"]
+                    if evaluation["length"] == length
+                )
+                / len(runs),
+                "minimum_exact_accuracy": min(
+                    evaluation["exact_accuracy"]
+                    for run in runs
+                    for evaluation in run["evaluations"]
+                    if evaluation["length"] == length
+                ),
+            }
+            for length in (96, 512)
         },
-        "git_commit": git_commit,
+        "preregistration": str(PREREGISTRATION),
+        "preregistration_sha256": _sha256(PREREGISTRATION),
+        "git_commit_at_start": git_commit,
+        "git_status_at_start": git_status_start,
         "environment": {
             "torch": torch.__version__,
             "cuda": torch.version.cuda,
@@ -211,7 +210,9 @@ def main() -> None:
         encoding="utf-8",
     )
     print(args.output)
-    print(json.dumps(report["aggregate_length_512"], sort_keys=True))
+    print(json.dumps(report["aggregate"], sort_keys=True))
+    if not passed:
+        raise SystemExit(2)
 
 
 if __name__ == "__main__":

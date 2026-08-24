@@ -1,0 +1,256 @@
+{
+  "aggregate_length_512": {
+    "mean_exact_accuracy": 0.9296875,
+    "minimum_exact_accuracy": 0.90380859375
+  },
+  "association_coefficient": 0.25,
+  "batch_size": 32,
+  "claim_status": "development objective and capacity screen",
+  "config": {
+    "attention_heads": 4,
+    "attention_rope_base": 10000.0,
+    "attention_window_size": 1024,
+    "conv_kernel": 4,
+    "delta_allow_negative_eigenvalues": true,
+    "delta_heads": 4,
+    "delta_num_householder": 4,
+    "dropout": 0.0,
+    "expansion": 2,
+    "gated_delta_allow_negative_eigenvalues": false,
+    "gated_delta_heads": 4,
+    "gated_delta_identity_output_gate": true,
+    "gated_delta_identity_value_path": true,
+    "gated_delta_initial_retention": 0.995,
+    "gated_delta_initial_write_strength": 0.1,
+    "gated_delta_key_dim": 32,
+    "gated_delta_minimum_retention": 0.9,
+    "gated_delta_normalize_values": true,
+    "gated_delta_residual_scale_init": 0.0,
+    "gated_delta_value_dim": 16,
+    "layer_plan": [
+      "gated_delta",
+      "attention"
+    ],
+    "model_dim": 64,
+    "norm_epsilon": 1e-06,
+    "selected_blocks": 4,
+    "selected_controller_rank": null,
+    "selected_heads": 2,
+    "selected_retention_max": 0.99,
+    "selected_retention_min": 0.0,
+    "selected_slots_per_block": 2,
+    "selected_update_rank": 1,
+    "selected_value_dim": 16,
+    "structured_channels": 1,
+    "structured_controller_rank": null,
+    "structured_hard_eval": true,
+    "structured_retention_max": 0.99,
+    "structured_retention_min": 0.0,
+    "structured_rungs": [
+      3,
+      4,
+      6,
+      8
+    ],
+    "tie_embeddings": true,
+    "use_local_conv": true,
+    "vocab_size": 197
+  },
+  "curriculum": [
+    {
+      "length": 16,
+      "pairs": 2,
+      "queries": 2,
+      "updates": 300
+    },
+    {
+      "length": 24,
+      "pairs": 4,
+      "queries": 4,
+      "updates": 300
+    },
+    {
+      "length": 48,
+      "pairs": 8,
+      "queries": 8,
+      "updates": 400
+    },
+    {
+      "length": 96,
+      "pairs": 16,
+      "queries": 16,
+      "updates": 600
+    }
+  ],
+  "development_seeds_reused_from_prior_work": [
+    1429,
+    1459
+  ],
+  "elapsed_wall_seconds": 166.52237120000063,
+  "environment": {
+    "cuda": "13.0",
+    "device": "cuda",
+    "device_name": "NVIDIA GeForce RTX 2070 SUPER",
+    "torch": "2.12.0+cu130"
+  },
+  "git_commit": "11b2fc96b06865b6e4316bcb9187b6fa9f4db7d3",
+  "identity_preserving_value_path": true,
+  "intermediate_retrieval_coefficient": 0.5,
+  "label_supervised": true,
+  "learning_rate": 0.003,
+  "runs": [
+    {
+      "checkpoint": "SSM-Models\\hybrid_memory_v1_4\\artifacts\\checkpoints\\hybrid_v1_4_3_dev_seed1429.pt",
+      "checkpoint_sha256": "eac7b7348b5420ced25d70e53a67d7d72a338c03932ffdabdd0e3ae4f8e4c7df",
+      "evaluations": [
+        {
+          "bits_per_query": 0.17435295606543366,
+          "exact_accuracy": 0.965087890625,
+          "exact_sequence_accuracy": 0.58203125,
+          "length": 96,
+          "pairs": 16,
+          "queries_per_sequence": 16,
+          "query_count": 8192
+        },
+        {
+          "bits_per_query": 0.20674114808362926,
+          "exact_accuracy": 0.95556640625,
+          "exact_sequence_accuracy": 0.845703125,
+          "length": 512,
+          "pairs": 16,
+          "queries_per_sequence": 4,
+          "query_count": 2048
+        }
+      ],
+      "model_seed": 1429,
+      "parameter_count": 124378,
+      "phase_traces": [
+        {
+          "last_batch_accuracy": 0.734375,
+          "mean_association_loss": 0.3818326873580615,
+          "mean_intermediate_retrieval_loss": 2.942121340036392,
+          "mean_retrieval_loss": 2.941587822238604,
+          "phase": {
+            "length": 16,
+            "pairs": 2,
+            "queries": 2,
+            "updates": 300
+          }
+        },
+        {
+          "last_batch_accuracy": 0.7890625,
+          "mean_association_loss": 0.6737332677841187,
+          "mean_intermediate_retrieval_loss": 1.1989677800734837,
+          "mean_retrieval_loss": 1.1985666211446127,
+          "phase": {
+            "length": 24,
+            "pairs": 4,
+            "queries": 4,
+            "updates": 300
+          }
+        },
+        {
+          "last_batch_accuracy": 0.9375,
+          "mean_association_loss": 0.8473109921813011,
+          "mean_intermediate_retrieval_loss": 0.6692526127770543,
+          "mean_retrieval_loss": 0.6690622480213642,
+          "phase": {
+            "length": 48,
+            "pairs": 8,
+            "queries": 8,
+            "updates": 400
+          }
+        },
+        {
+          "last_batch_accuracy": 0.984375,
+          "mean_association_loss": 0.693407995502154,
+          "mean_intermediate_retrieval_loss": 0.3334981237227718,
+          "mean_retrieval_loss": 0.3334959863622983,
+          "phase": {
+            "length": 96,
+            "pairs": 16,
+            "queries": 16,
+            "updates": 600
+          }
+        }
+      ]
+    },
+    {
+      "checkpoint": "SSM-Models\\hybrid_memory_v1_4\\artifacts\\checkpoints\\hybrid_v1_4_3_dev_seed1459.pt",
+      "checkpoint_sha256": "a12c195a7fad54a565499ef94db71c0cb69d8d454c5763f8d3f0f4f24e75d4e6",
+      "evaluations": [
+        {
+          "bits_per_query": 0.35473852607735074,
+          "exact_accuracy": 0.9290771484375,
+          "exact_sequence_accuracy": 0.32421875,
+          "length": 96,
+          "pairs": 16,
+          "queries_per_sequence": 16,
+          "query_count": 8192
+        },
+        {
+          "bits_per_query": 0.4912724972180528,
+          "exact_accuracy": 0.90380859375,
+          "exact_sequence_accuracy": 0.673828125,
+          "length": 512,
+          "pairs": 16,
+          "queries_per_sequence": 4,
+          "query_count": 2048
+        }
+      ],
+      "model_seed": 1459,
+      "parameter_count": 124378,
+      "phase_traces": [
+        {
+          "last_batch_accuracy": 0.078125,
+          "mean_association_loss": 0.5959110570450624,
+          "mean_intermediate_retrieval_loss": 3.8310291544596353,
+          "mean_retrieval_loss": 3.831618729432424,
+          "phase": {
+            "length": 16,
+            "pairs": 2,
+            "queries": 2,
+            "updates": 300
+          }
+        },
+        {
+          "last_batch_accuracy": 0.4375,
+          "mean_association_loss": 0.5603312933444977,
+          "mean_intermediate_retrieval_loss": 3.1764028692245483,
+          "mean_retrieval_loss": 3.170939129193624,
+          "phase": {
+            "length": 24,
+            "pairs": 4,
+            "queries": 4,
+            "updates": 300
+          }
+        },
+        {
+          "last_batch_accuracy": 0.6953125,
+          "mean_association_loss": 0.8403715997934341,
+          "mean_intermediate_retrieval_loss": 1.708138532191515,
+          "mean_retrieval_loss": 1.6967516104876994,
+          "phase": {
+            "length": 48,
+            "pairs": 8,
+            "queries": 8,
+            "updates": 400
+          }
+        },
+        {
+          "last_batch_accuracy": 0.935546875,
+          "mean_association_loss": 0.6695528223613898,
+          "mean_intermediate_retrieval_loss": 0.8231248764445385,
+          "mean_retrieval_loss": 0.8185957686106364,
+          "phase": {
+            "length": 96,
+            "pairs": 16,
+            "queries": 16,
+            "updates": 600
+          }
+        }
+      ]
+    }
+  ],
+  "schema_version": 1
+}
