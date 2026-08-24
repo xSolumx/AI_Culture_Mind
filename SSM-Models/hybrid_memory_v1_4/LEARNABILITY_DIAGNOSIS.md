@@ -238,6 +238,12 @@ replaces the fixed clock with capped competence pacing. This directly imports
 the reliable lesson from Pure Spin v1.2: curriculum stages should represent
 mastered capabilities, not merely equal update counts.
 
+G7 disproved the stronger version of that hypothesis. Every seed learned L96,
+but L512 still fell to an 85.89% minimum. Two seeds missed early competence
+caps and later mastered harder phases, so phase accuracy was not monotonic.
+The next learning problem is explicit distance coverage. G8 directly trains
+all failed-G7 checkpoints at L512 with one uniform, frozen continuation.
+
 ## Current claim ledger
 
 ### Proved by code/tests
@@ -275,8 +281,8 @@ mastered capabilities, not merely equal update counts.
 
 - robust tied-address commissioning passed G4f; learning the same rule without
   internal association/write labels remains open;
-- whether the competence-paced G7 successor eliminates the remaining
-  fixed-schedule seed failure;
+- whether the G8 target-distance phase repairs retention without short-task
+  forgetting across every failed-G7 checkpoint;
 - label-free MQAR after a dense causal language-model pretraining phase;
 - matched natural-text quality versus actual Mamba-2 and Gated DeltaNet;
 - whether selected archive or Spin/F4/rotor transport adds value after the

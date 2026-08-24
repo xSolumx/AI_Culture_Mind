@@ -189,6 +189,13 @@ boundaries. G7 freezes a competence-paced curriculum: two consecutive fresh
 probes must clear 90% before a phase advances, subject to fixed caps. See
 [`G7_PREREGISTRATION.md`](G7_PREREGISTRATION.md).
 
+G7 failed too. Every seed exceeded 94% at L96, but L512 mean/minimum were only
+89.40%/85.89%; two seeds also missed early-phase competence caps before later
+mastering harder phases. Phase mastery is not monotonic, and L96 mastery is not
+retention evidence. G8 freezes one uniform 600-update L512 consolidation phase
+for every G7 checkpoint, with optimizer state restored and no seed-specific
+tuning. See [`G8_PREREGISTRATION.md`](G8_PREREGISTRATION.md).
+
 ## Validation
 
 From `SSM-Models`:

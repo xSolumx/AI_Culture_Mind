@@ -434,6 +434,31 @@ Evidence:
 and
 [`artifacts/g6_optimization_diagnostic_cuda_2026-08-25.json`](artifacts/g6_optimization_diagnostic_cuda_2026-08-25.json).
 
+## G7 failure and target-distance successor
+
+Competence pacing did not pass its gate. It did make all seeds strong on the
+trained L96, but not on L512:
+
+| Fresh seed | Updates used | L96 exact | L512 exact |
+|---:|---:|---:|---:|
+| 1693 | 4,400 | 94.312% | 85.889% |
+| 1697 | 2,800 | 96.497% | 93.018% |
+| 1699 | 5,100 | 96.472% | 89.307% |
+
+Mean L512 accuracy was 89.404%, below the gate. Seeds 1693 and 1699 also hit
+the P2 and P4 caps without two consecutive competence probes, then later
+mastered P8 and P16. The assumption that easier-phase retrieval competence is
+a monotonic prerequisite was false.
+
+The remaining common failure is distance distribution: all seeds learned L96,
+but two did not retain the binding robustly through L512 filler. G8 therefore
+restores each saved G7 optimizer and applies the same 600-update, batch-16,
+learning-rate-0.001 L512 phase to all seeds. This tests direct target-distance
+training without seed-specific tuning. G7 remains failed.
+
+Evidence:
+[`artifacts/g7_competence_paced_validation_cuda_2026-08-25.json`](artifacts/g7_competence_paced_validation_cuda_2026-08-25.json).
+
 ## Actual upstream probes
 
 - FlashRT Gated Delta Attention was pinned at revision `892f725c...`, kernel
