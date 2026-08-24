@@ -1,6 +1,6 @@
 # Hybrid Memory SSM v1.4
 
-**Status:** v1.4.1 content-addressed successor under consolidation validation. The
+**Status:** v1.4.2 content-addressed successor under fresh-seed validation. The
 frozen G4a selected-memory result remains negative. A label-supervised Gated
 Delta commissioning run learned fresh 16-pair MQAR and produced retained
 development checkpoints; this is not yet a label-free, natural-language, or
@@ -76,6 +76,14 @@ but an average cannot hide the weak seed. The uniform target-length
 consolidation test is frozen in
 [`G4C_PREREGISTRATION.md`](G4C_PREREGISTRATION.md); G4b remains failed whatever
 G4c reports.
+
+G4c also failed: identical consolidation moved weak seed 1429 only to 87.60%
+at L512. Cross-seed diagnostics then showed perfect address top-1 accuracy but
+seed-dependent memory interference. v1.4.2 doubles key dimension, normalizes
+value injection, and directly supervises the post-memory readout. It reached
+97.17% and 92.68% at L512 on already exposed development seeds 1401 and 1429.
+Fresh seeds 1451/1453/1459 and the all-seed 90% gate are frozen in
+[`G4D_PREREGISTRATION.md`](G4D_PREREGISTRATION.md).
 
 ## Implemented surfaces
 

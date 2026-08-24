@@ -10,7 +10,10 @@ import torch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from hybrid_memory_v1_4.experiments import gated_delta_association_auxiliary_loss
+from hybrid_memory_v1_4.experiments import (
+    gated_delta_association_auxiliary_loss,
+    intermediate_retrieval_auxiliary_loss,
+)
 from hybrid_memory_v1_4.gated_delta import GatedDeltaConfig, GatedDeltaMemory
 from hybrid_memory_v1_4.model import (
     GatedDeltaState,
@@ -88,6 +91,19 @@ def test_gradients_reach_address_write_decay_value_and_read_paths() -> None:
         assert torch.count_nonzero(parameter.grad) > 0, name
 
 
+def test_optional_value_normalization_fixes_each_head_norm() -> None:
+    torch.manual_seed(1406)
+    layer = GatedDeltaMemory(
+        GatedDeltaConfig(16, heads=2, value_dim=6, normalize_values=True)
+    ).double()
+    inputs = torch.randn(2, 7, 16, dtype=torch.float64)
+    *_, diagnostics = layer(inputs, return_diagnostics=True)
+    value = diagnostics["value"]
+    assert isinstance(value, torch.Tensor)
+    expected = torch.full_like(value[..., 0], 6**0.5)
+    torch.testing.assert_close(value.norm(dim=-1), expected)
+
+
 def test_model_default_pivots_to_content_addressed_memory_plus_attention() -> None:
     config = HybridMemoryConfig(vocab_size=197, model_dim=32, attention_heads=4)
     assert config.layer_plan == ("gated_delta", "attention")
@@ -124,3 +140,11 @@ def test_association_auxiliary_aligns_matching_writes_and_supervises_events() ->
         mixer.write_projection.weight,
     ):
         assert parameter.grad is not None and torch.count_nonzero(parameter.grad) > 0
+
+    model.zero_grad(set_to_none=True)
+    output = model(batch.inputs, return_diagnostics=True)
+    intermediate = intermediate_retrieval_auxiliary_loss(output, batch)
+    assert torch.isfinite(intermediate) and intermediate > 0
+    intermediate.backward()
+    assert mixer.value_projection.weight.grad is not None
+    assert torch.count_nonzero(mixer.value_projection.weight.grad) > 0

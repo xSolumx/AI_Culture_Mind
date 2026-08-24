@@ -40,6 +40,7 @@ class GatedDeltaConfig:
     key_dim: int | None = None
     value_dim: int | None = None
     allow_negative_eigenvalues: bool = False
+    normalize_values: bool = False
     norm_epsilon: float = 1e-6
     minimum_retention: float = 0.90
     initial_retention: float = 0.995
@@ -56,6 +57,8 @@ class GatedDeltaConfig:
                 _positive_integer(name, value)
         if type(self.allow_negative_eigenvalues) is not bool:
             raise TypeError("allow_negative_eigenvalues must be a bool")
+        if type(self.normalize_values) is not bool:
+            raise TypeError("normalize_values must be a bool")
         if not math.isfinite(self.norm_epsilon) or self.norm_epsilon <= 0.0:
             raise ValueError("norm_epsilon must be finite and positive")
         if not 0.0 <= self.minimum_retention < 1.0:
@@ -230,6 +233,10 @@ class GatedDeltaMemory(nn.Module):
         query = self.query_projection(inputs).view(batch, length, heads, key_dim)
         key = self.key_projection(inputs).view(batch, length, heads, key_dim)
         value = self.value_projection(inputs).view(batch, length, heads, value_dim)
+        if self.config.normalize_values:
+            value = F.normalize(
+                value, dim=-1, eps=self.config.norm_epsilon
+            ) * math.sqrt(value_dim)
         query = F.normalize(query, dim=-1, eps=self.config.norm_epsilon)
         key = F.normalize(key, dim=-1, eps=self.config.norm_epsilon)
         write = torch.sigmoid(self.write_projection(inputs))
@@ -329,6 +336,9 @@ class GatedDeltaMemory(nn.Module):
             "scan_mode": scan_mode,
             "query": query,
             "key": key,
+            "value": value,
+            "read": read,
+            "update": output,
             "write_strength": write,
             "retention": retention,
             "state_norm": states.float().square().sum(dim=(-2, -1)).sqrt(),

@@ -333,6 +333,9 @@ def source_file_digests() -> tuple[SourceFileDigest, ...]:
         root / "long_context_continuation.py",
         root / "validation_screen.py",
         root / "continuation_validation.py",
+        root / "optimization_diagnostic.py",
+        root / "successor_screen.py",
+        root / "successor_validation.py",
         root / "upstream_probe.py",
         root / "model.py",
         root / "gated_delta.py",
@@ -347,6 +350,7 @@ def source_file_digests() -> tuple[SourceFileDigest, ...]:
         root / "PREREGISTRATION.md",
         root / "G4B_PREREGISTRATION.md",
         root / "G4C_PREREGISTRATION.md",
+        root / "G4D_PREREGISTRATION.md",
         root.parent / "delta_product_reference.py",
     )
     reports = []
@@ -689,6 +693,38 @@ def gated_delta_association_auxiliary_loss(
             ).sum() / nonwrite.sum().clamp_min(1.0)
             layer_loss = layer_loss + retention_weight * retention_loss
         losses.append(layer_loss)
+    if not losses:
+        return logits.sum() * 0.0
+    return torch.stack(losses).mean()
+
+
+def intermediate_retrieval_auxiliary_loss(
+    output: Mapping[str, Any], batch: _tasks.RetrievalBatch
+) -> torch.Tensor:
+    """Apply the task loss directly after each Gated Delta memory block.
+
+    This is layerwise deep supervision for commissioning the memory core. It
+    prevents a later attention/FFN block from hiding a weak recurrent readout.
+    """
+
+    logits = output.get("logits")
+    diagnostics = output.get("diagnostics")
+    intermediate = output.get("intermediate_logits")
+    if not isinstance(logits, torch.Tensor):
+        raise TypeError("output must contain tensor logits")
+    if not isinstance(diagnostics, Sequence) or not isinstance(intermediate, Sequence):
+        raise TypeError("output must come from return_diagnostics=True")
+    if len(diagnostics) != len(intermediate):
+        raise ValueError("diagnostics and intermediate logits must align by layer")
+    losses = []
+    for diagnostic, layer_logits in zip(diagnostics, intermediate, strict=True):
+        if not isinstance(diagnostic, Mapping):
+            continue
+        if diagnostic.get("kind") != "gated_delta":
+            continue
+        if not isinstance(layer_logits, torch.Tensor):
+            raise TypeError("intermediate logits must be tensors")
+        losses.append(_tasks.retrieval_loss(layer_logits, batch))
     if not losses:
         return logits.sum() * 0.0
     return torch.stack(losses).mean()
@@ -1250,6 +1286,7 @@ __all__ = [
     "generate_task_batch",
     "git_commit",
     "git_status",
+    "intermediate_retrieval_auxiliary_loss",
     "jsonable",
     "result_json",
     "routing_auxiliary_loss",

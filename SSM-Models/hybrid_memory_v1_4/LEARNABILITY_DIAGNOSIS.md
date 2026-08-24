@@ -25,6 +25,14 @@ length-512 continuation updates raised it to 94.19%.
 This is a real synthetic rule-learning result under explicit task labels. It
 is not yet a label-free or natural-language model promotion.
 
+The strict three-seed G4b gate later failed because seed 1429 reached 84.814%
+at L512, and uniform G4c consolidation raised it only to 87.598%. A post-G4c
+diagnostic showed 100% address top-1 accuracy but seed-dependent key/value
+interference. The v1.4.2 successor therefore doubles key dimension, normalizes
+value injection, and directly supervises the post-memory readout. It repaired
+the previously weak seed in development; fresh-seed G4d validation remains the
+current gate.
+
 ## What the present learning problem actually is
 
 The task is not “remember a value for a long time.” It is four coupled
@@ -224,9 +232,9 @@ ranking is claimed.
 
 ### Open
 
-- G4b fresh-model-seed validation failed because seed 1429 reached 84.814%
-  despite two seeds above 94%; prospectively frozen G4c target-length
-  consolidation is the next optimization-basin test;
+- G4b and G4c failed because seed 1429 remained below 90%; the
+  interference-targeted v1.4.2 successor passed only exposed-seed development,
+  and prospectively frozen G4d fresh-seed validation is the current gate;
 - label-free MQAR after a dense causal language-model pretraining phase;
 - matched natural-text quality versus actual Mamba-2 and Gated DeltaNet;
 - whether selected archive or Spin/F4/rotor transport adds value after the

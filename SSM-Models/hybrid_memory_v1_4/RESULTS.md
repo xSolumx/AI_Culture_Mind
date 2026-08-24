@@ -1,11 +1,11 @@
 # Hybrid Memory v1.4 frontier results
 
 **Date:** 2026-08-24
-**Status:** v1.4.1 content-addressed development result under prospectively
-frozen consolidation validation. G4a and the strict all-seed G4b gate both
-failed. Retained Gated Delta checkpoints learned the synthetic rule under
-explicit association labels; there is no label-free, natural-language, or
-matched-speed promotion.
+**Status:** v1.4.2 content-addressed successor under prospectively frozen
+fresh-seed validation. G4a, strict G4b, and consolidation G4c all failed their
+declared gates. The interference-targeted v1.4.2 design passed its exposed-seed
+development falsifier; there is no label-free, natural-language, or matched-
+speed promotion.
 
 ## Adjudication
 
@@ -192,6 +192,55 @@ and
 
 Fresh-seed evidence:
 [`artifacts/learnability_g4b_validation_cuda_2026-08-24.json`](artifacts/learnability_g4b_validation_cuda_2026-08-24.json).
+
+## G4c failure and v1.4.2 successor
+
+The uniformly frozen 300-update length-512 consolidation improved all seeds
+but still failed its all-seed gate:
+
+| Seed | L96 exact | L512 exact |
+|---:|---:|---:|
+| 1423 | 97.852% | 96.875% |
+| 1427 | 97.290% | 96.387% |
+| 1429 | 90.784% | 87.598% |
+
+Mean L512 accuracy was 93.620%, but the minimum was 87.598%. G4c is therefore
+a failure, not a repaired G4b result.
+
+The post-G4c diagnostic used common fresh cohorts and found:
+
+- every seed had 100% address top-1 accuracy in all four heads;
+- removing Gated Delta reduced accuracy to 0.98-3.52%;
+- removing attention left accuracy almost unchanged;
+- weak seed 1429 had lower query-key margin, higher key cross-correlation,
+  larger filler value norm, and larger fast-weight state norm;
+- thresholding tiny filler writes helped only modestly.
+
+The remaining failure was therefore content interference/value conditioning,
+not router discovery or missing attention. v1.4.2 made three targeted changes:
+
+1. key dimension 16 -> 32 per head;
+2. fixed-norm value injection; and
+3. retrieval deep supervision immediately after the Gated Delta block.
+
+On already exposed development seeds, including weak seed 1429, v1.4.2
+produced:
+
+| Development seed | L96 exact | L512 exact |
+|---:|---:|---:|
+| 1401 | 97.656% | 97.168% |
+| 1429 | 95.129% | 92.676% |
+
+This passed the development falsifier but is not validation. Fresh model seeds
+1451/1453/1459 and the requirement that every seed reach 90% at both L96 and
+L512 were frozen in [`G4D_PREREGISTRATION.md`](G4D_PREREGISTRATION.md) before
+those seeds ran.
+
+Evidence:
+[`artifacts/learnability_g4c_consolidation_validation_cuda_2026-08-24.json`](artifacts/learnability_g4c_consolidation_validation_cuda_2026-08-24.json),
+[`artifacts/g4c_optimization_diagnostic_cuda_2026-08-24.json`](artifacts/g4c_optimization_diagnostic_cuda_2026-08-24.json),
+and
+[`artifacts/learnability_v1_4_2_successor_development_cuda_2026-08-24.json`](artifacts/learnability_v1_4_2_successor_development_cuda_2026-08-24.json).
 
 ## Actual upstream probes
 

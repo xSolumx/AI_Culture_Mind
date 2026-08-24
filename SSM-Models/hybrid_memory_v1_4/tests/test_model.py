@@ -116,7 +116,13 @@ def test_layer_diagnostics_are_explicit_and_opt_in() -> None:
     default = model(tokens)
     assert "diagnostics" not in default
     detailed = model(tokens, return_diagnostics=True)
-    assert set(detailed) == {"logits", "states", "diagnostics"}
+    assert set(detailed) == {
+        "logits",
+        "states",
+        "diagnostics",
+        "intermediate_logits",
+    }
+    assert len(detailed["intermediate_logits"]) == len(model.blocks)
     torch.testing.assert_close(detailed["logits"], default["logits"])
 
     diagnostics = detailed["diagnostics"]

@@ -19,7 +19,7 @@ from .gated_delta import GatedDeltaConfig, GatedDeltaMemory
 from .selected_block import RouteMode, SelectedBlockConfig, SelectedBlockMemory
 from .structured_memory import StructuredMemoryConfig, StructuredSpin8Memory
 
-__version__ = "1.4.1"
+__version__ = "1.4.2"
 
 LayerKind: TypeAlias = Literal[
     "attention",
@@ -94,6 +94,7 @@ class HybridMemoryConfig:
     gated_delta_key_dim: int | None = None
     gated_delta_value_dim: int | None = None
     gated_delta_allow_negative_eigenvalues: bool = False
+    gated_delta_normalize_values: bool = False
     gated_delta_minimum_retention: float = 0.90
     gated_delta_initial_retention: float = 0.995
     gated_delta_initial_write_strength: float = 0.10
@@ -162,6 +163,7 @@ class HybridMemoryConfig:
             "tie_embeddings",
             "delta_allow_negative_eigenvalues",
             "gated_delta_allow_negative_eigenvalues",
+            "gated_delta_normalize_values",
             "structured_hard_eval",
         ):
             if type(getattr(self, name)) is not bool:
@@ -204,6 +206,7 @@ class HybridMemoryConfig:
                 allow_negative_eigenvalues=(
                     self.gated_delta_allow_negative_eigenvalues
                 ),
+                normalize_values=self.gated_delta_normalize_values,
                 norm_epsilon=self.norm_epsilon,
                 minimum_retention=self.gated_delta_minimum_retention,
                 initial_retention=self.gated_delta_initial_retention,
@@ -418,6 +421,7 @@ class HybridMemoryBlock(nn.Module):
                     allow_negative_eigenvalues=(
                         config.gated_delta_allow_negative_eigenvalues
                     ),
+                    normalize_values=config.gated_delta_normalize_values,
                     norm_epsilon=config.norm_epsilon,
                     minimum_retention=config.gated_delta_minimum_retention,
                     initial_retention=config.gated_delta_initial_retention,
@@ -848,6 +852,7 @@ class HybridMemoryLM(nn.Module):
         )
         next_states: list[LayerState] = []
         diagnostics: list[LayerDiagnostics] = []
+        intermediate_logits: list[torch.Tensor] = []
         for block, state in zip(self.blocks, layer_states, strict=True):
             if return_diagnostics:
                 hidden, next_state, layer_diagnostics = block(
@@ -861,6 +866,7 @@ class HybridMemoryLM(nn.Module):
                     return_diagnostics=True,
                 )
                 diagnostics.append(layer_diagnostics)
+                intermediate_logits.append(self.lm_head(self.final_norm(hidden)))
             else:
                 hidden, next_state = block(
                     hidden,
@@ -876,6 +882,7 @@ class HybridMemoryLM(nn.Module):
         output = {"logits": logits, "states": tuple(next_states)}
         if return_diagnostics:
             output["diagnostics"] = tuple(diagnostics)
+            output["intermediate_logits"] = tuple(intermediate_logits)
         return output
 
     def step(

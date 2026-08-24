@@ -29,7 +29,10 @@ import torch
 
 if __package__:
     from . import tasks
-    from .experiments import gated_delta_association_auxiliary_loss
+    from .experiments import (
+        gated_delta_association_auxiliary_loss,
+        intermediate_retrieval_auxiliary_loss,
+    )
     from .model import HybridMemoryConfig, HybridMemoryLM, parameter_count
     from .tasks import DEFAULT_VOCABULARY, RetrievalBatch, generate_mqar_batch
 else:
@@ -37,6 +40,7 @@ else:
     from hybrid_memory_v1_4 import tasks  # type: ignore[no-redef]
     from hybrid_memory_v1_4.experiments import (  # type: ignore[no-redef]
         gated_delta_association_auxiliary_loss,
+        intermediate_retrieval_auxiliary_loss,
     )
     from hybrid_memory_v1_4.model import (  # type: ignore[no-redef]
         HybridMemoryConfig,
@@ -99,19 +103,25 @@ def _loss_and_accuracy(
     batch: RetrievalBatch,
     *,
     association_coefficient: float,
-) -> tuple[torch.Tensor, torch.Tensor, float]:
+    intermediate_coefficient: float = 0.0,
+) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor, float]:
     output = model(
         batch.inputs,
         delta_scan_mode="parallel",
-        return_diagnostics=association_coefficient > 0.0,
+        return_diagnostics=(
+            association_coefficient > 0.0 or intermediate_coefficient > 0.0
+        ),
     )
     retrieval = tasks.retrieval_loss(output["logits"], batch)
     association = retrieval.new_zeros(())
     if association_coefficient > 0.0:
         association = gated_delta_association_auxiliary_loss(output, batch)
+    intermediate = retrieval.new_zeros(())
+    if intermediate_coefficient > 0.0:
+        intermediate = intermediate_retrieval_auxiliary_loss(output, batch)
     predictions = tasks.gather_query_logits(output["logits"], batch).argmax(-1)
     accuracy = float((predictions == batch.targets).float().mean().item())
-    return retrieval, association, accuracy
+    return retrieval, association, intermediate, accuracy
 
 
 @torch.no_grad()
@@ -170,10 +180,12 @@ def _train_steps(
     step_offset: int,
     device: torch.device,
     fixed_batch: RetrievalBatch | None = None,
+    intermediate_coefficient: float = 0.0,
 ) -> dict[str, float]:
     model.train()
     retrieval_sum = 0.0
     association_sum = 0.0
+    intermediate_sum = 0.0
     final_accuracy = 0.0
     for local_step in range(phase.updates):
         step = step_offset + local_step
@@ -184,10 +196,17 @@ def _train_steps(
             device=device,
         )
         optimizer.zero_grad(set_to_none=True)
-        retrieval, association, final_accuracy = _loss_and_accuracy(
-            model, batch, association_coefficient=association_coefficient
+        retrieval, association, intermediate, final_accuracy = _loss_and_accuracy(
+            model,
+            batch,
+            association_coefficient=association_coefficient,
+            intermediate_coefficient=intermediate_coefficient,
         )
-        loss = retrieval + association_coefficient * association
+        loss = (
+            retrieval
+            + association_coefficient * association
+            + intermediate_coefficient * intermediate
+        )
         if not bool(torch.isfinite(loss)):
             raise FloatingPointError("non-finite learnability loss")
         loss.backward()
@@ -195,9 +214,11 @@ def _train_steps(
         optimizer.step()
         retrieval_sum += float(retrieval.detach())
         association_sum += float(association.detach())
+        intermediate_sum += float(intermediate.detach())
     return {
         "mean_retrieval_loss": retrieval_sum / phase.updates,
         "mean_association_loss": association_sum / phase.updates,
+        "mean_intermediate_retrieval_loss": intermediate_sum / phase.updates,
         "last_batch_accuracy": final_accuracy,
     }
 
