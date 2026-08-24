@@ -54,7 +54,8 @@ def _reference_run(report_path: Path) -> dict[str, Any]:
     report = json.loads(report_path.read_text(encoding="utf-8"))
     if report.get("model_name") != REFERENCE_NAME:
         raise ValueError("reference report is not the v1.4.4 G9 cohort")
-    if report.get("config") != asdict(_tied_identity_config()):
+    frozen_config = json.loads(json.dumps(asdict(_tied_identity_config())))
+    if report.get("config") != frozen_config:
         raise ValueError("reference report config does not match frozen v1.4.4")
     if report.get("schedule") != [asdict(phase) for phase in COMBINED_SCHEDULE]:
         raise ValueError("reference report schedule does not match frozen G9")
