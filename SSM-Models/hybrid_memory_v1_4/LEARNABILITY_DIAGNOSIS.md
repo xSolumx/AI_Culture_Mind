@@ -241,8 +241,16 @@ mastered capabilities, not merely equal update counts.
 G7 disproved the stronger version of that hypothesis. Every seed learned L96,
 but L512 still fell to an 85.89% minimum. Two seeds missed early competence
 caps and later mastered harder phases, so phase accuracy was not monotonic.
-The next learning problem is explicit distance coverage. G8 directly trains
-all failed-G7 checkpoints at L512 with one uniform, frozen continuation.
+The next learning problem was explicit distance coverage. G8 directly trained
+all failed-G7 checkpoints at L512 with one uniform, frozen continuation. It
+passed every seed: L512 mean/minimum rose to 94.61%/92.29% while L96 remained
+95.63%/93.69%.
+
+The resulting answer to the learning problem is layered. Content-addressed
+state fixes representation capacity; tied address geometry fixes independent
+frame alignment; causal reverse-binding reconstruction fixes the absence of a
+learnable local association signal; and explicit target-distance training
+fixes the mistaken assumption that short-task mastery implies retention.
 
 ## Current claim ledger
 
@@ -269,6 +277,8 @@ all failed-G7 checkpoints at L512 with one uniform, frozen continuation.
   and L512 under the frozen 774,400-label commissioning budget;
 - the G4f artifact started from clean commit `ffc6efd`, retained all
   checkpoints, and records preregistration and checkpoint hashes.
+- G8 uniformly continued all three G7 checkpoints and cleared 90% at both L96
+  and L512 for every seed, with a 92.29% minimum L512 accuracy.
 
 ### Constrained
 
@@ -281,8 +291,8 @@ all failed-G7 checkpoints at L512 with one uniform, frozen continuation.
 
 - robust tied-address commissioning passed G4f; learning the same rule without
   internal association/write labels remains open;
-- whether the G8 target-distance phase repairs retention without short-task
-  forgetting across every failed-G7 checkpoint;
+- fresh-from-scratch validation of the combined external reverse-binding plus
+  target-distance schedule;
 - label-free MQAR after a dense causal language-model pretraining phase;
 - matched natural-text quality versus actual Mamba-2 and Gated DeltaNet;
 - whether selected archive or Spin/F4/rotor transport adds value after the

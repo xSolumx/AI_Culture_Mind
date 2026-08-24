@@ -1,11 +1,10 @@
 # Hybrid Memory SSM v1.4
 
-**Status:** v1.4.4 tied-address successor passed its prospectively frozen G4f
-fresh-seed validation. The
-frozen G4a selected-memory result remains negative. A label-supervised Gated
-Delta commissioning run learned fresh 16-pair MQAR and produced retained
-development checkpoints; this is not yet a label-free, natural-language, or
-speed promotion.
+**Status:** v1.4.4 tied-address successor passed prospectively frozen G4f with
+internal commissioning labels. The external causal reverse-binding route
+passed the prospectively frozen G8 target-distance continuation across all
+three G7 checkpoints. The frozen G4a selected-memory result remains negative;
+none of these results is a label-free, natural-language, or speed promotion.
 
 This track combines five explicit mixer kinds in one causal language-model
 shell:
@@ -157,6 +156,11 @@ remains label-supervised with 774,400 useful query labels per seed.
 - [`upstream_learning_comparison.py`](upstream_learning_comparison.py): paired
   learning screens using the actual Transformers Mamba-2 and OLMo Hybrid
   implementations, with external-label and single-seed boundaries explicit.
+- [`reverse_binding_validation.py`](reverse_binding_validation.py),
+  [`competence_validation.py`](competence_validation.py), and
+  [`distance_consolidation.py`](distance_consolidation.py): fresh-seed external
+  learning, competence-pacing falsification, and retained-optimizer L512
+  consolidation.
 
 ## Baseline boundary
 
@@ -192,9 +196,11 @@ probes must clear 90% before a phase advances, subject to fixed caps. See
 G7 failed too. Every seed exceeded 94% at L96, but L512 mean/minimum were only
 89.40%/85.89%; two seeds also missed early-phase competence caps before later
 mastering harder phases. Phase mastery is not monotonic, and L96 mastery is not
-retention evidence. G8 freezes one uniform 600-update L512 consolidation phase
+retention evidence. G8 froze one uniform 600-update L512 consolidation phase
 for every G7 checkpoint, with optimizer state restored and no seed-specific
-tuning. See [`G8_PREREGISTRATION.md`](G8_PREREGISTRATION.md).
+tuning. It passed: L96 mean/minimum were 95.63%/93.69%, and L512 mean/minimum
+were 94.61%/92.29%. See
+[`G8_PREREGISTRATION.md`](G8_PREREGISTRATION.md).
 
 ## Validation
 
@@ -220,6 +226,8 @@ matched speed evidence.
   the cause.
 - The positive v1.4.4 result uses explicit association/write labels and is not
   evidence of label-free or natural-language learning.
+- G8 validates a continuation of exposed G7 checkpoints, not a fresh-from-
+  scratch replay of the complete final schedule.
 - The retained validation checkpoints are not released pretrained models.
 - Straight-through routing establishes a gradient estimator, not successful
   label-free routing.

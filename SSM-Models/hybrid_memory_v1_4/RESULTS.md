@@ -1,9 +1,10 @@
 # Hybrid Memory v1.4 frontier results
 
-**Date:** 2026-08-24
+**Date:** 2026-08-25
 **Status:** v1.4.4 tied-address successor passed prospectively frozen G4f
-fresh-seed validation. G4a through G4e all failed their declared gates. There
-is still no label-free, natural-language, or matched-speed promotion.
+fresh-seed commissioning and G8 target-distance continuation. G4a through G4e,
+G6, and G7 failed their declared gates. There is still no label-free, natural-
+language, fresh combined-schedule, or matched-speed promotion.
 
 ## Adjudication
 
@@ -459,6 +460,42 @@ training without seed-specific tuning. G7 remains failed.
 Evidence:
 [`artifacts/g7_competence_paced_validation_cuda_2026-08-25.json`](artifacts/g7_competence_paced_validation_cuda_2026-08-25.json).
 
+## G8 pass: explicit target-distance retention
+
+The uniform L512 continuation passed its all-seed gate:
+
+| G7 source seed | L96 exact | L512 exact | L512 bits/query |
+|---:|---:|---:|---:|
+| 1693 | 93.689% | 92.285% | 0.386 |
+| 1697 | 96.704% | 95.801% | 0.223 |
+| 1699 | 96.484% | 95.752% | 0.201 |
+
+Mean L96 accuracy was 95.626% with a 93.689% minimum. Mean L512 accuracy was
+94.613% with a 92.285% minimum. No seed forgot the short task, and every seed
+cleared the frozen 90% gate at both lengths.
+
+G8 began from clean commit `c8aa2326924e335627210e7b325c6eb05824b799`,
+restored the exact G7 model and AdamW optimizer states, changed the learning
+rate uniformly to 0.001, and supplied 600 batch-16 L512 updates to every seed.
+That adds only 38,400 target-distance retrieval labels and 153,600 external
+reverse-binding labels per seed.
+
+The present synthetic learning solution is therefore a coordinated schedule:
+
+1. tied query/key geometry removes the independent address-frame lottery;
+2. reverse-key reconstruction after the observed value supplies a causal,
+   learnable binding/event signal without reading internal memory state;
+3. query loss trains use of the stored binding; and
+4. a direct L512 phase calibrates retention at the deployment distance instead
+   of treating short-length mastery as evidence of extrapolation.
+
+This is a prospectively frozen successful continuation across three failed-G7
+checkpoints. It does not retroactively pass G7 and is not a fresh-from-scratch
+validation of the entire combined schedule.
+
+Evidence:
+[`artifacts/g8_target_distance_consolidation_cuda_2026-08-25.json`](artifacts/g8_target_distance_consolidation_cuda_2026-08-25.json).
+
 ## Actual upstream probes
 
 - FlashRT Gated Delta Attention was pinned at revision `892f725c...`, kernel
@@ -500,6 +537,8 @@ Artifact file hashes are recorded in [`ARTIFACTS.sha256`](ARTIFACTS.sha256).
 - G4a failed retrieval capability in both routing cohorts.
 - G4f validates synthetic retrieval only with explicit association,
   write-event, and intermediate labels; label-free retrieval remains open.
+- G8 validates external causal-label target-distance continuation, not ordinary
+  label-free next-token learning or a fresh combined-schedule cohort.
 - The retained checkpoints are validation artifacts, not released pretrained
   models.
 - No natural-language or bits-per-byte claim exists.
