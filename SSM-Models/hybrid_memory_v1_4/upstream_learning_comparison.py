@@ -284,6 +284,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--checkpoint-dir", type=Path, required=True)
+    parser.add_argument("--preregistration", type=Path, default=PREREGISTRATION)
     parser.add_argument("--model-seed", type=int, default=MODEL_SEED)
     parser.add_argument("--data-seed", type=int, default=DATA_SEED)
     parser.add_argument("--eval-seed-l96", type=int, default=1_601_601)
@@ -348,7 +349,7 @@ def main() -> None:
                 "model_seed": args.model_seed,
                 "data_seed": args.data_seed,
                 "association_target": args.association_target,
-                "preregistration_sha256": _sha256(PREREGISTRATION),
+                "preregistration_sha256": _sha256(args.preregistration),
             },
             checkpoint,
         )
@@ -391,8 +392,8 @@ def main() -> None:
             phase.updates * 32 * phase.pairs for phase in CURRICULUM
         ),
         "runs": runs,
-        "preregistration": str(PREREGISTRATION),
-        "preregistration_sha256": _sha256(PREREGISTRATION),
+        "preregistration": str(args.preregistration),
+        "preregistration_sha256": _sha256(args.preregistration),
         "git_commit_at_start": git_commit,
         "git_status_at_start": git_status_start,
         "environment": {
