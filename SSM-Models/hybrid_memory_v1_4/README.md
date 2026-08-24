@@ -176,9 +176,11 @@ same synthetic episode stream as v1.4.4. Its proposed next-token write target
 was irreducible noise because synthetic values are random and unseen. With the
 remaining retrieval signal, OLMo learned L96 (97.52%) but transferred poorly
 to L512 (25.44%); Mamba-2 reached 17.97%/14.16%, and uncommissioned v1.4.4
-5.69%/4.44%. G5b freezes a causal reverse-binding reconstruction target at the
-observed value event. Neither one-seed comparison is an upstream superiority
-claim.
+5.69%/4.44%. G5b replaced the noise with causal reverse-binding reconstruction
+at the observed value event. All three models then learned L96; at L512,
+v1.4.4 reached 96.00%, Mamba-2 77.98%, and OLMo Hybrid 58.11%. This is one
+paired seed, not an upstream superiority claim. A three-fresh-seed v1.4.4 gate
+is frozen in [`G6_PREREGISTRATION.md`](G6_PREREGISTRATION.md).
 
 ## Validation
 

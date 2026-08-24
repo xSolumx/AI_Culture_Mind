@@ -372,6 +372,32 @@ seed 1621 and the exact successor protocol are frozen in
 Evidence:
 [`artifacts/g5_actual_upstream_learning_comparison_cuda_2026-08-24.json`](artifacts/g5_actual_upstream_learning_comparison_cuda_2026-08-24.json).
 
+## G5b causal reverse-binding result
+
+The corrected auxiliary was learned by every architecture and changed the
+outcome materially:
+
+| Model | L96 exact | L512 exact | L512 bits/query |
+|---|---:|---:|---:|
+| Hybrid Memory v1.4.4 | 97.375% | 95.996% | 0.194 |
+| Transformers Mamba-2 | 98.657% | 77.979% | 1.222 |
+| Transformers OLMo Hybrid | 100.000% | 58.105% | 3.072 |
+
+All final-phase reverse-binding losses were below 0.004, whereas G5's unseen-
+value losses stayed near `ln(64)`. The repaired signal therefore trained an
+observable binding rather than injecting random gradients. OLMo and Mamba-2
+slightly exceeded v1.4.4 at the trained L96, but v1.4.4 retained much more of
+the rule across the L512 filler extension.
+
+This is a clean-start, preregistered, paired comparison using real upstream
+library models, but it is still only model seed 1621. It supports a mechanism
+hypothesis, not a superiority claim. Fresh v1.4.4 model seeds 1643/1657/1663
+and an all-seed 90% L96/L512 gate are frozen in
+[`G6_PREREGISTRATION.md`](G6_PREREGISTRATION.md).
+
+Evidence:
+[`artifacts/g5b_causal_reverse_binding_comparison_cuda_2026-08-24.json`](artifacts/g5b_causal_reverse_binding_comparison_cuda_2026-08-24.json).
+
 ## Actual upstream probes
 
 - FlashRT Gated Delta Attention was pinned at revision `892f725c...`, kernel
