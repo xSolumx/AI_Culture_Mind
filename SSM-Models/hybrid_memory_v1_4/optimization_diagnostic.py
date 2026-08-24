@@ -326,11 +326,16 @@ def main() -> None:
     )
     parser.add_argument("--batches", type=int, default=8)
     parser.add_argument("--batch-size", type=int, default=16)
+    parser.add_argument("--seeds", type=int, nargs="+", default=[1423, 1427, 1429])
+    parser.add_argument(
+        "--checkpoint-pattern",
+        default="hybrid_v1_4_1_g4c_validation_seed{seed}.pt",
+    )
     args = parser.parse_args()
     device = torch.device(args.device)
     reports = []
-    for seed in (1423, 1427, 1429):
-        checkpoint = args.checkpoint_dir / f"hybrid_v1_4_1_g4c_validation_seed{seed}.pt"
+    for seed in args.seeds:
+        checkpoint = args.checkpoint_dir / args.checkpoint_pattern.format(seed=seed)
         reports.append(
             diagnose(
                 checkpoint,

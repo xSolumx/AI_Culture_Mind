@@ -8,7 +8,7 @@ import json
 import subprocess
 import sys
 import time
-from dataclasses import asdict
+from dataclasses import asdict, replace
 from pathlib import Path
 
 import torch
@@ -77,6 +77,15 @@ def _identity_config() -> HybridMemoryConfig:
     )
 
 
+def _tied_identity_config() -> HybridMemoryConfig:
+    return HybridMemoryConfig(
+        **{
+            **asdict(_identity_config()),
+            "gated_delta_tie_query_key": True,
+        }
+    )
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, required=True)
@@ -85,6 +94,8 @@ def main() -> None:
         "--device", default="cuda" if torch.cuda.is_available() else "cpu"
     )
     parser.add_argument("--identity", action="store_true")
+    parser.add_argument("--tied-query-key", action="store_true")
+    parser.add_argument("--final-updates", type=int, default=600)
     parser.add_argument("--seeds", type=int, nargs="+", default=list(DEVELOPMENT_SEEDS))
     args = parser.parse_args()
     device = torch.device(args.device)
@@ -99,8 +110,22 @@ def main() -> None:
     started = time.perf_counter()
     runs = []
     development_seeds = tuple(args.seeds)
-    config_factory = _identity_config if args.identity else _config
-    version_label = "v1_4_3" if args.identity else "v1_4_2"
+    if args.tied_query_key and not args.identity:
+        parser.error("--tied-query-key requires --identity")
+    config_factory = (
+        _tied_identity_config
+        if args.tied_query_key
+        else _identity_config
+        if args.identity
+        else _config
+    )
+    version_label = (
+        "v1_4_4" if args.tied_query_key else "v1_4_3" if args.identity else "v1_4_2"
+    )
+    curriculum = (
+        *DEFAULT_CURRICULUM[:-1],
+        replace(DEFAULT_CURRICULUM[-1], updates=args.final_updates),
+    )
     args.checkpoint_dir.mkdir(parents=True, exist_ok=True)
     for model_seed in development_seeds:
         torch.manual_seed(model_seed)
@@ -110,7 +135,7 @@ def main() -> None:
         optimizer = torch.optim.AdamW(model.parameters(), lr=3e-3, weight_decay=0.01)
         traces = []
         step_offset = 0
-        for phase in DEFAULT_CURRICULUM:
+        for phase in curriculum:
             trace = _train_steps(
                 model,
                 optimizer,
@@ -180,7 +205,7 @@ def main() -> None:
         "development_seeds_reused_from_prior_work": list(development_seeds),
         "identity_preserving_value_path": args.identity,
         "config": asdict(config_factory()),
-        "curriculum": [asdict(item) for item in DEFAULT_CURRICULUM],
+        "curriculum": [asdict(item) for item in curriculum],
         "batch_size": 32,
         "learning_rate": 3e-3,
         "association_coefficient": 0.25,

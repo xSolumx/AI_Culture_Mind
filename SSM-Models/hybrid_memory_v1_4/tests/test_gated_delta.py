@@ -123,6 +123,17 @@ def test_identity_value_path_and_gate_start_as_lossless_readout() -> None:
     torch.testing.assert_close(gate, torch.ones_like(gate))
 
 
+def test_tied_query_key_uses_one_orthogonal_address_projection() -> None:
+    layer = GatedDeltaMemory(
+        GatedDeltaConfig(16, heads=2, key_dim=8, tie_query_key=True)
+    )
+    assert layer.query_projection is layer.key_projection
+    gram = layer.query_projection.weight @ layer.query_projection.weight.T
+    torch.testing.assert_close(gram, torch.eye(16), rtol=1e-5, atol=1e-5)
+    parameter_ids = [id(parameter) for parameter in layer.parameters()]
+    assert len(parameter_ids) == len(set(parameter_ids))
+
+
 def test_model_default_pivots_to_content_addressed_memory_plus_attention() -> None:
     config = HybridMemoryConfig(vocab_size=197, model_dim=32, attention_heads=4)
     assert config.layer_plan == ("gated_delta", "attention")

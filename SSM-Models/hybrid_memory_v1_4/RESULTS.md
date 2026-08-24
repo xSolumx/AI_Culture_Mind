@@ -1,10 +1,10 @@
 # Hybrid Memory v1.4 frontier results
 
 **Date:** 2026-08-24
-**Status:** v1.4.3 identity-path successor under prospectively frozen fresh-
-seed validation. G4a through G4d all failed their declared gates. The identity-
-preserving v1.4.3 design passed its exposed weak-seed development falsifier;
-there is no label-free, natural-language, or matched-speed promotion.
+**Status:** v1.4.4 tied-address successor under prospectively frozen fresh-seed
+validation. G4a through G4e all failed their declared gates. The tied-address
+v1.4.4 design passed its exposed weak-seed development falsifier; there is no
+label-free, natural-language, or matched-speed promotion.
 
 ## Adjudication
 
@@ -274,6 +274,44 @@ Evidence:
 and
 [`artifacts/learnability_v1_4_3_identity_successor_development_cuda_2026-08-24.json`](artifacts/learnability_v1_4_3_identity_successor_development_cuda_2026-08-24.json).
 
+## G4e failure and v1.4.4 tied address
+
+Doubling the final training phase did not eliminate seed sensitivity. G4e
+failed its all-seed gate:
+
+| Fresh seed | L96 exact | L512 exact | L512 bits/query |
+|---:|---:|---:|---:|
+| 1481 | 79.382% | 78.223% | 0.976 |
+| 1483 | 99.280% | 99.316% | 0.045 |
+| 1487 | 98.035% | 97.168% | 0.124 |
+
+Mean L512 accuracy was 91.569%, but the minimum was 78.223%. The larger budget
+therefore exposed a qualitatively bad basin rather than repairing it.
+
+The post-G4e diagnostic localized the split to address geometry. Seed 1481 had
+per-head query-to-write-key top-1 accuracies of 97.66%, 98.83%, 99.80%, and
+98.05%, a mean query/key margin of 0.220, and association loss 0.382. Both
+strong seeds had 100% address accuracy in every head, margins about 0.41-0.42,
+and much lower association loss. Removing Gated Delta reduced all models near
+chance; removing attention did not explain the split.
+
+v1.4.4 therefore ties query and key projection weights and initializes that
+single address map orthogonally. This is a direct architectural constraint:
+queries and writes cannot begin in independently rotated frames. On the
+already exposed failed seed 1481, with the exact G4e training budget, it
+reached 98.975% at L96 and 97.998% at L512, with 0.078 bits/query. This is a
+development repair, not validation.
+
+Fresh seeds 1511/1523/1531, 774,400 useful labels per seed, and the requirement
+that every seed reach at least 90% at both L96 and L512 were frozen in
+[`G4F_PREREGISTRATION.md`](G4F_PREREGISTRATION.md) before they were run.
+
+Evidence:
+[`artifacts/learnability_v1_4_3_g4e_validation_cuda_2026-08-24.json`](artifacts/learnability_v1_4_3_g4e_validation_cuda_2026-08-24.json),
+[`artifacts/g4e_optimization_diagnostic_cuda_2026-08-24.json`](artifacts/g4e_optimization_diagnostic_cuda_2026-08-24.json),
+and
+[`artifacts/learnability_v1_4_4_tied_qk_development_cuda_2026-08-24.json`](artifacts/learnability_v1_4_4_tied_qk_development_cuda_2026-08-24.json).
+
 ## Actual upstream probes
 
 - FlashRT Gated Delta Attention was pinned at revision `892f725c...`, kernel
@@ -300,7 +338,7 @@ and
 
 ## Validation record
 
-- `python -m pytest hybrid_memory_v1_4/tests -q`: **192 passed, 4 skipped**.
+- `python -m pytest hybrid_memory_v1_4/tests -q`: **193 passed, 4 skipped**.
 - `python -m ruff check hybrid_memory_v1_4`: passed.
 - `python -m ruff format --check hybrid_memory_v1_4`: passed.
 - The four native-suite skips are guarded optional fused FLA/Mamba paths; WSL

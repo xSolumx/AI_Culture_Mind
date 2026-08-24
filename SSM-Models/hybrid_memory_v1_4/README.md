@@ -1,6 +1,6 @@
 # Hybrid Memory SSM v1.4
 
-**Status:** v1.4.3 identity-path successor under fresh-seed validation. The
+**Status:** v1.4.4 tied-address successor under fresh-seed validation. The
 frozen G4a selected-memory result remains negative. A label-supervised Gated
 Delta commissioning run learned fresh 16-pair MQAR and produced retained
 development checkpoints; this is not yet a label-free, natural-language, or
@@ -85,13 +85,20 @@ value injection, and directly supervises the post-memory readout. It reached
 Fresh seeds 1451/1453/1459 and the all-seed 90% gate are frozen in
 [`G4D_PREREGISTRATION.md`](G4D_PREREGISTRATION.md).
 
-G4d failed because fresh seed 1459 reached 86.33% at L512. v1.4.3 removes the
-remaining random value/readout basin with identity value and output
-projections, an identity-centered output gate, and a 0.5 initial memory
-residual. It raised prior weak seeds 1429 and 1459 to 95.56% and 90.38% in
-development. G4e freezes three new seeds and doubles the final 16-pair phase so
-the declared budget is 774,400 useful query labels per seed. See
-[`G4E_PREREGISTRATION.md`](G4E_PREREGISTRATION.md).
+G4d failed because fresh seed 1459 reached 86.33% at L512. v1.4.3 removed the
+random value/readout basin with identity value and output projections, an
+identity-centered output gate, and a 0.5 initial memory residual. G4e still
+failed: seed 1481 reached only 78.22% at L512 while the other two seeds reached
+99.32% and 97.17%. Its query/key projections had fallen into different address
+frames: per-head address accuracy was 97.7-99.8% and mean margin 0.22, versus
+100% and about 0.42 in the strong seeds.
+
+v1.4.4 removes that independent-frame lottery by using one tied, orthogonally
+initialized query/key projection. On the already exposed failed seed 1481 it
+reached 97.998% at L512 in development. Fresh seeds 1511/1523/1531 and the
+unchanged all-seed 90% gate are frozen in
+[`G4F_PREREGISTRATION.md`](G4F_PREREGISTRATION.md). This remains a
+label-supervised result with 774,400 useful query labels per seed.
 
 ## Implemented surfaces
 
@@ -135,9 +142,13 @@ the declared budget is 774,400 useful query labels per seed. See
   maintained DeltaProduct transitions.
 - [`learnability_screen.py`](learnability_screen.py),
   [`long_context_continuation.py`](long_context_continuation.py), and
-  [`validation_screen.py`](validation_screen.py): fixed-batch falsifier,
-  useful-label-accounted curriculum, retained checkpoints, continuation, and
-  prospectively frozen fresh-seed gate.
+  [`validation_screen.py`](validation_screen.py): fixed-batch falsifier and the
+  original useful-label-accounted curriculum.
+- [`successor_screen.py`](successor_screen.py),
+  [`identity_validation.py`](identity_validation.py), and
+  [`tied_validation.py`](tied_validation.py): interference, identity-path, and
+  tied-address successor experiments with retained checkpoints and
+  prospectively frozen fresh-seed gates.
 - [`upstream_probe.py`](upstream_probe.py): actual FLA, Transformers, and
   pretrained state-spaces Mamba-2 probes with explicit environment boundaries.
 

@@ -1,0 +1,345 @@
+{
+  "aggregate": {
+    "512": {
+      "mean_exact_accuracy": 0.9156901041666666,
+      "minimum_exact_accuracy": 0.7822265625
+    },
+    "96": {
+      "mean_exact_accuracy": 0.9223225911458334,
+      "minimum_exact_accuracy": 0.7938232421875
+    }
+  },
+  "association_coefficient": 0.25,
+  "batch_size": 32,
+  "claim_status": "failed v1.4.3 identity-path validation",
+  "config": {
+    "attention_heads": 4,
+    "attention_rope_base": 10000.0,
+    "attention_window_size": 1024,
+    "conv_kernel": 4,
+    "delta_allow_negative_eigenvalues": true,
+    "delta_heads": 4,
+    "delta_num_householder": 4,
+    "dropout": 0.0,
+    "expansion": 2,
+    "gated_delta_allow_negative_eigenvalues": false,
+    "gated_delta_heads": 4,
+    "gated_delta_identity_output_gate": true,
+    "gated_delta_identity_value_path": true,
+    "gated_delta_initial_retention": 0.995,
+    "gated_delta_initial_write_strength": 0.1,
+    "gated_delta_key_dim": 32,
+    "gated_delta_minimum_retention": 0.9,
+    "gated_delta_normalize_values": true,
+    "gated_delta_residual_scale_init": 0.0,
+    "gated_delta_value_dim": 16,
+    "layer_plan": [
+      "gated_delta",
+      "attention"
+    ],
+    "model_dim": 64,
+    "norm_epsilon": 1e-06,
+    "selected_blocks": 4,
+    "selected_controller_rank": null,
+    "selected_heads": 2,
+    "selected_retention_max": 0.99,
+    "selected_retention_min": 0.0,
+    "selected_slots_per_block": 2,
+    "selected_update_rank": 1,
+    "selected_value_dim": 16,
+    "structured_channels": 1,
+    "structured_controller_rank": null,
+    "structured_hard_eval": true,
+    "structured_retention_max": 0.99,
+    "structured_retention_min": 0.0,
+    "structured_rungs": [
+      3,
+      4,
+      6,
+      8
+    ],
+    "tie_embeddings": true,
+    "use_local_conv": true,
+    "vocab_size": 197
+  },
+  "curriculum": [
+    {
+      "length": 16,
+      "pairs": 2,
+      "queries": 2,
+      "updates": 300
+    },
+    {
+      "length": 24,
+      "pairs": 4,
+      "queries": 4,
+      "updates": 300
+    },
+    {
+      "length": 48,
+      "pairs": 8,
+      "queries": 8,
+      "updates": 400
+    },
+    {
+      "length": 96,
+      "pairs": 16,
+      "queries": 16,
+      "updates": 1200
+    }
+  ],
+  "elapsed_wall_seconds": 395.6910862000004,
+  "environment": {
+    "cuda": "13.0",
+    "device": "cuda",
+    "device_name": "NVIDIA GeForce RTX 2070 SUPER",
+    "torch": "2.12.0+cu130"
+  },
+  "gate": "every fresh seed has exact query accuracy >= 0.90 at L96 and L512",
+  "git_commit_at_start": "a4b5142ce745ea133b122463e75d4b34b0c4f9c6",
+  "git_status_at_start": [],
+  "intermediate_retrieval_coefficient": 0.5,
+  "label_supervised": true,
+  "learning_rate": 0.003,
+  "passed": false,
+  "preregistration": "C:\\Users\\HaydenLocal\\Programming\\AI_Culture_Mind\\SSM-Models\\hybrid_memory_v1_4\\G4E_PREREGISTRATION.md",
+  "preregistration_sha256": "3f030357e743dce939fc473732558e4f19840844ade0556eba5c9d88c8a738ed",
+  "runs": [
+    {
+      "checkpoint": "SSM-Models\\hybrid_memory_v1_4\\artifacts\\checkpoints\\hybrid_v1_4_3_g4e_seed1481.pt",
+      "checkpoint_sha256": "0deb04720998700a7ecc7a44bd46a3ca9e1b08005ec870fe554b2c7eb642fca2",
+      "evaluations": [
+        {
+          "bits_per_query": 0.8774901445806563,
+          "exact_accuracy": 0.7938232421875,
+          "exact_sequence_accuracy": 0.021484375,
+          "length": 96,
+          "pairs": 16,
+          "queries_per_sequence": 16,
+          "query_count": 8192
+        },
+        {
+          "bits_per_query": 0.9763014679533991,
+          "exact_accuracy": 0.7822265625,
+          "exact_sequence_accuracy": 0.37109375,
+          "length": 512,
+          "pairs": 16,
+          "queries_per_sequence": 4,
+          "query_count": 2048
+        }
+      ],
+      "model_seed": 1481,
+      "parameter_count": 124378,
+      "phase_traces": [
+        {
+          "last_batch_accuracy": 0.140625,
+          "mean_association_loss": 0.7227071447173754,
+          "mean_intermediate_retrieval_loss": 3.909437255859375,
+          "mean_retrieval_loss": 3.8951174585024515,
+          "phase": {
+            "length": 16,
+            "pairs": 2,
+            "queries": 2,
+            "updates": 300
+          }
+        },
+        {
+          "last_batch_accuracy": 0.3984375,
+          "mean_association_loss": 0.7496915849049887,
+          "mean_intermediate_retrieval_loss": 2.8409667925039925,
+          "mean_retrieval_loss": 2.780880261262258,
+          "phase": {
+            "length": 24,
+            "pairs": 4,
+            "queries": 4,
+            "updates": 300
+          }
+        },
+        {
+          "last_batch_accuracy": 0.4296875,
+          "mean_association_loss": 1.2265206936001778,
+          "mean_intermediate_retrieval_loss": 2.435705006122589,
+          "mean_retrieval_loss": 2.396096359193325,
+          "phase": {
+            "length": 48,
+            "pairs": 8,
+            "queries": 8,
+            "updates": 400
+          }
+        },
+        {
+          "last_batch_accuracy": 0.783203125,
+          "mean_association_loss": 1.2784406083325546,
+          "mean_intermediate_retrieval_loss": 1.472054440677166,
+          "mean_retrieval_loss": 1.4342271732290586,
+          "phase": {
+            "length": 96,
+            "pairs": 16,
+            "queries": 16,
+            "updates": 1200
+          }
+        }
+      ]
+    },
+    {
+      "checkpoint": "SSM-Models\\hybrid_memory_v1_4\\artifacts\\checkpoints\\hybrid_v1_4_3_g4e_seed1483.pt",
+      "checkpoint_sha256": "803084feff5409a4929a2720c0d3b2165dda161aa51264c5c282bd5e32d89730",
+      "evaluations": [
+        {
+          "bits_per_query": 0.03406223066530858,
+          "exact_accuracy": 0.9927978515625,
+          "exact_sequence_accuracy": 0.888671875,
+          "length": 96,
+          "pairs": 16,
+          "queries_per_sequence": 16,
+          "query_count": 8192
+        },
+        {
+          "bits_per_query": 0.04474679237612463,
+          "exact_accuracy": 0.9931640625,
+          "exact_sequence_accuracy": 0.97265625,
+          "length": 512,
+          "pairs": 16,
+          "queries_per_sequence": 4,
+          "query_count": 2048
+        }
+      ],
+      "model_seed": 1483,
+      "parameter_count": 124378,
+      "phase_traces": [
+        {
+          "last_batch_accuracy": 0.875,
+          "mean_association_loss": 0.32060691714286804,
+          "mean_intermediate_retrieval_loss": 2.207422925829887,
+          "mean_retrieval_loss": 2.205801401734352,
+          "phase": {
+            "length": 16,
+            "pairs": 2,
+            "queries": 2,
+            "updates": 300
+          }
+        },
+        {
+          "last_batch_accuracy": 0.9375,
+          "mean_association_loss": 0.40109086980422337,
+          "mean_intermediate_retrieval_loss": 0.5749447631587585,
+          "mean_retrieval_loss": 0.5770777281622091,
+          "phase": {
+            "length": 24,
+            "pairs": 4,
+            "queries": 4,
+            "updates": 300
+          }
+        },
+        {
+          "last_batch_accuracy": 0.9609375,
+          "mean_association_loss": 0.7357113686203957,
+          "mean_intermediate_retrieval_loss": 0.29396327486261725,
+          "mean_retrieval_loss": 0.2949612912163138,
+          "phase": {
+            "length": 48,
+            "pairs": 8,
+            "queries": 8,
+            "updates": 400
+          }
+        },
+        {
+          "last_batch_accuracy": 0.998046875,
+          "mean_association_loss": 0.5360405528297026,
+          "mean_intermediate_retrieval_loss": 0.10487450538746391,
+          "mean_retrieval_loss": 0.10504545826620112,
+          "phase": {
+            "length": 96,
+            "pairs": 16,
+            "queries": 16,
+            "updates": 1200
+          }
+        }
+      ]
+    },
+    {
+      "checkpoint": "SSM-Models\\hybrid_memory_v1_4\\artifacts\\checkpoints\\hybrid_v1_4_3_g4e_seed1487.pt",
+      "checkpoint_sha256": "53bdf879b02c31f5677e32739727d97085304c842a26636f62171326f85f09b5",
+      "evaluations": [
+        {
+          "bits_per_query": 0.09386216939151434,
+          "exact_accuracy": 0.9803466796875,
+          "exact_sequence_accuracy": 0.74609375,
+          "length": 96,
+          "pairs": 16,
+          "queries_per_sequence": 16,
+          "query_count": 8192
+        },
+        {
+          "bits_per_query": 0.12365259218818629,
+          "exact_accuracy": 0.9716796875,
+          "exact_sequence_accuracy": 0.892578125,
+          "length": 512,
+          "pairs": 16,
+          "queries_per_sequence": 4,
+          "query_count": 2048
+        }
+      ],
+      "model_seed": 1487,
+      "parameter_count": 124378,
+      "phase_traces": [
+        {
+          "last_batch_accuracy": 0.46875,
+          "mean_association_loss": 0.47411232903599737,
+          "mean_intermediate_retrieval_loss": 3.1705343957742054,
+          "mean_retrieval_loss": 3.1695621744791667,
+          "phase": {
+            "length": 16,
+            "pairs": 2,
+            "queries": 2,
+            "updates": 300
+          }
+        },
+        {
+          "last_batch_accuracy": 0.5625,
+          "mean_association_loss": 0.6671057413021724,
+          "mean_intermediate_retrieval_loss": 2.283811941941579,
+          "mean_retrieval_loss": 2.275672294696172,
+          "phase": {
+            "length": 24,
+            "pairs": 4,
+            "queries": 4,
+            "updates": 300
+          }
+        },
+        {
+          "last_batch_accuracy": 0.69140625,
+          "mean_association_loss": 0.9929757130146026,
+          "mean_intermediate_retrieval_loss": 1.5724251915514469,
+          "mean_retrieval_loss": 1.5660561600327492,
+          "phase": {
+            "length": 48,
+            "pairs": 8,
+            "queries": 8,
+            "updates": 400
+          }
+        },
+        {
+          "last_batch_accuracy": 0.9921875,
+          "mean_association_loss": 0.5842681579291821,
+          "mean_intermediate_retrieval_loss": 0.5139251605498915,
+          "mean_retrieval_loss": 0.5133554568778103,
+          "phase": {
+            "length": 96,
+            "pairs": 16,
+            "queries": 16,
+            "updates": 1200
+          }
+        }
+      ]
+    }
+  ],
+  "schema_version": 1,
+  "useful_query_labels_per_seed": 774400,
+  "validation_seeds": [
+    1481,
+    1483,
+    1487
+  ],
+  "weight_decay": 0.01
+}

@@ -1,0 +1,180 @@
+{
+  "aggregate_length_512": {
+    "mean_exact_accuracy": 0.97998046875,
+    "minimum_exact_accuracy": 0.97998046875
+  },
+  "association_coefficient": 0.25,
+  "batch_size": 32,
+  "claim_status": "development objective and capacity screen",
+  "config": {
+    "attention_heads": 4,
+    "attention_rope_base": 10000.0,
+    "attention_window_size": 1024,
+    "conv_kernel": 4,
+    "delta_allow_negative_eigenvalues": true,
+    "delta_heads": 4,
+    "delta_num_householder": 4,
+    "dropout": 0.0,
+    "expansion": 2,
+    "gated_delta_allow_negative_eigenvalues": false,
+    "gated_delta_heads": 4,
+    "gated_delta_identity_output_gate": true,
+    "gated_delta_identity_value_path": true,
+    "gated_delta_initial_retention": 0.995,
+    "gated_delta_initial_write_strength": 0.1,
+    "gated_delta_key_dim": 32,
+    "gated_delta_minimum_retention": 0.9,
+    "gated_delta_normalize_values": true,
+    "gated_delta_residual_scale_init": 0.0,
+    "gated_delta_tie_query_key": true,
+    "gated_delta_value_dim": 16,
+    "layer_plan": [
+      "gated_delta",
+      "attention"
+    ],
+    "model_dim": 64,
+    "norm_epsilon": 1e-06,
+    "selected_blocks": 4,
+    "selected_controller_rank": null,
+    "selected_heads": 2,
+    "selected_retention_max": 0.99,
+    "selected_retention_min": 0.0,
+    "selected_slots_per_block": 2,
+    "selected_update_rank": 1,
+    "selected_value_dim": 16,
+    "structured_channels": 1,
+    "structured_controller_rank": null,
+    "structured_hard_eval": true,
+    "structured_retention_max": 0.99,
+    "structured_retention_min": 0.0,
+    "structured_rungs": [
+      3,
+      4,
+      6,
+      8
+    ],
+    "tie_embeddings": true,
+    "use_local_conv": true,
+    "vocab_size": 197
+  },
+  "curriculum": [
+    {
+      "length": 16,
+      "pairs": 2,
+      "queries": 2,
+      "updates": 300
+    },
+    {
+      "length": 24,
+      "pairs": 4,
+      "queries": 4,
+      "updates": 300
+    },
+    {
+      "length": 48,
+      "pairs": 8,
+      "queries": 8,
+      "updates": 400
+    },
+    {
+      "length": 96,
+      "pairs": 16,
+      "queries": 16,
+      "updates": 1200
+    }
+  ],
+  "development_seeds_reused_from_prior_work": [
+    1481
+  ],
+  "elapsed_wall_seconds": 131.08183389999976,
+  "environment": {
+    "cuda": "13.0",
+    "device": "cuda",
+    "device_name": "NVIDIA GeForce RTX 2070 SUPER",
+    "torch": "2.12.0+cu130"
+  },
+  "git_commit": "a4b5142ce745ea133b122463e75d4b34b0c4f9c6",
+  "identity_preserving_value_path": true,
+  "intermediate_retrieval_coefficient": 0.5,
+  "label_supervised": true,
+  "learning_rate": 0.003,
+  "runs": [
+    {
+      "checkpoint": "SSM-Models\\hybrid_memory_v1_4\\artifacts\\checkpoints\\hybrid_v1_4_4_dev_seed1481.pt",
+      "checkpoint_sha256": "b67c51bb11177a5f81868618a758cfb66dae559616caecbfb5558e38ded59e55",
+      "evaluations": [
+        {
+          "bits_per_query": 0.05451611389627781,
+          "exact_accuracy": 0.98974609375,
+          "exact_sequence_accuracy": 0.85546875,
+          "length": 96,
+          "pairs": 16,
+          "queries_per_sequence": 16,
+          "query_count": 8192
+        },
+        {
+          "bits_per_query": 0.07803787361900055,
+          "exact_accuracy": 0.97998046875,
+          "exact_sequence_accuracy": 0.923828125,
+          "length": 512,
+          "pairs": 16,
+          "queries_per_sequence": 4,
+          "query_count": 2048
+        }
+      ],
+      "model_seed": 1481,
+      "parameter_count": 116186,
+      "phase_traces": [
+        {
+          "last_batch_accuracy": 0.25,
+          "mean_association_loss": 0.21362760790934165,
+          "mean_intermediate_retrieval_loss": 3.6146220207214355,
+          "mean_retrieval_loss": 3.6145606803894044,
+          "phase": {
+            "length": 16,
+            "pairs": 2,
+            "queries": 2,
+            "updates": 300
+          }
+        },
+        {
+          "last_batch_accuracy": 0.8203125,
+          "mean_association_loss": 0.3134059693912665,
+          "mean_intermediate_retrieval_loss": 1.5637356466054917,
+          "mean_retrieval_loss": 1.5623484267791112,
+          "phase": {
+            "length": 24,
+            "pairs": 4,
+            "queries": 4,
+            "updates": 300
+          }
+        },
+        {
+          "last_batch_accuracy": 0.91796875,
+          "mean_association_loss": 0.6625478254258632,
+          "mean_intermediate_retrieval_loss": 0.6574406044185162,
+          "mean_retrieval_loss": 0.6547826189175248,
+          "phase": {
+            "length": 48,
+            "pairs": 8,
+            "queries": 8,
+            "updates": 400
+          }
+        },
+        {
+          "last_batch_accuracy": 0.98046875,
+          "mean_association_loss": 0.44246761620044706,
+          "mean_intermediate_retrieval_loss": 0.1546106450414906,
+          "mean_retrieval_loss": 0.15391479192922514,
+          "phase": {
+            "length": 96,
+            "pairs": 16,
+            "queries": 16,
+            "updates": 1200
+          }
+        }
+      ]
+    }
+  ],
+  "schema_version": 1
+}

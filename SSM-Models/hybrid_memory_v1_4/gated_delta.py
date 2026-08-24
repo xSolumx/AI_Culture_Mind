@@ -43,6 +43,7 @@ class GatedDeltaConfig:
     normalize_values: bool = False
     identity_value_path: bool = False
     identity_output_gate: bool = False
+    tie_query_key: bool = False
     norm_epsilon: float = 1e-6
     minimum_retention: float = 0.90
     initial_retention: float = 0.995
@@ -63,6 +64,7 @@ class GatedDeltaConfig:
             "normalize_values",
             "identity_value_path",
             "identity_output_gate",
+            "tie_query_key",
         ):
             if type(getattr(self, name)) is not bool:
                 raise TypeError(f"{name} must be a bool")
@@ -156,7 +158,11 @@ class GatedDeltaMemory(nn.Module):
         key_width = config.heads * config.resolved_key_dim
         value_width = config.heads * config.resolved_value_dim
         self.query_projection = nn.Linear(config.model_dim, key_width, bias=False)
-        self.key_projection = nn.Linear(config.model_dim, key_width, bias=False)
+        self.key_projection = (
+            self.query_projection
+            if config.tie_query_key
+            else nn.Linear(config.model_dim, key_width, bias=False)
+        )
         self.value_projection = nn.Linear(config.model_dim, value_width, bias=False)
         self.write_projection = nn.Linear(config.model_dim, config.heads, bias=True)
         self.decay_projection = nn.Linear(config.model_dim, config.heads, bias=True)
@@ -179,8 +185,12 @@ class GatedDeltaMemory(nn.Module):
         return batch_size * self.state_scalars * probe.element_size()
 
     def reset_parameters(self) -> None:
-        for module in (self.query_projection, self.key_projection, self.output_gate):
-            nn.init.normal_(module.weight, mean=0.0, std=0.02)
+        if self.config.tie_query_key:
+            nn.init.orthogonal_(self.query_projection.weight)
+        else:
+            nn.init.normal_(self.query_projection.weight, mean=0.0, std=0.02)
+            nn.init.normal_(self.key_projection.weight, mean=0.0, std=0.02)
+        nn.init.normal_(self.output_gate.weight, mean=0.0, std=0.02)
         if self.config.identity_value_path:
             nn.init.eye_(self.value_projection.weight)
             nn.init.eye_(self.output_projection.weight)

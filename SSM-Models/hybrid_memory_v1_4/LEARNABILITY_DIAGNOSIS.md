@@ -28,17 +28,18 @@ is not yet a label-free or natural-language model promotion.
 The strict three-seed G4b gate later failed because seed 1429 reached 84.814%
 at L512, and uniform G4c consolidation raised it only to 87.598%. A post-G4c
 diagnostic showed 100% address top-1 accuracy but seed-dependent key/value
-interference. The v1.4.2 successor therefore doubles key dimension, normalizes
-value injection, and directly supervises the post-memory readout. It repaired
-the previously weak seed in development; fresh-seed G4d validation remains the
-current gate.
+interference. The v1.4.2 successor therefore doubled key dimension, normalized
+value injection, and directly supervised the post-memory readout. It repaired
+the previously weak seed in development, but fresh seed 1459 failed G4d at
+86.328%.
 
-G4d showed that interference repair alone still left a random value/readout
-basin: fresh seed 1459 reached only 86.328%. v1.4.3 now initializes the value
-projection, output projection, output gate, and memory residual as an identity-
-preserving path. It repaired both previously weak seeds in development. G4e
-tests that design on fresh seeds with the larger useful-label budget frozen in
-advance.
+v1.4.3 initialized the value projection, output projection, output gate, and
+memory residual as an identity-preserving path. G4e nevertheless failed on
+seed 1481 at 78.223% L512 while the other two seeds exceeded 97%. The weak seed
+had an independently misaligned query/key address frame. v1.4.4 ties those
+projections and initializes their shared map orthogonally. It repaired exposed
+seed 1481 to 97.998% L512 in development; prospectively frozen G4f is the
+current gate.
 
 ## What the present learning problem actually is
 
@@ -239,10 +240,10 @@ ranking is claimed.
 
 ### Open
 
-- G4b and G4c failed because seed 1429 remained below 90%; the
-  interference-targeted v1.4.2 successor then failed G4d on seed 1459; the
-  identity-preserving v1.4.3 successor passed only exposed weak-seed
-  development, and prospectively frozen G4e is the current gate;
+- G4b and G4c failed because seed 1429 remained below 90%; v1.4.2 then failed
+  G4d on seed 1459, and identity-preserving v1.4.3 failed G4e on seed 1481;
+  tied-address v1.4.4 passed only exposed weak-seed development, and
+  prospectively frozen G4f is the current gate;
 - label-free MQAR after a dense causal language-model pretraining phase;
 - matched natural-text quality versus actual Mamba-2 and Gated DeltaNet;
 - whether selected archive or Spin/F4/rotor transport adds value after the

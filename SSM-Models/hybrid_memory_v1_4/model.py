@@ -19,7 +19,7 @@ from .gated_delta import GatedDeltaConfig, GatedDeltaMemory
 from .selected_block import RouteMode, SelectedBlockConfig, SelectedBlockMemory
 from .structured_memory import StructuredMemoryConfig, StructuredSpin8Memory
 
-__version__ = "1.4.3"
+__version__ = "1.4.4"
 
 LayerKind: TypeAlias = Literal[
     "attention",
@@ -97,6 +97,7 @@ class HybridMemoryConfig:
     gated_delta_normalize_values: bool = False
     gated_delta_identity_value_path: bool = False
     gated_delta_identity_output_gate: bool = False
+    gated_delta_tie_query_key: bool = False
     gated_delta_residual_scale_init: float = -2.0
     gated_delta_minimum_retention: float = 0.90
     gated_delta_initial_retention: float = 0.995
@@ -169,6 +170,7 @@ class HybridMemoryConfig:
             "gated_delta_normalize_values",
             "gated_delta_identity_value_path",
             "gated_delta_identity_output_gate",
+            "gated_delta_tie_query_key",
             "structured_hard_eval",
         ):
             if type(getattr(self, name)) is not bool:
@@ -216,6 +218,7 @@ class HybridMemoryConfig:
                 normalize_values=self.gated_delta_normalize_values,
                 identity_value_path=self.gated_delta_identity_value_path,
                 identity_output_gate=self.gated_delta_identity_output_gate,
+                tie_query_key=self.gated_delta_tie_query_key,
                 norm_epsilon=self.norm_epsilon,
                 minimum_retention=self.gated_delta_minimum_retention,
                 initial_retention=self.gated_delta_initial_retention,
@@ -436,6 +439,7 @@ class HybridMemoryBlock(nn.Module):
                     normalize_values=config.gated_delta_normalize_values,
                     identity_value_path=config.gated_delta_identity_value_path,
                     identity_output_gate=config.gated_delta_identity_output_gate,
+                    tie_query_key=config.gated_delta_tie_query_key,
                     norm_epsilon=config.norm_epsilon,
                     minimum_retention=config.gated_delta_minimum_retention,
                     initial_retention=config.gated_delta_initial_retention,
