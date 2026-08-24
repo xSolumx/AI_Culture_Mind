@@ -496,6 +496,11 @@ validation of the entire combined schedule.
 Evidence:
 [`artifacts/g8_target_distance_consolidation_cuda_2026-08-25.json`](artifacts/g8_target_distance_consolidation_cuda_2026-08-25.json).
 
+G9 prospectively freezes a fresh-from-scratch replay of the complete schedule.
+Its fixed phase counts are 1,200/1,200/1,400/1,300 followed by the 600-update
+L512 phase. Fresh seeds 1721/1723/1733 must each exceed 90% at both lengths;
+the G8 continuation result is unchanged whatever G9 reports.
+
 ## Actual upstream probes
 
 - FlashRT Gated Delta Attention was pinned at revision `892f725c...`, kernel

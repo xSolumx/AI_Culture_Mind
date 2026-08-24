@@ -202,6 +202,12 @@ tuning. It passed: L96 mean/minimum were 95.63%/93.69%, and L512 mean/minimum
 were 94.61%/92.29%. See
 [`G8_PREREGISTRATION.md`](G8_PREREGISTRATION.md).
 
+G9 freezes the complete successful external schedule from random
+initialization on three unseen seeds. It replaces G7's invalid competence gate
+with fixed counts equal to the maximum updates actually consumed across the
+exposed G7 phases, then appends the uniform G8 L512 phase. See
+[`G9_PREREGISTRATION.md`](G9_PREREGISTRATION.md).
+
 ## Validation
 
 From `SSM-Models`:

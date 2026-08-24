@@ -292,7 +292,7 @@ fixes the mistaken assumption that short-task mastery implies retention.
 - robust tied-address commissioning passed G4f; learning the same rule without
   internal association/write labels remains open;
 - fresh-from-scratch validation of the combined external reverse-binding plus
-  target-distance schedule;
+  target-distance schedule, now prospectively frozen as G9;
 - label-free MQAR after a dense causal language-model pretraining phase;
 - matched natural-text quality versus actual Mamba-2 and Gated DeltaNet;
 - whether selected archive or Spin/F4/rotor transport adds value after the
