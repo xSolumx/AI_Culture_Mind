@@ -38,8 +38,8 @@ memory residual as an identity-preserving path. G4e nevertheless failed on
 seed 1481 at 78.223% L512 while the other two seeds exceeded 97%. The weak seed
 had an independently misaligned query/key address frame. v1.4.4 ties those
 projections and initializes their shared map orthogonally. It repaired exposed
-seed 1481 to 97.998% L512 in development; prospectively frozen G4f is the
-current gate.
+seed 1481 to 97.998% L512 in development, then passed prospectively frozen G4f
+on every fresh seed with a 98.096% minimum L512 accuracy.
 
 ## What the present learning problem actually is
 
@@ -231,6 +231,13 @@ ranking is claimed.
 - 94.19% after length-512 continuation;
 - finite real upstream FLA, Transformers, and pretrained Mamba-2 probes.
 
+### Prospectively validated
+
+- G4f fresh seeds 1511/1523/1531 all exceeded 98% exact query accuracy at L96
+  and L512 under the frozen 774,400-label commissioning budget;
+- the G4f artifact started from clean commit `ffc6efd`, retained all
+  checkpoints, and records preregistration and checkpoint hashes.
+
 ### Constrained
 
 - the positive learning result uses synthetic task labels for association and
@@ -240,10 +247,8 @@ ranking is claimed.
 
 ### Open
 
-- G4b and G4c failed because seed 1429 remained below 90%; v1.4.2 then failed
-  G4d on seed 1459, and identity-preserving v1.4.3 failed G4e on seed 1481;
-  tied-address v1.4.4 passed only exposed weak-seed development, and
-  prospectively frozen G4f is the current gate;
+- robust tied-address commissioning passed G4f; learning the same rule without
+  internal association/write labels remains open;
 - label-free MQAR after a dense causal language-model pretraining phase;
 - matched natural-text quality versus actual Mamba-2 and Gated DeltaNet;
 - whether selected archive or Spin/F4/rotor transport adds value after the

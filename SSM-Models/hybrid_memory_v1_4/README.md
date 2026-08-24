@@ -1,6 +1,7 @@
 # Hybrid Memory SSM v1.4
 
-**Status:** v1.4.4 tied-address successor under fresh-seed validation. The
+**Status:** v1.4.4 tied-address successor passed its prospectively frozen G4f
+fresh-seed validation. The
 frozen G4a selected-memory result remains negative. A label-supervised Gated
 Delta commissioning run learned fresh 16-pair MQAR and produced retained
 development checkpoints; this is not yet a label-free, natural-language, or
@@ -95,10 +96,12 @@ frames: per-head address accuracy was 97.7-99.8% and mean margin 0.22, versus
 
 v1.4.4 removes that independent-frame lottery by using one tied, orthogonally
 initialized query/key projection. On the already exposed failed seed 1481 it
-reached 97.998% at L512 in development. Fresh seeds 1511/1523/1531 and the
-unchanged all-seed 90% gate are frozen in
-[`G4F_PREREGISTRATION.md`](G4F_PREREGISTRATION.md). This remains a
-label-supervised result with 774,400 useful query labels per seed.
+reached 97.998% at L512 in development. The prospectively frozen G4f seeds
+1511/1523/1531 then all passed the 90% gate at both lengths. Mean exact query
+accuracy was 98.95% at L96 and 98.67% at L512; the minima were 98.72% and
+98.10%. See [`G4F_PREREGISTRATION.md`](G4F_PREREGISTRATION.md) and the retained
+validation artifact. This is validated synthetic associative learning, but it
+remains label-supervised with 774,400 useful query labels per seed.
 
 ## Implemented surfaces
 
@@ -187,9 +190,9 @@ matched speed evidence.
 - The frozen G4a retrieval capability claim failed in both routing cohorts.
 - The matched control also failed, so G4a does not isolate selected memory as
   the cause.
-- The positive v1.4.1 result uses explicit association/write labels and is not
+- The positive v1.4.4 result uses explicit association/write labels and is not
   evidence of label-free or natural-language learning.
-- The retained development checkpoints are not released pretrained models.
+- The retained validation checkpoints are not released pretrained models.
 - Straight-through routing establishes a gradient estimator, not successful
   label-free routing.
 - The selected-attention topology result establishes a causal gradient path,

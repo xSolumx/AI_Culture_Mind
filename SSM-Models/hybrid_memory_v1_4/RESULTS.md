@@ -1,10 +1,9 @@
 # Hybrid Memory v1.4 frontier results
 
 **Date:** 2026-08-24
-**Status:** v1.4.4 tied-address successor under prospectively frozen fresh-seed
-validation. G4a through G4e all failed their declared gates. The tied-address
-v1.4.4 design passed its exposed weak-seed development falsifier; there is no
-label-free, natural-language, or matched-speed promotion.
+**Status:** v1.4.4 tied-address successor passed prospectively frozen G4f
+fresh-seed validation. G4a through G4e all failed their declared gates. There
+is still no label-free, natural-language, or matched-speed promotion.
 
 ## Adjudication
 
@@ -312,6 +311,33 @@ Evidence:
 and
 [`artifacts/learnability_v1_4_4_tied_qk_development_cuda_2026-08-24.json`](artifacts/learnability_v1_4_4_tied_qk_development_cuda_2026-08-24.json).
 
+## G4f pass: robust commissioned learning
+
+G4f started from clean commit `ffc6efd7ce5feebe9a4ed8814e5df9477925a4f3`
+and passed the frozen all-seed gate:
+
+| Fresh seed | L96 exact | L512 exact | L512 bits/query |
+|---:|---:|---:|---:|
+| 1511 | 98.840% | 98.926% | 0.056 |
+| 1523 | 98.718% | 98.096% | 0.089 |
+| 1531 | 99.304% | 98.975% | 0.057 |
+
+Mean exact query accuracy was 98.954% at L96 and 98.665% at L512. The minima
+were 98.718% and 98.096%, both well above the preregistered 90% threshold. Each
+L96 row contains 8,192 unseen decisions and each L512 row 2,048. The artifact
+records an empty starting Git status, the preregistration hash, all checkpoint
+hashes, 116,186 parameters, 774,400 useful query labels per seed, and the RTX
+2070 SUPER/PyTorch 2.12.0+cu130 environment.
+
+This validates one precise claim: with tied address geometry, identity value
+paths, and explicit association/write/intermediate supervision, v1.4.4 learns
+fresh synthetic 16-pair MQAR robustly at the declared budget. It does not show
+that the same architecture discovers the rule from final retrieval loss alone
+or from natural text.
+
+Evidence:
+[`artifacts/learnability_v1_4_4_g4f_validation_cuda_2026-08-24.json`](artifacts/learnability_v1_4_4_g4f_validation_cuda_2026-08-24.json).
+
 ## Actual upstream probes
 
 - FlashRT Gated Delta Attention was pinned at revision `892f725c...`, kernel
@@ -351,9 +377,9 @@ Artifact file hashes are recorded in [`ARTIFACTS.sha256`](ARTIFACTS.sha256).
 ## Nonclaims
 
 - G4a failed retrieval capability in both routing cohorts.
-- G4b development learned synthetic retrieval only with explicit association
-  and write-event labels; label-free retrieval remains open.
-- The retained checkpoints are development artifacts, not released pretrained
+- G4f validates synthetic retrieval only with explicit association,
+  write-event, and intermediate labels; label-free retrieval remains open.
+- The retained checkpoints are validation artifacts, not released pretrained
   models.
 - No natural-language or bits-per-byte claim exists.
 - No fused-kernel, Tensor-Core, or matched speed claim exists.
