@@ -49,3 +49,34 @@ def test_external_write_and_retrieval_losses_use_only_causal_positions() -> None
     retrieval, reconstruction = externally_observable_losses(logits, batch)
     assert float(retrieval) < 1e-6
     assert float(reconstruction) < 1e-6
+
+
+def test_reverse_binding_target_reconstructs_seen_key_at_value_event() -> None:
+    batch = generate_mqar_batch(2, 4, 3, 24, seed=19)
+    vocab_size = batch.schema.vocabulary.vocab_size
+    logits = torch.full((2, 24, vocab_size), -20.0)
+    value_positions = batch.metadata["stored_value_positions"]
+    stored_keys = batch.metadata["stored_keys"]
+    assert isinstance(value_positions, torch.Tensor)
+    assert isinstance(stored_keys, torch.Tensor)
+    query_logits = _gather_positions(logits, batch.query_positions)
+    association_logits = _gather_positions(logits, value_positions)
+    query_logits.scatter_(2, batch.targets.unsqueeze(-1), 20.0)
+    association_logits.scatter_(2, stored_keys.unsqueeze(-1), 20.0)
+    logits.scatter_(
+        1,
+        batch.query_positions.unsqueeze(-1).expand(-1, -1, vocab_size),
+        query_logits,
+    )
+    logits.scatter_(
+        1,
+        value_positions.unsqueeze(-1).expand(-1, -1, vocab_size),
+        association_logits,
+    )
+    retrieval, reconstruction = externally_observable_losses(
+        logits,
+        batch,
+        "reverse_key",
+    )
+    assert float(retrieval) < 1e-6
+    assert float(reconstruction) < 1e-6

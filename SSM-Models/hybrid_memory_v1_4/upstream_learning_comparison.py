@@ -12,7 +12,7 @@ import sys
 import time
 from dataclasses import asdict
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
 
 import torch
 from torch import nn
@@ -55,6 +55,7 @@ MODEL_SEED = 1601
 DATA_SEED = 1661
 WRITE_COEFFICIENT = 0.25
 MODEL_NAMES = ("hybrid_v1_4_4", "transformers_mamba2", "transformers_olmo_hybrid")
+AssociationTarget = Literal["unseen_value", "reverse_key"]
 
 
 def _sha256(path: Path) -> str:
@@ -145,23 +146,33 @@ def _gather_positions(logits: torch.Tensor, positions: torch.Tensor) -> torch.Te
 
 
 def externally_observable_losses(
-    logits: torch.Tensor, batch: RetrievalBatch
+    logits: torch.Tensor,
+    batch: RetrievalBatch,
+    association_target: AssociationTarget = "unseen_value",
 ) -> tuple[torch.Tensor, torch.Tensor]:
-    """Return query retrieval and causal write-value reconstruction losses."""
+    """Return query retrieval and an externally observable association loss."""
 
     retrieval_logits = tasks.gather_query_logits(logits, batch)
     retrieval = F.cross_entropy(
         retrieval_logits.flatten(0, 1),
         batch.targets.flatten(),
     )
-    positions = batch.metadata["stored_key_positions"]
-    values = batch.metadata["stored_values"]
-    if not isinstance(positions, torch.Tensor) or not isinstance(values, torch.Tensor):
-        raise TypeError("MQAR metadata must expose tensor write positions and values")
-    write_logits = _gather_positions(logits, positions)
+    if association_target == "unseen_value":
+        positions = batch.metadata["stored_key_positions"]
+        association_targets = batch.metadata["stored_values"]
+    elif association_target == "reverse_key":
+        positions = batch.metadata["stored_value_positions"]
+        association_targets = batch.metadata["stored_keys"]
+    else:
+        raise ValueError(f"unknown association target {association_target!r}")
+    if not isinstance(positions, torch.Tensor) or not isinstance(
+        association_targets, torch.Tensor
+    ):
+        raise TypeError("MQAR metadata must expose tensor positions and targets")
+    association_logits = _gather_positions(logits, positions)
     reconstruction = F.cross_entropy(
-        write_logits.flatten(0, 1),
-        values.flatten(),
+        association_logits.flatten(0, 1),
+        association_targets.flatten(),
     )
     return retrieval, reconstruction
 
@@ -171,6 +182,8 @@ def _train_model(
     model: nn.Module,
     *,
     device: torch.device,
+    data_seed: int,
+    association_target: AssociationTarget,
 ) -> list[dict[str, Any]]:
     optimizer = torch.optim.AdamW(model.parameters(), lr=3e-3, weight_decay=0.01)
     traces = []
@@ -186,12 +199,16 @@ def _train_model(
             batch = _batch(
                 phase,
                 32,
-                seed=_seed("training", step, DATA_SEED),
+                seed=_seed("training", step, data_seed),
                 device=device,
             )
             optimizer.zero_grad(set_to_none=True)
             logits = _forward_logits(name, model, batch.inputs)
-            retrieval, reconstruction = externally_observable_losses(logits, batch)
+            retrieval, reconstruction = externally_observable_losses(
+                logits,
+                batch,
+                association_target,
+            )
             loss = retrieval + WRITE_COEFFICIENT * reconstruction
             if not bool(torch.isfinite(loss)):
                 raise FloatingPointError(f"non-finite {name} G5 loss")
@@ -206,7 +223,8 @@ def _train_model(
             {
                 "phase": asdict(phase),
                 "mean_retrieval_loss": retrieval_sum / phase.updates,
-                "mean_write_reconstruction_loss": reconstruction_sum / phase.updates,
+                "mean_association_reconstruction_loss": reconstruction_sum
+                / phase.updates,
                 "last_batch_accuracy": final_accuracy,
                 "elapsed_wall_seconds": time.perf_counter() - phase_started,
             }
@@ -266,6 +284,16 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--checkpoint-dir", type=Path, required=True)
+    parser.add_argument("--model-seed", type=int, default=MODEL_SEED)
+    parser.add_argument("--data-seed", type=int, default=DATA_SEED)
+    parser.add_argument("--eval-seed-l96", type=int, default=1_601_601)
+    parser.add_argument("--eval-seed-l512", type=int, default=1_701_601)
+    parser.add_argument(
+        "--association-target",
+        choices=("unseen_value", "reverse_key"),
+        default="unseen_value",
+    )
+    parser.add_argument("--run-label", default="g5")
     parser.add_argument(
         "--device", default="cuda" if torch.cuda.is_available() else "cpu"
     )
@@ -276,29 +304,37 @@ def main() -> None:
     runs = []
     started = time.perf_counter()
     for name in MODEL_NAMES:
-        torch.manual_seed(MODEL_SEED)
+        torch.manual_seed(args.model_seed)
         if device.type == "cuda":
-            torch.cuda.manual_seed_all(MODEL_SEED)
+            torch.cuda.manual_seed_all(args.model_seed)
         model_started = time.perf_counter()
         model = _build_model(name, device)
-        traces = _train_model(name, model, device=device)
+        traces = _train_model(
+            name,
+            model,
+            device=device,
+            data_seed=args.data_seed,
+            association_target=args.association_target,
+        )
         evaluations = [
             _evaluate(
                 name,
                 model,
                 CurriculumPhase(16, 16, 96, 0),
-                seed_base=1_601_601,
+                seed_base=args.eval_seed_l96,
                 device=device,
             ),
             _evaluate(
                 name,
                 model,
                 CurriculumPhase(16, 4, 512, 0),
-                seed_base=1_701_601,
+                seed_base=args.eval_seed_l512,
                 device=device,
             ),
         ]
-        checkpoint = args.checkpoint_dir / f"g5_{name}_seed{MODEL_SEED}.pt"
+        checkpoint = (
+            args.checkpoint_dir / f"{args.run_label}_{name}_seed{args.model_seed}.pt"
+        )
         model_config = (
             asdict(_tied_identity_config())
             if name == "hybrid_v1_4_4"
@@ -309,8 +345,9 @@ def main() -> None:
                 "model_state_dict": model.state_dict(),
                 "model_name": name,
                 "model_config": model_config,
-                "model_seed": MODEL_SEED,
-                "data_seed": DATA_SEED,
+                "model_seed": args.model_seed,
+                "data_seed": args.data_seed,
+                "association_target": args.association_target,
                 "preregistration_sha256": _sha256(PREREGISTRATION),
             },
             checkpoint,
@@ -336,18 +373,21 @@ def main() -> None:
         "schema_version": 1,
         "claim_status": "single-seed paired externally supervised comparison",
         "validation_claim": False,
-        "model_seed": MODEL_SEED,
-        "data_seed": DATA_SEED,
+        "model_seed": args.model_seed,
+        "data_seed": args.data_seed,
+        "evaluation_seed_l96": args.eval_seed_l96,
+        "evaluation_seed_l512": args.eval_seed_l512,
+        "association_target": args.association_target,
         "models": list(MODEL_NAMES),
         "curriculum": [asdict(phase) for phase in CURRICULUM],
         "batch_size": 32,
         "learning_rate": 3e-3,
         "weight_decay": 0.01,
-        "write_reconstruction_coefficient": WRITE_COEFFICIENT,
+        "association_reconstruction_coefficient": WRITE_COEFFICIENT,
         "retrieval_labels_per_model": sum(
             phase.updates * 32 * phase.queries for phase in CURRICULUM
         ),
-        "write_reconstruction_labels_per_model": sum(
+        "association_labels_per_model": sum(
             phase.updates * 32 * phase.pairs for phase in CURRICULUM
         ),
         "runs": runs,

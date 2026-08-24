@@ -154,6 +154,9 @@ remains label-supervised with 774,400 useful query labels per seed.
   prospectively frozen fresh-seed gates.
 - [`upstream_probe.py`](upstream_probe.py): actual FLA, Transformers, and
   pretrained state-spaces Mamba-2 probes with explicit environment boundaries.
+- [`upstream_learning_comparison.py`](upstream_learning_comparison.py): paired
+  learning screens using the actual Transformers Mamba-2 and OLMo Hybrid
+  implementations, with external-label and single-seed boundaries explicit.
 
 ## Baseline boundary
 
@@ -167,6 +170,15 @@ when unavailable.
 The exact pretrained `state-spaces/mamba2-130m` weights are pinned at revision
 `3a5aea0c25d0fb43cc360e2c2aac82c26e3eed49` in the external E: cache and were
 loaded through official `mamba_ssm` in WSL. They are not committed to Git.
+
+G5 also trained small actual Transformers Mamba-2 and OLMo Hybrid models on the
+same synthetic episode stream as v1.4.4. Its proposed next-token write target
+was irreducible noise because synthetic values are random and unseen. With the
+remaining retrieval signal, OLMo learned L96 (97.52%) but transferred poorly
+to L512 (25.44%); Mamba-2 reached 17.97%/14.16%, and uncommissioned v1.4.4
+5.69%/4.44%. G5b freezes a causal reverse-binding reconstruction target at the
+observed value event. Neither one-seed comparison is an upstream superiority
+claim.
 
 ## Validation
 

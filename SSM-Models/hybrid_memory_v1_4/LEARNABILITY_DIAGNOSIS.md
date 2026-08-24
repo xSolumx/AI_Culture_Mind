@@ -212,6 +212,18 @@ These are real upstream implementation probes. They are not yet matched MQAR
 quality comparisons and their timings cross different runtimes, so no speed
 ranking is claimed.
 
+G5 then performed a paired single-seed MQAR learning comparison with the actual
+small Transformers Mamba-2 and OLMo Hybrid implementations. With internal
+memory labels removed, v1.4.4 stayed at 5.69%/4.44% L96/L512, Mamba-2 reached
+17.97%/14.16%, and OLMo Hybrid reached 97.52%/25.44%. OLMo's split isolates
+training-length learning from long-filler retention.
+
+The comparison also exposed that predicting a fresh random value from its
+preceding key is an irreducible target, not useful next-token supervision. G5b
+replaces it with reverse-key reconstruction after the value has been observed.
+That retains an external, causal training signal while teaching the event to
+carry both sides of the binding.
+
 ## Current claim ledger
 
 ### Proved by code/tests
@@ -249,6 +261,8 @@ ranking is claimed.
 
 - robust tied-address commissioning passed G4f; learning the same rule without
   internal association/write labels remains open;
+- whether G5b's causal reverse-binding objective supports both autonomous
+  binding and L512 retention across actual architectures;
 - label-free MQAR after a dense causal language-model pretraining phase;
 - matched natural-text quality versus actual Mamba-2 and Gated DeltaNet;
 - whether selected archive or Spin/F4/rotor transport adds value after the

@@ -338,6 +338,40 @@ or from natural text.
 Evidence:
 [`artifacts/learnability_v1_4_4_g4f_validation_cuda_2026-08-24.json`](artifacts/learnability_v1_4_4_g4f_validation_cuda_2026-08-24.json).
 
+## G5 actual upstream learning comparison
+
+G5 paired the same model seed, episode stream, optimizer, and 2,200-update
+curriculum across v1.4.4 and the actual Transformers Mamba-2 and OLMo Hybrid
+implementations. Parameter counts were 116,186, 82,224, and 100,376. Both
+upstream models explicitly used their native unfused PyTorch fallbacks.
+
+| Model | L96 exact | L512 exact | L512 bits/query |
+|---|---:|---:|---:|
+| Hybrid Memory v1.4.4 | 5.688% | 4.443% | 5.763 |
+| Transformers Mamba-2 | 17.969% | 14.160% | 4.563 |
+| Transformers OLMo Hybrid | 97.522% | 25.439% | 9.003 |
+
+This does not contradict G4f. G4f used explicit internal association,
+write-event, and intermediate retrieval supervision; G5 withheld all internal
+state labels. OLMo Hybrid learned the trained L96 distribution but did not
+retain that performance across the longer filler span. The local model did not
+autonomously discover its address/write controls.
+
+G5 also diagnosed an error in its intended external auxiliary. Predicting the
+random value from the preceding write key is statistically impossible because
+that value has not appeared and is sampled independently. Every model's
+reconstruction loss stayed near `ln(64)`. The term was shared fairly but added
+noise rather than binding information.
+
+G5b therefore freezes a corrected external target: at the already observed
+value event, reconstruct the preceding key. This is causal, learnable, and
+available to every architecture without inspecting internal memory. Fresh
+seed 1621 and the exact successor protocol are frozen in
+[`G5B_PREREGISTRATION.md`](G5B_PREREGISTRATION.md).
+
+Evidence:
+[`artifacts/g5_actual_upstream_learning_comparison_cuda_2026-08-24.json`](artifacts/g5_actual_upstream_learning_comparison_cuda_2026-08-24.json).
+
 ## Actual upstream probes
 
 - FlashRT Gated Delta Attention was pinned at revision `892f725c...`, kernel
@@ -364,7 +398,7 @@ and
 
 ## Validation record
 
-- `python -m pytest hybrid_memory_v1_4/tests -q`: **193 passed, 4 skipped**.
+- `python -m pytest hybrid_memory_v1_4/tests -q`: **195 passed, 4 skipped**.
 - `python -m ruff check hybrid_memory_v1_4`: passed.
 - `python -m ruff format --check hybrid_memory_v1_4`: passed.
 - The four native-suite skips are guarded optional fused FLA/Mamba paths; WSL
