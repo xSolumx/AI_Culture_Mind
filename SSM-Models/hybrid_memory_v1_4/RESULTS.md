@@ -1,11 +1,11 @@
 # Hybrid Memory v1.4 frontier results
 
 **Date:** 2026-08-24
-**Status:** v1.4.1 content-addressed development result awaiting prospectively
-frozen fresh-seed validation. The frozen G4a retrieval campaign remains a
-capability failure. Retained Gated Delta development checkpoints learned the
-synthetic rule under explicit association labels; there is no label-free,
-natural-language, or matched-speed promotion.
+**Status:** v1.4.1 content-addressed development result under prospectively
+frozen consolidation validation. G4a and the strict all-seed G4b gate both
+failed. Retained Gated Delta checkpoints learned the synthetic rule under
+explicit association labels; there is no label-free, natural-language, or
+matched-speed promotion.
 
 ## Adjudication
 
@@ -169,11 +169,29 @@ learning. Fresh model seeds 1423/1427/1429 and the requirement that every seed
 reach at least 90% over 2,048 unseen L512 queries were frozen in
 [`G4B_PREREGISTRATION.md`](G4B_PREREGISTRATION.md) before those seeds ran.
 
+G4b then failed its primary gate:
+
+| Fresh model seed | L96 exact | L512 exact | L512 bits/query |
+|---:|---:|---:|---:|
+| 1423 | 96.997% | 96.143% | 0.200 |
+| 1427 | 96.411% | 94.141% | 0.291 |
+| 1429 | 89.087% | 84.814% | 0.801 |
+
+Mean L512 accuracy was 91.699%, but the preregistration required every seed to
+reach 90%. The minimum was 84.814%, so the disposition is failure. Before any
+validation checkpoint received more training, one identical 300-update L512
+consolidation phase for all three seeds was frozen in
+[`G4C_PREREGISTRATION.md`](G4C_PREREGISTRATION.md). This tests the optimization-
+basin hypothesis without erasing the G4b failure.
+
 Evidence:
 [`LEARNABILITY_DIAGNOSIS.md`](LEARNABILITY_DIAGNOSIS.md),
 [`artifacts/learnability_g4b_seed1401_cuda_2026-08-24.json`](artifacts/learnability_g4b_seed1401_cuda_2026-08-24.json),
 and
 [`artifacts/learnability_g4b_long_continuation_seed2401_cuda_2026-08-24.json`](artifacts/learnability_g4b_long_continuation_seed2401_cuda_2026-08-24.json).
+
+Fresh-seed evidence:
+[`artifacts/learnability_g4b_validation_cuda_2026-08-24.json`](artifacts/learnability_g4b_validation_cuda_2026-08-24.json).
 
 ## Actual upstream probes
 

@@ -1,6 +1,6 @@
 # Hybrid Memory SSM v1.4
 
-**Status:** v1.4.1 content-addressed successor under fresh-seed validation. The
+**Status:** v1.4.1 content-addressed successor under consolidation validation. The
 frozen G4a selected-memory result remains negative. A label-supervised Gated
 Delta commissioning run learned fresh 16-pair MQAR and produced retained
 development checkpoints; this is not yet a label-free, natural-language, or
@@ -69,6 +69,13 @@ supervised from synthetic task metadata, so these results prove commissioned
 rule learning, not label-free discovery. See
 [`LEARNABILITY_DIAGNOSIS.md`](LEARNABILITY_DIAGNOSIS.md) and the prospectively
 frozen [`G4B_PREREGISTRATION.md`](G4B_PREREGISTRATION.md).
+
+G4b subsequently failed its all-seed gate: seeds 1423 and 1427 reached 96.14%
+and 94.14% at length 512, while seed 1429 reached 84.81%. The mean was 91.70%,
+but an average cannot hide the weak seed. The uniform target-length
+consolidation test is frozen in
+[`G4C_PREREGISTRATION.md`](G4C_PREREGISTRATION.md); G4b remains failed whatever
+G4c reports.
 
 ## Implemented surfaces
 

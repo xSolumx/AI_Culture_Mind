@@ -224,7 +224,9 @@ ranking is claimed.
 
 ### Open
 
-- fresh-model-seed G4b validation;
+- G4b fresh-model-seed validation failed because seed 1429 reached 84.814%
+  despite two seeds above 94%; prospectively frozen G4c target-length
+  consolidation is the next optimization-basin test;
 - label-free MQAR after a dense causal language-model pretraining phase;
 - matched natural-text quality versus actual Mamba-2 and Gated DeltaNet;
 - whether selected archive or Spin/F4/rotor transport adds value after the
