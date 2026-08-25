@@ -49,7 +49,13 @@ learned an effective positive-carrier chart matching S within `4e-7` and tied
 S on every cosine evaluation. The cosine observation removes the vector-side
 alignment scalar, so the shared lift is not identifiable under that scoring
 law. The next gate must use full-frame, norm-sensitive observations before
-G15B.
+G15B. The prospectively frozen
+[`G15A-F four-probe protocol`](G15AF_FULL_FRAME_PROTOCOL_2026-08-25.md)
+now does so: every composition is scored through four shared orthogonal frames,
+and training is forbidden unless a rank-56 tangent screen and an exhaustive
+broken-control Lie-bracket witness pass first. The bound
+[`post-hoc observability artifact`](artifacts/g15al_observability_diagnostic_sm75_2026-08-25.json)
+records the raw carrier disagreement that G15A-L cosine hid.
 
 This track exposes seven explicit mixer kinds in one causal language-model
 shell:

@@ -230,3 +230,29 @@ symmetry. More steps, AdamW, or a larger controller cannot by themselves make
 an unobserved carrier identifiable. The next task should expose a full-rank
 association through multiple queries and raw Frobenius error, so both carrier
 actions affect the scored object.
+
+## G15A-F observability repair freeze
+
+The post-hoc diagnostic reproduced the G15A-L checkpoints and separated the
+hidden raw error from the scored quotient. Across the three seeds,
+S/S-broken effective positive charts agree within `3.94e-7`, and their output
+cosine is at least `0.99999988`; nevertheless, individual raw predictions
+differ by as much as `0.284`. This verifies that the old metric hid a real
+carrier mismatch rather than proving the two transports equal.
+
+An independent design audit then rejected a single full-frame probe as still
+gauge-degenerate. Before any G15A-F smoke or quality metric, the
+[`four-probe full-frame protocol`](G15AF_FULL_FRAME_PROTOCOL_2026-08-25.md)
+was frozen. Each action composition now transports the same four deterministic
+orthogonal association frames and is scored by raw Frobenius MSE. The run must
+stop before optimization unless the independent vector/positive tangent
+Jacobian has rank 56 with adequate conditioning, every target primitive has a
+fixed residual outside the broken tied-coordinate image, and an exhaustive
+integer-scaled Lie-bracket check proves that the broken coordinate map is not a
+Lie-algebra automorphism.
+
+The seeds, 300-update controller budget, scalar-second-moment optimizer, action
+support, and long-composition evaluations are otherwise held fixed in kind
+from G15A-L. This isolates the observation law. A pass would still be only
+multi-probe, oracle-frame controller evidence up to a common discrete center;
+it would not be generic memory or language evidence.

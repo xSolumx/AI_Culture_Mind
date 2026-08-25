@@ -166,15 +166,24 @@ Evidence:
 [`G15A-L protocol`](G15AL_LEARNED_COORDINATE_PROTOCOL_2026-08-25.md),
 [`exact execution amendment`](G15AL_EXECUTION_AMENDMENT_2026-08-25.md), and
 [`artifacts/g15al_learned_coordinate_cohort_sm75_2026-08-25.json`](artifacts/g15al_learned_coordinate_cohort_sm75_2026-08-25.json).
+The bound
+[`post-hoc observability diagnostic`](artifacts/g15al_observability_diagnostic_sm75_2026-08-25.json)
+confirms that S and S-broken can have cosine at least `0.99999988` while their
+raw predictions differ by as much as `0.284`.
 
 ## Next executable gate
 
-The next falsifier must change the observation law, not tune the failed
-optimizer. A full-frame task should expose several independent query/key
-directions and score the unnormalized transported association matrix with
-Frobenius loss. That makes both V and P observable and asks whether S learns a
-single shared chart while S-broken cannot. This controlled identifiability gate
-comes before G15B generic association or any additional exceptional geometry.
+The next falsifier changes the observation law, not the failed optimizer. The
+prospectively frozen
+[`G15A-F protocol`](G15AF_FULL_FRAME_PROTOCOL_2026-08-25.md) scores
+`V M_j P^T` for four shared orthogonal probes per action composition with raw
+Frobenius loss. One probe retains a continuous coupled-carrier gauge; the
+four-probe bank must first pass a rank-56/conditioning certificate. The broken
+arm must also exhibit an exhaustive integer-scaled Lie-bracket mismatch and
+each primitive target tangent must lie outside its tied-coordinate image.
+Only then may the unchanged 476-parameter controller train. This controlled
+identifiability gate comes before G15B generic association or any additional
+exceptional geometry.
 
 The constrained `su3_torus` arm is an additional scientific ablation, not a
 replacement for the four frozen primary arms.
