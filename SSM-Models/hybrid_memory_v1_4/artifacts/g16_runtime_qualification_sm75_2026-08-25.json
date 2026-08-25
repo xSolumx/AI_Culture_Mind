@@ -1,0 +1,503 @@
+{
+  "arms": [
+    {
+      "arm": "hybrid_v1_4_5",
+      "complete_gradients": true,
+      "finite_gradients": true,
+      "finite_parameters_after_step": true,
+      "gradient_tensor_count": 29,
+      "input_shape": [
+        2,
+        64
+      ],
+      "logits_finite": true,
+      "logits_shape": [
+        2,
+        64,
+        512
+      ],
+      "loss_finite": true,
+      "model": {
+        "config": {
+          "attention_heads": 4,
+          "attention_rope_base": 10000.0,
+          "attention_window_size": 1024,
+          "conv_kernel": 4,
+          "delta_allow_negative_eigenvalues": true,
+          "delta_heads": 4,
+          "delta_num_householder": 4,
+          "dropout": 0.0,
+          "expansion": 5,
+          "gated_delta_allow_negative_eigenvalues": false,
+          "gated_delta_heads": 4,
+          "gated_delta_identity_output_gate": true,
+          "gated_delta_identity_value_path": true,
+          "gated_delta_initial_erase_strength": 0.1,
+          "gated_delta_initial_retention": 0.9995,
+          "gated_delta_initial_write_strength": 0.1,
+          "gated_delta_key_dim": 24,
+          "gated_delta_minimum_retention": 0.999,
+          "gated_delta_normalize_values": true,
+          "gated_delta_residual_scale_init": 0.0,
+          "gated_delta_tie_query_key": true,
+          "gated_delta_value_dim": 12,
+          "layer_plan": [
+            "gated_delta",
+            "attention"
+          ],
+          "model_dim": 48,
+          "norm_epsilon": 1e-06,
+          "selected_blocks": 4,
+          "selected_controller_rank": null,
+          "selected_heads": 2,
+          "selected_retention_max": 0.99,
+          "selected_retention_min": 0.0,
+          "selected_slots_per_block": 2,
+          "selected_update_rank": 1,
+          "selected_value_dim": 16,
+          "spin_dirac_allow_negative_eigenvalues": false,
+          "spin_dirac_bound_values": true,
+          "spin_dirac_gate_mode": "equivariant_scalar",
+          "spin_dirac_heads": 4,
+          "spin_dirac_initial_erase_strength": 0.1,
+          "spin_dirac_initial_retention": 0.9995,
+          "spin_dirac_initial_write_strength": 0.1,
+          "spin_dirac_maximum_coordinate": 0.25,
+          "spin_dirac_maximum_retention": 0.999999,
+          "spin_dirac_minimum_retention": 0.999,
+          "spin_dirac_readout_mode": "clifford",
+          "spin_dirac_tie_query_key": true,
+          "spin_dirac_transport_mode": "spin8",
+          "structured_channels": 1,
+          "structured_controller_rank": null,
+          "structured_hard_eval": true,
+          "structured_retention_max": 0.99,
+          "structured_retention_min": 0.0,
+          "structured_rungs": [
+            3,
+            4,
+            6,
+            8
+          ],
+          "tie_embeddings": true,
+          "use_local_conv": true,
+          "vocab_size": 512
+        },
+        "family": "hybrid_memory_v1_4",
+        "parameter_count": 124534,
+        "parameter_residual": 0.0
+      },
+      "optimizer": {
+        "name": "harmonic_muon_adamw",
+        "partition": [
+          {
+            "learning_rate": 0.001,
+            "names": [
+              "blocks.0.input_projection.weight",
+              "blocks.0.ffn.gate_projection.weight",
+              "blocks.0.ffn.up_projection.weight",
+              "blocks.0.ffn.down_projection.weight",
+              "blocks.0.mixer.query_projection.weight",
+              "blocks.0.mixer.value_projection.weight",
+              "blocks.0.mixer.output_gate.weight",
+              "blocks.0.mixer.output_projection.weight",
+              "blocks.1.input_projection.weight",
+              "blocks.1.ffn.gate_projection.weight",
+              "blocks.1.ffn.up_projection.weight",
+              "blocks.1.ffn.down_projection.weight",
+              "blocks.1.mixer.qkv_projection.weight",
+              "blocks.1.mixer.output_projection.weight"
+            ],
+            "optimizer": "torch.optim.Muon",
+            "parameters": 99072,
+            "role": "hidden_matrices",
+            "second_moment": null,
+            "tensors": 14,
+            "weight_decay": 0.01
+          },
+          {
+            "learning_rate": 0.001,
+            "names": [
+              "blocks.0.residual_scale",
+              "blocks.0.mixer.write_projection.weight",
+              "blocks.0.mixer.write_projection.bias",
+              "blocks.0.mixer.decay_projection.weight",
+              "blocks.0.mixer.decay_projection.bias",
+              "blocks.1.residual_scale"
+            ],
+            "optimizer": "ScalarSecondMomentAdamW",
+            "parameters": 394,
+            "role": "memory_controls",
+            "second_moment": "one scalar per parameter tensor",
+            "tensors": 6,
+            "weight_decay": 0.0
+          },
+          {
+            "learning_rate": 0.001,
+            "names": [
+              "blocks.0.local_conv.conv.weight"
+            ],
+            "optimizer": "torch.optim.AdamW",
+            "parameters": 192,
+            "role": "non_matrix_decay",
+            "second_moment": "coordinatewise",
+            "tensors": 1,
+            "weight_decay": 0.01
+          },
+          {
+            "learning_rate": 0.001,
+            "names": [
+              "embedding.weight",
+              "blocks.0.mixer_norm.weight",
+              "blocks.0.ffn_norm.weight",
+              "blocks.0.mixer.output_norm.weight",
+              "blocks.0.local_conv.conv.bias",
+              "blocks.1.mixer_norm.weight",
+              "blocks.1.ffn_norm.weight",
+              "final_norm.weight"
+            ],
+            "optimizer": "torch.optim.AdamW",
+            "parameters": 24876,
+            "role": "embedding_norm_bias",
+            "second_moment": "coordinatewise",
+            "tensors": 8,
+            "weight_decay": 0.0
+          }
+        ],
+        "runtime_class": "hybrid_memory_v1_4.optimizers.HarmonicMuonAdamW"
+      },
+      "passed": true,
+      "peak_cuda_memory_bytes": 47723008,
+      "trainable_tensor_count": 29,
+      "wall_seconds": 0.9332553000000026
+    },
+    {
+      "arm": "hybrid_gdn2",
+      "complete_gradients": true,
+      "finite_gradients": true,
+      "finite_parameters_after_step": true,
+      "gradient_tensor_count": 31,
+      "input_shape": [
+        2,
+        64
+      ],
+      "logits_finite": true,
+      "logits_shape": [
+        2,
+        64,
+        512
+      ],
+      "loss_finite": true,
+      "model": {
+        "config": {
+          "attention_heads": 4,
+          "attention_rope_base": 10000.0,
+          "attention_window_size": 1024,
+          "conv_kernel": 4,
+          "delta_allow_negative_eigenvalues": true,
+          "delta_heads": 4,
+          "delta_num_householder": 4,
+          "dropout": 0.0,
+          "expansion": 4,
+          "gated_delta_allow_negative_eigenvalues": false,
+          "gated_delta_heads": 4,
+          "gated_delta_identity_output_gate": true,
+          "gated_delta_identity_value_path": true,
+          "gated_delta_initial_erase_strength": 0.1,
+          "gated_delta_initial_retention": 0.9995,
+          "gated_delta_initial_write_strength": 0.1,
+          "gated_delta_key_dim": 28,
+          "gated_delta_minimum_retention": 0.999,
+          "gated_delta_normalize_values": true,
+          "gated_delta_residual_scale_init": 0.0,
+          "gated_delta_tie_query_key": true,
+          "gated_delta_value_dim": 12,
+          "layer_plan": [
+            "gated_delta_v2",
+            "attention"
+          ],
+          "model_dim": 48,
+          "norm_epsilon": 1e-06,
+          "selected_blocks": 4,
+          "selected_controller_rank": null,
+          "selected_heads": 2,
+          "selected_retention_max": 0.99,
+          "selected_retention_min": 0.0,
+          "selected_slots_per_block": 2,
+          "selected_update_rank": 1,
+          "selected_value_dim": 16,
+          "spin_dirac_allow_negative_eigenvalues": false,
+          "spin_dirac_bound_values": true,
+          "spin_dirac_gate_mode": "equivariant_scalar",
+          "spin_dirac_heads": 4,
+          "spin_dirac_initial_erase_strength": 0.1,
+          "spin_dirac_initial_retention": 0.9995,
+          "spin_dirac_initial_write_strength": 0.1,
+          "spin_dirac_maximum_coordinate": 0.25,
+          "spin_dirac_maximum_retention": 0.999999,
+          "spin_dirac_minimum_retention": 0.999,
+          "spin_dirac_readout_mode": "clifford",
+          "spin_dirac_tie_query_key": true,
+          "spin_dirac_transport_mode": "spin8",
+          "structured_channels": 1,
+          "structured_controller_rank": null,
+          "structured_hard_eval": true,
+          "structured_retention_max": 0.99,
+          "structured_retention_min": 0.0,
+          "structured_rungs": [
+            3,
+            4,
+            6,
+            8
+          ],
+          "tie_embeddings": true,
+          "use_local_conv": true,
+          "vocab_size": 512
+        },
+        "family": "hybrid_memory_v1_4",
+        "parameter_count": 124414,
+        "parameter_residual": -0.0009635922719899786
+      },
+      "optimizer": {
+        "name": "harmonic_muon_adamw",
+        "partition": [
+          {
+            "learning_rate": 0.001,
+            "names": [
+              "blocks.0.input_projection.weight",
+              "blocks.0.ffn.gate_projection.weight",
+              "blocks.0.ffn.up_projection.weight",
+              "blocks.0.ffn.down_projection.weight",
+              "blocks.0.mixer.query_projection.weight",
+              "blocks.0.mixer.value_projection.weight",
+              "blocks.0.mixer.output_gate.weight",
+              "blocks.0.mixer.output_projection.weight",
+              "blocks.1.input_projection.weight",
+              "blocks.1.ffn.gate_projection.weight",
+              "blocks.1.ffn.up_projection.weight",
+              "blocks.1.ffn.down_projection.weight",
+              "blocks.1.mixer.qkv_projection.weight",
+              "blocks.1.mixer.output_projection.weight"
+            ],
+            "optimizer": "torch.optim.Muon",
+            "parameters": 86016,
+            "role": "hidden_matrices",
+            "second_moment": null,
+            "tensors": 14,
+            "weight_decay": 0.01
+          },
+          {
+            "learning_rate": 0.001,
+            "names": [
+              "blocks.0.residual_scale",
+              "blocks.0.mixer.erase_projection.weight",
+              "blocks.0.mixer.erase_projection.bias",
+              "blocks.0.mixer.write_projection.weight",
+              "blocks.0.mixer.write_projection.bias",
+              "blocks.0.mixer.decay_projection.weight",
+              "blocks.0.mixer.decay_projection.bias",
+              "blocks.1.residual_scale"
+            ],
+            "optimizer": "ScalarSecondMomentAdamW",
+            "parameters": 13330,
+            "role": "memory_controls",
+            "second_moment": "one scalar per parameter tensor",
+            "tensors": 8,
+            "weight_decay": 0.0
+          },
+          {
+            "learning_rate": 0.001,
+            "names": [
+              "blocks.0.local_conv.conv.weight"
+            ],
+            "optimizer": "torch.optim.AdamW",
+            "parameters": 192,
+            "role": "non_matrix_decay",
+            "second_moment": "coordinatewise",
+            "tensors": 1,
+            "weight_decay": 0.01
+          },
+          {
+            "learning_rate": 0.001,
+            "names": [
+              "embedding.weight",
+              "blocks.0.mixer_norm.weight",
+              "blocks.0.ffn_norm.weight",
+              "blocks.0.mixer.output_norm.weight",
+              "blocks.0.local_conv.conv.bias",
+              "blocks.1.mixer_norm.weight",
+              "blocks.1.ffn_norm.weight",
+              "final_norm.weight"
+            ],
+            "optimizer": "torch.optim.AdamW",
+            "parameters": 24876,
+            "role": "embedding_norm_bias",
+            "second_moment": "coordinatewise",
+            "tensors": 8,
+            "weight_decay": 0.0
+          }
+        ],
+        "runtime_class": "hybrid_memory_v1_4.optimizers.HarmonicMuonAdamW"
+      },
+      "passed": true,
+      "peak_cuda_memory_bytes": 61208576,
+      "trainable_tensor_count": 31,
+      "wall_seconds": 0.04329148200000077
+    },
+    {
+      "arm": "mamba2",
+      "complete_gradients": true,
+      "finite_gradients": true,
+      "finite_parameters_after_step": true,
+      "gradient_tensor_count": 38,
+      "input_shape": [
+        2,
+        64
+      ],
+      "logits_finite": true,
+      "logits_shape": [
+        2,
+        64,
+        512
+      ],
+      "loss_finite": true,
+      "model": {
+        "config": {
+          "d_model": 56,
+          "d_state": 32,
+          "expand": 2,
+          "headdim": 16,
+          "num_layers": 4,
+          "vocab_size": 512
+        },
+        "family": "mamba_ssm",
+        "parameter_count": 124172,
+        "parameter_residual": -0.002906836687169769,
+        "runtime_class": "pure_spin_ssm_v1_2.mamba2_baseline.OfficialMamba2LM"
+      },
+      "optimizer": {
+        "learning_rate": 0.001,
+        "name": "adamw",
+        "parameter_tensors": 38,
+        "parameters": 124172,
+        "weight_decay": 0.01
+      },
+      "passed": true,
+      "peak_cuda_memory_bytes": 292355584,
+      "trainable_tensor_count": 38,
+      "wall_seconds": 116.83024657499999
+    },
+    {
+      "arm": "olmo_hybrid",
+      "complete_gradients": true,
+      "finite_gradients": true,
+      "finite_parameters_after_step": true,
+      "gradient_tensor_count": 29,
+      "input_shape": [
+        2,
+        64
+      ],
+      "logits_finite": true,
+      "logits_shape": [
+        2,
+        64,
+        512
+      ],
+      "loss_finite": true,
+      "model": {
+        "config": {
+          "eos_token_id": 1,
+          "hidden_size": 64,
+          "intermediate_size": 138,
+          "layer_types": [
+            "linear_attention",
+            "full_attention"
+          ],
+          "linear_key_head_dim": 16,
+          "linear_num_key_heads": 4,
+          "linear_num_value_heads": 4,
+          "linear_value_head_dim": 16,
+          "max_position_embeddings": 4096,
+          "num_attention_heads": 4,
+          "num_hidden_layers": 2,
+          "num_key_value_heads": 4,
+          "pad_token_id": 0,
+          "tie_word_embeddings": true,
+          "use_cache": false,
+          "vocab_size": 512
+        },
+        "family": "transformers_olmo_hybrid",
+        "fla_version": "0.5.2",
+        "parameter_count": 124376,
+        "parameter_residual": -0.0012687298247868052,
+        "runtime_class": "transformers.models.olmo_hybrid.modeling_olmo_hybrid.OlmoHybridForCausalLM",
+        "transformers_version": "5.15.1"
+      },
+      "optimizer": {
+        "learning_rate": 0.001,
+        "name": "adamw",
+        "parameter_tensors": 29,
+        "parameters": 124376,
+        "weight_decay": 0.01
+      },
+      "passed": true,
+      "peak_cuda_memory_bytes": 20453888,
+      "trainable_tensor_count": 29,
+      "wall_seconds": 0.1731489839999938
+    }
+  ],
+  "claim_status": "runtime qualification only; no training-quality metric",
+  "environment": {
+    "compute_capability": [
+      7,
+      5
+    ],
+    "cuda": "12.8",
+    "device_name": "NVIDIA GeForce RTX 2070 SUPER",
+    "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.35",
+    "python": "3.11.16",
+    "torch": "2.9.0+cu128"
+  },
+  "explicit_nonclaims": [
+    "not a language-quality result",
+    "not a speed ranking",
+    "not a G16 training artifact",
+    "not a scaling result"
+  ],
+  "git_commit_at_start": "3976934ae0752ccc5f9acabe018f288cdb7f23d2",
+  "git_status_at_start": [],
+  "mamba_source": {
+    "direct_url": {
+      "dir_info": {},
+      "url": "file:///home/local/src/sm75-native/mamba"
+    },
+    "distribution": "mamba-ssm",
+    "distribution_module": "/home/local/.venvs/sm75-native-2026/lib/python3.11/site-packages/mamba_ssm/__init__.py",
+    "imported_module": "/home/local/.venvs/sm75-native-2026/lib/python3.11/site-packages/mamba_ssm/__init__.py",
+    "source_revision": "e9594ce1c732d97440f0332fdc43170a2294dbfa",
+    "source_root": "/home/local/src/sm75-native/mamba",
+    "source_status": [],
+    "version": "2.3.2.post1"
+  },
+  "olmo_runtime": {
+    "backend": "fla.ops.gated_delta_rule.chunk.chunk_gated_delta_rule",
+    "fla_version": "0.5.2",
+    "transformers_version": "5.15.1",
+    "wrapper": "transformers.models.olmo_hybrid.modeling_olmo_hybrid.torch_chunk_gated_delta_rule"
+  },
+  "pairing": {
+    "input_sha256": "4e9527913a60cb0610c69fce4cce3a289200351f1aa2d17d703c2b87531aa784",
+    "input_shape": [
+      2,
+      64
+    ],
+    "model_seed": 2333
+  },
+  "passed": true,
+  "protocol": "/mnt/c/Users/HaydenLocal/Programming/AI_Culture_Mind/SSM-Models/hybrid_memory_v1_4/G16_SM75_FRONTIER_SHOOTOUT_PROTOCOL_2026-08-25.md",
+  "protocol_sha256": "6537869f24ddae201436ce475451fd4cd3ad5572de4fa0008b113d68f18a3c9d",
+  "schema_version": 1,
+  "source": "/mnt/c/Users/HaydenLocal/Programming/AI_Culture_Mind/SSM-Models/hybrid_memory_v1_4/g16_runtime_qualification.py",
+  "source_sha256": "fa643d1f3dc14a55b63a9b81f969f8e09788877302e516038125e179b3942025",
+  "stage": "G16-runtime-qualification"
+}

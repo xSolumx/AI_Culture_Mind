@@ -143,7 +143,9 @@ The spanning-center successor is controlled by the
 and source-bound
 [G15A-S artifact](hybrid_memory_v1_4/artifacts/g15as_spanning_center_sm75_2026-08-25.json).
 The untrained four-arm model harness is frozen separately in the
-[G16 protocol](hybrid_memory_v1_4/G16_SM75_FRONTIER_SHOOTOUT_PROTOCOL_2026-08-25.md).
+[G16 protocol](hybrid_memory_v1_4/G16_SM75_FRONTIER_SHOOTOUT_PROTOCOL_2026-08-25.md),
+with exact source/runtime evidence in the
+[G16 qualification artifact](hybrid_memory_v1_4/artifacts/g16_runtime_qualification_sm75_2026-08-25.json).
 Status is not inferred from the presence of passing algebraic unit tests.
 Local baseline eligibility is independently controlled by
 [SM75_NATIVE_RUNTIME.md](hybrid_memory_v1_4/SM75_NATIVE_RUNTIME.md); native

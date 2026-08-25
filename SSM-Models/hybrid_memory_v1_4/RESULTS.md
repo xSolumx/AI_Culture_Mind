@@ -1051,6 +1051,17 @@ GDN2, official fused Mamba-2, and actual Transformers OLMo Hybrid. Mamba-3
 SISO/MIMO are excluded by their actual small-shape/SM75 backward paths rather
 than substituted with fallbacks.
 
+The exact runtime qualification then passed from clean commit `3976934` with
+all four frozen parameter counts and complete finite gradients: 29/29 tensors
+for v1.4.5, 31/31 for local GDN2, 38/38 for official fused Mamba-2, and 29/29
+for actual OLMo Hybrid. Mamba was bound to clean revision `e9594ce1...`; OLMo
+was bound to Transformers 5.15.1, FLA 0.5.2, and the real
+`fla.ops.gated_delta_rule.chunk.chunk_gated_delta_rule` backend. No BPRB,
+recall, or ordering was produced.
+
+Evidence:
+[`artifacts/g16_runtime_qualification_sm75_2026-08-25.json`](artifacts/g16_runtime_qualification_sm75_2026-08-25.json).
+
 ## Actual upstream probes
 
 - FlashRT Gated Delta Attention remains ineligible on SM75 because its published

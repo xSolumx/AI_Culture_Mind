@@ -125,6 +125,14 @@ gradient and remain finite after the step. The entrypoint requires a clean
 repository, exact SM75, and the frozen provenance above. It records no BPRB,
 recall, model ordering, or promotion decision.
 
+The exact-SM75 requalification passed from clean commit `3976934`: all 127
+trainable tensors across the four arms received finite gradients, and all
+parameters remained finite after the real optimizer step. The source-bound
+artifact is
+[`g16_runtime_qualification_sm75_2026-08-25.json`](artifacts/g16_runtime_qualification_sm75_2026-08-25.json),
+SHA-256 `97a0a67f2621448b7eccf6171649ca21be201b15aa9b100dec569c25258d0231`.
+This is eligibility evidence only.
+
 An arm is *development-qualified* only if:
 
 1. final 256-token BPRB is at most 2.0;

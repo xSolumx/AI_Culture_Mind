@@ -99,7 +99,10 @@ and [`harness`](frontier_shootout.py) retain four approximately 125K-parameter
 arms that passed real one-step SM75 qualification: v1.4.5, local GDN2, official
 fused Mamba-2, and actual Transformers OLMo Hybrid. No G16 training metric has
 been run. Mamba-3 SISO and MIMO were excluded because their actual backward
-paths violate the frozen small-shape or SM75 kernel contracts.
+paths violate the frozen small-shape or SM75 kernel contracts. The clean,
+source-bound [`G16 runtime artifact`](artifacts/g16_runtime_qualification_sm75_2026-08-25.json)
+records complete finite gradients for all 127 trainable tensors; it is not a
+quality or speed result.
 
 This track exposes seven explicit mixer kinds in one causal language-model
 shell:

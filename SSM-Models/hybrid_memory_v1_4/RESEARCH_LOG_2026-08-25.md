@@ -381,3 +381,15 @@ v1.4.5, local GDN2, official fused Mamba-2, and actual Transformers OLMo
 Hybrid. The small Mamba-3 SISO backward fails its `K >= 16` contract and MIMO
 selects an SM80-only path, so neither is silently approximated or retained as
 an eligible arm.
+
+A read-only audit then found that the harness recorded but did not fail closed
+on a dirty full run, Mamba revision/import drift, or OLMo backend drift. Those
+contracts were frozen before requalification. The new
+[`qualification entrypoint`](g16_runtime_qualification.py) passed from clean
+commit `3976934` on exact SM75: all 127 trainable tensors across the four arms
+received finite gradients and remained finite after their actual optimizer
+step. The bound Mamba revision is `e9594ce1...`; OLMo uses Transformers 5.15.1,
+FLA 0.5.2, and the real FLA chunk backend. This produces no BPRB, recall, or
+model ordering. Evidence:
+[`artifacts/g16_runtime_qualification_sm75_2026-08-25.json`](artifacts/g16_runtime_qualification_sm75_2026-08-25.json),
+SHA-256 `97a0a67f2621448b7eccf6171649ca21be201b15aa9b100dec569c25258d0231`.
