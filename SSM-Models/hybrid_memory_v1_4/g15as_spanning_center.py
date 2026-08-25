@@ -638,8 +638,7 @@ def _coordinate_metrics(
     controller: SpanningCoordinateController, seed: int
 ) -> dict[str, float]:
     token_map = _token_map(seed).to(controller.raw_coordinates.device)
-    token_ids = token_map
-    learned = controller(token_ids)[:, 0]
+    learned = controller(token_map.unsqueeze(0))[0, :, 0]
     target = torch.stack(
         [
             _semantic_coordinate(index, dtype=learned.dtype)[0]

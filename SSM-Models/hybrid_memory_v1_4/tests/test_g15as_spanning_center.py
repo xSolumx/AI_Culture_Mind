@@ -13,6 +13,7 @@ from hybrid_memory_v1_4.g15as_spanning_center import (
     PAIR_COUNT,
     STEP_ANGLE,
     SpanningCoordinateController,
+    _coordinate_metrics,
     _frame_prediction,
     _oracle_certificate,
     _pool_certificate,
@@ -54,6 +55,17 @@ def test_controller_starts_at_masked_identity() -> None:
     output = controller(token_ids)
     assert output.shape == (1, ACTION_VOCABULARY + 1, 1, PAIR_COUNT)
     assert torch.equal(output, torch.zeros_like(output))
+
+
+def test_coordinate_assay_preserves_semantic_row_and_plane_axes() -> None:
+    metrics = _coordinate_metrics(SpanningCoordinateController(), 2281)
+    assert math.isclose(
+        metrics["maximum_active_coordinate_abs_error"],
+        STEP_ANGLE,
+        rel_tol=1e-6,
+        abs_tol=1e-8,
+    )
+    assert metrics["inactive_coordinate_rms"] == 0.0
 
 
 def test_probe_pools_are_disjoint_and_structurally_observable() -> None:
