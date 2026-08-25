@@ -351,9 +351,11 @@ Every checkpoint should report:
 
 - GDN2 is not promoted as the v1.4 default.
 - G14 is not a language-model or long-context result.
-- G15A passes its three-seed oracle-coordinate mechanism gate, but conditional
-  coupling/readout attribution, generic association, natural text, and scaling
-  remain open; the result does not promote Spin to the default model.
+- G15A passes its three-seed oracle-coordinate mechanism gate. Conditional
+  controls support the shared vector/positive Spin lift and reject a necessary
+  contribution from the fixed Clifford second read. Autonomous control,
+  generic association, natural text, and scaling remain open; the result does
+  not promote Spin to the default model.
 - Tiny random upstream probes are not pretrained evaluations. Actual Mamba
   checkpoint finiteness is not a quality or throughput ranking.
 - External paper results are not reproduced locally.

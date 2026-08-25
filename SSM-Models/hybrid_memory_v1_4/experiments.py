@@ -365,6 +365,8 @@ def source_file_digests() -> tuple[SourceFileDigest, ...]:
         root / "g15_integrity_screen.py",
         root / "g15a_tasks.py",
         root / "g15a_spin_dirac_cohort.py",
+        root / "g15a_conditional_controls.py",
+        root / "g15al_learned_coordinate_cohort.py",
         root / "modern_ssm_probe.py",
         root / "native_sm75_probe.py",
         root / "pretrained_sm75_probe.py",
@@ -398,6 +400,8 @@ def source_file_digests() -> tuple[SourceFileDigest, ...]:
         root / "G15_SPIN_DIRAC_AMENDMENT_2026-08-25.md",
         root / "G15_SPIN_DIRAC_EDIT_LAW_AMENDMENT_2026-08-25.md",
         root / "G15A_EXECUTION_PROTOCOL_2026-08-25.md",
+        root / "G15A_CONDITIONAL_CONTROLS_PROTOCOL_2026-08-25.md",
+        root / "G15AL_LEARNED_COORDINATE_PROTOCOL_2026-08-25.md",
         root.parent / "delta_product_reference.py",
     )
     reports = []

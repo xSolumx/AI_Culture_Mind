@@ -34,10 +34,13 @@
 > G15A's exact SM75/FP32 three-seed primary cohort passes: `S` reaches 1.0
 > symmetry macro versus 0.2 for `C` and 0.1 for `I`/`I+C` in every seed, while
 > all four arms reach 1.0 learned no-sym delayed recall through L1024. The
-> symmetry comparison supplies exact coordinates and oracle carrier controls,
-> so this is mechanism evidence only; generic association, natural text,
-> scaling, and the prospectively frozen `S+identity-read`/`S-broken`
-> attribution controls remain open. Source-bound SM75 probes qualify
+> completed frozen controls show `S+identity-read` tying `S` at 1.0 in all
+> seeds, so the fixed Clifford/negative-spin read contribution is unsupported;
+> `S-broken` scores 0.3/0.2/0.2, passing the shared-coupling control with
+> 0.7/0.8/0.8 margins. Both conditional arms retain 1.0 no-sym recall through
+> L1024. This supports shared vector/positive-Spin lift on the designed
+> supplied-coordinate task, not full three-carrier triality, generic
+> association, natural text, or scaling. Source-bound SM75 probes qualify
 > Mamba-3 SISO and the Turing FlashAttention fork; current local GDN2 training
 > routes fail closed. See the
 > [frontier review](hybrid_memory_v1_4/FRONTIER_REVIEW_2026-08-25.md),
@@ -46,6 +49,7 @@
 > [G15 ledger](hybrid_memory_v1_4/G15_SPIN_DIRAC_RESULTS.md),
 > [G15A primary cohort artifact](hybrid_memory_v1_4/artifacts/g15a_spin_dirac_cohort_sm75_2026-08-25.json),
 > [G15A conditional attribution protocol](hybrid_memory_v1_4/G15A_CONDITIONAL_CONTROLS_PROTOCOL_2026-08-25.md),
+> [G15A conditional attribution artifact](hybrid_memory_v1_4/artifacts/g15a_conditional_controls_sm75_2026-08-25.json),
 > [SM75 runtime ledger](hybrid_memory_v1_4/SM75_NATIVE_RUNTIME.md), and
 > [current model inventory](MODEL_STATUS.md).
 

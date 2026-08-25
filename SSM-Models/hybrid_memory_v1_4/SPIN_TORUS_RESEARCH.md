@@ -1,8 +1,10 @@
 # Spin, torus, and content-addressed memory
 
 **Decision date:** 2026-08-25
-**Status:** exact fixed-frame transports implemented; G15A passes a bounded
-oracle-coordinate mechanism gate; moving-frame geometry remains research-only
+**Status:** exact fixed-frame transports implemented; G15A supports shared
+vector/positive Spin coupling on a bounded oracle-coordinate task but not a
+necessary fixed Clifford second read; moving-frame geometry remains
+research-only
 
 ## Outcome
 

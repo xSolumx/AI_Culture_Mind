@@ -26,6 +26,10 @@ coupling transports. G15A now passes its exact three-seed SM75 gate: S scores
 and 0.10 for both identity arms, while every arm learns the finite no-symmetry
 delayed-value task through length 1,024. This is narrow mechanism evidence,
 not generic language promotion, and the v1.4.5 default plan has not changed.
+The frozen controls then showed that S ties full Spin with an identity-copy
+second read, while beating broken shared coupling by 0.70/0.80/0.80 across the
+three seeds. Thus the supported component is the shared vector/positive Spin
+lift, not the fixed Clifford/negative-spin read.
 See the
 [`frontier review`](FRONTIER_REVIEW_2026-08-25.md),
 [`Spin/torus research note`](SPIN_TORUS_RESEARCH.md), and
@@ -36,8 +40,11 @@ The now-frozen
 FP32 budget, per-seed promotion semantics, and clean-worktree artifact
 requirements that the structural preregistration did not specify. The
 [`conditional-controls protocol`](G15A_CONDITIONAL_CONTROLS_PROTOCOL_2026-08-25.md)
-now freezes the required Clifford-read and broken-coupling attribution tests
-before their execution.
+and [`conditional artifact`](artifacts/g15a_conditional_controls_sm75_2026-08-25.json)
+bind the completed Clifford-read and broken-coupling attribution tests.
+The prospective
+[`G15A-L learned-coordinate protocol`](G15AL_LEARNED_COORDINATE_PROTOCOL_2026-08-25.md)
+now targets the remaining autonomous controller problem before G15B.
 
 This track exposes seven explicit mixer kinds in one causal language-model
 shell:
@@ -437,8 +444,10 @@ matched speed evidence.
 - G14 is a constructed unequal-parameter state-law separation, not a language
   or long-context result.
 - G15A passes only an oracle-coordinate symmetry mechanism plus a finite
-  learned no-symmetry retrieval task. Its conditional attribution controls,
-  G15B generic association, G15C natural text, and G15D scaling remain open.
+  learned no-symmetry retrieval task. Its controls support the shared
+  vector/positive Spin lift but not a contribution from the fixed Clifford
+  second read. Autonomous coordinate learning, G15B generic association, G15C
+  natural text, and G15D scaling remain open.
   The fixed `su3_torus` mode is not a moving `G2/SU(3)` memory, and
   `SpinDirac` is not a geometric Dirac differential operator.
 - Native SM75 probes qualify only the exact recorded implementation/runtime;

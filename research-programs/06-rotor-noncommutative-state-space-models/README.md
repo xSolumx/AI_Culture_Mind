@@ -169,9 +169,13 @@ new matched natural-data and complete-step hardware evidence.
   exact SM75/FP32 primary cohort passes across three seeds: full Spin `S`
   reaches 1.0 symmetry macro versus 0.2 for commuting `C` and 0.1 for `I` and
   `I+C` in every seed, while every arm learns the no-sym delayed control at
-  1.0 through L1024. This is supplied-coordinate, oracle-carrier mechanism
-  evidence only, not a maintained-model, generic-association, natural-text, or
-  scaling promotion.
+  1.0 through L1024. In the frozen conditional cohort, `S+identity-read` ties
+  `S` at 1.0 in every seed, so the fixed Clifford/negative-spin read contribution
+  is unsupported; `S-broken` falls to 0.3/0.2/0.2, passing the shared-coupling
+  control with 0.7/0.8/0.8 margins. Both conditional arms retain 1.0 no-sym
+  recall through L1024. The strongest result is shared vector/positive-Spin
+  lift on this supplied-coordinate task, not full three-carrier triality, a
+  maintained-model promotion, generic association, natural text, or scaling.
 
 ## Open Claims
 
@@ -195,9 +199,9 @@ new matched natural-data and complete-step hardware evidence.
   coordinates.
 - Matched-task evidence that the full dense-SO(8) Cayley control chart is more
   useful than restricted, octonion, Givens/Householder, or modern SSM controls.
-- G15A conditional attribution against the prospectively frozen
-  `S+identity-read` and `S-broken` controls, followed by generic associative-
-  memory, natural-text, and scaling gates.
+- Full three-carrier triality and autonomous-coordinate attribution beyond
+  G15A's completed shared vector/positive-Spin coupling control, followed by
+  generic associative-memory, natural-text, and scaling gates.
 
 ## Dependencies
 
@@ -227,9 +231,9 @@ new matched natural-data and complete-step hardware evidence.
 - The wider identity model won the reported matched eager-CUDA-cost comparison.
 - No current result establishes language-model or production superiority.
 - G15A supplies exact task coordinates and oracle carrier controls; its passed
-  symmetry separation does not establish autonomous transport inference,
-  generic association, natural-text recall, scaling, or triality-specific
-  attribution.
+  symmetry separation and shared-coupling control do not establish autonomous
+  transport inference, full three-carrier triality, generic association,
+  natural-text recall, or scaling.
 - The approximately 2,000x Pure Spin(8) MSE gap is task-specific and does not
   establish generic Mamba superiority, state matching, or a fused-kernel win.
 - The latent-token result removes supplied coordinates only for eight fixed
@@ -287,4 +291,5 @@ new matched natural-data and complete-step hardware evidence.
 - [G15 Spin-Dirac status and result ledger](../../SSM-Models/hybrid_memory_v1_4/G15_SPIN_DIRAC_RESULTS.md)
 - [G15A primary cohort artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g15a_spin_dirac_cohort_sm75_2026-08-25.json)
 - [G15A conditional attribution protocol](../../SSM-Models/hybrid_memory_v1_4/G15A_CONDITIONAL_CONTROLS_PROTOCOL_2026-08-25.md)
+- [G15A conditional attribution artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g15a_conditional_controls_sm75_2026-08-25.json)
 - [Local SM75 native-runtime ledger](../../SSM-Models/hybrid_memory_v1_4/SM75_NATIVE_RUNTIME.md)

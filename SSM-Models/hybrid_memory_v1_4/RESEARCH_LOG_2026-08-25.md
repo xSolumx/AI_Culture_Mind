@@ -159,3 +159,45 @@ Before inspecting either required control, the
 froze `S+identity-read` and `S-broken` against the immutable primary artifact.
 The per-seed two-point margin is binding, with no seed averaging. This is the
 next executable falsifier before G15B or any triality-specific wording.
+
+## G15A conditional attribution outcome
+
+The first conditional execution completed all metrics but exited nonzero
+because the runner incorrectly treated S-broken's intentionally failed
+inner-conjugation diagnostic as an integrity gate. The already frozen protocol
+said explicitly that conditional residuals were diagnostic only. The raw
+first-run artifact was retained outside Git, the adjudicator and regression
+test were corrected in commit `5fc3d7b`, and the identical cohort was rerun
+from that clean pushed commit. No seed, data, threshold, optimizer, or training
+setting changed.
+
+The evidentiary rerun passed its execution integrity gate. S+identity-read tied
+S at 1.00 in all three seeds, rejecting a necessary contribution from the
+fixed Clifford/negative-spin read. S-broken scored 0.30, 0.20, and 0.20 against
+S at 1.00, passing the shared-coupling attribution margin by 0.70, 0.80, and
+0.80. Both controls learned the finite no-symmetry task to 1.00 through length
+1,024. S-broken's `0.071--0.078` covariance residual confirms that the control
+breaks the common lift.
+
+The result supports a shared vector/positive Spin lift on this designed,
+supplied-coordinate task. It does not support necessity of the negative-spin
+Clifford read or usefulness of all three triality carriers. The next learning
+problem is to infer transport coordinates from observable action tokens under
+end loss; adding more exceptional geometry before that controller passes would
+not address the remaining bottleneck.
+
+## G15A-L learned-coordinate freeze
+
+Before running a smoke or quality row, the
+[`G15A-L protocol`](G15AL_LEARNED_COORDINATE_PROTOCOL_2026-08-25.md) freezes a
+minimal 17-token by 28-coordinate controller. It trains only that table from
+delayed positive-read loss with `ScalarSecondMomentAdamW`; edit controls and
+the exact transported final query stay oracle-fixed. Training uses short random
+primitive compositions, while evaluation uses fresh 8/12/16-action
+compositions spaced across lengths 64/256/1,024.
+
+This design admits the hard alternative rather than baking in success:
+S-broken learns its own coordinate table. If it inverts the frozen carrier
+permutation and catches S, then the supplied-coordinate attribution is not
+identifiable under learned control. The per-seed/per-length gate and the
+covariant optimizer are fixed before seeing that outcome.

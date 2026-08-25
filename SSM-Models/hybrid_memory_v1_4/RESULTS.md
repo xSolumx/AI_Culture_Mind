@@ -913,10 +913,22 @@ was below `5.45e-15`; the oracle semantic ladder also passed.
 This establishes a strong finite mechanism separation between full Spin
 transport and a single fixed torus/identity when exact coordinates and carrier
 controls are supplied. It does not establish learned geometry or a natural-
-text advantage. The required `S+identity-read` and `S-broken` controls are now
+text advantage. The required `S+identity-read` and `S-broken` controls were
 frozen prospectively in
 [`G15A_CONDITIONAL_CONTROLS_PROTOCOL_2026-08-25.md`](G15A_CONDITIONAL_CONTROLS_PROTOCOL_2026-08-25.md)
-and remain pending at this checkpoint.
+and then executed from clean commit `5fc3d7b`. S+identity-read tied S at 1.00
+in every seed, so the fixed Clifford/negative-spin read contribution is not
+supported. S-broken reached only 0.30/0.20/0.20, giving S margins of
+0.70/0.80/0.80 and passing the frozen shared-coupling control. Both controls
+retained 1.00 no-symmetry accuracy through length 1,024.
+
+The supported interpretation is a shared vector/positive Spin lift on the
+designed supplied-coordinate task, not usefulness of all three triality
+carriers. The intentionally broken arm's `0.071--0.078` conjugation residual
+is a diagnostic confirming the break, not an integrity failure. The first
+execution exposed and preserved a runner adjudication mismatch; the code was
+corrected to the already frozen diagnostic-only rule before the evidentiary
+rerun, without changing any experimental setting.
 
 Evidence:
 [`G15_SPIN_DIRAC_PREREGISTRATION.md`](G15_SPIN_DIRAC_PREREGISTRATION.md),
@@ -924,11 +936,20 @@ Evidence:
 [`G15_SPIN_DIRAC_EDIT_LAW_AMENDMENT_2026-08-25.md`](G15_SPIN_DIRAC_EDIT_LAW_AMENDMENT_2026-08-25.md),
 [`G15A_EXECUTION_PROTOCOL_2026-08-25.md`](G15A_EXECUTION_PROTOCOL_2026-08-25.md),
 [`G15A_CONDITIONAL_CONTROLS_PROTOCOL_2026-08-25.md`](G15A_CONDITIONAL_CONTROLS_PROTOCOL_2026-08-25.md),
+[`G15AL_LEARNED_COORDINATE_PROTOCOL_2026-08-25.md`](G15AL_LEARNED_COORDINATE_PROTOCOL_2026-08-25.md),
 [`G15_SPIN_DIRAC_RESULTS.md`](G15_SPIN_DIRAC_RESULTS.md), and
 [`SPIN_TORUS_RESEARCH.md`](SPIN_TORUS_RESEARCH.md), plus
 [`artifacts/g15_integrity_sm75_2026-08-25.json`](artifacts/g15_integrity_sm75_2026-08-25.json)
 and
 [`artifacts/g15a_spin_dirac_cohort_sm75_2026-08-25.json`](artifacts/g15a_spin_dirac_cohort_sm75_2026-08-25.json).
+The conditional evidence is
+[`artifacts/g15a_conditional_controls_sm75_2026-08-25.json`](artifacts/g15a_conditional_controls_sm75_2026-08-25.json).
+
+The next prospectively frozen gate is G15A-L: learn only the token-to-action
+coordinate table from delayed positive-read loss, keep edit controls and the
+transported final query oracle-fixed, and test fresh ordered compositions at
+lengths 64, 256, and 1,024. This directly tests whether S-broken can absorb its
+carrier mismatch into a learned chart reparameterization.
 
 ## Actual upstream probes
 
@@ -1003,8 +1024,10 @@ Artifact file hashes are recorded in [`ARTIFACTS.sha256`](ARTIFACTS.sha256).
 - G13 failed its frozen effect-size and factual-recall gates.
 - G14 is an unequal-parameter constructed state-law result, not model quality.
 - G15A's passing symmetry task supplies exact coordinates and oracle carrier
-  controls. It does not establish learned geometry, triality-specific benefit,
-  generic association, natural text, or moving `G2/SU(3)` memory.
+  controls. Its conditional result supports shared vector/positive Spin
+  coupling but not the fixed Clifford second read; it does not establish
+  autonomous geometry, generic association, natural text, or moving
+  `G2/SU(3)` memory.
 - The retained checkpoints are validation artifacts, not released pretrained
   models.
 - The natural-text claims are bounded G11--G13 TinyStories results only.

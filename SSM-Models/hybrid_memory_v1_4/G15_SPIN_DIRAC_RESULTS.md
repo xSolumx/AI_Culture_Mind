@@ -1,9 +1,10 @@
 # G15 Spin-Dirac status and results
 
 **Updated:** 2026-08-25
-**Adjudication:** G15A passes its frozen three-seed mechanism/observability
-gate; conditional attribution controls are frozen and pending; `spin_dirac`
-is not promoted to the default model
+**Adjudication:** G15A and its frozen conditional controls pass. The shared
+vector/positive Spin lift is supported on the designed task; a contribution
+from the fixed Clifford/negative-spin read is not. `spin_dirac` is not promoted
+to the default model.
 
 This file separates passing algebraic contracts, oracle-controlled mechanism
 evidence, and learned-model evidence. The binding protocol is the
@@ -19,7 +20,7 @@ optimizer, artifact contract, and retry policy. It was committed before any
 G15A runner output was inspected. The later
 [`conditional-controls protocol`](G15A_CONDITIONAL_CONTROLS_PROTOCOL_2026-08-25.md)
 was likewise frozen after the primary pass but before either attribution
-control was run.
+control was run. Both controls are now complete.
 
 ## Implementation outcome
 
@@ -44,7 +45,7 @@ named non-equivariant ablation.
 | Clifford equivariance | pass | float64 shared-carrier test |
 | all four center signatures | pass | direct backend residual at or below `1e-10` |
 | exact $SU(3)\;T^2$ slice | pass | zero total phase, fixed fourth lane, inactive-coordinate checks |
-| shared inner-conjugation covariance | pass at memory-law level | state, edit, positive read, and negative read agree in float64; a trained symmetry-task replay remains pending |
+| shared inner-conjugation covariance | pass | state, edit, positive read, negative read, and trained primary-arm replays agree in float64 |
 | contractive primary transition and bounded drive | pass | operator-norm and drive-norm tests |
 | 4,096-step state falsifier | pass | SM75 FP32 maximum state/ceiling ratios are `7.74e-5` and `8.99e-5`; all state/read/norm outputs finite |
 | full-LM gradients | pass | address, value, decay, erase, write, coordinates, output, and residual receive finite nonzero gradients |
@@ -52,8 +53,8 @@ named non-equivariant ablation.
 | optimizer partition | pass | complete, disjoint grouping; edit/transport controls use the scalar-moment group |
 | eight-step optimizer covariance | pass | scalar-moment and SGD mapped parameter/update residuals are below `1.87e-13` in every seed, versus the `1e-10` gate |
 | delayed scored-position observability | pass | coordinate and final-query paths exceed the read-change/loss-descent thresholds in all three seeds |
-| `S+identity-read` conditional control | implemented and prospectively frozen | authorized by the G15A pass; run pending |
-| `S-broken` conditional control | pass implementation contract | orthogonal actions retained while carrier coupling changes |
+| `S+identity-read` conditional control | complete | ties S at 1.00 in every seed; fixed Clifford second read is not necessary |
+| `S-broken` conditional control | complete | scores 0.30/0.20/0.20 versus S at 1.00; shared-coupling margin passes |
 
 The binding machine evidence is
 [`artifacts/g15_integrity_sm75_2026-08-25.json`](artifacts/g15_integrity_sm75_2026-08-25.json).
@@ -95,22 +96,52 @@ coordinate discovery, generic associative memory, ordinary natural text,
 long-context recall, scaling, or fused efficiency. G15B, G15C, and G15D have
 not run, and v1.4.5's default `gated_delta -> attention` plan is unchanged.
 
+## Conditional attribution result
+
+The conditional run started clean at commit `5fc3d7b`, verified the immutable
+primary artifact and unchanged core sources, and completed in FP32 on exact
+SM75. It produced the same outcome in every seed:
+
+| Metric | seed 2131 | seed 2137 | seed 2141 |
+|---|---:|---:|---:|
+| S symmetry accuracy, immutable primary | 1.00 | 1.00 | 1.00 |
+| S+identity-read symmetry accuracy | 1.00 | 1.00 | 1.00 |
+| S-broken symmetry accuracy | 0.30 | 0.20 | 0.20 |
+| S minus S-broken | **0.70** | **0.80** | **0.80** |
+| both controls, no-symmetry through L1,024 | 1.00 | 1.00 | 1.00 |
+
+The shared-coupling margin exceeds the frozen `0.02` threshold in all seeds.
+The identity-read tie fails the Clifford-read contribution threshold in all
+seeds. S-broken's large `0.071--0.078` inner-conjugation residual is reported
+as the prospective protocol required and confirms that the named control
+actually breaks shared-frame covariance; it was never a pass gate for that
+intentionally broken arm.
+
+The strongest supported wording is therefore **shared vector/positive Spin
+coupling matters on this supplied-coordinate task**. Because the negative-
+spin Clifford read was unnecessary, this is not evidence that all three
+triality carriers are useful. The first run exposed a runner-only adjudication
+bug that incorrectly promoted the broken arm's diagnostic residual into an
+integrity gate. Commit `5fc3d7b` corrected the code to match the already frozen
+protocol before the clean evidentiary rerun; no data, seed, margin, or training
+setting changed.
+
+Evidence:
+[`artifacts/g15a_conditional_controls_sm75_2026-08-25.json`](artifacts/g15a_conditional_controls_sm75_2026-08-25.json).
+
 ## Next executable gate
 
-Run the two prospectively frozen conditional controls against the immutable
-primary artifact:
-
-| Arm | Transport | Second read | Attribution question |
-|---|---|---|---|
-| S+identity-read | full Spin(8) | identity copy | was the Clifford second read necessary? |
-| S-broken | mismatched marginal orthogonal actions | Clifford | was the shared triality lift necessary? |
-
-The runner is
-[`g15a_conditional_controls.py`](g15a_conditional_controls.py). If S does not
-beat S-broken by the frozen per-seed margin, the allowed interpretation narrows
-to richer two-sided orthogonal transport rather than triality-specific
-coupling. If S does not beat S+identity-read, the fixed Clifford second read is
-not necessary for the observed separation.
+The central learning problem is now autonomous control, not more geometry:
+the positive symmetry result supplied exact coordinates and edit controls.
+The next bounded falsifier should learn a token-to-action coordinate map from
+end loss while holding the address/edit law oracle-fixed, then test unseen
+action compositions and long spacing. Only after that controller gate should
+G15B spend on generic MQAR/overwrite/collision/selective-copy cohorts.
+The prospective
+[`G15A-L protocol`](G15AL_LEARNED_COORDINATE_PROTOCOL_2026-08-25.md) freezes
+that exact controller, optimizer, action support, seeds, budgets, and
+per-length falsifier before execution. Its runner is
+[`g15al_learned_coordinate_cohort.py`](g15al_learned_coordinate_cohort.py).
 
 The constrained `su3_torus` arm is an additional scientific ablation, not a
 replacement for the four frozen primary arms.
