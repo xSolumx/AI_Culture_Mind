@@ -603,6 +603,12 @@ does not convert the reverse-binding auxiliary into ordinary next-token
 learning evidence. A separately frozen real-text screen is required for that
 question.
 
+The real-text input is now snapshotted before that screen: TinyStories Hub
+revision `f54c09fd23315a6f9c86f9dc80f725de7d8f9c64`, train rows 0--1999
+(1,730,239 UTF-8 bytes), and validation rows 0--255 (230,722 bytes). The
+official splits have zero exact-story overlap in the selected prefixes. The
+snapshot is retained rather than refetched during training.
+
 Evidence:
 [`artifacts/g10_retention_safe_validation_cuda_2026-08-25.json`](artifacts/g10_retention_safe_validation_cuda_2026-08-25.json)
 and

@@ -168,6 +168,9 @@ remains label-supervised with 774,400 useful query labels per seed.
   seed.
 - [`retention_successor_screen.py`](retention_successor_screen.py): the matched
   exposed-seed retention-only causal intervention for the v1.4.5 candidate.
+- [`natural_text_data.py`](natural_text_data.py): fixed-row TinyStories snapshot
+  through the Hugging Face Dataset Viewer, with Hub revision, license, byte
+  hashes, and exact split-overlap accounting.
 
 ## Baseline boundary
 
