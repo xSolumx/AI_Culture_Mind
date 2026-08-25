@@ -117,6 +117,14 @@ that the first harness recorded, but did not enforce, the repository status,
 Mamba revision/import path, and OLMo backend identity. They were frozen before
 requalification and before any G16 training metric.
 
+Requalification is a separate non-quality contract in
+[`g16_runtime_qualification.py`](g16_runtime_qualification.py): the four arms
+receive the same deterministic `2 x 64` FP32 token batch, one causal-loss
+backward, and one optimizer step. Every trainable tensor must receive a finite
+gradient and remain finite after the step. The entrypoint requires a clean
+repository, exact SM75, and the frozen provenance above. It records no BPRB,
+recall, model ordering, or promotion decision.
+
 An arm is *development-qualified* only if:
 
 1. final 256-token BPRB is at most 2.0;

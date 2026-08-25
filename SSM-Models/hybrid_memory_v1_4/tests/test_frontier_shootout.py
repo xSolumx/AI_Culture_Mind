@@ -20,6 +20,10 @@ from hybrid_memory_v1_4.frontier_shootout import (
     _olmo_kwargs,
     build_model,
 )
+from hybrid_memory_v1_4.g16_runtime_qualification import (
+    _paired_tokens,
+    _tensor_digest,
+)
 from hybrid_memory_v1_4.model import HybridMemoryLM
 
 
@@ -45,6 +49,14 @@ def test_g16_arm_roster_and_parameter_contract_are_frozen() -> None:
     assert FLA_VERSION == "0.5.2"
     assert OLMO_CHUNK_BACKEND_MODULE == "fla.ops.gated_delta_rule.chunk"
     assert OLMO_CHUNK_BACKEND_NAME == "chunk_gated_delta_rule"
+
+
+def test_g16_runtime_qualification_input_is_frozen() -> None:
+    tokens = _paired_tokens()
+    assert tokens.shape == (2, 64)
+    assert _tensor_digest(tokens) == (
+        "4e9527913a60cb0610c69fce4cce3a289200351f1aa2d17d703c2b87531aa784"
+    )
 
 
 def test_g16_hybrids_preserve_the_g12_shell_and_isolate_the_edit_law() -> None:
