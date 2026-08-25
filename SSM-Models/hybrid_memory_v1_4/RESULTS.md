@@ -894,11 +894,17 @@ Scalar-moment and SGD mapped covariance residuals stay below `1.87e-13`, and
 both the delayed coordinate path and scored-position query path clear the
 frozen read-change/descent thresholds in all three seeds. This authorizes the
 I, I+C, C, and S learning cohort; it does not count as that learning result.
+The later prospective
+[`G15A execution protocol`](G15A_EXECUTION_PROTOCOL_2026-08-25.md) freezes the
+previously absent exact seeds, task support, FP32 budget, optimizer,
+per-seed aggregation, clean-worktree rule, and artifact schema before any
+runner output is inspected.
 
 Evidence:
 [`G15_SPIN_DIRAC_PREREGISTRATION.md`](G15_SPIN_DIRAC_PREREGISTRATION.md),
 [`G15_SPIN_DIRAC_AMENDMENT_2026-08-25.md`](G15_SPIN_DIRAC_AMENDMENT_2026-08-25.md),
 [`G15_SPIN_DIRAC_EDIT_LAW_AMENDMENT_2026-08-25.md`](G15_SPIN_DIRAC_EDIT_LAW_AMENDMENT_2026-08-25.md),
+[`G15A_EXECUTION_PROTOCOL_2026-08-25.md`](G15A_EXECUTION_PROTOCOL_2026-08-25.md),
 [`G15_SPIN_DIRAC_RESULTS.md`](G15_SPIN_DIRAC_RESULTS.md), and
 [`SPIN_TORUS_RESEARCH.md`](SPIN_TORUS_RESEARCH.md), plus
 [`artifacts/g15_integrity_sm75_2026-08-25.json`](artifacts/g15_integrity_sm75_2026-08-25.json).

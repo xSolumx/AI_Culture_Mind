@@ -12,6 +12,11 @@ prospective [`amendment`](G15_SPIN_DIRAC_AMENDMENT_2026-08-25.md).
 The later prospective
 [`edit-law amendment`](G15_SPIN_DIRAC_EDIT_LAW_AMENDMENT_2026-08-25.md)
 repairs the exposed fixed-basis gating defect before training.
+The prospective
+[`G15A execution protocol`](G15A_EXECUTION_PROTOCOL_2026-08-25.md) now freezes
+the previously missing seeds, task support, FP32 budget, aggregation semantics,
+optimizer, artifact contract, and retry policy. It was committed before any
+G15A runner output was inspected.
 
 ## Implementation outcome
 
@@ -65,8 +70,8 @@ No G15A, G15B, G15C, or G15D training result exists. Therefore:
 
 ## Next executable gate
 
-Run the mandatory four-arm G15A comparison now that the deterministic
-integrity artifact has passed:
+Run the mandatory four-arm G15A comparison from the clean protocol commit now
+that both the deterministic integrity gate and operational freeze exist:
 
 | Arm | Transport | Second read |
 |---|---|---|
@@ -74,6 +79,11 @@ integrity artifact has passed:
 | I+C | identity | Clifford |
 | C | fixed `SO(2)^4` | Clifford |
 | S | full Spin(8) | Clifford |
+
+The runner is [`g15a_spin_dirac_cohort.py`](g15a_spin_dirac_cohort.py). It
+separates oracle-controlled supplied-coordinate symmetry tracking from learned
+final-only no-symmetry retrieval, so a geometry-aligned mechanism win cannot be
+reported as generic controller learning.
 
 The constrained `su3_torus` arm is an additional scientific ablation, not a
 replacement for the four frozen primary arms.

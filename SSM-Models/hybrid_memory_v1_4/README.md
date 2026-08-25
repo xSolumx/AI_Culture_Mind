@@ -26,6 +26,12 @@ learning result exists and the v1.4.5 default plan has not changed. See the
 [`frontier review`](FRONTIER_REVIEW_2026-08-25.md),
 [`Spin/torus research note`](SPIN_TORUS_RESEARCH.md), and
 [`G15 result ledger`](G15_SPIN_DIRAC_RESULTS.md).
+The now-frozen
+[`G15A operational protocol`](G15A_EXECUTION_PROTOCOL_2026-08-25.md) and
+[`runner`](g15a_spin_dirac_cohort.py) supply the exact seeds, task generators,
+FP32 budget, per-seed promotion semantics, and clean-worktree artifact
+requirements that the structural preregistration did not specify. No runner
+outcome exists at this protocol checkpoint.
 
 This track exposes seven explicit mixer kinds in one causal language-model
 shell:

@@ -12,6 +12,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from pure_spin8_ssm.torch_backend import spin8_factorized_actions
 from spin8_triality import (
+    SPIN8_PAIRS,
     TRIALITY_REPRESENTATIONS,
     algebra_diagnostics,
     torch_triality_generators,
@@ -371,3 +372,124 @@ def test_commissioning_losses_dispatch_to_spin_dirac() -> None:
     intermediate.backward()
     assert mixer.coordinate_projection.weight.grad is not None
     assert torch.count_nonzero(mixer.coordinate_projection.weight.grad) > 0
+
+
+def test_supplied_coordinates_are_validated_and_filtered_by_transport_mode() -> None:
+    torch.manual_seed(20260828)
+    inputs = torch.randn(2, 5, 8)
+    supplied = 0.2 * (2.0 * torch.rand(2, 5, 1, 28) - 1.0)
+    spin = SpinDiracMemory(SpinDiracConfig(8, heads=1, transport_mode="spin8"))
+    _, _, spin_diagnostics = spin(
+        inputs,
+        supplied_coordinates=supplied,
+        return_diagnostics=True,
+    )
+    torch.testing.assert_close(spin_diagnostics["transport_coordinates"], supplied)
+
+    commuting = SpinDiracMemory(
+        SpinDiracConfig(8, heads=1, transport_mode="commuting_so2")
+    )
+    _, _, commuting_diagnostics = commuting(
+        inputs,
+        supplied_coordinates=supplied,
+        return_diagnostics=True,
+    )
+    expected = supplied * commuting.commuting_coordinate_mask
+    torch.testing.assert_close(commuting_diagnostics["transport_coordinates"], expected)
+
+    identity = SpinDiracMemory(SpinDiracConfig(8, heads=1, transport_mode="identity"))
+    _, _, identity_diagnostics = identity(
+        inputs,
+        supplied_coordinates=supplied,
+        return_diagnostics=True,
+    )
+    assert not bool(identity_diagnostics["transport_coordinates"].any())
+
+    with pytest.raises(ValueError, match="must have shape"):
+        spin(inputs, supplied_coordinates=supplied[..., :27])
+    with pytest.raises(ValueError, match="bounded chart"):
+        spin(inputs, supplied_coordinates=torch.full_like(supplied, 0.251))
+
+
+def _oracle_controls(
+    *, length: int = 3, dtype: torch.dtype = torch.float64
+) -> tuple[torch.Tensor, ...]:
+    carrier = torch.zeros(1, length, 1, 8, dtype=dtype)
+    query = carrier.clone()
+    key = carrier.clone()
+    value = carrier.clone()
+    query[..., 0] = 1.0
+    key[..., 0] = 1.0
+    value[:, 0, :, 1] = 1.0
+    erase = torch.zeros(1, length, 1, 1, dtype=dtype)
+    write = torch.zeros_like(erase)
+    write[:, 0] = 1.0
+    retention = torch.full_like(erase, 0.99)
+    coordinates = torch.zeros(1, length, 1, 28, dtype=dtype)
+    return query, key, value, erase, write, retention, coordinates
+
+
+def test_oracle_controls_cover_one_hot_overwrite_and_orthogonal_query() -> None:
+    memory = SpinDiracMemory(
+        SpinDiracConfig(8, heads=1, transport_mode="identity")
+    ).double()
+    controls = list(_oracle_controls())
+    read, _ = memory.forward_controls(*controls, scan_mode="recurrent")
+    torch.testing.assert_close(
+        read[0, -1, 0, 1], torch.tensor(0.99**2, dtype=torch.float64)
+    )
+
+    controls = list(_oracle_controls())
+    controls[2][:, 1, :, 2] = 1.0
+    controls[3][:, 1] = 1.0
+    controls[4][:, 1] = 1.0
+    read, _ = memory.forward_controls(*controls, scan_mode="parallel")
+    expected = torch.zeros(8, dtype=torch.float64)
+    expected[2] = 0.99
+    torch.testing.assert_close(read[0, -1, 0, :8], expected)
+
+    controls[0][:, -1] = 0.0
+    controls[0][:, -1, :, 3] = 1.0
+    read, _ = memory.forward_controls(*controls)
+    torch.testing.assert_close(read[0, -1, 0, :8], torch.zeros_like(expected))
+
+
+def test_oracle_control_predictions_survive_inner_conjugation() -> None:
+    memory = SpinDiracMemory(
+        SpinDiracConfig(8, heads=1, transport_mode="spin8")
+    ).double()
+    controls = list(_oracle_controls(length=4))
+    controls[6][:, 1, :, SPIN8_PAIRS.index((1, 2))] = 0.2
+    read, _, diagnostics = memory.forward_controls(*controls, return_diagnostics=True)
+    actions = diagnostics["transport_actions"]
+    assert isinstance(actions, torch.Tensor)
+
+    h_coordinates = torch.zeros(1, 1, 1, 28, dtype=torch.float64)
+    h_coordinates[..., SPIN8_PAIRS.index((2, 4))] = 0.17
+    h = spin8_factorized_actions(
+        h_coordinates,
+        memory.generators.double(),
+        TRIALITY_REPRESENTATIONS,
+    )[0, 0, 0]
+    vector = h[TRIALITY_REPRESENTATIONS.index("vector")]
+    positive = h[TRIALITY_REPRESENTATIONS.index("positive")]
+    negative = h[TRIALITY_REPRESENTATIONS.index("negative")]
+    transformed = list(controls)
+    transformed[0] = torch.einsum("ij,bthj->bthi", vector, controls[0])
+    transformed[1] = torch.einsum("ij,bthj->bthi", vector, controls[1])
+    transformed[2] = torch.einsum("ij,bthj->bthi", positive, controls[2])
+    conjugated_actions = torch.einsum(
+        "rij,bthrjk,rkl->bthril", h, actions, h.transpose(-1, -2)
+    )
+    conjugated_read, _ = memory.forward_controls(
+        *transformed,
+        supplied_actions=conjugated_actions,
+    )
+    expected_positive = torch.einsum("ij,bthj->bthi", positive, read[..., :8])
+    expected_negative = torch.einsum("ij,bthj->bthi", negative, read[..., 8:])
+    torch.testing.assert_close(
+        conjugated_read,
+        torch.cat((expected_positive, expected_negative), dim=-1),
+        atol=1e-10,
+        rtol=1e-10,
+    )

@@ -253,7 +253,56 @@ class SpinDiracMemory(nn.Module):
             if valid_mask.device != inputs.device:
                 raise ValueError("valid_mask must be on the input device")
 
-    def _controls(self, inputs: torch.Tensor) -> tuple[torch.Tensor, ...]:
+    def _validate_supplied_coordinates(
+        self, inputs: torch.Tensor, supplied_coordinates: torch.Tensor | None
+    ) -> None:
+        if supplied_coordinates is None:
+            return
+        if not isinstance(supplied_coordinates, torch.Tensor):
+            raise TypeError("supplied_coordinates must be a tensor or None")
+        expected = (
+            inputs.shape[0],
+            inputs.shape[1],
+            self.config.heads,
+            SPIN8_BIVECTOR_DIM,
+        )
+        if supplied_coordinates.shape != expected:
+            raise ValueError(f"supplied_coordinates must have shape {expected}")
+        if (
+            supplied_coordinates.dtype != inputs.dtype
+            or supplied_coordinates.device != inputs.device
+        ):
+            raise ValueError("supplied_coordinates must match input dtype and device")
+        if not bool(torch.isfinite(supplied_coordinates).all()):
+            raise ValueError("supplied_coordinates must be finite")
+        if bool((supplied_coordinates.abs() > self.config.maximum_coordinate).any()):
+            raise ValueError("supplied_coordinates exceed the configured bounded chart")
+
+    def _apply_transport_mode(self, coordinates: torch.Tensor) -> torch.Tensor:
+        if self.config.transport_mode == "commuting_so2":
+            coordinates = coordinates * self.commuting_coordinate_mask.to(coordinates)
+        elif self.config.transport_mode == "su3_torus":
+            # Exact rank-two SU(3) Cartan slice inside SO(2)^4:
+            # (theta_1, theta_2, theta_3, theta_4)
+            # = (alpha, beta, -alpha-beta, 0). Halving the two free raw
+            # coordinates keeps every derived angle inside maximum_coordinate.
+            constrained = torch.zeros_like(coordinates)
+            first, second, third = self.su3_coordinate_indices
+            alpha = 0.5 * coordinates[..., first]
+            beta = 0.5 * coordinates[..., second]
+            constrained[..., first] = alpha
+            constrained[..., second] = beta
+            constrained[..., third] = -alpha - beta
+            coordinates = constrained
+        elif self.config.transport_mode == "identity":
+            coordinates = torch.zeros_like(coordinates)
+        return coordinates
+
+    def _controls(
+        self,
+        inputs: torch.Tensor,
+        supplied_coordinates: torch.Tensor | None = None,
+    ) -> tuple[torch.Tensor, ...]:
         batch, length, _ = inputs.shape
         shape = (batch, length, self.config.heads, SPIN8_DIM)
         query = F.normalize(
@@ -294,26 +343,13 @@ class SpinDiracMemory(nn.Module):
             self.config.heads,
             SPIN8_BIVECTOR_DIM,
         )
-        coordinates = self.config.maximum_coordinate * torch.tanh(
-            self.coordinate_projection(inputs).view(coordinate_shape)
-        )
-        if self.config.transport_mode == "commuting_so2":
-            coordinates = coordinates * self.commuting_coordinate_mask.to(coordinates)
-        elif self.config.transport_mode == "su3_torus":
-            # Exact rank-two SU(3) Cartan slice inside SO(2)^4:
-            # (theta_1, theta_2, theta_3, theta_4)
-            # = (alpha, beta, -alpha-beta, 0). Halving the two free raw
-            # coordinates keeps every derived angle inside maximum_coordinate.
-            constrained = torch.zeros_like(coordinates)
-            first, second, third = self.su3_coordinate_indices
-            alpha = 0.5 * coordinates[..., first]
-            beta = 0.5 * coordinates[..., second]
-            constrained[..., first] = alpha
-            constrained[..., second] = beta
-            constrained[..., third] = -alpha - beta
-            coordinates = constrained
-        elif self.config.transport_mode == "identity":
-            coordinates = torch.zeros_like(coordinates)
+        if supplied_coordinates is None:
+            coordinates = self.config.maximum_coordinate * torch.tanh(
+                self.coordinate_projection(inputs).view(coordinate_shape)
+            )
+        else:
+            coordinates = supplied_coordinates
+        coordinates = self._apply_transport_mode(coordinates)
         return query, key, value, erase, write, retention, coordinates
 
     def _transitions(
@@ -325,13 +361,17 @@ class SpinDiracMemory(nn.Module):
         retention: torch.Tensor,
         coordinates: torch.Tensor,
         valid_mask: torch.Tensor | None,
+        supplied_actions: torch.Tensor | None = None,
     ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]:
-        actions = spin8_factorized_actions(
-            coordinates,
-            self.generators.to(dtype=coordinates.dtype, device=coordinates.device),
-            TRIALITY_REPRESENTATIONS,
-        )
-        if self.config.transport_mode == "broken_spin8":
+        if supplied_actions is None:
+            actions = spin8_factorized_actions(
+                coordinates,
+                self.generators.to(dtype=coordinates.dtype, device=coordinates.device),
+                TRIALITY_REPRESENTATIONS,
+            )
+        else:
+            actions = supplied_actions
+        if self.config.transport_mode == "broken_spin8" and supplied_actions is None:
             broken_coordinates = coordinates.index_select(
                 -1, self.broken_coordinate_permutation
             ) * self.broken_coordinate_signs.to(coordinates)
@@ -371,6 +411,40 @@ class SpinDiracMemory(nn.Module):
             right = torch.where(valid, right, eye)
             injection = torch.where(valid, injection, torch.zeros_like(injection))
         return left, right, injection, actions
+
+    def _validate_supplied_actions(
+        self,
+        reference: torch.Tensor,
+        supplied_actions: torch.Tensor | None,
+    ) -> None:
+        if supplied_actions is None:
+            return
+        if not isinstance(supplied_actions, torch.Tensor):
+            raise TypeError("supplied_actions must be a tensor or None")
+        expected = (
+            reference.shape[0],
+            reference.shape[1],
+            self.config.heads,
+            len(TRIALITY_REPRESENTATIONS),
+            SPIN8_DIM,
+            SPIN8_DIM,
+        )
+        if supplied_actions.shape != expected:
+            raise ValueError(f"supplied_actions must have shape {expected}")
+        if (
+            supplied_actions.dtype != reference.dtype
+            or supplied_actions.device != reference.device
+        ):
+            raise ValueError("supplied_actions must match control dtype and device")
+        if not bool(torch.isfinite(supplied_actions).all()):
+            raise ValueError("supplied_actions must be finite")
+        eye = torch.eye(
+            SPIN8_DIM, dtype=supplied_actions.dtype, device=supplied_actions.device
+        )
+        residual = supplied_actions.transpose(-1, -2) @ supplied_actions - eye
+        tolerance = 1e-9 if supplied_actions.dtype == torch.float64 else 2e-5
+        if float(residual.abs().max()) > tolerance:
+            raise ValueError("supplied_actions must be orthogonal")
 
     @staticmethod
     def _compose_prefix(
@@ -439,6 +513,7 @@ class SpinDiracMemory(nn.Module):
         initial_state: torch.Tensor | None = None,
         *,
         valid_mask: torch.Tensor | None = None,
+        supplied_coordinates: torch.Tensor | None = None,
         scan_mode: GatedDeltaScanMode = "parallel",
         return_diagnostics: bool = False,
     ) -> (
@@ -446,7 +521,10 @@ class SpinDiracMemory(nn.Module):
         | tuple[torch.Tensor, torch.Tensor, dict[str, torch.Tensor | str]]
     ):
         self._validate(inputs, initial_state, valid_mask, scan_mode)
-        query, key, value, erase, write, retention, coordinates = self._controls(inputs)
+        self._validate_supplied_coordinates(inputs, supplied_coordinates)
+        query, key, value, erase, write, retention, coordinates = self._controls(
+            inputs, supplied_coordinates
+        )
         left, right, injection, actions = self._transitions(
             key, value, erase, write, retention, coordinates, valid_mask
         )
@@ -502,6 +580,129 @@ class SpinDiracMemory(nn.Module):
             "update": output,
         }
         return output, final_state, diagnostics
+
+    def forward_controls(
+        self,
+        query: torch.Tensor,
+        key: torch.Tensor,
+        value: torch.Tensor,
+        erase: torch.Tensor,
+        write: torch.Tensor,
+        retention: torch.Tensor,
+        coordinates: torch.Tensor,
+        initial_state: torch.Tensor | None = None,
+        *,
+        valid_mask: torch.Tensor | None = None,
+        supplied_actions: torch.Tensor | None = None,
+        scan_mode: GatedDeltaScanMode = "parallel",
+        return_diagnostics: bool = False,
+    ) -> (
+        tuple[torch.Tensor, torch.Tensor]
+        | tuple[torch.Tensor, torch.Tensor, dict[str, torch.Tensor | str]]
+    ):
+        """Execute the semantic memory from explicit carrier controls.
+
+        This fail-closed path exists for supplied-coordinate and conjugation
+        experiments. It bypasses learned projections and the language shell;
+        results from it are oracle mechanism evidence, not end-to-end learning.
+        """
+
+        if not isinstance(query, torch.Tensor):
+            raise TypeError("query must be a tensor")
+        expected_carrier = (
+            query.shape[0],
+            query.shape[1],
+            self.config.heads,
+            SPIN8_DIM,
+        )
+        if query.shape != expected_carrier or query.shape[0] < 1 or query.shape[1] < 1:
+            raise ValueError("query must have nonempty shape (batch,length,heads,8)")
+        for name, tensor in (("key", key), ("value", value)):
+            if not isinstance(tensor, torch.Tensor) or tensor.shape != expected_carrier:
+                raise ValueError(f"{name} must match query shape")
+        if not query.is_floating_point():
+            raise TypeError("carrier controls must use a floating-point dtype")
+        for name, tensor in (("key", key), ("value", value)):
+            if tensor.dtype != query.dtype or tensor.device != query.device:
+                raise ValueError(f"{name} must match query dtype and device")
+        gate_width = 1 if self.config.gate_mode == "equivariant_scalar" else SPIN8_DIM
+        expected_gate = (*expected_carrier[:-1], gate_width)
+        for name, tensor in (
+            ("erase", erase),
+            ("write", write),
+            ("retention", retention),
+        ):
+            if not isinstance(tensor, torch.Tensor) or tensor.shape != expected_gate:
+                raise ValueError(f"{name} must have shape {expected_gate}")
+            if tensor.dtype != query.dtype or tensor.device != query.device:
+                raise ValueError(f"{name} must match query dtype and device")
+        if not all(
+            bool(torch.isfinite(tensor).all())
+            for tensor in (query, key, value, erase, write, retention)
+        ):
+            raise ValueError("explicit controls must be finite")
+        if bool((erase < 0).any()) or bool((erase > 1).any()):
+            raise ValueError("erase must lie in [0,1]")
+        if bool((write < 0).any()) or bool((write > 1).any()):
+            raise ValueError("write must lie in [0,1]")
+        if bool((retention < 0).any()) or bool((retention >= 1).any()):
+            raise ValueError("retention must lie in [0,1)")
+
+        dummy_inputs = query.new_empty(
+            query.shape[0], query.shape[1], self.config.model_dim
+        )
+        self._validate(dummy_inputs, initial_state, valid_mask, scan_mode)
+        self._validate_supplied_coordinates(dummy_inputs, coordinates)
+        coordinates = self._apply_transport_mode(coordinates)
+        self._validate_supplied_actions(query, supplied_actions)
+        left, right, injection, actions = self._transitions(
+            key,
+            value,
+            erase,
+            write,
+            retention,
+            coordinates,
+            valid_mask,
+            supplied_actions,
+        )
+        if initial_state is None:
+            initial_state = query.new_zeros(query.shape[0], *self.config.state_shape)
+        if scan_mode == "recurrent":
+            states, final_state = self._recurrent_states(
+                left, right, injection, initial_state
+            )
+        else:
+            states, final_state = self._parallel_states(
+                left, right, injection, initial_state
+            )
+        positive_read = torch.einsum("bthv,bhtvp->bthp", query, states)
+        if self.config.readout_mode == "clifford":
+            negative_read = torch.einsum(
+                "...i,vji,...v->...j",
+                positive_read,
+                self.rho.to(positive_read),
+                query,
+            )
+        else:
+            negative_read = positive_read
+        read = torch.cat((positive_read, negative_read), dim=-1)
+        if valid_mask is not None:
+            read = read * valid_mask[..., None, None].to(read.dtype)
+        if not return_diagnostics:
+            return read, final_state
+        diagnostics: dict[str, torch.Tensor | str] = {
+            "kind": "spin_dirac_oracle_controls",
+            "scan_mode": scan_mode,
+            "transport_mode": self.config.transport_mode,
+            "readout_mode": self.config.readout_mode,
+            "gate_mode": self.config.gate_mode,
+            "read_positive": positive_read,
+            "read_negative": negative_read,
+            "transport_coordinates": coordinates,
+            "transport_actions": actions,
+            "state_norm": states.float().square().sum(dim=(-2, -1)).sqrt(),
+        }
+        return read, final_state, diagnostics
 
 
 __all__ = [

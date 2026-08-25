@@ -668,3 +668,38 @@ def test_parameter_count_matches_manual_sum() -> None:
     assert parameter_count(model) == sum(
         parameter.numel() for parameter in model.parameters()
     )
+
+
+def test_full_lm_threads_supplied_spin_coordinates_without_hidden_leakage() -> None:
+    torch.manual_seed(20260828)
+    config = HybridMemoryConfig(
+        vocab_size=32,
+        model_dim=16,
+        layer_plan=("spin_dirac",),
+        spin_dirac_heads=1,
+        spin_dirac_transport_mode="spin8",
+        use_local_conv=False,
+    )
+    model = HybridMemoryLM(config)
+    tokens = torch.randint(0, config.vocab_size, (2, 7))
+    supplied = 0.2 * (2.0 * torch.rand(2, 7, 1, 28) - 1.0)
+    output = model(
+        tokens,
+        spin_dirac_coordinates=supplied,
+        return_diagnostics=True,
+    )
+    diagnostic = output["diagnostics"][0]
+    torch.testing.assert_close(diagnostic["transport_coordinates"], supplied)
+
+    with pytest.raises(ValueError, match="must have shape"):
+        model(tokens, spin_dirac_coordinates=supplied[..., :27])
+    attention = HybridMemoryLM(
+        HybridMemoryConfig(
+            vocab_size=32,
+            model_dim=16,
+            layer_plan=("attention",),
+            attention_heads=1,
+        )
+    )
+    with pytest.raises(ValueError, match="require at least one"):
+        attention(tokens, spin_dirac_coordinates=supplied)

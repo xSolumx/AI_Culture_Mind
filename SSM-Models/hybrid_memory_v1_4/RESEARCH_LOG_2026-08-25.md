@@ -117,3 +117,19 @@ Full paths, revisions, packages, and claim boundaries are in
    target-token, raw-byte, and synchronized-compute accounting.
 6. Implement conjugate torus banks or moving (G_2) frames only after an oracle
    moving-frame task falsifies the fixed-torus family.
+
+## G15A operational freeze
+
+A second audit found that the structural G15A preregistration still lacked
+execution-critical variables: exact seeds, training budget, task support,
+dtype, aggregation, retry policy, and a supplied-coordinate pathway. Running a
+cohort at that point would have made those choices post hoc.
+
+The prospective
+[`G15A execution protocol`](G15A_EXECUTION_PROTOCOL_2026-08-25.md) now freezes
+those variables before any runner metric is inspected. The implementation adds
+validated externally supplied Spin coordinates through the full model and an
+explicit oracle-control semantic path for one-hot, overwrite, collision,
+orthogonal-query, and inner-conjugation checks. The quality runner is required
+to start from a clean committed worktree. This log entry records protocol
+readiness, not a G15A result.

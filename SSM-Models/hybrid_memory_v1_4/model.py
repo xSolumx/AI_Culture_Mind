@@ -758,6 +758,7 @@ class HybridMemoryBlock(nn.Module):
         state: LayerState | None = None,
         *,
         valid_mask: torch.Tensor | None = None,
+        spin_dirac_coordinates: torch.Tensor | None = None,
         delta_scan_mode: DeltaScanMode = "parallel",
         selected_scan_mode: SelectedScanMode = "physical_gather",
         selected_route_mode: RouteMode = "hard",
@@ -771,6 +772,10 @@ class HybridMemoryBlock(nn.Module):
             raise TypeError("return_diagnostics must be a bool")
         if hidden.ndim != 3 or hidden.shape[-1] != self.config.model_dim:
             raise ValueError("hidden must have shape (batch, length, model_dim)")
+        if spin_dirac_coordinates is not None and self.kind != "spin_dirac":
+            raise ValueError(
+                "spin_dirac_coordinates can only be passed to a spin_dirac block"
+            )
         if state is not None:
             self.validate_state(
                 state,
@@ -839,6 +844,7 @@ class HybridMemoryBlock(nn.Module):
                         mixed_value,
                         memory,
                         valid_mask=valid_mask,
+                        supplied_coordinates=spin_dirac_coordinates,
                         scan_mode=delta_scan_mode,
                         return_diagnostics=True,
                     )
@@ -847,6 +853,7 @@ class HybridMemoryBlock(nn.Module):
                         mixed_value,
                         memory,
                         valid_mask=valid_mask,
+                        supplied_coordinates=spin_dirac_coordinates,
                         scan_mode=delta_scan_mode,
                     )
                 next_state = SpinDiracState(next_memory, next_convolution)
@@ -1021,6 +1028,7 @@ class HybridMemoryLM(nn.Module):
         states: Sequence[LayerState] | None = None,
         *,
         valid_mask: torch.Tensor | None = None,
+        spin_dirac_coordinates: torch.Tensor | None = None,
         delta_scan_mode: DeltaScanMode = "parallel",
         selected_scan_mode: SelectedScanMode = "physical_gather",
         selected_route_mode: RouteMode = "hard",
@@ -1047,6 +1055,30 @@ class HybridMemoryLM(nn.Module):
                 f"structured_scan_mode must be one of {_STRUCTURED_SCAN_MODES}"
             )
         hidden = self.embedding(token_ids)
+        if spin_dirac_coordinates is not None:
+            if "spin_dirac" not in self.layer_plan:
+                raise ValueError(
+                    "spin_dirac_coordinates require at least one spin_dirac layer"
+                )
+            if not isinstance(spin_dirac_coordinates, torch.Tensor):
+                raise TypeError("spin_dirac_coordinates must be a tensor or None")
+            expected = (
+                token_ids.shape[0],
+                token_ids.shape[1],
+                self.config.spin_dirac_heads,
+                28,
+            )
+            if spin_dirac_coordinates.shape != expected:
+                raise ValueError(f"spin_dirac_coordinates must have shape {expected}")
+            if (
+                spin_dirac_coordinates.dtype != hidden.dtype
+                or spin_dirac_coordinates.device != hidden.device
+            ):
+                raise ValueError(
+                    "spin_dirac_coordinates must match the hidden dtype and device"
+                )
+            if not bool(torch.isfinite(spin_dirac_coordinates).all()):
+                raise ValueError("spin_dirac_coordinates must be finite")
         layer_states = self._validate_states(
             states,
             batch_size=token_ids.shape[0],
@@ -1062,6 +1094,9 @@ class HybridMemoryLM(nn.Module):
                     hidden,
                     state,
                     valid_mask=valid_mask,
+                    spin_dirac_coordinates=(
+                        spin_dirac_coordinates if block.kind == "spin_dirac" else None
+                    ),
                     delta_scan_mode=delta_scan_mode,
                     selected_scan_mode=selected_scan_mode,
                     selected_route_mode=selected_route_mode,
@@ -1075,6 +1110,9 @@ class HybridMemoryLM(nn.Module):
                     hidden,
                     state,
                     valid_mask=valid_mask,
+                    spin_dirac_coordinates=(
+                        spin_dirac_coordinates if block.kind == "spin_dirac" else None
+                    ),
                     delta_scan_mode=delta_scan_mode,
                     selected_scan_mode=selected_scan_mode,
                     selected_route_mode=selected_route_mode,
