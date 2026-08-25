@@ -517,20 +517,25 @@ def _train_arm(
     torch.cuda.manual_seed_all(MODEL_SEED)
     model, model_metadata = build_model(arm, device)
     optimizer, optimizer_metadata = _build_optimizer(arm, model)
+    initial_evaluation = evaluate_ordinary(
+        arm,
+        model,
+        validation,
+        lengths=MONITOR_LENGTHS,
+        device=device,
+        macro_batches=eval_macro_batches,
+    )
+    # ``evaluate_ordinary`` deliberately switches to eval mode. Restore the
+    # training contract before update one; otherwise the first context phase
+    # silently runs under a different module mode from every later phase.
+    model.train()
     curve = [
         {
             "update": 0,
             "completed_phase": 0,
             "cumulative_training_tokens": 0,
             "cumulative_training_raw_bytes": 0,
-            "ordinary_evaluation": evaluate_ordinary(
-                arm,
-                model,
-                validation,
-                lengths=MONITOR_LENGTHS,
-                device=device,
-                macro_batches=eval_macro_batches,
-            ),
+            "ordinary_evaluation": initial_evaluation,
         }
     ]
     cumulative_tokens = 0

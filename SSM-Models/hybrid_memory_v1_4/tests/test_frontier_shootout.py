@@ -1,5 +1,8 @@
 from __future__ import annotations
 
+import ast
+import inspect
+
 import pytest
 import torch
 from torch import nn
@@ -18,6 +21,7 @@ from hybrid_memory_v1_4.frontier_shootout import (
     _hybrid_config,
     _mamba2_kwargs,
     _olmo_kwargs,
+    _train_arm,
     build_model,
 )
 from hybrid_memory_v1_4.g16_runtime_qualification import (
@@ -130,3 +134,23 @@ def test_g16_mamba2_forward_uses_repository_wrapper_contract() -> None:
     inputs = torch.ones(2, 8, dtype=torch.long)
     logits = _forward_logits("mamba2", _DictionaryLogitModel(), inputs)
     assert logits.shape == (2, 8, 1)
+
+
+def test_g16_restores_train_mode_after_initial_evaluation_before_update_one() -> None:
+    """Guard the phase-one mode contract without executing the GPU cohort."""
+
+    tree = ast.parse(inspect.getsource(_train_arm))
+    calls = [
+        node
+        for node in ast.walk(tree)
+        if isinstance(node, ast.Call)
+        and isinstance(node.func, ast.Attribute)
+        and node.func.attr == "train"
+    ]
+    training_loops = [node for node in ast.walk(tree) if isinstance(node, ast.For)]
+    update_loop = next(
+        node
+        for node in training_loops
+        if isinstance(node.target, ast.Name) and node.target.id == "update"
+    )
+    assert any(call.lineno < update_loop.lineno for call in calls)
