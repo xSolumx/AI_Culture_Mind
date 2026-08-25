@@ -1148,7 +1148,7 @@ Artifact file hashes are recorded in [`ARTIFACTS.sha256`](ARTIFACTS.sha256).
 - No learned Spin(8) rung-use claim exists.
 - A straight-through estimator is not evidence that label-free routing learns.
 
-## G15B interleaved-controller freeze
+## G15B interleaved-controller result
 
 After G15A-S closed full signed-chart transfer under oracle edit timing, a
 repository-history audit rejected reusing the old front-loaded/trailing-query
@@ -1161,11 +1161,27 @@ read accuracy below `1e-10` residual for every task and parent `I/C/S` arm.
 The quality gate requires unique-key rather than write-occurrence addresses,
 balanced write/overwrite-erase supervision, fresh namespaces, controller
 metrics, and no-memory/no-write/no-erase/wrong-query/oracle interventions.
-This is a prospectively frozen commissioned-controller experiment. It has no
-training outcome yet and cannot be described as autonomous discovery. The
-executable contract is
+The exact-SM75 three-seed cohort completed all nine `I/C/S` cells and failed
+the frozen gate. Identity reached about 0.972 mean MQAR and 0.975 selective
+accuracy but only 0.768--0.833 overwrite accuracy. Address top-1 was at least
+0.99976 and memory/write removal collapsed successful retrieval, so addressing
+and causal memory use learned. Overwrite erase recall remained about 0.51,
+because the token-local width-four controller was asked to classify whether a
+key occurred arbitrarily earlier. Full Spin was inferior to identity in every
+MQAR/overwrite/selective mean cell; commuting transport was worse. Only needle
+transport noninferiority passed. G15C and the external-loss-only lane remain
+blocked.
+
+The correct repair is identity content-addressed memory with addressed erase
+on every valid write, or a genuinely state-aware pre-write correction. Generic
+token-wise transport should not return until query and stored state share a
+coherent accumulated frame. This is a commissioned-controller failure and
+diagnosis, not autonomous discovery. The executable contract is
 [`g15b_interleaved_cohort.py`](g15b_interleaved_cohort.py), backed by the
-[`interleaved task generator`](g15b_interleaved_tasks.py).
+[`interleaved task generator`](g15b_interleaved_tasks.py). Full evidence:
+[`G15B_INTERLEAVED_CONTROLLER_RESULTS.md`](G15B_INTERLEAVED_CONTROLLER_RESULTS.md)
+and
+[`artifacts/g15b_interleaved_controller_sm75_2026-08-26.json`](artifacts/g15b_interleaved_controller_sm75_2026-08-26.json).
 
 ## G16 one-seed trained-frontier result
 

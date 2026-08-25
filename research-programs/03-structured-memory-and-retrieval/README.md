@@ -131,6 +131,18 @@ representation.
   words under oracle edit timing. It does not establish learned topology,
   generic association/address/query learning, negative-spin/Clifford utility,
   language, full triality, or scaling/efficiency.
+- G15B completes the prospectively frozen commissioned-controller gate on exact
+  SM75 from clean commit `bd5045a`, with three seeds for each `I/C/S` arm,
+  4,200 updates and 375,360 scored training decisions per seed/arm. Preflight
+  and integrity pass, but adjudication fails. Identity reaches about 0.972 mean
+  MQAR and 0.975 selective recall, yet overwrite remains 0.768--0.833. `C` is
+  worse; `S` is inferior to identity in every MQAR/overwrite/selective mean cell
+  and passes noninferiority only on needle cells. Address top-1 is near perfect,
+  while overwrite erase recall remains about 0.5 and write F1 misses its gate.
+  The controller sees token/local-convolution features, but the erase target
+  depends on collision history: the present learning problem is temporal
+  observability, not insufficient Spin transport. G15C/external-only is blocked.
+  G15A-S remains a separate passed composition result under oracle edit timing.
 - G16 completed its one-seed parameter-matched SM75 development shootout.
   Official fused Mamba-2 wins ordinary compression at every context and beats
   v1.4.5 by `0.09764` BPRB at L4096. Local GDN2 and actual OLMo Hybrid lose;
@@ -159,10 +171,13 @@ representation.
   600 steps, and staged decay; block-scalar moments and curriculum are not
   needed. G15A-S then passes signed 28-generator composition transfer to unseen
   full-rank frame banks and center words, still under oracle edit timing. G15B
-  is now frozen as an attention-free interleaved shared-payload commissioned-
-  controller gate with oracle capacity and causal-use interventions. It retains
-  the parent `I/C/S` arms and has no quality outcome yet. Learned topology, full three-
-  carrier triality utility, natural-text, and scaling remain open.
+  fails the subsequent commissioned interleaved controller gate and blocks
+  G15C/external-only. The next falsifiable repair is identity-transport content-
+  addressed last-write-wins editing: erase on every valid write, or expose the
+  memory state/collision history to a state-aware correction. Generic transport
+  remains identity by default; Spin belongs in supplied/coherent-frame
+  specialized tasks. Learned topology, full three-carrier triality utility,
+  natural-text, and scaling remain open.
 - A frozen phase-separated follow-up rejected early address noise as a
   complete explanation: the perfect frozen-router core still missed its robust
   gate in one seed.
@@ -238,6 +253,11 @@ representation.
   It is not topology discovery, generic association, learned address/query
   control, negative-spin/Clifford utility, language modelling, full triality,
   or scaling/efficiency evidence.
+- G15B's near-perfect learned address classification is not successful edit-law
+  learning. Its overwrite erase recall remains about 0.5, write F1 misses the
+  frozen gate, and the quality adjudication fails. The result rejects the tested
+  token/local-convolution controller and transport promotion; it does not erase
+  G15A-S's separate oracle-timing composition result.
 
 ## Canonical Evidence
 
@@ -270,6 +290,8 @@ representation.
 - [G15A-S spanning-center protocol](../../SSM-Models/hybrid_memory_v1_4/G15AS_SPANNING_CENTER_PROTOCOL_2026-08-25.md)
 - [G15A-S spanning-center artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g15as_spanning_center_sm75_2026-08-25.json)
 - [G15B interleaved-controller protocol](../../SSM-Models/hybrid_memory_v1_4/G15B_CONTROL_PROTOCOL_2026-08-25.md)
+- [G15B interleaved-controller result](../../SSM-Models/hybrid_memory_v1_4/G15B_INTERLEAVED_CONTROLLER_RESULTS.md)
+- [G15B exact-SM75 quality artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g15b_interleaved_controller_sm75_2026-08-26.json)
 - [G16 SM75 frontier-shootout protocol](../../SSM-Models/hybrid_memory_v1_4/G16_SM75_FRONTIER_SHOOTOUT_PROTOCOL_2026-08-25.md)
 - [G16 trained-frontier results](../../SSM-Models/hybrid_memory_v1_4/G16_SM75_FRONTIER_SHOOTOUT_RESULTS.md)
 - [G16 exact-SM75 runtime qualification artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g16_runtime_qualification_sm75_2026-08-25.json)

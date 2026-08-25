@@ -447,3 +447,54 @@ development cohort, not a model-family promotion or scaling law. Evidence:
 and
 [`artifacts/g16_frontier_shootout_sm75_2026-08-25.json`](artifacts/g16_frontier_shootout_sm75_2026-08-25.json),
 SHA-256 `76323bb4b3a87705ac66e77bdd1c056f2a4cbb6bf7b5597386f4953187f2cac7`.
+
+## G15B completed: address learned, collision erase was unobservable
+
+The exact-SM75 G15B quality cohort completed from clean commit `bd5045a` after
+37,800 optimizer updates: three seeds, three primary arms, and 4,200 updates
+per seed/arm. All source, schedule, namespace-separation, oracle-capacity,
+checkpoint, and finite-value integrity checks passed. Each arm had 57,949
+trainable parameters and 1,792 recurrent-state bytes per sequence.
+
+The result is a binding failure, not an absence of learned memory. Identity
+reached three-seed mean query accuracy of `0.972--0.973` on MQAR,
+`0.972--0.977` on selective copy, and `1.0` on needles. Address top-1 was at
+least `0.999756`; no-memory/no-write and wrong-query interventions reduced
+mean accuracy by about `0.938` and `0.920`. The recurrent association matrix
+was therefore learned, used, and addressable.
+
+The failed component was edit timing. Write recall was one, but the identity
+write F1 mean was only about `0.785`, and overwrite-erase recall was about
+`0.506`, far below the frozen `0.95` gate. No arm/seed passed every absolute
+controller metric. Full Spin was not noninferior: it lost all nine non-needle
+task/length mean cells to identity and trailed by as much as 17.21 percentage
+points in a paired overwrite seed. The commuting arm was worse still.
+
+Inspection identified the present learning problem. `_controls` derives
+address, erase, write, retention, and transport from the current block input.
+In the frozen one-block shell that input contains an embedding plus a width-4
+causal convolution. The erase target, however, is one exactly when the current
+write key occurred anywhere earlier in the episode. Two histories can have
+the same local controller input and different collision labels. No optimizer
+can recover a target that is absent from its observations.
+
+The next prospective repair is consequently narrow:
+
+1. implement last-write-wins by erasing the addressed key on every valid
+   write, so first-write erase is a harmless no-op on an empty address;
+2. if independent state-dependent erase is retained, expose a causal pre-write
+   occupancy/read signal and test its temporal observability before training;
+3. retain identity as the generic association reference; token-wise Spin
+   transport is eligible only when keys, queries, and memory share a coherent
+   transported frame or the task supplies an observable moving frame;
+4. repair the learned-path oracle intervention so it preserves the learned
+   address/value gauge instead of replacing only the address with one-hot
+   coordinates.
+
+G15C and the external-loss-only lane remain blocked. This does not undo
+G15A-S: that result established a learned 28-generator transport dictionary
+under oracle edit timing, not a generic controller. Evidence:
+[`G15B_INTERLEAVED_CONTROLLER_RESULTS.md`](G15B_INTERLEAVED_CONTROLLER_RESULTS.md)
+and
+[`artifacts/g15b_interleaved_controller_sm75_2026-08-26.json`](artifacts/g15b_interleaved_controller_sm75_2026-08-26.json),
+SHA-256 `f74d860e30ab40ec747521dfcecd74aac2bb75151206c25b7104d334727429eb`.

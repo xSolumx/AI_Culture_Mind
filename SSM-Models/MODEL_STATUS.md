@@ -28,7 +28,7 @@ controlling evidence for their exact numbers.
 | [Pure Spin(8) v1.1](pure_spin8_ssm/CONTRACT.md) | Maintained task-bounded Spin(8) family | Frozen supplied, latent-token, continuous-observation, endpoint-only, calibration, and compiler cohorts | Strong exact/synthetic center-sensitive tracking and shared-action transfer; no natural-language, generic retrieval, or matched modern-SSM superiority |
 | [Pure Spin v1.2](pure_spin_ssm_v1_2/README.md) | Implemented frontier model with current CUDA backend | Current tests/backends plus [frontier training result](pure_spin_ssm_v1_2/FRONTIER_TRAINING_RESULTS.md) | Fused Mamba-2 wins all three matched Tiny Shakespeare quality seeds, 2.4942 versus 2.7477 mean bpb; low-level throughput ordering is unresolved at observed repeatability |
 | [Pure Exceptional Delta v1.3](pure_f4_delta_ssm_v1_3/README.md) | Experimental Albert/F4/E6 model | Algebra/model suite and small natural-text development cohorts | The exceptional hierarchy is executable, but the fresh [layer-localization result](pure_f4_delta_ssm_v1_3/SHAKESPEARE_LAYER_LOCALIZATION_RESULTS.md) rejects early E6 transport; identity is the supported natural-text reference |
-| [Hybrid Memory v1.4/v1.4.5](hybrid_memory_v1_4/README.md) | Active research workspace; no root-level promotion | G-series preregistrations, results, and artifacts inside the active directory | Validated small hybrid causal learner and commissioned synthetic memory; G13 rejects long-context archive promotion; G14 is a constructed mechanism task; after the distinct G15A-L/F observation/precision failures and G15A-R four-probe repair, G15A-S confirms composition-only signed 28-generator chart transfer to unseen frame banks and center words under oracle edit timing; no learned topology, generic association/address/query, negative-spin/Clifford utility, full triality, natural text, or scaling/efficiency promotion |
+| [Hybrid Memory v1.4/v1.4.5](hybrid_memory_v1_4/README.md) | Active research workspace; no root-level promotion | G-series preregistrations, results, and artifacts inside the active directory | Validated small hybrid causal learner and commissioned synthetic memory; G13 rejects long-context archive promotion; G14 is a constructed mechanism task; after the distinct G15A-L/F observation/precision failures and G15A-R repair, G15A-S confirms composition-only signed-dictionary transfer under oracle edit timing, while G15B rejects the token/local-convolution commissioned controller for interleaved last-write-wins retrieval and blocks G15C/external-only; identity transport is the generic default, with Spin reserved for supplied/coherent-frame tasks |
 | [Dense SO(8) Cayley scan](pure_rotor_ssm/dense_so8_cayley_scan.py) | Experimental control | Structural tests and one CUDA feasibility smoke in the [design report](experiments/DENSE_SO8_CAYLEY_SCAN_DESIGN.md) | Exact 28-direction chart and bounded scan are implemented; no training, quality, or comparative speed claim |
 | [SpinorDeltaLM](../Spin8-SSM-Benchmark/README.md) | Historical isolated benchmark model | Completed short benchmark artifacts under its own directory | Useful controlled historical evidence; not the maintained Pure Rotor/Pure Spin successor |
 | [SpinorModel](../SpinorModel/README.md) | Historical prototype | Original tensor-GA baseline and separate overhaul | Implementation provenance only; commands reproduce the historical model, not the current frontier |
@@ -113,10 +113,20 @@ content addressing and edit laws over richer transport geometry alone.
   timing. It does not establish learned topology, generic association,
   addressing/querying, negative-spin/Clifford utility, language, or full
   triality, and it provides no scaling/efficiency result.
-- G15B is prospectively frozen as an attention-free interleaved shared-payload
-  commissioned-controller gate. Exact oracle capacity, controller metrics,
-  causal interventions, and fresh data namespaces are binding; no G15B quality
-  result exists yet.
+- G15B completes its prospectively frozen exact-SM75 quality cohort from clean
+  commit `bd5045a`: three seeds for each `I/C/S` arm, 4,200 updates and 375,360
+  scored training decisions per seed/arm. Preflight and integrity pass, but the
+  adjudication fails. Identity reaches about 0.972 mean MQAR and 0.975 selective
+  recall, yet overwrite remains 0.768--0.833. `C` is worse; `S` is inferior to
+  identity in every MQAR/overwrite/selective mean cell and meets noninferiority
+  only on needle cells. Address top-1 is near perfect, while overwrite erase
+  recall stays about 0.5 and write F1 is below gate. The frozen erase target is
+  collision history, but the controller sees only token/local-convolution
+  features: a temporal-observability mismatch. G15C/external-only is blocked.
+  G15A-S remains an intact, separate composition result under oracle edit
+  timing. The next candidate is identity-transport content-addressed last-write-
+  wins editing with erase on every valid write or a state-aware correction;
+  Spin transport remains specialized to supplied/coherent-frame tasks.
 - G16 completed its prospectively frozen one-seed SM75 development shootout.
   Official fused Mamba-2 wins ordinary compression at every context and reaches
   `1.48571` BPRB at L4096 versus v1.4.5 `1.58335`; local semantic GDN2 and
@@ -147,6 +157,13 @@ The spanning-center successor is controlled by the
 [G15A-S protocol](hybrid_memory_v1_4/G15AS_SPANNING_CENTER_PROTOCOL_2026-08-25.md)
 and source-bound
 [G15A-S artifact](hybrid_memory_v1_4/artifacts/g15as_spanning_center_sm75_2026-08-25.json).
+The commissioned-controller successor is controlled by the
+[G15B protocol](hybrid_memory_v1_4/G15B_CONTROL_PROTOCOL_2026-08-25.md), with
+the failed quality adjudication in the
+[G15B result](hybrid_memory_v1_4/G15B_INTERLEAVED_CONTROLLER_RESULTS.md) and
+source-bound evidence in the
+[G15B artifact](hybrid_memory_v1_4/artifacts/g15b_interleaved_controller_sm75_2026-08-26.json),
+SHA-256 `f74d860e30ab40ec747521dfcecd74aac2bb75151206c25b7104d334727429eb`.
 The four-arm model harness is frozen separately in the
 [G16 protocol](hybrid_memory_v1_4/G16_SM75_FRONTIER_SHOOTOUT_PROTOCOL_2026-08-25.md),
 with exact source/runtime evidence in the

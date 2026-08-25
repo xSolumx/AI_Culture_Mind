@@ -116,3 +116,15 @@ prove universal Mamba-2 superiority, optimizer optimality, a scaling law,
 general language quality, or hardware-general efficiency. The retained
 checkpoints are research artifacts in the recorded WSL run directory, not
 released pretrained models.
+
+## Subsequent G15B outcome
+
+The separately frozen G15B commissioned-controller cohort subsequently failed.
+It learned near-perfect content addresses and causally used its matrix, but the
+collision-only erase label depended on episode history outside the token-local
+controller's receptive field. Full Spin also trailed identity in every
+non-needle mean cell. Therefore the conditional hybrid move in item 4 above is
+not authorized: G15C and the external-loss-only lane remain blocked while an
+identity, erase-on-every-valid-write or explicitly state-aware controller is
+frozen prospectively. See
+[`G15B_INTERLEAVED_CONTROLLER_RESULTS.md`](G15B_INTERLEAVED_CONTROLLER_RESULTS.md).

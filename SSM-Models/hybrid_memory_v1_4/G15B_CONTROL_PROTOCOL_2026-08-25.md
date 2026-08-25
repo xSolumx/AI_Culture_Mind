@@ -4,6 +4,12 @@
 **Parent:** [G15 Spin-Dirac preregistration](G15_SPIN_DIRAC_PREREGISTRATION.md)  
 **Entry evidence:** [G15A-S results](G15_SPIN_DIRAC_RESULTS.md#g15a-s-spanning-and-center-sensitive-chart-transfer) | **Executable runner:** [`g15b_interleaved_cohort.py`](g15b_interleaved_cohort.py) | **Task generator:** [`g15b_interleaved_tasks.py`](g15b_interleaved_tasks.py)
 
+**Outcome:** failed on the exact SM75 cohort. The controller learned addresses
+and causally used memory, but its collision-only erase target was not observable
+from the token-local controller input; full Spin also failed transport
+noninferiority. See
+[`G15B_INTERLEAVED_CONTROLLER_RESULTS.md`](G15B_INTERLEAVED_CONTROLLER_RESULTS.md).
+
 ## Decision being tested
 
 G15A-S established a learned composition chart under oracle keys, values,

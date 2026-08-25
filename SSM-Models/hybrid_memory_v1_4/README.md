@@ -100,8 +100,13 @@ bottleneck. It removes attention, uses one causal-conv
 Spin-Dirac block, interleaves writes/queries/changed overwrites over one shared
 payload alphabet, and binds unique-key address, balanced write/erase,
 oracle-capacity, controller-identification, and causal-use gates. This is
-explicit label-supervised commissioning, not autonomous discovery. No G15B
-quality result exists yet.
+explicit label-supervised commissioning, not autonomous discovery. The
+completed [G15B result](G15B_INTERLEAVED_CONTROLLER_RESULTS.md) fails: identity
+learns near-perfect addresses and causally used MQAR/selective memory, but the
+token-local controller cannot identify collision-conditioned erase, overwrite
+accuracy remains below gate, and Spin transport is inferior to identity on
+every non-needle mean cell. G15C and the external-loss-only lane remain
+blocked.
 
 In parallel, the frozen
 [`G16 SM75 shootout protocol`](G16_SM75_FRONTIER_SHOOTOUT_PROTOCOL_2026-08-25.md)

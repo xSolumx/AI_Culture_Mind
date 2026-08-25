@@ -72,10 +72,23 @@
 > composition of a learned spanning signed dictionary, unseen frame banks, and
 > global center words under oracle edit timing; it does not learn topology,
 > address/query association, negative-spin/Clifford utility, language, or full
-> triality, and it supplies no scaling/efficiency result. G15B is now frozen as
-> an attention-free interleaved shared-payload commissioned-controller gate
-> with exact oracle ceilings, controller metrics, and causal-use interventions;
-> it has no quality outcome yet. G16 has completed its one-seed SM75 development
+> triality, and it supplies no scaling/efficiency result. G15B has now completed
+> its exact-SM75 quality cohort from clean commit `bd5045a`: three seeds per
+> `I/C/S` arm, 4,200 updates and 375,360 scored training decisions per
+> seed/arm. Preflight and integrity contracts pass, but the frozen adjudication
+> fails. Identity reaches about 0.972 mean MQAR and 0.975 selective recall,
+> while overwrite accuracy remains 0.768--0.833; `C` is worse, and `S` is
+> inferior to identity in every MQAR/overwrite/selective mean cell, passing
+> noninferiority only on needle cells. Address top-1 is near perfect, but
+> overwrite erase recall remains about 0.5 and write F1 misses its gate. The
+> erase target depends on collision history that the token/local-convolution
+> controller cannot observe. G15C/external-only promotion is therefore blocked.
+> G15A-S remains a separate passed composition result under oracle edit timing;
+> G15B does not rewrite it. The next repair is identity-transport content-
+> addressed last-write-wins editing, using erase on every valid write or a
+> state-aware correction. Generic transport stays identity by default; Spin is
+> reserved for supplied or coherent-frame specialized tasks. G16 has completed
+> its one-seed SM75 development
 > shootout: official fused Mamba-2 wins every ordinary-compression context and
 > beats v1.4.5 by `0.09764` BPRB at L4096, while local GDN2 and actual OLMo
 > Hybrid lose and all four arms fail learned recall.
@@ -98,6 +111,8 @@
 > [G15A-S spanning-center protocol](hybrid_memory_v1_4/G15AS_SPANNING_CENTER_PROTOCOL_2026-08-25.md),
 > [G15A-S spanning-center artifact](hybrid_memory_v1_4/artifacts/g15as_spanning_center_sm75_2026-08-25.json),
 > [G15B interleaved-controller protocol](hybrid_memory_v1_4/G15B_CONTROL_PROTOCOL_2026-08-25.md),
+> [G15B interleaved-controller result](hybrid_memory_v1_4/G15B_INTERLEAVED_CONTROLLER_RESULTS.md),
+> [G15B exact-SM75 artifact](hybrid_memory_v1_4/artifacts/g15b_interleaved_controller_sm75_2026-08-26.json),
 > [G16 SM75 frontier-shootout protocol](hybrid_memory_v1_4/G16_SM75_FRONTIER_SHOOTOUT_PROTOCOL_2026-08-25.md),
 > [G16 trained-frontier results](hybrid_memory_v1_4/G16_SM75_FRONTIER_SHOOTOUT_RESULTS.md),
 > [G16 exact-SM75 runtime qualification artifact](hybrid_memory_v1_4/artifacts/g16_runtime_qualification_sm75_2026-08-25.json),

@@ -185,9 +185,16 @@ seeds at roughly `1e-6` held-out-frame error and at most `2.36e-5` direct-
 carrier error on unseen 2-pi/4-pi loops, volume-center words, other center
 cosets, and loop-plus-primitive continuations. This closes the local spanning
 and center-compatibility question for the hard-coded shared vector/positive
-lift. The frozen G15B interleaved shared-payload commissioned-controller gate
-now tests address/write/erase/query learning with oracle ceilings and causal
-interventions before any torus-bank or moving-frame implementation.
+lift.
+
+The completed G15B interleaved controller cohort then learned near-perfect
+address classes and causally used the association matrix, but failed every
+arm's absolute controller gate. Its collision-only erase label depends on
+unbounded earlier history that the token-local width-4 controller does not
+observe. Full Spin also trailed identity in all nine non-needle mean cells.
+Consequently, identity transport plus erase-on-every-valid-write is the next
+generic last-write-wins reference. Spin transport requires a coherent moving-
+frame task, or co-transported keys and queries, before it is eligible again.
 
 ## Claim ledger
 
@@ -200,8 +207,11 @@ control.
 **Empirical but local:** supplied-coordinate G15A separation; G15A-R learned
 primitive-coordinate composition; G15A-S learned all 28 signed directions and
 passed held-out-frame/global-center transfer under oracle edit timing; native
-runtime and finite contract probes.
+runtime and finite contract probes; G15B learned content addresses and causal
+matrix use but rejected the current collision-erase controller and generic
+token-wise Spin transport.
 
-**Open:** learned benefit from Spin transport, sparse conjugate tori, moving
-(G_2) frames, generic language improvement, long-range factual recall, and a
-matched scaling advantage.
+**Open:** a temporally observable last-write-wins controller; learned benefit
+from coherent-frame Spin transport; sparse conjugate tori; moving (G_2)
+frames; generic language improvement; long-range factual recall; and a matched
+scaling advantage.

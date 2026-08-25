@@ -81,6 +81,12 @@ transport claim fails.
 
 ### G15B: generic associative memory
 
+**Outcome:** failed. Learned addressing and causal memory use passed, but the
+token-local controller could not identify collision-only erase events, and full
+Spin failed the frozen noninferiority requirement. G15C and the external-loss-
+only lane are blocked. See
+[`G15B_INTERLEAVED_CONTROLLER_RESULTS.md`](G15B_INTERLEAVED_CONTROLLER_RESULTS.md).
+
 - MQAR, last-write-wins overwrite, repeated-key collision, selective copy, and
   exact-distance needles;
 - variable numbers of writes, delays, query positions, and final-only reads;

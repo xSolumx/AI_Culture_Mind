@@ -316,14 +316,23 @@ Evidence:
 [`artifacts/g15as_spanning_center_sm75_2026-08-25.json`](artifacts/g15as_spanning_center_sm75_2026-08-25.json),
 SHA-256 `96e939fa4411e305637961941a565ac26da5a4212b47de3fc198687693b5dbcc`.
 
-The next gate is now frozen in
-[`G15B_CONTROL_PROTOCOL_2026-08-25.md`](G15B_CONTROL_PROTOCOL_2026-08-25.md).
-It uses an attention-free Spin-Dirac shell and shared-payload interleaved
-events, rather than the older disjoint/front-loaded task shortcut. The primary
-`I/C/S` arms retain their parent readouts; unique-key address, balanced
-write/overwrite erase, oracle direct-read ceilings, controller metrics, and
-causal interventions are binding. This is explicit commissioned-controller
-learning, not label-free discovery. No G15B quality outcome exists yet.
+The prospectively frozen G15B cohort has now completed on exact SM75 hardware.
+It failed the binding gate despite learning near-perfect address classes and
+causally using its recurrent matrix. Three-seed mean identity accuracy stayed
+near `0.972--0.977` on MQAR/selective-copy and `0.768--0.833` on overwrite,
+but overwrite-erase recall was only about `0.506`; no arm/seed passed the
+absolute controller gate. Full Spin trailed identity in all nine non-needle
+task/length cells, by as much as 17.21 percentage points in a paired seed.
+
+The central repair is architectural, not another optimizer sweep. The frozen
+erase label asks whether the present write key appeared arbitrarily earlier,
+while the one-block controller sees only the current embedding and a width-4
+local convolution. That history bit is not observable. Last-write-wins can
+instead erase the addressed key on every valid write, which is harmless for an
+empty first-write address and necessary for an overwrite. An independent
+collision-aware erase controller would require a causal pre-write occupancy
+read. See
+[`G15B_INTERLEAVED_CONTROLLER_RESULTS.md`](G15B_INTERLEAVED_CONTROLLER_RESULTS.md).
 
 The constrained `su3_torus` arm is an additional scientific ablation, not a
 replacement for the four frozen primary arms.
@@ -331,6 +340,7 @@ replacement for the four frozen primary arms.
 In the parallel completed G16 one-seed SM75 development shootout, official
 fused Mamba-2 beat v1.4.5 at every context and by `0.09764` BPRB at L4096.
 Local GDN2 and OLMo Hybrid lost; every arm failed the learned-recall gate. This
-sets a stronger ordinary-compression reference but does not answer G15B or
-promote a model family. See
+sets a stronger ordinary-compression reference but does not promote a model
+family. The failed G15B cohort blocks G15C and the external-loss-only lane;
+G15A-S remains valid, separate oracle-timing geometry evidence. See
 [`G16_SM75_FRONTIER_SHOOTOUT_RESULTS.md`](G16_SM75_FRONTIER_SHOOTOUT_RESULTS.md).

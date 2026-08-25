@@ -214,6 +214,17 @@ new matched natural-data and complete-step hardware evidence.
   banks and global center words under oracle edit timing, not learned topology,
   association/address/query learning, negative-spin/Clifford utility, language,
   full triality, or scaling/efficiency.
+- G15B completes its exact-SM75 three-seed commissioned-controller cohort from
+  clean commit `bd5045a`, with 4,200 updates and 375,360 scored decisions per
+  seed/arm. Preflight and integrity pass, but the frozen adjudication fails.
+  Identity reaches about 0.972 mean MQAR and 0.975 selective recall, while
+  overwrite remains 0.768--0.833. `C` is worse, and `S` is inferior to identity
+  in every MQAR/overwrite/selective mean cell, passing noninferiority only on
+  needle cells. Address top-1 is near perfect, but overwrite erase recall stays
+  about 0.5 and write F1 is below gate. This is a temporal-observability failure:
+  collision history defines the erase target but is absent from the token/local-
+  convolution controller. G15C/external-only is blocked. The separate G15A-S
+  composition result remains intact.
 - G16 completed its one-seed parameter-matched SM75 development cohort.
   Official fused Mamba-2 wins all ordinary-compression contexts, reaching
   `1.48571` BPRB at L4096 versus v1.4.5 `1.58335`; local GDN2 and OLMo lose,
@@ -241,12 +252,13 @@ new matched natural-data and complete-step hardware evidence.
   coordinates.
 - Matched-task evidence that the full dense-SO(8) Cayley control chart is more
   useful than restricted, octonion, Givens/Householder, or modern SSM controls.
-- G15B is now prospectively frozen as an attention-free interleaved shared-
-  payload commissioned-controller gate with exact oracle ceilings, the parent
-  `I/C/S` arms, learned coordinates, and causal-use interventions.
-  G15A-S has widened only the composition dictionary and transfer banks under
-  oracle edit timing. More geometry is not the next move. Learned topology,
-  full three-carrier triality utility, natural text, and scaling remain open.
+- G15B has rejected the present token/local-convolution commissioned controller
+  and blocked G15C/external-only. The next test is an identity-transport content-
+  addressed last-write-wins edit law with erase on every valid write, or a
+  state-aware correction that observes memory/collision history. More generic
+  transport geometry is not the next move. Spin remains a specialized prior for
+  supplied or coherent frames; learned topology, full three-carrier triality
+  utility, natural text, and scaling remain open.
 
 ## Dependencies
 
@@ -293,6 +305,10 @@ new matched natural-data and complete-step hardware evidence.
   banks, and global center words, but retains oracle edit timing. It does not
   establish learned topology, generic association/address/query control,
   negative-spin/Clifford utility, language, full triality, or scaling/efficiency.
+- G15B does not establish generic retrieval or Spin-specific utility. Identity
+  is stronger in every MQAR/overwrite/selective mean cell, the overwrite edit
+  controller fails its frozen gate, and G15C/external-only is blocked. This does
+  not invalidate G15A-S's separate composition result under oracle edit timing.
 - The approximately 2,000x Pure Spin(8) MSE gap is task-specific and does not
   establish generic Mamba superiority, state matching, or a fused-kernel win.
 - The latent-token result removes supplied coordinates only for eight fixed
@@ -360,6 +376,8 @@ new matched natural-data and complete-step hardware evidence.
 - [G15A-S spanning-center protocol](../../SSM-Models/hybrid_memory_v1_4/G15AS_SPANNING_CENTER_PROTOCOL_2026-08-25.md)
 - [G15A-S spanning-center artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g15as_spanning_center_sm75_2026-08-25.json)
 - [G15B interleaved-controller protocol](../../SSM-Models/hybrid_memory_v1_4/G15B_CONTROL_PROTOCOL_2026-08-25.md)
+- [G15B interleaved-controller result](../../SSM-Models/hybrid_memory_v1_4/G15B_INTERLEAVED_CONTROLLER_RESULTS.md)
+- [G15B exact-SM75 quality artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g15b_interleaved_controller_sm75_2026-08-26.json)
 - [G16 SM75 frontier-shootout protocol](../../SSM-Models/hybrid_memory_v1_4/G16_SM75_FRONTIER_SHOOTOUT_PROTOCOL_2026-08-25.md)
 - [G16 trained-frontier results](../../SSM-Models/hybrid_memory_v1_4/G16_SM75_FRONTIER_SHOOTOUT_RESULTS.md)
 - [G16 exact-SM75 runtime qualification artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g16_runtime_qualification_sm75_2026-08-25.json)
