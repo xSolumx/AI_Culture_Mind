@@ -280,3 +280,25 @@ diagnostic will project the learned table onto exact primitive support while
 preserving learned amplitudes, separating inactive-coordinate leakage from
 active-angle bias. Optimizer or curriculum changes will be frozen only after
 that decomposition is recorded.
+
+## G15A-F chart decomposition and G15A-R freeze
+
+The source-bound SM75 diagnostic confirms that inactive-coordinate leakage is
+the dominant learning error. Across seeds, active target-axis MAE is only
+`0.00189--0.00324`, while inactive RMS is `0.00394--0.00780`. When the learned
+tables are projected onto the oracle primitive support but keep their learned
+amplitudes, all nine long-composition rows clear the original G15A-F absolute
+gates: mean `0.0051--0.0183`, p95 at most `0.0270`, maximum at most `0.0392`.
+Exact amplitudes with learned leakage remain near the failed result. This is a
+post-hoc decomposition, not a rescued promotion.
+
+Before inspecting a new metric, the
+[`G15A-R protocol`](G15AR_FIRST_ORDER_PROTOCOL_2026-08-25.md) freezes a paired
+first-order ablation. It tests staged LR decay first, then one scalar second
+moment per token row, then a balanced singleton/inverse curriculum, with a
+fixed least-intervention selection order. `BlockScalarSecondMomentAdamW`
+preserves the 28-coordinate orthogonal covariance that motivated the existing
+global scalar optimizer while no longer coupling unrelated token rows through
+one denominator. The winner, if any, must be reinitialized and pass the full
+I/C/S/S-broken cohort on three untouched seeds. No support labels or post-hoc
+projection enter training.

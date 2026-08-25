@@ -63,6 +63,13 @@ rows. It still failed promotion: S mean relative frame error was
 now sees and separates the shared lift, but accurate autonomous chart learning
 remains unsolved. See the
 [`G15A-F artifact`](artifacts/g15af_full_frame_cohort_sm75_2026-08-25.json).
+The bound
+[`support/amplitude decomposition`](artifacts/g15af_learning_diagnostic_sm75_2026-08-25.json)
+localizes the miss to off-axis leakage: support-projecting the learned tables
+passes every old absolute gate without correcting their amplitudes. The frozen
+[`G15A-R first-order protocol`](G15AR_FIRST_ORDER_PROTOCOL_2026-08-25.md)
+therefore tests LR decay, a new per-token rotation-covariant second moment, and
+a balanced primitive/inverse curriculum separately before fresh confirmation.
 
 This track exposes seven explicit mixer kinds in one causal language-model
 shell:

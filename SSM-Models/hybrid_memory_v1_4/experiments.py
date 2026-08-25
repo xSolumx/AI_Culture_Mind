@@ -370,6 +370,7 @@ def source_file_digests() -> tuple[SourceFileDigest, ...]:
         root / "g15al_observability_diagnostic.py",
         root / "g15af_full_frame_cohort.py",
         root / "g15af_learning_diagnostic.py",
+        root / "g15ar_first_order_repair.py",
         root / "modern_ssm_probe.py",
         root / "native_sm75_probe.py",
         root / "pretrained_sm75_probe.py",
@@ -407,6 +408,7 @@ def source_file_digests() -> tuple[SourceFileDigest, ...]:
         root / "G15AL_LEARNED_COORDINATE_PROTOCOL_2026-08-25.md",
         root / "G15AL_EXECUTION_AMENDMENT_2026-08-25.md",
         root / "G15AF_FULL_FRAME_PROTOCOL_2026-08-25.md",
+        root / "G15AR_FIRST_ORDER_PROTOCOL_2026-08-25.md",
         root.parent / "delta_product_reference.py",
     )
     reports = []

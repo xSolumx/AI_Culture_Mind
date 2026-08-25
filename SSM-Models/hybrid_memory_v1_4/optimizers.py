@@ -223,6 +223,78 @@ class ScalarSecondMomentAdamW(torch.optim.Optimizer):
         return loss
 
 
+class BlockScalarSecondMomentAdamW(ScalarSecondMomentAdamW):
+    """AdamW with one scalar second moment per final-axis vector block.
+
+    For a token-coordinate table shaped ``(tokens, coordinates)``, the first
+    moment remains coordinatewise while the second moment has shape
+    ``(tokens, 1)``.  This preserves covariance under one shared orthogonal
+    coordinate change and equivariance under token-row permutations without
+    forcing unrelated sparse token rows to share an adaptive scale.
+    """
+
+    @torch.no_grad()
+    def step(self, closure: Any = None) -> torch.Tensor | None:
+        loss = None
+        if closure is not None:
+            with torch.enable_grad():
+                loss = closure()
+        for group in self.param_groups:
+            beta1, beta2 = group["betas"]
+            for parameter in group["params"]:
+                gradient = parameter.grad
+                if gradient is None:
+                    continue
+                if gradient.is_sparse:
+                    raise RuntimeError(
+                        "BlockScalarSecondMomentAdamW does not support sparse gradients"
+                    )
+                if torch.is_complex(parameter) or torch.is_complex(gradient):
+                    raise RuntimeError(
+                        "BlockScalarSecondMomentAdamW does not support complex parameters"
+                    )
+                state = self.state[parameter]
+                second_moment_shape = (
+                    () if parameter.ndim == 0 else (*parameter.shape[:-1], 1)
+                )
+                if not state:
+                    state["step"] = 0
+                    state["exp_avg"] = torch.zeros_like(
+                        parameter, memory_format=torch.preserve_format
+                    )
+                    state["exp_avg_sq"] = torch.zeros(
+                        second_moment_shape,
+                        device=parameter.device,
+                        dtype=parameter.dtype,
+                    )
+                state["step"] += 1
+                step = state["step"]
+                exp_avg = state["exp_avg"]
+                exp_avg_sq = state["exp_avg_sq"]
+                exp_avg.mul_(beta1).add_(gradient, alpha=1.0 - beta1)
+                mean_square = (
+                    gradient.square()
+                    if gradient.ndim == 0
+                    else gradient.square().mean(dim=-1, keepdim=True)
+                )
+                exp_avg_sq.mul_(beta2).add_(mean_square, alpha=1.0 - beta2)
+
+                learning_rate = group["lr"]
+                weight_decay = group["weight_decay"]
+                if weight_decay:
+                    parameter.mul_(1.0 - learning_rate * weight_decay)
+                bias_correction1 = 1.0 - beta1**step
+                bias_correction2 = 1.0 - beta2**step
+                denominator = exp_avg_sq.sqrt() / math.sqrt(bias_correction2)
+                denominator.add_(group["eps"])
+                parameter.addcdiv_(
+                    exp_avg,
+                    denominator,
+                    value=-learning_rate / bias_correction1,
+                )
+        return loss
+
+
 class HarmonicMuonAdamW:
     """A checkpointable composite optimizer with an explicit group contract."""
 
@@ -409,6 +481,7 @@ def build_optimizer(
 
 
 __all__ = [
+    "BlockScalarSecondMomentAdamW",
     "HarmonicMuonAdamW",
     "OptimizerGroupReport",
     "OptimizerPartition",

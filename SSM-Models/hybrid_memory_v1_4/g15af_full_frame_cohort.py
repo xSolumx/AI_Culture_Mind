@@ -177,9 +177,7 @@ def _probe_bank(model_seed: int) -> torch.Tensor:
     generator = torch.Generator().manual_seed(
         _stable_seed("g15af-probe-bank", model_seed)
     )
-    samples = torch.randn(
-        PROBE_COUNT, 8, 8, generator=generator, dtype=torch.float64
-    )
+    samples = torch.randn(PROBE_COUNT, 8, 8, generator=generator, dtype=torch.float64)
     q, r = torch.linalg.qr(samples)
     signs = torch.sign(torch.diagonal(r, dim1=-2, dim2=-1))
     signs = torch.where(signs == 0, torch.ones_like(signs), signs)
@@ -222,9 +220,7 @@ def _semantic_coordinate(semantic: int) -> torch.Tensor:
     coordinate = torch.zeros(1, len(SPIN8_PAIRS), dtype=torch.float32)
     pair_index = semantic % len(OFF_TORUS_PAIRS)
     sign = 1.0 if semantic < len(OFF_TORUS_PAIRS) else -1.0
-    coordinate[0, SPIN8_PAIRS.index(OFF_TORUS_PAIRS[pair_index])] = (
-        sign * ACTION_ANGLE
-    )
+    coordinate[0, SPIN8_PAIRS.index(OFF_TORUS_PAIRS[pair_index])] = sign * ACTION_ANGLE
     return coordinate
 
 
@@ -282,14 +278,9 @@ def _broken_lie_bracket_certificate() -> dict[str, Any]:
                 vector[first] @ vector[second] - vector[second] @ vector[first]
             )
             coefficients = torch.stack(
-                [
-                    (vector_commutator * basis).sum() // 2
-                    for basis in vector
-                ]
+                [(vector_commutator * basis).sum() // 2 for basis in vector]
             )
-            expected = 2 * torch.einsum(
-                "a,aij->ij", coefficients, broken_positive
-            )
+            expected = 2 * torch.einsum("a,aij->ij", coefficients, broken_positive)
             observed = (
                 broken_positive[first] @ broken_positive[second]
                 - broken_positive[second] @ broken_positive[first]
@@ -309,9 +300,7 @@ def _broken_lie_bracket_certificate() -> dict[str, Any]:
                         "integer_residual_matrix": residual.tolist(),
                     }
     return {
-        "arithmetic": (
-            "exact int64 after multiplying positive-spin generators by two"
-        ),
+        "arithmetic": ("exact int64 after multiplying positive-spin generators by two"),
         "generator_pairs_checked": len(SPIN8_PAIRS) ** 2,
         "mismatch_count": mismatch_count,
         "maximum_integer_residual_abs": maximum_residual,
@@ -406,9 +395,7 @@ def _frame_prediction(
 ) -> torch.Tensor:
     vector, positive = _carrier_totals(memory, batch, coordinates, device=device)
     transported = (
-        vector[:, None]
-        @ batch.initial_frames
-        @ positive.transpose(-1, -2)[:, None]
+        vector[:, None] @ batch.initial_frames @ positive.transpose(-1, -2)[:, None]
     )
     return (RETENTION ** (batch.token_ids.shape[1] - 1)) * transported
 
@@ -420,9 +407,7 @@ def _teacher_target(
     *,
     device: torch.device,
 ) -> torch.Tensor:
-    return _frame_prediction(
-        teacher, batch, batch.exact_coordinates, device=device
-    )
+    return _frame_prediction(teacher, batch, batch.exact_coordinates, device=device)
 
 
 def _metrics(prediction: torch.Tensor, target: torch.Tensor) -> dict[str, Any]:
@@ -560,9 +545,7 @@ def _train_arm(
                 row["raw_elementwise_mse"] for row in metric_rows
             )
             / len(metric_rows),
-            "mean_matrix_cosine": sum(
-                row["mean_matrix_cosine"] for row in metric_rows
-            )
+            "mean_matrix_cosine": sum(row["mean_matrix_cosine"] for row in metric_rows)
             / len(metric_rows),
             "minimum_matrix_cosine": min(
                 row["minimum_matrix_cosine"] for row in metric_rows
@@ -649,9 +632,7 @@ def _adjudicate(seed_reports: list[dict[str, Any]]) -> dict[str, Any]:
         for length in arms["S"]["evaluation"]:
             spin = arms["S"]["evaluation"][length]
             comparator_margins = {
-                arm: arms[arm]["evaluation"][length][
-                    "mean_relative_frobenius_error"
-                ]
+                arm: arms[arm]["evaluation"][length]["mean_relative_frobenius_error"]
                 - spin["mean_relative_frobenius_error"]
                 for arm in ("I", "C", "S-broken")
             }
@@ -671,9 +652,9 @@ def _adjudicate(seed_reports: list[dict[str, Any]]) -> dict[str, Any]:
                 "each_comparator_error_margin_at_least_0_05": all(
                     margin + 1e-12 >= 0.05 for margin in comparator_margins.values()
                 ),
-                "broken_error_at_least_twice_spin": arms["S-broken"][
-                    "evaluation"
-                ][length]["mean_relative_frobenius_error"]
+                "broken_error_at_least_twice_spin": arms["S-broken"]["evaluation"][
+                    length
+                ]["mean_relative_frobenius_error"]
                 + 1e-12
                 >= 2.0 * spin["mean_relative_frobenius_error"],
             }
@@ -829,14 +810,10 @@ def main() -> None:
     args = _parser().parse_args()
     if not PROTOCOL.is_file():
         raise FileNotFoundError(PROTOCOL)
-    g15al_artifact = _load_bound_artifact(
-        args.g15al_artifact, G15AL_ARTIFACT_SHA256
-    )
+    g15al_artifact = _load_bound_artifact(args.g15al_artifact, G15AL_ARTIFACT_SHA256)
     if g15al_artifact.get("adjudication", {}).get("passed") is not False:
         raise RuntimeError("bound G15A-L artifact is not the frozen failure")
-    _load_bound_artifact(
-        args.observability_artifact, OBSERVABILITY_ARTIFACT_SHA256
-    )
+    _load_bound_artifact(args.observability_artifact, OBSERVABILITY_ARTIFACT_SHA256)
     config = quality_config() if args.mode == "quality" else smoke_config()
     commit, status_at_start = _git_state()
     if args.mode == "quality" and status_at_start:

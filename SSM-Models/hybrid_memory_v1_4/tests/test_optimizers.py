@@ -8,6 +8,7 @@ import torch
 
 from hybrid_memory_v1_4.model import HybridMemoryConfig, HybridMemoryLM
 from hybrid_memory_v1_4.optimizers import (
+    BlockScalarSecondMomentAdamW,
     HarmonicMuonAdamW,
     ScalarSecondMomentAdamW,
     build_optimizer,
@@ -88,6 +89,28 @@ def test_scalar_second_moment_rejects_zero_epsilon_and_handles_zero_gradient() -
     parameter.grad = torch.zeros_like(parameter)
     optimizer.step()
     torch.testing.assert_close(parameter, torch.tensor([1.0]))
+
+
+def test_block_scalar_second_moment_is_rowwise_orthogonally_covariant() -> None:
+    torch.manual_seed(9)
+    parameter = torch.nn.Parameter(torch.randn(5, 7, dtype=torch.float64))
+    matrix, _ = torch.linalg.qr(torch.randn(7, 7, dtype=torch.float64))
+    mapped = torch.nn.Parameter(parameter.detach() @ matrix)
+    optimizer = BlockScalarSecondMomentAdamW([parameter], lr=2e-3, weight_decay=0.01)
+    mapped_optimizer = BlockScalarSecondMomentAdamW(
+        [mapped], lr=2e-3, weight_decay=0.01
+    )
+    for _ in range(8):
+        gradient = torch.randn_like(parameter)
+        parameter.grad = gradient
+        mapped.grad = gradient @ matrix
+        optimizer.step()
+        mapped_optimizer.step()
+        optimizer.zero_grad(set_to_none=True)
+        mapped_optimizer.zero_grad(set_to_none=True)
+        torch.testing.assert_close(mapped, parameter @ matrix, atol=2e-14, rtol=2e-14)
+    state = optimizer.state[parameter]
+    assert state["exp_avg_sq"].shape == (5, 1)
 
 
 @pytest.mark.skipif(not hasattr(torch.optim, "Muon"), reason="PyTorch Muon unavailable")

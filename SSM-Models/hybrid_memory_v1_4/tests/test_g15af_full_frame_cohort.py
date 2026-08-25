@@ -54,14 +54,17 @@ def test_batches_repeat_the_same_probe_bank_for_each_composition() -> None:
     assert batch.initial_frames.shape == (3, PROBE_COUNT, 8, 8)
     assert torch.equal(batch.initial_frames[0], expected)
     assert torch.equal(batch.initial_frames[1], expected)
-    assert batch.fingerprint() == generate_frame_batch(
-        3,
-        16,
-        seed=11,
-        model_seed=2203,
-        minimum_actions=2,
-        maximum_actions=6,
-    ).fingerprint()
+    assert (
+        batch.fingerprint()
+        == generate_frame_batch(
+            3,
+            16,
+            seed=11,
+            model_seed=2203,
+            minimum_actions=2,
+            maximum_actions=6,
+        ).fingerprint()
+    )
 
 
 def test_frozen_probe_banks_and_broken_control_pass_pretraining_screens() -> None:
@@ -87,9 +90,7 @@ def test_event_sparse_full_frame_transport_matches_dense_recurrence_float64() ->
         maximum_actions=5,
     ).to(device, torch.float64)
     memory = _oracle_memory("S", dtype=torch.float64, device=device)
-    sparse = _frame_prediction(
-        memory, batch, batch.exact_coordinates, device=device
-    )
+    sparse = _frame_prediction(memory, batch, batch.exact_coordinates, device=device)
 
     batch_size, length = batch.token_ids.shape
     repeated = batch_size * PROBE_COUNT

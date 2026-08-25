@@ -983,6 +983,23 @@ Evidence:
 and
 [`artifacts/g15af_full_frame_cohort_sm75_2026-08-25.json`](artifacts/g15af_full_frame_cohort_sm75_2026-08-25.json).
 
+The bound post-hoc decomposition then removed inactive learned coordinates
+without changing each token's learned active-axis amplitude. Mean errors fell
+to `0.0051--0.0183`, p95 stayed below `0.0270`, and maximum error stayed below
+`0.0392` across all seeds and lengths. The converse ablation—exact active
+amplitudes with learned leakage—remained close to the failed tables. Off-axis
+leakage, not angle bias, is therefore the principal residual.
+
+G15A-R prospectively freezes a five-arm S-only ablation of fixed versus staged
+LR, global versus per-token covariant second moments, and random-composition
+versus singleton/inverse curriculum. A least-intervention selection rule and
+untouched four-transport confirmation cohort are fixed before any metric.
+
+Evidence:
+[`artifacts/g15af_learning_diagnostic_sm75_2026-08-25.json`](artifacts/g15af_learning_diagnostic_sm75_2026-08-25.json)
+and
+[`G15AR_FIRST_ORDER_PROTOCOL_2026-08-25.md`](G15AR_FIRST_ORDER_PROTOCOL_2026-08-25.md).
+
 ## Actual upstream probes
 
 - FlashRT Gated Delta Attention remains ineligible on SM75 because its published

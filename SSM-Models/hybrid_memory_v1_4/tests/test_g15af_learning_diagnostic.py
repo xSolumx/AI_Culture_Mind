@@ -22,9 +22,7 @@ def test_expected_table_contains_each_signed_primitive_once() -> None:
     assert table.shape == (17, 28)
     assert torch.equal(table[0], torch.zeros(28))
     assert int((table != 0).sum()) == 16
-    assert torch.allclose(
-        table.abs().sum(dim=1)[1:], torch.full((16,), 0.12)
-    )
+    assert torch.allclose(table.abs().sum(dim=1)[1:], torch.full((16,), 0.12))
 
 
 def test_table_variants_separate_support_amplitude_and_leakage() -> None:

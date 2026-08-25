@@ -212,16 +212,25 @@ and L256 and cannot rescue promotion.
 Evidence:
 [`artifacts/g15af_full_frame_cohort_sm75_2026-08-25.json`](artifacts/g15af_full_frame_cohort_sm75_2026-08-25.json).
 
-## Next learning diagnostic
+## Learning diagnostic and G15A-R freeze
 
-The next move is not G15B or additional geometry. The retained S tables are
-already much closer to the exact chart than S-broken, and singleton errors are
-only `0.0166--0.0319`, while long compositions amplify residual coordinate
-leakage. A bound post-hoc support/amplitude ablation should first measure how
-much error comes from inactive-coordinate leakage versus active-angle bias.
-Only then should a new prospective cohort freeze a balanced primitive/inverse
-curriculum, a per-token block-scalar second moment, and learning-rate decay.
-Changing all three without that diagnostic would forfeit attribution.
+The next move is not G15B or additional geometry. The bound
+[`chart-error decomposition`](artifacts/g15af_learning_diagnostic_sm75_2026-08-25.json)
+shows that inactive-coordinate leakage is the actual residual. Zeroing only
+that leakage while preserving learned active amplitudes reduces mean error to
+`0.0051--0.0183` and maximum error below `0.04` across all nine rows. Giving
+the failed tables exact active amplitudes while keeping leakage changes almost
+nothing. Active-axis MAE is only `0.00189--0.00324`; inactive RMS is
+`0.00394--0.00780` and compounds through composition.
+
+The prospectively frozen
+[`G15A-R protocol`](G15AR_FIRST_ORDER_PROTOCOL_2026-08-25.md) now isolates
+three first-order repairs rather than changing them together: learning-rate
+decay, one rotation-covariant second moment per token row, and a balanced
+singleton/inverse curriculum. Five paired S-only development arms use fresh
+seeds and fixed validation traces. The least intervention clearing every
+original absolute gate must then pass untouched four-transport confirmation
+seeds. No primitive support is supplied to training.
 
 The constrained `su3_torus` arm is an additional scientific ablation, not a
 replacement for the four frozen primary arms.

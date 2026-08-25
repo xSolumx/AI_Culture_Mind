@@ -102,9 +102,7 @@ def _table_variants(
         "active_only_learned_amplitude": torch.where(
             support, learned, torch.zeros_like(learned)
         ),
-        "exact_amplitude_with_learned_leakage": torch.where(
-            support, expected, learned
-        ),
+        "exact_amplitude_with_learned_leakage": torch.where(support, expected, learned),
         "oracle_exact": expected,
     }
 
