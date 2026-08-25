@@ -1,14 +1,11 @@
 # Hybrid Memory SSM v1.4
 
-**Status:** v1.4.4 tied-address successor passed prospectively frozen G4f with
-internal commissioning labels. The external causal reverse-binding route
-passed the G8 continuation but failed the fresh-from-scratch G9 gate: one of
-three fresh seeds fell below 90% at both L96 and L512. Diagnostics localize
-that failure to learned global filler decay, not a disconnected learning
-signal. A retention-only v1.4.5 candidate repaired the exposed weak seed, but
-that is development evidence pending fresh validation. The frozen G4a
-selected-memory result remains negative; none of these results is a label-free,
-natural-language, or speed promotion.
+**Status:** v1.4.5 is the synthetic external-learning successor. Its
+retention-safe G10 configuration passed the prospectively frozen fresh-seed
+gate with minimum exact accuracy 97.57% at L96 and 96.44% at L512. G9's failed
+v1.4.4 seed and the exposed-seed causal repair remain retained evidence. The
+frozen G4a selected-memory result remains negative; G10 is not yet a
+label-free, natural-language, or speed promotion.
 
 This track combines five explicit mixer kinds in one causal language-model
 shell:
@@ -230,9 +227,12 @@ ablating attention left 98.24%. Active-head filler retention was 0.99973.
 Because seed 1723 was already exposed, this is causal development evidence,
 not validation.
 
-G10 prospectively freezes the same retention-safe candidate and complete G9
-schedule on unseen seeds 1753/1759/1777. Every seed must reach at least 90% at
-both lengths. See [`G10_PREREGISTRATION.md`](G10_PREREGISTRATION.md).
+G10 froze the same retention-safe candidate and complete G9 schedule on unseen
+seeds 1753/1759/1777. All passed. L96 mean/minimum were 98.03%/97.57%; L512
+mean/minimum were 97.51%/96.44%. In a separate diagnostic, every checkpoint
+fell to 0% when Gated Delta was ablated, while removing attention preserved
+97.66% accuracy. See [`G10_PREREGISTRATION.md`](G10_PREREGISTRATION.md) and
+the retained artifacts.
 
 ## Validation
 
@@ -264,6 +264,8 @@ matched speed evidence.
   the 87.89% weak seed.
 - The v1.4.5 retention-safe replay used an exposed failed seed and cannot pass
   a fresh-seed gate by itself.
+- G10 validates synthetic learning from external causal labels, not ordinary
+  natural-text next-token learning.
 - The retained validation checkpoints are not released pretrained models.
 - Straight-through routing establishes a gradient estimator, not successful
   label-free routing.

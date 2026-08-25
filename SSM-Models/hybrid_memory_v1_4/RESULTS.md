@@ -567,7 +567,7 @@ This supports the erasure diagnosis as a matched causal result, but seed 1723
 was selected because it failed. The candidate remains development-only until
 it passes a prospectively frozen unseen-seed cohort.
 
-G10 freezes the identical candidate and complete schedule on unseen seeds
+G10 froze the identical candidate and complete schedule on unseen seeds
 1753/1759/1777. Its all-seed 90% gate at L96 and L512 was declared before any
 of those checkpoints were trained.
 
@@ -575,6 +575,38 @@ Evidence:
 [`artifacts/g9_retention_safe_exposed_seed_cuda_2026-08-25.json`](artifacts/g9_retention_safe_exposed_seed_cuda_2026-08-25.json)
 and
 [`artifacts/g9_retention_safe_diagnostic_cuda_2026-08-25.json`](artifacts/g9_retention_safe_diagnostic_cuda_2026-08-25.json).
+
+## G10 pass: retention-safe v1.4.5 is robust on fresh seeds
+
+The prospectively frozen cohort passed every declared threshold:
+
+| Fresh seed | L96 exact | L512 exact |
+|---:|---:|---:|
+| 1753 | 98.022% | 97.900% |
+| 1759 | 98.499% | 98.193% |
+| 1777 | 97.571% | 96.436% |
+
+Mean/minimum accuracy was 98.031%/97.571% at L96 and 97.510%/96.436% at
+L512. G10 began from clean commit `3ea7406b59fffacce3facd0445bd797ceb0bebad`.
+Each seed received the exact G9 objective and budget: 5,700 updates, 1,292,800
+retrieval labels, and 1,408,000 external reverse-binding labels. No internal
+memory labels or seed-specific schedule were used.
+
+The post-gate diagnostic also passed the causal-use check. All three models
+scored 97.461%--97.656% on its L512 cohort, and all fell to 0% when the Gated
+Delta mixer was disabled. Removing attention left 97.656% for every seed. The
+successful function is therefore carried by the retention-safe memory layer,
+not by the small attention block.
+
+This promotes v1.4.5 as the synthetic external-causal-learning successor. It
+does not convert the reverse-binding auxiliary into ordinary next-token
+learning evidence. A separately frozen real-text screen is required for that
+question.
+
+Evidence:
+[`artifacts/g10_retention_safe_validation_cuda_2026-08-25.json`](artifacts/g10_retention_safe_validation_cuda_2026-08-25.json)
+and
+[`artifacts/g10_retention_safe_diagnostic_cuda_2026-08-25.json`](artifacts/g10_retention_safe_diagnostic_cuda_2026-08-25.json).
 
 ## Actual upstream probes
 
@@ -622,6 +654,8 @@ Artifact file hashes are recorded in [`ARTIFACTS.sha256`](ARTIFACTS.sha256).
 - G9 failed its fresh combined-schedule all-seed gate.
 - The retention-safe v1.4.5 result is an exposed-seed development intervention,
   not fresh validation.
+- G10 is a fresh synthetic external-label validation, not natural-text
+  next-token evidence.
 - The retained checkpoints are validation artifacts, not released pretrained
   models.
 - No natural-language or bits-per-byte claim exists.
