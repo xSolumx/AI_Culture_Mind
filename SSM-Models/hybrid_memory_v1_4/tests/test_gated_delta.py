@@ -137,6 +137,8 @@ def test_tied_query_key_uses_one_orthogonal_address_projection() -> None:
 def test_model_default_pivots_to_content_addressed_memory_plus_attention() -> None:
     config = HybridMemoryConfig(vocab_size=197, model_dim=32, attention_heads=4)
     assert config.layer_plan == ("gated_delta", "attention")
+    assert config.gated_delta_minimum_retention == 0.999
+    assert config.gated_delta_initial_retention == 0.9995
     model = HybridMemoryLM(config)
     tokens = torch.randint(0, 197, (2, 13))
     output = model(tokens, delta_scan_mode="parallel")

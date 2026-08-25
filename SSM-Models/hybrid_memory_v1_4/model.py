@@ -20,7 +20,7 @@ from .gated_delta import GatedDeltaConfig, GatedDeltaMemory
 from .selected_block import RouteMode, SelectedBlockConfig, SelectedBlockMemory
 from .structured_memory import StructuredMemoryConfig, StructuredSpin8Memory
 
-__version__ = "1.4.4"
+__version__ = "1.4.5"
 
 LayerKind: TypeAlias = Literal[
     "attention",
@@ -100,8 +100,10 @@ class HybridMemoryConfig:
     gated_delta_identity_output_gate: bool = False
     gated_delta_tie_query_key: bool = False
     gated_delta_residual_scale_init: float = -2.0
-    gated_delta_minimum_retention: float = 0.90
-    gated_delta_initial_retention: float = 0.995
+    # v1.4.5 removes the destructive-decay basin found by G9. Historical
+    # runners freeze their earlier 0.90/0.995 values explicitly.
+    gated_delta_minimum_retention: float = 0.999
+    gated_delta_initial_retention: float = 0.9995
     gated_delta_initial_write_strength: float = 0.10
 
     selected_heads: int = 2

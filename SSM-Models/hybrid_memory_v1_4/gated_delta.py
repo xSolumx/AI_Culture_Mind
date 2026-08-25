@@ -45,8 +45,8 @@ class GatedDeltaConfig:
     identity_output_gate: bool = False
     tie_query_key: bool = False
     norm_epsilon: float = 1e-6
-    minimum_retention: float = 0.90
-    initial_retention: float = 0.995
+    minimum_retention: float = 0.999
+    initial_retention: float = 0.9995
     initial_write_strength: float = 0.10
 
     def __post_init__(self) -> None:

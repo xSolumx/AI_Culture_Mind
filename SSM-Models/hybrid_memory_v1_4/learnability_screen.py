@@ -304,6 +304,8 @@ def run_screen(
         gated_delta_heads=4,
         gated_delta_key_dim=16,
         gated_delta_value_dim=16,
+        gated_delta_minimum_retention=0.90,
+        gated_delta_initial_retention=0.995,
         use_local_conv=True,
         conv_kernel=4,
         expansion=2,
