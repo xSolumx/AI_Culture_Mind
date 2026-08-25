@@ -165,10 +165,13 @@ new matched natural-data and complete-step hardware evidence.
 - Pure Exceptional Delta v1.3's fresh five-seed layer-localization gate rejects
   early E6 transport: it wins only 2/5 seeds and is worse by 0.0093 bpb on
   average. Identity remains the supported generic natural-text reference.
-- Hybrid Memory v1.4/v1.4.5 is a separate active model workspace. Its current
-  evidence supports bounded causal learning and commissioned memory, rejects
-  ordinary-pretraining long-range archive promotion, and leaves GDN2 and
-  Spin-Dirac as prospective candidates rather than maintained model upgrades.
+- Hybrid Memory v1.4/v1.4.5 is a separate active model workspace. Its G15A
+  exact SM75/FP32 primary cohort passes across three seeds: full Spin `S`
+  reaches 1.0 symmetry macro versus 0.2 for commuting `C` and 0.1 for `I` and
+  `I+C` in every seed, while every arm learns the no-sym delayed control at
+  1.0 through L1024. This is supplied-coordinate, oracle-carrier mechanism
+  evidence only, not a maintained-model, generic-association, natural-text, or
+  scaling promotion.
 
 ## Open Claims
 
@@ -192,8 +195,9 @@ new matched natural-data and complete-step hardware evidence.
   coordinates.
 - Matched-task evidence that the full dense-SO(8) Cayley control chart is more
   useful than restricted, octonion, Givens/Householder, or modern SSM controls.
-- A trained, matched identity/Clifford/commuting/full-Spin Spin-Dirac cohort;
-  passing algebraic contracts alone does not promote that candidate.
+- G15A conditional attribution against the prospectively frozen
+  `S+identity-read` and `S-broken` controls, followed by generic associative-
+  memory, natural-text, and scaling gates.
 
 ## Dependencies
 
@@ -222,6 +226,10 @@ new matched natural-data and complete-step hardware evidence.
   state-matched transport in the reported comparison.
 - The wider identity model won the reported matched eager-CUDA-cost comparison.
 - No current result establishes language-model or production superiority.
+- G15A supplies exact task coordinates and oracle carrier controls; its passed
+  symmetry separation does not establish autonomous transport inference,
+  generic association, natural-text recall, scaling, or triality-specific
+  attribution.
 - The approximately 2,000x Pure Spin(8) MSE gap is task-specific and does not
   establish generic Mamba superiority, state matching, or a fused-kernel win.
 - The latent-token result removes supplied coordinates only for eight fixed
@@ -277,4 +285,6 @@ new matched natural-data and complete-step hardware evidence.
 - [Hybrid Memory frontier review](../../SSM-Models/hybrid_memory_v1_4/FRONTIER_REVIEW_2026-08-25.md)
 - [Hybrid Spin/torus architecture boundary](../../SSM-Models/hybrid_memory_v1_4/SPIN_TORUS_RESEARCH.md)
 - [G15 Spin-Dirac status and result ledger](../../SSM-Models/hybrid_memory_v1_4/G15_SPIN_DIRAC_RESULTS.md)
+- [G15A primary cohort artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g15a_spin_dirac_cohort_sm75_2026-08-25.json)
+- [G15A conditional attribution protocol](../../SSM-Models/hybrid_memory_v1_4/G15A_CONDITIONAL_CONTROLS_PROTOCOL_2026-08-25.md)
 - [Local SM75 native-runtime ledger](../../SSM-Models/hybrid_memory_v1_4/SM75_NATIVE_RUNTIME.md)

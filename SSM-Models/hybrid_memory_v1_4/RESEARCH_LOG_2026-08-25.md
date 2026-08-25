@@ -133,3 +133,29 @@ explicit oracle-control semantic path for one-hot, overwrite, collision,
 orthogonal-query, and inner-conjugation checks. The quality runner is required
 to start from a clean committed worktree. This log entry records protocol
 readiness, not a G15A result.
+
+## G15A primary result and attribution freeze
+
+The quality cohort was then executed from clean commit `73df687f` on the
+source-bound SM75 WSL runtime. It passed every frozen condition in all three
+seeds. S reached 1.00 macro accuracy on the supplied-coordinate symmetry task;
+C reached 0.20; I and I+C reached 0.10. All four arms learned the separate
+finite no-symmetry delayed-value task to 1.00 accuracy at lengths 64, 256, and
+1,024. Parameter shapes, schedules, state bytes, and execution budgets were
+matched; numerical semantic and inner-conjugation gates passed.
+
+The learning problem is therefore split cleanly rather than declared solved:
+
+1. The content-addressed edit law and bounded recurrent shell can learn the
+   finite delayed-value controller task.
+2. Full noncommuting transport is necessary relative to identity and one fixed
+   torus on the designed supplied-coordinate action support.
+3. Coordinate discovery was not learned on the symmetry task.
+4. The result does not yet identify the fixed Clifford read or shared triality
+   lift as the cause; marginally rich orthogonal transport may suffice.
+
+Before inspecting either required control, the
+[`conditional-controls protocol`](G15A_CONDITIONAL_CONTROLS_PROTOCOL_2026-08-25.md)
+froze `S+identity-read` and `S-broken` against the immutable primary artifact.
+The per-seed two-point margin is binding, with no seed averaging. This is the
+next executable falsifier before G15B or any triality-specific wording.

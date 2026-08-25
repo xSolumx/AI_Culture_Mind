@@ -1,12 +1,12 @@
 # G15 Spin-Dirac status and results
 
 **Updated:** 2026-08-25
-**Adjudication:** the pre-training implementation integrity artifact passes;
-no G15 learning cohort has run; `spin_dirac` is not promoted
+**Adjudication:** G15A passes its frozen three-seed mechanism/observability
+gate; conditional attribution controls are frozen and pending; `spin_dirac`
+is not promoted to the default model
 
-This file is intentionally named as the G15 result ledger even while the
-result is "not run." It prevents passing algebraic tests from being mistaken
-for a trained-model outcome. The binding protocol is the
+This file separates passing algebraic contracts, oracle-controlled mechanism
+evidence, and learned-model evidence. The binding protocol is the
 [`preregistration`](G15_SPIN_DIRAC_PREREGISTRATION.md), strengthened by the
 prospective [`amendment`](G15_SPIN_DIRAC_AMENDMENT_2026-08-25.md).
 The later prospective
@@ -16,7 +16,10 @@ The prospective
 [`G15A execution protocol`](G15A_EXECUTION_PROTOCOL_2026-08-25.md) now freezes
 the previously missing seeds, task support, FP32 budget, aggregation semantics,
 optimizer, artifact contract, and retry policy. It was committed before any
-G15A runner output was inspected.
+G15A runner output was inspected. The later
+[`conditional-controls protocol`](G15A_CONDITIONAL_CONTROLS_PROTOCOL_2026-08-25.md)
+was likewise frozen after the primary pass but before either attribution
+control was run.
 
 ## Implementation outcome
 
@@ -49,7 +52,7 @@ named non-equivariant ablation.
 | optimizer partition | pass | complete, disjoint grouping; edit/transport controls use the scalar-moment group |
 | eight-step optimizer covariance | pass | scalar-moment and SGD mapped parameter/update residuals are below `1.87e-13` in every seed, versus the `1e-10` gate |
 | delayed scored-position observability | pass | coordinate and final-query paths exceed the read-change/loss-descent thresholds in all three seeds |
-| `S+identity-read` conditional control | implemented by configuration | required only if S passes G15A |
+| `S+identity-read` conditional control | implemented and prospectively frozen | authorized by the G15A pass; run pending |
 | `S-broken` conditional control | pass implementation contract | orthogonal actions retained while carrier coupling changes |
 
 The binding machine evidence is
@@ -57,33 +60,57 @@ The binding machine evidence is
 This clears the pre-training implementation gate. It is not a learned
 mechanism result.
 
-## Learning result
+## G15A learning result
 
-No G15A, G15B, G15C, or G15D training result exists. Therefore:
+The exact quality cohort started from clean commit `73df687f`, ran in FP32 on
+the RTX 2070 SUPER at compute capability 7.5, and passed every frozen condition
+in every seed (`2131`, `2137`, and `2141`).
 
-- there is no evidence that full Spin transport beats identity, the fixed
-  torus, or the constrained $SU(3)$ torus;
-- there is no triality-specific result against the broken-coupling control;
-- there is no generic associative-memory promotion;
-- there is no multi-seed natural-text, long-recall, or scaling result; and
-- v1.4.5's default `gated_delta -> attention` layer plan remains unchanged.
+| Metric, in every seed | I | I+C | C | S |
+|---|---:|---:|---:|---:|
+| supplied-coordinate symmetry macro accuracy | 0.10 | 0.10 | 0.20 | **1.00** |
+| learned no-symmetry macro accuracy, L64/256/1,024 | 1.00 | 1.00 | 1.00 | 1.00 |
+| trainable parameters | 11,508 | 11,508 | 11,508 | 11,508 |
+| recurrent state bytes per FP32 sequence | 256 | 256 | 256 | 256 |
+
+Thus S's per-seed symmetry margins are approximately `+0.90` over I and I+C
+and `+0.80` over C, far above the frozen `+0.02` gate, with no learned
+no-symmetry regression. Parameter-shape and training-schedule hashes match
+exactly across arms. Trained-calibrator inner-conjugation residuals are at most
+`5.45e-15`, and the float64 one-hot/overwrite/collision/orthogonal-query ladder
+passes with maximum residual `1.12e-16`.
+
+The learned no-symmetry model used the frozen `HarmonicMuonAdamW` optimizer and
+reached 100% on the finite eight-class delayed-value support through length
+1,024 for all arms. That shows compatibility and basic controller learnability
+on this bounded task; it does not show that this optimizer is generally better
+than AdamW or that Spin is necessary there.
+
+Evidence:
+[`artifacts/g15a_spin_dirac_cohort_sm75_2026-08-25.json`](artifacts/g15a_spin_dirac_cohort_sm75_2026-08-25.json).
+
+This is a positive G15A result, but its symmetry side supplies exact
+coordinates and oracle carrier controls. It does not establish learned
+coordinate discovery, generic associative memory, ordinary natural text,
+long-context recall, scaling, or fused efficiency. G15B, G15C, and G15D have
+not run, and v1.4.5's default `gated_delta -> attention` plan is unchanged.
 
 ## Next executable gate
 
-Run the mandatory four-arm G15A comparison from the clean protocol commit now
-that both the deterministic integrity gate and operational freeze exist:
+Run the two prospectively frozen conditional controls against the immutable
+primary artifact:
 
-| Arm | Transport | Second read |
-|---|---|---|
-| I | identity | identity copy |
-| I+C | identity | Clifford |
-| C | fixed `SO(2)^4` | Clifford |
-| S | full Spin(8) | Clifford |
+| Arm | Transport | Second read | Attribution question |
+|---|---|---|---|
+| S+identity-read | full Spin(8) | identity copy | was the Clifford second read necessary? |
+| S-broken | mismatched marginal orthogonal actions | Clifford | was the shared triality lift necessary? |
 
-The runner is [`g15a_spin_dirac_cohort.py`](g15a_spin_dirac_cohort.py). It
-separates oracle-controlled supplied-coordinate symmetry tracking from learned
-final-only no-symmetry retrieval, so a geometry-aligned mechanism win cannot be
-reported as generic controller learning.
+The runner is
+[`g15a_conditional_controls.py`](g15a_conditional_controls.py). If S does not
+beat S-broken by the frozen per-seed margin, the allowed interpretation narrows
+to richer two-sided orthogonal transport rather than triality-specific
+coupling. If S does not beat S+identity-read, the fixed Clifford second read is
+not necessary for the observed separation.
 
 The constrained `su3_torus` arm is an additional scientific ablation, not a
 replacement for the four frozen primary arms.

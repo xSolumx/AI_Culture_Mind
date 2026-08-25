@@ -83,6 +83,11 @@ ARM_SPECS = {
     "C": ("commuting_so2", "clifford"),
     "S": ("spin8", "clifford"),
 }
+CONDITIONAL_ARM_SPECS = {
+    "S+identity-read": ("spin8", "identity"),
+    "S-broken": ("broken_spin8", "clifford"),
+}
+ALL_ARM_SPECS = {**ARM_SPECS, **CONDITIONAL_ARM_SPECS}
 
 
 @dataclass(frozen=True)
@@ -187,7 +192,7 @@ def _atomic_json(path: Path, report: dict[str, Any]) -> None:
 
 
 def _model_config(arm: str, config: CohortConfig) -> HybridMemoryConfig:
-    transport, readout = ARM_SPECS[arm]
+    transport, readout = ALL_ARM_SPECS[arm]
     return HybridMemoryConfig(
         vocab_size=VOCAB_SIZE,
         model_dim=config.model_dim,
@@ -395,7 +400,7 @@ def _train_no_symmetry(
 def _oracle_memory(
     arm: str, *, dtype: torch.dtype, device: torch.device
 ) -> SpinDiracMemory:
-    transport, readout = ARM_SPECS[arm]
+    transport, readout = ALL_ARM_SPECS[arm]
     return SpinDiracMemory(
         SpinDiracConfig(
             8,
@@ -568,7 +573,7 @@ def _inner_conjugation_residual(
     original = original * scale_vector
     conjugated = conjugated * scale_vector
     expected_positive = torch.einsum("ij,bj->bi", positive, original[:, :8])
-    second_action = positive if ARM_SPECS[arm][1] == "identity" else negative
+    second_action = positive if ALL_ARM_SPECS[arm][1] == "identity" else negative
     expected_second = torch.einsum("ij,bj->bi", second_action, original[:, 8:])
     expected = torch.cat((expected_positive, expected_second), dim=-1)
     return float((conjugated - expected).abs().max())

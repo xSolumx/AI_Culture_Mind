@@ -71,11 +71,14 @@ representation.
   that independent channel-wise erase/write can represent accumulation that a
   tied scalar erase/write gate cannot. It prioritizes GDN2 but is not a model-
   quality or natural-text result.
-- G15 prospectively compares identity, identity plus fixed Clifford read,
-  commuting `SO(2)^4`, and full Spin(8) transport in a content-addressed matrix
-  memory. An exact constrained `SU(3)` torus and a broken-coupling control are
-  implemented as additional scientific/attribution arms. The pre-training
-  integrity artifact passes; no trained checkpoint or quality result exists.
+- G15A completed its exact SM75/FP32 primary cohort over three fresh seeds.
+  Full Spin `S` reached 1.0 symmetry macro versus 0.2 for commuting `C` and 0.1
+  for both identity `I` and fixed-Clifford-read `I+C` in every seed. Every arm
+  also learned the no-sym delayed-recall control at 1.0 through L1024. The
+  symmetry comparison supplies exact coordinates and oracle carrier controls,
+  so this is mechanism evidence only, not a generic association, natural-text,
+  or scaling promotion. The prospectively frozen `S+identity-read` and
+  `S-broken` attribution controls remain pending.
 
 ## Open Claims
 
@@ -91,9 +94,10 @@ representation.
   Householder-product, and sparse-attention systems remain necessary.
 - A matched natural-text and delayed-binding comparison of GDN-v1, KDA-style
   channel decay, and GDN2 remains the immediate update-law gate after G14.
-- Spin-Dirac must pass its identity/readout/commuting/full-Spin attribution
-  ladder and delayed causal-observability checks before any Spin-specific
-  memory claim is eligible.
+- G15A's primary identity/readout/commuting/full-Spin mechanism ladder passes,
+  but attribution against the prospectively frozen `S+identity-read` and
+  `S-broken` controls remains pending. Generic association, natural-text, and
+  scaling gates remain later work.
 - A frozen phase-separated follow-up rejected early address noise as a
   complete explanation: the perfect frozen-router core still missed its robust
   gate in one seed.
@@ -151,6 +155,8 @@ representation.
 - Hard-routing success is not a theorem that direct memory is universally
   better than delta memory.
 - No matched experiment shows triality- or Spin(9)-specific storage capacity.
+- G15A's supplied-coordinate symmetry win does not establish autonomous
+  transport inference, generic association, natural-text recall, or scaling.
 
 ## Canonical Evidence
 
@@ -171,6 +177,8 @@ representation.
 - [Hybrid v1.4/v1.4.5 complete result ledger](../../SSM-Models/hybrid_memory_v1_4/RESULTS.md)
 - [G14 decoupled edit-law preregistration](../../SSM-Models/hybrid_memory_v1_4/G14_PREREGISTRATION.md)
 - [G15 Spin-Dirac status and result ledger](../../SSM-Models/hybrid_memory_v1_4/G15_SPIN_DIRAC_RESULTS.md)
+- [G15A primary cohort artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g15a_spin_dirac_cohort_sm75_2026-08-25.json)
+- [G15A conditional attribution protocol](../../SSM-Models/hybrid_memory_v1_4/G15A_CONDITIONAL_CONTROLS_PROTOCOL_2026-08-25.md)
 - [Spin/torus architecture and claim boundary](../../SSM-Models/hybrid_memory_v1_4/SPIN_TORUS_RESEARCH.md)
 
 The Spin-labelled reports remain at their provenance paths. Their routing,

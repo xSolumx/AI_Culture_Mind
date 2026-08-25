@@ -351,7 +351,9 @@ Every checkpoint should report:
 
 - GDN2 is not promoted as the v1.4 default.
 - G14 is not a language-model or long-context result.
-- G15 has no learning result; algebraic contracts do not promote Spin.
+- G15A passes its three-seed oracle-coordinate mechanism gate, but conditional
+  coupling/readout attribution, generic association, natural text, and scaling
+  remain open; the result does not promote Spin to the default model.
 - Tiny random upstream probes are not pretrained evaluations. Actual Mamba
   checkpoint finiteness is not a quality or throughput ranking.
 - External paper results are not reproduced locally.

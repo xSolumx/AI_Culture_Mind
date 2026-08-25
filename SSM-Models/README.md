@@ -31,15 +31,21 @@
 > ordinary-loss rows but missed its frozen effect-size threshold, and
 > 8,192-byte factual recall remained tiny and unstable. G14 supports
 > independent erase/write only on a deliberately constructed mechanism task.
-> G15's content-addressed Spin-Dirac comparison has algebraic/unit contracts,
-> including an exact constrained `SU(3)` torus and a conjugation-covariant
-> scalar edit law, but no trained result. Source-bound SM75 probes qualify
+> G15A's exact SM75/FP32 three-seed primary cohort passes: `S` reaches 1.0
+> symmetry macro versus 0.2 for `C` and 0.1 for `I`/`I+C` in every seed, while
+> all four arms reach 1.0 learned no-sym delayed recall through L1024. The
+> symmetry comparison supplies exact coordinates and oracle carrier controls,
+> so this is mechanism evidence only; generic association, natural text,
+> scaling, and the prospectively frozen `S+identity-read`/`S-broken`
+> attribution controls remain open. Source-bound SM75 probes qualify
 > Mamba-3 SISO and the Turing FlashAttention fork; current local GDN2 training
 > routes fail closed. See the
 > [frontier review](hybrid_memory_v1_4/FRONTIER_REVIEW_2026-08-25.md),
 > [v1.4 results](hybrid_memory_v1_4/RESULTS.md),
 > [Spin/torus boundary](hybrid_memory_v1_4/SPIN_TORUS_RESEARCH.md),
 > [G15 ledger](hybrid_memory_v1_4/G15_SPIN_DIRAC_RESULTS.md),
+> [G15A primary cohort artifact](hybrid_memory_v1_4/artifacts/g15a_spin_dirac_cohort_sm75_2026-08-25.json),
+> [G15A conditional attribution protocol](hybrid_memory_v1_4/G15A_CONDITIONAL_CONTROLS_PROTOCOL_2026-08-25.md),
 > [SM75 runtime ledger](hybrid_memory_v1_4/SM75_NATIVE_RUNTIME.md), and
 > [current model inventory](MODEL_STATUS.md).
 

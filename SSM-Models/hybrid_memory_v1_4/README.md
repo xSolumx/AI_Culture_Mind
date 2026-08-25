@@ -21,8 +21,12 @@ the constructed multi-value accumulation law on all three seeds while tied
 GDN-v1 cannot represent it. This is mechanism evidence only. G15 now contains
 an experimental content-addressed Spin/Clifford fast-weight memory with exact
 identity, fixed `SO(2)^4`, constrained `SU(3)` torus, full Spin(8), and broken-
-coupling transports. Its pre-training integrity artifact passes, but no G15
-learning result exists and the v1.4.5 default plan has not changed. See the
+coupling transports. G15A now passes its exact three-seed SM75 gate: S scores
+1.00 on the oracle-coordinate symmetry task versus 0.20 for the fixed torus
+and 0.10 for both identity arms, while every arm learns the finite no-symmetry
+delayed-value task through length 1,024. This is narrow mechanism evidence,
+not generic language promotion, and the v1.4.5 default plan has not changed.
+See the
 [`frontier review`](FRONTIER_REVIEW_2026-08-25.md),
 [`Spin/torus research note`](SPIN_TORUS_RESEARCH.md), and
 [`G15 result ledger`](G15_SPIN_DIRAC_RESULTS.md).
@@ -30,8 +34,10 @@ The now-frozen
 [`G15A operational protocol`](G15A_EXECUTION_PROTOCOL_2026-08-25.md) and
 [`runner`](g15a_spin_dirac_cohort.py) supply the exact seeds, task generators,
 FP32 budget, per-seed promotion semantics, and clean-worktree artifact
-requirements that the structural preregistration did not specify. No runner
-outcome exists at this protocol checkpoint.
+requirements that the structural preregistration did not specify. The
+[`conditional-controls protocol`](G15A_CONDITIONAL_CONTROLS_PROTOCOL_2026-08-25.md)
+now freezes the required Clifford-read and broken-coupling attribution tests
+before their execution.
 
 This track exposes seven explicit mixer kinds in one causal language-model
 shell:
@@ -430,9 +436,11 @@ matched speed evidence.
   advantages.
 - G14 is a constructed unequal-parameter state-law separation, not a language
   or long-context result.
-- G15 has implementation contracts but no learning result. The fixed
-  `su3_torus` mode is not a moving `G2/SU(3)` memory, and `SpinDirac` is not a
-  geometric Dirac differential operator.
+- G15A passes only an oracle-coordinate symmetry mechanism plus a finite
+  learned no-symmetry retrieval task. Its conditional attribution controls,
+  G15B generic association, G15C natural text, and G15D scaling remain open.
+  The fixed `su3_torus` mode is not a moving `G2/SU(3)` memory, and
+  `SpinDirac` is not a geometric Dirac differential operator.
 - Native SM75 probes qualify only the exact recorded implementation/runtime;
   first-call compilation time and finite loss are not matched throughput or
   model quality.

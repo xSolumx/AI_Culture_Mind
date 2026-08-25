@@ -6,6 +6,7 @@ import torch
 
 from hybrid_memory_v1_4.g15a_spin_dirac_cohort import (
     ARM_SPECS,
+    CONDITIONAL_ARM_SPECS,
     EVALUATION_LENGTHS,
     QUALITY_SEEDS,
     _adjudicate,
@@ -40,6 +41,27 @@ def test_frozen_g15a_arm_set_and_parameter_tensors_are_exactly_matched() -> None
         for model in models.values()
     )
     assert all(model.config.spin_dirac_bound_values for model in models.values())
+
+
+def test_conditional_arm_set_is_separate_and_parameter_matched() -> None:
+    assert CONDITIONAL_ARM_SPECS == {
+        "S+identity-read": ("spin8", "identity"),
+        "S-broken": ("broken_spin8", "clifford"),
+    }
+    config = quality_config()
+    models = {
+        arm: HybridMemoryLM(_model_config(arm, config))
+        for arm in ("S", *CONDITIONAL_ARM_SPECS)
+    }
+    counts = {arm: parameter_count(model) for arm, model in models.items()}
+    shapes = {
+        arm: {
+            name: tuple(parameter.shape) for name, parameter in model.named_parameters()
+        }
+        for arm, model in models.items()
+    }
+    assert len(set(counts.values())) == 1
+    assert all(value == shapes["S"] for value in shapes.values())
 
 
 def _fake_seed_report(

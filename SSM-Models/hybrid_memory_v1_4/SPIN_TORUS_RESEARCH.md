@@ -1,8 +1,8 @@
 # Spin, torus, and content-addressed memory
 
 **Decision date:** 2026-08-25
-**Status:** exact fixed-frame transports implemented; moving-frame geometry is
-research-only; no trained G15 result exists
+**Status:** exact fixed-frame transports implemented; G15A passes a bounded
+oracle-coordinate mechanism gate; moving-frame geometry remains research-only
 
 ## Outcome
 

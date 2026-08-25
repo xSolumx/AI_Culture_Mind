@@ -5,8 +5,9 @@
 fresh synthetic seeds, G11/G12 established bounded ordinary TinyStories
 learning, and G13 found a consistent but sub-threshold 4,096-token compression
 gain with negative factual recall. G14 passed only its constructed decoupled-
-edit mechanism gate. G15 is implemented and preregistered but has no learning
-result. There is still no robust long-range recall, broad language-quality,
+edit mechanism gate. G15A now passes a three-seed oracle-coordinate mechanism
+and finite learned no-symmetry gate, but not generic association or natural
+text. There is still no robust long-range recall, broad language-quality,
 scaling-law, or matched-speed promotion.
 
 ## Adjudication
@@ -869,9 +870,9 @@ Evidence:
 [`g14_gate_law_screen.py`](g14_gate_law_screen.py), and
 [`artifacts/g14_gate_law_screen_2026-08-25.json`](artifacts/g14_gate_law_screen_2026-08-25.json).
 
-## G15: Spin-Dirac implementation status
+## G15: Spin-Dirac implementation and G15A result
 
-G15 is preregistered but has no learning result. The new candidate stores one
+The new candidate stores one
 content-addressed `8 x 8` association matrix per head, uses independent
 erase/write controls, transports it on the left and right through shared
 Spin(8) carriers, and optionally applies the fixed Clifford tensor at readout.
@@ -893,21 +894,41 @@ The combined preregistered integrity artifact now passes. On SM75 FP32, both
 Scalar-moment and SGD mapped covariance residuals stay below `1.87e-13`, and
 both the delayed coordinate path and scored-position query path clear the
 frozen read-change/descent thresholds in all three seeds. This authorizes the
-I, I+C, C, and S learning cohort; it does not count as that learning result.
+I, I+C, C, and S learning cohort; it did not count as that learning result.
 The later prospective
 [`G15A execution protocol`](G15A_EXECUTION_PROTOCOL_2026-08-25.md) freezes the
 previously absent exact seeds, task support, FP32 budget, optimizer,
 per-seed aggregation, clean-worktree rule, and artifact schema before any
-runner output is inspected.
+runner output was inspected.
+
+The clean quality run at commit `73df687f` subsequently passed all frozen
+G15A conditions on seeds 2131, 2137, and 2141. In every seed, S achieved 1.00
+macro accuracy on the ten-class supplied-coordinate symmetry task, versus
+0.20 for C and 0.10 for I and I+C. Every arm achieved 1.00 learned no-symmetry
+accuracy at lengths 64, 256, and 1,024. All arms had 11,508 trainable
+parameters, the same parameter-shape and schedule hashes, and 256 bytes of
+FP32 recurrent state per sequence. Maximum trained inner-conjugation residual
+was below `5.45e-15`; the oracle semantic ladder also passed.
+
+This establishes a strong finite mechanism separation between full Spin
+transport and a single fixed torus/identity when exact coordinates and carrier
+controls are supplied. It does not establish learned geometry or a natural-
+text advantage. The required `S+identity-read` and `S-broken` controls are now
+frozen prospectively in
+[`G15A_CONDITIONAL_CONTROLS_PROTOCOL_2026-08-25.md`](G15A_CONDITIONAL_CONTROLS_PROTOCOL_2026-08-25.md)
+and remain pending at this checkpoint.
 
 Evidence:
 [`G15_SPIN_DIRAC_PREREGISTRATION.md`](G15_SPIN_DIRAC_PREREGISTRATION.md),
 [`G15_SPIN_DIRAC_AMENDMENT_2026-08-25.md`](G15_SPIN_DIRAC_AMENDMENT_2026-08-25.md),
 [`G15_SPIN_DIRAC_EDIT_LAW_AMENDMENT_2026-08-25.md`](G15_SPIN_DIRAC_EDIT_LAW_AMENDMENT_2026-08-25.md),
 [`G15A_EXECUTION_PROTOCOL_2026-08-25.md`](G15A_EXECUTION_PROTOCOL_2026-08-25.md),
+[`G15A_CONDITIONAL_CONTROLS_PROTOCOL_2026-08-25.md`](G15A_CONDITIONAL_CONTROLS_PROTOCOL_2026-08-25.md),
 [`G15_SPIN_DIRAC_RESULTS.md`](G15_SPIN_DIRAC_RESULTS.md), and
 [`SPIN_TORUS_RESEARCH.md`](SPIN_TORUS_RESEARCH.md), plus
-[`artifacts/g15_integrity_sm75_2026-08-25.json`](artifacts/g15_integrity_sm75_2026-08-25.json).
+[`artifacts/g15_integrity_sm75_2026-08-25.json`](artifacts/g15_integrity_sm75_2026-08-25.json)
+and
+[`artifacts/g15a_spin_dirac_cohort_sm75_2026-08-25.json`](artifacts/g15a_spin_dirac_cohort_sm75_2026-08-25.json).
 
 ## Actual upstream probes
 
@@ -981,9 +1002,9 @@ Artifact file hashes are recorded in [`ARTIFACTS.sha256`](ARTIFACTS.sha256).
   law or hardware-general efficiency.
 - G13 failed its frozen effect-size and factual-recall gates.
 - G14 is an unequal-parameter constructed state-law result, not model quality.
-- G15 has no trained result; fixed torus and Spin implementation contracts do
-  not establish learned geometry, triality benefit, or moving `G2/SU(3)`
-  memory.
+- G15A's passing symmetry task supplies exact coordinates and oracle carrier
+  controls. It does not establish learned geometry, triality-specific benefit,
+  generic association, natural text, or moving `G2/SU(3)` memory.
 - The retained checkpoints are validation artifacts, not released pretrained
   models.
 - The natural-text claims are bounded G11--G13 TinyStories results only.
