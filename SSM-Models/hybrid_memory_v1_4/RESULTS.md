@@ -962,6 +962,27 @@ queries and unnormalized Frobenius loss before more optimizer tuning or G15B.
 Evidence:
 [`artifacts/g15al_learned_coordinate_cohort_sm75_2026-08-25.json`](artifacts/g15al_learned_coordinate_cohort_sm75_2026-08-25.json).
 
+G15A-F then repaired that quotient with four shared orthogonal association
+frames per composition and raw Frobenius loss. Before training, every
+seed-specific `256 x 56` independent-carrier Jacobian had rank 56 with
+condition ratio `0.286--0.310`; all eight primitive target tangents had at
+least `0.598` relative residual outside the broken tied-coordinate image. An
+exhaustive integer-scaled check found 474 Lie-bracket mismatches in S-broken.
+
+The clean SM75 quality cohort at commit `503fa82` still failed its absolute
+learning gate. S mean relative error was `0.0705--0.0927` at L64,
+`0.1036--0.1201` at L256, and `0.1304--0.1433` at L1,024, versus the frozen
+`0.05` ceiling. The p95 gate failed in every row. Yet S beat I, C, and S-broken
+by the required `0.05` in all nine rows. This is genuine progress in
+identifiability, not promotion: the repaired observation separates shared
+Spin transport, while controller precision and compositional accumulation
+remain unsolved.
+
+Evidence:
+[`G15AF_FULL_FRAME_PROTOCOL_2026-08-25.md`](G15AF_FULL_FRAME_PROTOCOL_2026-08-25.md)
+and
+[`artifacts/g15af_full_frame_cohort_sm75_2026-08-25.json`](artifacts/g15af_full_frame_cohort_sm75_2026-08-25.json).
+
 ## Actual upstream probes
 
 - FlashRT Gated Delta Attention remains ineligible on SM75 because its published

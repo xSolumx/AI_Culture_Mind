@@ -56,6 +56,13 @@ and training is forbidden unless a rank-56 tangent screen and an exhaustive
 broken-control Lie-bracket witness pass first. The bound
 [`post-hoc observability artifact`](artifacts/g15al_observability_diagnostic_sm75_2026-08-25.json)
 records the raw carrier disagreement that G15A-L cosine hid.
+The clean G15A-F cohort passed those rank and control certificates and S beat
+identity, fixed torus, and S-broken by at least `0.05` in all nine quality
+rows. It still failed promotion: S mean relative frame error was
+`0.0705--0.1433`, above the frozen `0.05` ceiling in every row. Thus the loss
+now sees and separates the shared lift, but accurate autonomous chart learning
+remains unsolved. See the
+[`G15A-F artifact`](artifacts/g15af_full_frame_cohort_sm75_2026-08-25.json).
 
 This track exposes seven explicit mixer kinds in one causal language-model
 shell:

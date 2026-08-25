@@ -171,7 +171,7 @@ The bound
 confirms that S and S-broken can have cosine at least `0.99999988` while their
 raw predictions differ by as much as `0.284`.
 
-## Next executable gate
+## G15A-F full-frame outcome
 
 The next falsifier changes the observation law, not the failed optimizer. The
 prospectively frozen
@@ -184,6 +184,44 @@ each primitive target tangent must lie outside its tied-coordinate image.
 Only then may the unchanged 476-parameter controller train. This controlled
 identifiability gate comes before G15B generic association or any additional
 exceptional geometry.
+
+The clean quality run at commit `503fa82` passed every pretraining structural
+screen. All three four-probe Jacobians have rank 56, condition ratios
+`0.286--0.310`, and minimum primitive projection residuals `0.598--0.611`
+outside the broken tangent image. The exhaustive integer-scaled bracket check
+finds 474 mismatches among 784 ordered generator pairs, with maximum residual
+4. The control is therefore demonstrably non-automorphic and the objective is
+locally observable before learning begins.
+
+The frozen quality gate nevertheless **fails**:
+
+| Seed | S mean relative error L64 | L256 | L1,024 |
+|---:|---:|---:|---:|
+| 2203 | 0.0927 | 0.1201 | 0.1304 |
+| 2207 | 0.0912 | 0.1187 | 0.1433 |
+| 2213 | 0.0705 | 0.1036 | 0.1392 |
+
+Every row misses the `0.05` absolute mean-error threshold, and the frozen p95
+gate fails throughout. However, S beats I, C, and S-broken by at least `0.05`
+on every seed and length. Its margin over S-broken is `0.070--0.137`.
+Therefore the observation repair succeeds at separating the shared lift, but
+the controller does not recover the chart precisely enough. The frozen
+requirement that broken error be at least twice S passes only seed 2213 at L64
+and L256 and cannot rescue promotion.
+
+Evidence:
+[`artifacts/g15af_full_frame_cohort_sm75_2026-08-25.json`](artifacts/g15af_full_frame_cohort_sm75_2026-08-25.json).
+
+## Next learning diagnostic
+
+The next move is not G15B or additional geometry. The retained S tables are
+already much closer to the exact chart than S-broken, and singleton errors are
+only `0.0166--0.0319`, while long compositions amplify residual coordinate
+leakage. A bound post-hoc support/amplitude ablation should first measure how
+much error comes from inactive-coordinate leakage versus active-angle bias.
+Only then should a new prospective cohort freeze a balanced primitive/inverse
+curriculum, a per-token block-scalar second moment, and learning-rate decay.
+Changing all three without that diagnostic would forfeit attribution.
 
 The constrained `su3_torus` arm is an additional scientific ablation, not a
 replacement for the four frozen primary arms.

@@ -184,6 +184,16 @@ new matched natural-data and complete-step hardware evidence.
   across all rows and has an effective positive chart within `<4e-7` of `S`.
   The cosine score cancels positive scalar `<q,Vk>`, making the vector carrier
   unobservable and the broken signed permutation invertible for `P`.
+- G15A-F's full-frame repair is a clean-commit `503fa82`, exact-SM75 cohort over
+  seeds 2203/2207/2213. All rank-56 screens pass, with condition ratios
+  0.286--0.310, minimum primitive projection residual about 0.598, and an exact
+  broken Lie-bracket certificate with 474/784 mismatches and maximum integer
+  residual 4. The quality gate fails: `S` mean relative Frobenius error is
+  0.0927/0.0912/0.0705 at L64, 0.1201/0.1187/0.1036 at L256, and
+  0.1304/0.1433/0.1392 at L1024; p95 fails every row and maximum-error gates
+  fail cohort-wide. `S` beats `I`, `C`, and `S-broken` by at least 0.05 in every
+  row, so the observation repair separates the shared lift, but controller
+  precision remains unsolved. The broken-2x check passes only two rows.
 
 ## Open Claims
 
@@ -207,10 +217,10 @@ new matched natural-data and complete-step hardware evidence.
   coordinates.
 - Matched-task evidence that the full dense-SO(8) Cayley control chart is more
   useful than restricted, octonion, Givens/Householder, or modern SSM controls.
-- Full-frame multi-query raw-Frobenius observability is the next Spin-Dirac
-  falsifier after G15A-L's autonomous-attribution failure, before G15B or more
-  geometry. Full three-carrier triality, generic associative-memory,
-  natural-text, and scaling gates remain open.
+- Diagnose G15A-F chart leakage and convergence, then prospectively freeze a
+  balanced-primitive curriculum with a block-scalar optimizer. This precedes
+  G15B, more geometry, or natural text. Full three-carrier triality, generic
+  associative-memory, natural-text, and scaling gates remain open.
 
 ## Dependencies
 
@@ -246,6 +256,9 @@ new matched natural-data and complete-step hardware evidence.
 - G15A-L's high learned-coordinate cosine scores do not rescue attribution:
   `S-broken` is observationally equivalent to `S` under the frozen score, and
   no row passes the comparator gate.
+- G15A-F's repaired-observation comparator margins do not rescue its failed
+  absolute precision, p95, maximum-error, or broken-2x quality gates and do not
+  promote the model.
 - The approximately 2,000x Pure Spin(8) MSE gap is task-specific and does not
   establish generic Mamba superiority, state matching, or a fused-kernel win.
 - The latent-token result removes supplied coordinates only for eight fixed
@@ -306,4 +319,6 @@ new matched natural-data and complete-step hardware evidence.
 - [G15A conditional attribution artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g15a_conditional_controls_sm75_2026-08-25.json)
 - [G15A-L learned-coordinate protocol](../../SSM-Models/hybrid_memory_v1_4/G15AL_LEARNED_COORDINATE_PROTOCOL_2026-08-25.md)
 - [G15A-L learned-coordinate artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g15al_learned_coordinate_cohort_sm75_2026-08-25.json)
+- [G15A-F full-frame protocol](../../SSM-Models/hybrid_memory_v1_4/G15AF_FULL_FRAME_PROTOCOL_2026-08-25.md)
+- [G15A-F full-frame artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g15af_full_frame_cohort_sm75_2026-08-25.json)
 - [Local SM75 native-runtime ledger](../../SSM-Models/hybrid_memory_v1_4/SM75_NATIVE_RUNTIME.md)

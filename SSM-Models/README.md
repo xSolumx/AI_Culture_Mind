@@ -46,7 +46,15 @@
 > and learned `S-broken` matches `S` after chart reparameterization. Cosine
 > scoring cancels positive scalar `<q,Vk>`, making the vector carrier
 > unobservable; autonomous attribution is rejected. Full-frame multi-query
-> raw-Frobenius observability is next, before G15B or more geometry.
+> raw-Frobenius observability was then tested in G15A-F on clean commit
+> `503fa82`, exact SM75 seeds 2203/2207/2213. All rank-56 screens pass and `S`
+> beats `I`, `C`, and `S-broken` by at least 0.05 in every row, but `S` mean
+> relative Frobenius errors remain 0.0705--0.1433 and the frozen absolute mean,
+> p95, and maximum-error quality gates fail; broken-2x passes only two rows.
+> The observation repair separates the shared lift but does not solve controller
+> precision. Chart leakage/convergence diagnosis, then a prospectively frozen
+> balanced-primitive curriculum/block-scalar optimizer, precedes G15B or
+> natural text. There is no promotion.
 > Source-bound SM75 probes qualify
 > Mamba-3 SISO and the Turing FlashAttention fork; current local GDN2 training
 > routes fail closed. See the
@@ -59,6 +67,8 @@
 > [G15A conditional attribution artifact](hybrid_memory_v1_4/artifacts/g15a_conditional_controls_sm75_2026-08-25.json),
 > [G15A-L learned-coordinate protocol](hybrid_memory_v1_4/G15AL_LEARNED_COORDINATE_PROTOCOL_2026-08-25.md),
 > [G15A-L learned-coordinate artifact](hybrid_memory_v1_4/artifacts/g15al_learned_coordinate_cohort_sm75_2026-08-25.json),
+> [G15A-F full-frame protocol](hybrid_memory_v1_4/G15AF_FULL_FRAME_PROTOCOL_2026-08-25.md),
+> [G15A-F full-frame artifact](hybrid_memory_v1_4/artifacts/g15af_full_frame_cohort_sm75_2026-08-25.json),
 > [SM75 runtime ledger](hybrid_memory_v1_4/SM75_NATIVE_RUNTIME.md), and
 > [current model inventory](MODEL_STATUS.md).
 

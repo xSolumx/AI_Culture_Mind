@@ -256,3 +256,27 @@ support, and long-composition evaluations are otherwise held fixed in kind
 from G15A-L. This isolates the observation law. A pass would still be only
 multi-probe, oracle-frame controller evidence up to a common discrete center;
 it would not be generic memory or language evidence.
+
+## G15A-F quality failure with restored separation
+
+The clean exact-SM75 cohort at commit `503fa82` passed all pretraining
+certificates and completed in 64.5 seconds. The four-probe Jacobians have full
+rank 56, condition ratios `0.286--0.310`, and minimum target residuals above
+`0.598` outside the broken chart. The exhaustive broken-map certificate records
+474 nonzero Lie-bracket mismatches out of 784 ordered pairs.
+
+S then beat identity, the fixed torus, and S-broken by the required `0.05` mean
+relative-error margin in every seed and length. This is the separation that
+G15A-L's cosine quotient could not express. But S itself remained above the
+frozen absolute error ceiling in all nine rows: `0.0705--0.0927` at L64,
+`0.1036--0.1201` at L256, and `0.1304--0.1433` at L1,024. P95 errors also fail
+throughout, and the two-times-broken check passes only two rows.
+
+The learning problem has therefore moved. It is no longer structural blindness
+to the vector carrier; it is accurate chart recovery and accumulation under a
+stochastic composition-only curriculum. The final S singleton errors are much
+smaller (`0.0166--0.0319`) than its long-composition errors. The next read-only
+diagnostic will project the learned table onto exact primitive support while
+preserving learned amplitudes, separating inactive-coordinate leakage from
+active-angle bias. Optimizer or curriculum changes will be frozen only after
+that decomposition is recorded.

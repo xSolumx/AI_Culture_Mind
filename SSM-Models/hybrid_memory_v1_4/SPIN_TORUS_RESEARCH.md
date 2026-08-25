@@ -164,6 +164,13 @@ fixed torus, and broken-coupling controls on a task with an observable moving
 frame, the exceptional-geometry route is rejected before expensive language
 training.
 
+G15A-F now supplies that observable-frame control without promoting the model.
+Its four-probe tangent map has full rank, and learned S beats identity, fixed
+torus, and broken coupling in every frozen row. S still misses every absolute
+precision gate, so the result supports an identifiable shared vector/positive
+transport mechanism but not a solved controller. Chart-error decomposition and
+a separately frozen learning repair precede generic association or geometry.
+
 ## Claim ledger
 
 **Exact in code/tests:** two-sided affine scan algebra; content addressing;

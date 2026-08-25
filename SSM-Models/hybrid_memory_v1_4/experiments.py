@@ -369,6 +369,7 @@ def source_file_digests() -> tuple[SourceFileDigest, ...]:
         root / "g15al_learned_coordinate_cohort.py",
         root / "g15al_observability_diagnostic.py",
         root / "g15af_full_frame_cohort.py",
+        root / "g15af_learning_diagnostic.py",
         root / "modern_ssm_probe.py",
         root / "native_sm75_probe.py",
         root / "pretrained_sm75_probe.py",

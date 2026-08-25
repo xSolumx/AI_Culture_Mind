@@ -28,7 +28,7 @@ controlling evidence for their exact numbers.
 | [Pure Spin(8) v1.1](pure_spin8_ssm/CONTRACT.md) | Maintained task-bounded Spin(8) family | Frozen supplied, latent-token, continuous-observation, endpoint-only, calibration, and compiler cohorts | Strong exact/synthetic center-sensitive tracking and shared-action transfer; no natural-language, generic retrieval, or matched modern-SSM superiority |
 | [Pure Spin v1.2](pure_spin_ssm_v1_2/README.md) | Implemented frontier model with current CUDA backend | Current tests/backends plus [frontier training result](pure_spin_ssm_v1_2/FRONTIER_TRAINING_RESULTS.md) | Fused Mamba-2 wins all three matched Tiny Shakespeare quality seeds, 2.4942 versus 2.7477 mean bpb; low-level throughput ordering is unresolved at observed repeatability |
 | [Pure Exceptional Delta v1.3](pure_f4_delta_ssm_v1_3/README.md) | Experimental Albert/F4/E6 model | Algebra/model suite and small natural-text development cohorts | The exceptional hierarchy is executable, but the fresh [layer-localization result](pure_f4_delta_ssm_v1_3/SHAKESPEARE_LAYER_LOCALIZATION_RESULTS.md) rejects early E6 transport; identity is the supported natural-text reference |
-| [Hybrid Memory v1.4/v1.4.5](hybrid_memory_v1_4/README.md) | Active research workspace; no root-level promotion | G-series preregistrations, results, and artifacts inside the active directory | Validated small hybrid causal learner and commissioned synthetic memory; G13 rejects long-context archive promotion; G14 supports decoupled erase/write only on a constructed mechanism task; G15A supports shared vector/positive-Spin coupling on a designed supplied-coordinate task, while G15A-L rejects autonomous learned-coordinate attribution; no full three-carrier triality, generic association, natural text, or scaling promotion |
+| [Hybrid Memory v1.4/v1.4.5](hybrid_memory_v1_4/README.md) | Active research workspace; no root-level promotion | G-series preregistrations, results, and artifacts inside the active directory | Validated small hybrid causal learner and commissioned synthetic memory; G13 rejects long-context archive promotion; G14 supports decoupled erase/write only on a constructed mechanism task; G15A supports supplied-coordinate shared vector/positive-Spin coupling, G15A-L rejects cosine-map autonomous attribution, and G15A-F restores comparator separation but fails absolute controller-quality gates; no full triality, generic association, natural text, or scaling promotion |
 | [Dense SO(8) Cayley scan](pure_rotor_ssm/dense_so8_cayley_scan.py) | Experimental control | Structural tests and one CUDA feasibility smoke in the [design report](experiments/DENSE_SO8_CAYLEY_SCAN_DESIGN.md) | Exact 28-direction chart and bounded scan are implemented; no training, quality, or comparative speed claim |
 | [SpinorDeltaLM](../Spin8-SSM-Benchmark/README.md) | Historical isolated benchmark model | Completed short benchmark artifacts under its own directory | Useful controlled historical evidence; not the maintained Pure Rotor/Pure Spin successor |
 | [SpinorModel](../SpinorModel/README.md) | Historical prototype | Original tensor-GA baseline and separate overhaul | Implementation provenance only; commands reproduce the historical model, not the current frontier |
@@ -72,9 +72,20 @@ content addressing and edit laws over richer transport geometry alone.
   Learned `S-broken` matches `S` within about `6e-8` across all rows; its
   effective positive chart matches within `<4e-7`. Analytically, cosine cancels
   positive scalar `<q,Vk>`, making the vector carrier unobservable and the
-  broken signed permutation invertible for `P`. Autonomous attribution fails;
-  full-frame multi-query raw-Frobenius observability is next, before G15B or
-  more geometry.
+  broken signed permutation invertible for `P`. Autonomous attribution fails
+  under that observation map, motivating G15A-F.
+- G15A-F runs the frozen full-frame repair on clean commit `503fa82`, exact SM75
+  seeds 2203/2207/2213. All rank-56 screens pass, with condition ratios
+  0.286--0.310, minimum primitive projection residual about 0.598, and 474/784
+  exact broken Lie-bracket mismatches at maximum integer residual 4. The quality
+  gate fails: `S` mean relative Frobenius errors are 0.0927/0.0912/0.0705 at
+  L64, 0.1201/0.1187/0.1036 at L256, and 0.1304/0.1433/0.1392 at L1024; p95
+  fails every row and maximum-error gates fail cohort-wide. `S` beats `I`, `C`,
+  and `S-broken` by at least 0.05 in every row, so the repaired observation
+  separates the shared lift, but controller precision remains unsolved; the
+  broken-2x check passes only two rows. Diagnose chart leakage/convergence,
+  then prospectively freeze a balanced-primitive curriculum/block-scalar
+  optimizer before G15B or natural text. No promotion follows.
 
 The current machine-readable G15-series evidence is the
 [primary cohort artifact](hybrid_memory_v1_4/artifacts/g15a_spin_dirac_cohort_sm75_2026-08-25.json),
@@ -88,6 +99,10 @@ the prospectively frozen
 [G15A-L protocol](hybrid_memory_v1_4/G15AL_LEARNED_COORDINATE_PROTOCOL_2026-08-25.md),
 and its failed
 [learned-coordinate artifact](hybrid_memory_v1_4/artifacts/g15al_learned_coordinate_cohort_sm75_2026-08-25.json).
+The next evidence is the prospectively frozen
+[G15A-F protocol](hybrid_memory_v1_4/G15AF_FULL_FRAME_PROTOCOL_2026-08-25.md)
+and its failed
+[full-frame artifact](hybrid_memory_v1_4/artifacts/g15af_full_frame_cohort_sm75_2026-08-25.json).
 Status is not inferred from the presence of passing algebraic unit tests.
 Local baseline eligibility is independently controlled by
 [SM75_NATIVE_RUNTIME.md](hybrid_memory_v1_4/SM75_NATIVE_RUNTIME.md); native

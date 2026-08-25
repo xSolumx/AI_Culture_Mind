@@ -94,6 +94,18 @@ representation.
   cosine score cancels the positive scalar `<q,Vk>`, leaving the vector carrier
   unobservable and making the broken signed permutation invertible for `P`.
   Autonomous learned-coordinate attribution therefore fails.
+- G15A-F is the prospectively frozen full-frame observability repair, run on
+  clean commit `503fa82` with exact SM75 seeds 2203/2207/2213. All three
+  pre-training screens have numerical rank 56, condition ratios
+  0.286--0.310, and minimum primitive projection residual about 0.598; the exact
+  broken-carrier Lie-bracket certificate finds 474 mismatches among 784 pairs,
+  with maximum integer residual 4. The quality gate nevertheless fails. `S`
+  mean relative Frobenius errors are 0.0927/0.0912/0.0705 at L64,
+  0.1201/0.1187/0.1036 at L256, and 0.1304/0.1433/0.1392 at L1024; the p95 gate
+  fails in every row and the maximum-error gate is not satisfied cohort-wide.
+  `S` does beat `I`, `C`, and `S-broken` by at least 0.05 in every seed/length,
+  so the observation repair separates the shared lift, but controller precision
+  is not solved. The additional `S-broken >= 2x S` check passes only two rows.
 
 ## Open Claims
 
@@ -111,9 +123,12 @@ representation.
   channel decay, and GDN2 remains the immediate update-law gate after G14.
 - G15A's supplied-coordinate primary and conditional mechanism ladders pass,
   but G15A-L rejects autonomous learned-coordinate attribution under its frozen
-  cosine observation map. The next falsifier is full-frame, multi-query raw
-  Frobenius observability, before G15B or any additional geometry. Full three-
-  carrier triality, generic association, natural-text, and scaling remain open.
+  cosine observation map. G15A-F restores comparator separation under full-
+  frame raw-Frobenius observation but misses the absolute precision gates. The
+  next step is chart leakage/convergence diagnosis, followed by a prospectively
+  frozen balanced-primitive curriculum and block-scalar optimizer before G15B
+  or natural text. Full three-carrier triality, generic association, and
+  scaling remain open.
 - A frozen phase-separated follow-up rejected early address noise as a
   complete explanation: the perfect frozen-router core still missed its robust
   gate in one seed.
@@ -177,6 +192,9 @@ representation.
 - G15A-L's high cosines are not a pass: only one seed-length row meets the
   absolute `S` thresholds, no row meets the comparator gate, and `S-broken`
   remains observationally equivalent after learned reparameterization.
+- G15A-F's all-row comparator separation is not a quality pass or model
+  promotion: `S` misses its frozen absolute mean and p95 gates throughout, and
+  the maximum-error and broken-2x checks pass only two rows each.
 
 ## Canonical Evidence
 
@@ -202,6 +220,8 @@ representation.
 - [G15A conditional attribution artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g15a_conditional_controls_sm75_2026-08-25.json)
 - [G15A-L learned-coordinate protocol](../../SSM-Models/hybrid_memory_v1_4/G15AL_LEARNED_COORDINATE_PROTOCOL_2026-08-25.md)
 - [G15A-L learned-coordinate artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g15al_learned_coordinate_cohort_sm75_2026-08-25.json)
+- [G15A-F full-frame protocol](../../SSM-Models/hybrid_memory_v1_4/G15AF_FULL_FRAME_PROTOCOL_2026-08-25.md)
+- [G15A-F full-frame artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g15af_full_frame_cohort_sm75_2026-08-25.json)
 - [Spin/torus architecture and claim boundary](../../SSM-Models/hybrid_memory_v1_4/SPIN_TORUS_RESEARCH.md)
 
 The Spin-labelled reports remain at their provenance paths. Their routing,
