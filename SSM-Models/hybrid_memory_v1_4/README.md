@@ -8,10 +8,13 @@ improving from 8.028 to 1.614 bits/byte without auxiliary labels. G12 adds a
 validated training recipe without changing the model version: a geometry-aware
 Muon/scalar-moment/AdamW composite and lossless 512-token ByteLevel BPE. The
 three-seed parameter-matched BPE arm reached 1.534 mean bits per raw byte, but a
-post-pretraining factual-recall probe remained negative. G9's failed v1.4.4 seed
-and the exposed-seed causal repair remain retained evidence. The frozen G4a
-selected-memory result remains negative; these are bounded TinyStories results,
-not general language-quality or scaling-law promotion.
+post-pretraining factual-recall probe remained negative. G13 then trained an
+exact-target `256 -> 512 -> 1,024 -> 2,048 -> 4,096` curriculum. It improved
+4,096-token BPRB in all three fresh seeds, but the mean gain was only 0.0126,
+short of the frozen 0.02 gate, and factual recall still failed. G9's failed
+v1.4.4 seed and the exposed-seed causal repair remain retained evidence. The
+frozen G4a selected-memory result remains negative; these are bounded
+TinyStories results, not general language-quality or scaling-law promotion.
 
 This track combines five explicit mixer kinds in one causal language-model
 shell:
@@ -181,6 +184,15 @@ remains label-supervised with 774,400 useful query labels per seed.
   [`natural_text_diagnostic.py`](natural_text_diagnostic.py): the frozen G11
   ordinary next-byte comparison against actual Transformers models and its
   post-hoc causal mixer ablation.
+- [`tokenization.py`](tokenization.py), [`optimizers.py`](optimizers.py),
+  [`natural_text_frontier.py`](natural_text_frontier.py), and
+  [`compute_matched_frontier.py`](compute_matched_frontier.py): lossless
+  Hugging Face ByteLevel BPE, the geometry-aware composite optimizer, and the
+  frozen G12 robustness/allocation experiments.
+- [`long_context_curriculum.py`](long_context_curriculum.py) and
+  [`long_context_diagnostic.py`](long_context_diagnostic.py): exact-target
+  256-to-4,096 training, live-state chunking, recall ablations, and the
+  post-hoc positionwise/fast-weight overwrite diagnostic.
 
 ## Baseline boundary
 
@@ -285,6 +297,53 @@ ordinary pretraining, not inability to fit text or an unstable state. See
 [`OPTIMIZER_TOKENIZER_AUDIT.md`](OPTIMIZER_TOKENIZER_AUDIT.md) for the complete
 decision and evidence boundaries.
 
+## G13 exact-target 4,096-token frontier
+
+G13 gives both arms the exact same 4,096 target IDs on every update. The fixed
+control partitions each macro-window into sixteen length-256 rows; the
+curriculum partitions it into batches `16/8/4/2/1` at lengths
+`256/512/1,024/2,048/4,096`. Thus each paired seed receives the same 4,096,000
+target tokens and 9,424,359 represented raw bytes. Initial weights, optimizer,
+and the entire phase-1 trajectory are also identical.
+
+| Evaluation length | Fixed-256 BPRB | Curriculum BPRB | Curriculum - fixed |
+|---:|---:|---:|---:|
+| 256 | 1.5929 | 1.5941 | +0.0012 |
+| 512 | 1.5916 | 1.5863 | -0.0053 |
+| 1,024 | 1.5919 | 1.5827 | -0.0092 |
+| 2,048 | 1.5928 | 1.5814 | -0.0115 |
+| 4,096 | 1.5932 | 1.5805 | -0.0126 |
+
+The curriculum wins at 4,096 in all three seeds and does not materially harm
+256-token loss, but misses the preregistered -0.02 mean requirement. The
+ordinary long-context gate therefore fails by magnitude rather than direction.
+
+The stronger memory gate fails decisively. At 8,192 raw bytes, all 72 prompts
+were 3,379--3,755 BPE tokens long and therefore exceeded the 2,048-token
+attention window. Curriculum matching-minus-mismatched gain averaged only
+`0.0000108` nats, versus `0.0000034` for fixed training, with one of three
+curriculum seed means negative. Suppressing Gated Delta removes the already
+tiny signal, while suppressing attention does not; this is a microscopic
+recurrent trace, not robust recall.
+
+The post-hoc causal diagnostic explains the split. Removing Gated Delta raises
+curriculum 4,096-token loss by 1.3921 BPRB, whereas removing attention costs
+0.0093. The recurrent layer is genuinely useful for ordinary compression.
+However, learned mean write strengths are 0.446--0.768 per head per token.
+Along the currently written key direction, the measured transition factors are
+only 0.553, 0.232, 0.329, and 0.382 despite global retention near 0.999. The
+retention floor protects directions that are not rewritten; it does not protect
+a one-shot fact from thousands of high-strength content updates in a small
+fast-weight matrix.
+
+This keeps v1.4.5 as the model version but changes the next research decision.
+Another optimizer, tokenizer, or longer unmodified curriculum is not the
+best-supported repair. The next candidate needs a separate slow, sparse-write
+memory timescale and an explicitly named self-supervised binding/span objective
+derived from natural text. Ordinary next-token loss should remain present as
+the language-quality control; commissioned memory training must not be
+mislabelled as ordinary pretraining.
+
 ## Validation
 
 From `SSM-Models`:
@@ -320,6 +379,9 @@ matched speed evidence.
   bounded TinyStories scale.
 - G12 does not establish robust long-range factual recall, a scaling exponent,
   or hardware-general compute efficiency.
+- G13 improves long-context ordinary compression consistently but fails its
+  frozen magnitude and factual-recall gates. It is not a long-range-memory
+  promotion or a compute-matched win.
 - The retained validation checkpoints are not released pretrained models.
 - Straight-through routing establishes a gradient estimator, not successful
   label-free routing.

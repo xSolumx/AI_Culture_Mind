@@ -120,34 +120,46 @@ matching-prefix gains are tiny, change sign across seeds, and are not monotone
 with distance. The BPE arm's all-positive seed means at 1,024 raw bytes average
 only `0.0033` nats. That is not credible evidence of learned recall.
 
-The failure is identification, not state stability:
+G13 then removed the training-horizon objection with an exact-target
+`256 -> 512 -> 1,024 -> 2,048 -> 4,096` curriculum. It improves 4,096-token
+ordinary BPRB in all three seeds, by 0.0126 on average, but misses the frozen
+0.02 gate. At 8,192 raw bytes, all prompts are longer than the 2,048-token
+attention window and counterfactual recall averages only `0.0000108` nats with
+one negative seed. Longer training context helps compression; it does not solve
+one-shot binding.
 
-1. training windows are only 256 tokens, so no gradient can identify a
-   dependency beyond the observed window;
+The failure is identification plus fast-weight overwrite, not global state
+instability:
+
+1. G12's 256-token horizon withheld long-range gradients; G13 supplies them,
+   but the ordinary corpus still contains too little query-aligned pressure to
+   identify protected one-shot binding;
 2. TinyStories next-token entropy is dominated by local syntax and common word
    continuation, so optimization can improve BPRB without learning arbitrary
    fact storage;
-3. retention near 0.999 prevents destructive forgetting only after the write
-   controller has learned what information deserves storage; and
+3. retention near 0.999 protects directions not being rewritten, but G13's
+   learned mean write strengths are 0.446--0.768 per token and contract the
+   currently written direction to 0.553/0.232/0.329/0.382 per head;
 4. ByteLevel BPE expands raw-text coverage, but compression alone does not
    create a binding/query learning signal.
 
 ## Best-supported next strategy
 
-Keep the v1.4.5 state law, composite optimizer, and 512-token ByteLevel BPE.
-The next causal intervention should be an ordinary-text context curriculum,
-not another algebra or router:
+Keep the composite optimizer and lossless 512-token ByteLevel BPE. Preserve the
+current Gated Delta layer as fast working memory, because disabling it worsens
+G13 4,096-token loss by 1.3921 BPRB. Do not ask that same high-plasticity matrix
+to double as a protected archive. The next causal intervention should:
 
-1. train from scratch at 256 BPE tokens;
-2. extend the same checkpoints to 512 and 1,024 tokens while holding total
-   target tokens and original-byte exposure visible;
-3. reduce batch size to preserve tokens/update and measure the actual CUDA
-   increase;
-4. evaluate ordinary BPRB and the frozen counterfactual recall probe on fresh
-   seeds; and
-5. only if recall remains absent, add an explicitly labelled natural-text
-   binding/span objective and call it commissioned memory training rather than
-   ordinary pretraining.
+1. add a separate slow memory timescale with sparse learned admission and
+   protected consolidation;
+2. derive delayed binding/span targets from natural text so the slow write and
+   query policy are identifiable;
+3. retain ordinary next-token loss and the fixed v1.4.5 arm as quality and
+   compute controls;
+4. reuse G13's exact-target curriculum and frozen counterfactual recall
+   falsifier; and
+5. name the new auxiliary honestly as commissioned self-supervised memory
+   training, not ordinary pretraining.
 
 This is the lesson shared by the older SSM programmes: capacity and nonzero
 gradients are insufficient. Learning succeeds when the training horizon and
@@ -159,11 +171,14 @@ for missing long-range evidence.
 
 - [`G12_PREREGISTRATION.md`](G12_PREREGISTRATION.md)
 - [`G12E_PREREGISTRATION.md`](G12E_PREREGISTRATION.md)
+- [`G13_PREREGISTRATION.md`](G13_PREREGISTRATION.md)
 - [`artifacts/g12a_tokenizer_audit_2026-08-25.json`](artifacts/g12a_tokenizer_audit_2026-08-25.json)
 - [`artifacts/g12b_optimizer_development_cuda_2026-08-25.json`](artifacts/g12b_optimizer_development_cuda_2026-08-25.json)
 - [`artifacts/g12c_multiseed_natural_text_cuda_2026-08-25.json`](artifacts/g12c_multiseed_natural_text_cuda_2026-08-25.json)
 - [`artifacts/g12d_post_pretraining_long_context_recall_cuda_2026-08-25.json`](artifacts/g12d_post_pretraining_long_context_recall_cuda_2026-08-25.json)
 - [`artifacts/g12e_compute_matched_frontier_cuda_2026-08-25.json`](artifacts/g12e_compute_matched_frontier_cuda_2026-08-25.json)
+- [`artifacts/g13_exact_target_long_context_curriculum_cuda_2026-08-25.json`](artifacts/g13_exact_target_long_context_curriculum_cuda_2026-08-25.json)
+- [`artifacts/g13_posthoc_long_context_diagnostic_cuda_2026-08-25.json`](artifacts/g13_posthoc_long_context_diagnostic_cuda_2026-08-25.json)
 - [`../experiments/SPIN8_SO8_OPTIMIZER_EQUIVARIANCE_RESULTS.md`](../experiments/SPIN8_SO8_OPTIMIZER_EQUIVARIANCE_RESULTS.md)
 - [`../experiments/PURE_V2_1_TRANSPORT_ABLATION_RESULTS.md`](../experiments/PURE_V2_1_TRANSPORT_ABLATION_RESULTS.md)
 

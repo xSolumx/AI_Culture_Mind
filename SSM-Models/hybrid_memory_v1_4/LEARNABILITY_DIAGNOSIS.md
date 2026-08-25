@@ -293,15 +293,49 @@ BPRB across the fresh seeds and a separately CUDA-matched shape reached 1.5498.
 This is a real training-allocation gain, but the BPE runs saw about 2.30 times
 as many original bytes for the same token target count.
 
-The decisive remaining negative is long-range identification. Every checkpoint
-executes finite ordinary evaluation through 1,024 tokens, and BPE ordinary BPRB
-actually improves with longer evaluation context. Yet a paired counterfactual
-fact-recall probe remains tiny, inconsistent, and non-monotone. Retention can
-preserve a learned state; it cannot create a write/query policy that length-256
-ordinary next-token training never identifies. The next intervention should be
-an ordinary-text 256->512->1024 context curriculum with visible token, byte,
-and CUDA budgets. If that still fails, explicit binding/span labels must be
-named commissioned memory training rather than ordinary pretraining.
+G13 executed that intervention through the full requested frontier:
+`256 -> 512 -> 1,024 -> 2,048 -> 4,096`. It used exact paired macro-windows,
+so every control/curriculum update scored the same 4,096 target IDs and raw
+bytes. All three curriculum seeds improved 4,096-token ordinary BPRB, and the
+gain grew after position 256. The mean paired delta was -0.0126 BPRB, however,
+short of the frozen -0.02 requirement. This is reproducible useful context, not
+a passed ordinary long-context gate.
+
+More importantly, the factual-recall falsifier still fails. At 8,192 raw bytes,
+all prompts exceed the 2,048-token attention window, but curriculum
+matching-minus-mismatched gain averages only `0.0000108` nats and one seed mean
+is negative. Suppressing Gated Delta removes the tiny signal, which shows that
+the recurrent path is temporally observable, but the magnitude is about three
+orders below the preregistered capability threshold.
+
+The post-hoc causal diagnostic locates the present learning problem precisely:
+
+- removing Gated Delta worsens 4,096-token curriculum loss by 1.3921 BPRB,
+  while removing attention costs only 0.0093;
+- the curriculum's paired BPRB gain is only -0.0021 at positions 1--256 and
+  about -0.0133 after position 512;
+- mean recurrent write strengths are 0.446--0.768 per head per token;
+- global retention remains near 0.999, but measured transition factors along
+  the currently written key direction are only 0.553/0.232/0.329/0.382.
+
+The recurrent state is therefore not unstable or unused. It is learning a
+high-plasticity fast statistic that is excellent for ordinary text. The
+retention floor protects untouched subspace directions, not a rare fact's
+direction from thousands of later content-addressed erasures. Next-token loss
+rewards that high write rate because local distribution tracking dominates the
+bounded corpus; it does not identify sparse admission or protected one-shot
+consolidation. An optimizer can follow this objective more effectively, but it
+cannot resolve the objective conflict.
+
+The best-supported pivot is now a two-timescale memory candidate: preserve the
+current Gated Delta layer as fast working memory, add a separate slow
+sparse-write archive with protected consolidation, and train it with an
+explicit self-supervised natural-text binding/span objective alongside ordinary
+next-token loss. The binding labels can be generated from earlier natural-text
+spans, but they must be reported as commissioned memory training. Another
+unmodified longer curriculum, optimizer swap, tokenizer swap, Spin/F4/rotor
+transport, or retention-floor increase does not address the measured overwrite
+mechanism.
 
 ## Current claim ledger
 
@@ -342,6 +376,9 @@ named commissioned memory training rather than ordinary pretraining.
 - G12's lossless 512-token ByteLevel BPE arm passed its bounded three-seed
   parameter-matched robustness gate;
 - G12E passed its local measured-CUDA Pareto rule versus raw AdamW.
+- G13's exact-target integrity gate passed, and its 4,096-token ordinary
+  curriculum improvement was directionally consistent in all three seeds; it
+  failed the frozen magnitude and factual-recall gates.
 
 ### Constrained
 
@@ -351,7 +388,8 @@ named commissioned memory training rather than ordinary pretraining.
 - G11 uses one model seed, a 256-byte context, and unequal parameter counts;
 - G12 uses three seeds but only the pinned 2,000-story training snapshot and
   small 112k--125k parameter models;
-- extrapolation beyond the 1024 attention window has only small cohorts.
+- G13 is target/raw-byte matched but intentionally not FLOP- or wall-time
+  matched; its 8,192-byte prompts exceed the 2,048-token attention window.
 
 ### Open
 
@@ -359,7 +397,9 @@ named commissioned memory training rather than ordinary pretraining.
 - parameter- and compute-matched comparisons against actual upstream models at
   larger scale;
 - robust long-context factual recall after ordinary pretraining (the bounded
-  G12 probe failed);
+  G12 and exact-target G13 probes failed);
+- whether a slow sparse-write archive plus explicitly commissioned
+  self-supervised binding/span training passes the same recall falsifier;
 - whether ordinary pretraining transfers to label-free MQAR;
 - whether selected archive or Spin/F4/rotor transport adds value after the
   generic content-addressed core is stable;

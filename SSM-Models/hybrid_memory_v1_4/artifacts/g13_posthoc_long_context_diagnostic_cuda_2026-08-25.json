@@ -1,0 +1,782 @@
+{
+  "claim_boundary": "post-hoc frozen-checkpoint diagnostic; mixer suppression and position bins explain G13 but do not alter its preregistered decisions",
+  "claim_status": "post-hoc causal and positionwise diagnostic",
+  "elapsed_wall_seconds": 10.744795200000226,
+  "environment": {
+    "cuda": "13.0",
+    "device": "cuda",
+    "device_name": "NVIDIA GeForce RTX 2070 SUPER",
+    "python": "3.12.10",
+    "torch": "2.12.0+cu130"
+  },
+  "inputs": {
+    "g13_report": "SSM-Models\\hybrid_memory_v1_4\\artifacts\\g13_exact_target_long_context_curriculum_cuda_2026-08-25.json",
+    "g13_report_sha256": "3dff9699cc9eb4fff955c258585c1aa80b2cd54585af9140d093bbc9934f6f33",
+    "hub_sha": "f54c09fd23315a6f9c86f9dc80f725de7d8f9c64",
+    "snapshot": "SSM-Models\\hybrid_memory_v1_4\\artifacts\\tinystories_snapshot_rows_0_1999_train_0_255_validation_2026-08-25.json",
+    "snapshot_sha256": "ebe7c7c948f3e59781097ffa64e214da15364d61b38622d33dd076d40471adc6",
+    "tokenizer_audit": "SSM-Models\\hybrid_memory_v1_4\\artifacts\\g12a_tokenizer_audit_2026-08-25.json",
+    "tokenizer_audit_sha256": "e5683876b833de61bf9568a94050f89ccfcd2fb5980cd6b2d49c5580b441e011"
+  },
+  "protocol": {
+    "ablation_modes": [
+      "full",
+      "gated_delta_off",
+      "attention_off"
+    ],
+    "macro_batches": 8,
+    "position_bin_ends": [
+      256,
+      512,
+      1024,
+      2048,
+      4096
+    ],
+    "scored_tokens_per_evaluation": 32768,
+    "sequence_length_tokens": 4096
+  },
+  "runs": [
+    {
+      "arm_name": "fixed_256_control",
+      "checkpoint": "SSM-Models\\hybrid_memory_v1_4\\artifacts\\checkpoints\\g13\\g13_fixed_256_control_seed2011.pt",
+      "checkpoint_sha256": "e641003c2dbc11f0005de4b47b065a8d864aa6cf5d26e3a0becf64ab34f1a3da",
+      "memory_controls": {
+        "mean_read_norm_per_head": [
+          3.064643144607544,
+          3.3507583141326904,
+          3.3925466537475586,
+          2.966266632080078
+        ],
+        "mean_retention_per_head": [
+          0.9990307688713074,
+          0.9990889430046082,
+          0.999119758605957,
+          0.9990392923355103
+        ],
+        "mean_state_norm_per_head": [
+          16.052478790283203,
+          17.09502601623535,
+          15.152774810791016,
+          19.451858520507812
+        ],
+        "mean_write_strength_per_head": [
+          0.5462843179702759,
+          0.8852183222770691,
+          0.8683222532272339,
+          0.6635786890983582
+        ],
+        "mean_written_direction_transition_factor_per_head": [
+          0.4532758891582489,
+          0.11467736959457397,
+          0.1315620243549347,
+          0.3360983431339264
+        ],
+        "residual_scales": [
+          {
+            "kind": "gated_delta",
+            "raw": 0.2018640786409378,
+            "sigmoid": 0.550295352935791
+          },
+          {
+            "kind": "attention",
+            "raw": -1.2573370933532715,
+            "sigmoid": 0.2214326411485672
+          }
+        ],
+        "scored_tokens": 32768
+      },
+      "ordinary_ablation_bprb": {
+        "attention_off": 1.6062466615375202,
+        "full": 1.6024139008308595,
+        "gated_delta_off": 3.1811704344180285
+      },
+      "positionwise": [
+        {
+          "bits_per_raw_byte": 1.6782403637258483,
+          "mean_nats_per_token": 2.6003119945526123,
+          "position_end_inclusive": 256,
+          "position_start_inclusive": 1,
+          "scored_raw_bytes": 4578,
+          "scored_tokens": 2048
+        },
+        {
+          "bits_per_raw_byte": 1.602791070085298,
+          "mean_nats_per_token": 2.536570429801941,
+          "position_end_inclusive": 512,
+          "position_start_inclusive": 257,
+          "scored_raw_bytes": 4676,
+          "scored_tokens": 2048
+        },
+        {
+          "bits_per_raw_byte": 1.712864715442658,
+          "mean_nats_per_token": 2.6701920926570892,
+          "position_end_inclusive": 1024,
+          "position_start_inclusive": 513,
+          "scored_raw_bytes": 9212,
+          "scored_tokens": 4096
+        },
+        {
+          "bits_per_raw_byte": 1.5850498187900626,
+          "mean_nats_per_token": 2.6112255454063416,
+          "position_end_inclusive": 2048,
+          "position_start_inclusive": 1025,
+          "scored_raw_bytes": 19470,
+          "scored_tokens": 8192
+        },
+        {
+          "bits_per_raw_byte": 1.5756717697697287,
+          "mean_nats_per_token": 2.5632455348968506,
+          "position_end_inclusive": 4096,
+          "position_start_inclusive": 2049,
+          "scored_raw_bytes": 38452,
+          "scored_tokens": 16384
+        }
+      ],
+      "seed": 2011
+    },
+    {
+      "arm_name": "long_context_curriculum",
+      "checkpoint": "SSM-Models\\hybrid_memory_v1_4\\artifacts\\checkpoints\\g13\\g13_long_context_curriculum_seed2011.pt",
+      "checkpoint_sha256": "89e190d8ddd3f12e410d05ebeb664e98a22c35b3202c44f6dd4c7ec799132409",
+      "memory_controls": {
+        "mean_read_norm_per_head": [
+          2.8879432678222656,
+          3.339930772781372,
+          3.367826461791992,
+          2.996224880218506
+        ],
+        "mean_retention_per_head": [
+          0.9990221858024597,
+          0.9990701079368591,
+          0.9990990161895752,
+          0.9990254640579224
+        ],
+        "mean_state_norm_per_head": [
+          16.498306274414062,
+          17.412044525146484,
+          16.88555908203125,
+          20.06501007080078
+        ],
+        "mean_write_strength_per_head": [
+          0.39920538663864136,
+          0.8354960680007935,
+          0.7938567399978638,
+          0.6229515671730042
+        ],
+        "mean_written_direction_transition_factor_per_head": [
+          0.6002073287963867,
+          0.164351224899292,
+          0.20595782995224,
+          0.37668099999427795
+        ],
+        "residual_scales": [
+          {
+            "kind": "gated_delta",
+            "raw": 0.20331205427646637,
+            "sigmoid": 0.5506536364555359
+          },
+          {
+            "kind": "attention",
+            "raw": -1.2636618614196777,
+            "sigmoid": 0.2203441560268402
+          }
+        ],
+        "scored_tokens": 32768
+      },
+      "ordinary_ablation_bprb": {
+        "attention_off": 1.5994049675152733,
+        "full": 1.5911407063478502,
+        "gated_delta_off": 3.186103955559778
+      },
+      "positionwise": [
+        {
+          "bits_per_raw_byte": 1.6731052962694517,
+          "mean_nats_per_token": 2.592355579137802,
+          "position_end_inclusive": 256,
+          "position_start_inclusive": 1,
+          "scored_raw_bytes": 4578,
+          "scored_tokens": 2048
+        },
+        {
+          "bits_per_raw_byte": 1.5910416626215151,
+          "mean_nats_per_token": 2.517975866794586,
+          "position_end_inclusive": 512,
+          "position_start_inclusive": 257,
+          "scored_raw_bytes": 4676,
+          "scored_tokens": 2048
+        },
+        {
+          "bits_per_raw_byte": 1.7019223472856344,
+          "mean_nats_per_token": 2.653133988380432,
+          "position_end_inclusive": 1024,
+          "position_start_inclusive": 513,
+          "scored_raw_bytes": 9212,
+          "scored_tokens": 4096
+        },
+        {
+          "bits_per_raw_byte": 1.5745429392864616,
+          "mean_nats_per_token": 2.593916416168213,
+          "position_end_inclusive": 2048,
+          "position_start_inclusive": 1025,
+          "scored_raw_bytes": 19470,
+          "scored_tokens": 8192
+        },
+        {
+          "bits_per_raw_byte": 1.5632583889996519,
+          "mean_nats_per_token": 2.5430518984794617,
+          "position_end_inclusive": 4096,
+          "position_start_inclusive": 2049,
+          "scored_raw_bytes": 38452,
+          "scored_tokens": 16384
+        }
+      ],
+      "seed": 2011
+    },
+    {
+      "arm_name": "fixed_256_control",
+      "checkpoint": "SSM-Models\\hybrid_memory_v1_4\\artifacts\\checkpoints\\g13\\g13_fixed_256_control_seed2017.pt",
+      "checkpoint_sha256": "9125159ecab6074ef6bf4e1473e6ca71c12f0d5e7bb663891656c31dc7a65a9f",
+      "memory_controls": {
+        "mean_read_norm_per_head": [
+          2.8923535346984863,
+          3.3463363647460938,
+          3.3719236850738525,
+          3.313812017440796
+        ],
+        "mean_retention_per_head": [
+          0.9990248084068298,
+          0.9991316199302673,
+          0.9990854859352112,
+          0.9991607069969177
+        ],
+        "mean_state_norm_per_head": [
+          14.212016105651855,
+          15.71557903289795,
+          14.12165355682373,
+          18.638944625854492
+        ],
+        "mean_write_strength_per_head": [
+          0.4151432514190674,
+          0.829232394695282,
+          0.8104203343391418,
+          0.8503061532974243
+        ],
+        "mean_written_direction_transition_factor_per_head": [
+          0.5842863917350769,
+          0.17061978578567505,
+          0.189406618475914,
+          0.14956852793693542
+        ],
+        "residual_scales": [
+          {
+            "kind": "gated_delta",
+            "raw": 0.2430732697248459,
+            "sigmoid": 0.5604708790779114
+          },
+          {
+            "kind": "attention",
+            "raw": -1.2023310661315918,
+            "sigmoid": 0.23106080293655396
+          }
+        ],
+        "scored_tokens": 32768
+      },
+      "ordinary_ablation_bprb": {
+        "attention_off": 1.5850929608268138,
+        "full": 1.5807701678826298,
+        "gated_delta_off": 2.9136175174450623
+      },
+      "positionwise": [
+        {
+          "bits_per_raw_byte": 1.6576556047158624,
+          "mean_nats_per_token": 2.568417400121689,
+          "position_end_inclusive": 256,
+          "position_start_inclusive": 1,
+          "scored_raw_bytes": 4578,
+          "scored_tokens": 2048
+        },
+        {
+          "bits_per_raw_byte": 1.5872915239842198,
+          "mean_nats_per_token": 2.512040913105011,
+          "position_end_inclusive": 512,
+          "position_start_inclusive": 257,
+          "scored_raw_bytes": 4676,
+          "scored_tokens": 2048
+        },
+        {
+          "bits_per_raw_byte": 1.6782264017091897,
+          "mean_nats_per_token": 2.6161942780017853,
+          "position_end_inclusive": 1024,
+          "position_start_inclusive": 513,
+          "scored_raw_bytes": 9212,
+          "scored_tokens": 4096
+        },
+        {
+          "bits_per_raw_byte": 1.575032140412389,
+          "mean_nats_per_token": 2.594722330570221,
+          "position_end_inclusive": 2048,
+          "position_start_inclusive": 1025,
+          "scored_raw_bytes": 19470,
+          "scored_tokens": 8192
+        },
+        {
+          "bits_per_raw_byte": 1.5503810173933361,
+          "mean_nats_per_token": 2.5221034586429596,
+          "position_end_inclusive": 4096,
+          "position_start_inclusive": 2049,
+          "scored_raw_bytes": 38452,
+          "scored_tokens": 16384
+        }
+      ],
+      "seed": 2017
+    },
+    {
+      "arm_name": "long_context_curriculum",
+      "checkpoint": "SSM-Models\\hybrid_memory_v1_4\\artifacts\\checkpoints\\g13\\g13_long_context_curriculum_seed2017.pt",
+      "checkpoint_sha256": "3b6b199e1546ca3f720b7881f950c958b7ab771ddfdaa72eea75e8f482a95e72",
+      "memory_controls": {
+        "mean_read_norm_per_head": [
+          2.6968209743499756,
+          3.3212318420410156,
+          3.3511998653411865,
+          3.2915115356445312
+        ],
+        "mean_retention_per_head": [
+          0.9990168213844299,
+          0.9990825057029724,
+          0.9990696907043457,
+          0.9990897178649902
+        ],
+        "mean_state_norm_per_head": [
+          13.537795066833496,
+          17.48736000061035,
+          14.137056350708008,
+          20.538232803344727
+        ],
+        "mean_write_strength_per_head": [
+          0.3014681041240692,
+          0.7424797415733337,
+          0.7040184736251831,
+          0.8035017251968384
+        ],
+        "mean_written_direction_transition_factor_per_head": [
+          0.697844922542572,
+          0.2572842240333557,
+          0.2957063615322113,
+          0.19631989300251007
+        ],
+        "residual_scales": [
+          {
+            "kind": "gated_delta",
+            "raw": 0.2458498775959015,
+            "sigmoid": 0.5611547231674194
+          },
+          {
+            "kind": "attention",
+            "raw": -1.2336870431900024,
+            "sigmoid": 0.22553673386573792
+          }
+        ],
+        "scored_tokens": 32768
+      },
+      "ordinary_ablation_bprb": {
+        "attention_off": 1.5758376427038754,
+        "full": 1.5683970244899355,
+        "gated_delta_off": 2.935114013863797
+      },
+      "positionwise": [
+        {
+          "bits_per_raw_byte": 1.656979842279415,
+          "mean_nats_per_token": 2.567370355129242,
+          "position_end_inclusive": 256,
+          "position_start_inclusive": 1,
+          "scored_raw_bytes": 4578,
+          "scored_tokens": 2048
+        },
+        {
+          "bits_per_raw_byte": 1.577047358112927,
+          "mean_nats_per_token": 2.495828539133072,
+          "position_end_inclusive": 512,
+          "position_start_inclusive": 257,
+          "scored_raw_bytes": 4676,
+          "scored_tokens": 2048
+        },
+        {
+          "bits_per_raw_byte": 1.6634948341235904,
+          "mean_nats_per_token": 2.5932291746139526,
+          "position_end_inclusive": 1024,
+          "position_start_inclusive": 513,
+          "scored_raw_bytes": 9212,
+          "scored_tokens": 4096
+        },
+        {
+          "bits_per_raw_byte": 1.5600305514440416,
+          "mean_nats_per_token": 2.5700085759162903,
+          "position_end_inclusive": 2048,
+          "position_start_inclusive": 1025,
+          "scored_raw_bytes": 19470,
+          "scored_tokens": 8192
+        },
+        {
+          "bits_per_raw_byte": 1.5382522745836433,
+          "mean_nats_per_token": 2.5023728609085083,
+          "position_end_inclusive": 4096,
+          "position_start_inclusive": 2049,
+          "scored_raw_bytes": 38452,
+          "scored_tokens": 16384
+        }
+      ],
+      "seed": 2017
+    },
+    {
+      "arm_name": "fixed_256_control",
+      "checkpoint": "SSM-Models\\hybrid_memory_v1_4\\artifacts\\checkpoints\\g13\\g13_fixed_256_control_seed2027.pt",
+      "checkpoint_sha256": "1c3ceffbab48e3809e1cf3e6d3e0813d16659ef82e566b9d4e4d8a833d39d3e0",
+      "memory_controls": {
+        "mean_read_norm_per_head": [
+          3.158432722091675,
+          3.361811399459839,
+          3.296245813369751,
+          3.2414658069610596
+        ],
+        "mean_retention_per_head": [
+          0.9990561008453369,
+          0.9990697503089905,
+          0.9990608096122742,
+          0.9990447163581848
+        ],
+        "mean_state_norm_per_head": [
+          16.674684524536133,
+          14.947565078735352,
+          14.674591064453125,
+          14.42244815826416
+        ],
+        "mean_write_strength_per_head": [
+          0.7103393077850342,
+          0.8168410062789917,
+          0.7078180313110352,
+          0.6044477820396423
+        ],
+        "mean_written_direction_transition_factor_per_head": [
+          0.2893874943256378,
+          0.18298868834972382,
+          0.29190677404403687,
+          0.39517414569854736
+        ],
+        "residual_scales": [
+          {
+            "kind": "gated_delta",
+            "raw": 0.1949596256017685,
+            "sigmoid": 0.5485861301422119
+          },
+          {
+            "kind": "attention",
+            "raw": -1.3164290189743042,
+            "sigmoid": 0.21141301095485687
+          }
+        ],
+        "scored_tokens": 32768
+      },
+      "ordinary_ablation_bprb": {
+        "attention_off": 1.6015881368450713,
+        "full": 1.596287640227015,
+        "gated_delta_off": 2.7644148463345926
+      },
+      "positionwise": [
+        {
+          "bits_per_raw_byte": 1.6841087622001476,
+          "mean_nats_per_token": 2.6094046533107758,
+          "position_end_inclusive": 256,
+          "position_start_inclusive": 1,
+          "scored_raw_bytes": 4578,
+          "scored_tokens": 2048
+        },
+        {
+          "bits_per_raw_byte": 1.6002986545501117,
+          "mean_nats_per_token": 2.5326259434223175,
+          "position_end_inclusive": 512,
+          "position_start_inclusive": 257,
+          "scored_raw_bytes": 4676,
+          "scored_tokens": 2048
+        },
+        {
+          "bits_per_raw_byte": 1.7114313058387352,
+          "mean_nats_per_token": 2.6679575443267822,
+          "position_end_inclusive": 1024,
+          "position_start_inclusive": 513,
+          "scored_raw_bytes": 9212,
+          "scored_tokens": 4096
+        },
+        {
+          "bits_per_raw_byte": 1.5911125334611873,
+          "mean_nats_per_token": 2.6212133169174194,
+          "position_end_inclusive": 2048,
+          "position_start_inclusive": 1025,
+          "scored_raw_bytes": 19470,
+          "scored_tokens": 8192
+        },
+        {
+          "bits_per_raw_byte": 1.5603793631420053,
+          "mean_nats_per_token": 2.5383684039115906,
+          "position_end_inclusive": 4096,
+          "position_start_inclusive": 2049,
+          "scored_raw_bytes": 38452,
+          "scored_tokens": 16384
+        }
+      ],
+      "seed": 2027
+    },
+    {
+      "arm_name": "long_context_curriculum",
+      "checkpoint": "SSM-Models\\hybrid_memory_v1_4\\artifacts\\checkpoints\\g13\\g13_long_context_curriculum_seed2027.pt",
+      "checkpoint_sha256": "b898b483d21e610b71030b01841ad6c94efa0dfecc523ee8936e90c7717d9829",
+      "memory_controls": {
+        "mean_read_norm_per_head": [
+          3.147498607635498,
+          3.345876455307007,
+          3.1861891746520996,
+          3.1398262977600098
+        ],
+        "mean_retention_per_head": [
+          0.9990366697311401,
+          0.9990606904029846,
+          0.999038577079773,
+          0.9990296363830566
+        ],
+        "mean_state_norm_per_head": [
+          18.61301612854004,
+          15.339799880981445,
+          14.720667839050293,
+          14.319612503051758
+        ],
+        "mean_write_strength_per_head": [
+          0.6384584307670593,
+          0.7248048186302185,
+          0.5148528218269348,
+          0.4265534579753876
+        ],
+        "mean_written_direction_transition_factor_per_head": [
+          0.36119312047958374,
+          0.27493658661842346,
+          0.4846794605255127,
+          0.5728896856307983
+        ],
+        "residual_scales": [
+          {
+            "kind": "gated_delta",
+            "raw": 0.1965017467737198,
+            "sigmoid": 0.5489679574966431
+          },
+          {
+            "kind": "attention",
+            "raw": -1.360724687576294,
+            "sigmoid": 0.20412254333496094
+          }
+        ],
+        "scored_tokens": 32768
+      },
+      "ordinary_ablation_bprb": {
+        "attention_off": 1.5940504306828334,
+        "full": 1.5819998317505932,
+        "gated_delta_off": 2.7966287161098355
+      },
+      "positionwise": [
+        {
+          "bits_per_raw_byte": 1.6834963386673873,
+          "mean_nats_per_token": 2.6084557473659515,
+          "position_end_inclusive": 256,
+          "position_start_inclusive": 1,
+          "scored_raw_bytes": 4578,
+          "scored_tokens": 2048
+        },
+        {
+          "bits_per_raw_byte": 1.5877935473739864,
+          "mean_nats_per_token": 2.5128354132175446,
+          "position_end_inclusive": 512,
+          "position_start_inclusive": 257,
+          "scored_raw_bytes": 4676,
+          "scored_tokens": 2048
+        },
+        {
+          "bits_per_raw_byte": 1.697291883107987,
+          "mean_nats_per_token": 2.645915538072586,
+          "position_end_inclusive": 1024,
+          "position_start_inclusive": 513,
+          "scored_raw_bytes": 9212,
+          "scored_tokens": 4096
+        },
+        {
+          "bits_per_raw_byte": 1.5754031930081254,
+          "mean_nats_per_token": 2.595333606004715,
+          "position_end_inclusive": 2048,
+          "position_start_inclusive": 1025,
+          "scored_raw_bytes": 19470,
+          "scored_tokens": 8192
+        },
+        {
+          "bits_per_raw_byte": 1.5449308150882444,
+          "mean_nats_per_token": 2.5132372677326202,
+          "position_end_inclusive": 4096,
+          "position_start_inclusive": 2049,
+          "scored_raw_bytes": 38452,
+          "scored_tokens": 16384
+        }
+      ],
+      "seed": 2027
+    }
+  ],
+  "schema_version": 1,
+  "stage": "G13D",
+  "summaries": {
+    "arms": [
+      {
+        "arm_name": "fixed_256_control",
+        "bprb_increase_without_attention": 0.0044853500896337994,
+        "bprb_increase_without_gated_delta": 1.3599103630857265,
+        "mean_read_norm_per_head": [
+          3.0384764671325684,
+          3.352968692779541,
+          3.353572050730387,
+          3.1738481521606445
+        ],
+        "mean_residual_sigmoid_by_kind": {
+          "attention": 0.22130215167999268,
+          "gated_delta": 0.5531174540519714
+        },
+        "mean_retention_per_head": [
+          0.9990372260411581,
+          0.9990967710812887,
+          0.9990886847178141,
+          0.999081571896871
+        ],
+        "mean_state_norm_per_head": [
+          15.646393140157064,
+          15.919390042622885,
+          14.649673144022623,
+          17.504417101542156
+        ],
+        "mean_write_strength_per_head": [
+          0.5572556257247925,
+          0.8437639077504476,
+          0.7955202062924703,
+          0.7061108748118082
+        ],
+        "mean_written_direction_transition_factor_per_head": [
+          0.44231659173965454,
+          0.15609528124332428,
+          0.20429180562496185,
+          0.2936136722564697
+        ],
+        "ordinary_4096_ablations": {
+          "attention_off": {
+            "mean_bprb": 1.5976425864031352,
+            "worst_bprb": 1.6062466615375202
+          },
+          "full": {
+            "mean_bprb": 1.5931572363135014,
+            "worst_bprb": 1.6024139008308595
+          },
+          "gated_delta_off": {
+            "mean_bprb": 2.953067599399228,
+            "worst_bprb": 3.1811704344180285
+          }
+        }
+      },
+      {
+        "arm_name": "long_context_curriculum",
+        "bprb_increase_without_attention": 0.009251826104534233,
+        "bprb_increase_without_gated_delta": 1.3921030409816773,
+        "mean_read_norm_per_head": [
+          2.9107542832692466,
+          3.3356796900431314,
+          3.3017385005950928,
+          3.1425209045410156
+        ],
+        "mean_residual_sigmoid_by_kind": {
+          "attention": 0.21666781107584634,
+          "gated_delta": 0.5535921057065328
+        },
+        "mean_retention_per_head": [
+          0.9990252256393433,
+          0.9990711013476054,
+          0.999069094657898,
+          0.9990482727686564
+        ],
+        "mean_state_norm_per_head": [
+          16.2163724899292,
+          16.74640146891276,
+          15.247761090596518,
+          18.307618459065754
+        ],
+        "mean_write_strength_per_head": [
+          0.44637730717658997,
+          0.7675935427347819,
+          0.6709093451499939,
+          0.6176689167817434
+        ],
+        "mean_written_direction_transition_factor_per_head": [
+          0.5530817906061808,
+          0.2321906785170237,
+          0.32878121733665466,
+          0.38196352620919544
+        ],
+        "ordinary_4096_ablations": {
+          "attention_off": {
+            "mean_bprb": 1.5897643469673273,
+            "worst_bprb": 1.5994049675152733
+          },
+          "full": {
+            "mean_bprb": 1.580512520862793,
+            "worst_bprb": 1.5911407063478502
+          },
+          "gated_delta_off": {
+            "mean_bprb": 2.9726155618444703,
+            "worst_bprb": 3.186103955559778
+          }
+        }
+      }
+    ],
+    "positionwise_4096": [
+      {
+        "curriculum_mean_bprb": 1.6711938257387513,
+        "curriculum_minus_control_mean_bprb": -0.002141084475201375,
+        "curriculum_wins": 3,
+        "fixed_control_mean_bprb": 1.6733349102139528,
+        "position_end_inclusive": 256,
+        "position_start_inclusive": 1
+      },
+      {
+        "curriculum_mean_bprb": 1.585294189369476,
+        "curriculum_minus_control_mean_bprb": -0.011499560170400361,
+        "curriculum_wins": 3,
+        "fixed_control_mean_bprb": 1.5967937495398765,
+        "position_end_inclusive": 512,
+        "position_start_inclusive": 257
+      },
+      {
+        "curriculum_mean_bprb": 1.687569688172404,
+        "curriculum_minus_control_mean_bprb": -0.01327111949112362,
+        "curriculum_wins": 3,
+        "fixed_control_mean_bprb": 1.7008408076635275,
+        "position_end_inclusive": 1024,
+        "position_start_inclusive": 513
+      },
+      {
+        "curriculum_mean_bprb": 1.5699922279128762,
+        "curriculum_minus_control_mean_bprb": -0.013739269641670123,
+        "curriculum_wins": 3,
+        "fixed_control_mean_bprb": 1.5837314975545462,
+        "position_end_inclusive": 2048,
+        "position_start_inclusive": 1025
+      },
+      {
+        "curriculum_mean_bprb": 1.5488138262238464,
+        "curriculum_minus_control_mean_bprb": -0.013330223877843514,
+        "curriculum_wins": 3,
+        "fixed_control_mean_bprb": 1.56214405010169,
+        "position_end_inclusive": 4096,
+        "position_start_inclusive": 2049
+      }
+    ]
+  }
+}

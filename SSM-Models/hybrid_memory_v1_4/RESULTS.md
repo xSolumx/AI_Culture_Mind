@@ -745,6 +745,98 @@ Complete interpretation is in
 [`artifacts/g12d_post_pretraining_long_context_recall_cuda_2026-08-25.json`](artifacts/g12d_post_pretraining_long_context_recall_cuda_2026-08-25.json), and
 [`artifacts/g12e_compute_matched_frontier_cuda_2026-08-25.json`](artifacts/g12e_compute_matched_frontier_cuda_2026-08-25.json).
 
+## G13: exact-target context curriculum through 4,096
+
+G13 asks whether the G12 recipe failed recall simply because it never trained
+beyond 256 tokens. The comparison is stronger than a token-count match. For
+every seed and update, both arms score the exact same contiguous 4,096 target
+IDs and represented raw bytes. Fixed training splits them into sixteen
+length-256 rows. The curriculum splits the same macro-window into rows of
+length 256, 512, 1,024, 2,048, and 4,096 over five 200-update phases. Recurrent
+state remains live across 1,024-token execution chunks and is never detached.
+
+Fresh seeds 2011/2017/2027 each received 4,096,000 BPE targets and exactly
+9,424,359 represented raw bytes per arm. Phase 1 is identical by construction:
+all three paired BPRB differences are exactly zero, and final target hashes and
+raw-byte counts match for every pair.
+
+| Held-out context | Fixed-256 mean BPRB | Curriculum mean BPRB | Paired mean delta | Curriculum wins |
+|---:|---:|---:|---:|---:|
+| 256 | 1.5929 | 1.5941 | +0.0012 | 1/3 |
+| 512 | 1.5916 | 1.5863 | -0.0053 | 3/3 |
+| 1,024 | 1.5919 | 1.5827 | -0.0092 | 3/3 |
+| 2,048 | 1.5928 | 1.5814 | -0.0115 | 3/3 |
+| 4,096 | 1.5932 | 1.5805 | -0.0126 | 3/3 |
+
+The effect is consistent but smaller than preregistered. The ordinary gate
+required at least -0.02 mean BPRB at 4,096; the measured -0.0126 fails that
+threshold. The curriculum raises 256-token mean BPRB by only 0.0012, well
+inside its guardrail. Positionwise replay shows that the 4,096 gain is genuinely
+history-dependent: paired deltas are -0.0021 for positions 1--256, -0.0115 for
+257--512, and about -0.0133 thereafter.
+
+This target match is not compute matching. Mean synchronized training time was
+92.49 seconds for fixed training and 110.76 seconds for the curriculum. Median
+curriculum update time rose from 91.19 ms at length 256 to 127.93 ms at length
+4,096. Maximum training allocation was 1,265.1 versus 1,517.9 MiB on the RTX
+2070 SUPER.
+
+### Recall remains negative
+
+The full-model counterfactual gains remain too small to promote:
+
+| Raw-byte distance | Fixed mean gain (nats) | Curriculum mean gain (nats) |
+|---:|---:|---:|
+| 128 | +0.006449 | -0.002048 |
+| 256 | +0.009928 | +0.003079 |
+| 512 | +0.008960 | +0.008119 |
+| 1,024 | +0.004410 | +0.003247 |
+| 2,048 | +0.001247 | +0.001666 |
+| 4,096 | +0.000088 | +0.000227 |
+| 8,192 | +0.000003 | +0.000011 |
+
+At 8,192 raw bytes, prompt lengths are 3,379--3,755 BPE tokens; all 72
+full-model rows exceed the 2,048-token attention window. Only two of three
+curriculum seed means are positive. The mean curriculum-control improvement is
+`0.00000734` nats, not the required 0.01, and the absolute mean is not the
+required 0.02. The learned-recall and full G13 promotion gates fail.
+
+### Why ordinary memory works while one-shot recall fails
+
+The frozen-checkpoint diagnostic establishes two facts simultaneously:
+
+| Arm | Full BPRB | Gated Delta off | Attention off | Gated Delta cost | Attention cost |
+|---|---:|---:|---:|---:|---:|
+| Fixed 256 | 1.5932 | 2.9531 | 1.5976 | +1.3599 | +0.0045 |
+| Curriculum | 1.5805 | 2.9726 | 1.5898 | +1.3921 | +0.0093 |
+
+The recurrent core carries most ordinary 4,096-token compression; the gain is
+not merely longer local attention. But its per-token mean write strengths after
+curriculum training are `[0.446, 0.768, 0.671, 0.618]`. Mean retention remains
+near 0.999, while the exact measured transition factors along each token's
+written key direction are only `[0.553, 0.232, 0.329, 0.382]`. Fixed training
+writes even harder, with factors `[0.442, 0.156, 0.204, 0.294]`.
+
+This resolves the apparent contradiction. Global decay is stable, and the
+fast-weight state learns useful ordinary-text statistics, but every token can
+strongly erase the direction it writes. A finite low-rank content-addressed
+matrix optimized only for next-token likelihood is not identified as a
+protected archive for rare one-shot bindings. Longer context reduces write
+aggression and improves compression, but does not create sparse admission,
+protected consolidation, or a query-aligned factual objective.
+
+The next architectural route is therefore a distinct slow sparse-write memory
+timescale, trained with an explicitly named self-supervised natural-text
+binding/span target alongside ordinary next-token loss. That would be
+commissioned memory training, not evidence that ordinary pretraining alone
+learned recall. Merely extending the same curriculum, changing tokenizer, or
+changing optimizer again is not the best-supported causal intervention.
+
+Evidence:
+[`G13_PREREGISTRATION.md`](G13_PREREGISTRATION.md),
+[`artifacts/g13_exact_target_long_context_curriculum_cuda_2026-08-25.json`](artifacts/g13_exact_target_long_context_curriculum_cuda_2026-08-25.json), and
+[`artifacts/g13_posthoc_long_context_diagnostic_cuda_2026-08-25.json`](artifacts/g13_posthoc_long_context_diagnostic_cuda_2026-08-25.json).
+
 ## Actual upstream probes
 
 - FlashRT Gated Delta Attention was pinned at revision `892f725c...`, kernel
@@ -771,7 +863,7 @@ and
 
 ## Validation record
 
-- `python -m pytest hybrid_memory_v1_4/tests -q`: **220 passed, 4 skipped**.
+- `python -m pytest hybrid_memory_v1_4/tests -q`: **225 passed, 4 skipped**.
 - `python -m ruff check hybrid_memory_v1_4`: passed.
 - `python -m ruff format --check hybrid_memory_v1_4`: passed.
 - The four native-suite skips are guarded optional fused FLA/Mamba paths; WSL
