@@ -1,9 +1,11 @@
 # G15B-R0 gauge-preserving checkpoint repair protocol
 
 **Frozen:** 2026-08-26, after the complete G15B artifact was recorded and
-before any repair-intervention retrieval metric was inspected  
+before any repair-intervention retrieval metric was inspected.
+
 **Parent result:**
-[`G15B_INTERLEAVED_CONTROLLER_RESULTS.md`](G15B_INTERLEAVED_CONTROLLER_RESULTS.md)  
+[`G15B_INTERLEAVED_CONTROLLER_RESULTS.md`](G15B_INTERLEAVED_CONTROLLER_RESULTS.md)
+
 **Status:** prospective diagnostic; no model-promotion authority
 
 ## Question
