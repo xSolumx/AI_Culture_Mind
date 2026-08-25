@@ -1,8 +1,9 @@
 # G16 SM75 trained frontier shootout protocol
 
 **Frozen:** 2026-08-25, after runtime qualification and before inspecting any
-G16 training metric  
-**Hardware:** NVIDIA GeForce RTX 2070 SUPER, compute capability 7.5  
+G16 training metric
+
+**Hardware:** NVIDIA GeForce RTX 2070 SUPER, compute capability 7.5
 **Purpose:** train stronger executable small models, rather than infer model
 quality from layer probes or unmatched pretrained checkpoints
 
