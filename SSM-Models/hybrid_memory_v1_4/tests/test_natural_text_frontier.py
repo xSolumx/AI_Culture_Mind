@@ -5,6 +5,7 @@ from dataclasses import replace
 import torch
 
 from hybrid_memory_v1_4.natural_text_frontier import (
+    DEVELOPMENT_SEEDS,
     TARGET_PARAMETER_COUNT,
     _batch,
     _parameter_matched_config,
@@ -38,3 +39,7 @@ def test_parameter_matching_is_deterministic_and_close() -> None:
         model_dim=report["model_dim"],
         expansion=report["expansion"],
     )
+
+
+def test_development_seeds_are_frozen_and_distinct() -> None:
+    assert DEVELOPMENT_SEEDS == (1823, 1829)
