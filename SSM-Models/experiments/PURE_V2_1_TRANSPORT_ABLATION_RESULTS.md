@@ -1,5 +1,7 @@
 # Pure rotor SSM v2.1.0 transport-ablation results
 
+**Research author:** Hayden Austin
+
 Date: 2026-08-06.
 
 > **Current-status pointer, reconciled 2026-08-16T16:05:27+02:00.** This

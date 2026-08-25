@@ -1,5 +1,7 @@
 # Group and Number-Structure Catalogue
 
+**Research author:** Hayden Austin
+
 **Last audited:** 2026-08-21T14:29:36+02:00
 **Scope:** claim-bearing groups, loops, and additive finite structures actually
 defined, generated, or used as experimental targets in this repository. Casual

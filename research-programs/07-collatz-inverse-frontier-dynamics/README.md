@@ -1,5 +1,7 @@
 # Programme 07: Collatz inverse-frontier dynamics
 
+**Research author:** Hayden Austin
+
 ## Scope
 
 A standalone exact-computation programme about the inverse graph of the

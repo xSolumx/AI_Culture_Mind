@@ -1,5 +1,7 @@
 # Pure Spin SSM v1.2
 
+**Research author:** Hayden Austin
+
 This folder is the isolated implementation and evidence boundary for Pure Spin
 SSM v1.2. It does not inherit empirical claims from older rotor, Spin(8), or
 synthetic-memory experiments.

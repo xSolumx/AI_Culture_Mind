@@ -1,5 +1,7 @@
 # How to read the experiment record
 
+**Research author:** Hayden Austin
+
 This directory is a chronological scientific record. It contains frozen
 preregistrations, dated result reports, theorem certificates, negative results,
 and later corrections. Those documents answer different questions and should

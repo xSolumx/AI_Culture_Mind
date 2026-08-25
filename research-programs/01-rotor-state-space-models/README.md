@@ -1,5 +1,10 @@
 # Program 01: Selective rotor state-space models
 
+**Research author:** Hayden Austin
+
+**Status:** legacy route; current ownership is
+[Programme 06](../06-rotor-noncommutative-state-space-models/README.md).
+
 ## Object
 
 A bounded recurrent state in the full eight-coordinate Clifford algebra

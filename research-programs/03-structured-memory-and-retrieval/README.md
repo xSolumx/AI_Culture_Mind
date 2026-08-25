@@ -1,5 +1,9 @@
 # Programme 03: Learned structured memory and retrieval systems
 
+**Research author:** Hayden Austin
+
+**Last reconciled:** 2026-08-25
+
 ## Scope
 
 Memory-core quality and systems behaviour for direct slots, delta memories,
@@ -46,6 +50,33 @@ representation.
   fails its robust gate, localizing the remaining defect to co-adaptation or
   recurrent optimization rather than final address classification.
 
+### Current hybrid-memory boundary
+
+- Hybrid Memory v1.4.5 is a validated small causal learner and a validated
+  commissioned synthetic associative-memory model. Its successful default
+  shell is gated-delta memory followed by bounded attention; this does not
+  establish the older structured Spin(8) cache as the source of the gain.
+- G11 reached 1.614 held-out bits/byte in a bounded one-seed TinyStories
+  next-byte screen, versus 1.639 for the actual Mamba-2 comparator and 1.675
+  for the OLMo hybrid. The models were not parameter matched, so this is a
+  learning validation rather than a general quality ranking.
+- G12 supports bounded multi-seed ordinary-text improvements under its exact
+  tokenizer/optimizer protocol but does not validate factual recall; tokenizer
+  arms also consumed unequal raw-byte exposure.
+- G13's exact-target 4,096-token curriculum improved all paired ordinary-loss
+  rows but missed its frozen effect-size threshold, and 8,192-byte factual
+  recall remained tiny and sign-unstable. Long-context archive promotion
+  therefore failed.
+- G14 shows, on a deliberately constructed unequal-parameter mechanism task,
+  that independent channel-wise erase/write can represent accumulation that a
+  tied scalar erase/write gate cannot. It prioritizes GDN2 but is not a model-
+  quality or natural-text result.
+- G15 prospectively compares identity, identity plus fixed Clifford read,
+  commuting `SO(2)^4`, and full Spin(8) transport in a content-addressed matrix
+  memory. An exact constrained `SU(3)` torus and a broken-coupling control are
+  implemented as additional scientific/attribution arms. The pre-training
+  integrity artifact passes; no trained checkpoint or quality result exists.
+
 ## Open Claims
 
 - End-to-end training with a recent window, selected fine blocks, and a
@@ -58,6 +89,11 @@ representation.
   campaign. Joint frame/layout discovery remains open.
 - Comparisons with current fused Gated DeltaNet/DeltaProduct, p-BIM,
   Householder-product, and sparse-attention systems remain necessary.
+- A matched natural-text and delayed-binding comparison of GDN-v1, KDA-style
+  channel decay, and GDN2 remains the immediate update-law gate after G14.
+- Spin-Dirac must pass its identity/readout/commuting/full-Spin attribution
+  ladder and delayed causal-observability checks before any Spin-specific
+  memory claim is eligible.
 - A frozen phase-separated follow-up rejected early address noise as a
   complete explanation: the perfect frozen-router core still missed its robust
   gate in one seed.
@@ -132,6 +168,10 @@ representation.
 - [Query gradient-topology result](../../SSM-Models/pure_spin_ssm_v1_2/SPIN_DELTA_QUERY_GRADIENT_TOPOLOGY_RESULTS.md)
 - [Query-event continuation result](../../SSM-Models/pure_spin_ssm_v1_2/SPIN_DELTA_QUERY_CONTINUATION_RESULTS.md)
 - [Temporal query observability result](../../SSM-Models/pure_spin_ssm_v1_2/SPIN_DELTA_TEMPORAL_OBSERVABILITY_RESULTS.md)
+- [Hybrid v1.4/v1.4.5 complete result ledger](../../SSM-Models/hybrid_memory_v1_4/RESULTS.md)
+- [G14 decoupled edit-law preregistration](../../SSM-Models/hybrid_memory_v1_4/G14_PREREGISTRATION.md)
+- [G15 Spin-Dirac status and result ledger](../../SSM-Models/hybrid_memory_v1_4/G15_SPIN_DIRAC_RESULTS.md)
+- [Spin/torus architecture and claim boundary](../../SSM-Models/hybrid_memory_v1_4/SPIN_TORUS_RESEARCH.md)
 
 The Spin-labelled reports remain at their provenance paths. Their routing,
 update-law, and kernel conclusions are classified here; representation-specific

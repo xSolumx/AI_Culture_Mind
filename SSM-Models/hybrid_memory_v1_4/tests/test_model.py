@@ -17,16 +17,20 @@ from hybrid_memory_v1_4.attention import (
     AttentionState,
     CausalSelfAttention,
 )
+from hybrid_memory_v1_4.gated_delta import GatedDeltaMemory
+from hybrid_memory_v1_4.gated_delta_v2 import GatedDeltaV2Memory
 from hybrid_memory_v1_4.model import (
     CausalDepthwiseConv1d,
     DeltaProductState,
     HybridMemoryConfig,
     HybridMemoryLM,
     SelectedBlockState,
+    SpinDiracState,
     StructuredSpin8State,
     parameter_count,
 )
 from hybrid_memory_v1_4.selected_block import SelectedBlockMemory
+from hybrid_memory_v1_4.spin_dirac_memory import SpinDiracMemory
 from hybrid_memory_v1_4.structured_memory import StructuredSpin8Memory
 
 
@@ -75,9 +79,21 @@ def _assert_states_close(
             torch.testing.assert_close(left.key_cache, right.key_cache)
             torch.testing.assert_close(left.value_cache, right.value_cache)
         elif isinstance(
-            left, (DeltaProductState, SelectedBlockState, StructuredSpin8State)
+            left,
+            (
+                DeltaProductState,
+                SelectedBlockState,
+                SpinDiracState,
+                StructuredSpin8State,
+            ),
         ) and isinstance(
-            right, (DeltaProductState, SelectedBlockState, StructuredSpin8State)
+            right,
+            (
+                DeltaProductState,
+                SelectedBlockState,
+                SpinDiracState,
+                StructuredSpin8State,
+            ),
         ):
             torch.testing.assert_close(left.memory, right.memory)
             torch.testing.assert_close(left.convolution, right.convolution)
@@ -106,6 +122,198 @@ def test_explicit_schedule_builds_all_four_uniform_shells() -> None:
         assert hasattr(block, "residual_scale")
         assert hasattr(block, "ffn_norm")
         assert hasattr(block, "dropout")
+
+
+@pytest.mark.parametrize("kind", ["gated_delta", "gated_delta_v2"])
+def test_full_model_preserves_specialized_gated_delta_initialization(
+    kind: str,
+) -> None:
+    torch.manual_seed(20260825)
+    config = _small_config(
+        layer_plan=(kind,),
+        model_dim=8,
+        gated_delta_heads=1,
+        gated_delta_key_dim=8,
+        gated_delta_value_dim=8,
+        gated_delta_tie_query_key=True,
+        gated_delta_identity_value_path=True,
+        gated_delta_identity_output_gate=True,
+        gated_delta_minimum_retention=0.9,
+        gated_delta_initial_retention=0.95,
+        gated_delta_initial_write_strength=0.1,
+        use_local_conv=False,
+    )
+    model = HybridMemoryLM(config)
+    mixer = model.blocks[0].mixer
+    assert isinstance(mixer, (GatedDeltaMemory, GatedDeltaV2Memory))
+    assert mixer.query_projection is mixer.key_projection
+
+    identity = torch.eye(8)
+    torch.testing.assert_close(
+        mixer.query_projection.weight @ mixer.query_projection.weight.T,
+        identity,
+        rtol=1e-5,
+        atol=1e-6,
+    )
+    torch.testing.assert_close(mixer.value_projection.weight, identity)
+    torch.testing.assert_close(mixer.output_projection.weight, identity)
+
+    zero = torch.zeros(1, 1, 8)
+    controls = mixer._controls(zero)
+    if isinstance(mixer, GatedDeltaV2Memory):
+        _, _, _, erase, write, retention = controls
+        torch.testing.assert_close(erase, torch.full_like(erase, 0.1))
+    else:
+        _, _, _, write, retention = controls
+    torch.testing.assert_close(write, torch.full_like(write, 0.1))
+    torch.testing.assert_close(retention, torch.full_like(retention, 0.95))
+
+
+def test_full_model_preserves_spin_dirac_neutral_transport_and_gate_start() -> None:
+    config = _small_config(
+        layer_plan=("spin_dirac",),
+        model_dim=8,
+        spin_dirac_heads=1,
+        spin_dirac_minimum_retention=0.9,
+        spin_dirac_initial_retention=0.95,
+        spin_dirac_initial_erase_strength=0.2,
+        spin_dirac_initial_write_strength=0.1,
+        use_local_conv=False,
+    )
+    model = HybridMemoryLM(config)
+    mixer = model.blocks[0].mixer
+    assert isinstance(mixer, SpinDiracMemory)
+    assert torch.equal(
+        mixer.coordinate_projection.weight,
+        torch.zeros_like(mixer.coordinate_projection.weight),
+    )
+    zero = torch.zeros(1, 1, 8)
+    _, _, _, erase, write, retention, coordinates = mixer._controls(zero)
+    torch.testing.assert_close(erase, torch.full_like(erase, 0.2))
+    torch.testing.assert_close(write, torch.full_like(write, 0.1))
+    torch.testing.assert_close(retention, torch.full_like(retention, 0.95))
+    assert torch.equal(coordinates, torch.zeros_like(coordinates))
+
+
+def test_spin_dirac_full_model_scan_chunk_and_diagnostics_contracts() -> None:
+    torch.manual_seed(20260825)
+    model = (
+        HybridMemoryLM(
+            _small_config(
+                layer_plan=("spin_dirac",),
+                model_dim=8,
+                spin_dirac_heads=1,
+                use_local_conv=True,
+            )
+        )
+        .double()
+        .eval()
+    )
+    tokens = torch.randint(0, model.config.vocab_size, (2, 9))
+    recurrent = model(tokens, delta_scan_mode="recurrent", return_diagnostics=True)
+    parallel = model(tokens, delta_scan_mode="parallel")
+    torch.testing.assert_close(
+        parallel["logits"], recurrent["logits"], rtol=3e-10, atol=3e-11
+    )
+    _assert_states_close(parallel["states"], recurrent["states"])
+    diagnostics = recurrent["diagnostics"][0]
+    assert diagnostics["kind"] == "spin_dirac"
+    assert diagnostics["transport_mode"] == "spin8"
+    assert diagnostics["readout_mode"] == "clifford"
+
+    pieces = []
+    states = None
+    start = 0
+    for stop in (2, 5, 6, 9):
+        chunk = model(tokens[:, start:stop], states, delta_scan_mode="recurrent")
+        pieces.append(chunk["logits"])
+        states = chunk["states"]
+        start = stop
+    torch.testing.assert_close(
+        torch.cat(pieces, dim=1), recurrent["logits"], rtol=3e-10, atol=3e-11
+    )
+    assert states is not None
+    _assert_states_close(states, recurrent["states"])
+
+    step_logits = []
+    states = None
+    for position in range(tokens.shape[1]):
+        logits, states = model.step(tokens[:, position], states)
+        step_logits.append(logits[:, None])
+    torch.testing.assert_close(
+        torch.cat(step_logits, dim=1), recurrent["logits"], rtol=3e-10, atol=3e-11
+    )
+    assert states is not None
+    _assert_states_close(states, recurrent["states"])
+
+
+def test_spin_dirac_full_shell_mask_freezes_matrix_and_convolution_state() -> None:
+    torch.manual_seed(20260826)
+    model = (
+        HybridMemoryLM(
+            _small_config(
+                layer_plan=("spin_dirac",),
+                model_dim=8,
+                spin_dirac_heads=1,
+                use_local_conv=True,
+            )
+        )
+        .double()
+        .eval()
+    )
+    tokens = torch.randint(0, model.config.vocab_size, (2, 4))
+    prefix = model(tokens[:, :3], delta_scan_mode="recurrent")
+    masked = model(
+        tokens[:, 3:],
+        prefix["states"],
+        valid_mask=torch.zeros(2, 1, dtype=torch.bool),
+        delta_scan_mode="recurrent",
+    )
+    _assert_states_close(masked["states"], prefix["states"])
+
+
+def test_spin_dirac_full_lm_gradients_reach_every_declared_path() -> None:
+    torch.manual_seed(20260827)
+    model = (
+        HybridMemoryLM(
+            _small_config(
+                layer_plan=("spin_dirac",),
+                model_dim=8,
+                spin_dirac_heads=1,
+                spin_dirac_tie_query_key=False,
+                use_local_conv=False,
+            )
+        )
+        .double()
+        .train()
+    )
+    tokens = torch.randint(0, model.config.vocab_size, (2, 7))
+    output = model(tokens, delta_scan_mode="parallel")
+    output["logits"].square().mean().backward()
+    parameters = dict(model.named_parameters())
+    for suffix in (
+        "query_projection.weight",
+        "key_projection.weight",
+        "value_projection.weight",
+        "decay_projection.weight",
+        "erase_projection.weight",
+        "write_projection.weight",
+        "coordinate_projection.weight",
+        "output_gate.weight",
+        "output_projection.weight",
+    ):
+        matches = [
+            (name, parameter)
+            for name, parameter in parameters.items()
+            if name.endswith(suffix)
+        ]
+        assert matches, suffix
+        for name, parameter in matches:
+            assert parameter.grad is not None, name
+            assert bool(torch.isfinite(parameter.grad).all()), name
+            assert torch.count_nonzero(parameter.grad) > 0, name
+    residual = parameters["blocks.0.residual_scale"]
+    assert residual.grad is not None and torch.count_nonzero(residual.grad) > 0
 
 
 def test_layer_diagnostics_are_explicit_and_opt_in() -> None:
@@ -171,6 +379,8 @@ def test_layer_diagnostics_are_explicit_and_opt_in() -> None:
         ({"structured_retention_min": -0.1}, ValueError),
         ({"structured_retention_max": 1.0}, ValueError),
         ({"structured_hard_eval": 1}, TypeError),
+        ({"spin_dirac_heads": 0}, ValueError),
+        ({"spin_dirac_transport_mode": "rotor"}, ValueError),
     ],
 )
 def test_config_fails_closed(

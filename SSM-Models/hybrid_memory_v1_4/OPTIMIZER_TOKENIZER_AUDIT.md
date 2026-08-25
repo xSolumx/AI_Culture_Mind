@@ -123,8 +123,10 @@ only `0.0033` nats. That is not credible evidence of learned recall.
 G13 then removed the training-horizon objection with an exact-target
 `256 -> 512 -> 1,024 -> 2,048 -> 4,096` curriculum. It improves 4,096-token
 ordinary BPRB in all three seeds, by 0.0126 on average, but misses the frozen
-0.02 gate. At 8,192 raw bytes, all prompts are longer than the 2,048-token
-attention window and counterfactual recall averages only `0.0000108` nats with
+0.02 gate. At 8,192 raw bytes, all prompts are longer than the actual
+1,024-token attention window (the preregistration said 2,048, but the frozen
+builder and artifact used 1,024 in both arms) and counterfactual recall
+averages only `0.0000108` nats with
 one negative seed. Longer training context helps compression; it does not solve
 one-shot binding.
 

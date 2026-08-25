@@ -1,5 +1,7 @@
 # Source index
 
+**Research author:** Hayden Austin
+
 The source remains flat because the historical harnesses import one another by
 module name. Editable installation adds this directory to the Python path.
 

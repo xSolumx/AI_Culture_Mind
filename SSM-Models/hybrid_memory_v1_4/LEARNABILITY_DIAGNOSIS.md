@@ -302,7 +302,7 @@ short of the frozen -0.02 requirement. This is reproducible useful context, not
 a passed ordinary long-context gate.
 
 More importantly, the factual-recall falsifier still fails. At 8,192 raw bytes,
-all prompts exceed the 2,048-token attention window, but curriculum
+all prompts exceed the actual 1,024-token attention window, but curriculum
 matching-minus-mismatched gain averages only `0.0000108` nats and one seed mean
 is negative. Suppressing Gated Delta removes the tiny signal, which shows that
 the recurrent path is temporally observable, but the magnitude is about three
@@ -389,7 +389,9 @@ mechanism.
 - G12 uses three seeds but only the pinned 2,000-story training snapshot and
   small 112k--125k parameter models;
 - G13 is target/raw-byte matched but intentionally not FLOP- or wall-time
-  matched; its 8,192-byte prompts exceed the 2,048-token attention window.
+  matched; its 8,192-byte prompts exceed the actual 1,024-token attention
+  window. The preregistration specified 2,048, but the frozen builder and
+  artifact used 1,024 in both arms.
 
 ### Open
 

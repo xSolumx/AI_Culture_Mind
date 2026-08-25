@@ -1,5 +1,7 @@
 # Public release boundary
 
+**Research author:** Hayden Austin
+
 This repository publishes work that can be interpreted without access to a
 private workstation or an unpublished conversation. Public inclusion requires
 one of the following:

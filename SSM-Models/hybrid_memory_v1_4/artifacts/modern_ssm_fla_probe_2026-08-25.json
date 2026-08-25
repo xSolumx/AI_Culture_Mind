@@ -1,0 +1,63 @@
+{
+  "backend": "flash-linear-attention",
+  "backend_version": "0.5.2",
+  "claim_boundary": "availability and finite forward/backward only; no pretrained quality, throughput, scaling, or model-ranking claim",
+  "implementation_scope": "actual maintained FLA layer implementations in recurrent eval mode with autograd; random tiny architecture probes, not supported chunk training or pretrained checkpoint quality",
+  "probes": {
+    "fla_gated_delta_product": {
+      "error": "Backward pass is not implemented yet and we do not have plans to implement it because we haven't figured out how to compute dg without materializing the full hidden states for all time steps.",
+      "error_type": "NotImplementedError",
+      "status": "fail"
+    },
+    "fla_gated_deltanet": {
+      "error": "Backward pass is not implemented yet and we do not have plans to implement it because we haven't figured out how to compute dg without materializing the full hidden states for all time steps.",
+      "error_type": "NotImplementedError",
+      "status": "fail"
+    },
+    "fla_gated_deltanet_2": {
+      "finite_input_gradient": true,
+      "finite_output": true,
+      "finite_parameter_gradients": true,
+      "first_forward_backward_seconds": 0.10289569999999948,
+      "module_training": false,
+      "output_shape": [2, 64, 64],
+      "parameters": 28820,
+      "parameters_with_gradients": 5,
+      "peak_cuda_bytes": 17699840,
+      "status": "pass"
+    },
+    "fla_kimi_delta_attention": {
+      "finite_input_gradient": true,
+      "finite_output": true,
+      "finite_parameter_gradients": true,
+      "first_forward_backward_seconds": 0.010126999999998887,
+      "module_training": false,
+      "output_shape": [2, 64, 64],
+      "parameters": 20884,
+      "parameters_with_gradients": 5,
+      "peak_cuda_bytes": 17538048,
+      "status": "pass"
+    },
+    "fla_mamba3_mimo": {
+      "error": "Mamba-3 MIMO kernels are unavailable. Install TileLang to enable `is_mimo=True`.",
+      "error_type": "RuntimeError",
+      "status": "fail"
+    },
+    "fla_mamba3_siso": {
+      "error": "Mamba-3 SISO kernels are unavailable. Install `mamba_ssm` with Mamba-3 support.",
+      "error_type": "RuntimeError",
+      "status": "fail"
+    }
+  },
+  "runtime": {
+    "compute_capability": [7, 5],
+    "cuda_runtime": "13.0",
+    "device": "cuda",
+    "device_name": "NVIDIA GeForce RTX 2070 SUPER",
+    "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.35",
+    "python": "3.10.12",
+    "torch": "2.13.0+cu130"
+  },
+  "schema_version": 1,
+  "seed": 20260825
+}

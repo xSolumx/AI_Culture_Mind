@@ -1,5 +1,11 @@
 # Documentation reconciliation — 2026-08-16
 
+**Research author:** Hayden Austin
+
+**Historical snapshot:** current status is maintained by
+[README.md](README.md), [REPOSITORY_MAP.md](REPOSITORY_MAP.md), and the
+[research-programme index](research-programs/README.md).
+
 Reconciliation opened at **2026-08-16T16:05:27+02:00** and latest
 research status reconciliation completed at **2026-08-17T03:47:29+02:00**
 (`Africa/Johannesburg`, UTC+02:00).

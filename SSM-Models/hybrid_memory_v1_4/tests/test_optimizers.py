@@ -1,11 +1,12 @@
 from __future__ import annotations
 
+import copy
 from dataclasses import replace
 
 import pytest
 import torch
 
-from hybrid_memory_v1_4.model import HybridMemoryLM
+from hybrid_memory_v1_4.model import HybridMemoryConfig, HybridMemoryLM
 from hybrid_memory_v1_4.optimizers import (
     HarmonicMuonAdamW,
     ScalarSecondMomentAdamW,
@@ -38,6 +39,29 @@ def test_optimizer_partition_is_complete_disjoint_and_semantic() -> None:
     assert any("local_conv.conv.weight" in name for name, _ in partition.adamw_decay)
 
 
+def test_decoupled_erase_and_spin_transport_are_control_parameters() -> None:
+    model = HybridMemoryLM(
+        HybridMemoryConfig(
+            vocab_size=64,
+            model_dim=16,
+            layer_plan=("gated_delta_v2", "spin_dirac"),
+            gated_delta_heads=2,
+            spin_dirac_heads=2,
+            use_local_conv=False,
+        )
+    )
+    partition = partition_optimizer_parameters(model)
+    control_names = {name for name, _ in partition.scalar_adamw}
+    erase_names = {
+        name for name, _ in model.named_parameters() if "erase_projection" in name
+    }
+    coordinate_names = {
+        name for name, _ in model.named_parameters() if "coordinate_projection" in name
+    }
+    assert erase_names and erase_names <= control_names
+    assert coordinate_names and coordinate_names <= control_names
+
+
 def test_scalar_second_moment_is_orthogonally_covariant() -> None:
     torch.manual_seed(7)
     parameter = torch.nn.Parameter(torch.randn(11, dtype=torch.float64))
@@ -56,6 +80,16 @@ def test_scalar_second_moment_is_orthogonally_covariant() -> None:
         torch.testing.assert_close(mapped, matrix @ parameter, atol=2e-14, rtol=2e-14)
 
 
+def test_scalar_second_moment_rejects_zero_epsilon_and_handles_zero_gradient() -> None:
+    parameter = torch.nn.Parameter(torch.tensor([1.0]))
+    with pytest.raises(ValueError, match="epsilon"):
+        ScalarSecondMomentAdamW([parameter], eps=0.0)
+    optimizer = ScalarSecondMomentAdamW([parameter])
+    parameter.grad = torch.zeros_like(parameter)
+    optimizer.step()
+    torch.testing.assert_close(parameter, torch.tensor([1.0]))
+
+
 @pytest.mark.skipif(not hasattr(torch.optim, "Muon"), reason="PyTorch Muon unavailable")
 def test_harmonic_optimizer_steps_and_round_trips_state() -> None:
     torch.manual_seed(11)
@@ -72,9 +106,24 @@ def test_harmonic_optimizer_steps_and_round_trips_state() -> None:
         parameter.numel() for parameter in model.parameters()
     )
 
-    restored = HarmonicMuonAdamW(model)
-    restored.load_state_dict(state)
+    restored_model = _model()
+    restored_model.load_state_dict(copy.deepcopy(model.state_dict()))
+    restored = HarmonicMuonAdamW(restored_model)
+    restored.load_state_dict(copy.deepcopy(state))
     assert len(restored.param_groups) == len(optimizer.param_groups)
+    torch.manual_seed(12)
+    for original, replica in zip(
+        model.parameters(), restored_model.parameters(), strict=True
+    ):
+        gradient = torch.randn_like(original)
+        original.grad = gradient
+        replica.grad = gradient.clone()
+    optimizer.step()
+    restored.step()
+    for original, replica in zip(
+        model.parameters(), restored_model.parameters(), strict=True
+    ):
+        torch.testing.assert_close(original, replica)
 
 
 def test_optimizer_factory_rejects_unknown_name() -> None:

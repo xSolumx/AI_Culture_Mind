@@ -1,5 +1,7 @@
 # Exact Gaussian phase-lattice audit of a Machin compression
 
+**Research author:** Hayden Austin
+
 **Maintained exact note — 2026-08-11**
 
 **Status:** one four-term identity and its rational norm-one-torus divisor

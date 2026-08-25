@@ -1,6 +1,8 @@
 # Program 08: Spin--Dirac branching and finite subgroup lifts
 
-## Object
+**Research author:** Hayden Austin
+
+## Scope
 
 Complex Clifford spinor modules along
 `Spin(3) -> Spin(8) -> Spin(9) -> Spin(10) -> Spin(11) -> Spin(12)`, together
@@ -11,7 +13,16 @@ This programme is separated from Spin(8) triality, Spin(9) sensing, and rotor
 SSM training.  It asks which representation, branching, center, and subgroup
 properties actually survive the dimensional ladder.
 
-## Current result
+## Core Questions
+
+1. Which fixed `2.A5` lifts and spinor branches occur from Spin(3) through
+   Spin(12)?
+2. Which cohomology and compact-real component statements are exact for the
+   finite representation problem?
+3. What additional manifold, bundle, connection, and operator data would be
+   required before the finite census becomes a geometric Dirac problem?
+
+## Proven / Established Results
 
 The executable ladder starts from the maintained octonionic Spin(8) gamma
 system and extends it by chirality and graded Pauli doubling.  Exact
@@ -84,7 +95,7 @@ Canonical evidence:
 - [`SPIN_2A5_MULTIRELATION_RESULTS.md`](../../SSM-Models/experiments/SPIN_2A5_MULTIRELATION_RESULTS.md)
 - [`spin_2a5_multirelation_pilot300.json`](../../SSM-Models/experiments/artifacts/spin_2a5_multirelation_pilot300.json)
 
-## Open mathematical gate
+## Open Claims
 
 The local cohomology, global compact-real component, and finite-group spinor
 branching gates are closed through `n=12`. A geometric Dirac theorem now needs
@@ -93,7 +104,7 @@ manifold or orbifold, bundle, connection, operator, and boundary conditions.
 Only after those are fixed can the invariant-spinor census be promoted to a
 kernel, spectrum, eta-invariant, or index calculation.
 
-## ML gate and remaining frontier
+### ML gate and remaining frontier
 
 The first binary-center-sensitive prefix gate is complete. A frozen
 parameter-near three-seed screen compares exact and projective oracles, Pure
@@ -120,6 +131,13 @@ long exact accuracy in every split. The learned alternatives fail the center
 gate. Because this is seed 0 only, the next ML gate is fresh-seed validation of
 the unchanged architecture, followed by state-/compute-matched sweeps and only
 then a preregistered real-sequence hybrid.
+
+## Dependencies
+
+- Programme 01 supplies exact finite-group and representation tooling.
+- Programme 04 owns triality statements at the Spin(8) stage only.
+- Programme 06 owns any separately trained model experiment using these
+  representations.
 
 ## Nonclaims
 

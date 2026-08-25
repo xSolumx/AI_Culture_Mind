@@ -1,5 +1,7 @@
 # Pure Spin(8) SSM v1.1 contract
 
+**Research author:** Hayden Austin
+
 Status: maintained PyTorch model alongside, not in place of, Pure Rotor v2.1.
 
 The lower-dimensional `pure_rotor_ssm` remains the stable `Cl(3,0)` model and

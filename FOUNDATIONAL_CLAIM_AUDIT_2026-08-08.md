@@ -1,5 +1,10 @@
 # Foundational Claim and Logic Audit
 
+**Research author:** Hayden Austin
+
+**Historical audit:** current status is maintained by the
+[research-programme index](research-programs/README.md).
+
 **Audit date:** 2026-08-08  
 **Scope:** the maintained research programs in this workspace, read from their
 earliest mathematical contracts through their current theorem and experiment

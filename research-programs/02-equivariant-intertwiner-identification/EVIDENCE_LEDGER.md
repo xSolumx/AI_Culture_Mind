@@ -1,5 +1,7 @@
 # Shared-family representation learning
 
+**Research author:** Hayden Austin
+
 ## Scientific claim
 
 Relational constraints imposed on a complete family of actions can remove

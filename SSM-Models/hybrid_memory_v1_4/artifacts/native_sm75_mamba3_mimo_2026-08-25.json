@@ -1,0 +1,30 @@
+{
+  "backend": "mamba3-mimo",
+  "claim_boundary": "native maintained implementation and finite forward/backward only; first-call time is compilation-inclusive and not a throughput result",
+  "eligibility": {
+    "reason": "native qualification failed; no fallback permitted",
+    "training_baseline_eligible": false
+  },
+  "probe": {
+    "error": "CUDA error: device-side assert triggered\nSearch for `cudaErrorAssert' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.\nCUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.\nFor debugging consider passing CUDA_LAUNCH_BLOCKING=1\nCompile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.\n",
+    "error_type": "AcceleratorError",
+    "status": "fail",
+    "traceback": "Traceback (most recent call last):\n  File \"/mnt/c/Users/HaydenLocal/Programming/AI_Culture_Mind/SSM-Models/hybrid_memory_v1_4/native_sm75_probe.py\", line 416, in main\n    probe, eligibility = _mamba3(mimo=True)\n  File \"/mnt/c/Users/HaydenLocal/Programming/AI_Culture_Mind/SSM-Models/hybrid_memory_v1_4/native_sm75_probe.py\", line 241, in _mamba3\n    probe = _finite_layer_probe(\n  File \"/mnt/c/Users/HaydenLocal/Programming/AI_Culture_Mind/SSM-Models/hybrid_memory_v1_4/native_sm75_probe.py\", line 132, in _finite_layer_probe\n    torch.cuda.synchronize(device)\n  File \"/home/local/.venvs/sm75-mamba3-py310/lib/python3.10/site-packages/torch/cuda/__init__.py\", line 1083, in synchronize\n    return torch._C._cuda_synchronize()\ntorch.AcceleratorError: CUDA error: device-side assert triggered\nSearch for `cudaErrorAssert' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.\nCUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.\nFor debugging consider passing CUDA_LAUNCH_BLOCKING=1\nCompile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.\n\n"
+  },
+  "runtime": {
+    "compute_capability": [
+      7,
+      5
+    ],
+    "cuda_available": true,
+    "cuda_runtime": "12.8",
+    "device_name": "NVIDIA GeForce RTX 2070 SUPER",
+    "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.35",
+    "python": "3.10.12",
+    "torch": "2.9.0+cu128"
+  },
+  "schema_version": 1,
+  "seed": 20260825,
+  "source_revision": "e9594ce1c732d97440f0332fdc43170a2294dbfa",
+  "source_root": "/home/local/src/sm75-native/mamba"
+}

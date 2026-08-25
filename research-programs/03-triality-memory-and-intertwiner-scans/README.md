@@ -1,5 +1,11 @@
 # Program 03: Triality memory and intertwiner scans
 
+**Research author:** Hayden Austin
+
+**Status:** legacy combined route; use the
+[canonical Programme 03 charter](../03-structured-memory-and-retrieval/README.md)
+and route scan/identification/triality claims to Programmes 01, 02, and 04.
+
 ## Object
 
 Associative recurrent lifts whose transition algebra contains equivariant
@@ -98,20 +104,20 @@ direct row under hard keys but has not yet been rerun as its own artifact.
 
 ## Canonical evidence
 
-Use the theorem submodule's
-[`program ledger`](../../Spin8-Triality-Research/programs/triality-memory/README.md).
+Use the current
+[`Programme 03 evidence ledger`](../03-structured-memory-and-retrieval/EVIDENCE_LEDGER.md).
 The implementation protocol and raw benchmark hashes are in
-[`INTERTWINER_SCHURSCAN_BENCHMARK_RESULTS.md`](../../Spin8-Triality-Research/docs/experiments/INTERTWINER_SCHURSCAN_BENCHMARK_RESULTS.md).
+[`INTERTWINER_SCHURSCAN_BENCHMARK_RESULTS.md`](../../Spin-Space-Research/docs/experiments/INTERTWINER_SCHURSCAN_BENCHMARK_RESULTS.md).
 The first controlled structural generalization gate is in
-[`INTERTWINER_SCHURSCAN_EQUIVARIANT_IDENTIFICATION_RESULTS.md`](../../Spin8-Triality-Research/docs/experiments/INTERTWINER_SCHURSCAN_EQUIVARIANT_IDENTIFICATION_RESULTS.md).
+[`INTERTWINER_SCHURSCAN_EQUIVARIANT_IDENTIFICATION_RESULTS.md`](../../Spin-Space-Research/docs/experiments/INTERTWINER_SCHURSCAN_EQUIVARIANT_IDENTIFICATION_RESULTS.md).
 The current winner-by-regime systems verdict is in
-[`SCHURSCAN_MEMORY_SCANNER_OPTIMIZATION_RESULTS.md`](../../Spin8-Triality-Research/docs/experiments/SCHURSCAN_MEMORY_SCANNER_OPTIMIZATION_RESULTS.md).
+[`SCHURSCAN_MEMORY_SCANNER_OPTIMIZATION_RESULTS.md`](../../Spin-Space-Research/docs/experiments/SCHURSCAN_MEMORY_SCANNER_OPTIMIZATION_RESULTS.md).
 The frozen matched quality, sample-efficiency, failure-cohort, and CUDA verdict
 is in
-[`MATCHED_LEARNED_RETRIEVAL_RESULTS.md`](../../Spin8-Triality-Research/docs/experiments/MATCHED_LEARNED_RETRIEVAL_RESULTS.md).
+[`MATCHED_LEARNED_RETRIEVAL_RESULTS.md`](../../Spin-Space-Research/docs/experiments/MATCHED_LEARNED_RETRIEVAL_RESULTS.md).
 The full Spin(8)/Spin(9) boundary, hierarchical routing campaign, and stable
 transported FLA result are in
-[`SPIN8_SPIN9_HIERARCHICAL_MEMORY_RESULTS.md`](../../Spin8-Triality-Research/docs/experiments/SPIN8_SPIN9_HIERARCHICAL_MEMORY_RESULTS.md).
+[`SPIN8_SPIN9_HIERARCHICAL_MEMORY_RESULTS.md`](../../Spin-Space-Research/docs/experiments/SPIN8_SPIN9_HIERARCHICAL_MEMORY_RESULTS.md).
 
 ## Next publishable question
 

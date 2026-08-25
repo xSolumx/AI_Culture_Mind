@@ -1,5 +1,7 @@
 # Experiment document index
 
+**Research author:** Hayden Austin
+
 Documents are grouped for navigation; filenames and contents are preserved from the frozen research record. Every result should be read with its matching preregistration and raw artifact.
 
 Before interpreting dated language such as “next,” “proved,” or “the gate,”

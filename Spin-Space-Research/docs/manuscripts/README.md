@@ -1,5 +1,7 @@
 # Manuscripts
 
+**Research author:** Hayden Austin
+
 These papers isolate theorem-sized contributions from the chronological
 research archive. They are written to be read independently, while their exact
 certificates remain executable from the repository.

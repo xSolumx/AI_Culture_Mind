@@ -1,5 +1,7 @@
 # Repository-wide documentation refresh, 2026-08-10
 
+**Research author:** Hayden Austin
+
 > **Historical status.** This refresh remains the 2026-08-10 record. Its
 > maintained-model and benchmark successor is
 > [`DOCUMENTATION_REFRESH_2026-08-16.md`](DOCUMENTATION_REFRESH_2026-08-16.md),
@@ -41,7 +43,7 @@ interpretation.
   prerequisite for these memory and systems results.
 
 The authoritative technical report is
-[`SPIN8_SPIN9_HIERARCHICAL_MEMORY_RESULTS.md`](Spin8-Triality-Research/docs/experiments/SPIN8_SPIN9_HIERARCHICAL_MEMORY_RESULTS.md).
+[`SPIN8_SPIN9_HIERARCHICAL_MEMORY_RESULTS.md`](Spin-Space-Research/docs/experiments/SPIN8_SPIN9_HIERARCHICAL_MEMORY_RESULTS.md).
 
 ## Documentation surfaces synchronized
 

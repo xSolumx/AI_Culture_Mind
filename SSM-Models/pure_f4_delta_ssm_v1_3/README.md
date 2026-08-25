@@ -1,5 +1,7 @@
 # Pure Exceptional Delta SSM v1.3
 
+**Research author:** Hayden Austin
+
 This folder is the isolated correctness and evidence boundary for the v1.3
 frontier. The model is not a renamed v1.2 and does not inherit its language-
 quality or throughput claims.

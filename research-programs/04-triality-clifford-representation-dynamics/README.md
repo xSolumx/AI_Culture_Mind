@@ -1,5 +1,7 @@
 # Programme 04: Triality and Clifford representation dynamics
 
+**Research author:** Hayden Austin
+
 ## Scope
 
 Claims that genuinely depend on the exceptional representation structure of

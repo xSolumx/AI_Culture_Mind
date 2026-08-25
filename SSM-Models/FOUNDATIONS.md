@@ -1,5 +1,7 @@
 # Selective rotor SSM: mathematical contract
 
+**Research author:** Hayden Austin
+
 This note begins with the contract for the maintained model in
 `pure_rotor_ssm/jax_backend.py` and `pure_rotor_ssm/torch_backend.py`.
 `ga_ssm.py` and `rotor_ssm_torch.py` remain compatibility/training entry points

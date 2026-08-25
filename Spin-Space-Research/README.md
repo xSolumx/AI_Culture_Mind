@@ -1,5 +1,9 @@
 # Spin-Space Research
 
+**Research author:** Hayden Austin
+
+**Current claim map:** [root research programmes](../research-programs/README.md)
+
 Exact and computational research in Spin geometry, Clifford/Dirac sensing,
 representation dynamics, associative Schur scans, and noncommutative
 state-space systems.
@@ -7,7 +11,7 @@ state-space systems.
 This directory is the root repository's provenance-preserving exact-research
 and theorem-harness layer. It is an ordinary root-owned directory, not a
 submodule or second repository. The single authoritative claim map is the
-[seven-programme index](../research-programs/README.md); detailed Spin(8) and
+[eight-programme index](../research-programs/README.md); detailed Spin(8) and
 Spin(9) evidence ledgers live directly beside Programme 05, while compiler,
 identification, and memory claims route to Programmes 01--04.
 
@@ -498,4 +502,6 @@ unrelated 44.8 MB historical language-model checkpoint are excluded. Later
 research is explicitly post-extraction and is covered by ARTIFACTS.sha256 and
 Git history.
 
-Licensed under the GNU Affero General Public License v3.0. See [LICENSE](LICENSE).
+Licensed under the [Apache License 2.0](LICENSE). Component attribution and
+third-party boundaries are recorded in [NOTICE](NOTICE); the parent
+[repository notice](../NOTICE) controls the unified workspace.

@@ -1,5 +1,10 @@
 # Spin8 selective rotor SSM benchmark
 
+**Research author:** Hayden Austin
+
+**Status:** historical isolated benchmark; see the
+[current model inventory](../SSM-Models/MODEL_STATUS.md)
+
 This is an isolated, reproducible benchmark built from the strongest findings
 in the local Spin(8) research archive:
 

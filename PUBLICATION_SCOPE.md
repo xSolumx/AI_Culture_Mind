@@ -1,7 +1,15 @@
 # Public-release policy
 
+**Research author:** Hayden Austin
+
+**Last reconciled:** 2026-08-25
+
 The parent repository publishes maintained source, reproducible structured
 artifacts, and documents whose evidence boundary is explicit.
+
+Repository-wide attribution is governed by [AUTHORSHIP.md](AUTHORSHIP.md),
+while [NOTICE](NOTICE) records copyright and third-party boundaries. Frozen
+records are not mass-rewritten merely to repeat that metadata.
 
 ## Public
 
@@ -52,3 +60,9 @@ The 2026-08-10 hierarchical-memory campaign follows this boundary. It reports
 an official FLA chunk-kernel speed result for the co-moving delta formulation,
 but does not promote that result to language-model quality, triality capacity,
 or a production sparse-router latency claim.
+
+The same rule applies to the active hybrid-memory frontier. A constructed
+gate-law screen can prioritize an update mechanism, and an algebraic Spin
+contract can validate a representation, but neither is a natural-text,
+long-context, or model-quality result until its separately frozen cohort
+passes.

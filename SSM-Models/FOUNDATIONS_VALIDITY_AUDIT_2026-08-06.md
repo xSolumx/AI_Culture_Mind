@@ -1,5 +1,7 @@
 # Validity audit of `FOUNDATIONS.md`
 
+**Research author:** Hayden Austin
+
 Date: 2026-08-06
 
 > **Historical audit boundary.** This document audits the pre-pure maintained

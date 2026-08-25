@@ -1,5 +1,7 @@
 # Spin(8) signed Dirac--Gram inequalities
 
+**Research author:** Hayden Austin
+
 ## Scientific object
 
 For a correlated four-probe frame \(X\), with symmetric whitening

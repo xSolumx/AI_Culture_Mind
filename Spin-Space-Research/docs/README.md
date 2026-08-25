@@ -1,5 +1,9 @@
 # Documentation Guide
 
+**Research author:** Hayden Austin
+
+**Current claim authority:** [eight research programmes](../../research-programs/README.md)
+
 This page is the front door to the research record. It organizes the material
 by purpose and evidentiary status without moving or rewriting frozen historical
 documents.

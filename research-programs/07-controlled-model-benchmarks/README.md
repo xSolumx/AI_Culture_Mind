@@ -1,5 +1,11 @@
 # Program 07: Controlled model benchmarks
 
+**Research author:** Hayden Austin
+
+**Status:** legacy supporting track; use
+[SUPPORTING_TRACKS.md](../SUPPORTING_TRACKS.md) and the
+[current model inventory](../../SSM-Models/MODEL_STATUS.md).
+
 ## Object
 
 Matched-path empirical evaluation of proposed Spinor/SSM models against direct,

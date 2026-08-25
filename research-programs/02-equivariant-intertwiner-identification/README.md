@@ -1,5 +1,7 @@
 # Programme 02: Equivariant intertwiner identification and structured priors
 
+**Research author:** Hayden Austin
+
 ## Scope
 
 Identification of shared action families and equivariant intertwiners from

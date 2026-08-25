@@ -1,8 +1,10 @@
 # Research map
 
+**Research author:** Hayden Austin
+
 > **Taxonomy note, 2026-08-10.** This document preserves the chronological
 > lineage inside the exact theorem layer. The root repository's
-> [seven-programme index](../../research-programs/README.md) is authoritative
+> [eight-programme index](../../research-programs/README.md) is authoritative
 > for current cross-programme claim boundaries. In particular, scan/compiler
 > algebra, equivariant identification, memory systems, and exceptional
 > Spin(8)/Spin(9) representation dynamics are no longer one programme.

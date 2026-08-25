@@ -1,5 +1,10 @@
 # Program 06: Spin(9) Dirac--Clifford sensing
 
+**Research author:** Hayden Austin
+
+**Status:** legacy route; current ownership is
+[Programme 05](../05-information-geometry-and-dirac-gram-sensing/README.md).
+
 ## Object
 
 Nine symmetric Clifford involutions acting on the real 16-dimensional spin

@@ -1,5 +1,7 @@
 # Shakespeare layer-localization fresh-seed result
 
+**Research author:** Hayden Austin
+
 **Date:** 2026-08-21
 
 **Verdict:** the prospective gate failed. Early E6 transport is not promoted

@@ -1,279 +1,154 @@
 # AI Culture Mind
 
-Enjoy this, learn from this, and then step outside and touch grass ;)
+**Research author:** Hayden Austin
 
-AI Culture Mind is the latter third of a machine learning and topology research workspace and it's progress, not one monolithic model claim. Its
-work is separated into independently falsifiable programs with different
-mathematical objects, evidence standards, and publication paths.
+**Current repository review:** 2026-08-25
 
-The current compiler work enforces four independent obligations: algebraic
-decomposition, shared-action semantics, numerical precision, and measured
-silicon cost. Collapsing these layers too early can produce either an invalid
-lowering or a slower kernel; the distinction is now executable and tested.
+**Licence:** [Apache-2.0](LICENSE)
 
-Start with the [research-program index](research-programs/README.md). It
-distinguishes:
+AI Culture Mind is a claim-separated mathematical and machine-learning
+research workspace. It is not one model, one theorem, or one umbrella claim.
+The repository preserves exact mathematics, empirical model work, negative
+results, preregistered failures, compilers, benchmarks, and historical
+prototypes under different evidence contracts.
 
-1. associative scan algebra and compiler systems;
-2. equivariant intertwiner identification and structured priors;
-3. learned structured memory and retrieval systems;
-4. triality and Clifford representation dynamics;
-5. information geometry and Dirac--Gram sensing;
-6. rotor and noncommutative state-space models;
-7. Collatz inverse-frontier dynamics; and
-8. Spin--Dirac branching and finite subgroup lifts.
+Start with the [research-programme index](research-programs/README.md). Use the
+[repository map](REPOSITORY_MAP.md) to find code, artifacts, current status,
+and historical evidence. The repository-wide author and citation rules are in
+[AUTHORSHIP.md](AUTHORSHIP.md) and [CITATION.md](CITATION.md).
 
-Controlled model benchmarks and the historical `SpinorModel` are retained as
-supporting evidence/provenance tracks rather than numbered scientific
-programmes.
+## Current position
 
-The [foundational claim and logic audit](FOUNDATIONAL_CLAIM_AUDIT_2026-08-08.md)
-records which mathematical and empirical claims survived an adversarial
-definition--domain--evidence review, the corrections made, and the gates that
-remain open. The
-[2026-08-10 repository-wide documentation refresh](DOCUMENTATION_REFRESH_2026-08-10.md)
-records the previous cross-program interpretation and validation scope. The
-[2026-08-16 documentation reconciliation](DOCUMENTATION_REFRESH_2026-08-16.md)
-records the maintained-model, Spin/2.A5, motor, octonion-operator, and final
-validation status added after the repository was flattened.
+The strongest repository-wide conclusion is methodological:
 
-## Current research frontier (reviewed 2026-08-16)
+> Shared machinery may cross programme boundaries; claims do not.
 
-The triality-memory programme now has a completed matched memory-core campaign.
-Under identical routers, direct slots and triality-coded slots have the same
-ordinary overwrite capacity; the defensible Spin(8) contribution is a shared
-cross-view action/routing prior, not extra same-state storage. A hierarchical
-coarse-to-block router improves learned retrieval for both direct and delta
-memories, and a co-moving change of coordinates maps general invertible value
-transport to a standard gated-delta recurrence. On the recorded RTX 2070 SUPER
-benchmark, the official FLA chunk implementation is about `5.20x` faster in
-forward time and `5.30x` faster in combined forward/backward time than the
-matched direct transported reference at length 4096, with the declared
-`128`- versus `64`-scalar recurrent-state caveat. These are memory-core and
-systems results, not language-model results or a proof of triality-specific
-capacity. A prospective Task B replication on untouched seeds 20--29 further
-isolates the representation prior: shared actions remain exact, independently
-fitted actions average `0.542924` at length 2048, and direct/delta results are
-identical under the same hard routes. See the
-[canonical result](Spin-Space-Research/docs/experiments/SPIN8_SPIN9_HIERARCHICAL_MEMORY_RESULTS.md)
-and [Task B replication](Spin-Space-Research/docs/experiments/TASK_B_PAIRED_ACTION_REPLICATION_RESULTS.md).
-The action-completion conclusion belongs to
-[Programme 02](research-programs/02-equivariant-intertwiner-identification/README.md),
-the retrieval and kernel conclusions to
-[Programme 03](research-programs/03-structured-memory-and-retrieval/README.md),
-and the representation-specific boundary to
-[Programme 04](research-programs/04-triality-clifford-representation-dynamics/README.md).
+Exact scan closure is not a retrieval result. A representation theorem is not
+a language-model result. A synthetic supplied-coordinate win is not generic
+model superiority. A fast isolated kernel is not an end-to-end systems win.
+Failed frozen gates remain evidence and are not rewritten as successes.
 
-The subsequent frozen campaign replaces the separable routing proxy with 64
-overlapping semantic keys. Shared three-view completion and hierarchical
-retrieval pass `10/10`; a fused gathered-state inference kernel is
-`7.60x`--`13.00x` faster than its eager dense counterpart across the recorded
-RTX 2070 SUPER grid, depending on update law. The supplied action frame and
-inference-only kernel keep action discovery, extra capacity, training, and
-model-level claims open. See the
-[large-slot result](Spin-Space-Research/docs/experiments/LARGE_SLOT_SEMANTIC_HIERARCHY_RESULTS.md)
-and the derived
-[memory benchmark atlas and FLA fit](Spin-Space-Research/docs/experiments/MEMORY_BENCHMARK_ATLAS.md).
-The next implementation gate is an FLA-compatible selected-block mixer; it is
-not yet a trained model.
+### Mathematical results
 
-The standalone Collatz `32/9` inverse-frontier experiment is deliberately
-isolated as [Programme 07](research-programs/07-collatz-inverse-frontier-dynamics/README.md).
-No external scanner, finite-cover proof, or computation through `10^10` is
-imported as repository evidence.
+- Associative affine and two-sided scan laws, Schur/isotypic factorizations,
+  Clifford/triality actions, and multiple exact finite-group compilers are
+  implemented with explicit domains and replay contracts.
+- The Spin(8) archive contains exact triality, center, probe-identifiability,
+  finite-group closure, and a fixed-generator dense-
+  \(SO(8)\) closure theorem. These do not establish model quality.
+- Spin(8) and Spin(9) information-geometry programmes contain exact, local,
+  and constrained theorems. The unrestricted Spin(8) Dirac--Gram positivity
+  problem and unrestricted global Spin(9) design problem remain open.
+- The Collatz inverse-frontier programme is independent. Its bounded scanners
+  and finite checks are not a proof of the Collatz conjecture.
 
-The first local reproduction controls are now available: an exact bounded,
-path-merged Collatz inverse/source scanner and descent/path-merge certificate,
-plus finite HRT configuration and Weyl-composition controls. Their outputs are
-explicitly finite sanity artifacts, not upgrades to the global Collatz or
-arbitrary-`L2` HRT theorems. See [Programme 01](research-programs/01-associative-scan-algebra-and-compilers/README.md),
-[Programme 02](research-programs/02-equivariant-intertwiner-identification/README.md),
-and [Programme 07](research-programs/07-collatz-inverse-frontier-dynamics/README.md).
+The canonical theorem and certificate navigation lives in
+[Spin-Space-Research](Spin-Space-Research/README.md); current claim ownership
+lives in [research-programs](research-programs/README.md).
 
-No result in one program is evidence for another unless an explicit bridge
-experiment or theorem is cited. In particular, the maintained language model
-uses `Cl(3,0)`/`Spin(3)`, whereas the triality mathematics concerns three
-eight-dimensional representations of `Spin(8)`.
+### Model and memory results
 
-Pure Rotor remains the stable v2.1.0 `Cl(3,0)` family. Its PyTorch backend now
-also has a tested opt-in Schur-factored scan, but no fused-kernel claim. A
-separate maintained [`pure_spin8_ssm`](SSM-Models/pure_spin8_ssm/) v1.1 family
-was added without changing the Pure Rotor checkpoint contract. One shared
-28-coordinate controller drives `8v`, `8s+`, and `8s-`, giving a faithful
-24-scalar triality cache. On its frozen supplied-coordinate transport task,
-all three checkpoints reach L128 MSE `5.81e-5`--`6.68e-5` and 100% center
-classification, versus unfused Transformers Mamba-2 at `0.132`--`0.135` and
-50%. This is an algebra-matched synthetic result, not generic language-model
-superiority. See
-[`PURE_SPIN8_VS_MAMBA2_RESULTS.md`](SSM-Models/experiments/PURE_SPIN8_VS_MAMBA2_RESULTS.md).
+The maintained model inventory and its exact evidence links are in
+[SSM-Models/MODEL_STATUS.md](SSM-Models/MODEL_STATUS.md).
 
-The separate [`hybrid_memory_v1_4`](SSM-Models/hybrid_memory_v1_4/) frontier
-is a structurally tested prototype, not a maintained-model promotion. Its
-original one-block temporal-observability gate was false; a straight-through
-selected-memory layer followed by bounded attention restores the missing
-non-final read path. Mechanical CUDA streaming and 65,536-step numerical
-screens pass. Its frozen three-seed, 600-update MQAR campaign failed retrieval
-capability under both label-free and supervised routing; the common-shell
-DeltaProduct control also remained near chance. No trained checkpoint or
-quality promotion exists. See the
-[v1.4 result boundary](SSM-Models/hybrid_memory_v1_4/RESULTS.md).
+| Family | Current status | Supported conclusion |
+|---|---|---|
+| Pure Rotor v2.1 | Maintained | Exact bounded affine rotor recurrence and reproducible checkpoints; rotor transport was active but lost the registered memory and measured-compute gates, and simpler structured transports were competitive or better |
+| Pure Spin(8) v1.1 | Maintained, task-bounded | Strong supplied/latent/continuous synthetic Spin(8) tracking and exact center-sensitive mechanisms; no natural-language or generic modern-SSM superiority |
+| Pure Spin v1.2 | Implemented frontier model | Current CUDA contracts pass, but fused Mamba-2 wins all three matched Tiny Shakespeare quality seeds; throughput ordering is unresolved at local measurement precision |
+| Pure Exceptional Delta v1.3 | Experimental | Albert/F4/E6 machinery is implemented; fresh natural-text localization rejected exceptional transport as the default and retained identity transport |
+| Hybrid Memory v1.4/v1.4.5 | Active research workspace | Validated small hybrid causal learning and commissioned synthetic memory; G14 supports decoupled edits only on a constructed task; G15 has exact fixed torus/Spin contracts but no learning result; long-range ordinary-text recall is not established |
+| Dense SO(8) Cayley scan | Experimental control | Exact 28-direction construction, scan contracts, and CUDA feasibility smoke; no training or model-quality result |
+| SpinorDeltaLM benchmark | Historical isolated benchmark | Preserved controlled short-run evidence; it is not the maintained Pure Rotor or Pure Spin successor |
+| SpinorModel | Historical prototype | Preserved tensor-GA lineage and a separately labelled overhaul |
 
-The 2026-08-17 follow-up hides those 28 coordinates behind eight symbolic
-tokens and excludes the center-producing pair `a,a` from training. Three fresh
-seeds identify the local actions and retain 100% center/identity correctness
-through L128, with post-relation MSE `2.66e-5`--`2.87e-4`; see
-[`PURE_SPIN8_LATENT_INCREMENT_RESULTS.md`](SSM-Models/experiments/PURE_SPIN8_LATENT_INCREMENT_RESULTS.md).
-The v1.1 finite-token compiler freezes those learned actions into a faithful
-table and uses a register-resident Triton recurrence. Its recorded local
-model-forward speedup is 30.7x--67.1x with all center signatures preserved;
-see
-[`PURE_SPIN8_COMPILED_TOKEN_SCAN_RESULTS.md`](SSM-Models/experiments/PURE_SPIN8_COMPILED_TOKEN_SCAN_RESULTS.md).
-The next frozen cohort removes the dictionary entirely: three seed-specific
-noisy nonlinear observation charts are decoded online. Shared Spin(8) records
-median L128 post-relation MSE `0.01860`, versus `0.06129` for a parameter-near,
-exactly state-matched independent `SO(8)^3` control, with exact relation
-classification in both rows. A separately frozen RTX 2070 SUPER allocation
-matches model-update wall within 2.97% and preserves the ordering; see
-[`PURE_SPIN8_CONTINUOUS_OBSERVATION_RESULTS.md`](SSM-Models/experiments/PURE_SPIN8_CONTINUOUS_OBSERVATION_RESULTS.md).
-The frozen endpoint-only successor then removes every intermediate target:
-each L16 training sequence exposes only its final signed 24-real state. Shared
-Spin(8) retains median L128 MSE `0.01296`, versus `0.06268` for the capable
-exactly state-matched independent family at equal updates and `0.09080` under a
-separately pre-frozen local update-wall allocation; see
-[`PURE_SPIN8_ENDPOINT_SUPERVISION_RESULTS.md`](SSM-Models/experiments/PURE_SPIN8_ENDPOINT_SUPERVISION_RESULTS.md).
-These remain injective seven-coordinate signed synthetic and workstation-
-specific results, not an unsigned/partial observation, natural-task, fused-
-Mamba, or generic language-model claim.
+The active [`hybrid_memory_v1_4`](SSM-Models/hybrid_memory_v1_4/) directory is
+an independent live research workspace. Its local preregistrations, results,
+and artifacts control its claims. Root status pages summarize that work but do
+not replace or silently rewrite its frozen records.
 
-The next observability audit asks how much of that final signed state is
-actually necessary. Exact rational probe ranks reach all 28 Lie directions
-from seven basis states in any one triality representation. One final `8s+` or
-`8s-` block transfers across all three views, but the frozen aggregate fails:
-center-blind vector-only supervision misses exact hidden-lift rows in every
-seed. A separate quotient collision proves that identical `8v` inputs with
-opposite spinor labels have balanced Bayes MSE `1/8` and lift accuracy `1/2`;
-see
-[`PURE_SPIN8_ENDPOINT_OBSERVABILITY_RESULTS.md`](SSM-Models/experiments/PURE_SPIN8_ENDPOINT_OBSERVABILITY_RESULTS.md).
+## Active research programmes
 
-A frozen successor tests the minimum repair. For a unit half-spin endpoint
-`y`, the adaptive chart `j=argmax |y_j|`, `b=sign(y_j)` has lift-invariant
-three-bit address, one lift-odd bit, and selected magnitude at least
-`1/sqrt(8)`. Across untouched seeds 4--6, that four-bit calibration word closes
-every vector-only failure for shared Spin(8): action RMSE spans
-`0.012825--0.013633`, all-view L128 MSE spans `0.009198--0.026986`, and every
-lift/center relation row is exact. The fixed-coordinate sign control is worse
-than vector-only. This is one bit of lift information, not one total bit or
-recovery from the vector endpoint alone; see
-[`PURE_SPIN8_LIFT_BIT_CALIBRATION_RESULTS.md`](SSM-Models/experiments/PURE_SPIN8_LIFT_BIT_CALIBRATION_RESULTS.md).
+| Programme | Object | Current boundary |
+|---|---|---|
+| [01 — Associative scan algebra and compilers](research-programs/01-associative-scan-algebra-and-compilers/README.md) | Affine/semidirect composition, Schur blocks, exact scalar layers, ordered scans, and compiler lowerings | Exact closure and bounded implementation results; no automatic memory or model-quality claim |
+| [02 — Equivariant identification](research-programs/02-equivariant-intertwiner-identification/README.md) | Intertwiners, structured priors, action/frame identification, and matched controls | Controlled identification results; raw-frame and noisy general discovery remain open |
+| [03 — Structured memory and retrieval](research-programs/03-structured-memory-and-retrieval/README.md) | Addressing, write/erase laws, selected blocks, hierarchical routing, and fused memory kernels | Memory-core and bounded model evidence; no universal retrieval or long-context winner |
+| [04 — Triality and Clifford dynamics](research-programs/04-triality-clifford-representation-dynamics/README.md) | Spin(8) triality, Clifford actions, finite subgroups, exceptional chains, and representation dynamics | Exact representation results; no extra same-state capacity or generic model advantage |
+| [05 — Information geometry and Dirac--Gram sensing](research-programs/05-information-geometry-and-dirac-gram-sensing/README.md) | Probe design, determinant inequalities, Cayley spectra, and Spin(9) sensing | Exact/local/constrained results; stated global problems remain open |
+| [06 — Rotor and noncommutative SSMs](research-programs/06-rotor-noncommutative-state-space-models/README.md) | Persistent group-transported recurrent models and matched ablations | Maintained and experimental implementations with task-specific evidence only |
+| [07 — Collatz inverse-frontier dynamics](research-programs/07-collatz-inverse-frontier-dynamics/README.md) | Standalone inverse odd-Collatz cylinders and finite frontier computation | Exact bounded computation; no asymptotic theorem |
+| [08 — Spin--Dirac branching and finite lifts](research-programs/08-spin-dirac-a5-branching/README.md) | Spin(3)-to-Spin(12) branching, `2.A5`, cohomology, and finite-group spinors | Exact finite representation results; no geometric Dirac operator without new manifold data |
 
-An exact gradient trace sharpens why the state-matched independent control
-does not transfer the calibrated lift. Its negative-specific head receives
-zero data gradient and its final weights equal the 2,000-step AdamW decay-only
-counterfactual with residual `0.0`; all 28 rows of the shared Spin(8) coordinate
-head receive data gradient. See
-[`PURE_SPIN8_LIFT_GRADIENT_IDENTIFIABILITY_RESULTS.md`](SSM-Models/experiments/PURE_SPIN8_LIFT_GRADIENT_IDENTIFIABILITY_RESULTS.md).
+Legacy numbered directories remain provenance routes only and are identified in
+[supporting tracks](research-programs/SUPPORTING_TRACKS.md). They do not compete
+with the eight canonical programme names.
 
-The next frozen matched control preserves that shared latent head but
-independently scrambles the two spinor actions. Its all-view dominance gate
-**fails** because seed 7 wins two directly supervised vector L128 cells. The
-non-rescued boundary is narrower: correct triality alignment wins all `9/9`
-action, `12/12` spinor-L128, and `6/6` completely hidden negative-L128
-comparisons, while winning only `4/6` vector-L128 comparisons. Full supervision
-repairs the scrambled negative action, so the control is capable. This is
-bounded evidence for cross-view spinor transfer, not a universal triality or
-vector-inference advantage; see
-[`PURE_SPIN8_SCRAMBLED_ALIGNMENT_RESULTS.md`](SSM-Models/experiments/PURE_SPIN8_SCRAMBLED_ALIGNMENT_RESULTS.md).
+## Repository layout
 
-The negative-only calibration-rank successor makes that alignment boundary
-exact. Ordered basis probes have ranks `0,7,13,18,22,25,27,28,28`; rational
-stabilizer witnesses prove that zero through six probes are globally
-insufficient to identify the `SO(8)` action, seven are sufficient, and eight
-are redundant. All three fresh seeds recover the aligned action at rank 28,
-but the frozen all-seed effect-size headline **fails** because seed 10's
-rank-27 residual is already near the common router floor. See
-[`PURE_SPIN8_ALIGNMENT_CALIBRATION_RANK_RESULTS.md`](SSM-Models/experiments/PURE_SPIN8_ALIGNMENT_CALIBRATION_RANK_RESULTS.md).
-
-The broader noncommutative continuation now contains three separately bounded
-claims. A Spin quaternion scan retains the binary center on frozen `2.A5`
-relations where conjugation-based Pure Rotor cannot. An eight-scalar unit-dual-
-quaternion motor implements the double cover of `SE(3)` and becomes exact on
-the rigid task only after legal adjacent-prefix identification; blind learned
-readouts fail. Finally, raw octonion multiplication is lifted to associative
-`8 by 8` left-action operators, with exact `so(8)` Lie closure and optional
-WSL/Triton recurrence. A final-only depth curriculum recovers all 9/9
-structured and dense laws but reveals a necessary `G2 union -G2` parity
-ambiguity, exposed by a held-out odd length. These are mechanism,
-identification, and synthetic-composition results—not one universal model
-claim. See the [SSM model ledger](SSM-Models/README.md).
-
-[Programme 08](research-programs/08-spin-dirac-a5-branching/README.md) keeps the
-finite-subgroup and spinor-branching theorem line separate from both triality
-and model training. Its exact `2.A5` ladder reaches Spin(12), with
-`H1=H2=0`, a compact-real component atlas, and complete finite-group spinor
-branching on the classified types. Turning that representation census into a
-Dirac kernel, spectrum, eta-invariant, or index theorem requires new geometric
-input; the finite algebra alone does not supply one.
-
-The exact compiler frontier now includes a native ordered
-\(\mathbb Q(\sqrt2)\) scalar layer rather than only rational matrices or a
-special-purpose rationalizing bridge. Its genuine split/nonsplit controls and
-native Spin(9) quotient replay are documented in the
-[algebraic-extension design](Spin-Space-Research/docs/ALGEBRAIC_EXTENSION_DESIGN.md)
-and [exact result](Spin-Space-Research/docs/experiments/ALGEBRAIC_ISOTYPIC_DECOMPOSITION_RESULTS.md).
-The same audit certifies the maintained Spin(8) module separation and the exact
-signature chain
-\(\mathrm{Cl}(3,0)\hookrightarrow\mathrm{Cl}^0(1,4)\subset
-\mathrm{Cl}(1,4)\). These are algebra and representation results: they do not
-settle the global Spin(9) determinant problem and do not convert the maintained
-`Cl(3,0)` rotor SSM into a Lorentzian model.
-
-A user-supplied Machin/Alferov invariant-theory note has also been converted
-into a fail-closed Programme 01 result. The
-[Gaussian phase-lattice audit](research-programs/01-associative-scan-algebra-and-compilers/GAUSSIAN_PHASE_LATTICE_AUDIT.md)
-uses the exact algebraic phase \(z/\bar z\), proves the displayed four-term
-identity and split-prime divisor cancellation, and keeps global height descent,
-optimality, novelty, and any exceptional-Spin consequence explicitly open.
-
-## Source layout
-
-| Path | Role |
+| Path | Purpose |
 |---|---|
-| [`research-programs/`](research-programs/README.md) | Public claim map, status ledgers, and reading order |
-| [`SSM-Models/`](SSM-Models/) | Maintained Pure Rotor and Pure Spin(8) models, controlled comparisons, and executable representation gates |
-| [`Spin-Space-Research/`](Spin-Space-Research/) | Root-owned exact theorem, certificate, artifact, and research-document layer |
-| [`Spin8-SSM-Benchmark/`](Spin8-SSM-Benchmark/) | Matched empirical benchmarks and controls |
-| [`SpinorModel/`](SpinorModel/) | Preserved original prototype and a separate overhaul |
+| [research-programs](research-programs/README.md) | Current claim charters, evidence routing, open claims, and nonclaims |
+| [Spin-Space-Research](Spin-Space-Research/README.md) | Exact mathematics, certificates, manuscripts, tests, and published artifacts |
+| [SSM-Models](SSM-Models/README.md) | Maintained and experimental state-space implementations and model evidence |
+| [Spin8-SSM-Benchmark](Spin8-SSM-Benchmark/README.md) | Isolated model and systems comparisons |
+| [SpinorModel](SpinorModel/README.md) | Historical prototype and overhaul lineage |
+| [PUBLICATION_SCOPE.md](PUBLICATION_SCOPE.md) | Public-release and evidence boundary |
+| [REPOSITORY_MAP.md](REPOSITORY_MAP.md) | Canonical ownership, provenance, and validation map |
 
-The exact-research directory was renamed on 2026-08-11 from
-`Spin8-Triality-Research/` to `Spin-Space-Research/` because its scope now
-includes Spin(8), Spin(9), Clifford/Dirac sensing, Schur scans, and structured
-dynamics. On the same date its aligned nested Git history was backed up and
-the directory was flattened into this root repository. There is now one Git
-owner, one programme index, and no submodule checkout step. The historical
-GitHub remote and Python package slug remain unchanged as provenance
-identifiers; artifact contents and hashes were not rewritten by the move.
+The former nested `Spin8-Triality-Research` repository was flattened and
+renamed `Spin-Space-Research` on 2026-08-11. Historical remote names remain in
+provenance records; current relative links use the flattened path.
 
-Large model weights, downloaded datasets, generated caches, and raw process
-logs are intentionally excluded from Git. The compact 2026-08-16 frozen
-checkpoint cohort is a deliberate exception so artifact rehash/reload tests
-work from a clean clone. Reproducible conclusions should be backed by structured
-artifacts, executable checks, and a concise interpretation that states both the
-pass criteria and the nonclaims.
+## Evidence vocabulary
 
-The current Pure Spin(8) systems frontier is the
-[isotypic-to-silicon compiler v2.1.1](SSM-Models/experiments/ISOTYPIC_TO_SILICON_COMPILER_V211.md):
-exact block metadata, runtime sharing semantics, and measured hardware policy
-remain separate; a charted seven-probe construction applies the compiler to a
-self-calibrating continuous Spin(8) recurrence.
-See the [public-release policy](PUBLICATION_SCOPE.md) for the complete boundary.
+- **Exact theorem:** conclusion proved on the stated domain.
+- **Computer-assisted theorem:** proof reduced to explicit finite obligations
+  with a declared trust boundary.
+- **Exact reduction:** reversible reformulation; remaining inequalities or
+  classifications may still be open.
+- **Empirical result:** completed protocol under recorded seeds, data, budget,
+  software, and hardware.
+- **Falsification evidence:** bounded search or adversarial test that can find
+  failures but cannot prove their absence.
+- **Negative result / failed gate:** a completed test that rejected its frozen
+  promotion rule.
+- **Historical:** preserved statement of what was known at that date; consult
+  the maintained index for current interpretation.
+- **Open:** no complete theorem or decisive empirical gate settles the claim.
 
-Clone the complete repository with:
+## Reproduction and documentation checks
 
-```bash
-git clone https://github.com/xSolumx/AI_Culture_Mind.git
+There is no single root training command because the repository contains
+independent programmes with different environments. Follow the component
+README and the controlling result document.
+
+Run the repository-wide documentation checks with:
+
+```powershell
+python tools/check_repository_docs.py
 ```
 
-See the [repository map](REPOSITORY_MAP.md) for the single-source ownership,
-claim, artifact, runtime, and validation rules.
+For exact theorem artifacts:
 
-Cite the Authors: Solus Sol Solum.
+```powershell
+Set-Location Spin-Space-Research
+$env:PYTHONPATH = "src"
+python tools/verify_artifact_manifest.py
+python tools/audit_math_docs.py
+```
+
+Expensive certificate and GPU campaigns have narrower commands and hardware
+contracts in their own result documents. A smoke test, OOM trace, or partial
+log is never a completed result.
+
+## Authorship, citation, and licence
+
+Research author: **Hayden Austin**. Historical Solum/Solus/xSolumx names refer
+to the same research lineage; new citations use Hayden Austin. See
+[AUTHORSHIP.md](AUTHORSHIP.md), [CITATION.cff](CITATION.cff), and
+[CITATION.md](CITATION.md).
+
+Copyright (C) 2026 Hayden Austin. The repository is licensed under the
+[Apache License 2.0](LICENSE); attribution, patent, historical-release, and
+third-party boundaries are recorded in [NOTICE](NOTICE).

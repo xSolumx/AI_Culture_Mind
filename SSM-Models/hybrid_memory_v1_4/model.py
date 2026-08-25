@@ -16,7 +16,9 @@ from torch.nn import functional as F
 
 from .attention import AttentionConfig, AttentionState, CausalSelfAttention
 from .gated_delta import GatedDeltaConfig, GatedDeltaMemory
+from .gated_delta_v2 import GatedDeltaV2Config, GatedDeltaV2Memory
 from .selected_block import RouteMode, SelectedBlockConfig, SelectedBlockMemory
+from .spin_dirac_memory import SpinDiracConfig, SpinDiracMemory
 from .structured_memory import StructuredMemoryConfig, StructuredSpin8Memory
 
 __version__ = "1.4.5"
@@ -24,7 +26,9 @@ __version__ = "1.4.5"
 LayerKind: TypeAlias = Literal[
     "attention",
     "gated_delta",
+    "gated_delta_v2",
     "delta_product",
+    "spin_dirac",
     "selected_block",
     "structured_spin8",
 ]
@@ -37,7 +41,9 @@ StructuredScanMode: TypeAlias = Literal["recurrent", "parallel"]
 _LAYER_KINDS = (
     "attention",
     "gated_delta",
+    "gated_delta_v2",
     "delta_product",
+    "spin_dirac",
     "selected_block",
     "structured_spin8",
 )
@@ -103,7 +109,28 @@ class HybridMemoryConfig:
     # runners freeze their earlier 0.90/0.995 values explicitly.
     gated_delta_minimum_retention: float = 0.999
     gated_delta_initial_retention: float = 0.9995
+    gated_delta_initial_erase_strength: float = 0.10
     gated_delta_initial_write_strength: float = 0.10
+
+    # The Spin path uses a content-addressed 8_v -> 8_s+ matrix per head,
+    # two-sided Spin(8) transport, and a fixed Clifford/triality readout.
+    spin_dirac_heads: int = 4
+    spin_dirac_transport_mode: Literal[
+        "spin8", "commuting_so2", "su3_torus", "broken_spin8", "identity"
+    ] = "spin8"
+    spin_dirac_readout_mode: Literal["clifford", "identity"] = "clifford"
+    spin_dirac_gate_mode: Literal["equivariant_scalar", "channelwise"] = (
+        "equivariant_scalar"
+    )
+    spin_dirac_tie_query_key: bool = True
+    spin_dirac_allow_negative_eigenvalues: bool = False
+    spin_dirac_bound_values: bool = True
+    spin_dirac_minimum_retention: float = 0.999
+    spin_dirac_maximum_retention: float = 0.999999
+    spin_dirac_initial_retention: float = 0.9995
+    spin_dirac_initial_erase_strength: float = 0.10
+    spin_dirac_initial_write_strength: float = 0.10
+    spin_dirac_maximum_coordinate: float = 0.25
 
     selected_heads: int = 2
     selected_blocks: int = 4
@@ -137,6 +164,7 @@ class HybridMemoryConfig:
             "delta_heads",
             "delta_num_householder",
             "gated_delta_heads",
+            "spin_dirac_heads",
             "selected_heads",
             "selected_blocks",
             "selected_slots_per_block",
@@ -173,6 +201,9 @@ class HybridMemoryConfig:
             "gated_delta_identity_value_path",
             "gated_delta_identity_output_gate",
             "gated_delta_tie_query_key",
+            "spin_dirac_allow_negative_eigenvalues",
+            "spin_dirac_bound_values",
+            "spin_dirac_tie_query_key",
             "structured_hard_eval",
         ):
             if type(getattr(self, name)) is not bool:
@@ -226,6 +257,42 @@ class HybridMemoryConfig:
                 initial_retention=self.gated_delta_initial_retention,
                 initial_write_strength=self.gated_delta_initial_write_strength,
             )
+        if "gated_delta_v2" in self.layer_plan:
+            GatedDeltaV2Config(
+                model_dim=self.model_dim,
+                heads=self.gated_delta_heads,
+                key_dim=self.gated_delta_key_dim,
+                value_dim=self.gated_delta_value_dim,
+                allow_negative_eigenvalues=(
+                    self.gated_delta_allow_negative_eigenvalues
+                ),
+                normalize_values=self.gated_delta_normalize_values,
+                identity_value_path=self.gated_delta_identity_value_path,
+                identity_output_gate=self.gated_delta_identity_output_gate,
+                tie_query_key=self.gated_delta_tie_query_key,
+                norm_epsilon=self.norm_epsilon,
+                minimum_retention=self.gated_delta_minimum_retention,
+                initial_retention=self.gated_delta_initial_retention,
+                initial_erase_strength=self.gated_delta_initial_erase_strength,
+                initial_write_strength=self.gated_delta_initial_write_strength,
+            )
+        SpinDiracConfig(
+            model_dim=self.model_dim,
+            heads=self.spin_dirac_heads,
+            transport_mode=self.spin_dirac_transport_mode,
+            readout_mode=self.spin_dirac_readout_mode,
+            gate_mode=self.spin_dirac_gate_mode,
+            tie_query_key=self.spin_dirac_tie_query_key,
+            allow_negative_eigenvalues=(self.spin_dirac_allow_negative_eigenvalues),
+            bound_values=self.spin_dirac_bound_values,
+            norm_epsilon=self.norm_epsilon,
+            minimum_retention=self.spin_dirac_minimum_retention,
+            maximum_retention=self.spin_dirac_maximum_retention,
+            initial_retention=self.spin_dirac_initial_retention,
+            initial_erase_strength=self.spin_dirac_initial_erase_strength,
+            initial_write_strength=self.spin_dirac_initial_write_strength,
+            maximum_coordinate=self.spin_dirac_maximum_coordinate,
+        )
         StructuredMemoryConfig(
             model_dim=self.model_dim,
             channels=self.structured_channels,
@@ -305,12 +372,29 @@ class StructuredSpin8State:
         return self.actual_bytes
 
 
+@dataclass(frozen=True)
+class SpinDiracState:
+    """Complete Spin/Clifford fast-weight and local-convolution state."""
+
+    memory: torch.Tensor
+    convolution: torch.Tensor
+
+    @property
+    def actual_bytes(self) -> int:
+        return _tensor_bytes(self.memory) + _tensor_bytes(self.convolution)
+
+    @property
+    def nbytes(self) -> int:
+        return self.actual_bytes
+
+
 LayerState: TypeAlias = (
     AttentionState
     | GatedDeltaState
     | DeltaProductState
     | SelectedBlockState
     | StructuredSpin8State
+    | SpinDiracState
 )
 LayerDiagnostics: TypeAlias = dict[str, Any] | None
 
@@ -410,7 +494,9 @@ class HybridMemoryBlock(nn.Module):
             config.model_dim, 2 * config.model_dim, bias=False
         )
         residual_scale = (
-            config.gated_delta_residual_scale_init if kind == "gated_delta" else -2.0
+            config.gated_delta_residual_scale_init
+            if kind in ("gated_delta", "gated_delta_v2", "spin_dirac")
+            else -2.0
         )
         self.residual_scale = nn.Parameter(torch.tensor(residual_scale))
         self.ffn_norm = nn.RMSNorm(config.model_dim, eps=config.norm_epsilon)
@@ -446,6 +532,59 @@ class HybridMemoryBlock(nn.Module):
                     minimum_retention=config.gated_delta_minimum_retention,
                     initial_retention=config.gated_delta_initial_retention,
                     initial_write_strength=config.gated_delta_initial_write_strength,
+                )
+            )
+            self.local_conv = (
+                CausalDepthwiseConv1d(config.model_dim, config.conv_kernel)
+                if config.use_local_conv
+                else None
+            )
+        elif kind == "gated_delta_v2":
+            self.mixer = GatedDeltaV2Memory(
+                GatedDeltaV2Config(
+                    model_dim=config.model_dim,
+                    heads=config.gated_delta_heads,
+                    key_dim=config.gated_delta_key_dim,
+                    value_dim=config.gated_delta_value_dim,
+                    allow_negative_eigenvalues=(
+                        config.gated_delta_allow_negative_eigenvalues
+                    ),
+                    normalize_values=config.gated_delta_normalize_values,
+                    identity_value_path=config.gated_delta_identity_value_path,
+                    identity_output_gate=config.gated_delta_identity_output_gate,
+                    tie_query_key=config.gated_delta_tie_query_key,
+                    norm_epsilon=config.norm_epsilon,
+                    minimum_retention=config.gated_delta_minimum_retention,
+                    initial_retention=config.gated_delta_initial_retention,
+                    initial_erase_strength=(config.gated_delta_initial_erase_strength),
+                    initial_write_strength=(config.gated_delta_initial_write_strength),
+                )
+            )
+            self.local_conv = (
+                CausalDepthwiseConv1d(config.model_dim, config.conv_kernel)
+                if config.use_local_conv
+                else None
+            )
+        elif kind == "spin_dirac":
+            self.mixer = SpinDiracMemory(
+                SpinDiracConfig(
+                    model_dim=config.model_dim,
+                    heads=config.spin_dirac_heads,
+                    transport_mode=config.spin_dirac_transport_mode,
+                    readout_mode=config.spin_dirac_readout_mode,
+                    gate_mode=config.spin_dirac_gate_mode,
+                    tie_query_key=config.spin_dirac_tie_query_key,
+                    allow_negative_eigenvalues=(
+                        config.spin_dirac_allow_negative_eigenvalues
+                    ),
+                    bound_values=config.spin_dirac_bound_values,
+                    norm_epsilon=config.norm_epsilon,
+                    minimum_retention=config.spin_dirac_minimum_retention,
+                    maximum_retention=config.spin_dirac_maximum_retention,
+                    initial_retention=config.spin_dirac_initial_retention,
+                    initial_erase_strength=config.spin_dirac_initial_erase_strength,
+                    initial_write_strength=config.spin_dirac_initial_write_strength,
+                    maximum_coordinate=config.spin_dirac_maximum_coordinate,
                 )
             )
             self.local_conv = (
@@ -564,10 +703,15 @@ class HybridMemoryBlock(nn.Module):
             self.config.model_dim,
             self.convolution_cache_width,
         )
-        if self.kind == "gated_delta":
+        if self.kind in ("gated_delta", "gated_delta_v2"):
             if not isinstance(state, GatedDeltaState):
-                raise TypeError("gated_delta layer state must be a GatedDeltaState")
-            assert isinstance(self.mixer, GatedDeltaMemory)
+                raise TypeError(f"{self.kind} layer state must be a GatedDeltaState")
+            assert isinstance(self.mixer, (GatedDeltaMemory, GatedDeltaV2Memory))
+            memory_shape = (batch_size, *self.mixer.config.state_shape)
+        elif self.kind == "spin_dirac":
+            if not isinstance(state, SpinDiracState):
+                raise TypeError("spin_dirac layer state must be a SpinDiracState")
+            assert isinstance(self.mixer, SpinDiracMemory)
             memory_shape = (batch_size, *self.mixer.config.state_shape)
         elif self.kind == "delta_product":
             if not isinstance(state, DeltaProductState):
@@ -668,8 +812,8 @@ class HybridMemoryBlock(nn.Module):
                     value, previous_convolution, valid_mask
                 )
             mixed_value = F.silu(mixed_value)
-            if self.kind == "gated_delta":
-                assert isinstance(self.mixer, GatedDeltaMemory)
+            if self.kind in ("gated_delta", "gated_delta_v2"):
+                assert isinstance(self.mixer, (GatedDeltaMemory, GatedDeltaV2Memory))
                 memory = state.memory if isinstance(state, GatedDeltaState) else None
                 if return_diagnostics:
                     update, next_memory, diagnostics = self.mixer(
@@ -687,6 +831,25 @@ class HybridMemoryBlock(nn.Module):
                         scan_mode=delta_scan_mode,
                     )
                 next_state = GatedDeltaState(next_memory, next_convolution)
+            elif self.kind == "spin_dirac":
+                assert isinstance(self.mixer, SpinDiracMemory)
+                memory = state.memory if isinstance(state, SpinDiracState) else None
+                if return_diagnostics:
+                    update, next_memory, diagnostics = self.mixer(
+                        mixed_value,
+                        memory,
+                        valid_mask=valid_mask,
+                        scan_mode=delta_scan_mode,
+                        return_diagnostics=True,
+                    )
+                else:
+                    update, next_memory = self.mixer(
+                        mixed_value,
+                        memory,
+                        valid_mask=valid_mask,
+                        scan_mode=delta_scan_mode,
+                    )
+                next_state = SpinDiracState(next_memory, next_convolution)
             elif self.kind == "delta_product":
                 assert isinstance(self.mixer, DeltaProductReferenceLayer)
                 memory = state.memory if isinstance(state, DeltaProductState) else None
@@ -771,6 +934,26 @@ class HybridMemoryLM(nn.Module):
         self.final_norm = nn.RMSNorm(config.model_dim, eps=config.norm_epsilon)
         self.lm_head = nn.Linear(config.model_dim, config.vocab_size, bias=False)
         self.apply(_initialize_module)
+        # The shell uses a small normal initialization, but several mixers have
+        # deliberately structured starts (orthogonal/tied addresses, identity
+        # value paths, calibrated gate biases, or scaled DeltaProduct weights).
+        # ``Module.apply`` reaches inside those mixers and overwrites those
+        # contracts, so restore their public initialization only after the shell
+        # initialization has completed.  Keep this list explicit: calling every
+        # nested ``reset_parameters`` method would also reset ordinary Linear
+        # modules with PyTorch defaults and make the model initialization depend
+        # on module traversal details.
+        for block in self.blocks:
+            if isinstance(
+                block.mixer,
+                (
+                    GatedDeltaMemory,
+                    GatedDeltaV2Memory,
+                    SpinDiracMemory,
+                    DeltaProductReferenceLayer,
+                ),
+            ):
+                block.mixer.reset_parameters()
         if config.tie_embeddings:
             self.lm_head.weight = self.embedding.weight
 
@@ -946,6 +1129,7 @@ class HybridMemoryLM(nn.Module):
                 DeltaProductState,
                 SelectedBlockState,
                 StructuredSpin8State,
+                SpinDiracState,
             ),
         ):
             tensor = first.memory
@@ -1034,8 +1218,15 @@ class HybridMemoryLM(nn.Module):
                     * block.convolution_cache_width
                     * element_size
                 )
-                if block.kind == "gated_delta":
-                    assert isinstance(block.mixer, GatedDeltaMemory)
+                if block.kind in ("gated_delta", "gated_delta_v2"):
+                    assert isinstance(
+                        block.mixer, (GatedDeltaMemory, GatedDeltaV2Memory)
+                    )
+                    memory_capacity = (
+                        batch_size * block.mixer.state_scalars * element_size
+                    )
+                elif block.kind == "spin_dirac":
+                    assert isinstance(block.mixer, SpinDiracMemory)
                     memory_capacity = (
                         batch_size * block.mixer.state_scalars * element_size
                     )
@@ -1072,6 +1263,7 @@ class HybridMemoryLM(nn.Module):
                             DeltaProductState,
                             SelectedBlockState,
                             StructuredSpin8State,
+                            SpinDiracState,
                         ),
                     )
                     actual_components = {
@@ -1190,6 +1382,7 @@ DeltaProductLayerState = DeltaProductState
 GatedDeltaLayerState = GatedDeltaState
 SelectedBlockLayerState = SelectedBlockState
 StructuredSpin8LayerState = StructuredSpin8State
+SpinDiracLayerState = SpinDiracState
 SwiGLU = GatedMLP
 
 
@@ -1206,6 +1399,8 @@ __all__ = [
     "LayerState",
     "SelectedBlockLayerState",
     "SelectedBlockState",
+    "SpinDiracLayerState",
+    "SpinDiracState",
     "StructuredSpin8LayerState",
     "StructuredSpin8State",
     "SwiGLU",

@@ -1,5 +1,7 @@
 # Referee package: balanced Cayley information spectrum
 
+**Research author:** Hayden Austin
+
 This directory is a compact review object for one theorem-sized result. It can
 be read and verified without following the repository's chronological gate
 history.

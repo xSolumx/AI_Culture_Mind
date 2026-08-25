@@ -1,5 +1,7 @@
 # Spin(9) Dirac--Clifford sensing and exact design
 
+**Research author:** Hayden Austin
+
 ## Scientific object
 
 This program studies the nine symmetric Clifford involutions on the real

@@ -1,5 +1,9 @@
 # SpinorModel experiments
 
+**Research author:** Hayden Austin
+
+**Status:** historical prototype lineage
+
 > **Lineage note.** The files directly under this directory are the preserved
 > first tensor-based SpinorModel baseline. The additive
 > [`overhauled`](overhauled/README.md) implementation is the 2026-08-03
@@ -14,10 +18,6 @@
 > fused gathered-state results are likewise a separate memory-core programme.
 > They have not been integrated into this historical model and must not be used
 > to upgrade its claims.
-
-> **2026-08-16 clarification.** The maintained Pure Rotor / Mamba-2 benchmark
-> is also separate from this historical baseline. Its smoke artifact does not
-> update any result or status in `SpinorModel`.
 
 > **2026-08-16 clarification.** The maintained Pure Rotor / Mamba-2 benchmark
 > is also separate from this historical baseline. Its smoke artifact does not

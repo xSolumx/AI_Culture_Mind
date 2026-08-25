@@ -1,5 +1,7 @@
 # Pure rotor SSM contract
 
+**Research author:** Hayden Austin
+
 Model version: **2.1.0**. Version 2 introduced the new state/write law and
 parameterization; version 2.1 expands the default physical rotor-angle chart
 from `pi/2` to the full open `pi` range. A v2.0 checkpoint remains loadable

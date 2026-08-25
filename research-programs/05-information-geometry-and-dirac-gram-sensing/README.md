@@ -1,5 +1,7 @@
 # Programme 05: Information geometry and Dirac--Gram sensing
 
+**Research author:** Hayden Austin
+
 ## Scope
 
 Exact and computer-assisted theorems about identifying shared Spin actions from

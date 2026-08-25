@@ -1,5 +1,7 @@
 # Spin(8) sensing and Cayley design
 
+**Research author:** Hayden Austin
+
 ## Scientific object
 
 One infinitesimal `Spin(8)` action is observed through unit probes in the

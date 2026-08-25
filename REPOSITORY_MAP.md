@@ -1,63 +1,108 @@
 # Repository map
 
-This workspace has one Git owner and one scientific navigation authority.
-There are no submodules, nested Git repositories, or pointer-only programme
-directories in the maintained tree.
+**Research author:** Hayden Austin
+
+**Last reconciled:** 2026-08-25
+
+This repository has one Git owner and one current scientific navigation
+authority. The eight canonical claim charters are under
+[research-programs](research-programs/README.md). Dated reports preserve
+provenance; they do not override a current charter merely because they are
+more detailed.
 
 ## Canonical top-level paths
 
-| Path | Owns |
-|---|---|
-| [`research-programs/`](research-programs/README.md) | The seven claim charters, detailed evidence ledgers, status boundaries, and cross-program routing |
-| [`Spin-Space-Research/`](Spin-Space-Research/) | Exact Spin/Clifford/Dirac mathematics, certificate generators, tests, published artifacts, manuscripts, and experiment reports |
-| [`SSM-Models/`](SSM-Models/) | The maintained rotor and noncommutative state-space implementations |
-| [`Spin8-SSM-Benchmark/`](Spin8-SSM-Benchmark/) | Controlled empirical model and systems benchmarks |
-| [`SpinorModel/`](SpinorModel/) | Historical prototype lineage and its separately labelled overhaul |
-| [`.private/`](.private/) | Ignored local audit streams and recoverable metadata backups; never publication evidence |
+| Path | Owns | Does not own |
+|---|---|---|
+| [research-programs](research-programs/README.md) | Current claim names, established/open status, dependencies, nonclaims, and cross-programme routing | Raw artifacts or duplicated result narratives |
+| [Spin-Space-Research](Spin-Space-Research/README.md) | Exact Spin/Clifford/Dirac mathematics, certificate generators, tests, manuscripts, and hash-bound artifacts | Current model-quality promotion |
+| [SSM-Models](SSM-Models/README.md) | Maintained/experimental recurrent models, trainers, checkpoints, model contracts, and model result reports | Global theorem status outside a model contract |
+| [Spin8-SSM-Benchmark](Spin8-SSM-Benchmark/README.md) | Isolated controlled model and systems comparisons | Maintained-model identity or cross-programme theorem status |
+| [SpinorModel](SpinorModel/README.md) | Historical prototype and its separately labelled overhaul | Current model frontier |
+| [PUBLICATION_SCOPE.md](PUBLICATION_SCOPE.md) | Public/private and result-publication rules | Scientific proof of an individual claim |
+| [AUTHORSHIP.md](AUTHORSHIP.md) | Repository-wide research-author and attribution policy | Third-party ownership overrides |
+| `.private/` | Ignored local recovery/audit material | Public evidence of any kind |
 
 ## One source for each kind of truth
 
-- Claim status and programme ownership: `research-programs/` only.
-- Exact code and executable acceptance gates: `Spin-Space-Research/src/` and
-  `Spin-Space-Research/tests/`.
-- Published machine evidence: `Spin-Space-Research/artifacts/`, with one entry
-  per JSON file in `Spin-Space-Research/ARTIFACTS.sha256`.
-- Machine-dependent watchdog records and resumable checkpoints:
-  `Spin-Space-Research/runtime/`; ignored and never treated as theorem
-  artifacts.
-- Maintained rotor-model contract: `SSM-Models/`; `SpinorModel/` is historical.
+| Question | Canonical source |
+|---|---|
+| Who is the research author? | [AUTHORSHIP.md](AUTHORSHIP.md), [NOTICE](NOTICE), and [CITATION.cff](CITATION.cff) |
+| What licence applies? | [Apache License 2.0](LICENSE), qualified by the attribution, prior-release, and third-party boundaries in [NOTICE](NOTICE) |
+| What programmes exist and what do they currently claim? | [research-programs/README.md](research-programs/README.md) and the eight canonical charters |
+| Which models are maintained, experimental, or historical? | [SSM-Models/MODEL_STATUS.md](SSM-Models/MODEL_STATUS.md) |
+| What exact theorem/certificate documents exist? | [Spin-Space documentation guide](Spin-Space-Research/docs/README.md) and [experiment index](Spin-Space-Research/docs/EXPERIMENT_INDEX.md) |
+| What is the controlling empirical result? | The model/result document beside its artifact; use the programme ledger to find it |
+| What was known at a past date? | The dated audit, preregistration, result, or documentation-refresh file |
+| What is public or intentionally local? | [PUBLICATION_SCOPE.md](PUBLICATION_SCOPE.md) |
+| How should the work be cited? | [CITATION.md](CITATION.md) |
 
-Shared machinery may cross programme boundaries. Claims do not transfer
-without an explicit theorem, reduction, or matched experiment.
+Shared code may support several programmes. A claim moves across programmes
+only through an explicit theorem, reduction, or matched experiment.
 
-## Historical provenance
+## Documentation classes
 
-`Spin-Space-Research/` was formerly the separate
-`Spin8-Triality-Research` repository at
-`https://github.com/xSolumx/spin8-triality-research.git`. At flattening, its
-HEAD matched the root's pinned Gitlink commit
-`c4b6310a3a9063f06042d387fb0d90973a10e6d1`. The complete nested `.git`
-directory was moved to the ignored, recoverable local backup
-`.private/git-backups/Spin-Space-Research.git/`; `CITATION.cff` retains the
-historical remote URL.
+1. **Maintained front doors:** root README/map/policies, programme charters,
+   component READMEs, model status, and documentation indexes. These must track
+   the current repository.
+2. **Frozen prospective records:** preregistrations and amendments. They remain
+   unchanged after their declared freeze except through an explicit correction
+   or later amendment.
+3. **Completed evidence:** result reports and machine artifacts. The report
+   states the protocol, outcome, limitations, and validation path.
+4. **Historical snapshots:** dated audits, older plans, superseded model docs,
+   and extracted records. Their observations remain provenance; current status
+   comes from a maintained front door.
+5. **Private/runtime material:** ignored caches, logs, recovery data, and
+   incomplete work. It is never public evidence.
 
-The backed-up commit contains 961 tracked files. Of these, 955 remain at the
-same relative path under `Spin-Space-Research/`. The six deliberate exceptions
-are the old `programs/` navigation index and its five ledgers: their substantive
-content now lives directly under the canonical root `research-programs/`
-charters, and the obsolete nested programme index has been removed.
+Repository-wide authorship is declared centrally so frozen/hash-bound records
+do not need byte-changing author insertions. Maintained front doors repeat
+`Research author: Hayden Austin` explicitly.
+
+## Active and historical directory names
+
+`Spin-Space-Research` was formerly the nested
+`Spin8-Triality-Research` repository. It was flattened into this Git owner on
+2026-08-11. The historical remote and package names remain valid provenance
+identifiers, but current local links must target `Spin-Space-Research`.
+
+Legacy programme directories are retained where they contain historical
+narrative or evidence routing. They are marked as legacy and link back to the
+eight active charters; they are not alternate programme authorities.
+
+## Artifact and result routing
+
+- `Spin-Space-Research/ARTIFACTS.sha256` covers published exact-research
+  machine artifacts. `PROVENANCE.json` records the original extraction and is
+  not rewritten to make old files look newly authored.
+- `SSM-Models/experiments/artifacts` and model-local `artifacts` directories
+  hold empirical machine records. Their controlling Markdown result must state
+  whether the run is complete, validated, historical, failed, or smoke-only.
+- Model checkpoints are distributed only through an explicit documented
+  exception. Ordinary checkpoints, datasets, logs, and profiler dumps remain
+  ignored.
+- The active `SSM-Models/hybrid_memory_v1_4` workspace controls its own frozen
+  G-series records. External indexes may summarize and link to them but must
+  not silently amend them.
 
 ## Validation entry points
 
-From `Spin-Space-Research/`:
+Repository documentation:
 
 ```powershell
-$env:PYTHONPATH = "src"
-python -m spin8_gate_contracts
-python tools/verify_artifact_manifest.py
-python -m pytest -q
+python tools/check_repository_docs.py
 ```
 
-Expensive exact campaigns have narrower documented commands and resource
-contracts in
-[`Spin-Space-Research/docs/REPRODUCIBILITY.md`](Spin-Space-Research/docs/REPRODUCIBILITY.md).
+Exact theorem layer:
+
+```powershell
+Set-Location Spin-Space-Research
+$env:PYTHONPATH = "src"
+python tools/verify_artifact_manifest.py
+python tools/audit_math_docs.py
+```
+
+Model validation is component-specific; use
+[SSM-Models/MODEL_STATUS.md](SSM-Models/MODEL_STATUS.md) to reach the relevant
+contract, tests, and result report.

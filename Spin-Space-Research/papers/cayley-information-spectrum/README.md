@@ -1,5 +1,7 @@
 # Cayley information spectrum paper
 
+**Research author:** Hayden Austin
+
 This directory contains an arXiv-oriented LaTeX manuscript for the exact
 orthonormal balanced-orbit theorem. It intentionally does **not** claim the
 open unrestricted Dirac--Gram inequality or global five-query optimality.

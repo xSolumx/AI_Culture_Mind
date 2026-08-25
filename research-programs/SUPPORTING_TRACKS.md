@@ -1,5 +1,9 @@
 # Supporting evidence and provenance tracks
 
+**Research author:** Hayden Austin
+
+**Last reconciled:** 2026-08-25
+
 These are not additional numbered research programmes.
 
 ## Controlled model benchmarks
@@ -15,6 +19,13 @@ The next model-level gate is an FLA-compatible selected-block mixer with
 recurrent cache, differentiable reference/backward, and fused-inference
 contracts, followed by a controlled sequence-model comparison. Existing
 memory-core benchmarks are not that model result.
+
+The active Hybrid Memory v1.4/v1.4.5 programme now supplies a small
+`gated-delta -> attention` causal learner, bounded commissioned-memory results,
+and a failed long-context archive promotion. Its GDN2 gate-law result is a
+constructed mechanism screen, while Spin-Dirac remains preregistered and
+untrained. Use the [current model inventory](../SSM-Models/MODEL_STATUS.md)
+instead of the dated narrative below for present status.
 
 The 2026-08-16 SSM cohort adds transparent Transformers Mamba-2 and
 equation-faithful DeltaProduct references to several bounded tasks. The

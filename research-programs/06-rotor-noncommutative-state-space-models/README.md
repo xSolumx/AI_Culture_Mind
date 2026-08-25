@@ -1,5 +1,9 @@
 # Programme 06: Rotor and noncommutative state-space models
 
+**Research author:** Hayden Austin
+
+**Last reconciled:** 2026-08-25
+
 ## Scope
 
 Bounded recurrent models whose persistent state is transported by
@@ -154,6 +158,17 @@ new matched natural-data and complete-step hardware evidence.
   retaining an eight-scalar bounded affine cache. Its float64 structural
   contracts and one WSL2 RTX 2070 SUPER CUDA forward/backward feasibility
   smoke pass. This is neither training evidence nor a speed comparison.
+- Pure Spin v1.2's post-F14a three-seed Tiny Shakespeare quality gate is
+  negative: fused Mamba-2 wins all three seeds and averages 2.4942 bpb versus
+  2.7477 for Pure Spin. The local steady-step throughput ordering is unresolved
+  at the observed run-to-run variation.
+- Pure Exceptional Delta v1.3's fresh five-seed layer-localization gate rejects
+  early E6 transport: it wins only 2/5 seeds and is worse by 0.0093 bpb on
+  average. Identity remains the supported generic natural-text reference.
+- Hybrid Memory v1.4/v1.4.5 is a separate active model workspace. Its current
+  evidence supports bounded causal learning and commissioned memory, rejects
+  ordinary-pretraining long-range archive promotion, and leaves GDN2 and
+  Spin-Dirac as prospective candidates rather than maintained model upgrades.
 
 ## Open Claims
 
@@ -177,6 +192,8 @@ new matched natural-data and complete-step hardware evidence.
   coordinates.
 - Matched-task evidence that the full dense-SO(8) Cayley control chart is more
   useful than restricted, octonion, Givens/Householder, or modern SSM controls.
+- A trained, matched identity/Clifford/commuting/full-Spin Spin-Dirac cohort;
+  passing algebraic contracts alone does not promote that candidate.
 
 ## Dependencies
 
@@ -254,3 +271,10 @@ new matched natural-data and complete-step hardware evidence.
 - [Octonion operator-scan result](../../SSM-Models/experiments/OCTONION_OPERATOR_SCAN_RESULTS.md)
 - [Dense SO(8) Cayley scan design and CUDA feasibility gate](../../SSM-Models/experiments/DENSE_SO8_CAYLEY_SCAN_DESIGN.md)
 - [Final-only octonion-law result](../../SSM-Models/experiments/OCTONION_FINAL_ONLY_RESULTS.md)
+- [Current model inventory](../../SSM-Models/MODEL_STATUS.md)
+- [Pure Spin v1.2 frontier result](../../SSM-Models/pure_spin_ssm_v1_2/FRONTIER_TRAINING_RESULTS.md)
+- [Pure Exceptional Delta layer-localization result](../../SSM-Models/pure_f4_delta_ssm_v1_3/SHAKESPEARE_LAYER_LOCALIZATION_RESULTS.md)
+- [Hybrid Memory frontier review](../../SSM-Models/hybrid_memory_v1_4/FRONTIER_REVIEW_2026-08-25.md)
+- [Hybrid Spin/torus architecture boundary](../../SSM-Models/hybrid_memory_v1_4/SPIN_TORUS_RESEARCH.md)
+- [G15 Spin-Dirac status and result ledger](../../SSM-Models/hybrid_memory_v1_4/G15_SPIN_DIRAC_RESULTS.md)
+- [Local SM75 native-runtime ledger](../../SSM-Models/hybrid_memory_v1_4/SM75_NATIVE_RUNTIME.md)

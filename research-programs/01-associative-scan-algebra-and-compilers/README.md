@@ -1,5 +1,7 @@
 # Programme 01: Associative scan algebra and compiler systems
 
+**Research author:** Hayden Austin
+
 ## Scope
 
 Associative composition laws for affine, semidirect-product, triangular, and

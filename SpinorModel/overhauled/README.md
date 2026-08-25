@@ -1,5 +1,9 @@
 # Overhauled SpinorModel
 
+**Research author:** Hayden Austin
+
+**Status:** historical reference implementation
+
 > **Historical reference.** This implementation remains reproducible and its
 > tests remain useful, but it is no longer the maintained model frontier. The
 > canonical JAX/PyTorch v2.1 implementation, hard mathematical contract, and

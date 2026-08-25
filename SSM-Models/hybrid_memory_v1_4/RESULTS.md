@@ -1,10 +1,13 @@
 # Hybrid Memory v1.4 frontier results
 
 **Date:** 2026-08-25
-**Status:** v1.4.4 tied-address successor passed prospectively frozen G4f
-fresh-seed commissioning and G8 target-distance continuation. G4a through G4e,
-G6, and G7 failed their declared gates. There is still no label-free, natural-
-language, fresh combined-schedule, or matched-speed promotion.
+**Status:** v1.4.5 remains the validated retention-safe successor. G10 passed
+fresh synthetic seeds, G11/G12 established bounded ordinary TinyStories
+learning, and G13 found a consistent but sub-threshold 4,096-token compression
+gain with negative factual recall. G14 passed only its constructed decoupled-
+edit mechanism gate. G15 is implemented and preregistered but has no learning
+result. There is still no robust long-range recall, broad language-quality,
+scaling-law, or matched-speed promotion.
 
 ## Adjudication
 
@@ -755,6 +758,11 @@ length-256 rows. The curriculum splits the same macro-window into rows of
 length 256, 512, 1,024, 2,048, and 4,096 over five 200-update phases. Recurrent
 state remains live across 1,024-token execution chunks and is never detached.
 
+Protocol deviation: the preregistration specified a 2,048-token attention
+window, while the frozen builder and completed artifact used 1,024. Both arms
+used 1,024, so paired deltas remain internally controlled; G13 did not test the
+written 2,048-window architecture.
+
 Fresh seeds 2011/2017/2027 each received 4,096,000 BPE targets and exactly
 9,424,359 represented raw bytes per arm. Phase 1 is identical by construction:
 all three paired BPRB differences are exactly zero, and final target hashes and
@@ -796,7 +804,7 @@ The full-model counterfactual gains remain too small to promote:
 | 8,192 | +0.000003 | +0.000011 |
 
 At 8,192 raw bytes, prompt lengths are 3,379--3,755 BPE tokens; all 72
-full-model rows exceed the 2,048-token attention window. Only two of three
+full-model rows exceed the actual 1,024-token attention window. Only two of three
 curriculum seed means are positive. The mean curriculum-control improvement is
 `0.00000734` nats, not the required 0.01, and the absolute mean is not the
 required 0.02. The learned-recall and full G13 promotion gates fail.
@@ -837,37 +845,111 @@ Evidence:
 [`artifacts/g13_exact_target_long_context_curriculum_cuda_2026-08-25.json`](artifacts/g13_exact_target_long_context_curriculum_cuda_2026-08-25.json), and
 [`artifacts/g13_posthoc_long_context_diagnostic_cuda_2026-08-25.json`](artifacts/g13_posthoc_long_context_diagnostic_cuda_2026-08-25.json).
 
-## Actual upstream probes
+## G14: decoupled edit-law mechanism gate
 
-- FlashRT Gated Delta Attention was pinned at revision `892f725c...`, kernel
-  version 6. Its artifact requires BF16 x86_64 Linux and SM80+, so it correctly
-  fails closed on the local SM75 RTX 2070 SUPER.
-- Actual FLA 0.5.2 `chunk_gated_delta_rule` produced finite outputs and final
-  state in the WSL FLA environment.
-- Actual Transformers 5.9.0 `Mamba2ForCausalLM` and
-  `OlmoHybridForCausalLM` produced finite CUDA logits through their declared
-  unfused fallbacks.
-- The actual 128,989,632-parameter pretrained
-  `state-spaces/mamba2-130m` checkpoint at revision `3a5aea0c...` was downloaded
-  to the E: large cache and produced finite FP16 CUDA logits through official
-  `mamba_ssm` in WSL.
+G14 was frozen before its run and asks a deliberately narrow question: can one
+address retain eight independent nonnegative value features when erase and
+write are decoupled? Tied GDN-v1 cannot represent the target; its final
+coefficient mass is at most one, giving a length-eight MSE lower bound of
+`49/64 = 0.765625`. GDN2 can use near-zero erase and near-unit write.
 
-These are implementation-availability probes across different runtimes, not a
-matched speed ranking or an MQAR quality comparison.
+| Arm | Trainable parameters | Three-seed held-out MSE | Bit accuracy |
+|---|---:|---:|---:|
+| tied GDN-v1 | 10 | 0.770998--0.771060 | 0% |
+| decoupled GDN2 | 90 | 0.000181--0.000292 | 100% |
+
+Every frozen G14 gate passed. The result establishes a constructed
+representational and learnability separation for the edit law. It is
+intentionally unequal-parameter, uses an abstract controller rather than the
+language-model shell, and supplies no natural-text, long-context, or model-
+quality promotion.
 
 Evidence:
-[`artifacts/upstream_fla_gated_delta_wsl_cuda_2026-08-24.json`](artifacts/upstream_fla_gated_delta_wsl_cuda_2026-08-24.json),
-[`artifacts/upstream_native_transformers_cuda_2026-08-24.json`](artifacts/upstream_native_transformers_cuda_2026-08-24.json),
-and
-[`artifacts/upstream_pretrained_mamba2_wsl_cuda_2026-08-24.json`](artifacts/upstream_pretrained_mamba2_wsl_cuda_2026-08-24.json).
+[`G14_PREREGISTRATION.md`](G14_PREREGISTRATION.md),
+[`g14_gate_law_screen.py`](g14_gate_law_screen.py), and
+[`artifacts/g14_gate_law_screen_2026-08-25.json`](artifacts/g14_gate_law_screen_2026-08-25.json).
+
+## G15: Spin-Dirac implementation status
+
+G15 is preregistered but has no learning result. The new candidate stores one
+content-addressed `8 x 8` association matrix per head, uses independent
+erase/write controls, transports it on the left and right through shared
+Spin(8) carriers, and optionally applies the fixed Clifford tensor at readout.
+It is a 64-state LTV SSM per head and an associative two-sided scan; it is not
+the old 24-scalar cache, a scalar Mamba-2 SSD, or a geometric Dirac operator.
+
+Contract tests now pass for recurrent/parallel/chunk/token replay, masked
+state, complete LM gradients, center signatures, Clifford equivariance,
+bounded transitions, a 4,096-step float64 state falsifier, the fixed
+`SO(2)^4` torus, the exact constrained `SU(3)` rank-two torus, and a broken-
+coupling control. The primary edit gates were prospectively repaired from
+channelwise to independent head-scalar controls after the conjugation audit
+showed that diagonal/Hadamard channel gates choose a preferred basis. The
+scalar law passes exact shared-frame covariance; channelwise gating remains an
+explicit non-equivariant ablation.
+
+The combined preregistered integrity artifact now passes. On SM75 FP32, both
+4,096-step heads remain finite and below `9.0e-5` of the analytic ceiling.
+Scalar-moment and SGD mapped covariance residuals stay below `1.87e-13`, and
+both the delayed coordinate path and scored-position query path clear the
+frozen read-change/descent thresholds in all three seeds. This authorizes the
+I, I+C, C, and S learning cohort; it does not count as that learning result.
+
+Evidence:
+[`G15_SPIN_DIRAC_PREREGISTRATION.md`](G15_SPIN_DIRAC_PREREGISTRATION.md),
+[`G15_SPIN_DIRAC_AMENDMENT_2026-08-25.md`](G15_SPIN_DIRAC_AMENDMENT_2026-08-25.md),
+[`G15_SPIN_DIRAC_EDIT_LAW_AMENDMENT_2026-08-25.md`](G15_SPIN_DIRAC_EDIT_LAW_AMENDMENT_2026-08-25.md),
+[`G15_SPIN_DIRAC_RESULTS.md`](G15_SPIN_DIRAC_RESULTS.md), and
+[`SPIN_TORUS_RESEARCH.md`](SPIN_TORUS_RESEARCH.md), plus
+[`artifacts/g15_integrity_sm75_2026-08-25.json`](artifacts/g15_integrity_sm75_2026-08-25.json).
+
+## Actual upstream probes
+
+- FlashRT Gated Delta Attention remains ineligible on SM75 because its published
+  artifact requires SM80+. It is not replaced by a local approximation.
+- Source-current official Mamba-3 SISO at revision `e9594ce1...` passed native
+  training forward/backward on SM75 with complete finite input and all-
+  parameter gradients. The MIMO TileLang route selected an SM80 TF32 MMA path
+  and is excluded.
+- Source-current FLA GDN2 recurrent mode produced finite output and input
+  gradient, but gradients were absent for all recurrent-core projections. Its
+  chunk forward completed, while backward exceeded the bounded 1,200-second
+  attempt. Neither route is an eligible SM75 training baseline.
+- The source-built `ssiu/flash-attention-turing` extension passed FP16 causal
+  and noncausal forward/backward numerical gates at head dimensions 64 and
+  128. Official FlashAttention mainline remains Ampere-or-newer; the dedicated
+  Turing fork is the actual local implementation.
+- The actual 186,849,600-parameter `state-spaces/mamba3-siso-187m` checkpoint
+  at Hub revision `6792c27c...` produced finite FP16 logits and loss through a
+  source-bound official Mamba checkout. The inaccessible gated Meta tokenizer
+  repository is not hidden: the public `NousResearch/Meta-Llama-3.1-8B`
+  tokenizer mirror and its exact revision/hashes are recorded.
+- The actual 128,989,632-parameter `state-spaces/mamba2-130m` checkpoint at
+  revision `3a5aea0c...` also passed after the current causal-conv1d source
+  dependency was built for SM75. Its weight and GPT-NeoX tokenizer revisions/
+  hashes are bound in the artifact.
+
+These are implementation-availability probes across different runtimes, not
+a matched speed ranking or quality comparison. Full package, source,
+checkpoint, tokenizer, and exclusion details are in
+[`SM75_NATIVE_RUNTIME.md`](SM75_NATIVE_RUNTIME.md).
+
+Evidence:
+[`artifacts/native_sm75_mamba3_siso_2026-08-25.json`](artifacts/native_sm75_mamba3_siso_2026-08-25.json),
+[`artifacts/native_sm75_gdn2_recurrent_2026-08-25.json`](artifacts/native_sm75_gdn2_recurrent_2026-08-25.json),
+[`artifacts/native_sm75_gdn2_chunk_2026-08-25.json`](artifacts/native_sm75_gdn2_chunk_2026-08-25.json),
+[`artifacts/native_sm75_flash_turing_2026-08-25.json`](artifacts/native_sm75_flash_turing_2026-08-25.json),
+[`artifacts/pretrained_sm75_mamba3_siso_187m_2026-08-25.json`](artifacts/pretrained_sm75_mamba3_siso_187m_2026-08-25.json), and
+[`artifacts/pretrained_sm75_mamba2_130m_2026-08-25.json`](artifacts/pretrained_sm75_mamba2_130m_2026-08-25.json).
 
 ## Validation record
 
-- `python -m pytest hybrid_memory_v1_4/tests -q`: **225 passed, 4 skipped**.
+- `python -m pytest hybrid_memory_v1_4/tests -q`: **261 passed, 4 skipped**.
 - `python -m ruff check hybrid_memory_v1_4`: passed.
 - `python -m ruff format --check hybrid_memory_v1_4`: passed.
-- The four native-suite skips are guarded optional fused FLA/Mamba paths; WSL
-  probes separately exercised the installed actual FLA and Mamba environments.
+- The four native-suite skips are guarded optional fused operator paths; the
+  source-bound WSL probes separately qualify or reject the actual SM75
+  implementations.
 - Frozen G4a executed at 107,552 parameters for the candidate and 112,290 for
   the common-shell DeltaProduct control, a 4.4053% gap under the 5% gate.
 
@@ -891,9 +973,15 @@ Artifact file hashes are recorded in [`ARTIFACTS.sha256`](ARTIFACTS.sha256).
 - G12's post-pretraining counterfactual factual-recall result is negative.
 - G12 parameter and CUDA matches are distinct, and neither estimates a scaling
   law or hardware-general efficiency.
+- G13 failed its frozen effect-size and factual-recall gates.
+- G14 is an unequal-parameter constructed state-law result, not model quality.
+- G15 has no trained result; fixed torus and Spin implementation contracts do
+  not establish learned geometry, triality benefit, or moving `G2/SU(3)`
+  memory.
 - The retained checkpoints are validation artifacts, not released pretrained
   models.
-- The natural-text claims are bounded G11/G12 TinyStories results only.
-- No fused-kernel, Tensor-Core, or matched speed claim exists.
+- The natural-text claims are bounded G11--G13 TinyStories results only.
+- The passing Turing FlashAttention and Mamba-3 SISO execution gates are
+  native-runtime qualifications, not a matched speed or quality result.
 - No learned Spin(8) rung-use claim exists.
 - A straight-through estimator is not evidence that label-free routing learns.

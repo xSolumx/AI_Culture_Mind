@@ -59,6 +59,8 @@ class OptimizerPartition:
 
 
 _CONTROL_MARKERS = (
+    "coordinate_projection",
+    "erase_projection",
     "write_projection",
     "decay_projection",
     "residual_scale",
@@ -150,7 +152,7 @@ class ScalarSecondMomentAdamW(torch.optim.Optimizer):
     ) -> None:
         if not 0.0 <= lr:
             raise ValueError(f"invalid learning rate: {lr}")
-        if not 0.0 <= eps:
+        if not math.isfinite(eps) or eps <= 0.0:
             raise ValueError(f"invalid epsilon: {eps}")
         if not 0.0 <= betas[0] < 1.0:
             raise ValueError(f"invalid beta1: {betas[0]}")

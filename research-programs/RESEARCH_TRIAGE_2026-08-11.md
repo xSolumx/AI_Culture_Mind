@@ -1,5 +1,9 @@
 # Local research-programme triage
 
+**Research author:** Hayden Austin
+
+**Status:** historical 2026-08-11 triage; use [README.md](README.md) for current status.
+
 Date: 2026-08-11
 
 This is a point-in-time execution triage across the seven canonical research

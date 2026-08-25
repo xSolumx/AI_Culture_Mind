@@ -1,5 +1,7 @@
 # Pure Spin v1.2 frontier training backend
 
+**Research author:** Hayden Austin
+
 **Status:** implemented and gradient-validated; current throughput claims are
 separated into isolated-kernel, steady-step, and end-to-end measurements
 

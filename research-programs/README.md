@@ -1,5 +1,9 @@
 # Research-programme index
 
+**Research author:** Hayden Austin
+
+**Last reconciled:** 2026-08-25
+
 This directory is the scientific table of contents for `AI_Culture_Mind`.
 Programmes are separated by their actual mathematical or empirical object, not
 by the repository in which the work happened or by implementation chronology.
@@ -20,16 +24,20 @@ The [2026-08-16 reconciliation](../DOCUMENTATION_REFRESH_2026-08-16.md)
 records the later maintained Pure Spin(8), binary-center, motor, octonion-
 operator, benchmark, and validation status.
 
+The current maintained model inventory, including the later Pure Spin v1.2,
+Pure Exceptional Delta v1.3, Hybrid Memory v1.4/v1.4.5, and dense SO(8)
+boundaries, is [SSM-Models/MODEL_STATUS.md](../SSM-Models/MODEL_STATUS.md).
+
 ## Active Programmes
 
 | Programme | Actual object | Current claim boundary |
 |---|---|---|
 | [01 — Associative scan algebra and compiler systems](01-associative-scan-algebra-and-compilers/README.md) | Affine/semidirect composition, triangular lifts, Schur/isotypic factorizations, ordered scan algorithms, and compiler transforms | Exact closure and local implementation results; no automatic memory, model-quality, or production-throughput claim |
 | [02 — Equivariant intertwiner identification and structured priors](02-equivariant-intertwiner-identification/README.md) | Shared-family identifiability, equivariant hypothesis classes, augmentation controls, and the SO(3) cross-product intertwiner control | Controlled completion and orbit extrapolation; not triality-specific and not representation discovery from raw data |
-| [03 — Learned structured memory and retrieval systems](03-structured-memory-and-retrieval/README.md) | Direct/delta memories, learned and hierarchical routing, large-slot state, gathered access, and fused kernels | Frozen memory-core quality and local systems results; no end-to-end model or universal update-law winner |
+| [03 — Learned structured memory and retrieval systems](03-structured-memory-and-retrieval/README.md) | Direct/delta memories, learned and hierarchical routing, large-slot state, gathered access, fused kernels, and content-addressed hybrid memory | Frozen memory-core results plus bounded v1.4.5 causal-learning evidence; no universal update-law winner or robust ordinary-text long-range recall |
 | [04 — Triality and Clifford representation dynamics](04-triality-clifford-representation-dynamics/README.md) | Spin(8) shared `8v/8+/8-` actions, triality binding, Spin(9) Clifford binding, cross-view transport, and exact ordered-frame identifiability | Exact identities and a global seven-probe `SO(8)` action threshold; no matched-state storage advantage or Spin-lift recovery |
 | [05 — Information geometry and Dirac--Gram sensing](05-information-geometry-and-dirac-gram-sensing/README.md) | Probe identifiability, Cayley information spectra, Gram-normalized determinant inequalities, and Spin(9) exact design | Exact/local/constrained theorems with explicit domains; unrestricted Spin(8) positivity and global exact design remain open |
-| [06 — Rotor and noncommutative state-space models](06-rotor-noncommutative-state-space-models/README.md) | Persistent `Cl(3,0)`, Spin(8), quaternion/motor, and associative operator-lift states with selective noncommuting transport | Pure Spin(8) passes supplied, latent-token, continuous, endpoint-only, and adaptive lift-bit cohorts. The exact seven-probe alignment threshold is implemented, while its frozen uniform rank-27 effect-size headline fails in one seed |
+| [06 — Rotor and noncommutative state-space models](06-rotor-noncommutative-state-space-models/README.md) | Persistent `Cl(3,0)`, Spin(8), quaternion/motor, exceptional, and associative operator-lift states with selective noncommuting transport | Synthetic Spin(8) mechanisms pass bounded gates, but Pure Spin v1.2 loses the matched three-seed Tiny Shakespeare quality gate to fused Mamba-2 and exceptional transport loses its fresh localization gate to identity |
 | [07 — Collatz inverse-frontier dynamics](07-collatz-inverse-frontier-dynamics/README.md) | Standalone inverse odd-Collatz cylinders, hard-record envelope, affine word semigroup, and the `32/9` frontier | Exact bounded path-merged scanner and 10,000-step control reproduced locally; no external scan or finite-cover proof imported; asymptotic and eventual `(1,4)` claims remain open |
 | [08 — Spin--Dirac branching and finite subgroup lifts](08-spin-dirac-a5-branching/README.md) | Clifford spinor modules from Spin(3) through Spin(12), the fixed `2.A5` lift, cohomology, component structure, and spinor branching | Exact ladder, `H1=H2=0`, compact-real component atlas, and finite-group spinor atlas; a geometric Dirac theorem requires a specified manifold, bundle, operator, and boundary data |
 
@@ -62,6 +70,7 @@ being forced into a single bucket:
 | Memory benchmark atlas and FLA hybrid fit | Programme 03 for the visual systems/quality synthesis; Programmes 01, 02, and 04 retain their source claims | Derived figures only; protocols remain separate and the custom FLA mixer is still open |
 | Rotor transport ablations | Programme 06 for model conclusions; Programme 01 for affine-scan support | Algebraic validity does not transfer the empirical verdict |
 | Pure Spin(8) v1.1, signed transport, latent/continuous action identification, compiled token scan, lift calibration, alignment controls, and ordered-frame rank theorem | Programme 06 for maintained-model and benchmark claims; Programme 04 for representation identities and exact `SO(8)` action identifiability; Programme 01 for compiler/scan execution | The adaptive chart uses three external address bits plus one lift-odd bit. Seven ordered probes globally identify the action but not its Spin lift or factorized coordinates. The scrambled and rank-effect headlines each retain their frozen failures; this is not vector-only recovery, generic Mamba superiority, or a natural-input result |
+| Hybrid Memory v1.4/v1.4.5, GDN2 gate-law work, and Spin-Dirac preregistration | Programme 03 for addressing, erase/write, observability, and retrieval; Programme 06 for trained model comparisons; Programme 04 only for exact Spin/Clifford representation claims | G11/G12 establish bounded causal learning, G13 rejects long-range archive promotion, G14 is a constructed mechanism screen, and G15 has no trained result at freeze |
 | Spin/`2.A5` and dual-quaternion motor cohorts | Programme 06 for tracking and identification claims; Programme 01 for associative group/motor scans; Programme 04 for binary-center representation facts | Every-prefix signed-pose identification is not end-to-end learning from unsigned physical poses |
 | Octonion multiplication-operator lift | Programme 01 for associative operator scan and Triton execution; Programme 06 for synthetic model tasks; Programme 04 for `G2`, triality, and the exact finite operator-group classification | Raw octonion multiplication is not associative; the discrete left operators generate `2_+^(1+6)` and their Fano extension, while even-only terminal data identifies `G2 union -G2`, not a unique law |
 | Spin(3)-to-Spin(12) `2.A5` ladder, order-864,000 triality closure, and dense mixed monomial/golden groups | Programme 04 for finite-subgroup, spinor, embedding-generated group, finite-band mixing, and discrete chunk-scan claims; Programme 01 for scan execution | Triality remains confined to Spin(8); the exact six-representation band is not a full random-walk gap; the fused recurrence uses frozen labels, serial chunk depth, and initial-state-only backward—not a learned compiler or end-to-end SSM |
@@ -90,9 +99,10 @@ These are retained but are not numbered scientific programmes. Their role and
 validation contract are stated once in
 [Supporting evidence and provenance tracks](SUPPORTING_TRACKS.md).
 
-The former pointer-only and duplicate numbered routes were removed on
-2026-08-11. Their Git history remains available, but they no longer compete
-with the eight active programme names in the working tree.
+Former pointer-only and duplicate numbered routes are retained only where they
+carry useful provenance or historical narrative. Their headers and links route
+back to this index, and they do not compete with the eight active programme
+names.
 
 ## Evidence vocabulary
 

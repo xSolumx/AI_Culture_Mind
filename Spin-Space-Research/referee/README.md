@@ -1,5 +1,7 @@
 # Referee packages
 
+**Research author:** Hayden Austin
+
 Referee packages are compact, claim-specific review objects. Each package must
 contain a sharply scoped statement, human-readable proof, explicit trust
 boundary, independently reconstructed verifier where feasible, exact artifacts,

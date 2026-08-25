@@ -16,14 +16,28 @@ v1.4.4 seed and the exposed-seed causal repair remain retained evidence. The
 frozen G4a selected-memory result remains negative; these are bounded
 TinyStories results, not general language-quality or scaling-law promotion.
 
-This track combines five explicit mixer kinds in one causal language-model
+G14 has since established a narrow edit-law separation: decoupled GDN2 learns
+the constructed multi-value accumulation law on all three seeds while tied
+GDN-v1 cannot represent it. This is mechanism evidence only. G15 now contains
+an experimental content-addressed Spin/Clifford fast-weight memory with exact
+identity, fixed `SO(2)^4`, constrained `SU(3)` torus, full Spin(8), and broken-
+coupling transports. Its pre-training integrity artifact passes, but no G15
+learning result exists and the v1.4.5 default plan has not changed. See the
+[`frontier review`](FRONTIER_REVIEW_2026-08-25.md),
+[`Spin/torus research note`](SPIN_TORUS_RESEARCH.md), and
+[`G15 result ledger`](G15_SPIN_DIRAC_RESULTS.md).
+
+This track exposes seven explicit mixer kinds in one causal language-model
 shell:
 
 - bounded sliding-window RoPE attention with a complete streaming KV cache;
-- content-addressed Gated DeltaNet fast-weight memory;
+- content-addressed Gated DeltaNet v1 fast-weight memory;
+- decoupled GDN2 semantic memory with independent channelwise decay, erase,
+  and write;
 - the maintained repository DeltaProduct reference;
 - hierarchical selected-block affine memory;
-- bounded rung-routed Spin(8) memory.
+- bounded rung-routed Spin(8) memory; and
+- content-addressed two-sided Spin/Clifford fast weights.
 
 Layer schedules are explicit `layer_plan` tuples. Full-sequence, arbitrary
 chunk, and token-step execution carry complete recurrent, convolution, and
@@ -123,11 +137,17 @@ remains label-supervised with 774,400 useful query labels per seed.
 - [`gated_delta.py`](gated_delta.py): content-addressed matrix state with exact
   recurrent/parallel semantics, learned write and retention controls, and
   complete streaming state.
+- [`gated_delta_v2.py`](gated_delta_v2.py): maintained semantic GDN2 edit law
+  with independent channelwise decay, erase, and write; exact scan/chunk/mask/
+  gradient contracts; and no fused-kernel claim.
 - [`attention.py`](attention.py): bounded causal local attention and cache.
 - [`structured_tier.py`](structured_tier.py) and
   [`structured_memory.py`](structured_memory.py): data-routed subgroup ladder
   and a recurrent Spin(8) state that actually changes the model output.
-- [`model.py`](model.py): five-kind hybrid shell, local convolution caches,
+- [`spin_dirac_memory.py`](spin_dirac_memory.py): content-addressed `8_v ->
+  8_s+` matrix memory with bounded edits, two-sided transport, exact fixed
+  torus arms, full Spin actions, and a Clifford-coupled read.
+- [`model.py`](model.py): seven-kind hybrid shell, local convolution caches,
   checkpointing, diagnostics, and exact cache-byte accounting.
 - [`fla_adapter.py`](fla_adapter.py): fail-closed semantic and optional official
   FLA DeltaRule operator adapters.
@@ -193,6 +213,13 @@ remains label-supervised with 774,400 useful query labels per seed.
   [`long_context_diagnostic.py`](long_context_diagnostic.py): exact-target
   256-to-4,096 training, live-state chunking, recall ablations, and the
   post-hoc positionwise/fast-weight overwrite diagnostic.
+- [`g14_gate_law_screen.py`](g14_gate_law_screen.py): frozen constructed
+  representational separation between tied GDN-v1 and decoupled GDN2.
+- [`native_sm75_probe.py`](native_sm75_probe.py) and
+  [`pretrained_sm75_probe.py`](pretrained_sm75_probe.py): fail-closed,
+  source-bound native-kernel and actual-checkpoint qualification on the local
+  RTX 2070 SUPER. Environment and eligibility details live in
+  [`SM75_NATIVE_RUNTIME.md`](SM75_NATIVE_RUNTIME.md).
 
 ## Baseline boundary
 
@@ -203,9 +230,12 @@ semantic/systems controls, not silently promoted language models. Official
 Mamba-2 is an optional separate complete-model comparison and fails closed
 when unavailable.
 
-The exact pretrained `state-spaces/mamba2-130m` weights are pinned at revision
-`3a5aea0c25d0fb43cc360e2c2aac82c26e3eed49` in the external E: cache and were
-loaded through official `mamba_ssm` in WSL. They are not committed to Git.
+The exact pretrained `state-spaces/mamba2-130m` and
+`state-spaces/mamba3-siso-187m` weights are stored outside Git in the WSL Linux
+filesystem and loaded through a source-bound official `mamba_ssm` checkout.
+Hub revisions, weight hashes, tokenizer provenance, and actual SM75 outcomes
+are recorded in [`SM75_NATIVE_RUNTIME.md`](SM75_NATIVE_RUNTIME.md); these
+execution probes are not quality comparisons.
 
 G5 also trained small actual Transformers Mamba-2 and OLMo Hybrid models on the
 same synthetic episode stream as v1.4.4. Its proposed next-token write target
@@ -319,8 +349,10 @@ The curriculum wins at 4,096 in all three seeds and does not materially harm
 ordinary long-context gate therefore fails by magnitude rather than direction.
 
 The stronger memory gate fails decisively. At 8,192 raw bytes, all 72 prompts
-were 3,379--3,755 BPE tokens long and therefore exceeded the 2,048-token
-attention window. Curriculum matching-minus-mismatched gain averaged only
+were 3,379--3,755 BPE tokens long and therefore exceeded the actual 1,024-token
+attention window. The preregistration said 2,048, but the frozen builder and
+artifact record 1,024; both paired arms used that same smaller window.
+Curriculum matching-minus-mismatched gain averaged only
 `0.0000108` nats, versus `0.0000034` for fixed training, with one of three
 curriculum seed means negative. Suppressing Gated Delta removes the already
 tiny signal, while suppressing attention does not; this is a microscopic
@@ -355,6 +387,7 @@ python -m hybrid_memory_v1_4.precision_screen --output hybrid_memory_v1_4/artifa
 python -m hybrid_memory_v1_4.long_context_screen --device cuda --output hybrid_memory_v1_4/artifacts/mechanical_cuda_smoke_2026-08-24.json
 python -m hybrid_memory_v1_4.learnability_screen --output hybrid_memory_v1_4/artifacts/learnability.json --checkpoint hybrid_memory_v1_4/artifacts/checkpoints/learned.pt
 python -m hybrid_memory_v1_4.validation_screen --output hybrid_memory_v1_4/artifacts/validation.json --checkpoint-dir hybrid_memory_v1_4/artifacts/checkpoints
+python -m hybrid_memory_v1_4.g14_gate_law_screen --output hybrid_memory_v1_4/artifacts/g14_gate_law_screen_2026-08-25.json
 ```
 
 The CUDA screen is a random-token mechanical smoke: finiteness, chunk replay,
@@ -389,4 +422,12 @@ matched speed evidence.
   not aligned descent or improved accuracy.
 - Spin(8) structure and learned rung use are hypotheses, not promoted
   advantages.
+- G14 is a constructed unequal-parameter state-law separation, not a language
+  or long-context result.
+- G15 has implementation contracts but no learning result. The fixed
+  `su3_torus` mode is not a moving `G2/SU(3)` memory, and `SpinDirac` is not a
+  geometric Dirac differential operator.
+- Native SM75 probes qualify only the exact recorded implementation/runtime;
+  first-call compilation time and finite loss are not matched throughput or
+  model quality.
 - Reference Python timings are not fused-kernel comparisons.

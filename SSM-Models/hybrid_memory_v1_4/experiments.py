@@ -359,6 +359,13 @@ def source_file_digests() -> tuple[SourceFileDigest, ...]:
         root / "upstream_probe.py",
         root / "model.py",
         root / "gated_delta.py",
+        root / "gated_delta_v2.py",
+        root / "spin_dirac_memory.py",
+        root / "g14_gate_law_screen.py",
+        root / "g15_integrity_screen.py",
+        root / "modern_ssm_probe.py",
+        root / "native_sm75_probe.py",
+        root / "pretrained_sm75_probe.py",
         root / "tasks.py",
         root / "baselines.py",
         root / "selected_block.py",
@@ -384,6 +391,10 @@ def source_file_digests() -> tuple[SourceFileDigest, ...]:
         root / "G12_PREREGISTRATION.md",
         root / "G12E_PREREGISTRATION.md",
         root / "G13_PREREGISTRATION.md",
+        root / "G14_PREREGISTRATION.md",
+        root / "G15_SPIN_DIRAC_PREREGISTRATION.md",
+        root / "G15_SPIN_DIRAC_AMENDMENT_2026-08-25.md",
+        root / "G15_SPIN_DIRAC_EDIT_LAW_AMENDMENT_2026-08-25.md",
         root.parent / "delta_product_reference.py",
     )
     reports = []
@@ -556,6 +567,13 @@ def _write_keys_and_positions(
     )
 
 
+def _read_keys(batch: _tasks.RetrievalBatch) -> torch.Tensor:
+    if batch.schema.name == "selective_copy":
+        vocab = batch.schema.vocabulary
+        return vocab.key_start + (batch.targets - vocab.value_start)
+    return batch.inputs.gather(1, batch.query_positions)
+
+
 def _time_gather(values: torch.Tensor, positions: torch.Tensor) -> torch.Tensor:
     if values.ndim < 3 or positions.ndim != 2 or positions.shape[0] != values.shape[0]:
         raise ValueError("routing values or positions have incompatible shapes")
@@ -581,10 +599,7 @@ def routing_auxiliary_loss(
     if not isinstance(diagnostics, Sequence):
         raise TypeError("output must come from return_diagnostics=True")
     write_keys, write_positions = _write_keys_and_positions(batch)
-    read_keys = batch.inputs.gather(1, batch.query_positions)
-    if batch.schema.name == "selective_copy":
-        vocab = batch.schema.vocabulary
-        read_keys = vocab.key_start + (batch.targets - vocab.value_start)
+    read_keys = _read_keys(batch)
 
     losses: list[torch.Tensor] = []
     for diagnostic in diagnostics:
@@ -677,7 +692,7 @@ def gated_delta_association_auxiliary_loss(
     write_gate_weight = _nonnegative_finite("write_gate_weight", write_gate_weight)
     retention_weight = _nonnegative_finite("retention_weight", retention_weight)
     write_keys, write_positions = _write_keys_and_positions(batch)
-    read_keys = batch.inputs.gather(1, batch.query_positions)
+    read_keys = _read_keys(batch)
 
     # Select the last matching write. This also gives overwrite tasks the
     # correct target association while MQAR's unique keys remain unchanged.
@@ -691,10 +706,11 @@ def gated_delta_association_auxiliary_loss(
     for diagnostic in diagnostics:
         if not isinstance(diagnostic, Mapping):
             continue
-        if diagnostic.get("kind") != "gated_delta":
+        kind = diagnostic.get("kind")
+        if kind not in ("gated_delta", "gated_delta_v2", "spin_dirac"):
             continue
-        query = diagnostic.get("query")
-        key = diagnostic.get("key")
+        query = diagnostic.get("query_vector" if kind == "spin_dirac" else "query")
+        key = diagnostic.get("key_vector" if kind == "spin_dirac" else "key")
         write = diagnostic.get("write_strength")
         retention = diagnostic.get("retention")
         if not all(isinstance(item, torch.Tensor) for item in (query, key, write)):
@@ -711,7 +727,11 @@ def gated_delta_association_auxiliary_loss(
         address_loss = F.cross_entropy(similarities.flatten(0, 2), targets.flatten())
 
         events = torch.zeros_like(write)
-        event_index = write_positions[:, :, None].expand(-1, -1, write.shape[-1])
+        event_index = write_positions.view(
+            write_positions.shape[0],
+            write_positions.shape[1],
+            *((1,) * (write.ndim - 2)),
+        ).expand(write_positions.shape[0], write_positions.shape[1], *write.shape[2:])
         events.scatter_(1, event_index, 1.0)
         write_max = 2.0 if float(write.detach().max()) > 1.0 else 1.0
         probabilities = (write / write_max).clamp(
@@ -720,7 +740,8 @@ def gated_delta_association_auxiliary_loss(
         write_loss = F.binary_cross_entropy(probabilities, events)
         layer_loss = address_loss + write_gate_weight * write_loss
         if isinstance(retention, torch.Tensor):
-            nonwrite = 1.0 - events
+            event_by_token = events.amax(dim=-1, keepdim=True)
+            nonwrite = (1.0 - event_by_token).expand_as(retention)
             retention_loss = (
                 (1.0 - retention).square() * nonwrite
             ).sum() / nonwrite.sum().clamp_min(1.0)
@@ -753,7 +774,11 @@ def intermediate_retrieval_auxiliary_loss(
     for diagnostic, layer_logits in zip(diagnostics, intermediate, strict=True):
         if not isinstance(diagnostic, Mapping):
             continue
-        if diagnostic.get("kind") != "gated_delta":
+        if diagnostic.get("kind") not in (
+            "gated_delta",
+            "gated_delta_v2",
+            "spin_dirac",
+        ):
             continue
         if not isinstance(layer_logits, torch.Tensor):
             raise TypeError("intermediate logits must be tensors")

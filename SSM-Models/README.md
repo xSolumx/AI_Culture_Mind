@@ -1,5 +1,9 @@
 # GA-SSM experiments
 
+**Research author:** Hayden Austin
+
+**Current model inventory:** [MODEL_STATUS.md](MODEL_STATUS.md)
+
 > **Archive status.** This folder preserves the development lineage of the
 > selective rotor and triality experiments. Dated reports and preregistrations
 > state what was known when they were written; later results may supersede their
@@ -16,21 +20,28 @@
 > environment, correctness, gradient, and matched-performance gates on cu126;
 > artifact labels are never rewritten in place.
 
-> **2026-08-24 Hybrid Memory v1.4 research boundary.**
-> [`hybrid_memory_v1_4/`](hybrid_memory_v1_4/) is a structurally tested
-> prototype combining bounded local attention, the maintained DeltaProduct
-> reference, selected-block affine memory, and rung-routed Spin(8) memory. Its
-> original one-block temporal-observability gate was structurally false: hard
-> coarse routing disconnected its logits and non-final reads had no path to a
-> final-only loss. Straight-through routing plus an explicit
-> `selected_block -> attention` schedule repairs that causal path, while the
-> failed gate remains recorded. Mechanical CUDA streaming and 65,536-step
-> numerical audits pass. The frozen three-seed, 600-update MQAR campaign then
-> failed capability for both label-free and supervised routing; its matched
-> DeltaProduct control also stayed near chance, so the failure does not isolate
-> selected memory. No trained checkpoint, quality result, or speed promotion
-> exists. See the [v1.4 results](hybrid_memory_v1_4/RESULTS.md)
-> and [prospective G4a protocol](hybrid_memory_v1_4/PREREGISTRATION.md).
+> **2026-08-25 Hybrid Memory v1.4/v1.4.5 research boundary.**
+> [`hybrid_memory_v1_4/`](hybrid_memory_v1_4/) is an active research workspace,
+> not the maintained Pure Rotor/Pure Spin line. It now validates a small
+> `gated_delta -> attention` causal learner and commissioned synthetic memory,
+> while preserving the earlier selected-memory failures and observability
+> diagnosis. G11 reached 1.614 held-out TinyStories next-byte bpb in a bounded
+> one-seed screen; G12 adds bounded multi-seed ordinary-text evidence but no
+> factual-recall promotion. G13's 4,096-token curriculum improved all paired
+> ordinary-loss rows but missed its frozen effect-size threshold, and
+> 8,192-byte factual recall remained tiny and unstable. G14 supports
+> independent erase/write only on a deliberately constructed mechanism task.
+> G15's content-addressed Spin-Dirac comparison has algebraic/unit contracts,
+> including an exact constrained `SU(3)` torus and a conjugation-covariant
+> scalar edit law, but no trained result. Source-bound SM75 probes qualify
+> Mamba-3 SISO and the Turing FlashAttention fork; current local GDN2 training
+> routes fail closed. See the
+> [frontier review](hybrid_memory_v1_4/FRONTIER_REVIEW_2026-08-25.md),
+> [v1.4 results](hybrid_memory_v1_4/RESULTS.md),
+> [Spin/torus boundary](hybrid_memory_v1_4/SPIN_TORUS_RESEARCH.md),
+> [G15 ledger](hybrid_memory_v1_4/G15_SPIN_DIRAC_RESULTS.md),
+> [SM75 runtime ledger](hybrid_memory_v1_4/SM75_NATIVE_RUNTIME.md), and
+> [current model inventory](MODEL_STATUS.md).
 
 > **2026-08-21 Pure Exceptional Delta SSM v1.3 development boundary.**
 > [`pure_f4_delta_ssm_v1_3/`](pure_f4_delta_ssm_v1_3/) now contains an isolated

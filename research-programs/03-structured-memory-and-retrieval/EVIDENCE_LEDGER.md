@@ -1,5 +1,9 @@
 # Triality memory and intertwiner scans
 
+**Research author:** Hayden Austin
+
+**Last reconciled:** 2026-08-25
+
 > **Taxonomy note.** This is a provenance-preserving combined evidence ledger,
 > not a second programme map. Its scan/compiler,
 > equivariant-identification, memory-system, and exceptional-representation
@@ -43,6 +47,10 @@ provides an exceptional eight-dimensional instance.
 | Query gradient topology | [`SPIN_DELTA_QUERY_GRADIENT_TOPOLOGY_RESULTS.md`](../../SSM-Models/pure_spin_ssm_v1_2/SPIN_DELTA_QUERY_GRADIENT_TOPOLOGY_RESULTS.md) | Exact local dead-path identity plus three paired raw-CUDA initialization probes; selects soft query-event continuation, not model quality |
 | Query-event continuation | [`SPIN_DELTA_QUERY_CONTINUATION_RESULTS.md`](../../SSM-Models/pure_spin_ssm_v1_2/SPIN_DELTA_QUERY_CONTINUATION_RESULTS.md) | Fresh paired 3x3 intervention fails all mechanism and autonomy decisions; restored slot credit is insufficient for controller identification |
 | Temporal query observability | [`SPIN_DELTA_TEMPORAL_OBSERVABILITY_RESULTS.md`](../../SSM-Models/pure_spin_ssm_v1_2/SPIN_DELTA_TEMPORAL_OBSERVABILITY_RESULTS.md) | Exact one-block non-final zero, measured stack-induced Jacobian, and failed grammar-alignment gate motivate an event-free read address |
+| Hybrid Memory v1.4/v1.4.5 frontier | [`FRONTIER_REVIEW_2026-08-25.md`](../../SSM-Models/hybrid_memory_v1_4/FRONTIER_REVIEW_2026-08-25.md) | Bounded causal-learning and commissioned-memory validation; G13 long-range archive promotion rejected |
+| Decoupled erase/write mechanism screen | [`G14_PREREGISTRATION.md`](../../SSM-Models/hybrid_memory_v1_4/G14_PREREGISTRATION.md) and [`g14_gate_law_screen_2026-08-25.json`](../../SSM-Models/hybrid_memory_v1_4/artifacts/g14_gate_law_screen_2026-08-25.json) | Constructed unequal-parameter representational/optimization pass; no natural-text, long-context, throughput, or model-quality claim |
+| Spin-Dirac content-addressed memory | [`G15_SPIN_DIRAC_PREREGISTRATION.md`](../../SSM-Models/hybrid_memory_v1_4/G15_SPIN_DIRAC_PREREGISTRATION.md) and [`G15_SPIN_DIRAC_AMENDMENT_2026-08-25.md`](../../SSM-Models/hybrid_memory_v1_4/G15_SPIN_DIRAC_AMENDMENT_2026-08-25.md) | Prospective identity/readout/commuting/full-Spin attribution ladder; algebraic contracts only and no trained result at freeze |
+| Spin-Dirac current integrity ledger | [`G15_SPIN_DIRAC_RESULTS.md`](../../SSM-Models/hybrid_memory_v1_4/G15_SPIN_DIRAC_RESULTS.md) | Fixed `SO(2)^4`, constrained `SU(3)` torus, full Spin, and broken-coupling implementations; integrity partially complete and no learning cohort run |
 | Blind shared action | [`SPIN8_BLIND_SHARED_ACTION_RESULTS.md`](../../Spin-Space-Research/docs/experiments/SPIN8_BLIND_SHARED_ACTION_RESULTS.md) | Learned-action experiment |
 | Continuous aliases | [`SPIN8_CONTINUOUS_ALIAS_RESULTS.md`](../../Spin-Space-Research/docs/experiments/SPIN8_CONTINUOUS_ALIAS_RESULTS.md) | Alias-learning experiment |
 | Coded memory | [`SPIN8_CODED_MEMORY_RESULTS.md`](../../Spin-Space-Research/docs/experiments/SPIN8_CODED_MEMORY_RESULTS.md) | Multiplicity-channel memory |

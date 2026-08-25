@@ -1,5 +1,7 @@
 # External baseline programme
 
+**Research author:** Hayden Austin
+
 This directory turns the requested Falcon-Mamba, Mamba-3, GKA, GDN, Mamba-2,
 and Jamba comparisons into a fail-closed source and measurement contract.
 `manifest.py` pins every official model revision and implementation source;
@@ -32,8 +34,15 @@ python external_baselines/audit.py --live \
   --output artifacts/external_baseline_audit.json
 ```
 
-The next implementation gate is a separate Mamba-3/GKA/GDN environment. It
-must not upgrade Torch, Triton, or Mamba inside the frozen v1.2 Mamba-2 venv.
+The separate SM75 environments now exist outside this frozen v1.2 tree.
+Source-current Mamba-3 SISO and actual 187M/130M Mamba checkpoints execute on
+the RTX 2070 SUPER; Mamba-3 MIMO is excluded by an SM80 MMA path, and the
+current GDN2 training kernels did not qualify. The source revisions, packages,
+weight/tokenizer hashes, and fail-closed artifacts are documented in the
+[Hybrid Memory SM75 runtime ledger](../../hybrid_memory_v1_4/SM75_NATIVE_RUNTIME.md).
+Those execution gates do not rewrite v1.2's matched Shakespeare result or
+promote a cross-tokenizer quality comparison. The frozen v1.2 Mamba-2 venv
+remains unchanged.
 
 Quantized/offloaded checkpoint experiments use the pinned CUDA 7.5 llama.cpp
 build described in [`LLAMA_CPP_WSL.md`](LLAMA_CPP_WSL.md). Its source, build,

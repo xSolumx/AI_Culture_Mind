@@ -4,6 +4,14 @@
 **Parent evidence:** G12A--G12E  
 **Status at freeze:** protocol and thresholds fixed; no G13 outcome inspected
 
+> **Post-run protocol deviation (2026-08-25):** this frozen document specifies
+> a 2,048-token attention window, but the frozen builder inherited
+> `attention_window_size=1024` from `successor_screen.py`; the completed artifact
+> also records 1,024. Both paired arms used the same 1,024-token window, so the
+> paired curriculum comparison remains internally controlled. The run did not
+> execute the written 2,048-window architecture, and later reports must use the
+> actual 1,024 value. This notice preserves rather than rewrites the frozen spec.
+
 ## Question
 
 Does ordinary next-token pretraining through

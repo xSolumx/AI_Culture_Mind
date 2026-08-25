@@ -1,5 +1,7 @@
 # Raw artifacts
 
+**Research author:** Hayden Austin
+
 This directory contains the JSON outputs that support the research documents.
 They are retained as immutable evidence, including failed gates and controls.
 The standalone extraction began with 255 source-derived artifacts; subsequent
