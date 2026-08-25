@@ -125,3 +125,10 @@ def test_g15b_actual_memory_has_an_exact_oracle_control_ceiling(
 def test_g15b_rejects_more_than_eight_live_keys() -> None:
     with pytest.raises(ValueError, match="at most eight"):
         generate_interleaved_batch("mqar", 2, 64, 9, 9, 2, seed=1)
+
+
+def test_g15b_device_transfer_does_not_repeat_causal_replay() -> None:
+    batch = generate_interleaved_batch("mqar", 2, 64, 2, 4, 4, seed=7)
+    transferred = batch.to("cpu")
+    assert transferred._skip_validation
+    assert transferred.fingerprint() == batch.fingerprint()

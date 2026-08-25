@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import hashlib
-from dataclasses import dataclass, replace
+from dataclasses import dataclass, field, replace
 from typing import Literal
 
 import torch
@@ -85,9 +85,11 @@ class InterleavedBatch:
     roles: torch.Tensor
     needle_distances: torch.Tensor
     seed: int
+    _skip_validation: bool = field(default=False, repr=False, compare=False)
 
     def __post_init__(self) -> None:
-        self.validate()
+        if not self._skip_validation:
+            self.validate()
 
     @property
     def batch_size(self) -> int:
@@ -112,7 +114,10 @@ class InterleavedBatch:
             for name, value in self.__dict__.items()
             if isinstance(value, torch.Tensor)
         }
-        return replace(self, **updates)
+        # CPU construction already performed the full causal replay. Repeating
+        # its scalar checks after transfer would introduce one device
+        # synchronization per token in the training loop.
+        return replace(self, **updates, _skip_validation=True)
 
     def fingerprint(self) -> str:
         digest = hashlib.sha256()
