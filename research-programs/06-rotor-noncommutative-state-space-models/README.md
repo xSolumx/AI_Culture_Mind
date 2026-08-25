@@ -194,6 +194,15 @@ new matched natural-data and complete-step hardware evidence.
   fail cohort-wide. `S` beats `I`, `C`, and `S-broken` by at least 0.05 in every
   row, so the observation repair separates the shared lift, but controller
   precision remains unsolved. The broken-2x check passes only two rows.
+- G15A-R passes the first-order repair on exact SM75 clean commit `eca70f0`.
+  All five development recipes qualify. The 600-step fixed-LR/random control
+  reaches 0.0155--0.0285 mean error, so decay is not proven necessary. Frozen
+  least-intervention selection chooses `G-decay/random`, whose development
+  means are about `1.03e-7`--`1.85e-7`; staged decay is vastly more precise,
+  while block moments and curriculum are unnecessary. Fresh confirmation seeds
+  2251/2267/2273 pass all four transports and all L64/L256/L1024 gates: `S`
+  means are `1.21e-7`--`1.89e-7`, p95 `<=2.68e-7`, maximum `<=3.27e-7`, and
+  every comparator-margin and broken-2x check passes.
 
 ## Open Claims
 
@@ -217,10 +226,10 @@ new matched natural-data and complete-step hardware evidence.
   coordinates.
 - Matched-task evidence that the full dense-SO(8) Cayley control chart is more
   useful than restricted, octonion, Givens/Householder, or modern SSM controls.
-- Diagnose G15A-F chart leakage and convergence, then prospectively freeze a
-  balanced-primitive curriculum with a block-scalar optimizer. This precedes
-  G15B, more geometry, or natural text. Full three-carrier triality, generic
-  associative-memory, natural-text, and scaling gates remain open.
+- G15B generic association with learned addressing and querying is next,
+  retaining the `I/C/S/S-broken` controls and selected `G-decay/random` recipe.
+  More geometry is not the next move. Full three-carrier triality, natural text,
+  and scaling remain open.
 
 ## Dependencies
 
@@ -259,6 +268,10 @@ new matched natural-data and complete-step hardware evidence.
 - G15A-F's repaired-observation comparator margins do not rescue its failed
   absolute precision, p95, maximum-error, or broken-2x quality gates and do not
   promote the model.
+- G15A-R establishes composition-only minimal-controller chart learning under a
+  four-probe oracle frame and oracle edit timing. It does not establish generic
+  association, learned addressing/querying, language, full triality, or scaling;
+  fixed-LR success means decay is sufficient but not proven necessary.
 - The approximately 2,000x Pure Spin(8) MSE gap is task-specific and does not
   establish generic Mamba superiority, state matching, or a fused-kernel win.
 - The latent-token result removes supplied coordinates only for eight fixed
@@ -321,4 +334,6 @@ new matched natural-data and complete-step hardware evidence.
 - [G15A-L learned-coordinate artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g15al_learned_coordinate_cohort_sm75_2026-08-25.json)
 - [G15A-F full-frame protocol](../../SSM-Models/hybrid_memory_v1_4/G15AF_FULL_FRAME_PROTOCOL_2026-08-25.md)
 - [G15A-F full-frame artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g15af_full_frame_cohort_sm75_2026-08-25.json)
+- [G15A-R first-order repair protocol](../../SSM-Models/hybrid_memory_v1_4/G15AR_FIRST_ORDER_PROTOCOL_2026-08-25.md)
+- [G15A-R first-order repair artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g15ar_first_order_repair_sm75_2026-08-25.json)
 - [Local SM75 native-runtime ledger](../../SSM-Models/hybrid_memory_v1_4/SM75_NATIVE_RUNTIME.md)

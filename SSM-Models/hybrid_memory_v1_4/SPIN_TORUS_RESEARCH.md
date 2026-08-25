@@ -171,6 +171,15 @@ precision gate, so the result supports an identifiable shared vector/positive
 transport mechanism but not a solved controller. Chart-error decomposition and
 a separately frozen learning repair precede generic association or geometry.
 
+G15A-R subsequently supplies that learning repair. The original global
+rotation-covariant optimizer on random compositions, with a 600-step staged-LR
+schedule, learned the chart to roughly `1e-7` error and passed fresh
+I/C/S/S-broken confirmation. Because the longer fixed-LR control also passed,
+decay is a precision improvement rather than a demonstrated necessity. The
+supported advance is learned shared vector/positive transport under
+multi-probe oracle frames and oracle edit timing. G15B address/write/query
+learning now precedes any torus-bank or moving-frame implementation.
+
 ## Claim ledger
 
 **Exact in code/tests:** two-sided affine scan algebra; content addressing;
@@ -179,7 +188,9 @@ constrained $SU(3)\;T^2$; shared triality actions; Clifford equivariance;
 inner-conjugation covariance of the scalar edit law; explicit broken-coupling
 control.
 
-**Empirical but local:** contract tests and finite runtime probes only.
+**Empirical but local:** supplied-coordinate G15A separation; G15A-R learned
+primitive-coordinate composition and fresh four-transport confirmation under
+oracle frames/edit timing; native runtime and finite contract probes.
 
 **Open:** learned benefit from Spin transport, sparse conjugate tori, moving
 (G_2) frames, generic language improvement, long-range factual recall, and a

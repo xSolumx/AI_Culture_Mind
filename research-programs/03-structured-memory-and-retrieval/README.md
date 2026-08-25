@@ -106,6 +106,18 @@ representation.
   `S` does beat `I`, `C`, and `S-broken` by at least 0.05 in every seed/length,
   so the observation repair separates the shared lift, but controller precision
   is not solved. The additional `S-broken >= 2x S` check passes only two rows.
+- G15A-R completes the first-order repair on exact SM75 from clean commit
+  `eca70f0` (artifact SHA-256 begins `be004dea`). All five development recipes
+  qualify. Even the nonselectable 600-step `G-fixed/random` control reaches mean
+  errors 0.0155--0.0285, so learning-rate decay is not proven necessary. The
+  predeclared least-intervention order selects `G-decay/random`, which reaches
+  about `1.03e-7`--`1.85e-7` development mean error: staged decay is vastly
+  more precise, while a block moment and balanced curriculum are unnecessary.
+  Fresh seeds 2251/2267/2273 pass every frozen `I/C/S/S-broken` row at
+  L64/L256/L1024. `S` means span `1.21e-7`--`1.89e-7`, p95 is at most
+  `2.68e-7`, maximum error at most `3.27e-7`, margins are 0.234--0.355 versus
+  `I`, 0.231--0.351 versus `C`, and 0.153--0.234 versus `S-broken`, with
+  broken-2x passing every row.
 
 ## Open Claims
 
@@ -124,11 +136,12 @@ representation.
 - G15A's supplied-coordinate primary and conditional mechanism ladders pass,
   but G15A-L rejects autonomous learned-coordinate attribution under its frozen
   cosine observation map. G15A-F restores comparator separation under full-
-  frame raw-Frobenius observation but misses the absolute precision gates. The
-  next step is chart leakage/convergence diagnosis, followed by a prospectively
-  frozen balanced-primitive curriculum and block-scalar optimizer before G15B
-  or natural text. Full three-carrier triality, generic association, and
-  scaling remain open.
+  frame raw-Frobenius observation but misses the absolute precision gates.
+  G15A-R repairs precision with the existing global `ScalarSecondMomentAdamW`,
+  600 steps, and staged decay; block-scalar moments and curriculum are not
+  needed. G15B generic association with learned addressing/querying is next,
+  retaining `I/C/S/S-broken` and the selected recipe. Full three-carrier
+  triality, natural-text, and scaling remain open.
 - A frozen phase-separated follow-up rejected early address noise as a
   complete explanation: the perfect frozen-router core still missed its robust
   gate in one seed.
@@ -195,6 +208,10 @@ representation.
 - G15A-F's all-row comparator separation is not a quality pass or model
   promotion: `S` misses its frozen absolute mean and p95 gates throughout, and
   the maximum-error and broken-2x checks pass only two rows each.
+- G15A-R is a composition-only controller result under a four-probe oracle
+  initial frame and oracle edit timing. It is not generic association, learned
+  addressing/querying, language modelling, full triality, or scaling evidence;
+  the fixed-LR control prevents a claim that decay is necessary.
 
 ## Canonical Evidence
 
@@ -222,6 +239,8 @@ representation.
 - [G15A-L learned-coordinate artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g15al_learned_coordinate_cohort_sm75_2026-08-25.json)
 - [G15A-F full-frame protocol](../../SSM-Models/hybrid_memory_v1_4/G15AF_FULL_FRAME_PROTOCOL_2026-08-25.md)
 - [G15A-F full-frame artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g15af_full_frame_cohort_sm75_2026-08-25.json)
+- [G15A-R first-order repair protocol](../../SSM-Models/hybrid_memory_v1_4/G15AR_FIRST_ORDER_PROTOCOL_2026-08-25.md)
+- [G15A-R first-order repair artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g15ar_first_order_repair_sm75_2026-08-25.json)
 - [Spin/torus architecture and claim boundary](../../SSM-Models/hybrid_memory_v1_4/SPIN_TORUS_RESEARCH.md)
 
 The Spin-labelled reports remain at their provenance paths. Their routing,

@@ -302,3 +302,32 @@ global scalar optimizer while no longer coupling unrelated token rows through
 one denominator. The winner, if any, must be reinitialized and pass the full
 I/C/S/S-broken cohort on three untouched seeds. No support labels or post-hoc
 projection enter training.
+
+## G15A-R passes composition-only chart learning
+
+The clean SM75 run from commit `eca70f0` completed in 290.6 seconds and passed
+the complete frozen programme. All five development recipes qualified. The
+longer 600-step fixed-LR/random control reached mean errors
+`0.0155--0.0285`; therefore the earlier 300-step miss was not a hard optimizer
+or representation failure, and LR decay is not shown necessary.
+
+The predeclared selectable order chose `G-decay/random`. This retains the
+original dense 476-scalar table, global rotation-covariant scalar moment,
+random two-to-six-action composition data, raw Frobenius loss, and four-probe
+observation. Only the 600-update budget and staged learning rate change. It
+reached `1.03e-7--1.85e-7` mean error on development. Block-scalar moments and
+the primitive/inverse curriculum also solve the task but add no demonstrated
+need.
+
+Fresh confirmation reinitialized I, C, S, and S-broken on seeds 2251, 2267,
+and 2273. S mean error was `1.21e-7--1.89e-7`, p95 at most `2.68e-7`, and
+maximum at most `3.27e-7` across all nine length rows. Its minimum margins were
+`0.234` over I, `0.231` over C, and `0.153` over S-broken; every broken-two-
+times and pairing check passed.
+
+The present learning problem is now sharply advanced: a token controller can
+learn the shared vector/positive Spin coordinate chart from composition-only
+end loss when the observation exposes both carriers. Oracle frame probes and
+edit timing remain, so G15B must learn address/write/query behavior on generic
+association while holding this recipe and the four transports fixed. That is
+the next bottleneck; additional exceptional geometry is not.

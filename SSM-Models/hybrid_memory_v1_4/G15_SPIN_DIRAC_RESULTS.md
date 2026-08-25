@@ -232,5 +232,46 @@ seeds and fixed validation traces. The least intervention clearing every
 original absolute gate must then pass untouched four-transport confirmation
 seeds. No primitive support is supplied to training.
 
+## G15A-R learning result
+
+The clean exact-SM75 run at commit `eca70f0` passed its complete frozen
+development-selection-confirmation protocol. All five development recipes
+qualified. The 600-step fixed-LR/random control reached mean error
+`0.0155--0.0285`, so LR decay is **not proven necessary**; simply extending
+the original stochastic composition training also crosses the absolute gate.
+
+Among selectable arms, the predeclared least-intervention order chose
+`G-decay/random`. It changes neither the dense controller, data distribution,
+global scalar-second-moment optimizer, nor loss: only 600 updates and staged
+LR `0.05 -> 0.01 -> 0.002`. Its development mean errors were
+`1.03e-7--1.85e-7`. The block-scalar optimizer and primitive/inverse curriculum
+also worked but were unnecessary.
+
+Fresh confirmation then reinitialized the selected recipe on seeds 2251,
+2267, and 2273:
+
+| Metric over all seeds and L64/L256/L1,024 | Range |
+|---|---:|
+| S mean relative error | `1.21e-7--1.89e-7` |
+| S p95 relative error | `1.53e-7--2.68e-7` |
+| S maximum relative error | `2.00e-7--3.27e-7` |
+| I minus S mean-error margin | `0.234--0.355` |
+| C minus S mean-error margin | `0.231--0.351` |
+| S-broken minus S mean-error margin | `0.153--0.234` |
+
+Every absolute, comparator, broken-two-times, exact-pairing, and finite-value
+gate passes in every row. This establishes composition-only learned primitive
+coordinates for the shared vector/positive Spin lift under the four-probe
+oracle-frame objective and oracle edit timing. It does not establish learned
+addressing/querying, generic association, language performance, negative-spin
+benefit, or full triality.
+
+Evidence:
+[`artifacts/g15ar_first_order_repair_sm75_2026-08-25.json`](artifacts/g15ar_first_order_repair_sm75_2026-08-25.json).
+
+The next gate is G15B: hold the selected recipe and I/C/S/S-broken transports
+fixed while learning content address, write timing, and final query on generic
+associative tasks. More exceptional geometry is not the present bottleneck.
+
 The constrained `su3_torus` arm is an additional scientific ablation, not a
 replacement for the four frozen primary arms.

@@ -52,9 +52,17 @@
 > relative Frobenius errors remain 0.0705--0.1433 and the frozen absolute mean,
 > p95, and maximum-error quality gates fail; broken-2x passes only two rows.
 > The observation repair separates the shared lift but does not solve controller
-> precision. Chart leakage/convergence diagnosis, then a prospectively frozen
-> balanced-primitive curriculum/block-scalar optimizer, precedes G15B or
-> natural text. There is no promotion.
+> precision. G15A-R then passes on exact SM75 clean commit `eca70f0`. All five
+> development recipes qualify; the 600-step fixed-LR/random control reaches
+> 0.0155--0.0285 mean error, so decay is not proven necessary. Frozen least-
+> intervention selection chooses `G-decay/random`, and fresh seeds
+> 2251/2267/2273 pass every four-arm L64/L256/L1024 gate with `S` mean errors
+> `1.21e-7`--`1.89e-7`, p95 `<=2.68e-7`, and max `<=3.27e-7`. The existing
+> global scalar optimizer plus 600 steps/decay is sufficient; block moments and
+> curriculum are unnecessary. This is composition-only shared-chart learning
+> under a four-probe oracle frame and oracle edit timing, not generic
+> association, language, full triality, or scaling. G15B learned
+> address/query association is next, retaining `I/C/S/S-broken` and the recipe.
 > Source-bound SM75 probes qualify
 > Mamba-3 SISO and the Turing FlashAttention fork; current local GDN2 training
 > routes fail closed. See the
@@ -69,6 +77,8 @@
 > [G15A-L learned-coordinate artifact](hybrid_memory_v1_4/artifacts/g15al_learned_coordinate_cohort_sm75_2026-08-25.json),
 > [G15A-F full-frame protocol](hybrid_memory_v1_4/G15AF_FULL_FRAME_PROTOCOL_2026-08-25.md),
 > [G15A-F full-frame artifact](hybrid_memory_v1_4/artifacts/g15af_full_frame_cohort_sm75_2026-08-25.json),
+> [G15A-R first-order repair protocol](hybrid_memory_v1_4/G15AR_FIRST_ORDER_PROTOCOL_2026-08-25.md),
+> [G15A-R first-order repair artifact](hybrid_memory_v1_4/artifacts/g15ar_first_order_repair_sm75_2026-08-25.json),
 > [SM75 runtime ledger](hybrid_memory_v1_4/SM75_NATIVE_RUNTIME.md), and
 > [current model inventory](MODEL_STATUS.md).
 

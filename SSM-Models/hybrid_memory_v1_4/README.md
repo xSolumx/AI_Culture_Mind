@@ -70,6 +70,15 @@ passes every old absolute gate without correcting their amplitudes. The frozen
 [`G15A-R first-order protocol`](G15AR_FIRST_ORDER_PROTOCOL_2026-08-25.md)
 therefore tests LR decay, a new per-token rotation-covariant second moment, and
 a balanced primitive/inverse curriculum separately before fresh confirmation.
+G15A-R passed. All five development recipes qualified; even the longer
+fixed-LR control passed, so decay is not necessary on current evidence. The
+predeclared selectable order chose the unchanged global scalar optimizer on
+random compositions with staged LR. On three untouched confirmation seeds, S
+mean relative error was `1.21e-7--1.89e-7` through L1,024 and beat I, C, and
+S-broken by at least `0.153`. See the
+[`G15A-R artifact`](artifacts/g15ar_first_order_repair_sm75_2026-08-25.json).
+This solves primitive chart learning under oracle frames/edit timing, not
+generic memory or language.
 
 This track exposes seven explicit mixer kinds in one causal language-model
 shell:

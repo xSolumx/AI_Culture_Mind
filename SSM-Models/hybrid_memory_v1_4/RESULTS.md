@@ -1000,6 +1000,25 @@ Evidence:
 and
 [`G15AR_FIRST_ORDER_PROTOCOL_2026-08-25.md`](G15AR_FIRST_ORDER_PROTOCOL_2026-08-25.md).
 
+The clean G15A-R run at commit `eca70f0` passed. All five development recipes
+qualified. The 600-step fixed-LR/random control itself reached
+`0.0155--0.0285` mean error, so the evidence does not show LR decay is
+necessary. The frozen selectable order chose `G-decay/random`; it retained the
+original dense table, random 2--6-action compositions, and global
+rotation-covariant scalar moment, changing only the update budget and staged
+LR. Development mean error fell to `1.03e-7--1.85e-7`.
+
+On untouched confirmation seeds 2251/2267/2273, S mean error was
+`1.21e-7--1.89e-7`, p95 at most `2.68e-7`, and maximum at most `3.27e-7` at
+every L64/L256/L1,024 row. Mean-error margins were at least `0.234` over I,
+`0.231` over C, and `0.153` over S-broken; the broken-two-times check passed
+throughout. This is a real learned-coordinate mechanism result under oracle
+frames and edit timing. It is not generic association or natural-text
+evidence.
+
+Evidence:
+[`artifacts/g15ar_first_order_repair_sm75_2026-08-25.json`](artifacts/g15ar_first_order_repair_sm75_2026-08-25.json).
+
 ## Actual upstream probes
 
 - FlashRT Gated Delta Attention remains ineligible on SM75 because its published
