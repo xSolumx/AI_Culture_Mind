@@ -1183,6 +1183,12 @@ diagnosis, not autonomous discovery. The executable contract is
 and
 [`artifacts/g15b_interleaved_controller_sm75_2026-08-26.json`](artifacts/g15b_interleaved_controller_sm75_2026-08-26.json).
 
+The next step is frozen separately as
+[`G15B-R0`](G15BR_CHECKPOINT_REPAIR_PROTOCOL_2026-08-26.md). It performs no
+training and preserves the learned address/value/readout gauge while testing
+whether erase-equals-write delta correction repairs the retained identity
+checkpoints. It cannot promote G15C.
+
 ## G16 one-seed trained-frontier result
 
 The clean exact-SM75 cohort from commit `5796a851df02` completed all four real

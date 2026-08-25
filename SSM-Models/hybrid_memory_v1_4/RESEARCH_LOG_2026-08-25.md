@@ -498,3 +498,13 @@ under oracle edit timing, not a generic controller. Evidence:
 and
 [`artifacts/g15b_interleaved_controller_sm75_2026-08-26.json`](artifacts/g15b_interleaved_controller_sm75_2026-08-26.json),
 SHA-256 `f74d860e30ab40ec747521dfcecd74aac2bb75151206c25b7104d334727429eb`.
+
+Before a fresh trained repair, G15B-R0 is frozen as a zero-update checkpoint
+intervention. It preserves learned keys, queries, values, retention, and the
+decoder, avoiding the old one-hot oracle's gauge change. It compares learned
+editing, soft erase-equals-write delta correction, exact collision timing, and
+exact delta timing on the retained identity checkpoints. A constructive pair
+of histories proves that collision timing is absent from the width-four local
+observation, while valid-write timing is exactly decoded by the marker two
+positions earlier. See
+[`G15BR_CHECKPOINT_REPAIR_PROTOCOL_2026-08-26.md`](G15BR_CHECKPOINT_REPAIR_PROTOCOL_2026-08-26.md).

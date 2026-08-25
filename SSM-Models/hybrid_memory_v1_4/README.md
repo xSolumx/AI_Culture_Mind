@@ -108,6 +108,13 @@ accuracy remains below gate, and Spin transport is inferior to identity on
 every non-needle mean cell. G15C and the external-loss-only lane remain
 blocked.
 
+Before any fresh retraining, the prospective
+[`G15B-R0 checkpoint-repair protocol`](G15BR_CHECKPOINT_REPAIR_PROTOCOL_2026-08-26.md)
+replays only the retained identity checkpoints in their learned address/value
+gauge. It compares the learned edit, soft erase-equals-write delta correction,
+exact collision timing, and exact delta timing. This is a causal checkpoint
+diagnostic with zero optimizer updates, not a model result or promotion.
+
 In parallel, the frozen
 [`G16 SM75 shootout protocol`](G16_SM75_FRONTIER_SHOOTOUT_PROTOCOL_2026-08-25.md)
 and [`harness`](frontier_shootout.py) completed the one-seed, 4.096M-target
