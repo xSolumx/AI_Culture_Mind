@@ -4,12 +4,16 @@ from __future__ import annotations
 
 import torch
 
+from hybrid_memory_v1_4.g15a_spin_dirac_cohort import _oracle_memory
 from hybrid_memory_v1_4.g15al_learned_coordinate_cohort import (
     ACTION_ANGLE,
     ARM_NAMES,
     QUALITY_SEEDS,
     TokenCoordinateController,
     _adjudicate,
+    _controls,
+    _event_sparse_prediction,
+    _teacher_target,
     generate_batch,
     quality_config,
 )
@@ -55,6 +59,32 @@ def test_controller_hard_masks_filler_and_has_exact_parameter_budget() -> None:
     coordinates = controller(tokens)
     assert sum(parameter.numel() for parameter in controller.parameters()) == 476
     assert torch.equal(coordinates[:, 0], torch.zeros_like(coordinates[:, 0]))
+
+
+def test_event_sparse_recurrence_matches_dense_memory_in_float64() -> None:
+    device = torch.device("cpu")
+    batch = generate_batch(
+        3,
+        16,
+        seed=23,
+        model_seed=2153,
+        minimum_actions=2,
+        maximum_actions=6,
+    ).to(device, torch.float64)
+    memory = _oracle_memory("S", dtype=torch.float64, device=device)
+    exact_query, sparse = _teacher_target(memory, batch, device=device)
+    controls = list(_controls(batch, device=device))
+    controls[0][:, -1, 0] = exact_query
+    dense, _ = memory.forward_controls(*controls, batch.exact_coordinates)
+    assert torch.allclose(sparse, dense[:, -1, 0, :8], atol=1e-10, rtol=1e-10)
+    predicted = _event_sparse_prediction(
+        memory,
+        batch,
+        batch.exact_coordinates,
+        exact_query,
+        device=device,
+    )
+    assert torch.allclose(predicted, sparse, atol=1e-10, rtol=1e-10)
 
 
 def _fake_arm(mean: float, minimum: float, raw: float = 0.0) -> dict[str, object]:

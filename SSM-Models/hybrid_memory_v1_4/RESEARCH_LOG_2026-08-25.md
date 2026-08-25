@@ -201,3 +201,11 @@ S-broken learns its own coordinate table. If it inverts the frozen carrier
 permutation and catches S, then the supplied-coordinate attribution is not
 identifiable under learned control. The per-seed/per-length gate and the
 covariant optimizer are fixed before seeing that outcome.
+
+The first non-evidentiary smoke showed that dense evaluation time was dominated
+by identity filler rather than learning. Before quality, the prospective
+[`exact event-sparse amendment`](G15AL_EXECUTION_AMENDMENT_2026-08-25.md)
+replaced those redundant identity actions by the closed-form scalar retention
+factor and ordered products over actual events. A float64 regression requires
+agreement with dense `forward_controls` to `1e-10`; no scientific setting or
+gate changed.

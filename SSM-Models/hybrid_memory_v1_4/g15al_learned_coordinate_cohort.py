@@ -50,6 +50,9 @@ else:
 
 
 PROTOCOL = Path(__file__).with_name("G15AL_LEARNED_COORDINATE_PROTOCOL_2026-08-25.md")
+EXECUTION_AMENDMENT = Path(__file__).with_name(
+    "G15AL_EXECUTION_AMENDMENT_2026-08-25.md"
+)
 CONDITIONAL_ARTIFACT_SHA256 = (
     "78cb06c0e7d088db74651fc93f3c40380f7d3f0f04d447bf54b75ff263c3ffe9"
 )
@@ -118,12 +121,15 @@ class CoordinateBatch:
     values: torch.Tensor
     action_positions: torch.Tensor
 
-    def to(self, device: torch.device) -> CoordinateBatch:
+    def to(
+        self, device: torch.device, dtype: torch.dtype | None = None
+    ) -> CoordinateBatch:
+        dtype = dtype or self.exact_coordinates.dtype
         return CoordinateBatch(
             token_ids=self.token_ids.to(device),
-            exact_coordinates=self.exact_coordinates.to(device),
-            keys=self.keys.to(device),
-            values=self.values.to(device),
+            exact_coordinates=self.exact_coordinates.to(device=device, dtype=dtype),
+            keys=self.keys.to(device=device, dtype=dtype),
+            values=self.values.to(device=device, dtype=dtype),
             action_positions=self.action_positions.to(device),
         )
 
@@ -222,17 +228,94 @@ def _controls(
     device: torch.device,
 ) -> tuple[torch.Tensor, ...]:
     batch_size, length = batch.token_ids.shape
-    carrier = torch.zeros(batch_size, length, 1, 8, device=device)
+    carrier = torch.zeros(
+        batch_size, length, 1, 8, device=device, dtype=batch.keys.dtype
+    )
     query = carrier.clone()
     key = carrier.clone()
     value = carrier.clone()
     key[:, 0, 0] = batch.keys
     value[:, 0, 0] = batch.values
-    erase = torch.zeros(batch_size, length, 1, 1, device=device)
+    erase = torch.zeros(batch_size, length, 1, 1, device=device, dtype=batch.keys.dtype)
     write = torch.zeros_like(erase)
     write[:, 0] = 1.0
     retention = torch.full_like(erase, 0.999999)
     return query, key, value, erase, write, retention
+
+
+def _carrier_totals(
+    memory: nn.Module,
+    batch: CoordinateBatch,
+    coordinates: torch.Tensor,
+    *,
+    device: torch.device,
+) -> tuple[torch.Tensor, torch.Tensor]:
+    batch_size, maximum_actions = batch.action_positions.shape
+    rows = torch.arange(batch_size, device=device)[:, None]
+    positions = batch.action_positions.clamp_min(0)
+    event_coordinates = coordinates[rows, positions]
+    valid = batch.action_positions >= 0
+    event_coordinates = torch.where(
+        valid[..., None, None],
+        event_coordinates,
+        torch.zeros_like(event_coordinates),
+    )
+    event_coordinates = memory._apply_transport_mode(event_coordinates)
+    carrier = torch.zeros(
+        batch_size,
+        maximum_actions,
+        1,
+        8,
+        device=device,
+        dtype=coordinates.dtype,
+    )
+    gate = torch.zeros(
+        batch_size,
+        maximum_actions,
+        1,
+        1,
+        device=device,
+        dtype=coordinates.dtype,
+    )
+    retention = torch.ones_like(gate)
+    actions = memory._transitions(
+        carrier,
+        carrier,
+        gate,
+        gate,
+        retention,
+        event_coordinates,
+        None,
+    )[3]
+    eye = torch.eye(8, device=device, dtype=coordinates.dtype).expand(batch_size, 8, 8)
+    total_vector = eye.clone()
+    total_positive = eye.clone()
+    positive_index = TRIALITY_REPRESENTATIONS.index("positive")
+    for column in range(maximum_actions):
+        vector = actions[:, column, 0, VECTOR_INDEX]
+        positive = actions[:, column, 0, positive_index]
+        column_valid = valid[:, column, None, None]
+        vector = torch.where(column_valid, vector, eye)
+        positive = torch.where(column_valid, positive, eye)
+        total_vector = vector @ total_vector
+        total_positive = positive @ total_positive
+    return total_vector, total_positive
+
+
+def _event_sparse_prediction(
+    memory: nn.Module,
+    batch: CoordinateBatch,
+    coordinates: torch.Tensor,
+    exact_query: torch.Tensor,
+    *,
+    device: torch.device,
+) -> torch.Tensor:
+    vector, positive = _carrier_totals(memory, batch, coordinates, device=device)
+    transported_key = torch.einsum("bij,bj->bi", vector, batch.keys)
+    alignment = (exact_query * transported_key).sum(dim=-1, keepdim=True)
+    transported_value = torch.einsum("bij,bj->bi", positive, batch.values)
+    retention = 0.999999 ** (batch.token_ids.shape[1] - 1)
+    return retention * alignment * transported_value
 
 
 @torch.no_grad()
@@ -241,28 +324,15 @@ def _teacher_target(
     batch: CoordinateBatch,
     *,
     device: torch.device,
-) -> tuple[tuple[torch.Tensor, ...], torch.Tensor]:
-    controls = list(_controls(batch, device=device))
-    _, final_state, diagnostics = teacher.forward_controls(
-        *controls,
-        batch.exact_coordinates,
-        return_diagnostics=True,
+) -> tuple[torch.Tensor, torch.Tensor]:
+    vector, positive = _carrier_totals(
+        teacher, batch, batch.exact_coordinates, device=device
     )
-    actions = diagnostics["transport_actions"]
-    assert isinstance(actions, torch.Tensor)
-    eye = torch.eye(8, device=device).expand(batch.token_ids.shape[0], 8, 8)
-    total_vector = eye.clone()
-    rows = torch.arange(batch.token_ids.shape[0], device=device)
-    for column in range(batch.action_positions.shape[1]):
-        positions = batch.action_positions[:, column]
-        valid = positions >= 0
-        selected = actions[rows, positions.clamp_min(0), 0, VECTOR_INDEX]
-        selected = torch.where(valid[:, None, None], selected, eye)
-        total_vector = selected @ total_vector
-    final_query = torch.einsum("bij,bj->bi", total_vector, batch.keys)
-    controls[0][:, -1, 0] = final_query
-    target = torch.einsum("bi,bhip->bhp", final_query, final_state)[:, 0]
-    return tuple(controls), target
+    exact_query = torch.einsum("bij,bj->bi", vector, batch.keys)
+    retention = 0.999999 ** (batch.token_ids.shape[1] - 1)
+    alignment = (exact_query * exact_query).sum(dim=-1, keepdim=True)
+    target = retention * alignment * torch.einsum("bij,bj->bi", positive, batch.values)
+    return exact_query, target
 
 
 def _metrics(prediction: torch.Tensor, target: torch.Tensor) -> dict[str, float]:
@@ -312,11 +382,16 @@ def _train_arm(
         )
         schedule.update(batch.fingerprint().encode())
         batch = batch.to(device)
-        controls, target = _teacher_target(teacher, batch, device=device)
+        exact_query, target = _teacher_target(teacher, batch, device=device)
         optimizer.zero_grad(set_to_none=True)
         learned_coordinates = controller(batch.token_ids)
-        read, _ = memory.forward_controls(*controls, learned_coordinates)
-        prediction = read[:, -1, 0, :8]
+        prediction = _event_sparse_prediction(
+            memory,
+            batch,
+            learned_coordinates,
+            exact_query,
+            device=device,
+        )
         cosine = (F.normalize(prediction, dim=-1) * F.normalize(target, dim=-1)).sum(
             dim=-1
         )
@@ -360,12 +435,16 @@ def _train_arm(
                 minimum_actions=actions_per_episode,
                 maximum_actions=actions_per_episode,
             ).to(device)
-            controls, target = _teacher_target(teacher, batch, device=device)
+            exact_query, target = _teacher_target(teacher, batch, device=device)
             with torch.no_grad():
-                read, _ = memory.forward_controls(
-                    *controls, controller(batch.token_ids)
+                prediction = _event_sparse_prediction(
+                    memory,
+                    batch,
+                    controller(batch.token_ids),
+                    exact_query,
+                    device=device,
                 )
-            metric_rows.append(_metrics(read[:, -1, 0, :8], target))
+            metric_rows.append(_metrics(prediction, target))
         evaluations[str(length)] = {
             "mean_cosine": sum(row["mean_cosine"] for row in metric_rows)
             / len(metric_rows),
@@ -565,6 +644,11 @@ def run(
         "protocol": asdict(config),
         "arm_names": list(ARM_NAMES),
         "protocol_file_sha256": _sha256(PROTOCOL),
+        "protocol_files": {
+            PROTOCOL.name: _sha256(PROTOCOL),
+            EXECUTION_AMENDMENT.name: _sha256(EXECUTION_AMENDMENT),
+        },
+        "execution_path": "exact_event_sparse_affine_recurrence",
         "source_files": {
             str(path.relative_to(Path(__file__).parent)): _sha256(path)
             for path in source_paths
@@ -608,6 +692,9 @@ def _parser() -> argparse.ArgumentParser:
 
 def main() -> None:
     args = _parser().parse_args()
+    for path in (PROTOCOL, EXECUTION_AMENDMENT):
+        if not path.is_file():
+            raise FileNotFoundError(path)
     conditional_artifact = _load_conditional_artifact(args.conditional_artifact)
     config = quality_config() if args.mode == "quality" else smoke_config()
     commit, status_at_start = _git_state()

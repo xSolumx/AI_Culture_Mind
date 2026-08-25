@@ -402,6 +402,7 @@ def source_file_digests() -> tuple[SourceFileDigest, ...]:
         root / "G15A_EXECUTION_PROTOCOL_2026-08-25.md",
         root / "G15A_CONDITIONAL_CONTROLS_PROTOCOL_2026-08-25.md",
         root / "G15AL_LEARNED_COORDINATE_PROTOCOL_2026-08-25.md",
+        root / "G15AL_EXECUTION_AMENDMENT_2026-08-25.md",
         root.parent / "delta_product_reference.py",
     )
     reports = []
