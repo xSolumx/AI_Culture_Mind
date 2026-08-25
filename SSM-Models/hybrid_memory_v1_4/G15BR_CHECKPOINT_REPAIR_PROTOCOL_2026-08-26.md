@@ -8,6 +8,11 @@ before any repair-intervention retrieval metric was inspected.
 
 **Status:** prospective diagnostic; no model-promotion authority
 
+**Outcome:** failed. Baseline replay and observability pass exactly, but soft
+delta degrades all nine non-needle cells and exact atomic timing collapses the
+learned write code. See
+[`G15BR_CHECKPOINT_REPAIR_RESULTS.md`](G15BR_CHECKPOINT_REPAIR_RESULTS.md).
+
 ## Question
 
 G15B learned content addresses and causally used its recurrent association

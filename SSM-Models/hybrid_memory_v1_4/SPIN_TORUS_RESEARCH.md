@@ -192,8 +192,11 @@ address classes and causally used the association matrix, but failed every
 arm's absolute controller gate. Its collision-only erase label depends on
 unbounded earlier history that the token-local width-4 controller does not
 observe. Full Spin also trailed identity in all nine non-needle mean cells.
-Consequently, identity transport plus erase-on-every-valid-write is the next
-generic last-write-wins reference. Spin transport requires a coherent moving-
+G15B-R0 then rejects naive erase-equals-write delta because selected heads use
+a structured one-token write continuation. The next generic last-write-wins
+reference keeps identity transport and the learned write window, but anchors
+independent erase to every locally observable write event. Spin transport
+requires a coherent moving-
 frame task, or co-transported keys and queries, before it is eligible again.
 
 ## Claim ledger

@@ -172,10 +172,11 @@ representation.
   needed. G15A-S then passes signed 28-generator composition transfer to unseen
   full-rank frame banks and center words, still under oracle edit timing. G15B
   fails the subsequent commissioned interleaved controller gate and blocks
-  G15C/external-only. The next falsifiable repair is identity-transport content-
-  addressed last-write-wins editing: erase on every valid write, or expose the
-  memory state/collision history to a state-aware correction. Generic transport
-  remains identity by default; Spin belongs in supplied/coherent-frame
+  G15C/external-only. G15B-R0 rejects naive erase-equals-write delta because the
+  learned controllers use a structured one-token write continuation. The next
+  falsifier preserves that write window and anchors independent erase to every
+  locally observable write event. Generic transport remains identity by default;
+  Spin belongs in supplied/coherent-frame
   specialized tasks. Learned topology, full three-carrier triality utility,
   natural-text, and scaling remain open.
 - A frozen phase-separated follow-up rejected early address noise as a
@@ -292,6 +293,8 @@ representation.
 - [G15B interleaved-controller protocol](../../SSM-Models/hybrid_memory_v1_4/G15B_CONTROL_PROTOCOL_2026-08-25.md)
 - [G15B interleaved-controller result](../../SSM-Models/hybrid_memory_v1_4/G15B_INTERLEAVED_CONTROLLER_RESULTS.md)
 - [G15B exact-SM75 quality artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g15b_interleaved_controller_sm75_2026-08-26.json)
+- [G15B-R0 checkpoint-repair result](../../SSM-Models/hybrid_memory_v1_4/G15BR_CHECKPOINT_REPAIR_RESULTS.md)
+- [G15B-R0 exact-SM75 artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g15br_checkpoint_repair_sm75_2026-08-26.json)
 - [G16 SM75 frontier-shootout protocol](../../SSM-Models/hybrid_memory_v1_4/G16_SM75_FRONTIER_SHOOTOUT_PROTOCOL_2026-08-25.md)
 - [G16 trained-frontier results](../../SSM-Models/hybrid_memory_v1_4/G16_SM75_FRONTIER_SHOOTOUT_RESULTS.md)
 - [G16 exact-SM75 runtime qualification artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g16_runtime_qualification_sm75_2026-08-25.json)

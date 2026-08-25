@@ -84,9 +84,11 @@
 > erase target depends on collision history that the token/local-convolution
 > controller cannot observe. G15C/external-only promotion is therefore blocked.
 > G15A-S remains a separate passed composition result under oracle edit timing;
-> G15B does not rewrite it. The next repair is identity-transport content-
-> addressed last-write-wins editing, using erase on every valid write or a
-> state-aware correction. Generic transport stays identity by default; Spin is
+> G15B does not rewrite it. G15B-R0 then rejects naive erase-equals-write
+> delta: learned heads use a structured one-token write continuation, and tying
+> erase to that continuation degrades every non-needle cell. The next falsifier
+> keeps the learned write window but anchors independent erase to every locally
+> observable write event. Generic transport stays identity by default; Spin is
 > reserved for supplied or coherent-frame specialized tasks. G16 has completed
 > its one-seed SM75 development
 > shootout: official fused Mamba-2 wins every ordinary-compression context and
@@ -113,6 +115,8 @@
 > [G15B interleaved-controller protocol](hybrid_memory_v1_4/G15B_CONTROL_PROTOCOL_2026-08-25.md),
 > [G15B interleaved-controller result](hybrid_memory_v1_4/G15B_INTERLEAVED_CONTROLLER_RESULTS.md),
 > [G15B exact-SM75 artifact](hybrid_memory_v1_4/artifacts/g15b_interleaved_controller_sm75_2026-08-26.json),
+> [G15B-R0 checkpoint-repair result](hybrid_memory_v1_4/G15BR_CHECKPOINT_REPAIR_RESULTS.md),
+> [G15B-R0 exact-SM75 artifact](hybrid_memory_v1_4/artifacts/g15br_checkpoint_repair_sm75_2026-08-26.json),
 > [G16 SM75 frontier-shootout protocol](hybrid_memory_v1_4/G16_SM75_FRONTIER_SHOOTOUT_PROTOCOL_2026-08-25.md),
 > [G16 trained-frontier results](hybrid_memory_v1_4/G16_SM75_FRONTIER_SHOOTOUT_RESULTS.md),
 > [G16 exact-SM75 runtime qualification artifact](hybrid_memory_v1_4/artifacts/g16_runtime_qualification_sm75_2026-08-25.json),

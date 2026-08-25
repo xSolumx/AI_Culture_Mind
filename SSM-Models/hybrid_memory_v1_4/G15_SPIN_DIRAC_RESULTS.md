@@ -334,6 +334,14 @@ collision-aware erase controller would require a causal pre-write occupancy
 read. See
 [`G15B_INTERLEAVED_CONTROLLER_RESULTS.md`](G15B_INTERLEAVED_CONTROLLER_RESULTS.md).
 
+The subsequent G15B-R0 retained-checkpoint screen rejects the naive tied form
+of that repair. Learned heads use a structured one-token write continuation,
+so erase-equals-write makes that continuation destructive and exact atomic
+timing removes useful learned code. The refined candidate keeps write and erase
+independent: write may occupy a short learned window, while erase is anchored
+to every locally observable write event. See
+[`G15BR_CHECKPOINT_REPAIR_RESULTS.md`](G15BR_CHECKPOINT_REPAIR_RESULTS.md).
+
 The constrained `su3_torus` arm is an additional scientific ablation, not a
 replacement for the four frozen primary arms.
 

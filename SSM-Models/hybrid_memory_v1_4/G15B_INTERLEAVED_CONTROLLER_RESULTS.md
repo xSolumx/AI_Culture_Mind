@@ -174,6 +174,16 @@ frozen repair passes fresh seeds. G15A-S remains valid, separate evidence for
 supplied-coordinate composition and center-sensitive chart transfer; G15B does
 not overwrite or weaken that result.
 
+## Subsequent G15B-R0 qualification
+
+The proposed erase-equals-write repair was tested prospectively on the retained
+identity checkpoints and rejected. Exact replay shows a structured one-token
+write continuation in selected heads; tying erase to that continuation damages
+every non-needle mean cell, while exact atomic timing removes a necessary part
+of the learned code. The refined next falsifier preserves the learned write
+window and anchors only erase to every locally observable write event. See
+[`G15BR_CHECKPOINT_REPAIR_RESULTS.md`](G15BR_CHECKPOINT_REPAIR_RESULTS.md).
+
 ## Claim boundary
 
 This is a completed, exact-SM75, three-seed commissioned-controller failure and

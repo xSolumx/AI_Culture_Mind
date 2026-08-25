@@ -508,3 +508,23 @@ of histories proves that collision timing is absent from the width-four local
 observation, while valid-write timing is exactly decoded by the marker two
 positions earlier. See
 [`G15BR_CHECKPOINT_REPAIR_PROTOCOL_2026-08-26.md`](G15BR_CHECKPOINT_REPAIR_PROTOCOL_2026-08-26.md).
+
+G15B-R0 then completed from clean commit `f303435` with exact replay of all 36
+recorded identity cells. The naive repair fails decisively: soft delta loses
+6.6--7.9 points on MQAR, 9.3--11.8 on overwrite, and 10.7--11.1 on selective
+copy. Exact collision and exact delta timing fall to roughly 0.39--0.57 on
+non-needle tasks. The failure exposes a second temporal fact. Depending on the
+seed, one, two, or all four heads fire on essentially every token immediately
+after a valid write, while firing on only about 0.76% of filler positions
+overall. Those token-level false positives are a structured write continuation
+used by the learned code. Atomic exact timing removes it; tying erase to it
+makes the continuation destructive.
+
+The next candidate must keep the two roles separate: locally anchored erase on
+every valid write event, and a short learned write window. This removes the
+unobservable collision target without erasing the useful continuation. Before
+fresh training, a paired checkpoint intervention must preserve learned writes
+and replace only erase timing. Evidence:
+[`G15BR_CHECKPOINT_REPAIR_RESULTS.md`](G15BR_CHECKPOINT_REPAIR_RESULTS.md) and
+[`artifacts/g15br_checkpoint_repair_sm75_2026-08-26.json`](artifacts/g15br_checkpoint_repair_sm75_2026-08-26.json),
+SHA-256 `4d92d6af2fb062cf2baaa035c4e4eff89d494dfcb56b9b666523bbbdbfe3cf9c`.

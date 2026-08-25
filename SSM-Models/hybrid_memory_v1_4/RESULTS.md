@@ -1183,11 +1183,14 @@ diagnosis, not autonomous discovery. The executable contract is
 and
 [`artifacts/g15b_interleaved_controller_sm75_2026-08-26.json`](artifacts/g15b_interleaved_controller_sm75_2026-08-26.json).
 
-The next step is frozen separately as
-[`G15B-R0`](G15BR_CHECKPOINT_REPAIR_PROTOCOL_2026-08-26.md). It performs no
-training and preserves the learned address/value/readout gauge while testing
-whether erase-equals-write delta correction repairs the retained identity
-checkpoints. It cannot promote G15C.
+The separately frozen
+[`G15B-R0 result`](G15BR_CHECKPOINT_REPAIR_RESULTS.md) performs no training and
+preserves the learned address/value/readout gauge. Baseline replay is exact,
+but soft erase-equals-write delta loses every non-needle cell and exact atomic
+timing removes a learned one-token write continuation. Naive tied-delta
+training is rejected. The next checkpoint falsifier must preserve the learned
+write tail and replace only erase with locally observable all-write-event
+timing. G15C remains blocked.
 
 ## G16 one-seed trained-frontier result
 

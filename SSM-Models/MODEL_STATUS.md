@@ -124,9 +124,12 @@ content addressing and edit laws over richer transport geometry alone.
   collision history, but the controller sees only token/local-convolution
   features: a temporal-observability mismatch. G15C/external-only is blocked.
   G15A-S remains an intact, separate composition result under oracle edit
-  timing. The next candidate is identity-transport content-addressed last-write-
-  wins editing with erase on every valid write or a state-aware correction;
-  Spin transport remains specialized to supplied/coherent-frame tasks.
+  timing. G15B-R0 then rejects naive erase-equals-write delta: exact replay
+  shows that the learned controllers use a structured one-token write
+  continuation, and tying erase to it degrades every non-needle cell. The next
+  falsifier preserves the learned write window while anchoring independent
+  erase to every locally observable write event. Spin transport remains
+  specialized to supplied/coherent-frame tasks.
 - G16 completed its prospectively frozen one-seed SM75 development shootout.
   Official fused Mamba-2 wins ordinary compression at every context and reaches
   `1.48571` BPRB at L4096 versus v1.4.5 `1.58335`; local semantic GDN2 and
@@ -164,6 +167,10 @@ the failed quality adjudication in the
 source-bound evidence in the
 [G15B artifact](hybrid_memory_v1_4/artifacts/g15b_interleaved_controller_sm75_2026-08-26.json),
 SHA-256 `f74d860e30ab40ec747521dfcecd74aac2bb75151206c25b7104d334727429eb`.
+The zero-update repair is recorded in the
+[G15B-R0 result](hybrid_memory_v1_4/G15BR_CHECKPOINT_REPAIR_RESULTS.md) and
+[G15B-R0 artifact](hybrid_memory_v1_4/artifacts/g15br_checkpoint_repair_sm75_2026-08-26.json),
+SHA-256 `4d92d6af2fb062cf2baaa035c4e4eff89d494dfcb56b9b666523bbbdbfe3cf9c`.
 The four-arm model harness is frozen separately in the
 [G16 protocol](hybrid_memory_v1_4/G16_SM75_FRONTIER_SHOOTOUT_PROTOCOL_2026-08-25.md),
 with exact source/runtime evidence in the

@@ -108,12 +108,15 @@ accuracy remains below gate, and Spin transport is inferior to identity on
 every non-needle mean cell. G15C and the external-loss-only lane remain
 blocked.
 
-Before any fresh retraining, the prospective
-[`G15B-R0 checkpoint-repair protocol`](G15BR_CHECKPOINT_REPAIR_PROTOCOL_2026-08-26.md)
-replays only the retained identity checkpoints in their learned address/value
-gauge. It compares the learned edit, soft erase-equals-write delta correction,
-exact collision timing, and exact delta timing. This is a causal checkpoint
-diagnostic with zero optimizer updates, not a model result or promotion.
+Before any fresh retraining, the completed
+[`G15B-R0 checkpoint repair`](G15BR_CHECKPOINT_REPAIR_RESULTS.md) replays only
+the retained identity checkpoints in their learned address/value gauge. Exact
+baseline replay and the temporal-observability witness pass, but soft erase-
+equals-write delta correction degrades every non-needle cell. Exact atomic
+timing collapses because the models learned a structured one-token write
+continuation. The next candidate must anchor erase to every locally observable
+write event while allowing a short learned write window; naive tied delta
+training is not authorized.
 
 In parallel, the frozen
 [`G16 SM75 shootout protocol`](G16_SM75_FRONTIER_SHOOTOUT_PROTOCOL_2026-08-25.md)
