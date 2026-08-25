@@ -564,7 +564,7 @@ def _inner_conjugation_residual(
         supplied_actions=conjugated_actions,
         controls=transformed,
     )
-    scale_vector = scales.double().repeat_interleave(8)
+    scale_vector = scales.detach().to(device=device, dtype=dtype).repeat_interleave(8)
     original = original * scale_vector
     conjugated = conjugated * scale_vector
     expected_positive = torch.einsum("ij,bj->bi", positive, original[:, :8])

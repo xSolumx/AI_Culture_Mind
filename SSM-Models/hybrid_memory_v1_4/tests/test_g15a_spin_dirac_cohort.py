@@ -2,11 +2,14 @@
 
 from __future__ import annotations
 
+import torch
+
 from hybrid_memory_v1_4.g15a_spin_dirac_cohort import (
     ARM_SPECS,
     EVALUATION_LENGTHS,
     QUALITY_SEEDS,
     _adjudicate,
+    _inner_conjugation_residual,
     _model_config,
     _oracle_semantic_ladder,
     quality_config,
@@ -98,3 +101,4 @@ def test_quality_protocol_and_oracle_ladder_are_frozen() -> None:
     assert config.dtype == "float32"
     ladder = _oracle_semantic_ladder()
     assert ladder["passed"] is True
+    assert _inner_conjugation_residual("S", torch.ones(2), seed=2131) <= 1e-9
