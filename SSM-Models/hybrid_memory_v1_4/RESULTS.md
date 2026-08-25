@@ -1192,6 +1192,11 @@ training is rejected. The next checkpoint falsifier must preserve the learned
 write tail and replace only erase with locally observable all-write-event
 timing. G15C remains blocked.
 
+That final checkpoint falsifier is frozen in
+[`G15B-R1`](G15BR1_EVENT_ERASE_PROTOCOL_2026-08-26.md). It changes no learned
+write, address, value, or decoder control and reports prototype cross-address
+cosine. It has no training or promotion authority.
+
 ## G16 one-seed trained-frontier result
 
 The clean exact-SM75 cohort from commit `5796a851df02` completed all four real

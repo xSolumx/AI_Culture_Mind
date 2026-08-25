@@ -118,6 +118,13 @@ continuation. The next candidate must anchor erase to every locally observable
 write event while allowing a short learned write window; naive tied delta
 training is not authorized.
 
+The follow-on
+[`G15B-R1 event-erase protocol`](G15BR1_EVENT_ERASE_PROTOCOL_2026-08-26.md)
+preserves the learned write continuation bitwise and changes only erase at the
+locally observable write event. It also measures learned key-prototype cross-
+cosine before any fresh training. This is the final retained-checkpoint
+falsifier for the event-anchored erase route.
+
 In parallel, the frozen
 [`G16 SM75 shootout protocol`](G16_SM75_FRONTIER_SHOOTOUT_PROTOCOL_2026-08-25.md)
 and [`harness`](frontier_shootout.py) completed the one-seed, 4.096M-target

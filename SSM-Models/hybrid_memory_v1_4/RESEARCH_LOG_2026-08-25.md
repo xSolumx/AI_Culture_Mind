@@ -528,3 +528,10 @@ and replace only erase timing. Evidence:
 [`G15BR_CHECKPOINT_REPAIR_RESULTS.md`](G15BR_CHECKPOINT_REPAIR_RESULTS.md) and
 [`artifacts/g15br_checkpoint_repair_sm75_2026-08-26.json`](artifacts/g15br_checkpoint_repair_sm75_2026-08-26.json),
 SHA-256 `4d92d6af2fb062cf2baaa035c4e4eff89d494dfcb56b9b666523bbbdbfe3cf9c`.
+
+G15B-R1 is now frozen before fresh training. It leaves the learned write
+microprogram untouched and replaces only erase with either the learned write
+amplitude at exact event positions or unit erase at those positions. Learned
+prototype off-diagonal cosine is binding diagnostic evidence: a large value
+would explain collateral erasure of unrelated keys. See
+[`G15BR1_EVENT_ERASE_PROTOCOL_2026-08-26.md`](G15BR1_EVENT_ERASE_PROTOCOL_2026-08-26.md).
