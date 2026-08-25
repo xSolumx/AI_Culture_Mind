@@ -188,7 +188,7 @@ def _git_provenance() -> tuple[str, list[str]]:
 
 def frozen_config(mode: Literal["smoke", "quality"]) -> CohortConfig:
     if mode == "quality":
-        return CohortConfig(mode, QUALITY_SEEDS, QUALITY_PHASES, 4096, 32)
+        return CohortConfig(mode, QUALITY_SEEDS, QUALITY_PHASES, 4096, 16)
     if mode == "smoke":
         return CohortConfig(mode, (23,), SMOKE_PHASES, 16, 2)
     raise ValueError("mode must be 'smoke' or 'quality'")
@@ -837,8 +837,10 @@ def _classification_report(counts: dict[str, int]) -> dict[str, float | int]:
     }
 
 
-def _evaluation_batch_size(length: int, cap: int) -> int:
-    return min(cap, {128: 32, 512: 8, 1024: 4}[length])
+def _evaluation_batch_size(task: TaskName, *, decisions: int, cap: int) -> int:
+    queries_per_episode = 1 if task == "needle" else 8
+    complete_episodes = decisions // queries_per_episode
+    return min(cap, complete_episodes)
 
 
 @torch.no_grad()
@@ -853,7 +855,7 @@ def _evaluate_cell(
 ) -> tuple[dict[str, Any], set[str]]:
     model.eval()
     device = model.embedding.weight.device
-    batch_size = _evaluation_batch_size(length, batch_cap)
+    batch_size = _evaluation_batch_size(task, decisions=decisions, cap=batch_cap)
     decisions_per_batch = batch_size * (1 if task == "needle" else 8)
     if decisions % decisions_per_batch:
         raise ValueError(

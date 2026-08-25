@@ -177,6 +177,13 @@ Each arm and seed receives held-out namespaces with at least 4,096 query
 decisions per task/length at lengths 128, 512, and 1,024. Needle distances are
 exactly 64, 448, and 960. Report:
 
+The exact SM75 no-gradient evaluation batch is capped at 16. A batch-32 full
+Spin L1,024 intervention replay executed but peaked at 8,255,536,640 allocated
+bytes and was rejected as unsafe; batch 16 peaked at 4,132,163,072 bytes. This
+throughput qualification changed no seed, example count, task, intervention,
+threshold, or training metric and occurred before any quality checkpoint or
+output existed.
+
 - exact query and exact episode accuracy plus bits/query;
 - unique-key query-address top-1 and correct-minus-best-wrong cosine margin;
 - same-key address consistency across overwrites;

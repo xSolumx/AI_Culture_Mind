@@ -33,6 +33,7 @@ def test_frozen_quality_schedule_has_exact_decision_count() -> None:
     config = frozen_config("quality")
     assert config.seeds == (2309, 2311, 2333)
     assert config.phases == QUALITY_PHASES
+    assert config.evaluation_batch_cap == 16
     assert sum(phase.updates for phase in config.phases) == 4200
     assert scored_training_decisions(config.phases) == 375_360
 
@@ -147,3 +148,10 @@ def test_evaluation_requires_complete_batches() -> None:
             decisions=15,
             batch_cap=2,
         )
+
+
+def test_evaluation_uses_available_no_grad_batch_capacity() -> None:
+    assert cohort._evaluation_batch_size("mqar", decisions=16, cap=32) == 2
+    assert cohort._evaluation_batch_size("needle", decisions=16, cap=32) == 16
+    assert cohort._evaluation_batch_size("mqar", decisions=4096, cap=16) == 16
+    assert cohort._evaluation_batch_size("needle", decisions=4096, cap=16) == 16

@@ -400,6 +400,18 @@ controller passes. Retrieval without controller metrics and the frozen
 no-memory/no-write/no-erase/wrong-query interventions will not be called a
 memory result.
 
+The first exact-SM75 quality launch was stopped before any checkpoint, output,
+or held-out metric became visible. External monitoring showed the original
+L1,024 evaluation batch of four using only about 17% of the GPU and implied a
+multi-hour systems bottleneck unrelated to the frozen decision. A prospective
+no-gradient qualification then executed the full-Spin six-intervention needle
+cell at batch 32 and 16. Batch 32 peaked at 8,255,536,640 allocated bytes and
+was rejected as unsafe on the 8 GB card; batch 16 peaked at 4,132,163,072
+bytes. The quality evaluation cap is therefore 16. Seeds, 4,096 decisions per
+cell, tasks, thresholds, training batches, optimizer, and schedule are
+unchanged. The interrupted attempt has no result and cannot be used for model
+selection.
+
 ## G16 completed and rejected the current local ordinary-text frontier
 
 Before launch, a read-only audit found that initialization evaluation left the
