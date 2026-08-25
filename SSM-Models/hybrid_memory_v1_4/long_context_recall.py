@@ -275,11 +275,8 @@ def _recall_evaluation(
                     device,
                 )
             )
-            if (matching_tokens, continuation_tokens) != (
-                mismatched_tokens,
-                mismatched_continuation_tokens,
-            ):
-                raise RuntimeError("counterfactual pair token shapes differ")
+            if continuation_tokens != mismatched_continuation_tokens:
+                raise RuntimeError("counterfactual continuation token counts differ")
             rows.append(
                 {
                     "distance_raw_bytes": distance,
@@ -288,7 +285,8 @@ def _recall_evaluation(
                     "supported_value": pair["supported_value"],
                     "counterfactual_value": pair["counterfactual_value"],
                     "filler_offset": pair["filler_offset"],
-                    "prompt_tokens": matching_tokens,
+                    "matching_prompt_tokens": matching_tokens,
+                    "mismatched_prompt_tokens": mismatched_tokens,
                     "continuation_tokens": continuation_tokens,
                     "continuation_raw_bytes": len(
                         pair["continuation"].encode("utf-8")  # type: ignore[union-attr]
