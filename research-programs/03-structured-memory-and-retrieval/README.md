@@ -131,9 +131,11 @@ representation.
   words under oracle edit timing. It does not establish learned topology,
   generic association/address/query learning, negative-spin/Clifford utility,
   language, full triality, or scaling/efficiency.
-- G16 freezes a parameter-matched, runtime-qualified four-arm SM75 harness for
-  v1.4.5, local semantic GDN2, official fused Mamba-2, and actual Transformers
-  OLMo Hybrid. It has no training metric yet and cannot support a quality rank.
+- G16 completed its one-seed parameter-matched SM75 development shootout.
+  Official fused Mamba-2 wins ordinary compression at every context and beats
+  v1.4.5 by `0.09764` BPRB at L4096. Local GDN2 and actual OLMo Hybrid lose;
+  all four arms fail learned recall. This does not establish a fresh-seed model
+  promotion or scaling law.
 
 ## Open Claims
 
@@ -157,8 +159,9 @@ representation.
   600 steps, and staged decay; block-scalar moments and curriculum are not
   needed. G15A-S then passes signed 28-generator composition transfer to unseen
   full-rank frame banks and center words, still under oracle edit timing. G15B
-  generic association with learned addressing/querying is next, retaining
-  `I/C/S/S-broken` and the selected recipe. Learned topology, full three-
+  is now frozen as an attention-free interleaved shared-payload commissioned-
+  controller gate with oracle capacity and causal-use interventions. It retains
+  the parent `I/C/S` arms and has no quality outcome yet. Learned topology, full three-
   carrier triality utility, natural-text, and scaling remain open.
 - A frozen phase-separated follow-up rejected early address noise as a
   complete explanation: the perfect frozen-router core still missed its robust
@@ -266,7 +269,9 @@ representation.
 - [G15A-R first-order repair artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g15ar_first_order_repair_sm75_2026-08-25.json)
 - [G15A-S spanning-center protocol](../../SSM-Models/hybrid_memory_v1_4/G15AS_SPANNING_CENTER_PROTOCOL_2026-08-25.md)
 - [G15A-S spanning-center artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g15as_spanning_center_sm75_2026-08-25.json)
+- [G15B interleaved-controller protocol](../../SSM-Models/hybrid_memory_v1_4/G15B_CONTROL_PROTOCOL_2026-08-25.md)
 - [G16 SM75 frontier-shootout protocol](../../SSM-Models/hybrid_memory_v1_4/G16_SM75_FRONTIER_SHOOTOUT_PROTOCOL_2026-08-25.md)
+- [G16 trained-frontier results](../../SSM-Models/hybrid_memory_v1_4/G16_SM75_FRONTIER_SHOOTOUT_RESULTS.md)
 - [G16 exact-SM75 runtime qualification artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g16_runtime_qualification_sm75_2026-08-25.json)
 - [Spin/torus architecture and claim boundary](../../SSM-Models/hybrid_memory_v1_4/SPIN_TORUS_RESEARCH.md)
 

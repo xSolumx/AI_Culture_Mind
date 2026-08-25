@@ -1147,3 +1147,48 @@ Artifact file hashes are recorded in [`ARTIFACTS.sha256`](ARTIFACTS.sha256).
   native-runtime qualifications, not a matched speed or quality result.
 - No learned Spin(8) rung-use claim exists.
 - A straight-through estimator is not evidence that label-free routing learns.
+
+## G15B interleaved-controller freeze
+
+After G15A-S closed full signed-chart transfer under oracle edit timing, a
+repository-history audit rejected reusing the old front-loaded/trailing-query
+tasks as evidence for learned timing. The frozen G15B protocol instead uses
+one attention-free causal-conv Spin-Dirac block and shared payload symbols in
+random interleaved write, query, changed-overwrite, selection, and exact-needle
+episodes. Direct FP64 execution of the actual memory law reaches 100% oracle
+read accuracy below `1e-10` residual for every task and parent `I/C/S` arm.
+
+The quality gate requires unique-key rather than write-occurrence addresses,
+balanced write/overwrite-erase supervision, fresh namespaces, controller
+metrics, and no-memory/no-write/no-erase/wrong-query/oracle interventions.
+This is a prospectively frozen commissioned-controller experiment. It has no
+training outcome yet and cannot be described as autonomous discovery. The
+executable contract is
+[`g15b_interleaved_cohort.py`](g15b_interleaved_cohort.py), backed by the
+[`interleaved task generator`](g15b_interleaved_tasks.py).
+
+## G16 one-seed trained-frontier result
+
+The clean exact-SM75 cohort from commit `5796a851df02` completed all four real
+approximately 125K-parameter arms and 4,096,000 paired target tokens per arm.
+All integrity gates pass. Final L4096 BPRB is:
+
+| Arm | L4096 BPRB | Delta versus v1.4.5 | Median update seconds |
+|---|---:|---:|---:|
+| v1.4.5 | 1.58335 | 0.00000 | 0.11349 |
+| local GDN2 | 1.60457 | +0.02121 | 0.13644 |
+| official fused Mamba-2 | **1.48571** | **-0.09764** | 0.03073 |
+| actual OLMo Hybrid | 1.61413 | +0.03077 | **0.01675** |
+
+Mamba-2 wins ordinary compression at every length from 256 through 4,096.
+Local GDN2 loses both quality and exact local step cost to v1.4.5. OLMo is
+fastest but compresses worst at L4096. All four fail the frozen learned-recall
+gate; OLMo's nominally best 8,192-byte gain is only `0.003786` nats.
+
+This is parameter- and target-matched but optimizer-specific, one seed, one
+small repeated snapshot, and one SM75 GPU. It is a development rejection of
+the current local frontier, not universal Mamba superiority or a scaling law.
+Evidence:
+[`G16_SM75_FRONTIER_SHOOTOUT_RESULTS.md`](G16_SM75_FRONTIER_SHOOTOUT_RESULTS.md)
+and
+[`artifacts/g16_frontier_shootout_sm75_2026-08-25.json`](artifacts/g16_frontier_shootout_sm75_2026-08-25.json).

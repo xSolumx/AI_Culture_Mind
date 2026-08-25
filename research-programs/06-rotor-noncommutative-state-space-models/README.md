@@ -214,9 +214,10 @@ new matched natural-data and complete-step hardware evidence.
   banks and global center words under oracle edit timing, not learned topology,
   association/address/query learning, negative-spin/Clifford utility, language,
   full triality, or scaling/efficiency.
-- G16 is frozen as a parameter-matched and runtime-qualified four-arm SM75
-  harness for v1.4.5, local semantic GDN2, official fused Mamba-2, and actual
-  Transformers OLMo Hybrid. It has no training metrics or quality ordering yet.
+- G16 completed its one-seed parameter-matched SM75 development cohort.
+  Official fused Mamba-2 wins all ordinary-compression contexts, reaching
+  `1.48571` BPRB at L4096 versus v1.4.5 `1.58335`; local GDN2 and OLMo lose,
+  and every arm fails learned recall. This is not a model-family promotion.
 
 ## Open Claims
 
@@ -240,8 +241,9 @@ new matched natural-data and complete-step hardware evidence.
   coordinates.
 - Matched-task evidence that the full dense-SO(8) Cayley control chart is more
   useful than restricted, octonion, Givens/Householder, or modern SSM controls.
-- G15B generic association with learned addressing and querying is next,
-  retaining the `I/C/S/S-broken` controls and selected `G-decay/random` recipe.
+- G15B is now prospectively frozen as an attention-free interleaved shared-
+  payload commissioned-controller gate with exact oracle ceilings, the parent
+  `I/C/S` arms, learned coordinates, and causal-use interventions.
   G15A-S has widened only the composition dictionary and transfer banks under
   oracle edit timing. More geometry is not the next move. Learned topology,
   full three-carrier triality utility, natural text, and scaling remain open.
@@ -357,6 +359,8 @@ new matched natural-data and complete-step hardware evidence.
 - [G15A-R first-order repair artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g15ar_first_order_repair_sm75_2026-08-25.json)
 - [G15A-S spanning-center protocol](../../SSM-Models/hybrid_memory_v1_4/G15AS_SPANNING_CENTER_PROTOCOL_2026-08-25.md)
 - [G15A-S spanning-center artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g15as_spanning_center_sm75_2026-08-25.json)
+- [G15B interleaved-controller protocol](../../SSM-Models/hybrid_memory_v1_4/G15B_CONTROL_PROTOCOL_2026-08-25.md)
 - [G16 SM75 frontier-shootout protocol](../../SSM-Models/hybrid_memory_v1_4/G16_SM75_FRONTIER_SHOOTOUT_PROTOCOL_2026-08-25.md)
+- [G16 trained-frontier results](../../SSM-Models/hybrid_memory_v1_4/G16_SM75_FRONTIER_SHOOTOUT_RESULTS.md)
 - [G16 exact-SM75 runtime qualification artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g16_runtime_qualification_sm75_2026-08-25.json)
 - [Local SM75 native-runtime ledger](../../SSM-Models/hybrid_memory_v1_4/SM75_NATIVE_RUNTIME.md)

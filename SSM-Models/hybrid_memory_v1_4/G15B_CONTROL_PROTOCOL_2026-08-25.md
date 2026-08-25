@@ -2,7 +2,7 @@
 
 **Frozen:** 2026-08-25, after G15A-S and before any G15B outcome is inspected  
 **Parent:** [G15 Spin-Dirac preregistration](G15_SPIN_DIRAC_PREREGISTRATION.md)  
-**Entry evidence:** [G15A-S results](G15_SPIN_DIRAC_RESULTS.md#g15a-s-spanning-and-center-sensitive-chart-transfer)
+**Entry evidence:** [G15A-S results](G15_SPIN_DIRAC_RESULTS.md#g15a-s-spanning-and-center-sensitive-chart-transfer) | **Executable runner:** [`g15b_interleaved_cohort.py`](g15b_interleaved_cohort.py) | **Task generator:** [`g15b_interleaved_tasks.py`](g15b_interleaved_tasks.py)
 
 ## Decision being tested
 

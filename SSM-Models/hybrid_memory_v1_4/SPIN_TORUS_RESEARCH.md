@@ -185,8 +185,9 @@ seeds at roughly `1e-6` held-out-frame error and at most `2.36e-5` direct-
 carrier error on unseen 2-pi/4-pi loops, volume-center words, other center
 cosets, and loop-plus-primitive continuations. This closes the local spanning
 and center-compatibility question for the hard-coded shared vector/positive
-lift. G15B address/write/query learning now precedes any torus-bank or moving-
-frame implementation.
+lift. The frozen G15B interleaved shared-payload commissioned-controller gate
+now tests address/write/erase/query learning with oracle ceilings and causal
+interventions before any torus-bank or moving-frame implementation.
 
 ## Claim ledger
 

@@ -93,16 +93,26 @@ timing; it still does not learn addressing, writes, queries, topology from raw
 data, generic association, or language. See the
 [`G15A-S artifact`](artifacts/g15as_spanning_center_sm75_2026-08-25.json).
 
+The prospectively frozen
+[`G15B interleaved-controller protocol`](G15B_CONTROL_PROTOCOL_2026-08-25.md)
+and its [`executable cohort`](g15b_interleaved_cohort.py) now target that actual
+bottleneck. It removes attention, uses one causal-conv
+Spin-Dirac block, interleaves writes/queries/changed overwrites over one shared
+payload alphabet, and binds unique-key address, balanced write/erase,
+oracle-capacity, controller-identification, and causal-use gates. This is
+explicit label-supervised commissioning, not autonomous discovery. No G15B
+quality result exists yet.
+
 In parallel, the frozen
 [`G16 SM75 shootout protocol`](G16_SM75_FRONTIER_SHOOTOUT_PROTOCOL_2026-08-25.md)
-and [`harness`](frontier_shootout.py) retain four approximately 125K-parameter
-arms that passed real one-step SM75 qualification: v1.4.5, local GDN2, official
-fused Mamba-2, and actual Transformers OLMo Hybrid. No G16 training metric has
-been run. Mamba-3 SISO and MIMO were excluded because their actual backward
-paths violate the frozen small-shape or SM75 kernel contracts. The clean,
-source-bound [`G16 runtime artifact`](artifacts/g16_runtime_qualification_sm75_2026-08-25.json)
-records complete finite gradients for all 127 trainable tensors; it is not a
-quality or speed result.
+and [`harness`](frontier_shootout.py) completed the one-seed, 4.096M-target
+development cohort after exact runtime qualification. Official fused Mamba-2
+wins every ordinary-compression context and reaches `1.48571` BPRB at L4096
+versus v1.4.5 `1.58335`. Local GDN2 (`1.60457`) and actual Transformers OLMo
+Hybrid (`1.61413`) lose; every arm fails learned recall. See the
+[`G16 result`](G16_SM75_FRONTIER_SHOOTOUT_RESULTS.md). It is parameter- and
+target-matched but optimizer-specific and one seed, so it rejects the current
+local development candidates without promoting a universal model family.
 
 This track exposes seven explicit mixer kinds in one causal language-model
 shell:

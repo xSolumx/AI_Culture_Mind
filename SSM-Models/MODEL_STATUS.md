@@ -113,10 +113,15 @@ content addressing and edit laws over richer transport geometry alone.
   timing. It does not establish learned topology, generic association,
   addressing/querying, negative-spin/Clifford utility, language, or full
   triality, and it provides no scaling/efficiency result.
-- G16 is a frozen, runtime-qualified four-arm SM75 harness for v1.4.5, local
-  semantic GDN2, official fused Mamba-2, and actual Transformers OLMo Hybrid.
-  Its parameter and full-gradient qualification is not a training result; no
-  G16 quality metric exists yet.
+- G15B is prospectively frozen as an attention-free interleaved shared-payload
+  commissioned-controller gate. Exact oracle capacity, controller metrics,
+  causal interventions, and fresh data namespaces are binding; no G15B quality
+  result exists yet.
+- G16 completed its prospectively frozen one-seed SM75 development shootout.
+  Official fused Mamba-2 wins ordinary compression at every context and reaches
+  `1.48571` BPRB at L4096 versus v1.4.5 `1.58335`; local semantic GDN2 and
+  actual OLMo Hybrid lose. All four arms fail the learned-recall gate. This is
+  bounded development evidence, not a model-family promotion or scaling law.
 
 The current machine-readable G15-series evidence is the
 [primary cohort artifact](hybrid_memory_v1_4/artifacts/g15a_spin_dirac_cohort_sm75_2026-08-25.json),
@@ -142,10 +147,12 @@ The spanning-center successor is controlled by the
 [G15A-S protocol](hybrid_memory_v1_4/G15AS_SPANNING_CENTER_PROTOCOL_2026-08-25.md)
 and source-bound
 [G15A-S artifact](hybrid_memory_v1_4/artifacts/g15as_spanning_center_sm75_2026-08-25.json).
-The untrained four-arm model harness is frozen separately in the
+The four-arm model harness is frozen separately in the
 [G16 protocol](hybrid_memory_v1_4/G16_SM75_FRONTIER_SHOOTOUT_PROTOCOL_2026-08-25.md),
 with exact source/runtime evidence in the
-[G16 qualification artifact](hybrid_memory_v1_4/artifacts/g16_runtime_qualification_sm75_2026-08-25.json).
+[G16 qualification artifact](hybrid_memory_v1_4/artifacts/g16_runtime_qualification_sm75_2026-08-25.json)
+and the completed development ordering in the
+[G16 result](hybrid_memory_v1_4/G16_SM75_FRONTIER_SHOOTOUT_RESULTS.md).
 Status is not inferred from the presence of passing algebraic unit tests.
 Local baseline eligibility is independently controlled by
 [SM75_NATIVE_RUNTIME.md](hybrid_memory_v1_4/SM75_NATIVE_RUNTIME.md); native

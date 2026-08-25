@@ -370,26 +370,68 @@ Evidence:
 [`artifacts/g15as_spanning_center_sm75_2026-08-25.json`](artifacts/g15as_spanning_center_sm75_2026-08-25.json),
 SHA-256 `96e939fa4411e305637961941a565ac26da5a4212b47de3fc198687693b5dbcc`.
 
-## G16 retained in parallel without premature metrics
+## G15B is now the controller problem, not another geometry assay
 
-The
-[`G16 SM75 protocol`](G16_SM75_FRONTIER_SHOOTOUT_PROTOCOL_2026-08-25.md) and
-[`frontier harness`](frontier_shootout.py) were frozen alongside G15A-S, but no
-G16 training run has been launched. Its four approximately 125K-parameter arms
-all passed real one-step forward/backward/optimizer qualification on SM75:
-v1.4.5, local GDN2, official fused Mamba-2, and actual Transformers OLMo
-Hybrid. The small Mamba-3 SISO backward fails its `K >= 16` contract and MIMO
-selects an SM80-only path, so neither is silently approximated or retained as
-an eligible arm.
+The repository history changes the correct experiment. Old Pure Spin work
+showed that a final retrieval score can pass while an explicit query-event
+router has zero event F1, and that nonzero parameter gradients do not imply a
+grammar-aligned temporal path. The current Spin-Dirac query is continuously
+live, so no hard event switch was reintroduced. Old generic builders also put
+all writes first and all queries last with disjoint key/value/filler ranges;
+they cannot support the stronger claim that write/query timing was identified.
 
-A read-only audit then found that the harness recorded but did not fail closed
-on a dirty full run, Mamba revision/import drift, or OLMo backend drift. Those
-contracts were frozen before requalification. The new
-[`qualification entrypoint`](g16_runtime_qualification.py) passed from clean
-commit `3976934` on exact SM75: all 127 trainable tensors across the four arms
-received finite gradients and remained finite after their actual optimizer
-step. The bound Mamba revision is `e9594ce1...`; OLMo uses Transformers 5.15.1,
-FLA 0.5.2, and the real FLA chunk backend. This produces no BPRB, recall, or
-model ordering. Evidence:
-[`artifacts/g16_runtime_qualification_sm75_2026-08-25.json`](artifacts/g16_runtime_qualification_sm75_2026-08-25.json),
-SHA-256 `97a0a67f2621448b7eccf6171649ca21be201b15aa9b100dec569c25258d0231`.
+The prospectively frozen
+[`G15B protocol`](G15B_CONTROL_PROTOCOL_2026-08-25.md) therefore uses one
+attention-free causal-conv Spin-Dirac block over a shared payload alphabet.
+The complete executable cohort is
+[`g15b_interleaved_cohort.py`](g15b_interleaved_cohort.py); its data contract is
+[`g15b_interleaved_tasks.py`](g15b_interleaved_tasks.py).
+Writes, queries, changed overwrites, selected/unselected writes, and needles are
+interleaved. The address target groups all versions of one key: classifying the
+latest write occurrence would ask the query to infer information it does not
+contain. Balanced write and overwrite-erase objectives prevent length-1,024
+filler negatives from dominating. Oracle direct reads through the actual
+`8 x 8` state law pass every task and `I/C/S` arm exactly in the committed task
+tests, removing the old representation-capacity ambiguity.
+
+This is explicit label-supervised commissioning under the parent G15B
+boundary. A fresh external-loss-only lane can follow only after the identified
+controller passes. Retrieval without controller metrics and the frozen
+no-memory/no-write/no-erase/wrong-query interventions will not be called a
+memory result.
+
+## G16 completed and rejected the current local ordinary-text frontier
+
+Before launch, a read-only audit found that initialization evaluation left the
+model in eval mode for the first 200 updates. Dropout was zero, but the phase-
+dependent mode violated the execution contract. Commit `32e03e5` restored
+training mode before update one and added a regression guard. No G16 quality
+metric had been seen. The exact runtime qualification and all source/backend
+bindings remained unchanged.
+
+The full run then started clean at commit `5796a851df02` on the RTX 2070 SUPER
+SM75 runtime. All four arms completed 1,000 updates and 4,096,000 paired target
+tokens. Every integrity gate passed. At L4096, v1.4.5 reached `1.58335` BPRB,
+local GDN2 `1.60457`, official fused Mamba-2 `1.48571`, and actual OLMo Hybrid
+`1.61413`. Mamba-2 won every context and beat v1.4.5 by `0.09764` BPRB. Its
+median synchronized update was `0.03073` seconds versus v1.4.5 `0.11349` on
+this exact runtime. OLMo was fastest at `0.01675` seconds but did not convert
+that speed into quality.
+
+Every arm failed learned factual recall. OLMo's nominally best 8,192-byte mean
+gain was only `0.003786` nats; Mamba-2 and v1.4.5 were effectively zero and
+GDN2 was negative. Thus ordinary pretraining still does not teach reliable
+long-range binding, even in the best compressor.
+
+The decision is uncomfortable but clear: do not promote the local GDN2 edit
+law from its constructed G14 win, and do not treat v1.4.5 as competitive with
+the official fused Mamba-2 ordinary-compression reference at this scale. G15B
+must first show that a content edit memory can be commissioned and causally
+used; only then should it return to a Mamba-2-controlled natural-text hybrid.
+
+This remains a one-seed, small repeated-snapshot, optimizer-specific SM75
+development cohort, not a model-family promotion or scaling law. Evidence:
+[`G16_SM75_FRONTIER_SHOOTOUT_RESULTS.md`](G16_SM75_FRONTIER_SHOOTOUT_RESULTS.md)
+and
+[`artifacts/g16_frontier_shootout_sm75_2026-08-25.json`](artifacts/g16_frontier_shootout_sm75_2026-08-25.json),
+SHA-256 `76323bb4b3a87705ac66e77bdd1c056f2a4cbb6bf7b5597386f4953187f2cac7`.

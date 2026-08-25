@@ -72,11 +72,13 @@
 > composition of a learned spanning signed dictionary, unseen frame banks, and
 > global center words under oracle edit timing; it does not learn topology,
 > address/query association, negative-spin/Clifford utility, language, or full
-> triality, and it supplies no scaling/efficiency result. G15B learned
-> address/query association remains next, retaining `I/C/S/S-broken` and the
-> recipe. G16 is separately frozen as a runtime-qualified four-arm SM75 harness
-> for v1.4.5, local GDN2, official fused Mamba-2, and actual Transformers OLMo
-> Hybrid; it has no training metric or quality adjudication yet.
+> triality, and it supplies no scaling/efficiency result. G15B is now frozen as
+> an attention-free interleaved shared-payload commissioned-controller gate
+> with exact oracle ceilings, controller metrics, and causal-use interventions;
+> it has no quality outcome yet. G16 has completed its one-seed SM75 development
+> shootout: official fused Mamba-2 wins every ordinary-compression context and
+> beats v1.4.5 by `0.09764` BPRB at L4096, while local GDN2 and actual OLMo
+> Hybrid lose and all four arms fail learned recall.
 > The frozen G16 qualification supersedes earlier candidate-arm notes for that
 > harness: its parameter and full-gradient checks establish four-arm runtime
 > eligibility, not training quality. See the
@@ -95,7 +97,9 @@
 > [G15A-R first-order repair artifact](hybrid_memory_v1_4/artifacts/g15ar_first_order_repair_sm75_2026-08-25.json),
 > [G15A-S spanning-center protocol](hybrid_memory_v1_4/G15AS_SPANNING_CENTER_PROTOCOL_2026-08-25.md),
 > [G15A-S spanning-center artifact](hybrid_memory_v1_4/artifacts/g15as_spanning_center_sm75_2026-08-25.json),
+> [G15B interleaved-controller protocol](hybrid_memory_v1_4/G15B_CONTROL_PROTOCOL_2026-08-25.md),
 > [G16 SM75 frontier-shootout protocol](hybrid_memory_v1_4/G16_SM75_FRONTIER_SHOOTOUT_PROTOCOL_2026-08-25.md),
+> [G16 trained-frontier results](hybrid_memory_v1_4/G16_SM75_FRONTIER_SHOOTOUT_RESULTS.md),
 > [G16 exact-SM75 runtime qualification artifact](hybrid_memory_v1_4/artifacts/g16_runtime_qualification_sm75_2026-08-25.json),
 > [SM75 runtime ledger](hybrid_memory_v1_4/SM75_NATIVE_RUNTIME.md), and
 > [current model inventory](MODEL_STATUS.md).

@@ -316,9 +316,21 @@ Evidence:
 [`artifacts/g15as_spanning_center_sm75_2026-08-25.json`](artifacts/g15as_spanning_center_sm75_2026-08-25.json),
 SHA-256 `96e939fa4411e305637961941a565ac26da5a4212b47de3fc198687693b5dbcc`.
 
-The next gate is G15B: hold the selected recipe and I/C/S/S-broken transports
-fixed while learning content address, write timing, and final query on generic
-associative tasks. More exceptional geometry is not the present bottleneck.
+The next gate is now frozen in
+[`G15B_CONTROL_PROTOCOL_2026-08-25.md`](G15B_CONTROL_PROTOCOL_2026-08-25.md).
+It uses an attention-free Spin-Dirac shell and shared-payload interleaved
+events, rather than the older disjoint/front-loaded task shortcut. The primary
+`I/C/S` arms retain their parent readouts; unique-key address, balanced
+write/overwrite erase, oracle direct-read ceilings, controller metrics, and
+causal interventions are binding. This is explicit commissioned-controller
+learning, not label-free discovery. No G15B quality outcome exists yet.
 
 The constrained `su3_torus` arm is an additional scientific ablation, not a
 replacement for the four frozen primary arms.
+
+In the parallel completed G16 one-seed SM75 development shootout, official
+fused Mamba-2 beat v1.4.5 at every context and by `0.09764` BPRB at L4096.
+Local GDN2 and OLMo Hybrid lost; every arm failed the learned-recall gate. This
+sets a stronger ordinary-compression reference but does not answer G15B or
+promote a model family. See
+[`G16_SM75_FRONTIER_SHOOTOUT_RESULTS.md`](G16_SM75_FRONTIER_SHOOTOUT_RESULTS.md).
