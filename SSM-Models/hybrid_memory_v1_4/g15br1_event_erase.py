@@ -12,6 +12,7 @@ from pathlib import Path
 from typing import Any, Literal
 
 import torch
+import torch.nn.functional as F
 
 from .g15b_interleaved_cohort import (
     EVALUATION_LENGTHS,
@@ -41,6 +42,22 @@ from .model import HybridMemoryLM
 
 PROTOCOL = ROOT / "G15BR1_EVENT_ERASE_PROTOCOL_2026-08-26.md"
 R0_ARTIFACT = ROOT / "artifacts/g15br_checkpoint_repair_sm75_2026-08-26.json"
+EXPECTED_G15B_SHA256 = (
+    "f74d860e30ab40ec747521dfcecd74aac2bb75151206c25b7104d334727429eb"
+)
+EXPECTED_R0_SHA256 = "4d92d6af2fb062cf2baaa035c4e4eff89d494dfcb56b9b666523bbbdbfe3cf9c"
+CONTROL_NAMES = (
+    "query_vector",
+    "key_vector",
+    "value_positive",
+    "erase_strength",
+    "write_strength",
+    "retention",
+    "transport_coordinates",
+)
+PRESERVED_CONTROL_NAMES = tuple(
+    name for name in CONTROL_NAMES if name != "erase_strength"
+)
 INTERVENTIONS = ("learned", "soft_event_erase", "exact_event_erase")
 Intervention = Literal["learned", "soft_event_erase", "exact_event_erase"]
 
@@ -79,15 +96,7 @@ def event_erase_forward(
         "controls": {
             name: tensor
             for name, tensor in zip(
-                (
-                    "query_vector",
-                    "key_vector",
-                    "value_positive",
-                    "erase_strength",
-                    "write_strength",
-                    "retention",
-                    "transport_coordinates",
-                ),
+                CONTROL_NAMES,
                 controls,
                 strict=True,
             )
@@ -145,6 +154,14 @@ def evaluate_checkpoint(
     device = model.embedding.weight.device
     cells: dict[str, Any] = {}
     cross = _new_cross_accumulator()
+    integrity = {
+        "local_decoder_batches_checked": 0,
+        "model_forward_maximum_absolute_logit_residual": 0.0,
+        "preserved_controls": {
+            name: {"bitwise_equal": True, "maximum_absolute_residual": 0.0}
+            for name in PRESERVED_CONTROL_NAMES
+        },
+    }
     for task in ("mqar", "overwrite", "selective", "needle"):
         for length in EVALUATION_LENGTHS:
             batch_size = _evaluation_batch_size(
@@ -155,6 +172,7 @@ def evaluate_checkpoint(
                 raise ValueError("decisions must contain complete evaluation batches")
             correct = {name: 0 for name in INTERVENTIONS}
             episodes = {name: 0 for name in INTERVENTIONS}
+            nll_sum = {name: 0.0 for name in INTERVENTIONS}
             total = 0
             episode_total = 0
             batch_index = 0
@@ -171,23 +189,53 @@ def evaluate_checkpoint(
                         NEEDLE_DISTANCES[length] if task == "needle" else None
                     ),
                 ).to(device)
-                if not torch.equal(
-                    local_write_event_mask(batch.token_ids), batch.write_event_mask
-                ):
+                decoded_write_events = local_write_event_mask(batch.token_ids)
+                if not torch.equal(decoded_write_events, batch.write_event_mask):
                     raise RuntimeError("valid-write target is not locally observable")
-                learned_controls: dict[str, torch.Tensor] | None = None
+                integrity["local_decoder_batches_checked"] += 1
+                results = {
+                    intervention: event_erase_forward(model, batch, intervention)
+                    for intervention in INTERVENTIONS
+                }
+                learned_result = results["learned"]
+                learned_controls = learned_result["controls"]
+                ordinary_logits = model(batch.token_ids)["logits"]
+                ordinary_residual = float(
+                    (ordinary_logits - learned_result["logits"]).abs().max()
+                )
+                integrity["model_forward_maximum_absolute_logit_residual"] = max(
+                    float(integrity["model_forward_maximum_absolute_logit_residual"]),
+                    ordinary_residual,
+                )
                 for intervention in INTERVENTIONS:
-                    result = event_erase_forward(model, batch, intervention)
-                    prediction = _gather_time(
+                    result = results[intervention]
+                    selected_logits = _gather_time(
                         result["logits"], batch.query_positions
-                    ).argmax(-1)
+                    )
+                    prediction = selected_logits.argmax(-1)
                     match = prediction == batch.targets
                     correct[intervention] += int(match.sum())
                     episodes[intervention] += int(match.all(dim=1).sum())
+                    nll_sum[intervention] += float(
+                        F.cross_entropy(
+                            selected_logits.flatten(0, 1),
+                            batch.targets.flatten(),
+                            reduction="sum",
+                        )
+                    )
                     if intervention == "learned":
-                        learned_controls = result["controls"]
-                if learned_controls is None:
-                    raise RuntimeError("learned controls were not evaluated")
+                        continue
+                    for name in PRESERVED_CONTROL_NAMES:
+                        learned_control = learned_controls[name]
+                        repaired_control = result["controls"][name]
+                        report = integrity["preserved_controls"][name]
+                        report["bitwise_equal"] = bool(
+                            report["bitwise_equal"]
+                        ) and torch.equal(learned_control, repaired_control)
+                        report["maximum_absolute_residual"] = max(
+                            float(report["maximum_absolute_residual"]),
+                            float((learned_control - repaired_control).abs().max()),
+                        )
                 _accumulate_prototype_cross(cross, learned_controls, batch)
                 total += batch.targets.numel()
                 episode_total += batch.batch_size
@@ -200,19 +248,32 @@ def evaluate_checkpoint(
                     name: {
                         "query_accuracy": correct[name] / total,
                         "exact_episode_accuracy": episodes[name] / episode_total,
+                        "bits_per_query": nll_sum[name] / total / math.log(2.0),
                     }
                     for name in INTERVENTIONS
                 },
             }
-    return {"cells": cells, "prototype_cross": _finish_prototype_cross(cross)}
+    integrity["preserved_controls_bitwise_equal"] = all(
+        row["bitwise_equal"] for row in integrity["preserved_controls"].values()
+    )
+    return {
+        "cells": cells,
+        "prototype_cross": _finish_prototype_cross(cross),
+        "runtime_integrity": integrity,
+    }
 
 
 def _adjudicate(seed_reports: list[dict[str, Any]]) -> dict[str, Any]:
     cell_names = list(seed_reports[0]["evaluation"]["cells"])
     replay_residuals = [
-        cell["baseline_replay_absolute_residual"]
+        residual
         for report in seed_reports
         for cell in report["evaluation"]["cells"].values()
+        for residual in (
+            cell["baseline_query_accuracy_absolute_residual"],
+            cell["baseline_exact_episode_accuracy_absolute_residual"],
+            cell["baseline_bits_per_query_absolute_residual"],
+        )
     ]
     means: dict[str, Any] = {}
     for cell_name in cell_names:
@@ -236,6 +297,18 @@ def _adjudicate(seed_reports: list[dict[str, Any]]) -> dict[str, Any]:
 
     replay_passed = max(replay_residuals, default=math.inf) <= 1e-12
     witness_passed = all(row["observability_witness"]["passed"] for row in seed_reports)
+    runtime_integrity_passed = all(
+        report["evaluation"]["runtime_integrity"][
+            "model_forward_maximum_absolute_logit_residual"
+        ]
+        == 0.0
+        and report["evaluation"]["runtime_integrity"][
+            "preserved_controls_bitwise_equal"
+        ]
+        and report["evaluation"]["runtime_integrity"]["local_decoder_batches_checked"]
+        > 0
+        for report in seed_reports
+    )
     mode_checks: dict[str, dict[str, bool]] = {}
     for intervention in ("soft_event_erase", "exact_event_erase"):
         checks = {}
@@ -252,18 +325,24 @@ def _adjudicate(seed_reports: list[dict[str, Any]]) -> dict[str, Any]:
     passed_modes = [
         mode
         for mode, checks in mode_checks.items()
-        if replay_passed and witness_passed and all(checks.values())
+        if replay_passed
+        and witness_passed
+        and runtime_integrity_passed
+        and all(checks.values())
     ]
     selected = None
     if passed_modes:
         regressions = {}
         for mode in passed_modes:
             delta_name = f"{mode}_minus_learned"
-            regressions[mode] = sum(
-                max(0.0, -row[delta_name])
+            relevant = [
+                row
                 for name, row in means.items()
-                if not name.startswith("overwrite:")
-            )
+                if name.startswith(("mqar:", "selective:"))
+            ]
+            regressions[mode] = sum(
+                max(0.0, -row[delta_name]) for row in relevant
+            ) / len(relevant)
         selected = min(
             passed_modes,
             key=lambda mode: (regressions[mode], mode != "soft_event_erase"),
@@ -286,6 +365,7 @@ def _adjudicate(seed_reports: list[dict[str, Any]]) -> dict[str, Any]:
         ),
         "baseline_replay_passed": replay_passed,
         "observability_witness_passed": witness_passed,
+        "runtime_integrity_passed": runtime_integrity_passed,
         "three_seed_means": means,
         "mode_checks": mode_checks,
         "passed_modes": passed_modes,
@@ -300,15 +380,43 @@ def _adjudicate(seed_reports: list[dict[str, Any]]) -> dict[str, Any]:
     }
 
 
-def _validate_r0(path: Path) -> dict[str, Any]:
+def _validate_quality_artifact(report: dict[str, Any], *, name: str) -> None:
+    if report.get("mode") != "quality" or report.get("evidentiary") is not True:
+        raise ValueError(f"{name} is not an evidentiary quality artifact")
+    if report.get("git_status_at_start") != []:
+        raise ValueError(f"{name} did not start from a clean git tree")
+    if report.get("protocol", {}).get("seeds") != list(QUALITY_SEEDS):
+        raise ValueError(f"{name} does not bind the frozen quality seeds")
+    environment = report.get("environment", {})
+    if environment.get("device") != "cuda" or environment.get("compute_capability") != [
+        7,
+        5,
+    ]:
+        raise ValueError(f"{name} is not the frozen SM75 CUDA result")
+
+
+def _validate_parent(path: Path) -> tuple[dict[str, Any], str]:
+    actual_sha256 = _sha256(path)
+    if actual_sha256 != EXPECTED_G15B_SHA256:
+        raise ValueError("G15B parent artifact hash does not match the frozen input")
+    report = _load_parent(path)
+    _validate_quality_artifact(report, name="G15B parent")
+    return report, actual_sha256
+
+
+def _validate_r0(path: Path, *, parent_sha256: str) -> tuple[dict[str, Any], str]:
+    actual_sha256 = _sha256(path)
+    if actual_sha256 != EXPECTED_R0_SHA256:
+        raise ValueError("R0 artifact hash does not match the frozen input")
     report = json.loads(path.read_text(encoding="utf-8"))
-    if report.get("evidentiary") is not True:
-        raise ValueError("R0 artifact is not evidentiary")
+    _validate_quality_artifact(report, name="R0")
     if report["adjudication"]["passed"] is not False:
         raise ValueError("R1 requires the failed R0 adjudication")
     if report["adjudication"]["baseline_replay_passed"] is not True:
         raise ValueError("R1 requires exact R0 baseline replay")
-    return report
+    if report.get("parent_artifact_sha256") != parent_sha256:
+        raise ValueError("R0 does not bind the supplied G15B parent artifact")
+    return report, actual_sha256
 
 
 def run(
@@ -321,8 +429,8 @@ def run(
     commit: str,
     status_at_start: list[str],
 ) -> dict[str, Any]:
-    parent = _load_parent(parent_path)
-    _validate_r0(r0_path)
+    parent, parent_sha256 = _validate_parent(parent_path)
+    _, r0_sha256 = _validate_r0(r0_path, parent_sha256=parent_sha256)
     expected = _expected_identity(parent)
     seeds = QUALITY_SEEDS if mode == "quality" else QUALITY_SEEDS[:1]
     decisions = 4096 if mode == "quality" else 16
@@ -345,10 +453,17 @@ def run(
         )
         _sync(device)
         for name, cell in evaluation["cells"].items():
-            recorded = checkpoint["evaluation"]["cells"][name]["query_accuracy"]
-            replayed = cell["interventions"]["learned"]["query_accuracy"]
-            cell["recorded_g15b_query_accuracy"] = recorded
-            cell["baseline_replay_absolute_residual"] = abs(replayed - recorded)
+            recorded = checkpoint["evaluation"]["cells"][name]
+            replayed = cell["interventions"]["learned"]
+            for metric in (
+                "query_accuracy",
+                "exact_episode_accuracy",
+                "bits_per_query",
+            ):
+                cell[f"recorded_g15b_{metric}"] = recorded[metric]
+                cell[f"baseline_{metric}_absolute_residual"] = abs(
+                    replayed[metric] - recorded[metric]
+                )
         seed_reports.append(
             {
                 "seed": seed,
@@ -382,9 +497,9 @@ def run(
         "git_status_at_start": status_at_start,
         "elapsed_wall_seconds": time.perf_counter() - started,
         "parent_g15b_artifact": str(parent_path),
-        "parent_g15b_sha256": _sha256(parent_path),
+        "parent_g15b_sha256": parent_sha256,
         "parent_r0_artifact": str(r0_path),
-        "parent_r0_sha256": _sha256(r0_path),
+        "parent_r0_sha256": r0_sha256,
         "protocol": {
             "seeds": list(seeds),
             "evaluation_decisions_per_cell": decisions,
