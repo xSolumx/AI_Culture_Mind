@@ -87,10 +87,7 @@ No such state is implemented here. Calling the fixed `su3_torus` arm a moving
 octonionic memory would be false. The standard structure is strict nearly
 Kahler and nonintegrable; see
 [Butruille](https://arxiv.org/abs/math/0612655) and
-[Foscolo--Haskins](https://arxiv.org/abs/1501.07838). A very recent manuscript
-claiming a different integrable complex structure on a manifold diffeomorphic
-to (S^6) is unreviewed and supplies no recurrent write law; it has no role in
-the present architecture decision.
+[Foscolo--Haskins](https://arxiv.org/abs/1501.07838).
 
 ## The actual state-space dual
 
