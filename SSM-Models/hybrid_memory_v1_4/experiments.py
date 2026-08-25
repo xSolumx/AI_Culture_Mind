@@ -345,6 +345,7 @@ def source_file_digests() -> tuple[SourceFileDigest, ...]:
         root / "retention_successor_screen.py",
         root / "retention_validation.py",
         root / "natural_text_data.py",
+        root / "natural_text_screen.py",
         root / "upstream_learning_comparison.py",
         root / "upstream_probe.py",
         root / "model.py",
@@ -370,6 +371,7 @@ def source_file_digests() -> tuple[SourceFileDigest, ...]:
         root / "G8_PREREGISTRATION.md",
         root / "G9_PREREGISTRATION.md",
         root / "G10_PREREGISTRATION.md",
+        root / "G11_PREREGISTRATION.md",
         root.parent / "delta_product_reference.py",
     )
     reports = []
