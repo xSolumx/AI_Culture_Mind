@@ -346,6 +346,7 @@ def source_file_digests() -> tuple[SourceFileDigest, ...]:
         root / "retention_validation.py",
         root / "natural_text_data.py",
         root / "natural_text_screen.py",
+        root / "natural_text_diagnostic.py",
         root / "upstream_learning_comparison.py",
         root / "upstream_probe.py",
         root / "model.py",

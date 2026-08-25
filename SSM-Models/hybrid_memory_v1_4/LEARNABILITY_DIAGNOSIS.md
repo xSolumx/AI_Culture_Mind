@@ -1,6 +1,6 @@
 # Hybrid Memory v1.4 Learnability Diagnosis and Pivot
 
-Date: 2026-08-24
+Date: 2026-08-25
 
 ## Outcome first
 
@@ -22,8 +22,10 @@ then reached 94.34% at length 96 and 89.84% at length 512. On a larger unseen
 2,048-query length-512 cohort the same checkpoint reached 92.68%; 300 fresh
 length-512 continuation updates raised it to 94.19%.
 
-This is a real synthetic rule-learning result under explicit task labels. It
-is not yet a label-free or natural-language model promotion.
+This was a real synthetic rule-learning result under explicit task labels.
+Subsequent G9--G11 work has now separated the remaining failure and tested an
+ordinary real-text objective; the current conclusion is updated below rather
+than retroactively relabeling the historical result.
 
 The strict three-seed G4b gate later failed because seed 1429 reached 84.814%
 at L512, and uniform G4c consolidation raised it only to 87.598%. A post-G4c
@@ -252,6 +254,31 @@ frame alignment; causal reverse-binding reconstruction fixes the absence of a
 learnable local association signal; and explicit target-distance training
 fixes the mistaken assumption that short-task mastery implies retention.
 
+G9 then showed that this was still incomplete. Its fresh combined schedule had
+high mean accuracy but failed one seed at 87.89% L512. That seed learned the
+external reverse-binding target and had nonzero retrieval gradients, yet one
+head wrote on nearly every filler token while driving global retention to the
+0.90 floor. Across hundreds of filler transitions, the model erased its own
+bindings. The present learning problem was therefore an unsafe architectural
+degree of freedom, not missing credit or insufficient labels.
+
+v1.4.5 raises the global retention floor/initialization to 0.999/0.9995 while
+leaving content-selective delta overwrites trainable. It repaired the exact
+exposed G9 seed in a matched causal replay, then G10 passed all fresh seeds:
+minimum accuracy was 97.57% at L96 and 96.44% at L512. Ablating Gated Delta
+collapsed every diagnostic checkpoint to 0%, so the memory carried the
+solution.
+
+G11 finally removed the synthetic auxiliary entirely. On a fixed TinyStories
+byte snapshot, ordinary next-token cross entropy moved v1.4.5 from 8.028 to
+1.614 held-out bits/byte. Actual small Transformers Mamba-2 and OLMo Hybrid
+reached 1.639 and 1.675 under the same one-seed data/update budget. A post-hoc
+ablation degraded the hybrid to 6.410 bits/byte without Gated Delta and 1.818
+without attention. The answer to “will it learn?” is now yes in this bounded
+real-text screen, and the recurrent memory is causally responsible for most of
+that learned function. Cross-seed natural-text robustness and scaling remain
+open.
+
 ## Current claim ledger
 
 ### Proved by code/tests
@@ -269,7 +296,11 @@ fixes the mistaken assumption that short-task mastery implies retention.
 - 94.34% fresh length-96 accuracy;
 - 92.68% fresh length-512 accuracy on a larger pre-continuation cohort;
 - 94.19% after length-512 continuation;
-- finite real upstream FLA, Transformers, and pretrained Mamba-2 probes.
+- finite real upstream FLA, Transformers, and pretrained Mamba-2 probes;
+- the exposed G9 seed improved from 87.89% to 96.29% L512 under the
+  retention-only v1.4.5 intervention;
+- the post-hoc G11 ablation increased BPC by 4.796 without Gated Delta and
+  0.204 without attention.
 
 ### Prospectively validated
 
@@ -279,22 +310,25 @@ fixes the mistaken assumption that short-task mastery implies retention.
   checkpoints, and records preregistration and checkpoint hashes.
 - G8 uniformly continued all three G7 checkpoints and cleared 90% at both L96
   and L512 for every seed, with a 92.29% minimum L512 accuracy.
+- G10 trained retention-safe v1.4.5 from scratch on fresh seeds
+  1753/1759/1777 and cleared both gates with 96.44% minimum L512 accuracy;
+- G11 prospectively passed its one-seed ordinary TinyStories next-byte gate,
+  improving by 6.414 bits/byte to 1.614 BPC without auxiliary labels.
 
 ### Constrained
 
-- the positive learning result uses synthetic task labels for association and
-  write events;
+- G10 uses an externally observable synthetic reverse-binding target; G11 uses
+  only ordinary next-byte labels;
 - the local v1.4 recurrence is semantic PyTorch, not a fused kernel;
+- G11 uses one model seed, a 256-byte context, and unequal parameter counts;
 - extrapolation beyond the 1024 attention window has only small cohorts.
 
 ### Open
 
-- robust tied-address commissioning passed G4f; learning the same rule without
-  internal association/write labels remains open;
-- fresh-from-scratch validation of the combined external reverse-binding plus
-  target-distance schedule, now prospectively frozen as G9;
-- label-free MQAR after a dense causal language-model pretraining phase;
-- matched natural-text quality versus actual Mamba-2 and Gated DeltaNet;
+- multi-seed ordinary natural-text robustness;
+- parameter-matched and compute-matched natural-text quality at larger scale;
+- long-context natural-text recall after ordinary pretraining;
+- whether ordinary pretraining transfers to label-free MQAR;
 - whether selected archive or Spin/F4/rotor transport adds value after the
   generic content-addressed core is stable;
 - a fused SM75/next-hardware kernel path.

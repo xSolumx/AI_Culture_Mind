@@ -2,10 +2,13 @@
 
 **Status:** v1.4.5 is the synthetic external-learning successor. Its
 retention-safe G10 configuration passed the prospectively frozen fresh-seed
-gate with minimum exact accuracy 97.57% at L96 and 96.44% at L512. G9's failed
+gate with minimum exact accuracy 97.57% at L96 and 96.44% at L512. It also
+passed the frozen single-seed G11 ordinary next-byte TinyStories screen,
+improving from 8.028 to 1.614 bits/byte without auxiliary labels. G9's failed
 v1.4.4 seed and the exposed-seed causal repair remain retained evidence. The
-frozen G4a selected-memory result remains negative; G10 is not yet a
-label-free, natural-language, or speed promotion.
+frozen G4a selected-memory result remains negative; G11 is bounded real-text
+learning evidence, not a general language-quality, superiority, or speed
+promotion.
 
 This track combines five explicit mixer kinds in one causal language-model
 shell:
@@ -171,6 +174,10 @@ remains label-supervised with 774,400 useful query labels per seed.
 - [`natural_text_data.py`](natural_text_data.py): fixed-row TinyStories snapshot
   through the Hugging Face Dataset Viewer, with Hub revision, license, byte
   hashes, and exact split-overlap accounting.
+- [`natural_text_screen.py`](natural_text_screen.py) and
+  [`natural_text_diagnostic.py`](natural_text_diagnostic.py): the frozen G11
+  ordinary next-byte comparison against actual Transformers models and its
+  post-hoc causal mixer ablation.
 
 ## Baseline boundary
 
@@ -237,6 +244,19 @@ fell to 0% when Gated Delta was ablated, while removing attention preserved
 97.66% accuracy. See [`G10_PREREGISTRATION.md`](G10_PREREGISTRATION.md) and
 the retained artifacts.
 
+G11 supplies the first bounded ordinary real-text screen. On one paired
+TinyStories seed and 8,192,000 next-byte training labels per model, v1.4.5
+improved from 8.028 to 1.614 held-out bits/byte. Actual Transformers Mamba-2
+reached 1.639 and actual Transformers OLMo Hybrid reached 1.675. These models
+have 119,962, 86,000, and 104,152 parameters respectively, so the ordering is
+not a parameter-matched superiority claim.
+
+A post-hoc v1.4.5 ablation found 1.614 bits/byte for the full model, 6.410
+without Gated Delta, and 1.818 without attention. The recurrent memory carries
+most of the learned real-text function in this checkpoint; attention adds a
+smaller measurable improvement. Because the ablation was post-hoc and G11 has
+one model seed, cross-seed natural-text robustness remains open.
+
 ## Validation
 
 From `SSM-Models`:
@@ -267,8 +287,8 @@ matched speed evidence.
   the 87.89% weak seed.
 - The v1.4.5 retention-safe replay used an exposed failed seed and cannot pass
   a fresh-seed gate by itself.
-- G10 validates synthetic learning from external causal labels, not ordinary
-  natural-text next-token learning.
+- G11 validates bounded ordinary next-byte learning on one TinyStories seed,
+  not general language quality or cross-seed natural-text robustness.
 - The retained validation checkpoints are not released pretrained models.
 - Straight-through routing establishes a gradient estimator, not successful
   label-free routing.

@@ -614,6 +614,57 @@ Evidence:
 and
 [`artifacts/g10_retention_safe_diagnostic_cuda_2026-08-25.json`](artifacts/g10_retention_safe_diagnostic_cuda_2026-08-25.json).
 
+## G11 pass: ordinary real-text next-token learning
+
+G11 removed every synthetic auxiliary and trained only causal UTF-8 next-byte
+cross entropy on the retained TinyStories snapshot. Every model saw the same
+8,192,000 scored training bytes and fixed 131,072-byte validation cohort.
+
+| Model | Parameters | Initial BPC | 500 | 1000 | Final BPC | Final byte accuracy |
+|---|---:|---:|---:|---:|---:|---:|
+| Hybrid Memory v1.4.5 | 119,962 | 8.028 | 2.106 | 1.837 | **1.614** | 65.398% |
+| Transformers Mamba-2 | 86,000 | 8.394 | 1.845 | 1.718 | 1.639 | 65.193% |
+| Transformers OLMo Hybrid | 104,152 | 8.063 | 2.101 | 1.872 | 1.675 | 64.297% |
+
+v1.4.5 improved by 6.414 bits/byte, passing the preregistered requirement of
+at least 2.0 improvement and final BPC at most 4.0. All curves were finite. The
+actual upstream runtime classes were
+`transformers.models.mamba2.modeling_mamba2.Mamba2ForCausalLM` and
+`transformers.models.olmo_hybrid.modeling_olmo_hybrid.OlmoHybridForCausalLM`.
+Both declared their Torch fallbacks; no repository substitute was used.
+
+The final BPC ordering is descriptive, not a superiority claim: this is one
+model seed and the parameter counts differ. Raw wall time is also not a speed
+comparison because the upstream models used different unfused paths.
+
+### Post-hoc causal-use diagnostic
+
+The trained hybrid is genuinely using its recurrent memory:
+
+| Frozen v1.4.5 mode | Validation BPC | Byte accuracy |
+|---|---:|---:|
+| Full | 1.614 | 65.398% |
+| Gated Delta disabled | 6.410 | 16.696% |
+| Attention disabled | 1.818 | 60.749% |
+
+Removing memory costs 4.796 bits/byte; removing attention costs 0.204. The
+learned residual weights were 0.560 for memory and 0.146 for attention. Across
+32,768 inspected validation bytes, all four heads actively wrote and mean
+retention per head remained near 0.99902. This diagnostic is post-hoc, so it
+supports causal use of the frozen checkpoint without becoming a preregistered
+architecture comparison.
+
+G11 therefore resolves the narrow learning question positively: v1.4.5 can
+learn ordinary real-text causal prediction, and its recurrent memory carries
+most of that learned function in this bounded run. General language quality,
+cross-seed robustness, scaling, and long-context natural-text recall remain
+open.
+
+Evidence:
+[`artifacts/g11_tinystories_next_byte_comparison_cuda_2026-08-25.json`](artifacts/g11_tinystories_next_byte_comparison_cuda_2026-08-25.json)
+and
+[`artifacts/g11_tinystories_memory_ablation_cuda_2026-08-25.json`](artifacts/g11_tinystories_memory_ablation_cuda_2026-08-25.json).
+
 ## Actual upstream probes
 
 - FlashRT Gated Delta Attention was pinned at revision `892f725c...`, kernel
@@ -640,7 +691,7 @@ and
 
 ## Validation record
 
-- `python -m pytest hybrid_memory_v1_4/tests -q`: **196 passed, 4 skipped**.
+- `python -m pytest hybrid_memory_v1_4/tests -q`: **203 passed, 4 skipped**.
 - `python -m ruff check hybrid_memory_v1_4`: passed.
 - `python -m ruff format --check hybrid_memory_v1_4`: passed.
 - The four native-suite skips are guarded optional fused FLA/Mamba paths; WSL
@@ -662,9 +713,11 @@ Artifact file hashes are recorded in [`ARTIFACTS.sha256`](ARTIFACTS.sha256).
   not fresh validation.
 - G10 is a fresh synthetic external-label validation, not natural-text
   next-token evidence.
+- G11 is a one-seed bounded next-byte screen, not general language quality,
+  cross-seed robustness, or a parameter-matched upstream superiority result.
 - The retained checkpoints are validation artifacts, not released pretrained
   models.
-- No natural-language or bits-per-byte claim exists.
+- The only natural-text claim is the bounded G11 TinyStories next-byte result.
 - No fused-kernel, Tensor-Core, or matched speed claim exists.
 - No learned Spin(8) rung-use claim exists.
 - A straight-through estimator is not evidence that label-free routing learns.
