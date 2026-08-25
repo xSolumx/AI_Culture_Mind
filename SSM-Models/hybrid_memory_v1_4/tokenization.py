@@ -143,25 +143,15 @@ class ByteLevelBPETokenizer:
         encoding = self._tokenizer.encode(text, add_special_tokens=False)
         if not encoding.ids:
             raise ValueError("cannot encode empty text")
-        character_byte_prefix = [0]
-        for character in text:
-            character_byte_prefix.append(
-                character_byte_prefix[-1] + len(character.encode("utf-8"))
-            )
-        byte_lengths = []
-        expected_start = 0
-        for start, stop in encoding.offsets:
-            if start != expected_start or stop <= start:
-                raise RuntimeError(
-                    "ByteLevel offsets are not a positive contiguous text partition"
-                )
-            byte_lengths.append(
-                character_byte_prefix[stop] - character_byte_prefix[start]
-            )
-            expected_start = stop
-        if expected_start != len(text):
-            raise RuntimeError("ByteLevel offsets do not cover the complete text")
+        # ByteLevel maps each one of the 256 possible bytes to exactly one
+        # Unicode alphabet character before BPE merging.  A merged vocabulary
+        # piece therefore represents exactly ``len(piece)`` original bytes.
+        # This is more reliable than Encoding.offsets: upstream offsets are
+        # character-oriented and can overlap for multi-byte Unicode input.
+        byte_lengths = [len(piece) for piece in encoding.tokens]
         raw = text.encode("utf-8")
+        if sum(byte_lengths) != len(raw):
+            raise RuntimeError("ByteLevel vocabulary pieces do not cover every raw byte")
         result = EncodedText(
             token_ids=torch.tensor(encoding.ids, dtype=torch.long),
             token_byte_lengths=torch.tensor(byte_lengths, dtype=torch.long),
