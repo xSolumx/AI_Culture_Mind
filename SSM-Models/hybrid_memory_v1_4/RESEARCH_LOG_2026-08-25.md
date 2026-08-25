@@ -209,3 +209,24 @@ replaced those redundant identity actions by the closed-form scalar retention
 factor and ordered products over actual events. A float64 regression requires
 agreement with dense `forward_controls` to `1e-10`; no scientific setting or
 gate changed.
+
+## G15A-L quality failure
+
+The clean quality run at commit `0c49f64` completed all fifteen arm/seed rows
+and failed the preregistered gate. S reached high but sub-threshold cosine on
+most rows and never beat every comparator by 0.05. S-broken was equal to S to
+roughly `6e-8` across all nine evaluation rows.
+
+The retained tables identify the mechanism. The learned broken chart, after
+its frozen signed permutation is applied, equals S's effective positive chart
+within `4e-7`. Cosine scoring normalizes away the scalar
+`<q,Vk>`, so the vector action is invisible while that scalar remains positive.
+The controller can invert the positive-carrier chart without respecting a
+shared lift. This is exactly the gauge/observability failure the protocol was
+designed to expose.
+
+The optimizer did learn nontrivial charts, and the S/S-broken losses agree by
+symmetry. More steps, AdamW, or a larger controller cannot by themselves make
+an unobserved carrier identifiable. The next task should expose a full-rank
+association through multiple queries and raw Frobenius error, so both carrier
+actions affect the scored object.

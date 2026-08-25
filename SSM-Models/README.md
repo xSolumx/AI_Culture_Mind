@@ -40,7 +40,14 @@
 > 0.7/0.8/0.8 margins. Both conditional arms retain 1.0 no-sym recall through
 > L1024. This supports shared vector/positive-Spin lift on the designed
 > supplied-coordinate task, not full three-carrier triality, generic
-> association, natural text, or scaling. Source-bound SM75 probes qualify
+> association, natural text, or scaling. G15A-L's clean-SM75 learned-coordinate
+> cohort at commit `0c49f64` fails in fresh seeds 2153/2161/2179: only seed 2161
+> L64 meets the absolute `S` thresholds, no row meets the 0.05 comparator gate,
+> and learned `S-broken` matches `S` after chart reparameterization. Cosine
+> scoring cancels positive scalar `<q,Vk>`, making the vector carrier
+> unobservable; autonomous attribution is rejected. Full-frame multi-query
+> raw-Frobenius observability is next, before G15B or more geometry.
+> Source-bound SM75 probes qualify
 > Mamba-3 SISO and the Turing FlashAttention fork; current local GDN2 training
 > routes fail closed. See the
 > [frontier review](hybrid_memory_v1_4/FRONTIER_REVIEW_2026-08-25.md),
@@ -50,6 +57,8 @@
 > [G15A primary cohort artifact](hybrid_memory_v1_4/artifacts/g15a_spin_dirac_cohort_sm75_2026-08-25.json),
 > [G15A conditional attribution protocol](hybrid_memory_v1_4/G15A_CONDITIONAL_CONTROLS_PROTOCOL_2026-08-25.md),
 > [G15A conditional attribution artifact](hybrid_memory_v1_4/artifacts/g15a_conditional_controls_sm75_2026-08-25.json),
+> [G15A-L learned-coordinate protocol](hybrid_memory_v1_4/G15AL_LEARNED_COORDINATE_PROTOCOL_2026-08-25.md),
+> [G15A-L learned-coordinate artifact](hybrid_memory_v1_4/artifacts/g15al_learned_coordinate_cohort_sm75_2026-08-25.json),
 > [SM75 runtime ledger](hybrid_memory_v1_4/SM75_NATIVE_RUNTIME.md), and
 > [current model inventory](MODEL_STATUS.md).
 

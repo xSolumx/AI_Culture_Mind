@@ -176,6 +176,14 @@ new matched natural-data and complete-step hardware evidence.
   recall through L1024. The strongest result is shared vector/positive-Spin
   lift on this supplied-coordinate task, not full three-carrier triality, a
   maintained-model promotion, generic association, natural text, or scaling.
+- G15A-L then fails autonomous learned-coordinate attribution on clean SM75
+  commit `0c49f64` in fresh seeds 2153/2161/2179. `S` mean cosine spans
+  0.9902--0.9957 at L64, 0.9803--0.9913 at L256, and 0.9726--0.9862 at L1024;
+  only seed 2161 L64 meets the absolute `S` thresholds, and no row meets the
+  0.05 comparator gate. Learned `S-broken` matches `S` within about `6e-8`
+  across all rows and has an effective positive chart within `<4e-7` of `S`.
+  The cosine score cancels positive scalar `<q,Vk>`, making the vector carrier
+  unobservable and the broken signed permutation invertible for `P`.
 
 ## Open Claims
 
@@ -199,9 +207,10 @@ new matched natural-data and complete-step hardware evidence.
   coordinates.
 - Matched-task evidence that the full dense-SO(8) Cayley control chart is more
   useful than restricted, octonion, Givens/Householder, or modern SSM controls.
-- Full three-carrier triality and autonomous-coordinate attribution beyond
-  G15A's completed shared vector/positive-Spin coupling control, followed by
-  generic associative-memory, natural-text, and scaling gates.
+- Full-frame multi-query raw-Frobenius observability is the next Spin-Dirac
+  falsifier after G15A-L's autonomous-attribution failure, before G15B or more
+  geometry. Full three-carrier triality, generic associative-memory,
+  natural-text, and scaling gates remain open.
 
 ## Dependencies
 
@@ -234,6 +243,9 @@ new matched natural-data and complete-step hardware evidence.
   symmetry separation and shared-coupling control do not establish autonomous
   transport inference, full three-carrier triality, generic association,
   natural-text recall, or scaling.
+- G15A-L's high learned-coordinate cosine scores do not rescue attribution:
+  `S-broken` is observationally equivalent to `S` under the frozen score, and
+  no row passes the comparator gate.
 - The approximately 2,000x Pure Spin(8) MSE gap is task-specific and does not
   establish generic Mamba superiority, state matching, or a fused-kernel win.
 - The latent-token result removes supplied coordinates only for eight fixed
@@ -292,4 +304,6 @@ new matched natural-data and complete-step hardware evidence.
 - [G15A primary cohort artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g15a_spin_dirac_cohort_sm75_2026-08-25.json)
 - [G15A conditional attribution protocol](../../SSM-Models/hybrid_memory_v1_4/G15A_CONDITIONAL_CONTROLS_PROTOCOL_2026-08-25.md)
 - [G15A conditional attribution artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g15a_conditional_controls_sm75_2026-08-25.json)
+- [G15A-L learned-coordinate protocol](../../SSM-Models/hybrid_memory_v1_4/G15AL_LEARNED_COORDINATE_PROTOCOL_2026-08-25.md)
+- [G15A-L learned-coordinate artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g15al_learned_coordinate_cohort_sm75_2026-08-25.json)
 - [Local SM75 native-runtime ledger](../../SSM-Models/hybrid_memory_v1_4/SM75_NATIVE_RUNTIME.md)

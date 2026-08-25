@@ -3,7 +3,8 @@
 **Updated:** 2026-08-25
 **Adjudication:** G15A and its frozen conditional controls pass. The shared
 vector/positive Spin lift is supported on the designed task; a contribution
-from the fixed Clifford/negative-spin read is not. `spin_dirac` is not promoted
+from the fixed Clifford/negative-spin read is not. G15A-L then fails to recover
+that attribution with a learned coordinate chart. `spin_dirac` is not promoted
 to the default model.
 
 This file separates passing algebraic contracts, oracle-controlled mechanism
@@ -129,19 +130,51 @@ setting changed.
 Evidence:
 [`artifacts/g15a_conditional_controls_sm75_2026-08-25.json`](artifacts/g15a_conditional_controls_sm75_2026-08-25.json).
 
+## G15A-L learned-coordinate result
+
+G15A-L trained only a 476-parameter token-to-coordinate table with the
+rotation-covariant `ScalarSecondMomentAdamW`, while holding edit controls and
+the final transported query oracle-fixed. The clean SM75 quality run at commit
+`0c49f64` failed its frozen per-seed/per-length gate:
+
+| Seed | S mean cosine L64 | L256 | L1,024 |
+|---:|---:|---:|---:|
+| 2153 | 0.9921 | 0.9878 | 0.9814 |
+| 2161 | 0.9957 | 0.9913 | 0.9862 |
+| 2179 | 0.9902 | 0.9803 | 0.9726 |
+
+Only seed 2161 at L64 clears S's absolute mean/minimum thresholds. No row
+clears the frozen `0.05` margin over all comparators. Most decisively,
+S-broken matches S's mean cosine to at most about `6e-8` in every seed and
+length, and S+identity-read is exactly equal to S.
+
+The learned tables expose why. After applying S-broken's frozen signed
+coordinate permutation, its effective positive-carrier chart matches S's
+learned chart within `2.84e-7--3.94e-7`. Their final training losses also agree
+to numerical precision. Under the scored observation,
+
+\[
+\hat y=r^{L-1}\langle q,Vk\rangle Pv,
+\]
+
+cosine normalization cancels the positive scalar containing the vector
+carrier. The invertible broken chart can therefore learn the same positive
+action. This is a structural observability/gauge failure, not evidence that
+more training or a coordinatewise optimizer would recover the shared lift.
+
+Evidence:
+[`G15A-L protocol`](G15AL_LEARNED_COORDINATE_PROTOCOL_2026-08-25.md),
+[`exact execution amendment`](G15AL_EXECUTION_AMENDMENT_2026-08-25.md), and
+[`artifacts/g15al_learned_coordinate_cohort_sm75_2026-08-25.json`](artifacts/g15al_learned_coordinate_cohort_sm75_2026-08-25.json).
+
 ## Next executable gate
 
-The central learning problem is now autonomous control, not more geometry:
-the positive symmetry result supplied exact coordinates and edit controls.
-The next bounded falsifier should learn a token-to-action coordinate map from
-end loss while holding the address/edit law oracle-fixed, then test unseen
-action compositions and long spacing. Only after that controller gate should
-G15B spend on generic MQAR/overwrite/collision/selective-copy cohorts.
-The prospective
-[`G15A-L protocol`](G15AL_LEARNED_COORDINATE_PROTOCOL_2026-08-25.md) freezes
-that exact controller, optimizer, action support, seeds, budgets, and
-per-length falsifier before execution. Its runner is
-[`g15al_learned_coordinate_cohort.py`](g15al_learned_coordinate_cohort.py).
+The next falsifier must change the observation law, not tune the failed
+optimizer. A full-frame task should expose several independent query/key
+directions and score the unnormalized transported association matrix with
+Frobenius loss. That makes both V and P observable and asks whether S learns a
+single shared chart while S-broken cannot. This controlled identifiability gate
+comes before G15B generic association or any additional exceptional geometry.
 
 The constrained `su3_torus` arm is an additional scientific ablation, not a
 replacement for the four frozen primary arms.

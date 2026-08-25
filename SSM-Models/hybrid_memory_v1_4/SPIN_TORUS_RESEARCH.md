@@ -4,7 +4,8 @@
 **Status:** exact fixed-frame transports implemented; G15A supports shared
 vector/positive Spin coupling on a bounded oracle-coordinate task but not a
 necessary fixed Clifford second read; moving-frame geometry remains
-research-only
+research-only. A learned-coordinate follow-up fails because its cosine
+observation quotients out the vector carrier.
 
 ## Outcome
 

@@ -44,7 +44,12 @@ and [`conditional artifact`](artifacts/g15a_conditional_controls_sm75_2026-08-25
 bind the completed Clifford-read and broken-coupling attribution tests.
 The prospective
 [`G15A-L learned-coordinate protocol`](G15AL_LEARNED_COORDINATE_PROTOCOL_2026-08-25.md)
-now targets the remaining autonomous controller problem before G15B.
+then targeted the remaining autonomous controller problem. It failed: S-broken
+learned an effective positive-carrier chart matching S within `4e-7` and tied
+S on every cosine evaluation. The cosine observation removes the vector-side
+alignment scalar, so the shared lift is not identifiable under that scoring
+law. The next gate must use full-frame, norm-sensitive observations before
+G15B.
 
 This track exposes seven explicit mixer kinds in one causal language-model
 shell:
@@ -446,8 +451,9 @@ matched speed evidence.
 - G15A passes only an oracle-coordinate symmetry mechanism plus a finite
   learned no-symmetry retrieval task. Its controls support the shared
   vector/positive Spin lift but not a contribution from the fixed Clifford
-  second read. Autonomous coordinate learning, G15B generic association, G15C
-  natural text, and G15D scaling remain open.
+  second read. G15A-L fails autonomous shared-lift attribution because its
+  cosine observation admits a compensating broken chart. G15B generic
+  association, G15C natural text, and G15D scaling remain open.
   The fixed `su3_torus` mode is not a moving `G2/SU(3)` memory, and
   `SpinDirac` is not a geometric Dirac differential operator.
 - Native SM75 probes qualify only the exact recorded implementation/runtime;

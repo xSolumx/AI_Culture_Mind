@@ -945,11 +945,22 @@ and
 The conditional evidence is
 [`artifacts/g15a_conditional_controls_sm75_2026-08-25.json`](artifacts/g15a_conditional_controls_sm75_2026-08-25.json).
 
-The next prospectively frozen gate is G15A-L: learn only the token-to-action
-coordinate table from delayed positive-read loss, keep edit controls and the
-transported final query oracle-fixed, and test fresh ordered compositions at
-lengths 64, 256, and 1,024. This directly tests whether S-broken can absorb its
-carrier mismatch into a learned chart reparameterization.
+G15A-L then learned only the token-to-action coordinate table from delayed
+positive-read loss, keeping edit controls and the transported final query
+oracle-fixed. It failed the frozen gate. S mean cosine ranged from 0.9902 to
+0.9957 at L64, 0.9803 to 0.9913 at L256, and 0.9726 to 0.9862 at L1,024; only
+one seed/length cleared the absolute S thresholds. S-broken matched S to
+approximately `6e-8` or better on every row.
+
+This is an observation-law failure. The scored positive read has form
+`r^(L-1) <q,Vk> Pv`; cosine normalization discards the positive vector-side
+alignment scalar. S-broken's invertible signed permutation can therefore
+learn an effective positive chart matching S within `4e-7`, which the retained
+raw tables verify. The next controlled gate must use multiple independent
+queries and unnormalized Frobenius loss before more optimizer tuning or G15B.
+
+Evidence:
+[`artifacts/g15al_learned_coordinate_cohort_sm75_2026-08-25.json`](artifacts/g15al_learned_coordinate_cohort_sm75_2026-08-25.json).
 
 ## Actual upstream probes
 
@@ -1026,8 +1037,9 @@ Artifact file hashes are recorded in [`ARTIFACTS.sha256`](ARTIFACTS.sha256).
 - G15A's passing symmetry task supplies exact coordinates and oracle carrier
   controls. Its conditional result supports shared vector/positive Spin
   coupling but not the fixed Clifford second read; it does not establish
-  autonomous geometry, generic association, natural text, or moving
-  `G2/SU(3)` memory.
+  autonomous geometry. G15A-L's learned chart fails because the cosine
+  observation cannot identify the vector carrier. No generic association,
+  natural text, or moving `G2/SU(3)` memory follows.
 - The retained checkpoints are validation artifacts, not released pretrained
   models.
 - The natural-text claims are bounded G11--G13 TinyStories results only.

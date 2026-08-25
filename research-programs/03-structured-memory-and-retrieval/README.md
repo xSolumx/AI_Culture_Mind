@@ -84,6 +84,16 @@ representation.
   controls, the strongest result is shared vector/positive-Spin lift on this
   designed task, not full three-carrier triality, generic association,
   natural-text recall, or scaling.
+- G15A-L's learned-coordinate attribution cohort is a clean-SM75 negative result
+  from commit `0c49f64` and fresh seeds 2153/2161/2179. `S` mean cosine ranges
+  from 0.9902--0.9957 at L64, 0.9803--0.9913 at L256, and 0.9726--0.9862 at
+  L1024. Only seed 2161 at L64 meets the absolute `S` thresholds, and no row
+  passes the frozen 0.05 comparator gate. After learned chart
+  reparameterization, `S-broken` matches `S` within about `6e-8` across every
+  row and its effective positive chart matches within `<4e-7`. Analytically, the
+  cosine score cancels the positive scalar `<q,Vk>`, leaving the vector carrier
+  unobservable and making the broken signed permutation invertible for `P`.
+  Autonomous learned-coordinate attribution therefore fails.
 
 ## Open Claims
 
@@ -99,9 +109,11 @@ representation.
   Householder-product, and sparse-attention systems remain necessary.
 - A matched natural-text and delayed-binding comparison of GDN-v1, KDA-style
   channel decay, and GDN2 remains the immediate update-law gate after G14.
-- G15A's primary and prospectively frozen conditional mechanism ladders pass.
-  Full three-carrier triality, autonomous coordinate inference, generic
-  association, natural-text, and scaling gates remain later work.
+- G15A's supplied-coordinate primary and conditional mechanism ladders pass,
+  but G15A-L rejects autonomous learned-coordinate attribution under its frozen
+  cosine observation map. The next falsifier is full-frame, multi-query raw
+  Frobenius observability, before G15B or any additional geometry. Full three-
+  carrier triality, generic association, natural-text, and scaling remain open.
 - A frozen phase-separated follow-up rejected early address noise as a
   complete explanation: the perfect frozen-router core still missed its robust
   gate in one seed.
@@ -162,6 +174,9 @@ representation.
 - G15A's supplied-coordinate symmetry and shared-coupling wins do not establish
   autonomous transport inference, full three-carrier triality, generic
   association, natural-text recall, or scaling.
+- G15A-L's high cosines are not a pass: only one seed-length row meets the
+  absolute `S` thresholds, no row meets the comparator gate, and `S-broken`
+  remains observationally equivalent after learned reparameterization.
 
 ## Canonical Evidence
 
@@ -185,6 +200,8 @@ representation.
 - [G15A primary cohort artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g15a_spin_dirac_cohort_sm75_2026-08-25.json)
 - [G15A conditional attribution protocol](../../SSM-Models/hybrid_memory_v1_4/G15A_CONDITIONAL_CONTROLS_PROTOCOL_2026-08-25.md)
 - [G15A conditional attribution artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g15a_conditional_controls_sm75_2026-08-25.json)
+- [G15A-L learned-coordinate protocol](../../SSM-Models/hybrid_memory_v1_4/G15AL_LEARNED_COORDINATE_PROTOCOL_2026-08-25.md)
+- [G15A-L learned-coordinate artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g15al_learned_coordinate_cohort_sm75_2026-08-25.json)
 - [Spin/torus architecture and claim boundary](../../SSM-Models/hybrid_memory_v1_4/SPIN_TORUS_RESEARCH.md)
 
 The Spin-labelled reports remain at their provenance paths. Their routing,

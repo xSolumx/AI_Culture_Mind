@@ -28,7 +28,7 @@ controlling evidence for their exact numbers.
 | [Pure Spin(8) v1.1](pure_spin8_ssm/CONTRACT.md) | Maintained task-bounded Spin(8) family | Frozen supplied, latent-token, continuous-observation, endpoint-only, calibration, and compiler cohorts | Strong exact/synthetic center-sensitive tracking and shared-action transfer; no natural-language, generic retrieval, or matched modern-SSM superiority |
 | [Pure Spin v1.2](pure_spin_ssm_v1_2/README.md) | Implemented frontier model with current CUDA backend | Current tests/backends plus [frontier training result](pure_spin_ssm_v1_2/FRONTIER_TRAINING_RESULTS.md) | Fused Mamba-2 wins all three matched Tiny Shakespeare quality seeds, 2.4942 versus 2.7477 mean bpb; low-level throughput ordering is unresolved at observed repeatability |
 | [Pure Exceptional Delta v1.3](pure_f4_delta_ssm_v1_3/README.md) | Experimental Albert/F4/E6 model | Algebra/model suite and small natural-text development cohorts | The exceptional hierarchy is executable, but the fresh [layer-localization result](pure_f4_delta_ssm_v1_3/SHAKESPEARE_LAYER_LOCALIZATION_RESULTS.md) rejects early E6 transport; identity is the supported natural-text reference |
-| [Hybrid Memory v1.4/v1.4.5](hybrid_memory_v1_4/README.md) | Active research workspace; no root-level promotion | G-series preregistrations, results, and artifacts inside the active directory | Validated small hybrid causal learner and commissioned synthetic memory; G13 rejects long-context archive promotion; G14 supports decoupled erase/write only on a constructed mechanism task; G15A's exact SM75 three-seed primary and conditional cohorts support shared vector/positive-Spin coupling on a designed supplied-coordinate task, not full three-carrier triality, generic association, natural text, or scaling |
+| [Hybrid Memory v1.4/v1.4.5](hybrid_memory_v1_4/README.md) | Active research workspace; no root-level promotion | G-series preregistrations, results, and artifacts inside the active directory | Validated small hybrid causal learner and commissioned synthetic memory; G13 rejects long-context archive promotion; G14 supports decoupled erase/write only on a constructed mechanism task; G15A supports shared vector/positive-Spin coupling on a designed supplied-coordinate task, while G15A-L rejects autonomous learned-coordinate attribution; no full three-carrier triality, generic association, natural text, or scaling promotion |
 | [Dense SO(8) Cayley scan](pure_rotor_ssm/dense_so8_cayley_scan.py) | Experimental control | Structural tests and one CUDA feasibility smoke in the [design report](experiments/DENSE_SO8_CAYLEY_SCAN_DESIGN.md) | Exact 28-direction chart and bounded scan are implemented; no training, quality, or comparative speed claim |
 | [SpinorDeltaLM](../Spin8-SSM-Benchmark/README.md) | Historical isolated benchmark model | Completed short benchmark artifacts under its own directory | Useful controlled historical evidence; not the maintained Pure Rotor/Pure Spin successor |
 | [SpinorModel](../SpinorModel/README.md) | Historical prototype | Original tensor-GA baseline and separate overhaul | Implementation provenance only; commands reproduce the historical model, not the current frontier |
@@ -65,16 +65,30 @@ content addressing and edit laws over richer transport geometry alone.
   supplies exact coordinates and oracle carrier controls, the strongest result
   is shared vector/positive-Spin lift on this designed task, not full three-
   carrier triality, generic association, natural text, or scaling.
+- G15A-L is a failed clean-SM75 cohort from commit `0c49f64` and fresh seeds
+  2153/2161/2179. `S` mean cosine spans 0.9902--0.9957 at L64,
+  0.9803--0.9913 at L256, and 0.9726--0.9862 at L1024. Only seed 2161 L64
+  meets the absolute `S` thresholds, and no row meets the 0.05 comparator gate.
+  Learned `S-broken` matches `S` within about `6e-8` across all rows; its
+  effective positive chart matches within `<4e-7`. Analytically, cosine cancels
+  positive scalar `<q,Vk>`, making the vector carrier unobservable and the
+  broken signed permutation invertible for `P`. Autonomous attribution fails;
+  full-frame multi-query raw-Frobenius observability is next, before G15B or
+  more geometry.
 
-The current machine-readable G15A evidence is the
+The current machine-readable G15-series evidence is the
 [primary cohort artifact](hybrid_memory_v1_4/artifacts/g15a_spin_dirac_cohort_sm75_2026-08-25.json),
 read together with the frozen
-[G15 preregistration/result ledger](hybrid_memory_v1_4/G15_SPIN_DIRAC_RESULTS.md)
-and the prospectively frozen
+[G15 preregistration/result ledger](hybrid_memory_v1_4/G15_SPIN_DIRAC_RESULTS.md),
+the prospectively frozen
 [conditional attribution protocol](hybrid_memory_v1_4/G15A_CONDITIONAL_CONTROLS_PROTOCOL_2026-08-25.md)
 with its completed
 [conditional-control artifact](hybrid_memory_v1_4/artifacts/g15a_conditional_controls_sm75_2026-08-25.json),
-not inferred from the presence of passing algebraic unit tests.
+the prospectively frozen
+[G15A-L protocol](hybrid_memory_v1_4/G15AL_LEARNED_COORDINATE_PROTOCOL_2026-08-25.md),
+and its failed
+[learned-coordinate artifact](hybrid_memory_v1_4/artifacts/g15al_learned_coordinate_cohort_sm75_2026-08-25.json).
+Status is not inferred from the presence of passing algebraic unit tests.
 Local baseline eligibility is independently controlled by
 [SM75_NATIVE_RUNTIME.md](hybrid_memory_v1_4/SM75_NATIVE_RUNTIME.md); native
 execution does not itself promote model quality.
