@@ -331,3 +331,53 @@ end loss when the observation exposes both carriers. Oracle frame probes and
 edit timing remain, so G15B must learn address/write/query behavior on generic
 association while holding this recipe and the four transports fixed. That is
 the next bottleneck; additional exceptional geometry is not.
+
+## G15A-S spans the chart and closes the center-sensitive pre-G15B gate
+
+The complete history was retained rather than flattened: G15A supplied exact
+coordinates; G15A-L failed because cosine removed a carrier; G15A-F repaired
+observability but exposed leakage; G15A-R repaired precision. Before advancing
+to G15B, the
+[`G15A-S protocol`](G15AS_SPANNING_CENTER_PROTOCOL_2026-08-25.md) froze the
+strongest remaining G15A test: 56 hidden signed tokens covering all 28 planes,
+disjoint train/evaluation probe pools, and unseen global-center schedules.
+
+An initial exact execution stopped without an artifact because the
+evaluation-only coordinate assay treated a one-dimensional token tensor as if
+it already had batch and sequence axes. This was an implementation failure,
+not a model result. Commit `4067926` fixed that tensor shape and added a
+regression test; no threshold, seed, optimizer, data, or learned gate changed.
+
+The rerun started clean at `4067926` in WSL on the exact RTX 2070 SUPER SM75
+runtime and completed in 163.25 seconds. All three fresh seeds passed. S mean
+held-out-frame error was `6.89e-7--1.18e-6`; maximum active-coordinate error
+was `7.15e-7`; inactive RMS was at most `2.10e-8`; and the worst direct
+carrier error over all 132 structured schedules was `2.36e-5`. Identity,
+fixed torus, and S-broken each remained at least `0.266` worse in mean random
+frame error. The exact oracle matched center signs within `5.11e-15` and the
+two `minus_volume` words verified that projective frame scoring loses a center
+distinction which direct vector/positive assays retain.
+
+The supported claim is deliberately narrow: composition-only end loss can
+learn a complete signed coordinate dictionary compatible with the repository's
+hard-coded shared vector/positive Spin lift, unseen frames, and center words
+under oracle edit timing. The next learning problem is no longer local chart
+precision. It is learning when and where to address, erase, write, and query
+content on generic association tasks. That is G15B; negative-spin/Clifford
+utility, natural text, scaling, and fused performance remain unestablished.
+
+Evidence:
+[`artifacts/g15as_spanning_center_sm75_2026-08-25.json`](artifacts/g15as_spanning_center_sm75_2026-08-25.json),
+SHA-256 `96e939fa4411e305637961941a565ac26da5a4212b47de3fc198687693b5dbcc`.
+
+## G16 retained in parallel without premature metrics
+
+The
+[`G16 SM75 protocol`](G16_SM75_FRONTIER_SHOOTOUT_PROTOCOL_2026-08-25.md) and
+[`frontier harness`](frontier_shootout.py) were frozen alongside G15A-S, but no
+G16 training run has been launched. Its four approximately 125K-parameter arms
+all passed real one-step forward/backward/optimizer qualification on SM75:
+v1.4.5, local GDN2, official fused Mamba-2, and actual Transformers OLMo
+Hybrid. The small Mamba-3 SISO backward fails its `K >= 16` contract and MIMO
+selects an SM80-only path, so neither is silently approximated or retained as
+an eligible arm.

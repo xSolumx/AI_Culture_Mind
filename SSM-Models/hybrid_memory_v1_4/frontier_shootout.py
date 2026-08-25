@@ -5,6 +5,8 @@ from __future__ import annotations
 import argparse
 import hashlib
 import importlib.metadata
+import importlib.util
+import inspect
 import json
 import math
 import platform
@@ -66,6 +68,11 @@ RECALL_DISTANCES = (512, 2048, 8192)
 RECALL_EXAMPLES = 8
 TOKENIZER_SHA256 = "6b8031ebb2c899eaa780ee9216b2feddd00fac0a04265a6f3a5111a8dbda8ee1"
 MAMBA_VERSION = "2.3.2.post1"
+MAMBA_SOURCE_REVISION = "e9594ce1c732d97440f0332fdc43170a2294dbfa"
+TRANSFORMERS_VERSION = "5.15.1"
+FLA_VERSION = "0.5.2"
+OLMO_CHUNK_BACKEND_MODULE = "fla.ops.gated_delta_rule.chunk"
+OLMO_CHUNK_BACKEND_NAME = "chunk_gated_delta_rule"
 
 
 def _installed_version(distribution: str) -> str | None:
@@ -141,12 +148,70 @@ def _mamba_source_provenance(source_root: Path) -> dict[str, Any]:
         capture_output=True,
         text=True,
     ).stdout.strip()
+    if revision != MAMBA_SOURCE_REVISION:
+        raise RuntimeError(
+            f"G16 requires Mamba revision {MAMBA_SOURCE_REVISION}, got {revision}"
+        )
+    source_status = subprocess.run(
+        ["git", "-C", str(expected), "status", "--short", "--untracked-files=all"],
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout.splitlines()
+    if source_status:
+        raise RuntimeError("G16 requires a clean Mamba source checkout")
+    module_spec = importlib.util.find_spec("mamba_ssm")
+    if module_spec is None or module_spec.origin is None:
+        raise RuntimeError("G16 cannot resolve the imported mamba_ssm module")
+    imported_module = Path(module_spec.origin).resolve()
+    distribution_module = Path(
+        distribution.locate_file("mamba_ssm/__init__.py")
+    ).resolve()
+    if imported_module != distribution_module:
+        raise RuntimeError(
+            "imported mamba_ssm module does not belong to the source-bound "
+            f"distribution: {imported_module} != {distribution_module}"
+        )
     return {
         "distribution": "mamba-ssm",
         "version": distribution.version,
         "direct_url": direct_url,
         "source_root": str(expected),
         "source_revision": revision,
+        "source_status": source_status,
+        "imported_module": str(imported_module),
+        "distribution_module": str(distribution_module),
+    }
+
+
+def _olmo_runtime_provenance() -> dict[str, Any]:
+    transformers_version = _installed_version("transformers")
+    fla_version = _installed_version("flash-linear-attention")
+    if transformers_version != TRANSFORMERS_VERSION:
+        raise RuntimeError(
+            f"G16 requires Transformers {TRANSFORMERS_VERSION}, "
+            f"got {transformers_version}"
+        )
+    if fla_version != FLA_VERSION:
+        raise RuntimeError(f"G16 requires FLA {FLA_VERSION}, got {fla_version}")
+    from transformers.models.olmo_hybrid import modeling_olmo_hybrid
+
+    wrapper = modeling_olmo_hybrid.torch_chunk_gated_delta_rule
+    implementation = inspect.getclosurevars(wrapper).nonlocals.get("implementation")
+    backend_module = getattr(implementation, "__module__", None)
+    backend_name = getattr(implementation, "__name__", None)
+    if (
+        backend_module != OLMO_CHUNK_BACKEND_MODULE
+        or backend_name != OLMO_CHUNK_BACKEND_NAME
+    ):
+        raise RuntimeError(
+            f"G16 OLMo chunk backend changed: {backend_module}.{backend_name}"
+        )
+    return {
+        "transformers_version": transformers_version,
+        "fla_version": fla_version,
+        "wrapper": f"{wrapper.__module__}.{wrapper.__qualname__}",
+        "backend": f"{backend_module}.{backend_name}",
     }
 
 
@@ -710,8 +775,16 @@ def main() -> None:
         parser.error("phase/evaluation counts must be positive")
     if tuple(args.arms) != ARMS and args.phase_updates == PHASE_UPDATES:
         parser.error("the full G16 budget requires every frozen arm")
+    full_protocol = (
+        tuple(args.arms) == ARMS
+        and args.phase_updates == PHASE_UPDATES
+        and args.eval_macro_batches == EVAL_MACRO_BATCHES
+    )
     git_commit, git_status = _git()
+    if full_protocol and git_status:
+        parser.error("the full G16 budget requires a clean committed worktree")
     mamba_provenance = _mamba_source_provenance(args.mamba_source_root)
+    olmo_provenance = _olmo_runtime_provenance()
     train_text, validation_text, snapshot = _snapshot_text(args.snapshot)
     tokenizer = _load_tokenizer(args.tokenizer_audit)
     train = tokenizer.encode(train_text)
@@ -734,11 +807,6 @@ def main() -> None:
             )
         )
         torch.cuda.empty_cache()
-    full_protocol = (
-        tuple(args.arms) == ARMS
-        and args.phase_updates == PHASE_UPDATES
-        and args.eval_macro_batches == EVAL_MACRO_BATCHES
-    )
     report = {
         "schema_version": 1,
         "stage": "G16",
@@ -777,6 +845,7 @@ def main() -> None:
             "hub_sha": snapshot["hub_sha_at_snapshot"],
         },
         "mamba_source": mamba_provenance,
+        "olmo_runtime": olmo_provenance,
         "preregistration": str(PREREGISTRATION),
         "preregistration_sha256": _sha256(PREREGISTRATION),
         "git_commit_at_start": git_commit,

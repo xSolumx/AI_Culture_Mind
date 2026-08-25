@@ -5,10 +5,11 @@
 fresh synthetic seeds, G11/G12 established bounded ordinary TinyStories
 learning, and G13 found a consistent but sub-threshold 4,096-token compression
 gain with negative factual recall. G14 passed only its constructed decoupled-
-edit mechanism gate. G15A now passes a three-seed oracle-coordinate mechanism
-and finite learned no-symmetry gate, but not generic association or natural
-text. There is still no robust long-range recall, broad language-quality,
-scaling-law, or matched-speed promotion.
+edit mechanism gate. The G15A chain now reaches a passing composition-only
+28-generator learned chart with held-out-frame and center-sensitive transfer,
+but still uses oracle edit timing and does not establish generic association
+or natural text. There is still no robust long-range recall, broad language-
+quality, scaling-law, or matched-speed promotion.
 
 ## Adjudication
 
@@ -1018,6 +1019,37 @@ evidence.
 
 Evidence:
 [`artifacts/g15ar_first_order_repair_sm75_2026-08-25.json`](artifacts/g15ar_first_order_repair_sm75_2026-08-25.json).
+
+G15A-S then tested the two major gaps left by G15A-R without entering G15B:
+all 28 signed planes rather than eight, and direct center-sensitive transfer
+on probe banks never used for training. The clean exact-SM75 quality run from
+commit `4067926` passed every frozen gate on seeds 2281/2287/2293. Across all
+nine random rows, S mean error was `6.89e-7--1.18e-6`, p95 was at most
+`1.47e-6`, and maximum was at most `1.94e-6`. The minimum mean-error margin
+over identity, fixed torus, and broken shared coupling was `0.266`.
+
+The learned 56 signed rows had active-coordinate maximum error `7.15e-7` and
+inactive RMS at most `2.10e-8`. On 132 unseen structured schedules covering
+every signed 2-pi/4-pi plane loop, volume and other-center-coset words, and
+loop-plus-noncommuting continuations, the worst direct vector/positive error
+was `2.36e-5`. Exact FP64 center replay reached `5.11e-15`; both signed
+`minus_volume` schedules supplied the required case where frame scoring is
+blind but direct carriers resolve the center.
+
+This is full-chart and global-center compatibility for a learned token lookup
+under oracle frames/edit timing. It is not learned topology, generic memory,
+negative-spin/Clifford evidence, language, scaling, or efficiency.
+
+Evidence:
+[`G15AS_SPANNING_CENTER_PROTOCOL_2026-08-25.md`](G15AS_SPANNING_CENTER_PROTOCOL_2026-08-25.md)
+and
+[`artifacts/g15as_spanning_center_sm75_2026-08-25.json`](artifacts/g15as_spanning_center_sm75_2026-08-25.json).
+
+The parallel G16 small-model shootout is frozen and runtime-qualified but has
+not produced a training result. Its eligible SM75 roster is v1.4.5, local
+GDN2, official fused Mamba-2, and actual Transformers OLMo Hybrid. Mamba-3
+SISO/MIMO are excluded by their actual small-shape/SM75 backward paths rather
+than substituted with fallbacks.
 
 ## Actual upstream probes
 

@@ -118,6 +118,22 @@ representation.
   `2.68e-7`, maximum error at most `3.27e-7`, margins are 0.234--0.355 versus
   `I`, 0.231--0.351 versus `C`, and 0.153--0.234 versus `S-broken`, with
   broken-2x passing every row.
+- G15A-S is the distinct spanning-chart and center-sensitive successor, run on
+  exact SM75 from clean commit `4067926` with fresh seeds 2281/2287/2293. Its
+  56 signed actions cover all 28 generators, and all training/evaluation banks
+  pass numerical rank 56. On unseen banks, `S` mean relative Frobenius errors
+  span `6.89e-7`--`1.18e-6` through L1024, p95 is at most `1.47e-6`, and
+  maximum error at most `1.94e-6`; margins versus every comparator are
+  0.266--0.536 and broken-2x passes every seed/length. Structured direct vector
+  and positive errors are at most `2.36e-5`, with frame maximum at
+  most `3.54e-5`. The result establishes composition-only transfer of a
+  learned spanning signed dictionary to unseen frame banks and global center
+  words under oracle edit timing. It does not establish learned topology,
+  generic association/address/query learning, negative-spin/Clifford utility,
+  language, full triality, or scaling/efficiency.
+- G16 freezes a parameter-matched, runtime-qualified four-arm SM75 harness for
+  v1.4.5, local semantic GDN2, official fused Mamba-2, and actual Transformers
+  OLMo Hybrid. It has no training metric yet and cannot support a quality rank.
 
 ## Open Claims
 
@@ -139,9 +155,11 @@ representation.
   frame raw-Frobenius observation but misses the absolute precision gates.
   G15A-R repairs precision with the existing global `ScalarSecondMomentAdamW`,
   600 steps, and staged decay; block-scalar moments and curriculum are not
-  needed. G15B generic association with learned addressing/querying is next,
-  retaining `I/C/S/S-broken` and the selected recipe. Full three-carrier
-  triality, natural-text, and scaling remain open.
+  needed. G15A-S then passes signed 28-generator composition transfer to unseen
+  full-rank frame banks and center words, still under oracle edit timing. G15B
+  generic association with learned addressing/querying is next, retaining
+  `I/C/S/S-broken` and the selected recipe. Learned topology, full three-
+  carrier triality utility, natural-text, and scaling remain open.
 - A frozen phase-separated follow-up rejected early address noise as a
   complete explanation: the perfect frozen-router core still missed its robust
   gate in one seed.
@@ -212,6 +230,11 @@ representation.
   initial frame and oracle edit timing. It is not generic association, learned
   addressing/querying, language modelling, full triality, or scaling evidence;
   the fixed-LR control prevents a claim that decay is necessary.
+- G15A-S widens the composition test to a signed 28-generator dictionary,
+  unseen frame banks, and center words, but still supplies oracle edit timing.
+  It is not topology discovery, generic association, learned address/query
+  control, negative-spin/Clifford utility, language modelling, full triality,
+  or scaling/efficiency evidence.
 
 ## Canonical Evidence
 
@@ -241,6 +264,9 @@ representation.
 - [G15A-F full-frame artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g15af_full_frame_cohort_sm75_2026-08-25.json)
 - [G15A-R first-order repair protocol](../../SSM-Models/hybrid_memory_v1_4/G15AR_FIRST_ORDER_PROTOCOL_2026-08-25.md)
 - [G15A-R first-order repair artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g15ar_first_order_repair_sm75_2026-08-25.json)
+- [G15A-S spanning-center protocol](../../SSM-Models/hybrid_memory_v1_4/G15AS_SPANNING_CENTER_PROTOCOL_2026-08-25.md)
+- [G15A-S spanning-center artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g15as_spanning_center_sm75_2026-08-25.json)
+- [G16 SM75 frontier-shootout protocol](../../SSM-Models/hybrid_memory_v1_4/G16_SM75_FRONTIER_SHOOTOUT_PROTOCOL_2026-08-25.md)
 - [Spin/torus architecture and claim boundary](../../SSM-Models/hybrid_memory_v1_4/SPIN_TORUS_RESEARCH.md)
 
 The Spin-labelled reports remain at their provenance paths. Their routing,

@@ -61,11 +61,25 @@
 > global scalar optimizer plus 600 steps/decay is sufficient; block moments and
 > curriculum are unnecessary. This is composition-only shared-chart learning
 > under a four-probe oracle frame and oracle edit timing, not generic
-> association, language, full triality, or scaling. G15B learned
-> address/query association is next, retaining `I/C/S/S-broken` and the recipe.
-> Source-bound SM75 probes qualify
-> Mamba-3 SISO and the Turing FlashAttention fork; current local GDN2 training
-> routes fail closed. See the
+> association, language, full triality, or scaling. G15A-S then passes the
+> spanning-chart and center-sensitive transfer gate on exact SM75 from clean
+> commit `4067926`, fresh seeds 2281/2287/2293. The 56-action signed dictionary
+> spans all 28 generators; every train/evaluation bank has rank 56. On unseen
+> banks, `S` mean relative error is `6.89e-7`--`1.18e-6` through L1024, p95 is
+> at most `1.47e-6`, maximum at most `1.94e-6`, every comparator margin is at
+> least 0.266, and every broken-2x check passes. Worst structured direct
+> vector/positive errors are at most `2.36e-5`. This extends G15A-R only to
+> composition of a learned spanning signed dictionary, unseen frame banks, and
+> global center words under oracle edit timing; it does not learn topology,
+> address/query association, negative-spin/Clifford utility, language, or full
+> triality, and it supplies no scaling/efficiency result. G15B learned
+> address/query association remains next, retaining `I/C/S/S-broken` and the
+> recipe. G16 is separately frozen as a runtime-qualified four-arm SM75 harness
+> for v1.4.5, local GDN2, official fused Mamba-2, and actual Transformers OLMo
+> Hybrid; it has no training metric or quality adjudication yet.
+> The frozen G16 qualification supersedes earlier candidate-arm notes for that
+> harness: its parameter and full-gradient checks establish four-arm runtime
+> eligibility, not training quality. See the
 > [frontier review](hybrid_memory_v1_4/FRONTIER_REVIEW_2026-08-25.md),
 > [v1.4 results](hybrid_memory_v1_4/RESULTS.md),
 > [Spin/torus boundary](hybrid_memory_v1_4/SPIN_TORUS_RESEARCH.md),
@@ -79,6 +93,9 @@
 > [G15A-F full-frame artifact](hybrid_memory_v1_4/artifacts/g15af_full_frame_cohort_sm75_2026-08-25.json),
 > [G15A-R first-order repair protocol](hybrid_memory_v1_4/G15AR_FIRST_ORDER_PROTOCOL_2026-08-25.md),
 > [G15A-R first-order repair artifact](hybrid_memory_v1_4/artifacts/g15ar_first_order_repair_sm75_2026-08-25.json),
+> [G15A-S spanning-center protocol](hybrid_memory_v1_4/G15AS_SPANNING_CENTER_PROTOCOL_2026-08-25.md),
+> [G15A-S spanning-center artifact](hybrid_memory_v1_4/artifacts/g15as_spanning_center_sm75_2026-08-25.json),
+> [G16 SM75 frontier-shootout protocol](hybrid_memory_v1_4/G16_SM75_FRONTIER_SHOOTOUT_PROTOCOL_2026-08-25.md),
 > [SM75 runtime ledger](hybrid_memory_v1_4/SM75_NATIVE_RUNTIME.md), and
 > [current model inventory](MODEL_STATUS.md).
 

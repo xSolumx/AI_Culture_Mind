@@ -7,8 +7,13 @@ from torch import nn
 from hybrid_memory_v1_4.frontier_shootout import (
     ARMS,
     EXPECTED_PARAMETERS,
+    FLA_VERSION,
+    MAMBA_SOURCE_REVISION,
     MAX_PARAMETER_RESIDUAL,
+    OLMO_CHUNK_BACKEND_MODULE,
+    OLMO_CHUNK_BACKEND_NAME,
     TARGET_PARAMETERS,
+    TRANSFORMERS_VERSION,
     _forward_logits,
     _hybrid_config,
     _mamba2_kwargs,
@@ -35,6 +40,11 @@ def test_g16_arm_roster_and_parameter_contract_are_frozen() -> None:
         abs(count - TARGET_PARAMETERS) / TARGET_PARAMETERS <= MAX_PARAMETER_RESIDUAL
         for count in EXPECTED_PARAMETERS.values()
     )
+    assert MAMBA_SOURCE_REVISION == "e9594ce1c732d97440f0332fdc43170a2294dbfa"
+    assert TRANSFORMERS_VERSION == "5.15.1"
+    assert FLA_VERSION == "0.5.2"
+    assert OLMO_CHUNK_BACKEND_MODULE == "fla.ops.gated_delta_rule.chunk"
+    assert OLMO_CHUNK_BACKEND_NAME == "chunk_gated_delta_rule"
 
 
 def test_g16_hybrids_preserve_the_g12_shell_and_isolate_the_edit_law() -> None:

@@ -28,7 +28,7 @@ controlling evidence for their exact numbers.
 | [Pure Spin(8) v1.1](pure_spin8_ssm/CONTRACT.md) | Maintained task-bounded Spin(8) family | Frozen supplied, latent-token, continuous-observation, endpoint-only, calibration, and compiler cohorts | Strong exact/synthetic center-sensitive tracking and shared-action transfer; no natural-language, generic retrieval, or matched modern-SSM superiority |
 | [Pure Spin v1.2](pure_spin_ssm_v1_2/README.md) | Implemented frontier model with current CUDA backend | Current tests/backends plus [frontier training result](pure_spin_ssm_v1_2/FRONTIER_TRAINING_RESULTS.md) | Fused Mamba-2 wins all three matched Tiny Shakespeare quality seeds, 2.4942 versus 2.7477 mean bpb; low-level throughput ordering is unresolved at observed repeatability |
 | [Pure Exceptional Delta v1.3](pure_f4_delta_ssm_v1_3/README.md) | Experimental Albert/F4/E6 model | Algebra/model suite and small natural-text development cohorts | The exceptional hierarchy is executable, but the fresh [layer-localization result](pure_f4_delta_ssm_v1_3/SHAKESPEARE_LAYER_LOCALIZATION_RESULTS.md) rejects early E6 transport; identity is the supported natural-text reference |
-| [Hybrid Memory v1.4/v1.4.5](hybrid_memory_v1_4/README.md) | Active research workspace; no root-level promotion | G-series preregistrations, results, and artifacts inside the active directory | Validated small hybrid causal learner and commissioned synthetic memory; G13 rejects long-context archive promotion; G14 is a constructed mechanism task; G15A-R confirms composition-only shared vector/positive-Spin chart learning under a four-probe oracle frame and oracle edit timing after the G15A-L/F observation/precision failures; no generic association, learned address/query, full triality, natural text, or scaling promotion |
+| [Hybrid Memory v1.4/v1.4.5](hybrid_memory_v1_4/README.md) | Active research workspace; no root-level promotion | G-series preregistrations, results, and artifacts inside the active directory | Validated small hybrid causal learner and commissioned synthetic memory; G13 rejects long-context archive promotion; G14 is a constructed mechanism task; after the distinct G15A-L/F observation/precision failures and G15A-R four-probe repair, G15A-S confirms composition-only signed 28-generator chart transfer to unseen frame banks and center words under oracle edit timing; no learned topology, generic association/address/query, negative-spin/Clifford utility, full triality, natural text, or scaling/efficiency promotion |
 | [Dense SO(8) Cayley scan](pure_rotor_ssm/dense_so8_cayley_scan.py) | Experimental control | Structural tests and one CUDA feasibility smoke in the [design report](experiments/DENSE_SO8_CAYLEY_SCAN_DESIGN.md) | Exact 28-direction chart and bounded scan are implemented; no training, quality, or comparative speed claim |
 | [SpinorDeltaLM](../Spin8-SSM-Benchmark/README.md) | Historical isolated benchmark model | Completed short benchmark artifacts under its own directory | Useful controlled historical evidence; not the maintained Pure Rotor/Pure Spin successor |
 | [SpinorModel](../SpinorModel/README.md) | Historical prototype | Original tensor-GA baseline and separate overhaul | Implementation provenance only; commands reproduce the historical model, not the current frontier |
@@ -99,6 +99,24 @@ content addressing and edit laws over richer transport geometry alone.
   four-probe oracle-frame objective and oracle edit timing. G15B learned
   address/query generic association is next, retaining all four controls and
   the selected recipe; no language, full-triality, or scaling claim follows.
+- G15A-S passes its exact SM75 spanning-chart and center-sensitive transfer
+  gate from clean commit `4067926`, artifact SHA-256
+  `96e939fa4411e305637961941a565ac26da5a4212b47de3fc198687693b5dbcc`,
+  fresh seeds 2281/2287/2293, and the retained `I/C/S/S-broken` controls. All
+  train/evaluation frame banks have rank 56. On unseen banks, `S` means span
+  `6.89e-7`--`1.18e-6` through L1024, p95 is at most `1.47e-6`, maximum at
+  most `1.94e-6`; comparator margins span 0.266--0.536 and broken-2x passes
+  every row. Structured direct vector/positive errors are at most `2.36e-5`
+  and frame maximum at most `3.54e-5`. This extends the composition-
+  only claim from a four-probe chart to a learned signed 28-generator
+  dictionary, unseen frame banks, and global center words under oracle edit
+  timing. It does not establish learned topology, generic association,
+  addressing/querying, negative-spin/Clifford utility, language, or full
+  triality, and it provides no scaling/efficiency result.
+- G16 is a frozen, runtime-qualified four-arm SM75 harness for v1.4.5, local
+  semantic GDN2, official fused Mamba-2, and actual Transformers OLMo Hybrid.
+  Its parameter and full-gradient qualification is not a training result; no
+  G16 quality metric exists yet.
 
 The current machine-readable G15-series evidence is the
 [primary cohort artifact](hybrid_memory_v1_4/artifacts/g15a_spin_dirac_cohort_sm75_2026-08-25.json),
@@ -120,6 +138,12 @@ The successful first-order repair is controlled by the prospectively frozen
 [G15A-R protocol](hybrid_memory_v1_4/G15AR_FIRST_ORDER_PROTOCOL_2026-08-25.md)
 and source-bound
 [repair artifact](hybrid_memory_v1_4/artifacts/g15ar_first_order_repair_sm75_2026-08-25.json).
+The spanning-center successor is controlled by the
+[G15A-S protocol](hybrid_memory_v1_4/G15AS_SPANNING_CENTER_PROTOCOL_2026-08-25.md)
+and source-bound
+[G15A-S artifact](hybrid_memory_v1_4/artifacts/g15as_spanning_center_sm75_2026-08-25.json).
+The untrained four-arm model harness is frozen separately in the
+[G16 protocol](hybrid_memory_v1_4/G16_SM75_FRONTIER_SHOOTOUT_PROTOCOL_2026-08-25.md).
 Status is not inferred from the presence of passing algebraic unit tests.
 Local baseline eligibility is independently controlled by
 [SM75_NATIVE_RUNTIME.md](hybrid_memory_v1_4/SM75_NATIVE_RUNTIME.md); native

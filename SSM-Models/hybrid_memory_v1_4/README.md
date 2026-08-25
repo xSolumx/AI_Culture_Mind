@@ -80,6 +80,27 @@ S-broken by at least `0.153`. See the
 This solves primitive chart learning under oracle frames/edit timing, not
 generic memory or language.
 
+The prospectively frozen
+[`G15A-S protocol`](G15AS_SPANNING_CENTER_PROTOCOL_2026-08-25.md) then expanded
+the hidden dictionary to both signs of all 28 planes, separated 64 training
+from 64 evaluation probe banks, and added direct-carrier assays for global
+center words that the two-sided frame cannot distinguish. The clean exact
+SM75 run passed every gate on seeds 2281/2287/2293. S held-out-frame mean error
+was `6.89e-7--1.18e-6`, its worst structured direct-carrier error was
+`2.36e-5`, and the smallest I/C/S-broken mean-error margin was `0.266`.
+This supports full-chart and center-compatible composition under oracle edit
+timing; it still does not learn addressing, writes, queries, topology from raw
+data, generic association, or language. See the
+[`G15A-S artifact`](artifacts/g15as_spanning_center_sm75_2026-08-25.json).
+
+In parallel, the frozen
+[`G16 SM75 shootout protocol`](G16_SM75_FRONTIER_SHOOTOUT_PROTOCOL_2026-08-25.md)
+and [`harness`](frontier_shootout.py) retain four approximately 125K-parameter
+arms that passed real one-step SM75 qualification: v1.4.5, local GDN2, official
+fused Mamba-2, and actual Transformers OLMo Hybrid. No G16 training metric has
+been run. Mamba-3 SISO and MIMO were excluded because their actual backward
+paths violate the frozen small-shape or SM75 kernel contracts.
+
 This track exposes seven explicit mixer kinds in one causal language-model
 shell:
 

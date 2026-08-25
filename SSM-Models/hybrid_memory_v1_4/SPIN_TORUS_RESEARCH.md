@@ -1,11 +1,11 @@
 # Spin, torus, and content-addressed memory
 
 **Decision date:** 2026-08-25
-**Status:** exact fixed-frame transports implemented; G15A supports shared
-vector/positive Spin coupling on a bounded oracle-coordinate task but not a
-necessary fixed Clifford second read; moving-frame geometry remains
-research-only. A learned-coordinate follow-up fails because its cosine
-observation quotients out the vector carrier.
+**Status:** exact fixed-frame transports implemented; the complete G15A chain
+now supports a learned full 28-generator shared vector/positive chart on
+held-out frames and global-center words under oracle edit timing. The fixed
+Clifford second read remains unsupported and moving-frame geometry remains
+research-only.
 
 ## Outcome
 
@@ -177,8 +177,16 @@ schedule, learned the chart to roughly `1e-7` error and passed fresh
 I/C/S/S-broken confirmation. Because the longer fixed-LR control also passed,
 decay is a precision improvement rather than a demonstrated necessity. The
 supported advance is learned shared vector/positive transport under
-multi-probe oracle frames and oracle edit timing. G15B address/write/query
-learning now precedes any torus-bank or moving-frame implementation.
+multi-probe oracle frames and oracle edit timing.
+
+G15A-S then expands the hidden dictionary from eight to all 28 planes and
+evaluates it on probe banks disjoint from training. It passes all three fresh
+seeds at roughly `1e-6` held-out-frame error and at most `2.36e-5` direct-
+carrier error on unseen 2-pi/4-pi loops, volume-center words, other center
+cosets, and loop-plus-primitive continuations. This closes the local spanning
+and center-compatibility question for the hard-coded shared vector/positive
+lift. G15B address/write/query learning now precedes any torus-bank or moving-
+frame implementation.
 
 ## Claim ledger
 
@@ -189,8 +197,9 @@ inner-conjugation covariance of the scalar edit law; explicit broken-coupling
 control.
 
 **Empirical but local:** supplied-coordinate G15A separation; G15A-R learned
-primitive-coordinate composition and fresh four-transport confirmation under
-oracle frames/edit timing; native runtime and finite contract probes.
+primitive-coordinate composition; G15A-S learned all 28 signed directions and
+passed held-out-frame/global-center transfer under oracle edit timing; native
+runtime and finite contract probes.
 
 **Open:** learned benefit from Spin transport, sparse conjugate tori, moving
 (G_2) frames, generic language improvement, long-range factual recall, and a

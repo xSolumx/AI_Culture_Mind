@@ -203,6 +203,20 @@ new matched natural-data and complete-step hardware evidence.
   2251/2267/2273 pass all four transports and all L64/L256/L1024 gates: `S`
   means are `1.21e-7`--`1.89e-7`, p95 `<=2.68e-7`, maximum `<=3.27e-7`, and
   every comparator-margin and broken-2x check passes.
+- G15A-S separately passes spanning-chart and center-sensitive transfer on
+  exact SM75 from clean commit `4067926`, fresh seeds 2281/2287/2293. Its 56
+  signed actions span all 28 generators and every train/evaluation frame bank
+  has rank 56. On unseen banks, `S` means are `6.89e-7`--`1.18e-6` through
+  L1024, p95 `<=1.47e-6`, maximum `<=1.94e-6`; all comparator margins are
+  0.266--0.536 and broken-2x passes every row. Structured direct vector/positive
+  errors are `<=2.36e-5`, with frame maximum `<=3.54e-5`. This is
+  composition-only transfer of a learned signed dictionary to unseen frame
+  banks and global center words under oracle edit timing, not learned topology,
+  association/address/query learning, negative-spin/Clifford utility, language,
+  full triality, or scaling/efficiency.
+- G16 is frozen as a parameter-matched and runtime-qualified four-arm SM75
+  harness for v1.4.5, local semantic GDN2, official fused Mamba-2, and actual
+  Transformers OLMo Hybrid. It has no training metrics or quality ordering yet.
 
 ## Open Claims
 
@@ -228,8 +242,9 @@ new matched natural-data and complete-step hardware evidence.
   useful than restricted, octonion, Givens/Householder, or modern SSM controls.
 - G15B generic association with learned addressing and querying is next,
   retaining the `I/C/S/S-broken` controls and selected `G-decay/random` recipe.
-  More geometry is not the next move. Full three-carrier triality, natural text,
-  and scaling remain open.
+  G15A-S has widened only the composition dictionary and transfer banks under
+  oracle edit timing. More geometry is not the next move. Learned topology,
+  full three-carrier triality utility, natural text, and scaling remain open.
 
 ## Dependencies
 
@@ -272,6 +287,10 @@ new matched natural-data and complete-step hardware evidence.
   four-probe oracle frame and oracle edit timing. It does not establish generic
   association, learned addressing/querying, language, full triality, or scaling;
   fixed-LR success means decay is sufficient but not proven necessary.
+- G15A-S extends composition to a signed 28-generator dictionary, unseen frame
+  banks, and global center words, but retains oracle edit timing. It does not
+  establish learned topology, generic association/address/query control,
+  negative-spin/Clifford utility, language, full triality, or scaling/efficiency.
 - The approximately 2,000x Pure Spin(8) MSE gap is task-specific and does not
   establish generic Mamba superiority, state matching, or a fused-kernel win.
 - The latent-token result removes supplied coordinates only for eight fixed
@@ -336,4 +355,7 @@ new matched natural-data and complete-step hardware evidence.
 - [G15A-F full-frame artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g15af_full_frame_cohort_sm75_2026-08-25.json)
 - [G15A-R first-order repair protocol](../../SSM-Models/hybrid_memory_v1_4/G15AR_FIRST_ORDER_PROTOCOL_2026-08-25.md)
 - [G15A-R first-order repair artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g15ar_first_order_repair_sm75_2026-08-25.json)
+- [G15A-S spanning-center protocol](../../SSM-Models/hybrid_memory_v1_4/G15AS_SPANNING_CENTER_PROTOCOL_2026-08-25.md)
+- [G15A-S spanning-center artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g15as_spanning_center_sm75_2026-08-25.json)
+- [G16 SM75 frontier-shootout protocol](../../SSM-Models/hybrid_memory_v1_4/G16_SM75_FRONTIER_SHOOTOUT_PROTOCOL_2026-08-25.md)
 - [Local SM75 native-runtime ledger](../../SSM-Models/hybrid_memory_v1_4/SM75_NATIVE_RUNTIME.md)

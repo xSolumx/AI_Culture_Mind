@@ -29,9 +29,17 @@ for confirmation, but cannot establish architecture superiority.
 All counts must be within 1% of the 124,534 target. The Mamba-2 arm must bind
 its imported distribution to the source checkout and revision already qualified
 on SM75. The OLMo arm must record its exact Transformers runtime class and
-installed Transformers/FLA versions. Random initialization is explicit; no
-downloaded checkpoint is shrunk, distilled, or presented as one of these small
-arms.
+installed Transformers/FLA versions. The frozen runtime is Transformers
+`5.15.1`, FLA `0.5.2`, with the decorated chunk wrapper closing over the real
+`fla.ops.gated_delta_rule.chunk.chunk_gated_delta_rule` backend. Random
+initialization is explicit; no downloaded checkpoint is shrunk, distilled, or
+presented as one of these small arms.
+
+The official Mamba-2 distribution is bound to version `2.3.2.post1`, clean
+source revision `e9594ce1c732d97440f0332fdc43170a2294dbfa`, and an imported
+`mamba_ssm` module matching the package path owned by that source-bound
+distribution. A mismatched revision, dirty source checkout, installation URL,
+or import path fails closed.
 
 The local `hybrid_gdn2` arm implements the full decoupled retention/erase/write
 law in this repository. It is not renamed as upstream FLA GDN2 or as KDA. Its
@@ -100,7 +108,14 @@ checkpoint hash, starting commit, and starting Git status.
 
 Integrity passes only if all metrics and gradients are finite, parameter-count
 residuals are at most 1%, tokenizer/source identities match, and all four arms
-have identical training target digests.
+have identical training target digests. A full-budget run also requires an
+empty repository status at startup; a dirty or uncommitted run is rejected
+rather than labeled adjudicating.
+
+These provenance requirements were added after a read-only pre-run audit found
+that the first harness recorded, but did not enforce, the repository status,
+Mamba revision/import path, and OLMo backend identity. They were frozen before
+requalification and before any G16 training metric.
 
 An arm is *development-qualified* only if:
 

@@ -3,9 +3,11 @@
 **Updated:** 2026-08-25
 **Adjudication:** G15A and its frozen conditional controls pass. The shared
 vector/positive Spin lift is supported on the designed task; a contribution
-from the fixed Clifford/negative-spin read is not. G15A-L then fails to recover
-that attribution with a learned coordinate chart. `spin_dirac` is not promoted
-to the default model.
+from the fixed Clifford/negative-spin read is not. G15A-L fails under a
+center-blind cosine observation, G15A-F restores observability but misses its
+precision gate, G15A-R repairs that precision, and G15A-S passes full
+28-generator, held-out-frame, center-sensitive transfer. `spin_dirac` is not
+promoted to the default model.
 
 This file separates passing algebraic contracts, oracle-controlled mechanism
 evidence, and learned-model evidence. The binding protocol is the
@@ -268,6 +270,51 @@ benefit, or full triality.
 
 Evidence:
 [`artifacts/g15ar_first_order_repair_sm75_2026-08-25.json`](artifacts/g15ar_first_order_repair_sm75_2026-08-25.json).
+
+## G15A-S spanning and center-sensitive result
+
+Before any learned metric, the
+[`G15A-S protocol`](G15AS_SPANNING_CENTER_PROTOCOL_2026-08-25.md) froze a
+57-by-28 table containing both directions of all 28 planes, hidden behind a
+seed-specific token permutation. Training retained composition-only final
+four-probe frame loss and oracle edit timing. It used 64 training probe banks;
+all random evaluation used a disjoint pool of 64 banks. Direct vector and
+positive-carrier matrices were evaluated only on unseen structured words,
+because the two-sided frame alone is blind to the central element whose two
+carrier signs are both negative.
+
+The clean exact-SM75 run from commit `4067926` passed every frozen gate on
+fresh seeds 2281, 2287, and 2293:
+
+| Metric over all seeds and L64/L256/L1,024 | Range or worst case |
+|---|---:|
+| S mean held-out-frame error | `6.89e-7--1.18e-6` |
+| S p95 held-out-frame error | at most `1.47e-6` |
+| S maximum held-out-frame error | at most `1.94e-6` |
+| minimum I/C/S-broken mean-error margin | `0.266` |
+| learned active-coordinate maximum error | `7.15e-7` |
+| learned inactive-coordinate RMS | `2.10e-8` |
+| maximum structured direct-vector error | `2.34e-5` |
+| maximum structured direct-positive error | `2.36e-5` |
+
+All 384 training/evaluation banks had independent-carrier tangent rank 56.
+The minimum condition ratio was `0.196`, the minimum target residual outside
+the broken tied-chart tangent image was `0.506`, and the FP64 oracle center
+residual was `5.11e-15`. The structured set covered signed 2-pi and 4-pi loops
+in all planes, volume and other-center-coset words, and loop-plus-primitive
+continuations. The required frame-blind/direct-carrier witness was observed
+for both signed `minus_volume` words.
+
+This establishes a composition-only learned dictionary spanning the full
+28-generator shared vector/positive lift, compatible with unseen probe frames
+and the hard-coded global Spin center under oracle edit timing. It does not
+show discovery of Spin topology from raw data, learned addressing/write/query
+behavior, negative-spin or Clifford benefit, generic association, language
+quality, scaling, or fused efficiency.
+
+Evidence:
+[`artifacts/g15as_spanning_center_sm75_2026-08-25.json`](artifacts/g15as_spanning_center_sm75_2026-08-25.json),
+SHA-256 `96e939fa4411e305637961941a565ac26da5a4212b47de3fc198687693b5dbcc`.
 
 The next gate is G15B: hold the selected recipe and I/C/S/S-broken transports
 fixed while learning content address, write timing, and final query on generic
