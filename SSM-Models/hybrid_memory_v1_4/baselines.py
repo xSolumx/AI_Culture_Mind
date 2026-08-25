@@ -18,12 +18,11 @@ from dataclasses import asdict, dataclass
 from typing import Any
 
 import torch
-from torch import nn
-
 from delta_product_reference import (
     DeltaProductReferenceLayer,
     DeltaProductReferenceModel,
 )
+from torch import nn
 
 from .fla_adapter import DeltaRuleAdapter, fla_available
 

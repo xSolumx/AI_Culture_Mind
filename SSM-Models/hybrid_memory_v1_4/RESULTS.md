@@ -665,6 +665,86 @@ Evidence:
 and
 [`artifacts/g11_tinystories_memory_ablation_cuda_2026-08-25.json`](artifacts/g11_tinystories_memory_ablation_cuda_2026-08-25.json).
 
+## G12: optimizer, tokenizer, robustness, and matched allocation
+
+The repo-wide audit selected a composite optimizer rather than a blanket
+replacement. The exact Spin(8)/SO(8) chart experiment had already shown that
+coordinatewise AdamW moments break an orthogonal parameter relation that SGD
+preserves. G12 therefore sends 102,400 hidden-matrix parameters to actual
+PyTorch Muon, 522 write/decay/residual controller parameters to a custom
+scalar-second-moment AdamW update, and all remaining parameters to ordinary
+AdamW with semantic no-decay groups.
+
+The corrected paired development screen used identical initial weights,
+training windows, validation windows, and presented bytes. Composite minus
+AdamW final BPRB was -0.1205 and -0.0948 on seeds 1823 and 1829, so it passed
+the frozen -0.02 mean rule. Median update time increased about 3.9%.
+
+The tokenizer audit trained only on the pinned TinyStories training stream:
+
+| Tokenizer | Vocabulary | Train bytes/token | Validation bytes/token | Exact round trip |
+|---|---:|---:|---:|---|
+| raw UTF-8 bytes | 256 | 1.000 | 1.000 | yes |
+| ByteLevel BPE | 512 | 2.302 | 2.337 | yes |
+| ByteLevel BPE | 1,024 | 3.038 | 3.048 | yes |
+
+The frozen rule selected the smallest fitted vocabulary exceeding 2.0 training
+bytes/token: 512. It has no unknown or special token. Cross-tokenizer loss is
+total token negative log likelihood divided by represented original bytes and
+`ln(2)`, reported as bits per raw byte.
+
+### Fresh three-seed result
+
+| Arm | Parameters | Mean BPRB | Worst BPRB | Median update | Presented raw bytes |
+|---|---:|---:|---:|---:|---:|
+| raw + AdamW | 119,962 | 1.8072 | 1.8204 | 108.96 ms | 4,096,000 |
+| raw + composite | 119,962 | 1.7478 | 1.7537 | 113.55 ms | 4,096,000 |
+| parameter-matched BPE + composite | 124,534 | **1.5344** | **1.5446** | **79.93 ms** | 9,434,111 mean |
+
+The raw optimizer arm wins every paired seed by 0.0442--0.0671 BPRB. The BPE
+arm passes the frozen robustness gate, but sees about 2.30 times as many
+original bytes for the same 4,096,000 token targets. Its 3.81% parameter
+mismatch is the fixed closest-shape result.
+
+### Long context after ordinary pretraining
+
+All checkpoints execute finite ordinary validation at 256, 512, and 1,024
+tokens. Mean BPRB changes as follows:
+
+| Arm | 256 tokens | 512 tokens | 1,024 tokens |
+|---|---:|---:|---:|
+| raw + AdamW | 1.8175 | 1.8363 | 1.8734 |
+| raw + composite | 1.7542 | 1.7693 | 1.7516 |
+| parameter-matched BPE + composite | 1.5505 | 1.5176 | 1.5075 |
+
+This is longer-context execution and ordinary loss, not recall. The paired
+counterfactual factual probe at raw-byte distances 128/256/512/1,024 is
+negative: gains are tiny, sign-changing across seeds, and non-monotone. The
+BPE row's all-positive 1,024-byte seed means average only 0.0033 nats and are
+not promoted as a capability.
+
+### Measured-compute point
+
+G12E enumerated widths 24--96 and FFN expansions 1--6 using random tokens only.
+Five warmups and 15 synchronized updates per valid shape selected BPE width 64
+/ expansion 1. Calibration was 110.72 ms versus 106.80 ms for the raw AdamW
+target (+3.67%). On the three outcome seeds it measured 113.43 ms versus
+108.96 ms (+4.10%), with 111,770 parameters, 1.5498 mean BPRB, and 1.5625
+worst-seed BPRB. It passes the CUDA-matched Pareto rule versus raw AdamW.
+
+The parameter-matched width-48/expansion-5 BPE point is still faster and
+slightly better. Thus extra recurrent width was not the best allocation at
+this scale; a narrower recurrent core plus larger FFN dominates among the
+tested BPE shapes. This is an RTX 2070 SUPER result, not a scaling exponent.
+
+Complete interpretation is in
+[`OPTIMIZER_TOKENIZER_AUDIT.md`](OPTIMIZER_TOKENIZER_AUDIT.md). Evidence:
+[`artifacts/g12a_tokenizer_audit_2026-08-25.json`](artifacts/g12a_tokenizer_audit_2026-08-25.json),
+[`artifacts/g12b_optimizer_development_cuda_2026-08-25.json`](artifacts/g12b_optimizer_development_cuda_2026-08-25.json),
+[`artifacts/g12c_multiseed_natural_text_cuda_2026-08-25.json`](artifacts/g12c_multiseed_natural_text_cuda_2026-08-25.json),
+[`artifacts/g12d_post_pretraining_long_context_recall_cuda_2026-08-25.json`](artifacts/g12d_post_pretraining_long_context_recall_cuda_2026-08-25.json), and
+[`artifacts/g12e_compute_matched_frontier_cuda_2026-08-25.json`](artifacts/g12e_compute_matched_frontier_cuda_2026-08-25.json).
+
 ## Actual upstream probes
 
 - FlashRT Gated Delta Attention was pinned at revision `892f725c...`, kernel
@@ -691,7 +771,7 @@ and
 
 ## Validation record
 
-- `python -m pytest hybrid_memory_v1_4/tests -q`: **203 passed, 4 skipped**.
+- `python -m pytest hybrid_memory_v1_4/tests -q`: **220 passed, 4 skipped**.
 - `python -m ruff check hybrid_memory_v1_4`: passed.
 - `python -m ruff format --check hybrid_memory_v1_4`: passed.
 - The four native-suite skips are guarded optional fused FLA/Mamba paths; WSL
@@ -713,11 +793,15 @@ Artifact file hashes are recorded in [`ARTIFACTS.sha256`](ARTIFACTS.sha256).
   not fresh validation.
 - G10 is a fresh synthetic external-label validation, not natural-text
   next-token evidence.
-- G11 is a one-seed bounded next-byte screen, not general language quality,
-  cross-seed robustness, or a parameter-matched upstream superiority result.
+- G11 is a one-seed bounded next-byte screen, not general language quality or a
+  parameter-matched upstream superiority result. G12 supplies three-seed local
+  robustness, not larger-corpus or larger-scale validation.
+- G12's post-pretraining counterfactual factual-recall result is negative.
+- G12 parameter and CUDA matches are distinct, and neither estimates a scaling
+  law or hardware-general efficiency.
 - The retained checkpoints are validation artifacts, not released pretrained
   models.
-- The only natural-text claim is the bounded G11 TinyStories next-byte result.
+- The natural-text claims are bounded G11/G12 TinyStories results only.
 - No fused-kernel, Tensor-Core, or matched speed claim exists.
 - No learned Spin(8) rung-use claim exists.
 - A straight-through estimator is not evidence that label-free routing learns.

@@ -11,17 +11,18 @@ import torch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
+from pure_spin8_ssm.torch_backend import (
+    recurrent_spin8_scan,
+    spin8_factorized_actions,
+)
+from spin8_triality import TRIALITY_REPRESENTATIONS
+
 from hybrid_memory_v1_4.selected_block import LowRankLinear
 from hybrid_memory_v1_4.structured_memory import (
     StructuredMemoryConfig,
     StructuredSpin8Memory,
 )
 from hybrid_memory_v1_4.structured_tier import generator_mask_for_rung
-from pure_spin8_ssm.torch_backend import (
-    recurrent_spin8_scan,
-    spin8_factorized_actions,
-)
-from spin8_triality import TRIALITY_REPRESENTATIONS
 
 DTYPE = torch.float64
 

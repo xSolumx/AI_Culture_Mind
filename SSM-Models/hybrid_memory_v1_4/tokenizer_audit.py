@@ -67,7 +67,10 @@ def main() -> None:
         tokenizer = ByteLevelBPETokenizer.train(train_text, vocab_size=vocab_size)
         train = tokenizer.encode(train_text)
         validation = tokenizer.encode(validation_text)
-        path = args.tokenizer_dir / f"tinystories_train_only_bytelevel_bpe_{vocab_size}.json"
+        path = (
+            args.tokenizer_dir
+            / f"tinystories_train_only_bytelevel_bpe_{vocab_size}.json"
+        )
         path.write_text(tokenizer.serialized() + "\n", encoding="utf-8")
         report = tokenizer_report(tokenizer, train, validation)
         report["path"] = str(path)
@@ -82,7 +85,9 @@ def main() -> None:
         and candidate["train"]["round_trip"]
         and candidate["validation"]["round_trip"]
     ]
-    selected = min(eligible, key=lambda candidate: candidate["vocab_size"], default=None)
+    selected = min(
+        eligible, key=lambda candidate: candidate["vocab_size"], default=None
+    )
     root = Path(__file__).resolve().parents[2]
     git_commit = subprocess.run(
         ["git", "rev-parse", "HEAD"],

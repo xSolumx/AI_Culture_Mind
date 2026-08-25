@@ -151,7 +151,9 @@ class ByteLevelBPETokenizer:
         byte_lengths = [len(piece) for piece in encoding.tokens]
         raw = text.encode("utf-8")
         if sum(byte_lengths) != len(raw):
-            raise RuntimeError("ByteLevel vocabulary pieces do not cover every raw byte")
+            raise RuntimeError(
+                "ByteLevel vocabulary pieces do not cover every raw byte"
+            )
         result = EncodedText(
             token_ids=torch.tensor(encoding.ids, dtype=torch.long),
             token_byte_lengths=torch.tensor(byte_lengths, dtype=torch.long),

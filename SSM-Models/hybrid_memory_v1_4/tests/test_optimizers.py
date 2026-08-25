@@ -23,9 +23,13 @@ def test_optimizer_partition_is_complete_disjoint_and_semantic() -> None:
     model = _model()
     partition = partition_optimizer_parameters(model)
     grouped = [parameter for group in partition.named_groups for _, parameter in group]
-    expected = [parameter for parameter in model.parameters() if parameter.requires_grad]
+    expected = [
+        parameter for parameter in model.parameters() if parameter.requires_grad
+    ]
     assert len(grouped) == len(expected)
-    assert {id(parameter) for parameter in grouped} == {id(parameter) for parameter in expected}
+    assert {id(parameter) for parameter in grouped} == {
+        id(parameter) for parameter in expected
+    }
     assert len({id(parameter) for parameter in grouped}) == len(grouped)
     assert all(parameter.ndim == 2 for _, parameter in partition.muon)
     assert any(name == "embedding.weight" for name, _ in partition.adamw_no_decay)
@@ -40,9 +44,7 @@ def test_scalar_second_moment_is_orthogonally_covariant() -> None:
     matrix, _ = torch.linalg.qr(torch.randn(11, 11, dtype=torch.float64))
     mapped = torch.nn.Parameter(matrix @ parameter.detach())
     optimizer = ScalarSecondMomentAdamW([parameter], lr=2e-3, weight_decay=0.01)
-    mapped_optimizer = ScalarSecondMomentAdamW(
-        [mapped], lr=2e-3, weight_decay=0.01
-    )
+    mapped_optimizer = ScalarSecondMomentAdamW([mapped], lr=2e-3, weight_decay=0.01)
     for _ in range(8):
         gradient = torch.randn_like(parameter)
         parameter.grad = gradient

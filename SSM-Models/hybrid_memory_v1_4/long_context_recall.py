@@ -199,9 +199,7 @@ def _recall_pair(
     measured = len((first_tail + filler + query).encode("utf-8"))
     if measured != distance:
         raise RuntimeError("constructed recall pair has the wrong byte distance")
-    if len(matching_prompt.encode("utf-8")) != len(
-        mismatched_prompt.encode("utf-8")
-    ):
+    if len(matching_prompt.encode("utf-8")) != len(mismatched_prompt.encode("utf-8")):
         raise RuntimeError("counterfactual recall prompts must have equal byte length")
     return {
         "name": name,
@@ -387,9 +385,7 @@ def main() -> None:
             )
             for length in CONTEXT_TOKEN_LENGTHS
         ]
-        recall = _recall_evaluation(
-            model, tokenizer, validation_ascii, device=device
-        )
+        recall = _recall_evaluation(model, tokenizer, validation_ascii, device=device)
         runs.append(
             {
                 "seed": source_run["seed"],

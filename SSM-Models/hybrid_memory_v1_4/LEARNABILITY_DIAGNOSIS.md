@@ -279,6 +279,30 @@ real-text screen, and the recurrent memory is causally responsible for most of
 that learned function. Cross-seed natural-text robustness and scaling remain
 open.
 
+G12 closes the optimizer and bounded cross-seed questions without pretending
+that they solve recall. The exact prior chart audit showed why coordinatewise
+AdamW moments are unsafe for geometric parameter groups. A composite using
+Muon on hidden matrices, one scalar second moment per memory-control tensor,
+and ordinary AdamW elsewhere beat raw-byte AdamW on both paired development
+seeds and all three fresh natural-text seeds. Mean final BPRB improved from
+1.8072 to 1.7478 at equal parameters, windows, and original bytes.
+
+A lossless training-only 512-token ByteLevel BPE then reduced the token horizon
+by 2.302x on training text. The closest parameter shape reached 1.5344 mean
+BPRB across the fresh seeds and a separately CUDA-matched shape reached 1.5498.
+This is a real training-allocation gain, but the BPE runs saw about 2.30 times
+as many original bytes for the same token target count.
+
+The decisive remaining negative is long-range identification. Every checkpoint
+executes finite ordinary evaluation through 1,024 tokens, and BPE ordinary BPRB
+actually improves with longer evaluation context. Yet a paired counterfactual
+fact-recall probe remains tiny, inconsistent, and non-monotone. Retention can
+preserve a learned state; it cannot create a write/query policy that length-256
+ordinary next-token training never identifies. The next intervention should be
+an ordinary-text 256->512->1024 context curriculum with visible token, byte,
+and CUDA budgets. If that still fails, explicit binding/span labels must be
+named commissioned memory training rather than ordinary pretraining.
+
 ## Current claim ledger
 
 ### Proved by code/tests
@@ -314,6 +338,10 @@ open.
   1753/1759/1777 and cleared both gates with 96.44% minimum L512 accuracy;
 - G11 prospectively passed its one-seed ordinary TinyStories next-byte gate,
   improving by 6.414 bits/byte to 1.614 BPC without auxiliary labels.
+- G12's composite optimizer improved raw-byte BPRB on all three fresh seeds;
+- G12's lossless 512-token ByteLevel BPE arm passed its bounded three-seed
+  parameter-matched robustness gate;
+- G12E passed its local measured-CUDA Pareto rule versus raw AdamW.
 
 ### Constrained
 
@@ -321,13 +349,17 @@ open.
   only ordinary next-byte labels;
 - the local v1.4 recurrence is semantic PyTorch, not a fused kernel;
 - G11 uses one model seed, a 256-byte context, and unequal parameter counts;
+- G12 uses three seeds but only the pinned 2,000-story training snapshot and
+  small 112k--125k parameter models;
 - extrapolation beyond the 1024 attention window has only small cohorts.
 
 ### Open
 
-- multi-seed ordinary natural-text robustness;
-- parameter-matched and compute-matched natural-text quality at larger scale;
-- long-context natural-text recall after ordinary pretraining;
+- multi-seed ordinary natural-text robustness on larger corpora and scales;
+- parameter- and compute-matched comparisons against actual upstream models at
+  larger scale;
+- robust long-context factual recall after ordinary pretraining (the bounded
+  G12 probe failed);
 - whether ordinary pretraining transfers to label-free MQAR;
 - whether selected archive or Spin/F4/rotor transport adds value after the
   generic content-addressed core is stable;

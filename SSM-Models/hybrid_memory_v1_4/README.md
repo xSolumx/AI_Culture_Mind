@@ -1,14 +1,17 @@
 # Hybrid Memory SSM v1.4
 
-**Status:** v1.4.5 is the synthetic external-learning successor. Its
+**Status:** v1.4.5 remains the model-architecture successor. Its
 retention-safe G10 configuration passed the prospectively frozen fresh-seed
 gate with minimum exact accuracy 97.57% at L96 and 96.44% at L512. It also
 passed the frozen single-seed G11 ordinary next-byte TinyStories screen,
-improving from 8.028 to 1.614 bits/byte without auxiliary labels. G9's failed
-v1.4.4 seed and the exposed-seed causal repair remain retained evidence. The
-frozen G4a selected-memory result remains negative; G11 is bounded real-text
-learning evidence, not a general language-quality, superiority, or speed
-promotion.
+improving from 8.028 to 1.614 bits/byte without auxiliary labels. G12 adds a
+validated training recipe without changing the model version: a geometry-aware
+Muon/scalar-moment/AdamW composite and lossless 512-token ByteLevel BPE. The
+three-seed parameter-matched BPE arm reached 1.534 mean bits per raw byte, but a
+post-pretraining factual-recall probe remained negative. G9's failed v1.4.4 seed
+and the exposed-seed causal repair remain retained evidence. The frozen G4a
+selected-memory result remains negative; these are bounded TinyStories results,
+not general language-quality or scaling-law promotion.
 
 This track combines five explicit mixer kinds in one causal language-model
 shell:
@@ -257,6 +260,31 @@ most of the learned real-text function in this checkpoint; attention adds a
 smaller measurable improvement. Because the ablation was post-hoc and G11 has
 one model seed, cross-seed natural-text robustness remains open.
 
+## G12 optimizer and tokenizer frontier
+
+G12 closes that cross-seed question at the tested scale. The selected
+`HarmonicMuonAdamW` optimizer uses PyTorch Muon for hidden matrices, a custom
+scalar-second-moment AdamW update for memory controllers, and ordinary AdamW
+for embeddings, norms, biases, and convolution. Against raw-byte AdamW with
+identical parameters, bytes, and windows, it improves final BPRB on every fresh
+seed; the mean moves from 1.8072 to 1.7478 while median update time rises about
+4.2%.
+
+The train-only 512-token ByteLevel BPE round-trips both corpus splits exactly
+and covers 2.302 training bytes/token. At the closest allowed parameter point
+(124,534 versus 119,962 parameters), three-seed mean/worst BPRB are
+1.5344/1.5446 and median update time is 79.93 ms. A separately calibrated
+measured-CUDA point matches the raw update budget within 4.1% and reaches
+1.5498 mean BPRB. These views expose different original-byte counts and must
+not be treated as an architecture-only win.
+
+Ordinary validation stays finite at 1,024 tokens, but the frozen templated
+counterfactual recall probe does not pass: gains are tiny and seed-inconsistent.
+The present bottleneck is missing long-range identification under length-256
+ordinary pretraining, not inability to fit text or an unstable state. See
+[`OPTIMIZER_TOKENIZER_AUDIT.md`](OPTIMIZER_TOKENIZER_AUDIT.md) for the complete
+decision and evidence boundaries.
+
 ## Validation
 
 From `SSM-Models`:
@@ -288,7 +316,10 @@ matched speed evidence.
 - The v1.4.5 retention-safe replay used an exposed failed seed and cannot pass
   a fresh-seed gate by itself.
 - G11 validates bounded ordinary next-byte learning on one TinyStories seed,
-  not general language quality or cross-seed natural-text robustness.
+  not general language quality; G12 supplies three-seed robustness only at the
+  bounded TinyStories scale.
+- G12 does not establish robust long-range factual recall, a scaling exponent,
+  or hardware-general compute efficiency.
 - The retained validation checkpoints are not released pretrained models.
 - Straight-through routing establishes a gradient estimator, not successful
   label-free routing.

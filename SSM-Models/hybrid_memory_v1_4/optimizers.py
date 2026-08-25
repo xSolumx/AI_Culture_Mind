@@ -99,21 +99,29 @@ def partition_optimizer_parameters(model: nn.Module) -> OptimizerPartition:
         lowered = name.lower()
         if any(marker in lowered for marker in _CONTROL_MARKERS):
             destination = "scalar_adamw"
-        elif parameter.ndim == 2 and min(parameter.shape) >= 2 and not any(
-            marker in lowered for marker in _NO_DECAY_MARKERS
+        elif (
+            parameter.ndim == 2
+            and min(parameter.shape) >= 2
+            and not any(marker in lowered for marker in _NO_DECAY_MARKERS)
         ):
             destination = "muon"
-        elif parameter.ndim < 2 or lowered.endswith(".bias") or any(
-            marker in lowered for marker in _NO_DECAY_MARKERS
+        elif (
+            parameter.ndim < 2
+            or lowered.endswith(".bias")
+            or any(marker in lowered for marker in _NO_DECAY_MARKERS)
         ):
             destination = "adamw_no_decay"
         else:
             destination = "adamw_decay"
         groups[destination].append((name, parameter))
 
-    expected = {id(parameter) for parameter in model.parameters() if parameter.requires_grad}
+    expected = {
+        id(parameter) for parameter in model.parameters() if parameter.requires_grad
+    }
     if seen != expected:
-        raise RuntimeError("optimizer partition does not cover every trainable parameter")
+        raise RuntimeError(
+            "optimizer partition does not cover every trainable parameter"
+        )
     return OptimizerPartition(
         muon=tuple(groups["muon"]),
         scalar_adamw=tuple(groups["scalar_adamw"]),
@@ -294,7 +302,9 @@ class HarmonicMuonAdamW:
 
     @property
     def param_groups(self) -> list[dict[str, Any]]:
-        return [group for optimizer in self._optimizers for group in optimizer.param_groups]
+        return [
+            group for optimizer in self._optimizers for group in optimizer.param_groups
+        ]
 
     def zero_grad(self, set_to_none: bool = True) -> None:
         for optimizer in self._optimizers:

@@ -154,7 +154,9 @@ def _batch(
     return tokens[:, :-1], tokens[:, 1:], byte_lengths[:, 1:]
 
 
-def _parameter_matched_config(vocab_size: int) -> tuple[HybridMemoryConfig, dict[str, int]]:
+def _parameter_matched_config(
+    vocab_size: int,
+) -> tuple[HybridMemoryConfig, dict[str, int]]:
     candidates = []
     for width in range(24, 97, 4):
         for expansion in range(1, 7):
@@ -187,7 +189,9 @@ def _parameter_matched_config(vocab_size: int) -> tuple[HybridMemoryConfig, dict
     }
 
 
-def _build_model(config: HybridMemoryConfig, seed: int, device: torch.device) -> nn.Module:
+def _build_model(
+    config: HybridMemoryConfig, seed: int, device: torch.device
+) -> nn.Module:
     torch.manual_seed(seed)
     if device.type == "cuda":
         torch.cuda.manual_seed_all(seed)
@@ -319,7 +323,9 @@ def _train(
         if not bool(torch.isfinite(loss)):
             raise FloatingPointError(f"non-finite G12 loss for {optimizer_name}")
         loss.backward()
-        gradient_norm = torch.nn.utils.clip_grad_norm_(model.parameters(), GRADIENT_CLIP)
+        gradient_norm = torch.nn.utils.clip_grad_norm_(
+            model.parameters(), GRADIENT_CLIP
+        )
         optimizer.step()
         cumulative_raw_bytes += int(byte_lengths.sum())
         cumulative_tokens += targets.numel()
@@ -359,7 +365,9 @@ def _train(
     return curve, optimizer, {"optimizer": optimizer_metadata, "systems": systems}
 
 
-def _load_bpe_from_audit(audit_path: Path) -> tuple[ByteLevelBPETokenizer, dict[str, Any]]:
+def _load_bpe_from_audit(
+    audit_path: Path,
+) -> tuple[ByteLevelBPETokenizer, dict[str, Any]]:
     audit = json.loads(audit_path.read_text(encoding="utf-8"))
     selection = audit["selection_rule"]
     path = Path(selection["selected_path"])
@@ -424,8 +432,7 @@ def _run_development(
         harmonic = next(
             run
             for run in runs
-            if run["seed"] == seed
-            and run["optimizer_name"] == "harmonic_muon_adamw"
+            if run["seed"] == seed and run["optimizer_name"] == "harmonic_muon_adamw"
         )
         delta = (
             harmonic["learning_curve"][-1]["bits_per_raw_byte"]
@@ -439,9 +446,7 @@ def _run_development(
         and max(deltas) <= 0.02
     )
     decision = {
-        "selected_optimizer": (
-            "harmonic_muon_adamw" if harmonic_advances else "adamw"
-        ),
+        "selected_optimizer": ("harmonic_muon_adamw" if harmonic_advances else "adamw"),
         "harmonic_advances": harmonic_advances,
         "paired": paired,
         "mean_harmonic_minus_adamw_bprb": statistics.mean(deltas),
@@ -568,11 +573,7 @@ def _run_validation(
         for run in selected
     ]
     passed = (
-        all(
-            point["finite"]
-            for run in selected
-            for point in run["learning_curve"]
-        )
+        all(point["finite"] for run in selected for point in run["learning_curve"])
         and min(selected_improvements) >= 2.0
         and statistics.mean(selected_final) <= statistics.mean(control_final) + 0.02
         and max(selected_final) <= max(control_final) + 0.05
@@ -620,9 +621,7 @@ def main() -> None:
     train_text, validation_text, snapshot = _snapshot_text(args.snapshot)
     started = time.perf_counter()
     if args.stage == "development":
-        runs, decision = _run_development(
-            train_text, validation_text, device=device
-        )
+        runs, decision = _run_development(train_text, validation_text, device=device)
         stage = "G12B"
         claim_status = "completed optimizer development screen"
     else:

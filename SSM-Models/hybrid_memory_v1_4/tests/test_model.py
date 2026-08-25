@@ -12,6 +12,7 @@ import torch
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from delta_product_reference import DeltaProductReferenceLayer, GatedMLP
+
 from hybrid_memory_v1_4.attention import (
     AttentionState,
     CausalSelfAttention,

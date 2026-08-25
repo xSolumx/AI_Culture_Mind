@@ -177,9 +177,7 @@ def _calibrate(device: torch.device) -> tuple[dict[str, Any], list[dict[str, Any
                 )
                 continue
             try:
-                measurement = _measure(
-                    config, "harmonic_muon_adamw", device=device
-                )
+                measurement = _measure(config, "harmonic_muon_adamw", device=device)
             except torch.cuda.OutOfMemoryError:
                 torch.cuda.empty_cache()
                 measurement = {
@@ -299,29 +297,20 @@ def _summary(
     runs: list[dict[str, Any]],
     g12c: dict[str, Any],
 ) -> dict[str, Any]:
-    control = [
-        run for run in g12c["runs"] if run["arm_name"] == "raw_adamw_control"
-    ]
-    candidate_final = [
-        run["learning_curve"][-1]["bits_per_raw_byte"] for run in runs
-    ]
-    control_final = [
-        run["learning_curve"][-1]["bits_per_raw_byte"] for run in control
-    ]
+    control = [run for run in g12c["runs"] if run["arm_name"] == "raw_adamw_control"]
+    candidate_final = [run["learning_curve"][-1]["bits_per_raw_byte"] for run in runs]
+    control_final = [run["learning_curve"][-1]["bits_per_raw_byte"] for run in control]
     candidate_times = [
         run["systems"]["median_update_wall_seconds_after_50_warmups"] for run in runs
     ]
     control_times = [
-        run["systems"]["median_update_wall_seconds_after_50_warmups"]
-        for run in control
+        run["systems"]["median_update_wall_seconds_after_50_warmups"] for run in control
     ]
     residual = calibration["selected"]["relative_compute_residual"]
     outcome_time_ratio = statistics.mean(candidate_times) / statistics.mean(
         control_times
     )
-    finite = all(
-        point["finite"] for run in runs for point in run["learning_curve"]
-    )
+    finite = all(point["finite"] for run in runs for point in run["learning_curve"])
     passed = (
         abs(residual) <= MAXIMUM_COMPUTE_RESIDUAL
         and finite
