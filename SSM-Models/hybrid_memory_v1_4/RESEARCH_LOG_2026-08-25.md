@@ -845,3 +845,14 @@ and all declared gradient paths are finite and nonzero.
 Phase 0 passes. It authorizes only the frozen constructed P/A learning screen.
 Do not infer learning, natural-text quality, optimizer superiority, scaling,
 or geometry from the implementation result.
+
+The subsequent Phase-1 runner was adversarially audited before execution. Ten
+fail-open or provenance gaps were repaired, including absolute-difference
+gates, MQAR intervention coverage, coherent payload permutation, exact
+decision counts, dirty-run ineligibility, direct dependency hashes, WSL2
+enforcement, and product-arm decision labelling. The exact clean-SM75 smoke
+then completed from commit `475221e`; artifact SHA-256 is
+`ac5829d23625a0bc111ee19b5c1ef3d6f5dcd63b6e9a3324121c3220bd36ebe2`.
+Both arms completed the full smoke runner with exact predictions and maximum
+logit/state residuals `3.576e-7`/`8.941e-8`. Four updates carry no learning
+claim. The unchanged quality cohort is next.

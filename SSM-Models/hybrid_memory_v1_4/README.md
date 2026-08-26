@@ -210,7 +210,11 @@ This authorizes only the fresh-seed constructed P/A screen; it is not a
 learning result and does not reopen geometry.
 The fail-closed
 [`Phase-1 runner and result ledger`](G15BE_PHASE1_RESULTS.md) are now
-implemented; exact clean-SM75 smoke and quality execution remain pending.
+implemented. Its exact clean-SM75 execution smoke from commit `475221e`
+passes all runtime/integrity contracts with maximum trained logit residual
+`3.576e-7` and exact predictions; artifact SHA-256 is
+`ac5829d23625a0bc111ee19b5c1ef3d6f5dcd63b6e9a3324121c3220bd36ebe2`.
+The smoke is non-promotable by construction; quality execution remains pending.
 
 In parallel, the frozen
 [`G16 SM75 shootout protocol`](G16_SM75_FRONTIER_SHOOTOUT_PROTOCOL_2026-08-25.md)

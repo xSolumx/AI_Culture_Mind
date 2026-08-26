@@ -9,9 +9,32 @@
 **Runner:**
 [`g15be_effective_edit_cohort.py`](g15be_effective_edit_cohort.py)
 
-**Current status:** runner implemented and semantic smoke contracts pass; exact
-clean-SM75 Phase-1 execution smoke and quality cohort pending. No G15B-E
-learning result exists yet.
+**Current status:** exact clean-SM75 execution smoke passed; quality cohort
+pending. No G15B-E learning result exists yet.
+
+## Exact SM75 execution smoke
+
+The sealed runner executed from clean commit
+`475221e20feb8b0f1e5ed04ae4b1a28a935c52be` under WSL2 on the NVIDIA GeForce
+RTX 2070 SUPER, exact compute capability `(7,5)`, Python 3.11.16, PyTorch
+2.9.0+cu128, and CUDA 12.8. The artifact is
+[`artifacts/g15be_phase1_smoke_sm75_2026-08-26.json`](artifacts/g15be_phase1_smoke_sm75_2026-08-26.json),
+SHA-256
+`ac5829d23625a0bc111ee19b5c1ef3d6f5dcd63b6e9a3324121c3220bd36ebe2`.
+
+Preflight binds the passing Phase-0 hash and unchanged `model.py` /
+`transactional_delta.py` source hashes. `P` and `A` have bit-identical initial
+tensors, 67,033 parameters, 4,864 FP32 state bytes, complete optimizer
+partition, finite nonzero gradients, and exact reconstructed forward logits.
+Both completed four deliberately tiny updates, 3,840 tokens, all 20 ordinary
+cells, the A intervention cells, external checkpoint hashing, and the trained
+boundary audit. Maximum observed chunk/masked-step logit residual is
+`3.576e-7`; maximum state residual is `8.941e-8`; predictions are exact.
+
+The smoke adjudicator returns `passed=false` and
+`eligible_for_promotion=false` by construction. Its zero boundary accuracy and
+untrained task metrics are expected after four updates and are not learning
+evidence. Only the unchanged three-seed quality cohort can adjudicate P/A.
 
 ## Frozen comparison
 

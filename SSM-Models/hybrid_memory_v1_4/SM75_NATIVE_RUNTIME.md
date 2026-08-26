@@ -18,6 +18,14 @@ checks in 2.44 seconds, peaking at 20,867,072 allocated CUDA bytes. See the
 SHA-256
 `41b49a6de9a74a563c4dc6f3c0571d8d9b0c7fd8fd95405232be22807d88936b`.
 
+The G15B-E Phase-1 runner subsequently passed its clean exact-SM75 execution
+smoke from commit `475221e`. Both matched arms completed the full smoke path,
+external checkpoints, and trained boundary comparison with exact predictions;
+maximum logit/state residuals were `3.576e-7`/`8.941e-8`. The smoke artifact
+SHA-256 is
+`ac5829d23625a0bc111ee19b5c1ef3d6f5dcd63b6e9a3324121c3220bd36ebe2`.
+It is execution evidence only and cannot promote either arm.
+
 ## Source checkouts
 
 | Implementation | Source revision | Role |

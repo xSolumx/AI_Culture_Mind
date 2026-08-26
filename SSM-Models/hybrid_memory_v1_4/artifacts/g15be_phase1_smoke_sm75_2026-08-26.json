@@ -1,0 +1,3711 @@
+{
+  "adjudication": {
+    "decision": "smoke execution completed; run the frozen quality cohort",
+    "eligible_for_promotion": false,
+    "passed": false
+  },
+  "environment": {
+    "compute_capability": [
+      7,
+      5
+    ],
+    "cuda_runtime": "12.8",
+    "device": "NVIDIA GeForce RTX 2070 SUPER",
+    "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.35",
+    "python": "3.11.16",
+    "torch": "2.9.0+cu128"
+  },
+  "evidentiary": true,
+  "experiment": "G15B-E effective edit",
+  "git_commit_at_start": "475221e20feb8b0f1e5ed04ae4b1a28a935c52be",
+  "git_status_at_start": [],
+  "mode": "smoke",
+  "phase0_artifact_sha256": "41b49a6de9a74a563c4dc6f3c0571d8d9b0c7fd8fd95405232be22807d88936b",
+  "preflight": {
+    "active_parameter_counts": {
+      "A": 67033,
+      "P": 67033
+    },
+    "checks": {
+      "finite_nonzero_gradients": true,
+      "learned_reconstruction": true,
+      "matched_parameters": true,
+      "optimizer_partition": true,
+      "phase0_core_sources_unchanged": true,
+      "sealed_phase0": true
+    },
+    "gradients_finite_nonzero": {
+      "A": true,
+      "P": true
+    },
+    "initial_parameter_sha256": {
+      "A": "945cb155898ba3da898e0134825baa1fa9b89996d8534f132583407513ca3c7f",
+      "P": "945cb155898ba3da898e0134825baa1fa9b89996d8534f132583407513ca3c7f"
+    },
+    "learned_reconstruction": {
+      "A": {
+        "maximum_absolute_logit_residual": 0.0,
+        "predictions_equal": true
+      },
+      "P": {
+        "maximum_absolute_logit_residual": 0.0,
+        "predictions_equal": true
+      }
+    },
+    "optimizer_partition": {
+      "assigned_tensors": 25,
+      "groups": [
+        {
+          "learning_rate": 0.003,
+          "names": [
+            "blocks.0.input_projection.weight",
+            "blocks.0.ffn.gate_projection.weight",
+            "blocks.0.ffn.up_projection.weight",
+            "blocks.0.ffn.down_projection.weight",
+            "blocks.0.mixer.query_projection.weight",
+            "blocks.0.mixer.key_projection.weight",
+            "blocks.0.mixer.value_projection.weight",
+            "blocks.0.mixer.output_gate.weight",
+            "blocks.0.mixer.output_projection.weight"
+          ],
+          "optimizer": "torch.optim.Muon",
+          "parameters": 53248,
+          "role": "hidden_matrices",
+          "second_moment": null,
+          "tensors": 9,
+          "weight_decay": 0.01
+        },
+        {
+          "learning_rate": 0.003,
+          "names": [
+            "blocks.0.residual_scale",
+            "blocks.0.mixer.commit_projection.weight",
+            "blocks.0.mixer.commit_projection.bias",
+            "blocks.0.mixer.erase_projection.weight",
+            "blocks.0.mixer.erase_projection.bias",
+            "blocks.0.mixer.write_projection.weight",
+            "blocks.0.mixer.write_projection.bias",
+            "blocks.0.mixer.decay_projection.weight",
+            "blocks.0.mixer.decay_projection.bias"
+          ],
+          "optimizer": "ScalarSecondMomentAdamW",
+          "parameters": 8841,
+          "role": "memory_controls",
+          "second_moment": "one scalar per parameter tensor",
+          "tensors": 9,
+          "weight_decay": 0.0
+        },
+        {
+          "learning_rate": 0.003,
+          "names": [
+            "blocks.0.local_conv.conv.weight"
+          ],
+          "optimizer": "torch.optim.AdamW",
+          "parameters": 256,
+          "role": "non_matrix_decay",
+          "second_moment": "coordinatewise",
+          "tensors": 1,
+          "weight_decay": 0.01
+        },
+        {
+          "learning_rate": 0.003,
+          "names": [
+            "embedding.weight",
+            "blocks.0.mixer_norm.weight",
+            "blocks.0.ffn_norm.weight",
+            "blocks.0.mixer.output_norm.weight",
+            "blocks.0.local_conv.conv.bias",
+            "final_norm.weight"
+          ],
+          "optimizer": "torch.optim.AdamW",
+          "parameters": 4688,
+          "role": "embedding_norm_bias",
+          "second_moment": "coordinatewise",
+          "tensors": 6,
+          "weight_decay": 0.0
+        }
+      ],
+      "memory_control_names": [
+        "blocks.0.residual_scale",
+        "blocks.0.mixer.commit_projection.weight",
+        "blocks.0.mixer.commit_projection.bias",
+        "blocks.0.mixer.erase_projection.weight",
+        "blocks.0.mixer.erase_projection.bias",
+        "blocks.0.mixer.write_projection.weight",
+        "blocks.0.mixer.write_projection.bias",
+        "blocks.0.mixer.decay_projection.weight",
+        "blocks.0.mixer.decay_projection.bias"
+      ],
+      "passed": true,
+      "trainable_tensors": 25
+    },
+    "parameter_counts": {
+      "A": 67033,
+      "P": 67033
+    },
+    "passed": true,
+    "phase0_core_source_matches": {
+      "SSM-Models/hybrid_memory_v1_4/model.py": true,
+      "SSM-Models/hybrid_memory_v1_4/transactional_delta.py": true
+    },
+    "phase0_sha256": "41b49a6de9a74a563c4dc6f3c0571d8d9b0c7fd8fd95405232be22807d88936b",
+    "state_bytes_per_sequence_fp32": {
+      "A": 4864,
+      "P": 4864
+    }
+  },
+  "protocol": {
+    "evaluation_batch_cap": 2,
+    "evaluation_decisions": 16,
+    "intervention_batch_cap": 2,
+    "intervention_decisions": 16,
+    "mode": "smoke",
+    "phases": [
+      {
+        "batch_size": 2,
+        "learning_rate": 0.003,
+        "length": 128,
+        "live_keys": 4,
+        "max_writes": 8,
+        "queries": 4,
+        "updates": 1
+      },
+      {
+        "batch_size": 2,
+        "learning_rate": 0.003,
+        "length": 256,
+        "live_keys": 8,
+        "max_writes": 16,
+        "queries": 8,
+        "updates": 1
+      },
+      {
+        "batch_size": 2,
+        "learning_rate": 0.001,
+        "length": 512,
+        "live_keys": 8,
+        "max_writes": 24,
+        "queries": 8,
+        "updates": 1
+      },
+      {
+        "batch_size": 2,
+        "learning_rate": 0.001,
+        "length": 1024,
+        "live_keys": 8,
+        "max_writes": 24,
+        "queries": 8,
+        "updates": 1
+      }
+    ],
+    "seeds": [
+      29
+    ]
+  },
+  "schema_version": 1,
+  "seed_arm_reports": [
+    {
+      "active_parameters": 67033,
+      "arm": "P",
+      "checkpoint": "/home/local/ai-culture-mind-checkpoints/g15be-475221e-smoke/g15be_p_seed29.pt",
+      "checkpoint_sha256": "e3f7f9d9338b7e81348f1a755c1c1cbaba1807c63fb07e0ee0a55e397dbc3806",
+      "evaluation": {
+        "boundary_audit": {
+          "chunk_logit_maximum_absolute_residual": 2.384185791015625e-07,
+          "chunk_state_maximum_absolute_residual": 7.450580596923828e-08,
+          "logit_bound": 0.0031196754425764084,
+          "masked_step_logit_maximum_absolute_residual": 3.5762786865234375e-07,
+          "masked_step_state_maximum_absolute_residual": 8.940696716308594e-08,
+          "passed": true,
+          "predictions_equal": true,
+          "query_accuracy": 0.0,
+          "state_bound": 0.001953125
+        },
+        "boundary_batch_sha256": "aba38a5768dde606b6c83b2d5b082b6a1e98592c005bed029c222bf221aa0514",
+        "cells": {
+          "mqar:L1024": {
+            "bits_per_query": 6.218430365833641,
+            "effective_gate_statistics": {
+              "event_erase": {
+                "count": 64.0,
+                "maximum": 0.010578617453575134,
+                "mean": 0.01017014030367136,
+                "minimum": 0.009937935508787632,
+                "standard_deviation": 0.0002231353755317671
+              },
+              "event_write": {
+                "count": 1024.0,
+                "maximum": 0.012874118052423,
+                "mean": 0.01034792885184288,
+                "minimum": 0.008814928121864796,
+                "standard_deviation": 0.0006041540288190146
+              },
+              "non_event_erase": {
+                "count": 8128.0,
+                "maximum": 0.010617261752486229,
+                "mean": 0.010168676301250307,
+                "minimum": 0.00993094127625227,
+                "standard_deviation": 0.00022290326289994467
+              },
+              "non_event_write": {
+                "count": 130048.0,
+                "maximum": 0.013102537021040916,
+                "mean": 0.010343510334885965,
+                "minimum": 0.008741304278373718,
+                "standard_deviation": 0.0005972876699312986
+              }
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 1024,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.0625,
+            "query_decisions": 16,
+            "read_maximum_absolute": 0.023946721106767654,
+            "state_norm_maximum": 0.12059038877487183,
+            "task": "mqar"
+          },
+          "mqar:L128": {
+            "bits_per_query": 6.310932266496108,
+            "effective_gate_statistics": {
+              "event_erase": {
+                "count": 64.0,
+                "maximum": 0.010583524592220783,
+                "mean": 0.010168174281716347,
+                "minimum": 0.009938027709722519,
+                "standard_deviation": 0.0002202897299052678
+              },
+              "event_write": {
+                "count": 1024.0,
+                "maximum": 0.012874839827418327,
+                "mean": 0.010342653840780258,
+                "minimum": 0.00881713442504406,
+                "standard_deviation": 0.0005939975604601843
+              },
+              "non_event_erase": {
+                "count": 960.0,
+                "maximum": 0.010602050460875034,
+                "mean": 0.010167288780212402,
+                "minimum": 0.009933403693139553,
+                "standard_deviation": 0.00022119629501384576
+              },
+              "non_event_write": {
+                "count": 15360.0,
+                "maximum": 0.012948579154908657,
+                "mean": 0.010340481003125509,
+                "minimum": 0.008788312785327435,
+                "standard_deviation": 0.0005920995270140928
+              }
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 128,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.4375,
+            "query_decisions": 16,
+            "read_maximum_absolute": 0.013797484338283539,
+            "state_norm_maximum": 0.08493988960981369,
+            "task": "mqar"
+          },
+          "mqar:L2048": {
+            "bits_per_query": 6.204581634855565,
+            "effective_gate_statistics": {
+              "event_erase": {
+                "count": 64.0,
+                "maximum": 0.010574945248663425,
+                "mean": 0.010172685608267784,
+                "minimum": 0.009936998598277569,
+                "standard_deviation": 0.0002254481843731419
+              },
+              "event_write": {
+                "count": 1024.0,
+                "maximum": 0.01286967284977436,
+                "mean": 0.010353118181228638,
+                "minimum": 0.008821955882012844,
+                "standard_deviation": 0.0006120609389883791
+              },
+              "non_event_erase": {
+                "count": 16320.0,
+                "maximum": 0.010634755715727806,
+                "mean": 0.01016851873958812,
+                "minimum": 0.009930691681802273,
+                "standard_deviation": 0.00022259985220805274
+              },
+              "non_event_write": {
+                "count": 261120.0,
+                "maximum": 0.013198770582675934,
+                "mean": 0.010343104717778225,
+                "minimum": 0.008710948750376701,
+                "standard_deviation": 0.0005965677681716686
+              }
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 2048,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.125,
+            "query_decisions": 16,
+            "read_maximum_absolute": 0.02389632910490036,
+            "state_norm_maximum": 0.12146823853254318,
+            "task": "mqar"
+          },
+          "mqar:L512": {
+            "bits_per_query": 6.263773247768319,
+            "effective_gate_statistics": {
+              "event_erase": {
+                "count": 64.0,
+                "maximum": 0.010600138455629349,
+                "mean": 0.01017006579786539,
+                "minimum": 0.009935525245964527,
+                "standard_deviation": 0.0002220613583597828
+              },
+              "event_write": {
+                "count": 1024.0,
+                "maximum": 0.012968087568879128,
+                "mean": 0.010347390547394753,
+                "minimum": 0.008793776854872704,
+                "standard_deviation": 0.0006028526976586423
+              },
+              "non_event_erase": {
+                "count": 4032.0,
+                "maximum": 0.010605433024466038,
+                "mean": 0.010168172064281646,
+                "minimum": 0.009928698651492596,
+                "standard_deviation": 0.00022206833482713798
+              },
+              "non_event_write": {
+                "count": 64512.0,
+                "maximum": 0.013011204078793526,
+                "mean": 0.010342449422866579,
+                "minimum": 0.008765652775764465,
+                "standard_deviation": 0.0005955642881011548
+              }
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 512,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.4375,
+            "query_decisions": 16,
+            "read_maximum_absolute": 0.021961485967040062,
+            "state_norm_maximum": 0.11720643192529678,
+            "task": "mqar"
+          },
+          "needle:L1024": {
+            "bits_per_query": 6.1471820811648,
+            "effective_gate_statistics": {
+              "event_erase": {
+                "count": 64.0,
+                "maximum": 0.010576196946203709,
+                "mean": 0.010168783832341433,
+                "minimum": 0.009941191412508488,
+                "standard_deviation": 0.00022034547581713685
+              },
+              "event_write": {
+                "count": 1024.0,
+                "maximum": 0.012857346795499325,
+                "mean": 0.010343360248953104,
+                "minimum": 0.008819742128252983,
+                "standard_deviation": 0.0005958672736692129
+              },
+              "non_event_erase": {
+                "count": 65472.0,
+                "maximum": 0.010631502605974674,
+                "mean": 0.010168589105354377,
+                "minimum": 0.009929667226970196,
+                "standard_deviation": 0.0002227464616458561
+              },
+              "non_event_write": {
+                "count": 1047552.0,
+                "maximum": 0.013137275353074074,
+                "mean": 0.010343279423718345,
+                "minimum": 0.008726377040147781,
+                "standard_deviation": 0.0005968978272861549
+              }
+            },
+            "evaluation_batch_fingerprints": 8,
+            "exact_episode_accuracy": 0.0,
+            "length": 1024,
+            "query_accuracy": 0.0,
+            "query_address_top1": 1.0,
+            "query_decisions": 16,
+            "read_maximum_absolute": 0.0247071273624897,
+            "state_norm_maximum": 0.12262162566184998,
+            "task": "needle"
+          },
+          "needle:L128": {
+            "bits_per_query": 6.163057627683295,
+            "effective_gate_statistics": {
+              "event_erase": {
+                "count": 64.0,
+                "maximum": 0.010588006116449833,
+                "mean": 0.010171488858759403,
+                "minimum": 0.00993876252323389,
+                "standard_deviation": 0.0002241873686524515
+              },
+              "event_write": {
+                "count": 1024.0,
+                "maximum": 0.012950610369443893,
+                "mean": 0.010350328986532986,
+                "minimum": 0.008791076019406319,
+                "standard_deviation": 0.0006074821832642552
+              },
+              "non_event_erase": {
+                "count": 8128.0,
+                "maximum": 0.010638594627380371,
+                "mean": 0.010168247922198979,
+                "minimum": 0.009930326603353024,
+                "standard_deviation": 0.0002222835218330993
+              },
+              "non_event_write": {
+                "count": 130048.0,
+                "maximum": 0.013195904903113842,
+                "mean": 0.010342557833889338,
+                "minimum": 0.008707656525075436,
+                "standard_deviation": 0.0005956925052400172
+              }
+            },
+            "evaluation_batch_fingerprints": 8,
+            "exact_episode_accuracy": 0.0,
+            "length": 128,
+            "query_accuracy": 0.0,
+            "query_address_top1": 1.0,
+            "query_decisions": 16,
+            "read_maximum_absolute": 0.015486035495996475,
+            "state_norm_maximum": 0.08833163231611252,
+            "task": "needle"
+          },
+          "needle:L2048": {
+            "bits_per_query": 6.121675334215337,
+            "effective_gate_statistics": {
+              "event_erase": {
+                "count": 64.0,
+                "maximum": 0.010572902858257294,
+                "mean": 0.010169280343689024,
+                "minimum": 0.009940585121512413,
+                "standard_deviation": 0.0002204920471564455
+              },
+              "event_write": {
+                "count": 1024.0,
+                "maximum": 0.01287023350596428,
+                "mean": 0.010345098678953946,
+                "minimum": 0.00882544182240963,
+                "standard_deviation": 0.0005976896686174832
+              },
+              "non_event_erase": {
+                "count": 131008.0,
+                "maximum": 0.010649836622178555,
+                "mean": 0.010168578371980683,
+                "minimum": 0.009929404594004154,
+                "standard_deviation": 0.00022273766188521266
+              },
+              "non_event_write": {
+                "count": 2096128.0,
+                "maximum": 0.013185318559408188,
+                "mean": 0.010343259523482105,
+                "minimum": 0.00871952809393406,
+                "standard_deviation": 0.0005968832231321497
+              }
+            },
+            "evaluation_batch_fingerprints": 8,
+            "exact_episode_accuracy": 0.0,
+            "length": 2048,
+            "query_accuracy": 0.0,
+            "query_address_top1": 1.0,
+            "query_decisions": 16,
+            "read_maximum_absolute": 0.025834335014224052,
+            "state_norm_maximum": 0.12418270111083984,
+            "task": "needle"
+          },
+          "needle:L512": {
+            "bits_per_query": 6.201476832059538,
+            "effective_gate_statistics": {
+              "event_erase": {
+                "count": 64.0,
+                "maximum": 0.010574867017567158,
+                "mean": 0.010171380825340748,
+                "minimum": 0.009938052855432034,
+                "standard_deviation": 0.00022369474649291726
+              },
+              "event_write": {
+                "count": 1024.0,
+                "maximum": 0.012864730320870876,
+                "mean": 0.010348882875405252,
+                "minimum": 0.00882743764668703,
+                "standard_deviation": 0.0006051947745372761
+              },
+              "non_event_erase": {
+                "count": 32704.0,
+                "maximum": 0.010626927949488163,
+                "mean": 0.010168504458350911,
+                "minimum": 0.009930198080837727,
+                "standard_deviation": 0.00022264105590352593
+              },
+              "non_event_write": {
+                "count": 523264.0,
+                "maximum": 0.01314116083085537,
+                "mean": 0.01034311165781637,
+                "minimum": 0.008731774985790253,
+                "standard_deviation": 0.0005966401537867671
+              }
+            },
+            "evaluation_batch_fingerprints": 8,
+            "exact_episode_accuracy": 0.0,
+            "length": 512,
+            "query_accuracy": 0.0,
+            "query_address_top1": 1.0,
+            "query_decisions": 16,
+            "read_maximum_absolute": 0.024002034217119217,
+            "state_norm_maximum": 0.11930498480796814,
+            "task": "needle"
+          },
+          "overwrite:L1024": {
+            "bits_per_query": 6.134960306063886,
+            "effective_gate_statistics": {
+              "event_erase": {
+                "count": 192.0,
+                "maximum": 0.010580589063465595,
+                "mean": 0.01017040510972341,
+                "minimum": 0.00993799977004528,
+                "standard_deviation": 0.00022284246229769674
+              },
+              "event_write": {
+                "count": 3072.0,
+                "maximum": 0.01289302296936512,
+                "mean": 0.010348591953516006,
+                "minimum": 0.008811796084046364,
+                "standard_deviation": 0.0006044899524814832
+              },
+              "non_event_erase": {
+                "count": 8000.0,
+                "maximum": 0.010620787739753723,
+                "mean": 0.010168280601501465,
+                "minimum": 0.009929178282618523,
+                "standard_deviation": 0.00022229828330026948
+              },
+              "non_event_write": {
+                "count": 128000.0,
+                "maximum": 0.013085741549730301,
+                "mean": 0.01034259033203125,
+                "minimum": 0.008740810677409172,
+                "standard_deviation": 0.0005956943417511324
+              }
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 1024,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.1875,
+            "query_decisions": 16,
+            "query_strata": {
+              "after_same_key_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 14
+              },
+              "after_unrelated_overwrite_only": {
+                "accuracy": null,
+                "query_decisions": 0
+              },
+              "before_any_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 2
+              }
+            },
+            "read_maximum_absolute": 0.023082472383975983,
+            "state_norm_maximum": 0.12059244513511658,
+            "task": "overwrite"
+          },
+          "overwrite:L128": {
+            "bits_per_query": 6.148238054641098,
+            "effective_gate_statistics": {
+              "event_erase": {
+                "count": 192.0,
+                "maximum": 0.01058719027787447,
+                "mean": 0.010171245162685713,
+                "minimum": 0.00993678905069828,
+                "standard_deviation": 0.00022385398795198212
+              },
+              "event_write": {
+                "count": 3072.0,
+                "maximum": 0.01288934051990509,
+                "mean": 0.010349477330843607,
+                "minimum": 0.008811920881271362,
+                "standard_deviation": 0.0006059407102982346
+              },
+              "non_event_erase": {
+                "count": 832.0,
+                "maximum": 0.010616683401167393,
+                "mean": 0.010166784891715417,
+                "minimum": 0.009934508241713047,
+                "standard_deviation": 0.00022096218259408002
+              },
+              "non_event_write": {
+                "count": 13312.0,
+                "maximum": 0.013022826053202152,
+                "mean": 0.010339198204187246,
+                "minimum": 0.008771470747888088,
+                "standard_deviation": 0.0005900937735058891
+              }
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 128,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.0625,
+            "query_decisions": 16,
+            "query_strata": {
+              "after_same_key_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 14
+              },
+              "after_unrelated_overwrite_only": {
+                "accuracy": null,
+                "query_decisions": 0
+              },
+              "before_any_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 2
+              }
+            },
+            "read_maximum_absolute": 0.016486570239067078,
+            "state_norm_maximum": 0.0838429406285286,
+            "task": "overwrite"
+          },
+          "overwrite:L2048": {
+            "bits_per_query": 6.173293863079999,
+            "effective_gate_statistics": {
+              "event_erase": {
+                "count": 192.0,
+                "maximum": 0.010574271902441978,
+                "mean": 0.010170641044775644,
+                "minimum": 0.009938986040651798,
+                "standard_deviation": 0.0002230666761519077
+              },
+              "event_write": {
+                "count": 3072.0,
+                "maximum": 0.012875932268798351,
+                "mean": 0.010348365952571234,
+                "minimum": 0.00880997534841299,
+                "standard_deviation": 0.0006041059161916401
+              },
+              "non_event_erase": {
+                "count": 16192.0,
+                "maximum": 0.010625447146594524,
+                "mean": 0.01016858255439125,
+                "minimum": 0.009928762912750244,
+                "standard_deviation": 0.0002227240600284879
+              },
+              "non_event_write": {
+                "count": 259072.0,
+                "maximum": 0.013116514310240746,
+                "mean": 0.010343254790475718,
+                "minimum": 0.00874317903071642,
+                "standard_deviation": 0.0005968093919290866
+              }
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 2048,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.0625,
+            "query_decisions": 16,
+            "query_strata": {
+              "after_same_key_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 14
+              },
+              "after_unrelated_overwrite_only": {
+                "accuracy": null,
+                "query_decisions": 0
+              },
+              "before_any_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 2
+              }
+            },
+            "read_maximum_absolute": 0.023250024765729904,
+            "state_norm_maximum": 0.12207464873790741,
+            "task": "overwrite"
+          },
+          "overwrite:L512": {
+            "bits_per_query": 6.344104280194527,
+            "effective_gate_statistics": {
+              "event_erase": {
+                "count": 192.0,
+                "maximum": 0.010581078939139843,
+                "mean": 0.010171993325153986,
+                "minimum": 0.009936407208442688,
+                "standard_deviation": 0.00022515314863505136
+              },
+              "event_write": {
+                "count": 3072.0,
+                "maximum": 0.012905392795801163,
+                "mean": 0.01035031241675218,
+                "minimum": 0.00880543701350689,
+                "standard_deviation": 0.0006076127745649699
+              },
+              "non_event_erase": {
+                "count": 3904.0,
+                "maximum": 0.010614736005663872,
+                "mean": 0.010167691551271032,
+                "minimum": 0.009932386688888073,
+                "standard_deviation": 0.00022172301174689768
+              },
+              "non_event_write": {
+                "count": 62464.0,
+                "maximum": 0.013050599955022335,
+                "mean": 0.010341425411036758,
+                "minimum": 0.00875374861061573,
+                "standard_deviation": 0.0005938157885971656
+              }
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 512,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.125,
+            "query_decisions": 16,
+            "query_strata": {
+              "after_same_key_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 14
+              },
+              "after_unrelated_overwrite_only": {
+                "accuracy": null,
+                "query_decisions": 0
+              },
+              "before_any_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 2
+              }
+            },
+            "read_maximum_absolute": 0.023061320185661316,
+            "state_norm_maximum": 0.11689921468496323,
+            "task": "overwrite"
+          },
+          "overwrite_guard:L1024": {
+            "bits_per_query": 6.162812552405816,
+            "effective_gate_statistics": {
+              "event_erase": {
+                "count": 24.0,
+                "maximum": 0.010551287792623043,
+                "mean": 0.010165100917220116,
+                "minimum": 0.009944500401616096,
+                "standard_deviation": 0.00021489683006281255
+              },
+              "event_write": {
+                "count": 384.0,
+                "maximum": 0.012704703025519848,
+                "mean": 0.010336890195806822,
+                "minimum": 0.008882008492946625,
+                "standard_deviation": 0.0005838105093000176
+              },
+              "non_event_erase": {
+                "count": 8168.0,
+                "maximum": 0.010631083510816097,
+                "mean": 0.010168264241456752,
+                "minimum": 0.009930375032126904,
+                "standard_deviation": 0.00022236461479075432
+              },
+              "non_event_write": {
+                "count": 130688.0,
+                "maximum": 0.013132319785654545,
+                "mean": 0.010342639994084192,
+                "minimum": 0.008728476241230965,
+                "standard_deviation": 0.0005957537493884455
+              }
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 1024,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.25,
+            "query_decisions": 16,
+            "query_strata": {
+              "after_same_key_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 6
+              },
+              "after_unrelated_overwrite_only": {
+                "accuracy": 0.0,
+                "query_decisions": 6
+              },
+              "before_any_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 4
+              }
+            },
+            "read_maximum_absolute": 0.02391248196363449,
+            "state_norm_maximum": 0.11992612481117249,
+            "task": "overwrite_guard"
+          },
+          "overwrite_guard:L128": {
+            "bits_per_query": 6.290963016939125,
+            "effective_gate_statistics": {
+              "event_erase": {
+                "count": 24.0,
+                "maximum": 0.01059973705559969,
+                "mean": 0.010172723482052485,
+                "minimum": 0.009940254501998425,
+                "standard_deviation": 0.00022718578547754878
+              },
+              "event_write": {
+                "count": 384.0,
+                "maximum": 0.012958806939423084,
+                "mean": 0.010352890938520432,
+                "minimum": 0.008796578273177147,
+                "standard_deviation": 0.0006158770007641271
+              },
+              "non_event_erase": {
+                "count": 1000.0,
+                "maximum": 0.010595127008855343,
+                "mean": 0.010168724060058594,
+                "minimum": 0.009930478408932686,
+                "standard_deviation": 0.00022282623076308713
+              },
+              "non_event_write": {
+                "count": 16000.0,
+                "maximum": 0.012998303398489952,
+                "mean": 0.010343547821044921,
+                "minimum": 0.008773687295615673,
+                "standard_deviation": 0.0005971720268110053
+              }
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 128,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.3125,
+            "query_decisions": 16,
+            "query_strata": {
+              "after_same_key_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 6
+              },
+              "after_unrelated_overwrite_only": {
+                "accuracy": 0.0,
+                "query_decisions": 6
+              },
+              "before_any_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 4
+              }
+            },
+            "read_maximum_absolute": 0.011729264631867409,
+            "state_norm_maximum": 0.08703745901584625,
+            "task": "overwrite_guard"
+          },
+          "overwrite_guard:L2048": {
+            "bits_per_query": 6.051886494321718,
+            "effective_gate_statistics": {
+              "event_erase": {
+                "count": 24.0,
+                "maximum": 0.010571135208010674,
+                "mean": 0.010172292590141296,
+                "minimum": 0.009940702468156815,
+                "standard_deviation": 0.00022492508902136277
+              },
+              "event_write": {
+                "count": 384.0,
+                "maximum": 0.012837061658501625,
+                "mean": 0.010350613544384638,
+                "minimum": 0.008833767846226692,
+                "standard_deviation": 0.0006069054047772747
+              },
+              "non_event_erase": {
+                "count": 16360.0,
+                "maximum": 0.01062527671456337,
+                "mean": 0.010168595069195064,
+                "minimum": 0.009930568747222424,
+                "standard_deviation": 0.00022275471632144801
+              },
+              "non_event_write": {
+                "count": 261760.0,
+                "maximum": 0.013086194172501564,
+                "mean": 0.010343267165652698,
+                "minimum": 0.008740009739995003,
+                "standard_deviation": 0.000596872628833735
+              }
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 2048,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.375,
+            "query_decisions": 16,
+            "query_strata": {
+              "after_same_key_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 6
+              },
+              "after_unrelated_overwrite_only": {
+                "accuracy": 0.0,
+                "query_decisions": 6
+              },
+              "before_any_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 4
+              }
+            },
+            "read_maximum_absolute": 0.023568566888570786,
+            "state_norm_maximum": 0.12317955493927002,
+            "task": "overwrite_guard"
+          },
+          "overwrite_guard:L512": {
+            "bits_per_query": 6.318126644747001,
+            "effective_gate_statistics": {
+              "event_erase": {
+                "count": 24.0,
+                "maximum": 0.010577628389000893,
+                "mean": 0.01017501081029574,
+                "minimum": 0.009938651695847511,
+                "standard_deviation": 0.0002307762460684049
+              },
+              "event_write": {
+                "count": 384.0,
+                "maximum": 0.012865308672189713,
+                "mean": 0.010357844332853952,
+                "minimum": 0.0088279377669096,
+                "standard_deviation": 0.0006201018711651278
+              },
+              "non_event_erase": {
+                "count": 4072.0,
+                "maximum": 0.010615239851176739,
+                "mean": 0.010168467148816421,
+                "minimum": 0.009927955456078053,
+                "standard_deviation": 0.00022259252289273323
+              },
+              "non_event_write": {
+                "count": 65152.0,
+                "maximum": 0.01303968857973814,
+                "mean": 0.010342965191614418,
+                "minimum": 0.008758503012359142,
+                "standard_deviation": 0.0005964393572684974
+              }
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 512,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.375,
+            "query_decisions": 16,
+            "query_strata": {
+              "after_same_key_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 6
+              },
+              "after_unrelated_overwrite_only": {
+                "accuracy": 0.0,
+                "query_decisions": 6
+              },
+              "before_any_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 4
+              }
+            },
+            "read_maximum_absolute": 0.021914537996053696,
+            "state_norm_maximum": 0.11974379420280457,
+            "task": "overwrite_guard"
+          },
+          "selective:L1024": {
+            "bits_per_query": 6.129916398879381,
+            "effective_gate_statistics": {
+              "event_erase": {
+                "count": 64.0,
+                "maximum": 0.01057349517941475,
+                "mean": 0.010167931206524372,
+                "minimum": 0.009935478679835796,
+                "standard_deviation": 0.00022362337092297658
+              },
+              "event_write": {
+                "count": 1024.0,
+                "maximum": 0.012801735661923885,
+                "mean": 0.01034138910472393,
+                "minimum": 0.008845328353345394,
+                "standard_deviation": 0.0005950401683146141
+              },
+              "non_event_erase": {
+                "count": 8128.0,
+                "maximum": 0.01061997003853321,
+                "mean": 0.01016851485244871,
+                "minimum": 0.009931392967700958,
+                "standard_deviation": 0.00022255333326804246
+              },
+              "non_event_write": {
+                "count": 130048.0,
+                "maximum": 0.013070899993181229,
+                "mean": 0.010343139565835787,
+                "minimum": 0.008749890141189098,
+                "standard_deviation": 0.0005966176564869831
+              }
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 1024,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.0625,
+            "query_decisions": 16,
+            "read_maximum_absolute": 0.02386259287595749,
+            "state_norm_maximum": 0.12055616080760956,
+            "task": "selective"
+          },
+          "selective:L128": {
+            "bits_per_query": 6.296226373986131,
+            "effective_gate_statistics": {
+              "event_erase": {
+                "count": 64.0,
+                "maximum": 0.010587123222649097,
+                "mean": 0.010168422013521194,
+                "minimum": 0.009930774569511414,
+                "standard_deviation": 0.00022450323634756693
+              },
+              "event_write": {
+                "count": 1024.0,
+                "maximum": 0.012912848964333534,
+                "mean": 0.010342683643102646,
+                "minimum": 0.008793431334197521,
+                "standard_deviation": 0.0005980886044182466
+              },
+              "non_event_erase": {
+                "count": 960.0,
+                "maximum": 0.010604645125567913,
+                "mean": 0.010168598095575968,
+                "minimum": 0.009934299625456333,
+                "standard_deviation": 0.00022270434272216835
+              },
+              "non_event_write": {
+                "count": 15360.0,
+                "maximum": 0.013000004924833775,
+                "mean": 0.010343291362126668,
+                "minimum": 0.008774391375482082,
+                "standard_deviation": 0.000596462435595611
+              }
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 128,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.1875,
+            "query_decisions": 16,
+            "read_maximum_absolute": 0.015039130114018917,
+            "state_norm_maximum": 0.08622970432043076,
+            "task": "selective"
+          },
+          "selective:L2048": {
+            "bits_per_query": 6.2642685578028034,
+            "effective_gate_statistics": {
+              "event_erase": {
+                "count": 64.0,
+                "maximum": 0.010586931370198727,
+                "mean": 0.010169990360736847,
+                "minimum": 0.00993130449205637,
+                "standard_deviation": 0.0002264717989553727
+              },
+              "event_write": {
+                "count": 1024.0,
+                "maximum": 0.012876934371888638,
+                "mean": 0.01034670602530241,
+                "minimum": 0.008808162063360214,
+                "standard_deviation": 0.0006035336238313221
+              },
+              "non_event_erase": {
+                "count": 16320.0,
+                "maximum": 0.010627500712871552,
+                "mean": 0.010168707604501762,
+                "minimum": 0.009930840693414211,
+                "standard_deviation": 0.00022294676979764315
+              },
+              "non_event_write": {
+                "count": 261120.0,
+                "maximum": 0.013106929138302803,
+                "mean": 0.010343526391422048,
+                "minimum": 0.008738392032682896,
+                "standard_deviation": 0.0005973252160698013
+              }
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 2048,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.3125,
+            "query_decisions": 16,
+            "read_maximum_absolute": 0.02483305148780346,
+            "state_norm_maximum": 0.12236618250608444,
+            "task": "selective"
+          },
+          "selective:L512": {
+            "bits_per_query": 6.009961251624986,
+            "effective_gate_statistics": {
+              "event_erase": {
+                "count": 64.0,
+                "maximum": 0.01058002095669508,
+                "mean": 0.010167481377720833,
+                "minimum": 0.009933062829077244,
+                "standard_deviation": 0.0002223216386343005
+              },
+              "event_write": {
+                "count": 1024.0,
+                "maximum": 0.012854454107582569,
+                "mean": 0.010340651497244835,
+                "minimum": 0.008823620155453682,
+                "standard_deviation": 0.0005926550422547609
+              },
+              "non_event_erase": {
+                "count": 4032.0,
+                "maximum": 0.010639803484082222,
+                "mean": 0.010168715128822932,
+                "minimum": 0.009929937310516834,
+                "standard_deviation": 0.00022292887471063273
+              },
+              "non_event_write": {
+                "count": 64512.0,
+                "maximum": 0.013153500854969025,
+                "mean": 0.010343543120792933,
+                "minimum": 0.00872934702783823,
+                "standard_deviation": 0.0005973063005579197
+              }
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 512,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.1875,
+            "query_decisions": 16,
+            "read_maximum_absolute": 0.022458206862211227,
+            "state_norm_maximum": 0.11758602410554886,
+            "task": "selective"
+          }
+        },
+        "intervention_cells": {},
+        "intervention_evaluation_schedule_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "standard_evaluation_schedule_sha256": "f318021d6901aec7065813db23222a9e9224ae1f82875375ff89e5f68d1b8660"
+      },
+      "evaluation_batch_fingerprints": 49,
+      "evaluation_wall_seconds": 2.1648393169999984,
+      "initial_parameter_sha256": "945cb155898ba3da898e0134825baa1fa9b89996d8534f132583407513ca3c7f",
+      "loss_samples": [
+        {
+          "components": {
+            "query_to_value_position_address": 1.5258381366729736,
+            "retrieval": 4.405067443847656,
+            "reverse_binding": 4.423267364501953
+          },
+          "global_update": 1,
+          "gradient_norm": 6.610684394836426,
+          "learning_rate": 0.003,
+          "phase": 1,
+          "phase_update": 1,
+          "task": "mqar",
+          "total": 5.892343997955322
+        },
+        {
+          "components": {
+            "query_to_value_position_address": 2.1683192253112793,
+            "retrieval": 4.324428558349609,
+            "reverse_binding": 4.277429580688477
+          },
+          "global_update": 2,
+          "gradient_norm": 4.847195625305176,
+          "learning_rate": 0.003,
+          "phase": 2,
+          "phase_update": 1,
+          "task": "overwrite",
+          "total": 5.935865879058838
+        },
+        {
+          "components": {
+            "query_to_value_position_address": 2.1358227729797363,
+            "retrieval": 4.307407855987549,
+            "reverse_binding": 4.290719032287598
+          },
+          "global_update": 3,
+          "gradient_norm": 3.7679920196533203,
+          "learning_rate": 0.001,
+          "phase": 3,
+          "phase_update": 1,
+          "task": "overwrite",
+          "total": 5.914043426513672
+        },
+        {
+          "components": {
+            "query_to_value_position_address": 2.114814281463623,
+            "retrieval": 4.340055465698242,
+            "reverse_binding": 4.291431427001953
+          },
+          "global_update": 4,
+          "gradient_norm": 5.091902732849121,
+          "learning_rate": 0.001,
+          "phase": 4,
+          "phase_update": 1,
+          "task": "selective",
+          "total": 5.941617012023926
+        }
+      ],
+      "mean_synchronized_step_seconds": 0.11824983825000057,
+      "optimizer_partition": [
+        {
+          "learning_rate": 0.003,
+          "names": [
+            "blocks.0.input_projection.weight",
+            "blocks.0.ffn.gate_projection.weight",
+            "blocks.0.ffn.up_projection.weight",
+            "blocks.0.ffn.down_projection.weight",
+            "blocks.0.mixer.query_projection.weight",
+            "blocks.0.mixer.key_projection.weight",
+            "blocks.0.mixer.value_projection.weight",
+            "blocks.0.mixer.output_gate.weight",
+            "blocks.0.mixer.output_projection.weight"
+          ],
+          "optimizer": "torch.optim.Muon",
+          "parameters": 53248,
+          "role": "hidden_matrices",
+          "second_moment": null,
+          "tensors": 9,
+          "weight_decay": 0.01
+        },
+        {
+          "learning_rate": 0.003,
+          "names": [
+            "blocks.0.residual_scale",
+            "blocks.0.mixer.commit_projection.weight",
+            "blocks.0.mixer.commit_projection.bias",
+            "blocks.0.mixer.erase_projection.weight",
+            "blocks.0.mixer.erase_projection.bias",
+            "blocks.0.mixer.write_projection.weight",
+            "blocks.0.mixer.write_projection.bias",
+            "blocks.0.mixer.decay_projection.weight",
+            "blocks.0.mixer.decay_projection.bias"
+          ],
+          "optimizer": "ScalarSecondMomentAdamW",
+          "parameters": 8841,
+          "role": "memory_controls",
+          "second_moment": "one scalar per parameter tensor",
+          "tensors": 9,
+          "weight_decay": 0.0
+        },
+        {
+          "learning_rate": 0.003,
+          "names": [
+            "blocks.0.local_conv.conv.weight"
+          ],
+          "optimizer": "torch.optim.AdamW",
+          "parameters": 256,
+          "role": "non_matrix_decay",
+          "second_moment": "coordinatewise",
+          "tensors": 1,
+          "weight_decay": 0.01
+        },
+        {
+          "learning_rate": 0.003,
+          "names": [
+            "embedding.weight",
+            "blocks.0.mixer_norm.weight",
+            "blocks.0.ffn_norm.weight",
+            "blocks.0.mixer.output_norm.weight",
+            "blocks.0.local_conv.conv.bias",
+            "final_norm.weight"
+          ],
+          "optimizer": "torch.optim.AdamW",
+          "parameters": 4688,
+          "role": "embedding_norm_bias",
+          "second_moment": "coordinatewise",
+          "tensors": 6,
+          "weight_decay": 0.0
+        }
+      ],
+      "parameters": 67033,
+      "peak_cuda_memory_bytes": 446982144,
+      "phase_execution": [
+        {
+          "declared": {
+            "batch_size": 2,
+            "learning_rate": 0.003,
+            "length": 128,
+            "live_keys": 4,
+            "max_writes": 8,
+            "queries": 4,
+            "updates": 1
+          },
+          "optimizer_group_learning_rates": [
+            0.003
+          ],
+          "phase": 1,
+          "query_decisions": 8,
+          "task_batches": {
+            "mqar": 1,
+            "needle": 0,
+            "overwrite": 0,
+            "selective": 0
+          },
+          "tokens": 256
+        },
+        {
+          "declared": {
+            "batch_size": 2,
+            "learning_rate": 0.003,
+            "length": 256,
+            "live_keys": 8,
+            "max_writes": 16,
+            "queries": 8,
+            "updates": 1
+          },
+          "optimizer_group_learning_rates": [
+            0.003
+          ],
+          "phase": 2,
+          "query_decisions": 16,
+          "task_batches": {
+            "mqar": 0,
+            "needle": 0,
+            "overwrite": 1,
+            "selective": 0
+          },
+          "tokens": 512
+        },
+        {
+          "declared": {
+            "batch_size": 2,
+            "learning_rate": 0.001,
+            "length": 512,
+            "live_keys": 8,
+            "max_writes": 24,
+            "queries": 8,
+            "updates": 1
+          },
+          "optimizer_group_learning_rates": [
+            0.001
+          ],
+          "phase": 3,
+          "query_decisions": 16,
+          "task_batches": {
+            "mqar": 0,
+            "needle": 0,
+            "overwrite": 1,
+            "selective": 0
+          },
+          "tokens": 1024
+        },
+        {
+          "declared": {
+            "batch_size": 2,
+            "learning_rate": 0.001,
+            "length": 1024,
+            "live_keys": 8,
+            "max_writes": 24,
+            "queries": 8,
+            "updates": 1
+          },
+          "optimizer_group_learning_rates": [
+            0.001
+          ],
+          "phase": 4,
+          "query_decisions": 16,
+          "task_batches": {
+            "mqar": 0,
+            "needle": 0,
+            "overwrite": 0,
+            "selective": 1
+          },
+          "tokens": 2048
+        }
+      ],
+      "seed": 29,
+      "state_bytes_per_sequence_fp32": 4864,
+      "train_evaluation_hash_intersection": [],
+      "training_batch_fingerprints": 4,
+      "training_schedule_sha256": "da23eabf2c2c52a113770b4ac6a3f927f2081f241acc1984e690675ec9b096a6",
+      "training_tokens": 3840,
+      "training_tokens_per_second": 8118.404339550928,
+      "training_updates": 4,
+      "training_wall_seconds": 0.4729993530000023
+    },
+    {
+      "active_parameters": 67033,
+      "arm": "A",
+      "checkpoint": "/home/local/ai-culture-mind-checkpoints/g15be-475221e-smoke/g15be_a_seed29.pt",
+      "checkpoint_sha256": "5613fae89e4b54b841bcd8af5713532ef79f28b9d3c21ed0c47dd8cb69b98b56",
+      "evaluation": {
+        "boundary_audit": {
+          "chunk_logit_maximum_absolute_residual": 2.384185791015625e-07,
+          "chunk_state_maximum_absolute_residual": 8.940696716308594e-08,
+          "logit_bound": 0.0031196814961731434,
+          "masked_step_logit_maximum_absolute_residual": 2.384185791015625e-07,
+          "masked_step_state_maximum_absolute_residual": 8.940696716308594e-08,
+          "passed": true,
+          "predictions_equal": true,
+          "query_accuracy": 0.0,
+          "state_bound": 0.001953125
+        },
+        "boundary_batch_sha256": "aba38a5768dde606b6c83b2d5b082b6a1e98592c005bed029c222bf221aa0514",
+        "cells": {
+          "mqar:L1024": {
+            "bits_per_query": 6.218415231360365,
+            "effective_gate_statistics": {
+              "event_erase": {
+                "count": 64.0,
+                "maximum": 0.010645462200045586,
+                "mean": 0.01018823217600584,
+                "minimum": 0.009931227192282677,
+                "standard_deviation": 0.000249131264224117
+              },
+              "event_write": {
+                "count": 1024.0,
+                "maximum": 0.013216097839176655,
+                "mean": 0.010387676768004894,
+                "minimum": 0.008718688040971756,
+                "standard_deviation": 0.0006714556212763112
+              },
+              "non_event_erase": {
+                "count": 8128.0,
+                "maximum": 0.0106891430914402,
+                "mean": 0.010186606504785733,
+                "minimum": 0.009923522360622883,
+                "standard_deviation": 0.00024882083934944516
+              },
+              "non_event_write": {
+                "count": 130048.0,
+                "maximum": 0.013477344065904617,
+                "mean": 0.010382703908785122,
+                "minimum": 0.00863994937390089,
+                "standard_deviation": 0.0006637658712066826
+              }
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 1024,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.0625,
+            "query_decisions": 16,
+            "read_maximum_absolute": 0.023971278220415115,
+            "state_norm_maximum": 0.12126792222261429,
+            "task": "mqar"
+          },
+          "mqar:L128": {
+            "bits_per_query": 6.310930202704298,
+            "effective_gate_statistics": {
+              "event_erase": {
+                "count": 64.0,
+                "maximum": 0.010650938376784325,
+                "mean": 0.010186032392084599,
+                "minimum": 0.009931301698088646,
+                "standard_deviation": 0.0002459549972451959
+              },
+              "event_write": {
+                "count": 1024.0,
+                "maximum": 0.013216979801654816,
+                "mean": 0.010381714440882206,
+                "minimum": 0.00872106198221445,
+                "standard_deviation": 0.0006600546262950059
+              },
+              "non_event_erase": {
+                "count": 960.0,
+                "maximum": 0.010671659372746944,
+                "mean": 0.010185054937998454,
+                "minimum": 0.009926221333444118,
+                "standard_deviation": 0.0002468859310341549
+              },
+              "non_event_write": {
+                "count": 15360.0,
+                "maximum": 0.01330102514475584,
+                "mean": 0.01037928859392802,
+                "minimum": 0.008690223097801208,
+                "standard_deviation": 0.0006579154399693004
+              }
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 128,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.4375,
+            "query_decisions": 16,
+            "read_maximum_absolute": 0.013810038566589355,
+            "state_norm_maximum": 0.08560052514076233,
+            "task": "mqar"
+          },
+          "mqar:L2048": {
+            "bits_per_query": 6.204600896912461,
+            "effective_gate_statistics": {
+              "event_erase": {
+                "count": 64.0,
+                "maximum": 0.010641154833137989,
+                "mean": 0.010191076435148716,
+                "minimum": 0.009930168278515339,
+                "standard_deviation": 0.0002517674613835396
+              },
+              "event_write": {
+                "count": 1024.0,
+                "maximum": 0.01321117952466011,
+                "mean": 0.010393524542450905,
+                "minimum": 0.008726191706955433,
+                "standard_deviation": 0.0006803895994755563
+              },
+              "non_event_erase": {
+                "count": 16320.0,
+                "maximum": 0.010708988644182682,
+                "mean": 0.010186428182265337,
+                "minimum": 0.00992320291697979,
+                "standard_deviation": 0.00024849277682720386
+              },
+              "non_event_write": {
+                "count": 261120.0,
+                "maximum": 0.01358744129538536,
+                "mean": 0.010382246503642962,
+                "minimum": 0.00860758125782013,
+                "standard_deviation": 0.0006629443273858711
+              }
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 2048,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.125,
+            "query_decisions": 16,
+            "read_maximum_absolute": 0.023917056620121002,
+            "state_norm_maximum": 0.12216787040233612,
+            "task": "mqar"
+          },
+          "mqar:L512": {
+            "bits_per_query": 6.263766368462284,
+            "effective_gate_statistics": {
+              "event_erase": {
+                "count": 64.0,
+                "maximum": 0.010669696144759655,
+                "mean": 0.010188146494328976,
+                "minimum": 0.009928544983267784,
+                "standard_deviation": 0.0002479595988669746
+              },
+              "event_write": {
+                "count": 1024.0,
+                "maximum": 0.013323661871254444,
+                "mean": 0.010387062095105648,
+                "minimum": 0.008696133270859718,
+                "standard_deviation": 0.0006700402896553568
+              },
+              "non_event_erase": {
+                "count": 4032.0,
+                "maximum": 0.010675597935914993,
+                "mean": 0.010186040212237646,
+                "minimum": 0.009921048767864704,
+                "standard_deviation": 0.0002478868390023727
+              },
+              "non_event_write": {
+                "count": 64512.0,
+                "maximum": 0.013372790068387985,
+                "mean": 0.010381509387303912,
+                "minimum": 0.008666042238473892,
+                "standard_deviation": 0.00066181258313093
+              }
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 512,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.4375,
+            "query_decisions": 16,
+            "read_maximum_absolute": 0.02198786847293377,
+            "state_norm_maximum": 0.11787819117307663,
+            "task": "mqar"
+          },
+          "needle:L1024": {
+            "bits_per_query": 6.147169182465985,
+            "effective_gate_statistics": {
+              "event_erase": {
+                "count": 64.0,
+                "maximum": 0.010642645880579948,
+                "mean": 0.010186705854721367,
+                "minimum": 0.009934772737324238,
+                "standard_deviation": 0.0002459927023652761
+              },
+              "event_write": {
+                "count": 1024.0,
+                "maximum": 0.013196839950978756,
+                "mean": 0.010382513399235904,
+                "minimum": 0.008723890408873558,
+                "standard_deviation": 0.0006621720878665763
+              },
+              "non_event_erase": {
+                "count": 65472.0,
+                "maximum": 0.010704988613724709,
+                "mean": 0.010186508137692687,
+                "minimum": 0.009922069497406483,
+                "standard_deviation": 0.0002486351998517402
+              },
+              "non_event_write": {
+                "count": 1047552.0,
+                "maximum": 0.013516982086002827,
+                "mean": 0.010382444045177769,
+                "minimum": 0.008624043315649033,
+                "standard_deviation": 0.0006633131912955434
+              }
+            },
+            "evaluation_batch_fingerprints": 8,
+            "exact_episode_accuracy": 0.0,
+            "length": 1024,
+            "query_accuracy": 0.0,
+            "query_address_top1": 1.0,
+            "query_decisions": 16,
+            "read_maximum_absolute": 0.02473323978483677,
+            "state_norm_maximum": 0.12334845960140228,
+            "task": "needle"
+          },
+          "needle:L128": {
+            "bits_per_query": 6.163040343426884,
+            "effective_gate_statistics": {
+              "event_erase": {
+                "count": 64.0,
+                "maximum": 0.010656015016138554,
+                "mean": 0.010189739754423499,
+                "minimum": 0.00993208959698677,
+                "standard_deviation": 0.00025031759570189326
+              },
+              "event_write": {
+                "count": 1024.0,
+                "maximum": 0.013303622603416443,
+                "mean": 0.010390376322902739,
+                "minimum": 0.008693202398717403,
+                "standard_deviation": 0.0006752273328340329
+              },
+              "non_event_erase": {
+                "count": 8128.0,
+                "maximum": 0.010713191702961922,
+                "mean": 0.010186126030336215,
+                "minimum": 0.009922772645950317,
+                "standard_deviation": 0.0002481301834145105
+              },
+              "non_event_write": {
+                "count": 130048.0,
+                "maximum": 0.013583874329924583,
+                "mean": 0.010381630555851253,
+                "minimum": 0.008604065515100956,
+                "standard_deviation": 0.0006619597491968527
+              }
+            },
+            "evaluation_batch_fingerprints": 8,
+            "exact_episode_accuracy": 0.0,
+            "length": 128,
+            "query_accuracy": 0.0,
+            "query_address_top1": 1.0,
+            "query_decisions": 16,
+            "read_maximum_absolute": 0.015498632565140724,
+            "state_norm_maximum": 0.08907006680965424,
+            "task": "needle"
+          },
+          "needle:L2048": {
+            "bits_per_query": 6.121677655981124,
+            "effective_gate_statistics": {
+              "event_erase": {
+                "count": 64.0,
+                "maximum": 0.010638845153152943,
+                "mean": 0.010187258245423436,
+                "minimum": 0.009934105910360813,
+                "standard_deviation": 0.00024615656349560064
+              },
+              "event_write": {
+                "count": 1024.0,
+                "maximum": 0.013211838901042938,
+                "mean": 0.010384468478150666,
+                "minimum": 0.008729986846446991,
+                "standard_deviation": 0.0006642254701315829
+              },
+              "non_event_erase": {
+                "count": 131008.0,
+                "maximum": 0.010725701227784157,
+                "mean": 0.010186495755320941,
+                "minimum": 0.009921812452375889,
+                "standard_deviation": 0.0002486473914589608
+              },
+              "non_event_write": {
+                "count": 2096128.0,
+                "maximum": 0.013571848161518574,
+                "mean": 0.010382421434828289,
+                "minimum": 0.008616778068244457,
+                "standard_deviation": 0.0006633054249741311
+              }
+            },
+            "evaluation_batch_fingerprints": 8,
+            "exact_episode_accuracy": 0.0,
+            "length": 2048,
+            "query_accuracy": 0.0,
+            "query_address_top1": 1.0,
+            "query_decisions": 16,
+            "read_maximum_absolute": 0.025857102125883102,
+            "state_norm_maximum": 0.12492229789495468,
+            "task": "needle"
+          },
+          "needle:L512": {
+            "bits_per_query": 6.20147416632845,
+            "effective_gate_statistics": {
+              "event_erase": {
+                "count": 64.0,
+                "maximum": 0.010641129687428474,
+                "mean": 0.010189608437940478,
+                "minimum": 0.009931324981153011,
+                "standard_deviation": 0.00024977463986643563
+              },
+              "event_write": {
+                "count": 1024.0,
+                "maximum": 0.013205450028181076,
+                "mean": 0.010388739872723818,
+                "minimum": 0.008732220157980919,
+                "standard_deviation": 0.0006726570345974095
+              },
+              "non_event_erase": {
+                "count": 32704.0,
+                "maximum": 0.010699848644435406,
+                "mean": 0.010186413379564677,
+                "minimum": 0.00992267020046711,
+                "standard_deviation": 0.0002485299965344139
+              },
+              "non_event_write": {
+                "count": 523264.0,
+                "maximum": 0.013521510176360607,
+                "mean": 0.010382255579394137,
+                "minimum": 0.008629842661321163,
+                "standard_deviation": 0.0006630205356884401
+              }
+            },
+            "evaluation_batch_fingerprints": 8,
+            "exact_episode_accuracy": 0.0,
+            "length": 512,
+            "query_accuracy": 0.0,
+            "query_address_top1": 1.0,
+            "query_decisions": 16,
+            "read_maximum_absolute": 0.024024903774261475,
+            "state_norm_maximum": 0.12002065777778625,
+            "task": "needle"
+          },
+          "overwrite:L1024": {
+            "bits_per_query": 6.13495136296604,
+            "effective_gate_statistics": {
+              "event_erase": {
+                "count": 192.0,
+                "maximum": 0.010647566989064217,
+                "mean": 0.010188527405261993,
+                "minimum": 0.009931273758411407,
+                "standard_deviation": 0.0002487979926802503
+              },
+              "event_write": {
+                "count": 3072.0,
+                "maximum": 0.013237955048680305,
+                "mean": 0.010388418411215147,
+                "minimum": 0.008715375326573849,
+                "standard_deviation": 0.0006718543367949739
+              },
+              "non_event_erase": {
+                "count": 8000.0,
+                "maximum": 0.010693025775253773,
+                "mean": 0.010186162948608399,
+                "minimum": 0.009921560063958168,
+                "standard_deviation": 0.0002481107863459527
+              },
+              "non_event_write": {
+                "count": 128000.0,
+                "maximum": 0.013457818888127804,
+                "mean": 0.01038166618347168,
+                "minimum": 0.008639484643936157,
+                "standard_deviation": 0.0006619625977192391
+              }
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 1024,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.1875,
+            "query_decisions": 16,
+            "query_strata": {
+              "after_same_key_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 14
+              },
+              "after_unrelated_overwrite_only": {
+                "accuracy": null,
+                "query_decisions": 0
+              },
+              "before_any_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 2
+              }
+            },
+            "read_maximum_absolute": 0.02310299500823021,
+            "state_norm_maximum": 0.12128528207540512,
+            "task": "overwrite"
+          },
+          "overwrite:L128": {
+            "bits_per_query": 6.14825043739196,
+            "effective_gate_statistics": {
+              "event_erase": {
+                "count": 192.0,
+                "maximum": 0.010655018500983715,
+                "mean": 0.01018946742018064,
+                "minimum": 0.009929933585226536,
+                "standard_deviation": 0.00024995443397423365
+              },
+              "event_write": {
+                "count": 3072.0,
+                "maximum": 0.013233534060418606,
+                "mean": 0.010389412442843119,
+                "minimum": 0.00871538370847702,
+                "standard_deviation": 0.0006734985807726665
+              },
+              "non_event_erase": {
+                "count": 832.0,
+                "maximum": 0.010688260197639465,
+                "mean": 0.010184492056186382,
+                "minimum": 0.00992743019014597,
+                "standard_deviation": 0.0002466710916913116
+              },
+              "non_event_write": {
+                "count": 13312.0,
+                "maximum": 0.013386108912527561,
+                "mean": 0.010377842646378737,
+                "minimum": 0.008672257885336876,
+                "standard_deviation": 0.0006556585071737265
+              }
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 128,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.0625,
+            "query_decisions": 16,
+            "query_strata": {
+              "after_same_key_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 14
+              },
+              "after_unrelated_overwrite_only": {
+                "accuracy": null,
+                "query_decisions": 0
+              },
+              "before_any_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 2
+              }
+            },
+            "read_maximum_absolute": 0.016501937061548233,
+            "state_norm_maximum": 0.08451139181852341,
+            "task": "overwrite"
+          },
+          "overwrite:L2048": {
+            "bits_per_query": 6.17328423205155,
+            "effective_gate_statistics": {
+              "event_erase": {
+                "count": 192.0,
+                "maximum": 0.0106405820697546,
+                "mean": 0.01018879065910975,
+                "minimum": 0.009932362474501133,
+                "standard_deviation": 0.00024907159157683284
+              },
+              "event_write": {
+                "count": 3072.0,
+                "maximum": 0.013218024745583534,
+                "mean": 0.010388160745302836,
+                "minimum": 0.00871349312365055,
+                "standard_deviation": 0.0006714342017158069
+              },
+              "non_event_erase": {
+                "count": 16192.0,
+                "maximum": 0.010698335245251656,
+                "mean": 0.010186500700094954,
+                "minimum": 0.009921086952090263,
+                "standard_deviation": 0.0002486208056541988
+              },
+              "non_event_write": {
+                "count": 259072.0,
+                "maximum": 0.013493109494447708,
+                "mean": 0.010382415748867592,
+                "minimum": 0.008642077445983887,
+                "standard_deviation": 0.0006632180771069536
+              }
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 2048,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.0625,
+            "query_decisions": 16,
+            "query_strata": {
+              "after_same_key_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 14
+              },
+              "after_unrelated_overwrite_only": {
+                "accuracy": null,
+                "query_decisions": 0
+              },
+              "before_any_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 2
+              }
+            },
+            "read_maximum_absolute": 0.023268789052963257,
+            "state_norm_maximum": 0.1227811872959137,
+            "task": "overwrite"
+          },
+          "overwrite:L512": {
+            "bits_per_query": 6.3440960250272855,
+            "effective_gate_statistics": {
+              "event_erase": {
+                "count": 192.0,
+                "maximum": 0.010648139752447605,
+                "mean": 0.010190301885207495,
+                "minimum": 0.009929530322551727,
+                "standard_deviation": 0.00025142523664986225
+              },
+              "event_write": {
+                "count": 3072.0,
+                "maximum": 0.01325199007987976,
+                "mean": 0.010390356183052063,
+                "minimum": 0.00870854314416647,
+                "standard_deviation": 0.0006753724519246641
+              },
+              "non_event_erase": {
+                "count": 3904.0,
+                "maximum": 0.010686198249459267,
+                "mean": 0.01018550552305628,
+                "minimum": 0.009925082325935364,
+                "standard_deviation": 0.0002474692696600963
+              },
+              "non_event_write": {
+                "count": 62464.0,
+                "maximum": 0.013417885638773441,
+                "mean": 0.010380354083952357,
+                "minimum": 0.008653364144265652,
+                "standard_deviation": 0.0006598577952079056
+              }
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 512,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.125,
+            "query_decisions": 16,
+            "query_strata": {
+              "after_same_key_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 14
+              },
+              "after_unrelated_overwrite_only": {
+                "accuracy": null,
+                "query_decisions": 0
+              },
+              "before_any_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 2
+              }
+            },
+            "read_maximum_absolute": 0.023079626262187958,
+            "state_norm_maximum": 0.11757198721170425,
+            "task": "overwrite"
+          },
+          "overwrite_guard:L1024": {
+            "bits_per_query": 6.162780907598057,
+            "effective_gate_statistics": {
+              "event_erase": {
+                "count": 24.0,
+                "maximum": 0.010614641010761261,
+                "mean": 0.010182584325472513,
+                "minimum": 0.009938431903719902,
+                "standard_deviation": 0.0002398744996580433
+              },
+              "event_write": {
+                "count": 384.0,
+                "maximum": 0.013023167848587036,
+                "mean": 0.010375211636225382,
+                "minimum": 0.008790498599410057,
+                "standard_deviation": 0.0006486196194503515
+              },
+              "non_event_erase": {
+                "count": 8168.0,
+                "maximum": 0.010704594664275646,
+                "mean": 0.010186145868404137,
+                "minimum": 0.009922848083078861,
+                "standard_deviation": 0.00024818415141033076
+              },
+              "non_event_write": {
+                "count": 130688.0,
+                "maximum": 0.013510950841009617,
+                "mean": 0.010381721025816257,
+                "minimum": 0.008626298047602177,
+                "standard_deviation": 0.0006620617493151458
+              }
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 1024,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.25,
+            "query_decisions": 16,
+            "query_strata": {
+              "after_same_key_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 6
+              },
+              "after_unrelated_overwrite_only": {
+                "accuracy": 0.0,
+                "query_decisions": 6
+              },
+              "before_any_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 4
+              }
+            },
+            "read_maximum_absolute": 0.02393762767314911,
+            "state_norm_maximum": 0.12059897929430008,
+            "task": "overwrite_guard"
+          },
+          "overwrite_guard:L128": {
+            "bits_per_query": 6.290941691090419,
+            "effective_gate_statistics": {
+              "event_erase": {
+                "count": 24.0,
+                "maximum": 0.010669258423149586,
+                "mean": 0.010191122690836588,
+                "minimum": 0.00993372593075037,
+                "standard_deviation": 0.0002537215325067364
+              },
+              "event_write": {
+                "count": 384.0,
+                "maximum": 0.01331289578229189,
+                "mean": 0.01039330723385016,
+                "minimum": 0.008699084632098675,
+                "standard_deviation": 0.0006846723591075556
+              },
+              "non_event_erase": {
+                "count": 1000.0,
+                "maximum": 0.010664140805602074,
+                "mean": 0.010186656951904297,
+                "minimum": 0.009922988712787628,
+                "standard_deviation": 0.0002487585807077262
+              },
+              "non_event_write": {
+                "count": 16000.0,
+                "maximum": 0.013357862830162048,
+                "mean": 0.010382742881774902,
+                "minimum": 0.008674726821482182,
+                "standard_deviation": 0.0006636279386819876
+              }
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 128,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.3125,
+            "query_decisions": 16,
+            "query_strata": {
+              "after_same_key_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 6
+              },
+              "after_unrelated_overwrite_only": {
+                "accuracy": 0.0,
+                "query_decisions": 6
+              },
+              "before_any_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 4
+              }
+            },
+            "read_maximum_absolute": 0.0117357661947608,
+            "state_norm_maximum": 0.08774968981742859,
+            "task": "overwrite_guard"
+          },
+          "overwrite_guard:L2048": {
+            "bits_per_query": 6.051857601236373,
+            "effective_gate_statistics": {
+              "event_erase": {
+                "count": 24.0,
+                "maximum": 0.010636958293616772,
+                "mean": 0.010190626606345177,
+                "minimum": 0.00993424654006958,
+                "standard_deviation": 0.00025113200308973956
+              },
+              "event_write": {
+                "count": 384.0,
+                "maximum": 0.013173767365515232,
+                "mean": 0.01039068028330803,
+                "minimum": 0.008738962933421135,
+                "standard_deviation": 0.0006745873231241495
+              },
+              "non_event_erase": {
+                "count": 16360.0,
+                "maximum": 0.010698001831769943,
+                "mean": 0.010186513886766503,
+                "minimum": 0.009923063218593597,
+                "standard_deviation": 0.00024867545384797457
+              },
+              "non_event_write": {
+                "count": 261760.0,
+                "maximum": 0.013458432629704475,
+                "mean": 0.01038242983643175,
+                "minimum": 0.008638527244329453,
+                "standard_deviation": 0.0006632927448281397
+              }
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 2048,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.375,
+            "query_decisions": 16,
+            "query_strata": {
+              "after_same_key_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 6
+              },
+              "after_unrelated_overwrite_only": {
+                "accuracy": 0.0,
+                "query_decisions": 6
+              },
+              "before_any_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 4
+              }
+            },
+            "read_maximum_absolute": 0.02359890565276146,
+            "state_norm_maximum": 0.12390247732400894,
+            "task": "overwrite_guard"
+          },
+          "overwrite_guard:L512": {
+            "bits_per_query": 6.318134899914242,
+            "effective_gate_statistics": {
+              "event_erase": {
+                "count": 24.0,
+                "maximum": 0.010644308291375637,
+                "mean": 0.010193696866432825,
+                "minimum": 0.009931986220180988,
+                "standard_deviation": 0.0002577052297975319
+              },
+              "event_write": {
+                "count": 384.0,
+                "maximum": 0.013206164352595806,
+                "mean": 0.010398859158158302,
+                "minimum": 0.008732656948268414,
+                "standard_deviation": 0.0006894160254923925
+              },
+              "non_event_erase": {
+                "count": 4072.0,
+                "maximum": 0.010686778463423252,
+                "mean": 0.010186371494135829,
+                "minimum": 0.00992021057754755,
+                "standard_deviation": 0.00024843573543120967
+              },
+              "non_event_write": {
+                "count": 65152.0,
+                "maximum": 0.013405336067080498,
+                "mean": 0.010382090195691421,
+                "minimum": 0.008658323436975479,
+                "standard_deviation": 0.0006627918273446626
+              }
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 512,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.375,
+            "query_decisions": 16,
+            "query_strata": {
+              "after_same_key_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 6
+              },
+              "after_unrelated_overwrite_only": {
+                "accuracy": 0.0,
+                "query_decisions": 6
+              },
+              "before_any_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 4
+              }
+            },
+            "read_maximum_absolute": 0.021934200078248978,
+            "state_norm_maximum": 0.12045534700155258,
+            "task": "overwrite_guard"
+          },
+          "selective:L1024": {
+            "bits_per_query": 6.129921902324209,
+            "effective_gate_statistics": {
+              "event_erase": {
+                "count": 64.0,
+                "maximum": 0.010639563202857971,
+                "mean": 0.010185780934989452,
+                "minimum": 0.009928517043590546,
+                "standard_deviation": 0.0002495824213407041
+              },
+              "event_write": {
+                "count": 1024.0,
+                "maximum": 0.013133460655808449,
+                "mean": 0.010380325838923454,
+                "minimum": 0.008751198649406433,
+                "standard_deviation": 0.000661185712744288
+              },
+              "non_event_erase": {
+                "count": 8128.0,
+                "maximum": 0.01069199200719595,
+                "mean": 0.010186424405556026,
+                "minimum": 0.009923980571329594,
+                "standard_deviation": 0.00024845073619017343
+              },
+              "non_event_write": {
+                "count": 130048.0,
+                "maximum": 0.013441014103591442,
+                "mean": 0.010382286206943783,
+                "minimum": 0.008649172261357307,
+                "standard_deviation": 0.0006629963436634923
+              }
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 1024,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.0625,
+            "query_decisions": 16,
+            "read_maximum_absolute": 0.023883990943431854,
+            "state_norm_maximum": 0.12125435471534729,
+            "task": "selective"
+          },
+          "selective:L128": {
+            "bits_per_query": 6.296201608484407,
+            "effective_gate_statistics": {
+              "event_erase": {
+                "count": 64.0,
+                "maximum": 0.010655058547854424,
+                "mean": 0.010186326690018177,
+                "minimum": 0.009923315607011318,
+                "standard_deviation": 0.0002505270551050621
+              },
+              "event_write": {
+                "count": 1024.0,
+                "maximum": 0.013260253705084324,
+                "mean": 0.010381791740655899,
+                "minimum": 0.008695598691701889,
+                "standard_deviation": 0.0006646376686943763
+              },
+              "non_event_erase": {
+                "count": 960.0,
+                "maximum": 0.01067453995347023,
+                "mean": 0.010186519225438435,
+                "minimum": 0.009927205741405487,
+                "standard_deviation": 0.0002486003631826978
+              },
+              "non_event_write": {
+                "count": 15360.0,
+                "maximum": 0.013359816744923592,
+                "mean": 0.0103824516137441,
+                "minimum": 0.008675365708768368,
+                "standard_deviation": 0.0006628192709206072
+              }
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 128,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.1875,
+            "query_decisions": 16,
+            "read_maximum_absolute": 0.015052113682031631,
+            "state_norm_maximum": 0.08691713958978653,
+            "task": "selective"
+          },
+          "selective:L2048": {
+            "bits_per_query": 6.264282316414873,
+            "effective_gate_statistics": {
+              "event_erase": {
+                "count": 64.0,
+                "maximum": 0.010654658079147339,
+                "mean": 0.010188093408942223,
+                "minimum": 0.009923901408910751,
+                "standard_deviation": 0.00025280762528992994
+              },
+              "event_write": {
+                "count": 1024.0,
+                "maximum": 0.01321925688534975,
+                "mean": 0.01038631796836853,
+                "minimum": 0.00871133804321289,
+                "standard_deviation": 0.0006707486547167226
+              },
+              "non_event_erase": {
+                "count": 16320.0,
+                "maximum": 0.01070051547139883,
+                "mean": 0.01018664042154948,
+                "minimum": 0.009923391044139862,
+                "standard_deviation": 0.00024888988415093424
+              },
+              "non_event_write": {
+                "count": 261120.0,
+                "maximum": 0.013482068665325642,
+                "mean": 0.010382721470851524,
+                "minimum": 0.008636870421469212,
+                "standard_deviation": 0.0006638019775919728
+              }
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 2048,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.3125,
+            "query_decisions": 16,
+            "read_maximum_absolute": 0.02485738694667816,
+            "state_norm_maximum": 0.12308631092309952,
+            "task": "selective"
+          },
+          "selective:L512": {
+            "bits_per_query": 6.009975010237055,
+            "effective_gate_statistics": {
+              "event_erase": {
+                "count": 64.0,
+                "maximum": 0.010646958835422993,
+                "mean": 0.010185269638895988,
+                "minimum": 0.00992586463689804,
+                "standard_deviation": 0.00024814271794830337
+              },
+              "event_write": {
+                "count": 1024.0,
+                "maximum": 0.01319381594657898,
+                "mean": 0.010379479266703129,
+                "minimum": 0.008727965876460075,
+                "standard_deviation": 0.0006585086696469686
+              },
+              "non_event_erase": {
+                "count": 4032.0,
+                "maximum": 0.010714364238083363,
+                "mean": 0.010186649504162017,
+                "minimum": 0.009922369383275509,
+                "standard_deviation": 0.0002488486622290626
+              },
+              "non_event_write": {
+                "count": 64512.0,
+                "maximum": 0.01353543996810913,
+                "mean": 0.010382741216629271,
+                "minimum": 0.008627239614725113,
+                "standard_deviation": 0.0006637670483950008
+              }
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 512,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.1875,
+            "query_decisions": 16,
+            "read_maximum_absolute": 0.022481031715869904,
+            "state_norm_maximum": 0.11823943257331848,
+            "task": "selective"
+          }
+        },
+        "intervention_cells": {
+          "mqar:L1024": {
+            "bits_per_query": 6.148641869905323,
+            "effective_gate_statistics": {
+              "event_erase": {
+                "count": 64.0,
+                "maximum": 0.010628802701830864,
+                "mean": 0.010189192369580269,
+                "minimum": 0.009933753870427608,
+                "standard_deviation": 0.00024997433921903684
+              },
+              "event_write": {
+                "count": 1024.0,
+                "maximum": 0.013135900720953941,
+                "mean": 0.010388894006609917,
+                "minimum": 0.008742127567529678,
+                "standard_deviation": 0.0006729556272465114
+              },
+              "non_event_erase": {
+                "count": 8128.0,
+                "maximum": 0.010695265606045723,
+                "mean": 0.010186604627474087,
+                "minimum": 0.00992246437817812,
+                "standard_deviation": 0.00024883875093444985
+              },
+              "non_event_write": {
+                "count": 130048.0,
+                "maximum": 0.013484783470630646,
+                "mean": 0.010382618491105207,
+                "minimum": 0.008635359816253185,
+                "standard_deviation": 0.0006636215388389376
+              }
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "interventions": {
+              "erase_zero": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  }
+                }
+              },
+              "learned_reconstruction": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  }
+                }
+              },
+              "memory_zero": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  }
+                }
+              },
+              "non_event_only": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  }
+                }
+              },
+              "permuted_write_binding": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  }
+                }
+              },
+              "valid_event_edit_zero": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  }
+                }
+              },
+              "valid_event_only": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  }
+                }
+              }
+            },
+            "length": 1024,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.125,
+            "query_decisions": 16,
+            "read_maximum_absolute": 0.023574020713567734,
+            "reconstruction_maximum_absolute_logit_residual": 0.0,
+            "reconstruction_query_predictions_equal": true,
+            "state_norm_maximum": 0.12117248773574829,
+            "task": "mqar"
+          },
+          "mqar:L512": {
+            "bits_per_query": 6.217866262738811,
+            "effective_gate_statistics": {
+              "event_erase": {
+                "count": 64.0,
+                "maximum": 0.01066342182457447,
+                "mean": 0.010191036388278008,
+                "minimum": 0.009928526356816292,
+                "standard_deviation": 0.00025240508974811257
+              },
+              "event_write": {
+                "count": 1024.0,
+                "maximum": 0.013336913660168648,
+                "mean": 0.010391820222139359,
+                "minimum": 0.008678910322487354,
+                "standard_deviation": 0.0006789484679396646
+              },
+              "non_event_erase": {
+                "count": 4032.0,
+                "maximum": 0.010694439522922039,
+                "mean": 0.010186678833431669,
+                "minimum": 0.009925208985805511,
+                "standard_deviation": 0.0002490143272205924
+              },
+              "non_event_write": {
+                "count": 64512.0,
+                "maximum": 0.013407441787421703,
+                "mean": 0.010382790414113847,
+                "minimum": 0.008659837767481804,
+                "standard_deviation": 0.0006640553123978649
+              }
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "interventions": {
+              "erase_zero": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  }
+                }
+              },
+              "learned_reconstruction": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  }
+                }
+              },
+              "memory_zero": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  }
+                }
+              },
+              "non_event_only": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  }
+                }
+              },
+              "permuted_write_binding": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  }
+                }
+              },
+              "valid_event_edit_zero": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  }
+                }
+              },
+              "valid_event_only": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  }
+                }
+              }
+            },
+            "length": 512,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.3125,
+            "query_decisions": 16,
+            "read_maximum_absolute": 0.022668831050395966,
+            "reconstruction_maximum_absolute_logit_residual": 0.0,
+            "reconstruction_query_predictions_equal": true,
+            "state_norm_maximum": 0.11955103278160095,
+            "task": "mqar"
+          },
+          "overwrite:L1024": {
+            "bits_per_query": 6.170498113107573,
+            "effective_gate_statistics": {
+              "event_erase": {
+                "count": 192.0,
+                "maximum": 0.010638955980539322,
+                "mean": 0.010189512744545937,
+                "minimum": 0.009930898435413837,
+                "standard_deviation": 0.00024950360048097884
+              },
+              "event_write": {
+                "count": 3072.0,
+                "maximum": 0.01319056935608387,
+                "mean": 0.010388671110073725,
+                "minimum": 0.00873812846839428,
+                "standard_deviation": 0.0006716362523852171
+              },
+              "non_event_erase": {
+                "count": 8000.0,
+                "maximum": 0.01069718413054943,
+                "mean": 0.010186012268066407,
+                "minimum": 0.009922819212079048,
+                "standard_deviation": 0.00024802078544927685
+              },
+              "non_event_write": {
+                "count": 128000.0,
+                "maximum": 0.01345053967088461,
+                "mean": 0.010381422996520995,
+                "minimum": 0.008657406084239483,
+                "standard_deviation": 0.0006614936895310611
+              }
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "interventions": {
+              "erase_zero": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 14
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 2
+                  }
+                }
+              },
+              "learned_reconstruction": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 14
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 2
+                  }
+                }
+              },
+              "memory_zero": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 14
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 2
+                  }
+                }
+              },
+              "non_event_only": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 14
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 2
+                  }
+                }
+              },
+              "permuted_write_binding": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 14
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 2
+                  }
+                }
+              },
+              "valid_event_edit_zero": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 14
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 2
+                  }
+                }
+              },
+              "valid_event_only": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 14
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 2
+                  }
+                }
+              }
+            },
+            "length": 1024,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.0,
+            "query_decisions": 16,
+            "query_strata": {
+              "after_same_key_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 14
+              },
+              "after_unrelated_overwrite_only": {
+                "accuracy": null,
+                "query_decisions": 0
+              },
+              "before_any_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 2
+              }
+            },
+            "read_maximum_absolute": 0.022493571043014526,
+            "reconstruction_maximum_absolute_logit_residual": 0.0,
+            "reconstruction_query_predictions_equal": true,
+            "state_norm_maximum": 0.1206277534365654,
+            "task": "overwrite"
+          },
+          "overwrite:L512": {
+            "bits_per_query": 6.112822699244825,
+            "effective_gate_statistics": {
+              "event_erase": {
+                "count": 192.0,
+                "maximum": 0.010646175593137741,
+                "mean": 0.010187294334173203,
+                "minimum": 0.009933308698236942,
+                "standard_deviation": 0.00024723039609336755
+              },
+              "event_write": {
+                "count": 3072.0,
+                "maximum": 0.01322016492486,
+                "mean": 0.010385313381751379,
+                "minimum": 0.008721478283405304,
+                "standard_deviation": 0.0006669844462718203
+              },
+              "non_event_erase": {
+                "count": 3904.0,
+                "maximum": 0.010694590397179127,
+                "mean": 0.010185476209296555,
+                "minimum": 0.009925049729645252,
+                "standard_deviation": 0.00024741103164405273
+              },
+              "non_event_write": {
+                "count": 62464.0,
+                "maximum": 0.013435551896691322,
+                "mean": 0.010380214355030998,
+                "minimum": 0.008646126836538315,
+                "standard_deviation": 0.0006595048594498224
+              }
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "interventions": {
+              "erase_zero": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 14
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 2
+                  }
+                }
+              },
+              "learned_reconstruction": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 14
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 2
+                  }
+                }
+              },
+              "memory_zero": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 14
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 2
+                  }
+                }
+              },
+              "non_event_only": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 14
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 2
+                  }
+                }
+              },
+              "permuted_write_binding": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 14
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 2
+                  }
+                }
+              },
+              "valid_event_edit_zero": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 14
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 2
+                  }
+                }
+              },
+              "valid_event_only": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 14
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 2
+                  }
+                }
+              }
+            },
+            "length": 512,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.1875,
+            "query_decisions": 16,
+            "query_strata": {
+              "after_same_key_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 14
+              },
+              "after_unrelated_overwrite_only": {
+                "accuracy": null,
+                "query_decisions": 0
+              },
+              "before_any_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 2
+              }
+            },
+            "read_maximum_absolute": 0.02340060845017433,
+            "reconstruction_maximum_absolute_logit_residual": 0.0,
+            "reconstruction_query_predictions_equal": true,
+            "state_norm_maximum": 0.11680618673563004,
+            "task": "overwrite"
+          },
+          "selective:L1024": {
+            "bits_per_query": 6.192825588773186,
+            "effective_gate_statistics": {
+              "event_erase": {
+                "count": 64.0,
+                "maximum": 0.010658351704478264,
+                "mean": 0.010188920423388481,
+                "minimum": 0.009927439503371716,
+                "standard_deviation": 0.00025335195838511635
+              },
+              "event_write": {
+                "count": 1024.0,
+                "maximum": 0.01325204037129879,
+                "mean": 0.010387690737843513,
+                "minimum": 0.008705534972250462,
+                "standard_deviation": 0.0006730526492132666
+              },
+              "non_event_erase": {
+                "count": 8128.0,
+                "maximum": 0.010683557018637657,
+                "mean": 0.010186841168741542,
+                "minimum": 0.00992263201624155,
+                "standard_deviation": 0.000249057235083693
+              },
+              "non_event_write": {
+                "count": 130048.0,
+                "maximum": 0.013456135056912899,
+                "mean": 0.010383125365249754,
+                "minimum": 0.0086394427344203,
+                "standard_deviation": 0.0006644038389639844
+              }
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "interventions": {
+              "erase_zero": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  }
+                }
+              },
+              "learned_reconstruction": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  }
+                }
+              },
+              "memory_zero": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  }
+                }
+              },
+              "non_event_only": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  }
+                }
+              },
+              "permuted_write_binding": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  }
+                }
+              },
+              "valid_event_edit_zero": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  }
+                }
+              },
+              "valid_event_only": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  }
+                }
+              }
+            },
+            "length": 1024,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.25,
+            "query_decisions": 16,
+            "read_maximum_absolute": 0.023710690438747406,
+            "reconstruction_maximum_absolute_logit_residual": 0.0,
+            "reconstruction_query_predictions_equal": true,
+            "state_norm_maximum": 0.12263639271259308,
+            "task": "selective"
+          },
+          "selective:L512": {
+            "bits_per_query": 6.159938378344597,
+            "effective_gate_statistics": {
+              "event_erase": {
+                "count": 64.0,
+                "maximum": 0.010636085644364357,
+                "mean": 0.010184692218899727,
+                "minimum": 0.009928765706717968,
+                "standard_deviation": 0.00024828283848175197
+              },
+              "event_write": {
+                "count": 1024.0,
+                "maximum": 0.01308813039213419,
+                "mean": 0.010378861799836159,
+                "minimum": 0.008758986368775368,
+                "standard_deviation": 0.0006575059468763107
+              },
+              "non_event_erase": {
+                "count": 4032.0,
+                "maximum": 0.010690872557461262,
+                "mean": 0.010186500019497342,
+                "minimum": 0.00992507766932249,
+                "standard_deviation": 0.00024875993333744014
+              },
+              "non_event_write": {
+                "count": 64512.0,
+                "maximum": 0.013397468253970146,
+                "mean": 0.010382415756346687,
+                "minimum": 0.00866630394011736,
+                "standard_deviation": 0.0006632285981826951
+              }
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "interventions": {
+              "erase_zero": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  }
+                }
+              },
+              "learned_reconstruction": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  }
+                }
+              },
+              "memory_zero": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  }
+                }
+              },
+              "non_event_only": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  }
+                }
+              },
+              "permuted_write_binding": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  }
+                }
+              },
+              "valid_event_edit_zero": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  }
+                }
+              },
+              "valid_event_only": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  }
+                }
+              }
+            },
+            "length": 512,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.125,
+            "query_decisions": 16,
+            "read_maximum_absolute": 0.021799903362989426,
+            "reconstruction_maximum_absolute_logit_residual": 0.0,
+            "reconstruction_query_predictions_equal": true,
+            "state_norm_maximum": 0.11783105880022049,
+            "task": "selective"
+          }
+        },
+        "intervention_evaluation_schedule_sha256": "179b05918627966e106940e726abf28e0b5ba5e37efebf0a48de99ea8fe82ad4",
+        "standard_evaluation_schedule_sha256": "f318021d6901aec7065813db23222a9e9224ae1f82875375ff89e5f68d1b8660"
+      },
+      "evaluation_batch_fingerprints": 55,
+      "evaluation_wall_seconds": 2.6964782789999973,
+      "initial_parameter_sha256": "945cb155898ba3da898e0134825baa1fa9b89996d8534f132583407513ca3c7f",
+      "loss_samples": [
+        {
+          "components": {
+            "query_to_value_position_address": 1.5258381366729736,
+            "retrieval": 4.405067443847656,
+            "reverse_binding": 4.423267364501953
+          },
+          "global_update": 1,
+          "gradient_norm": 6.610684394836426,
+          "learning_rate": 0.003,
+          "phase": 1,
+          "phase_update": 1,
+          "task": "mqar",
+          "total": 5.892343997955322
+        },
+        {
+          "components": {
+            "query_to_value_position_address": 2.1683192253112793,
+            "retrieval": 4.324431419372559,
+            "reverse_binding": 4.277429580688477
+          },
+          "global_update": 2,
+          "gradient_norm": 4.847188949584961,
+          "learning_rate": 0.003,
+          "phase": 2,
+          "phase_update": 1,
+          "task": "overwrite",
+          "total": 5.935868740081787
+        },
+        {
+          "components": {
+            "query_to_value_position_address": 2.1358416080474854,
+            "retrieval": 4.307409286499023,
+            "reverse_binding": 4.290720462799072
+          },
+          "global_update": 3,
+          "gradient_norm": 3.768007516860962,
+          "learning_rate": 0.001,
+          "phase": 3,
+          "phase_update": 1,
+          "task": "overwrite",
+          "total": 5.9140496253967285
+        },
+        {
+          "components": {
+            "query_to_value_position_address": 2.1148557662963867,
+            "retrieval": 4.340059757232666,
+            "reverse_binding": 4.291446208953857
+          },
+          "global_update": 4,
+          "gradient_norm": 5.091951370239258,
+          "learning_rate": 0.001,
+          "phase": 4,
+          "phase_update": 1,
+          "task": "selective",
+          "total": 5.9416351318359375
+        }
+      ],
+      "mean_synchronized_step_seconds": 0.08101624324999968,
+      "optimizer_partition": [
+        {
+          "learning_rate": 0.003,
+          "names": [
+            "blocks.0.input_projection.weight",
+            "blocks.0.ffn.gate_projection.weight",
+            "blocks.0.ffn.up_projection.weight",
+            "blocks.0.ffn.down_projection.weight",
+            "blocks.0.mixer.query_projection.weight",
+            "blocks.0.mixer.key_projection.weight",
+            "blocks.0.mixer.value_projection.weight",
+            "blocks.0.mixer.output_gate.weight",
+            "blocks.0.mixer.output_projection.weight"
+          ],
+          "optimizer": "torch.optim.Muon",
+          "parameters": 53248,
+          "role": "hidden_matrices",
+          "second_moment": null,
+          "tensors": 9,
+          "weight_decay": 0.01
+        },
+        {
+          "learning_rate": 0.003,
+          "names": [
+            "blocks.0.residual_scale",
+            "blocks.0.mixer.commit_projection.weight",
+            "blocks.0.mixer.commit_projection.bias",
+            "blocks.0.mixer.erase_projection.weight",
+            "blocks.0.mixer.erase_projection.bias",
+            "blocks.0.mixer.write_projection.weight",
+            "blocks.0.mixer.write_projection.bias",
+            "blocks.0.mixer.decay_projection.weight",
+            "blocks.0.mixer.decay_projection.bias"
+          ],
+          "optimizer": "ScalarSecondMomentAdamW",
+          "parameters": 8841,
+          "role": "memory_controls",
+          "second_moment": "one scalar per parameter tensor",
+          "tensors": 9,
+          "weight_decay": 0.0
+        },
+        {
+          "learning_rate": 0.003,
+          "names": [
+            "blocks.0.local_conv.conv.weight"
+          ],
+          "optimizer": "torch.optim.AdamW",
+          "parameters": 256,
+          "role": "non_matrix_decay",
+          "second_moment": "coordinatewise",
+          "tensors": 1,
+          "weight_decay": 0.01
+        },
+        {
+          "learning_rate": 0.003,
+          "names": [
+            "embedding.weight",
+            "blocks.0.mixer_norm.weight",
+            "blocks.0.ffn_norm.weight",
+            "blocks.0.mixer.output_norm.weight",
+            "blocks.0.local_conv.conv.bias",
+            "final_norm.weight"
+          ],
+          "optimizer": "torch.optim.AdamW",
+          "parameters": 4688,
+          "role": "embedding_norm_bias",
+          "second_moment": "coordinatewise",
+          "tensors": 6,
+          "weight_decay": 0.0
+        }
+      ],
+      "parameters": 67033,
+      "peak_cuda_memory_bytes": 447227904,
+      "phase_execution": [
+        {
+          "declared": {
+            "batch_size": 2,
+            "learning_rate": 0.003,
+            "length": 128,
+            "live_keys": 4,
+            "max_writes": 8,
+            "queries": 4,
+            "updates": 1
+          },
+          "optimizer_group_learning_rates": [
+            0.003
+          ],
+          "phase": 1,
+          "query_decisions": 8,
+          "task_batches": {
+            "mqar": 1,
+            "needle": 0,
+            "overwrite": 0,
+            "selective": 0
+          },
+          "tokens": 256
+        },
+        {
+          "declared": {
+            "batch_size": 2,
+            "learning_rate": 0.003,
+            "length": 256,
+            "live_keys": 8,
+            "max_writes": 16,
+            "queries": 8,
+            "updates": 1
+          },
+          "optimizer_group_learning_rates": [
+            0.003
+          ],
+          "phase": 2,
+          "query_decisions": 16,
+          "task_batches": {
+            "mqar": 0,
+            "needle": 0,
+            "overwrite": 1,
+            "selective": 0
+          },
+          "tokens": 512
+        },
+        {
+          "declared": {
+            "batch_size": 2,
+            "learning_rate": 0.001,
+            "length": 512,
+            "live_keys": 8,
+            "max_writes": 24,
+            "queries": 8,
+            "updates": 1
+          },
+          "optimizer_group_learning_rates": [
+            0.001
+          ],
+          "phase": 3,
+          "query_decisions": 16,
+          "task_batches": {
+            "mqar": 0,
+            "needle": 0,
+            "overwrite": 1,
+            "selective": 0
+          },
+          "tokens": 1024
+        },
+        {
+          "declared": {
+            "batch_size": 2,
+            "learning_rate": 0.001,
+            "length": 1024,
+            "live_keys": 8,
+            "max_writes": 24,
+            "queries": 8,
+            "updates": 1
+          },
+          "optimizer_group_learning_rates": [
+            0.001
+          ],
+          "phase": 4,
+          "query_decisions": 16,
+          "task_batches": {
+            "mqar": 0,
+            "needle": 0,
+            "overwrite": 0,
+            "selective": 1
+          },
+          "tokens": 2048
+        }
+      ],
+      "seed": 29,
+      "state_bytes_per_sequence_fp32": 4864,
+      "train_evaluation_hash_intersection": [],
+      "training_batch_fingerprints": 4,
+      "training_schedule_sha256": "da23eabf2c2c52a113770b4ac6a3f927f2081f241acc1984e690675ec9b096a6",
+      "training_tokens": 3840,
+      "training_tokens_per_second": 11849.475629691135,
+      "training_updates": 4,
+      "training_wall_seconds": 0.3240649729999987
+    }
+  ],
+  "source_files": {
+    "SSM-Models/hybrid_memory_v1_4/G15BE_EFFECTIVE_EDIT_PROTOCOL_2026-08-26.md": "4d3554a07549ef168ac2aa07be33b7eb4eda68aac34247a710f8cef6853fafd6",
+    "SSM-Models/hybrid_memory_v1_4/g15b_interleaved_cohort.py": "5a8e5aa3b33e80d32fd758ea54f475c53c231730df197485f7f5d208cca622b1",
+    "SSM-Models/hybrid_memory_v1_4/g15b_interleaved_tasks.py": "234284b1d8e4ad9eb15c86f9cadb2e9f10d1c7bf6a3bcbb4c7534c4a5c225e9e",
+    "SSM-Models/hybrid_memory_v1_4/g15be_effective_edit_cohort.py": "ee741bb31829a0c4acc2fa482fdf1d635c5f7b116610f7e6a51b8ad30ba348cd",
+    "SSM-Models/hybrid_memory_v1_4/g15br2_collision_erase.py": "5a99fb0a650d2b98f2d6897bccc7ce5913c63e8efe75b083868f1c61f4dfcc9e",
+    "SSM-Models/hybrid_memory_v1_4/g15br3_logical_component.py": "820cc31d9602c07e095267f4f5256a79cad162a2c69278b72e5b0c4115797ef3",
+    "SSM-Models/hybrid_memory_v1_4/g15bt_transactional_cohort.py": "ab1f927c6a3f6f7febfa7fe095a63680b0477414e99a4873b5a69addb36c35d5",
+    "SSM-Models/hybrid_memory_v1_4/model.py": "23d2a8ae97ebf4c007768a08aae0722afdaf3f4cc5c1271a96dd1d9f1d1914b4",
+    "SSM-Models/hybrid_memory_v1_4/optimizers.py": "eaf429e03593e918f1f69727b22a0f087c638930f7ce81f80c284e8727258ffa",
+    "SSM-Models/hybrid_memory_v1_4/transactional_delta.py": "02acb58d56282cb842d9372ee6e5a608fdf83184b7d4d1116f6251e15a6b3cb2"
+  }
+}

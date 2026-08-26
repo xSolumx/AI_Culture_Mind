@@ -12,6 +12,9 @@ G15B-E training batch, metric, or checkpoint
 **Phase-1 result ledger:**
 [`G15BE_PHASE1_RESULTS.md`](G15BE_PHASE1_RESULTS.md)
 
+**Phase-1 execution smoke:**
+[`artifacts/g15be_phase1_smoke_sm75_2026-08-26.json`](artifacts/g15be_phase1_smoke_sm75_2026-08-26.json)
+
 **Status:** Phase 0 passed on exact clean SM75 and authorizes only the frozen
 Phase-1 constructed P/A learning screen. No G15B-E learning or model-quality
 result exists yet.
