@@ -85,9 +85,10 @@ C_t^{(j)}=U_t^{(j)}
 at the write event, followed by the untouched learned one-token tail.
 
 The one-token tail is frozen because R0 identified it prospectively as a strong
-structured continuation. Every write must have exactly one in-range following
-token; ownership conflicts fail closed. R3 does not claim that this convention
-captures the complete learned logical association.
+structured continuation. Every write owns its value-token injection and, when
+`t+1` exists, that following-token injection. A final-token write has no tail
+and is reported separately; ownership conflicts fail closed. R3 does not claim
+that this convention captures the complete learned logical association.
 
 ## Frozen interventions
 
@@ -136,6 +137,12 @@ state within `3.6e-7`, but downstream RMS normalization amplified maximum logit
 residual to `3.1e-4`. No quality result had run and no performance threshold
 was changed. The parity gate below therefore requires state residual at most
 `2e-6`, logit residual at most `5e-4`, and identical query predictions.
+
+**Fail-closed pre-metric quality amendment:** the first quality invocation
+stopped before evaluating a batch because one frozen schedule writes at its
+final token. The ownership convention now records that write's value injection
+without inventing an out-of-range tail. No quality metric or artifact was
+produced, and all performance gates remain unchanged.
 
 ## Integrity
 

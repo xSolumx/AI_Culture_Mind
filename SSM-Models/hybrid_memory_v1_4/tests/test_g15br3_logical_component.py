@@ -42,6 +42,28 @@ def test_constructed_guard_populates_every_causal_stratum() -> None:
     )
 
 
+def test_final_token_write_has_no_tail_and_still_owns_its_value() -> None:
+    batch = generate_interleaved_batch(
+        "mqar",
+        16,
+        128,
+        8,
+        24,
+        8,
+        seed=r3._stable_seed("g15b-eval", 2309, "mqar", 128, 3),
+    )
+    final_write = batch.write_positions.eq(127)
+    assert int(final_write.sum()) == 1
+    ownership, reset = r3.logical_component_ownership(batch)
+    matches = batch.write_keys[..., None].eq(batch.live_keys[:, None, :])
+    key_index = matches.to(torch.int64).argmax(-1) + 1
+    assert torch.equal(
+        ownership.gather(1, batch.write_positions)[final_write],
+        key_index[final_write],
+    )
+    assert int(reset.sum()) == int(batch.write_event_mask.sum())
+
+
 def test_decomposed_replays_match_monolithic_controls() -> None:
     model = build_model("I", 29, torch.device("cpu")).eval()
     batch = _batch()

@@ -108,17 +108,20 @@ def logical_component_ownership(
         raise RuntimeError("every write key must match exactly one live key")
     key_index = matches.to(torch.int64).argmax(dim=-1) + 1
     tail_positions = batch.write_positions + 1
-    if not bool((tail_positions < batch.length).all()):
-        raise RuntimeError("every logical write tail must remain in range")
-    positions = torch.cat((batch.write_positions, tail_positions), dim=1)
-    owners = torch.cat((key_index, key_index), dim=1)
+    valid_tail = tail_positions < batch.length
+    rows = torch.arange(batch.batch_size, device=batch.token_ids.device)[:, None]
+    rows = rows.expand_as(key_index)
     assignment_count = torch.zeros_like(batch.token_ids, dtype=torch.int64)
-    assignment_count.scatter_add_(1, positions, torch.ones_like(positions))
+    assignment_count.scatter_add_(
+        1, batch.write_positions, torch.ones_like(batch.write_positions)
+    )
+    assignment_count[rows[valid_tail], tail_positions[valid_tail]] += 1
     if bool((assignment_count > 1).any()):
         raise RuntimeError("logical write programs overlap")
 
     ownership = torch.zeros_like(batch.token_ids, dtype=torch.int64)
-    ownership.scatter_(1, positions, owners)
+    ownership.scatter_(1, batch.write_positions, key_index)
+    ownership[rows[valid_tail], tail_positions[valid_tail]] = key_index[valid_tail]
     components = batch.live_keys.shape[1] + 1
     if int(ownership.min()) < 0 or int(ownership.max()) >= components:
         raise RuntimeError("logical component owner is out of range")
@@ -130,9 +133,8 @@ def logical_component_ownership(
         dtype=torch.bool,
         device=batch.token_ids.device,
     )
-    rows = torch.arange(batch.batch_size, device=batch.token_ids.device)[:, None]
     reset_mask[
-        rows.expand_as(key_index).flatten(),
+        rows.flatten(),
         key_index.flatten(),
         batch.write_positions.flatten(),
     ] = True
@@ -319,6 +321,7 @@ def _new_integrity() -> dict[str, Any]:
         "erase_free_decomposition_maximum_absolute_state_residual": 0.0,
         "erase_free_decomposition_query_predictions_equal": True,
         "tail_role_counts": {name: 0 for name in ROLE_NAMES.values()},
+        "writes_without_in_range_tail": 0,
         "component_capacities": {},
         "preserved_controls": {
             name: {"bitwise_equal": True, "maximum_absolute_residual": 0.0}
@@ -537,7 +540,15 @@ def evaluate_checkpoint(
                 ownership, reset_mask = logical_component_ownership(batch)
                 if int(reset_mask.sum()) != int(batch.write_event_mask.sum()):
                     raise RuntimeError("valid-write reset mask lost an event")
-                tail_roles = batch.roles.gather(1, batch.write_positions + 1)
+                tail_positions = batch.write_positions + 1
+                valid_tail = tail_positions < batch.length
+                tail_rows = torch.arange(
+                    batch.batch_size, device=batch.token_ids.device
+                )[:, None].expand_as(tail_positions)
+                tail_roles = batch.roles[
+                    tail_rows[valid_tail], tail_positions[valid_tail]
+                ]
+                integrity["writes_without_in_range_tail"] += int((~valid_tail).sum())
                 for role, name in ROLE_NAMES.items():
                     integrity["tail_role_counts"][name] += int(
                         tail_roles.eq(role).sum()
