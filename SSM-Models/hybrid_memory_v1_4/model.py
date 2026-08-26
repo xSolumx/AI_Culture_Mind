@@ -21,6 +21,7 @@ from .selected_block import RouteMode, SelectedBlockConfig, SelectedBlockMemory
 from .spin_dirac_memory import SpinDiracConfig, SpinDiracMemory
 from .structured_memory import StructuredMemoryConfig, StructuredSpin8Memory
 from .transactional_delta import (
+    EffectiveEditGateMode,
     TransactionalControllerMode,
     TransactionalDeltaConfig,
     TransactionalDeltaMemory,
@@ -124,6 +125,7 @@ class HybridMemoryConfig:
     # the edit-control source changes.
     transactional_controller_mode: TransactionalControllerMode = "history"
     transactional_initial_commit_strength: float = 0.10
+    transactional_effective_edit_gate_mode: EffectiveEditGateMode = "product"
 
     # The Spin path uses a content-addressed 8_v -> 8_s+ matrix per head,
     # two-sided Spin(8) transport, and a fixed Clifford/triality readout.
@@ -300,6 +302,9 @@ class HybridMemoryConfig:
                 key_dim=self.gated_delta_key_dim,
                 value_dim=self.gated_delta_value_dim,
                 controller_mode=self.transactional_controller_mode,
+                effective_edit_gate_mode=(
+                    self.transactional_effective_edit_gate_mode
+                ),
                 normalize_values=self.gated_delta_normalize_values,
                 identity_value_path=self.gated_delta_identity_value_path,
                 identity_output_gate=self.gated_delta_identity_output_gate,
@@ -671,6 +676,9 @@ class HybridMemoryBlock(nn.Module):
                     key_dim=config.gated_delta_key_dim,
                     value_dim=config.gated_delta_value_dim,
                     controller_mode=config.transactional_controller_mode,
+                    effective_edit_gate_mode=(
+                        config.transactional_effective_edit_gate_mode
+                    ),
                     normalize_values=config.gated_delta_normalize_values,
                     identity_value_path=config.gated_delta_identity_value_path,
                     identity_output_gate=config.gated_delta_identity_output_gate,

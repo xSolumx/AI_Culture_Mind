@@ -9,6 +9,15 @@ G15B-E training batch, metric, or checkpoint
 **Status:** prospective identity-memory pivot; Phase 0 implementation
 qualification pending. No G15B-E learning or model-quality result exists yet.
 
+**Pre-execution numerical clarification:** the two algebraically equal initial
+effective gates are required to agree within `2e-8` in FP32 rather than be
+bit-identical across the product and sigmoid-of-sum evaluation graphs. This
+roundoff allowance was committed before Phase-0 execution and changes no
+learning or promotion gate. The FP32 parity bound is frozen as
+`128 * eps(float32) * sequence_length * max(1, reference_absmax)` separately
+for logits, recurrent state, and memory read. FP64 remains fixed at `1e-10`,
+and every compared prediction must be exact.
+
 ## Decision being tested
 
 G15B-T learned useful addresses and used its recurrent memory, but its primary
@@ -90,7 +99,8 @@ SM75 device. It must establish:
 
 1. exact P/A parameter-shape, active-parameter, initialization-hash, and state
    byte equality;
-2. exact equality of initial effective erase/write gates;
+2. algebraic equality and FP32 agreement within `2e-8` for the initial
+   effective erase/write gates;
 3. finite effective gates strictly inside `[0,1]` and transition spectral norm
    at most `1 + 1e-6`;
 4. FP64 recurrent/parallel, arbitrary-chunk, and token-step parity at absolute

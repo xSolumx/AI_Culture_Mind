@@ -5,11 +5,15 @@ readout controls always consume the full causal convolution view.  Edit
 controls consume either that full view (the matched F control) or a structurally
 computed strict-history view (the T arm).
 
-For unit key ``k`` and scalar commit/erase gates ``c,e in [0,1]``:
+For unit key ``k`` and effective erase/write gates ``beta,alpha in [0,1]``:
 
-``A = (I - c e k k^T) diag(r)``
-``B = k (c w v)^T``
+``A = (I - beta k k^T) diag(r)``
+``B = k (alpha v)^T``
 ``S_t = A_t S_{t-1} + B_t``.
+
+The historical product mode uses ``beta=c*e`` and ``alpha=c*w``. G15B-E's
+matched mode instead forms the effective gates by adding the corresponding
+logits. The shared logit is continuous and has no required binary semantics.
 
 The symmetric erase and bounded retention are nonexpansive.  The affine law is
 scan-compatible.  This module is semantic PyTorch code, not a fused-kernel or
@@ -29,6 +33,7 @@ from torch.nn import functional as F
 from .gated_delta import GatedDeltaScanMode, _affine_prefix_scan, _positive_integer
 
 TransactionalControllerMode = Literal["full", "history"]
+EffectiveEditGateMode = Literal["product", "logit_additive"]
 
 
 @dataclass(frozen=True)
@@ -40,6 +45,7 @@ class TransactionalDeltaConfig:
     key_dim: int | None = None
     value_dim: int | None = None
     controller_mode: TransactionalControllerMode = "history"
+    effective_edit_gate_mode: EffectiveEditGateMode = "product"
     normalize_values: bool = False
     identity_value_path: bool = False
     identity_output_gate: bool = False
@@ -62,6 +68,10 @@ class TransactionalDeltaConfig:
                 _positive_integer(name, value)
         if self.controller_mode not in ("full", "history"):
             raise ValueError("controller_mode must be 'full' or 'history'")
+        if self.effective_edit_gate_mode not in ("product", "logit_additive"):
+            raise ValueError(
+                "effective_edit_gate_mode must be 'product' or 'logit_additive'"
+            )
         for name in (
             "normalize_values",
             "identity_value_path",
@@ -110,12 +120,12 @@ class TransactionalDeltaConfig:
 
 
 class TransactionalDeltaMemory(nn.Module):
-    """Monolithic fast weights with an explicit learned commit decision."""
+    """Monolithic fast weights with bounded effective erase/write decisions."""
 
     memory_kind = "strict_history_transactional_fast_weight"
     supports_episode_writes = True
     claim_boundary = (
-        "Prospective G15B-T semantic recurrence; no learned-transaction, "
+        "Prospective G15B-T/G15B-E semantic recurrence; no learned-transaction, "
         "natural-text, fused-kernel, or model-promotion claim."
     )
 
@@ -274,15 +284,41 @@ class TransactionalDeltaMemory(nn.Module):
             value = F.normalize(
                 value, dim=-1, eps=self.config.norm_epsilon
             ) * math.sqrt(value_dim)
-        commit = torch.sigmoid(self.commit_projection(edit_inputs)).view(
+        event_logits = self.commit_projection(edit_inputs).view(
             batch, length, heads, 1
         )
-        erase = torch.sigmoid(self.erase_projection(edit_inputs)).view(
+        erase_logits = self.erase_projection(edit_inputs).view(
             batch, length, heads, 1
         )
-        write = torch.sigmoid(self.write_projection(edit_inputs)).view(
+        write_logits = self.write_projection(edit_inputs).view(
             batch, length, heads, value_dim
         )
+        commit = torch.sigmoid(event_logits)
+        if self.config.effective_edit_gate_mode == "product":
+            erase = torch.sigmoid(erase_logits)
+            write = torch.sigmoid(write_logits)
+        else:
+            initial_commit_logit = self._logit(
+                self.config.initial_commit_strength
+            )
+            erase_offset = (
+                self._logit(
+                    self.config.initial_commit_strength
+                    * self.config.initial_erase_strength
+                )
+                - initial_commit_logit
+                - self._logit(self.config.initial_erase_strength)
+            )
+            write_offset = (
+                self._logit(
+                    self.config.initial_commit_strength
+                    * self.config.initial_write_strength
+                )
+                - initial_commit_logit
+                - self._logit(self.config.initial_write_strength)
+            )
+            erase = torch.sigmoid(event_logits + erase_logits + erase_offset)
+            write = torch.sigmoid(event_logits + write_logits + write_offset)
         retention_unit = torch.sigmoid(self.decay_projection(edit_inputs)).view(
             batch, length, heads, key_dim
         )
@@ -305,12 +341,18 @@ class TransactionalDeltaMemory(nn.Module):
         eye = torch.eye(
             self.config.resolved_key_dim, dtype=key.dtype, device=key.device
         )
-        erase_direction = (commit * erase).sqrt() * key
+        if self.config.effective_edit_gate_mode == "product":
+            effective_erase = commit * erase
+            effective_write = commit * write
+        else:
+            effective_erase = erase
+            effective_write = write
+        erase_direction = effective_erase.sqrt() * key
         erase_operator = eye - erase_direction.unsqueeze(
             -1
         ) * erase_direction.unsqueeze(-2)
         transition = erase_operator @ torch.diag_embed(retention)
-        written_value = commit * write * value
+        written_value = effective_write * value
         injection = key.unsqueeze(-1) * written_value.unsqueeze(-2)
         transition = transition.transpose(1, 2)
         injection = injection.transpose(1, 2)
@@ -392,6 +434,7 @@ class TransactionalDeltaMemory(nn.Module):
         diagnostics: dict[str, torch.Tensor | str] = {
             "kind": "transactional_delta",
             "controller_mode": self.config.controller_mode,
+            "effective_edit_gate_mode": self.config.effective_edit_gate_mode,
             "scan_mode": scan_mode,
             "query_vector": query,
             "key_vector": key,
@@ -399,6 +442,16 @@ class TransactionalDeltaMemory(nn.Module):
             "commit_strength": commit,
             "erase_strength": erase,
             "write_strength": write,
+            "effective_erase_strength": (
+                commit * erase
+                if self.config.effective_edit_gate_mode == "product"
+                else erase
+            ),
+            "effective_write_strength": (
+                commit * write
+                if self.config.effective_edit_gate_mode == "product"
+                else write
+            ),
             "retention": retention,
             "read": read,
             "update": output,
@@ -410,6 +463,7 @@ class TransactionalDeltaMemory(nn.Module):
 
 
 __all__ = [
+    "EffectiveEditGateMode",
     "TransactionalControllerMode",
     "TransactionalDeltaConfig",
     "TransactionalDeltaMemory",

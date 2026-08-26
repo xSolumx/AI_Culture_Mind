@@ -10,7 +10,8 @@ import torch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from hybrid_memory_v1_4.g15bt_phase0_qualification import qualify
+from hybrid_memory_v1_4.g15be_phase0_qualification import qualify as qualify_g15be
+from hybrid_memory_v1_4.g15bt_phase0_qualification import qualify as qualify_g15bt
 from hybrid_memory_v1_4.model import (
     CausalDepthwiseConv1d,
     GatedDeltaState,
@@ -65,6 +66,11 @@ def test_config_rejects_invalid_controller_and_requires_history_cache() -> None:
         TransactionalDeltaConfig(8, initial_commit_strength=1.0)
     with pytest.raises(ValueError, match="initial_erase_strength"):
         TransactionalDeltaConfig(8, initial_erase_strength=0.0)
+    with pytest.raises(ValueError, match="effective_edit_gate_mode"):
+        TransactionalDeltaConfig(
+            8,
+            effective_edit_gate_mode="ratio",  # type: ignore[arg-type]
+        )
     with pytest.raises(ValueError, match="local convolution"):
         HybridMemoryConfig(
             model_dim=8,
@@ -98,6 +104,82 @@ def test_full_and_history_arms_are_exactly_parameter_and_state_matched() -> None
         3, torch.float32
     )
     assert full.state_dict().keys() == history.state_dict().keys()
+
+
+def test_product_and_additive_effective_edits_are_matched_at_initialization() -> None:
+    torch.manual_seed(2481)
+    product = TransactionalDeltaMemory(
+        TransactionalDeltaConfig(
+            12,
+            heads=3,
+            key_dim=4,
+            value_dim=4,
+            controller_mode="full",
+            effective_edit_gate_mode="product",
+        )
+    )
+    torch.manual_seed(2481)
+    additive = TransactionalDeltaMemory(
+        TransactionalDeltaConfig(
+            12,
+            heads=3,
+            key_dim=4,
+            value_dim=4,
+            controller_mode="full",
+            effective_edit_gate_mode="logit_additive",
+        )
+    )
+    assert product.state_dict().keys() == additive.state_dict().keys()
+    for name, tensor in product.state_dict().items():
+        assert torch.equal(tensor, additive.state_dict()[name]), name
+
+    inputs = torch.randn(2, 7, 12)
+    product_controls = product._controls(inputs, inputs)
+    additive_controls = additive._controls(inputs, inputs)
+    torch.testing.assert_close(
+        product_controls[3] * product_controls[4],
+        additive_controls[4],
+        rtol=0.0,
+        atol=2e-8,
+    )
+    torch.testing.assert_close(
+        product_controls[3] * product_controls[5],
+        additive_controls[5],
+        rtol=0.0,
+        atol=2e-8,
+    )
+
+
+@pytest.mark.parametrize("gate_mode", ("product", "logit_additive"))
+def test_effective_edit_gate_modes_remain_bounded_and_contracting(
+    gate_mode: str,
+) -> None:
+    torch.manual_seed(2482)
+    layer = TransactionalDeltaMemory(
+        TransactionalDeltaConfig(
+            12,
+            heads=3,
+            key_dim=4,
+            value_dim=4,
+            controller_mode="full",
+            effective_edit_gate_mode=gate_mode,  # type: ignore[arg-type]
+        )
+    ).double()
+    inputs = torch.randn(2, 11, 12, dtype=torch.float64)
+    controls = layer._controls(inputs, inputs)
+    transition, injection = layer._transitions(*controls[1:], None)
+    assert torch.isfinite(transition).all()
+    assert torch.isfinite(injection).all()
+    spectral_maximum = torch.linalg.matrix_norm(transition, ord=2).max().detach()
+    assert float(spectral_maximum) <= 1.0 + 1e-12
+    _, _, diagnostics = layer(
+        inputs, inputs, scan_mode="recurrent", return_diagnostics=True
+    )
+    assert diagnostics["effective_edit_gate_mode"] == gate_mode
+    for name in ("effective_erase_strength", "effective_write_strength"):
+        gate = diagnostics[name]
+        assert isinstance(gate, torch.Tensor)
+        assert bool(((gate > 0.0) & (gate < 1.0)).all())
 
 
 def test_strict_history_is_current_invariant_and_prior_sensitive() -> None:
@@ -324,10 +406,23 @@ def test_real_lm_loss_reaches_every_declared_transactional_path() -> None:
 
 
 def test_phase0_qualification_harness_passes_on_semantic_cpu_path() -> None:
-    report = qualify(torch.device("cpu"))
+    report = qualify_g15bt(torch.device("cpu"))
     assert report["passed"] is True
     assert report["matched_arms"]["passed"] is True
     assert report["causality_and_contraction"]["passed"] is True
     assert report["fp64_execution"]["passed"] is True
     assert report["fp32_execution"]["passed"] is True
     assert report["gradient_reach"]["passed"] is True
+
+
+def test_effective_edit_phase0_harness_passes_on_semantic_cpu_path() -> None:
+    report = qualify_g15be(torch.device("cpu"))
+    assert report["passed"] is True
+    assert report["matched_arms"]["passed"] is True
+    assert report["bounded_update"]["passed"] is True
+    assert all(
+        row["passed"]
+        for arm in report["execution"].values()
+        for row in arm.values()
+    )
+    assert all(row["passed"] for row in report["gradient_reach"].values())
