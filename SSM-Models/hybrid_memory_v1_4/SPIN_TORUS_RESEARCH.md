@@ -193,9 +193,14 @@ arm's absolute controller gate. Its collision-only erase label depends on
 unbounded earlier history that the token-local width-4 controller does not
 observe. Full Spin also trailed identity in all nine non-needle mean cells.
 G15B-R0 then rejects naive erase-equals-write delta because selected heads use
-a structured one-token write continuation. The next generic last-write-wins
-reference keeps identity transport and the learned write window, but anchors
-independent erase to every locally observable write event. Spin transport
+a structured one-token write continuation. G15B-R1 preserves that learned
+write window and anchors independent erase to every locally observable write
+event, but both erase arms still fail every non-needle gate and reduce
+overwrite by 9.7--11.5 points. Learned-key prototype overlap is high, so the
+symmetric erase operator is not an isolated-slot update. The last zero-update
+factorial restricts erase to true collisions while preserving the write tail;
+if that fails, move to dual/separate erase addresses or logical component
+memory. Spin transport
 requires a coherent moving-
 frame task, or co-transported keys and queries, before it is eligible again.
 

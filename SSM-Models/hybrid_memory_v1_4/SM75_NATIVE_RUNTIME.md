@@ -62,6 +62,18 @@ The one fixed natural-text loss is only an execution/finiteness probe.
 Different tokenizers and pretraining corpora make these losses ineligible for
 a model-quality ranking.
 
+## Bound G15B checkpoint diagnostics
+
+The G15B-R1 zero-update checkpoint diagnostic also ran on this exact SM75
+runtime from clean commit `dba3f9a`. It binds the completed G15B and G15B-R0
+artifact hashes, replays all baseline accuracy/episode/BPQ cells and ordinary
+model logits exactly, and records bitwise preservation of all non-erase
+controls. The run completed in 1,726.8 seconds and rejected erase at every
+valid write. See the
+[`result`](G15BR1_EVENT_ERASE_RESULTS.md) and
+[`artifact`](artifacts/g15br1_event_erase_sm75_2026-08-26.json), SHA-256
+`c015b128846e4b5c63d927778815a87728a7d613369163b1027ed3dd9f0b2912`.
+
 ## Reproduction
 
 Run [`native_sm75_probe.py`](native_sm75_probe.py) with an explicit backend,

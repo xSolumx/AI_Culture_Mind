@@ -119,11 +119,15 @@ write event while allowing a short learned write window; naive tied delta
 training is not authorized.
 
 The follow-on
-[`G15B-R1 event-erase protocol`](G15BR1_EVENT_ERASE_PROTOCOL_2026-08-26.md)
-preserves the learned write continuation bitwise and changes only erase at the
-locally observable write event. It also measures learned key-prototype cross-
-cosine before any fresh training. This is the final retained-checkpoint
-falsifier for the event-anchored erase route.
+[`G15B-R1 event-erase result`](G15BR1_EVENT_ERASE_RESULTS.md) also fails. It
+preserves the learned write continuation bitwise and changes only erase at
+every locally observable write event, yet both soft and unit erase lose all
+nine non-needle gates. Overwrite falls by 9.7--11.5 points rather than
+improving. Mean absolute off-diagonal learned-key cosine is `0.54822`, with a
+`0.999934` maximum, so symmetric rank-one erase is not an isolated-slot update
+in the retained representation. No event-erase training is authorized. The
+narrow next checkpoint factorial preserves the write tail and applies erase
+only on true collisions before testing dual addresses or component memory.
 
 In parallel, the frozen
 [`G16 SM75 shootout protocol`](G16_SM75_FRONTIER_SHOOTOUT_PROTOCOL_2026-08-25.md)

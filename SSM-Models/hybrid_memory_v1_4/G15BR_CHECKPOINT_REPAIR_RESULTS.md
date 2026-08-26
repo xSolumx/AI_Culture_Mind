@@ -128,6 +128,11 @@ erase with an all-valid-write event gate. If that cannot improve overwrite
 without damaging unique-key recall, investigate prototype orthogonality and
 head routing rather than train.
 
+That subsequent G15B-R1 intervention has now completed and failed. Both
+erase-at-every-write arms reduce overwrite and every other non-needle mean;
+learned-key prototype overlap is high. Event-erase training is not authorized.
+See [`G15BR1_EVENT_ERASE_RESULTS.md`](G15BR1_EVENT_ERASE_RESULTS.md).
+
 ## Claim boundary
 
 This is a completed exact-SM75, three-checkpoint, zero-update causal diagnostic.

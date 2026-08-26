@@ -173,9 +173,12 @@ representation.
   full-rank frame banks and center words, still under oracle edit timing. G15B
   fails the subsequent commissioned interleaved controller gate and blocks
   G15C/external-only. G15B-R0 rejects naive erase-equals-write delta because the
-  learned controllers use a structured one-token write continuation. The next
-  falsifier preserves that write window and anchors independent erase to every
-  locally observable write event. Generic transport remains identity by default;
+  learned controllers use a structured one-token write continuation. G15B-R1
+  preserves that continuation but rejects erase at every valid write: all nine
+  non-needle gates fail, overwrite drops 9.7--11.5 points, and learned-key
+  prototype overlap is high. Event-erase training remains blocked. The final
+  checkpoint factorial preserves the write tail and restricts oracle erase to
+  true collisions. Generic transport remains identity by default;
   Spin belongs in supplied/coherent-frame
   specialized tasks. Learned topology, full three-carrier triality utility,
   natural-text, and scaling remain open.
@@ -295,6 +298,8 @@ representation.
 - [G15B exact-SM75 quality artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g15b_interleaved_controller_sm75_2026-08-26.json)
 - [G15B-R0 checkpoint-repair result](../../SSM-Models/hybrid_memory_v1_4/G15BR_CHECKPOINT_REPAIR_RESULTS.md)
 - [G15B-R0 exact-SM75 artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g15br_checkpoint_repair_sm75_2026-08-26.json)
+- [G15B-R1 event-erase result](../../SSM-Models/hybrid_memory_v1_4/G15BR1_EVENT_ERASE_RESULTS.md)
+- [G15B-R1 exact-SM75 artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g15br1_event_erase_sm75_2026-08-26.json)
 - [G16 SM75 frontier-shootout protocol](../../SSM-Models/hybrid_memory_v1_4/G16_SM75_FRONTIER_SHOOTOUT_PROTOCOL_2026-08-25.md)
 - [G16 trained-frontier results](../../SSM-Models/hybrid_memory_v1_4/G16_SM75_FRONTIER_SHOOTOUT_RESULTS.md)
 - [G16 exact-SM75 runtime qualification artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g16_runtime_qualification_sm75_2026-08-25.json)

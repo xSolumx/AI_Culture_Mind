@@ -1192,10 +1192,16 @@ training is rejected. The next checkpoint falsifier must preserve the learned
 write tail and replace only erase with locally observable all-write-event
 timing. G15C remains blocked.
 
-That final checkpoint falsifier is frozen in
-[`G15B-R1`](G15BR1_EVENT_ERASE_PROTOCOL_2026-08-26.md). It changes no learned
-write, address, value, or decoder control and reports prototype cross-address
-cosine. It has no training or promotion authority.
+That checkpoint falsifier is completed in
+[`G15B-R1`](G15BR1_EVENT_ERASE_RESULTS.md), exact SM75 artifact SHA-256
+`c015b128846e4b5c63d927778815a87728a7d613369163b1027ed3dd9f0b2912`.
+Both event-erase arms fail all nine non-needle gates: overwrite drops by
+9.7--11.5 points, MQAR by 2.5--3.3, and selective copy by 5.4--5.9. Needle
+remains perfect. Mean absolute off-diagonal key-prototype cosine is `0.54822`
+and the maximum is `0.999934`; this is consistent with collateral symmetric
+erase but is not sole-cause attribution. Event-erase training is rejected. One
+zero-update factorial cell remains before an address-geometry pivot: preserve
+the learned write tail and restrict erase to true collision events.
 
 ## G16 one-seed trained-frontier result
 

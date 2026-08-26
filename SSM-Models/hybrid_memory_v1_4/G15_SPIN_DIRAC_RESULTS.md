@@ -337,10 +337,16 @@ read. See
 The subsequent G15B-R0 retained-checkpoint screen rejects the naive tied form
 of that repair. Learned heads use a structured one-token write continuation,
 so erase-equals-write makes that continuation destructive and exact atomic
-timing removes useful learned code. The refined candidate keeps write and erase
-independent: write may occupy a short learned window, while erase is anchored
-to every locally observable write event. See
-[`G15BR_CHECKPOINT_REPAIR_RESULTS.md`](G15BR_CHECKPOINT_REPAIR_RESULTS.md).
+timing removes useful learned code. G15B-R1 then keeps that write continuation
+bitwise intact and anchors independent erase to every locally observable write
+event. It also fails all nine non-needle gates, including a 9.7--11.5 point
+overwrite loss. Learned key prototypes have mean absolute off-diagonal cosine
+`0.54822` and maximum `0.999934`, making collateral symmetric erase plausible
+without proving sole cause. Event-erase training is rejected. The remaining
+factorial control keeps the learned write tail and restricts oracle erase to
+true collisions before any dual-address or logical-component pivot. See
+[`G15BR_CHECKPOINT_REPAIR_RESULTS.md`](G15BR_CHECKPOINT_REPAIR_RESULTS.md) and
+[`G15BR1_EVENT_ERASE_RESULTS.md`](G15BR1_EVENT_ERASE_RESULTS.md).
 
 The constrained `su3_torus` arm is an additional scientific ablation, not a
 replacement for the four frozen primary arms.

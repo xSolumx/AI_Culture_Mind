@@ -535,3 +535,16 @@ amplitude at exact event positions or unit erase at those positions. Learned
 prototype off-diagonal cosine is binding diagnostic evidence: a large value
 would explain collateral erasure of unrelated keys. See
 [`G15BR1_EVENT_ERASE_PROTOCOL_2026-08-26.md`](G15BR1_EVENT_ERASE_PROTOCOL_2026-08-26.md).
+
+G15B-R1 then completed from clean commit `dba3f9a` on exact SM75. All replay,
+parent-hash, local-decoder, model-forward, and bitwise preserved-control checks
+pass. Both erase-at-every-write arms lose all nine non-needle gates, including
+9.7--11.5 points on overwrite; needle remains perfect. Learned key prototypes
+are strongly nonorthogonal (mean absolute off-diagonal cosine `0.54822`,
+maximum `0.999934`), but the statistic is not monotone with damage across seeds
+and is not sole-cause proof. The artifact SHA-256 is
+`c015b128846e4b5c63d927778815a87728a7d613369163b1027ed3dd9f0b2912`.
+Do not train event-anchored erase. The remaining checkpoint-only factorial is
+collision-only erase with the learned write continuation preserved; R0 changed
+both timing and write, while R1 changed timing at first writes and overwrites.
+See [`G15BR1_EVENT_ERASE_RESULTS.md`](G15BR1_EVENT_ERASE_RESULTS.md).

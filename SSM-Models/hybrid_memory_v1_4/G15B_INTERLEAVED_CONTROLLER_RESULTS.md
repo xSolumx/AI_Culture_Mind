@@ -184,6 +184,14 @@ of the learned code. The refined next falsifier preserves the learned write
 window and anchors only erase to every locally observable write event. See
 [`G15BR_CHECKPOINT_REPAIR_RESULTS.md`](G15BR_CHECKPOINT_REPAIR_RESULTS.md).
 
+That G15B-R1 falsifier subsequently failed as well. Preserving the write tail
+while erasing at every valid write reduces overwrite by 9.7--11.5 points and
+fails all nine non-needle cells. Prototype overlap is high (mean absolute
+off-diagonal cosine `0.54822`, maximum `0.999934`), so scalar symmetric erase
+is not an isolated-slot update in the retained representation. No event-erase
+training is authorized. See
+[`G15BR1_EVENT_ERASE_RESULTS.md`](G15BR1_EVENT_ERASE_RESULTS.md).
+
 ## Claim boundary
 
 This is a completed, exact-SM75, three-seed commissioned-controller failure and
