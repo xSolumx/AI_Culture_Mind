@@ -155,7 +155,10 @@ The prospective
 [`G15B-R5 protocol`](G15BR5_CAUSAL_TAIL_SOURCE_PROTOCOL_2026-08-26.md) is now
 frozen before new metrics. It asks whether the necessary tail injection can be
 derived from the completed write transaction in the convolution history while
-leaving the current token in an exact residual background path.
+leaving the current token in an exact residual background path. Prospective
+review adds a bias-only control and requires the background-free history arm:
+the shared-background arm alone can still read current-token residual and
+cannot authorize training.
 
 In parallel, the frozen
 [`G16 SM75 shootout protocol`](G16_SM75_FRONTIER_SHOOTOUT_PROTOCOL_2026-08-25.md)

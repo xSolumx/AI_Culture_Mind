@@ -647,3 +647,12 @@ background so the no-reset sum reconstructs the original recurrence. Only a
 passing history-only arm can authorize a separately frozen pending-write/
 commit training screen. See
 [`G15BR5_CAUSAL_TAIL_SOURCE_PROTOCOL_2026-08-26.md`](G15BR5_CAUSAL_TAIL_SOURCE_PROTOCOL_2026-08-26.md).
+
+Prospective adversarial review, still before any R5 metric, identified two
+necessary restrictions. First, `BG+` can read the exact residual containing
+current-token and nonlinear interaction information, so it cannot establish
+clean history sufficiency by itself. Second, history/current sources both
+contain convolution bias. R5 now includes a bias-only arm, requires history to
+beat its matched bias control, and authorizes training only from a passing
+background-free history arm. It also labels the result as injection-source
+sufficiency conditional on the unchanged full-token transition.

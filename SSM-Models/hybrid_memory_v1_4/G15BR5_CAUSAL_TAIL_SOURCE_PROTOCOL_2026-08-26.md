@@ -1,7 +1,9 @@
 # G15B-R5 causal tail-source decomposition protocol
 
 **Frozen:** 2026-08-26, after sealing G15B-R4 and before evaluating any R5
-history-only or current-only intervention metric.
+history-only, current-only, or bias-only intervention metric. The bias control,
+background-free authorization rule, and full-transition claim boundary were
+added by prospective adversarial review before implementation metrics.
 
 **Entry evidence:**
 [`G15BR4_OWNERSHIP_BACKGROUND_RESULTS.md`](G15BR4_OWNERSHIP_BACKGROUND_RESULTS.md)
@@ -75,19 +77,25 @@ At an in-range position `s=t+1` immediately after a valid write-value token
 ```text
 I_full = Phi(silu(b + h_s + c_s))
 I_hist = Phi(silu(b + h_s))
-I_curr = Phi(silu(b + c_s)).
+I_curr = Phi(silu(b + c_s))
+I_bias = Phi(silu(b)).
 ```
 
 The ordinary frozen retention, transport, query, output gate, residual path,
 and decoder remain unchanged. The alternative source changes injection
 ownership only; it does not recompute the step transition from a masked token.
+In particular, every arm retains the full-token left/right transition from
+`silu(b+h_s+c_s)`. A history result is therefore injection-source sufficiency
+conditional on the ordinary full-token transition, not a wholly history-only
+tail update.
 
 ### Exact residual split
 
-For a source `S` in `{H,C}`, assign:
+For a source `S` in `{H,C,B}`, assign:
 
 - the full value-token injection at `t` to the written key component;
-- `I_hist` (`H`) or `I_curr` (`C`) at `t+1` to that key component;
+- `I_hist` (`H`), `I_curr` (`C`), or `I_bias` (`B`) at `t+1` to that key
+  component;
 - the exact residual `I_full - I_source` at `t+1` to background;
 - every other full injection to background.
 
@@ -100,6 +108,11 @@ injection exactly as R3/R4; the residual background is never reset.
 The signed residual is an attribution device, not a proposed standalone
 bounded outer-product write. A training architecture is not authorized merely
 because this algebra is valid.
+
+`H`, `C`, and `B` are not additive or exclusive sources: all include the
+convolution bias, and SiLU plus `Phi` are nonlinear. The bias arm is therefore
+a required non-authorizing control. A history claim must beat the
+background-matched bias arm rather than receiving credit for bias alone.
 
 ### Local timing
 
@@ -124,12 +137,20 @@ Score:
 1. `h_lww_bgplus`;
 2. `h_lww_bgminus`;
 3. `c_lww_bgplus`;
-4. `c_lww_bgminus`.
+4. `c_lww_bgminus`;
+5. `b_lww_bgplus`;
+6. `b_lww_bgminus`.
 
 Controls are `learned`, a shared `erase_free_no_reset_bgplus`,
-`h_no_reset_bgminus`, and `c_no_reset_bgminus`. The current-only arms are
-diagnostic controls and can never authorize training. Sealed R4 `V` and `VT`
-metrics remain bound references; they are not retrospectively changed.
+`h_no_reset_bgminus`, `c_no_reset_bgminus`, and `b_no_reset_bgminus`.
+Current-only and bias-only arms are diagnostic controls and can never authorize
+training. Sealed R4 `V` and `VT` metrics remain bound references; they are not
+retrospectively changed.
+
+`BG+` is residual-coupled: it continues to read `I_full-I_source`, which can
+contain current-token and nonlinear interaction information. Only a passing
+`h_lww_bgminus` arm demonstrates history-derived injection sufficiency without
+residual-background read support.
 
 ## Cohorts and query strata
 
@@ -151,19 +172,32 @@ populate all three strata at every length or adjudication fails closed.
   `erase_free_no_reset_bgplus` query metrics within `1e-12`;
 - verify the sealed R4 parent SHA, failed decision, and exact passing-arm lists;
 - ordinary model forward and the `learned` arm are bit-identical;
+- assert the exact one-block Spin-Dirac shell and depthwise convolution with
+  kernel four, stride/dilation one, and `groups == expanded width`;
 - reconstruct direct local-convolution preactivations from bias plus history
-  and current contributions;
+  and current contributions under both full-sequence and arbitrary-chunk
+  execution; include per-tap impulse tests so reversed kernel indexing fails;
 - prove `u_full = b + h + c` and the exact residual identity
   `I_source + (I_full - I_source) = I_full` under an independent FP64
   contract with residual at most `1e-10`;
-- perturb the current tail token while holding the preceding completed write
-  fixed and require history preactivation and `I_hist` to remain invariant;
-- require current-only source to depend only on convolution bias and current
-  expanded input, not the preceding transaction;
+- perturb the current expanded input while holding the preceding completed
+  write fixed and require history preactivation and `I_hist` to remain
+  invariant, while current preactivation and `I_curr` change nontrivially;
+- perturb the preceding completed-write expanded inputs while holding the
+  current expanded input fixed and require current preactivation and `I_curr`
+  to remain invariant, while history preactivation and `I_hist` change
+  nontrivially;
+- verify future-token perturbations cannot alter earlier tail masks or source
+  terms;
+- independently compute `I_bias` and fail closed if source perturbation effects
+  are numerically degenerate;
 - ownership is exclusive except for the explicit additive source/residual
   split, whose sum is complete at every token;
 - reset affects exactly one logical component per valid write and occurs before
   the current value injection;
+- verify value-token injection remains full and unchanged, and full left/right
+  transitions plus every non-injection control are bit-identical across all
+  source arms;
 - LWW and matching no-reset predictions are identical on no-overwrite tasks
   and at all prefixes before a first same-key overwrite;
 - for each source, `BG+ read - BG- read` equals the residual-background read at
@@ -176,8 +210,8 @@ populate all three strata at every length or adjudication fails closed.
   hashes, clean SM75 provenance, and zero updates must pass.
 
 Continue to report final-token writes, state expansion, source and residual
-norms by tail role, and wall time. R5 is not state-, parameter-, compute-, or
-time-matched.
+norms and source/bias cosines by filler, write-marker, and item-marker tail
+role, and wall time. R5 is not state-, parameter-, compute-, or time-matched.
 
 ## Frozen decision gates
 
@@ -210,21 +244,30 @@ conditions below.
 - needle accuracy is at least `0.999`;
 - every integrity gate passes.
 
-Fresh pending-write/commit training is warranted only if at least one
-history-only arm passes:
+In addition, a history arm must improve over its background-matched bias LWW
+arm by at least `0.05` in three-seed mean ordinary aggregate and post-same-key
+accuracy at every length, and by at least `0.02` within every seed on both
+measures. This source-specific gate does not apply to current- or bias-only
+controls.
 
-- if only `h_lww_bgplus` passes, screen a causal transaction path plus shared
-  residual/background channel;
-- if only `h_lww_bgminus` passes, screen a causal transaction path with a
-  protected transaction read;
-- if both pass, prefer `BG+` unless `BG-` has a separately reported material
-  overwrite or bits/query advantage;
+Fresh pending-write/commit training is warranted only if
+`h_lww_bgminus` passes every general and bias-separation gate:
+
+- if `h_lww_bgminus` passes and `h_lww_bgplus` fails, screen a causal
+  transaction path with a protected transaction read;
+- if both history arms pass, history injection is sufficient without
+  background, while the shared-residual arm is also viable; choose between
+  them only in a separately frozen matched training protocol;
+- if only `h_lww_bgplus` passes, record residual-coupled history evidence but
+  authorize no training;
 - if only current-only arms pass, reject this checkpoint-repair route because
   the apparent association depends on the new token;
-- if no history-only arm passes, stop retained-checkpoint tail repair and do
+- if the bias arm matches history or no background-free history arm passes,
+  stop retained-checkpoint tail repair and do
   not train the present shell;
-- current-only status cannot invalidate a passing history-only sufficiency
-  result, but it must be reported as non-unique attribution.
+- if both history- and current-only background-free arms pass, report
+  non-unique injection-source sufficiency; do not call history the unique
+  source.
 
 Any authorized training requires a separate frozen protocol, fresh seeds and
 data, learned non-oracle addresses, explicit occupancy/transaction state, and
@@ -250,8 +293,9 @@ integrity/support.
 ## Nonclaims
 
 R5 remains zero-update, retained-checkpoint, commissioned-task attribution with
-oracle logical-key components. A history-only pass would establish causal
-source sufficiency under the frozen shell; it would not establish autonomous
+oracle logical-key components. A background-free history pass would establish
+causal injection-source sufficiency conditional on the ordinary current-token-
+dependent transition; it would not establish a wholly history-only update or autonomous
 transaction learning, generic association, ordinary-text recall, longer-
 context scaling, efficiency, optimizer or tokenizer superiority, Spin
 benefit, G15C, or model-family promotion. A failure does not falsify GDN2,

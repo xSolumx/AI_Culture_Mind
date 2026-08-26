@@ -185,9 +185,9 @@ model with explicit transaction and occupancy state trained from scratch.
 That successor is now frozen as the
 [`G15B-R5 causal tail-source decomposition`](G15BR5_CAUSAL_TAIL_SOURCE_PROTOCOL_2026-08-26.md).
 It splits the width-four causal convolution into strict-history and
-current-token sources, preserves the exact full injection through a residual
-background channel, and permits training authorization only from a passing
-history-only arm.
+current-token sources plus a bias-only control, preserves the exact full
+injection through a residual background channel, and permits training
+authorization only from a bias-separated, background-free history pass.
 
 ## Nonclaims
 
