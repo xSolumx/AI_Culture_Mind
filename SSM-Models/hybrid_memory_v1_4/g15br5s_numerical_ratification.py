@@ -8,6 +8,7 @@ import json
 import math
 import os
 import platform
+import subprocess
 import time
 from pathlib import Path
 from typing import Any, Literal
@@ -205,13 +206,28 @@ def _audit_sealed_r5(report: dict[str, Any]) -> dict[str, Any]:
 
 
 def _audit_r5_source_hashes(report: dict[str, Any]) -> dict[str, Any]:
+    repository_root = ROOT.parents[1]
     rows: dict[str, Any] = {}
     for relative, expected in report["source_files"].items():
-        path = ROOT / relative
-        actual = _sha256(path) if path.is_file() else None
+        repository_relative = (ROOT / relative).relative_to(repository_root).as_posix()
+        try:
+            sealed_bytes = subprocess.check_output(
+                [
+                    "git",
+                    "-C",
+                    str(repository_root),
+                    "show",
+                    f"{EXPECTED_R5_COMMIT}:{repository_relative}",
+                ],
+                stderr=subprocess.DEVNULL,
+            )
+            actual = hashlib.sha256(sealed_bytes).hexdigest()
+        except (OSError, subprocess.CalledProcessError):
+            actual = None
         rows[relative] = {
             "expected_sha256": expected,
             "actual_sha256": actual,
+            "source_commit": EXPECTED_R5_COMMIT,
             "passed": actual == expected,
         }
     return {

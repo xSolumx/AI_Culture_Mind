@@ -20,6 +20,11 @@ from .gated_delta_v2 import GatedDeltaV2Config, GatedDeltaV2Memory
 from .selected_block import RouteMode, SelectedBlockConfig, SelectedBlockMemory
 from .spin_dirac_memory import SpinDiracConfig, SpinDiracMemory
 from .structured_memory import StructuredMemoryConfig, StructuredSpin8Memory
+from .transactional_delta import (
+    TransactionalControllerMode,
+    TransactionalDeltaConfig,
+    TransactionalDeltaMemory,
+)
 
 __version__ = "1.4.5"
 
@@ -27,6 +32,7 @@ LayerKind: TypeAlias = Literal[
     "attention",
     "gated_delta",
     "gated_delta_v2",
+    "transactional_delta",
     "delta_product",
     "spin_dirac",
     "selected_block",
@@ -42,6 +48,7 @@ _LAYER_KINDS = (
     "attention",
     "gated_delta",
     "gated_delta_v2",
+    "transactional_delta",
     "delta_product",
     "spin_dirac",
     "selected_block",
@@ -111,6 +118,12 @@ class HybridMemoryConfig:
     gated_delta_initial_retention: float = 0.9995
     gated_delta_initial_erase_strength: float = 0.10
     gated_delta_initial_write_strength: float = 0.10
+
+    # G15B-T adds a scalar commit decision and symmetric scalar erase.  Both
+    # controller modes compute full and strict-history convolution views; only
+    # the edit-control source changes.
+    transactional_controller_mode: TransactionalControllerMode = "history"
+    transactional_initial_commit_strength: float = 0.10
 
     # The Spin path uses a content-addressed 8_v -> 8_s+ matrix per head,
     # two-sided Spin(8) transport, and a fixed Clifford/triality readout.
@@ -273,6 +286,28 @@ class HybridMemoryConfig:
                 norm_epsilon=self.norm_epsilon,
                 minimum_retention=self.gated_delta_minimum_retention,
                 initial_retention=self.gated_delta_initial_retention,
+                initial_erase_strength=self.gated_delta_initial_erase_strength,
+                initial_write_strength=self.gated_delta_initial_write_strength,
+            )
+        if "transactional_delta" in self.layer_plan:
+            if not self.use_local_conv or self.conv_kernel < 2:
+                raise ValueError(
+                    "transactional_delta requires local convolution kernel >= 2"
+                )
+            TransactionalDeltaConfig(
+                model_dim=self.model_dim,
+                heads=self.gated_delta_heads,
+                key_dim=self.gated_delta_key_dim,
+                value_dim=self.gated_delta_value_dim,
+                controller_mode=self.transactional_controller_mode,
+                normalize_values=self.gated_delta_normalize_values,
+                identity_value_path=self.gated_delta_identity_value_path,
+                identity_output_gate=self.gated_delta_identity_output_gate,
+                tie_query_key=self.gated_delta_tie_query_key,
+                norm_epsilon=self.norm_epsilon,
+                minimum_retention=self.gated_delta_minimum_retention,
+                initial_retention=self.gated_delta_initial_retention,
+                initial_commit_strength=self.transactional_initial_commit_strength,
                 initial_erase_strength=self.gated_delta_initial_erase_strength,
                 initial_write_strength=self.gated_delta_initial_write_strength,
             )
@@ -479,6 +514,63 @@ class CausalDepthwiseConv1d(nn.Module):
             cache = torch.where(valid_mask[:, position, None, None], candidate, cache)
         return torch.cat(outputs, dim=-1).transpose(1, 2), cache.clone()
 
+    def full_and_strict_history(
+        self,
+        inputs: torch.Tensor,
+        cache: torch.Tensor | None = None,
+        valid_mask: torch.Tensor | None = None,
+    ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+        """Return full and structurally current-free convolution views.
+
+        Strict history evaluates only the first ``kernel_size - 1`` taps and
+        adds the shared bias exactly once.  It is not formed by subtracting a
+        rounded current contribution from the full result.
+        """
+
+        if self.conv.kernel_size[0] < 2:
+            raise RuntimeError("strict history requires convolution kernel >= 2")
+        full, next_cache = self(inputs, cache, valid_mask)
+        channels = inputs.transpose(1, 2)
+        if cache is None:
+            history_cache = channels.new_zeros(
+                channels.shape[0], channels.shape[1], self.cache_width
+            )
+        else:
+            history_cache = cache
+        history_weight = self.conv.weight[..., :-1]
+        if valid_mask is None:
+            combined = torch.cat((history_cache, channels), dim=-1)
+            strict_input = combined[..., :-1]
+            history = F.conv1d(
+                strict_input,
+                history_weight,
+                bias=self.conv.bias,
+                groups=self.width,
+            ).transpose(1, 2)
+            return full, history, next_cache
+
+        outputs = []
+        for position in range(inputs.shape[1]):
+            window = torch.cat(
+                (history_cache, channels[..., position : position + 1]), dim=-1
+            )
+            outputs.append(
+                F.conv1d(
+                    window[..., :-1],
+                    history_weight,
+                    bias=self.conv.bias,
+                    groups=self.width,
+                )
+            )
+            candidate = window[..., 1:]
+            history_cache = torch.where(
+                valid_mask[:, position, None, None], candidate, history_cache
+            )
+        history = torch.cat(outputs, dim=-1).transpose(1, 2)
+        if not torch.equal(history_cache, next_cache):
+            raise RuntimeError("full/history convolution cache paths diverged")
+        return full, history, next_cache
+
 
 class HybridMemoryBlock(nn.Module):
     """Uniform pre-norm, gated residual, and pre-norm SwiGLU layer shell."""
@@ -495,7 +587,13 @@ class HybridMemoryBlock(nn.Module):
         )
         residual_scale = (
             config.gated_delta_residual_scale_init
-            if kind in ("gated_delta", "gated_delta_v2", "spin_dirac")
+            if kind
+            in (
+                "gated_delta",
+                "gated_delta_v2",
+                "transactional_delta",
+                "spin_dirac",
+            )
             else -2.0
         )
         self.residual_scale = nn.Parameter(torch.tensor(residual_scale))
@@ -564,6 +662,31 @@ class HybridMemoryBlock(nn.Module):
                 CausalDepthwiseConv1d(config.model_dim, config.conv_kernel)
                 if config.use_local_conv
                 else None
+            )
+        elif kind == "transactional_delta":
+            self.mixer = TransactionalDeltaMemory(
+                TransactionalDeltaConfig(
+                    model_dim=config.model_dim,
+                    heads=config.gated_delta_heads,
+                    key_dim=config.gated_delta_key_dim,
+                    value_dim=config.gated_delta_value_dim,
+                    controller_mode=config.transactional_controller_mode,
+                    normalize_values=config.gated_delta_normalize_values,
+                    identity_value_path=config.gated_delta_identity_value_path,
+                    identity_output_gate=config.gated_delta_identity_output_gate,
+                    tie_query_key=config.gated_delta_tie_query_key,
+                    norm_epsilon=config.norm_epsilon,
+                    minimum_retention=config.gated_delta_minimum_retention,
+                    initial_retention=config.gated_delta_initial_retention,
+                    initial_commit_strength=(
+                        config.transactional_initial_commit_strength
+                    ),
+                    initial_erase_strength=(config.gated_delta_initial_erase_strength),
+                    initial_write_strength=(config.gated_delta_initial_write_strength),
+                )
+            )
+            self.local_conv = CausalDepthwiseConv1d(
+                config.model_dim, config.conv_kernel
             )
         elif kind == "spin_dirac":
             self.mixer = SpinDiracMemory(
@@ -703,10 +826,17 @@ class HybridMemoryBlock(nn.Module):
             self.config.model_dim,
             self.convolution_cache_width,
         )
-        if self.kind in ("gated_delta", "gated_delta_v2"):
+        if self.kind in (
+            "gated_delta",
+            "gated_delta_v2",
+            "transactional_delta",
+        ):
             if not isinstance(state, GatedDeltaState):
                 raise TypeError(f"{self.kind} layer state must be a GatedDeltaState")
-            assert isinstance(self.mixer, (GatedDeltaMemory, GatedDeltaV2Memory))
+            assert isinstance(
+                self.mixer,
+                (GatedDeltaMemory, GatedDeltaV2Memory, TransactionalDeltaMemory),
+            )
             memory_shape = (batch_size, *self.mixer.config.state_shape)
         elif self.kind == "spin_dirac":
             if not isinstance(state, SpinDiracState):
@@ -810,14 +940,45 @@ class HybridMemoryBlock(nn.Module):
                 None if state is None else state.convolution  # type: ignore[union-attr]
             )
             if self.local_conv is None:
-                mixed_value = value
+                mixed_value = F.silu(value)
+                history_value = mixed_value
                 next_convolution = self._empty_convolution(hidden)
+            elif self.kind == "transactional_delta":
+                full_value, strict_history, next_convolution = (
+                    self.local_conv.full_and_strict_history(
+                        value, previous_convolution, valid_mask
+                    )
+                )
+                mixed_value = F.silu(full_value)
+                history_value = F.silu(strict_history)
             else:
                 mixed_value, next_convolution = self.local_conv(
                     value, previous_convolution, valid_mask
                 )
-            mixed_value = F.silu(mixed_value)
-            if self.kind in ("gated_delta", "gated_delta_v2"):
+                mixed_value = F.silu(mixed_value)
+                history_value = mixed_value
+            if self.kind == "transactional_delta":
+                assert isinstance(self.mixer, TransactionalDeltaMemory)
+                memory = state.memory if isinstance(state, GatedDeltaState) else None
+                if return_diagnostics:
+                    update, next_memory, diagnostics = self.mixer(
+                        mixed_value,
+                        history_value,
+                        memory,
+                        valid_mask=valid_mask,
+                        scan_mode=delta_scan_mode,
+                        return_diagnostics=True,
+                    )
+                else:
+                    update, next_memory = self.mixer(
+                        mixed_value,
+                        history_value,
+                        memory,
+                        valid_mask=valid_mask,
+                        scan_mode=delta_scan_mode,
+                    )
+                next_state = GatedDeltaState(next_memory, next_convolution)
+            elif self.kind in ("gated_delta", "gated_delta_v2"):
                 assert isinstance(self.mixer, (GatedDeltaMemory, GatedDeltaV2Memory))
                 memory = state.memory if isinstance(state, GatedDeltaState) else None
                 if return_diagnostics:
@@ -956,6 +1117,7 @@ class HybridMemoryLM(nn.Module):
                 (
                     GatedDeltaMemory,
                     GatedDeltaV2Memory,
+                    TransactionalDeltaMemory,
                     SpinDiracMemory,
                     DeltaProductReferenceLayer,
                 ),
@@ -1256,9 +1418,18 @@ class HybridMemoryLM(nn.Module):
                     * block.convolution_cache_width
                     * element_size
                 )
-                if block.kind in ("gated_delta", "gated_delta_v2"):
+                if block.kind in (
+                    "gated_delta",
+                    "gated_delta_v2",
+                    "transactional_delta",
+                ):
                     assert isinstance(
-                        block.mixer, (GatedDeltaMemory, GatedDeltaV2Memory)
+                        block.mixer,
+                        (
+                            GatedDeltaMemory,
+                            GatedDeltaV2Memory,
+                            TransactionalDeltaMemory,
+                        ),
                     )
                     memory_capacity = (
                         batch_size * block.mixer.state_scalars * element_size
