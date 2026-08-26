@@ -208,6 +208,9 @@ predictions, finite nonzero gradients, and artifact SHA-256
 `41b49a6de9a74a563c4dc6f3c0571d8d9b0c7fd8fd95405232be22807d88936b`.
 This authorizes only the fresh-seed constructed P/A screen; it is not a
 learning result and does not reopen geometry.
+The fail-closed
+[`Phase-1 runner and result ledger`](G15BE_PHASE1_RESULTS.md) are now
+implemented; exact clean-SM75 smoke and quality execution remain pending.
 
 In parallel, the frozen
 [`G16 SM75 shootout protocol`](G16_SM75_FRONTIER_SHOOTOUT_PROTOCOL_2026-08-25.md)
@@ -350,6 +353,10 @@ remains label-supervised with 774,400 useful query labels per seed.
 - [`g15be_phase0_qualification.py`](g15be_phase0_qualification.py): clean-SM75
   matching, contraction, scan/chunk/step/mask, gradient, and provenance gate
   for the G15B-E pivot.
+- [`g15be_effective_edit_cohort.py`](g15be_effective_edit_cohort.py): matched
+  fresh-seed P/A curriculum, value-position objectives, effective-gate
+  statistics/interventions, numerical boundary audit, checkpoints, and frozen
+  fail-closed adjudication.
 - [`model.py`](model.py): eight-kind hybrid shell, local convolution caches,
   checkpointing, diagnostics, and exact cache-byte accounting.
 - [`fla_adapter.py`](fla_adapter.py): fail-closed semantic and optional official

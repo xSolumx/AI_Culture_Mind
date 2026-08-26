@@ -9,6 +9,9 @@ G15B-E training batch, metric, or checkpoint
 **Phase-0 result:**
 [`G15BE_PHASE0_QUALIFICATION_RESULTS.md`](G15BE_PHASE0_QUALIFICATION_RESULTS.md)
 
+**Phase-1 result ledger:**
+[`G15BE_PHASE1_RESULTS.md`](G15BE_PHASE1_RESULTS.md)
+
 **Status:** Phase 0 passed on exact clean SM75 and authorizes only the frozen
 Phase-1 constructed P/A learning screen. No G15B-E learning or model-quality
 result exists yet.
@@ -170,7 +173,8 @@ At L512 and L1024 for every A seed:
   least `0.50`;
 - retaining edits only at valid WRITE/SELECT value positions stays within
   `0.02` of learned execution;
-- retaining only ITEM/non-event edits cannot solve overwrite or selective copy.
+- retaining only ITEM/non-event edits has accuracy at most `0.50` on overwrite
+  and selective copy.
 
 Any failed provenance, schedule, fingerprint-disjointness, finite-output,
 checkpoint, exact-prediction, or Phase-0 numerical bound stops promotion.
