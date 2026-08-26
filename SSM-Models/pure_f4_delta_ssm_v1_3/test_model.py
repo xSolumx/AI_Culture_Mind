@@ -85,6 +85,40 @@ def test_full_model_parallel_recurrent_output_and_gradient_parity() -> None:
         )
 
 
+def test_activation_checkpointing_preserves_outputs_states_and_gradients() -> None:
+    torch.manual_seed(20260826)
+    common = {
+        "num_layers": 2,
+        "action_geometry": "canonical_product",
+        "primitive_backend": "reference",
+        "action_event_stride": 3,
+    }
+    reference = _tiny(activation_checkpointing=False, **common).double().train()
+    checkpointed = _tiny(activation_checkpointing=True, **common).double().train()
+    checkpointed.load_state_dict(reference.state_dict())
+    tokens = torch.randint(0, 256, (2, 5))
+    expected = reference(tokens)
+    actual = checkpointed(tokens)
+    torch.testing.assert_close(actual["logits"], expected["logits"])
+    for candidate_state, oracle_state in zip(
+        actual["states"], expected["states"], strict=True
+    ):
+        torch.testing.assert_close(candidate_state.memory, oracle_state.memory)
+        torch.testing.assert_close(
+            candidate_state.convolution, oracle_state.convolution
+        )
+        assert candidate_state.transport_phase == oracle_state.transport_phase
+    cotangent = torch.randn_like(actual["logits"])
+    expected_gradients = torch.autograd.grad(
+        expected["logits"], tuple(reference.parameters()), cotangent
+    )
+    actual_gradients = torch.autograd.grad(
+        actual["logits"], tuple(checkpointed.parameters()), cotangent
+    )
+    for candidate, oracle in zip(actual_gradients, expected_gradients, strict=True):
+        torch.testing.assert_close(candidate, oracle, rtol=2e-12, atol=2e-12)
+
+
 def test_every_action_tier_and_update_parameterization_executes() -> None:
     tokens = torch.randint(0, 256, (1, 2))
     for algebra in ("identity", "g2", "spin7", "spin8", "spin9", "f4", "e6"):

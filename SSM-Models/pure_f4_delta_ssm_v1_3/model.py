@@ -17,6 +17,7 @@ from typing import Any, Literal
 import torch
 from torch import nn
 from torch.nn import functional as F
+from torch.utils.checkpoint import checkpoint
 
 from .action import IdentityAction, build_exceptional_action
 from .albert import (
@@ -100,6 +101,7 @@ class ExceptionalDeltaConfig:
     noncompact_stability: Literal["none", "frobenius_bound"] = "frobenius_bound"
     dropout: float = 0.0
     tie_embeddings: bool = True
+    activation_checkpointing: bool = False
 
     def __post_init__(self) -> None:
         dimensions = (
@@ -803,12 +805,45 @@ class ExceptionalDeltaLM(nn.Module):
         hidden = self.embedding(token_ids)
         next_states = []
         for block, state in zip(self.blocks, states, strict=True):
-            hidden, next_state = block(
-                hidden,
-                state,
-                scan_mode=scan_mode,
-                valid_mask=valid_mask,
-            )
+            if self.config.activation_checkpointing and self.training and state is None:
+                def checkpointed_block(
+                    block_input: torch.Tensor,
+                    current_block: ExceptionalDeltaBlock = block,
+                ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+                    block_output, block_state = current_block(
+                        block_input,
+                        None,
+                        scan_mode=scan_mode,
+                        valid_mask=valid_mask,
+                    )
+                    return (
+                        block_output,
+                        block_state.memory,
+                        block_state.convolution,
+                    )
+
+                hidden, memory, convolution = checkpoint(
+                    checkpointed_block,
+                    hidden,
+                    use_reentrant=False,
+                )
+                transport_phase = (
+                    token_ids.shape[1] % block.config.action_event_stride
+                    if isinstance(block.action, PrimitiveExceptionalAction)
+                    else 0
+                )
+                next_state = ExceptionalDeltaState(
+                    memory,
+                    convolution,
+                    transport_phase,
+                )
+            else:
+                hidden, next_state = block(
+                    hidden,
+                    state,
+                    scan_mode=scan_mode,
+                    valid_mask=valid_mask,
+                )
             next_states.append(next_state)
         logits = self.lm_head(self.final_norm(hidden))
         return {"logits": logits, "states": next_states}

@@ -225,6 +225,8 @@ def _benchmark_command(args: argparse.Namespace, length: int) -> list[str]:
     ]
     if args.require_sm75:
         command.append("--require-sm75")
+    if args.activation_checkpointing:
+        command.append("--activation-checkpointing")
     return command
 
 
@@ -266,6 +268,7 @@ def _run(args: argparse.Namespace) -> dict[str, object]:
             "update_rank": args.update_rank,
             "d_conv": args.d_conv,
             "learning_rate": args.learning_rate,
+            "activation_checkpointing": args.activation_checkpointing,
             "seed": args.seed,
         },
         "environment": {
@@ -301,6 +304,7 @@ def main() -> None:
     parser.add_argument("--update-rank", type=int, default=2)
     parser.add_argument("--d-conv", type=int, default=4)
     parser.add_argument("--learning-rate", type=float, default=3e-3)
+    parser.add_argument("--activation-checkpointing", action="store_true")
     parser.add_argument("--seed", type=int, default=20260826)
     parser.add_argument("--device", choices=("cuda",), default="cuda")
     parser.add_argument("--require-sm75", action="store_true")

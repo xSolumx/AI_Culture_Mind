@@ -97,6 +97,7 @@ def test_child_command_propagates_mamba_width() -> None:
         seed = 17
         device = "cuda"
         require_sm75 = True
+        activation_checkpointing = False
 
     command = _child_command(Args(), "mamba2_official", 0)
     index = command.index("--mamba-d-model")

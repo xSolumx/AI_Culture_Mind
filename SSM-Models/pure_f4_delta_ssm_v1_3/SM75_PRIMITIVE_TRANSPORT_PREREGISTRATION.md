@@ -152,6 +152,13 @@ in backward.  Forward remains the same exact dense contraction.  The repair
 must preserve output/gradient tests and is judged by a new clean-revision
 representative rerun against the untouched official Mamba-2 arm.
 
+If that exact reverse rule still fails the `1.25x` Mamba memory threshold, the
+second frozen repair enables non-reentrant per-block activation checkpointing
+for training only.  Recurrent state outputs remain explicit, each block is
+recomputed during backward, and streaming/inference execution is unchanged.
+The checkpointed arm must still satisfy the same complete-step time and memory
+thresholds; no memory-only pass is allowed.
+
 ### Mamba-competitive systems promotion
 
 This stronger gate requires both complete training-step time and peak CUDA

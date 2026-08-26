@@ -42,6 +42,7 @@ class TrainingConfig:
     memory_width: int = 4
     update_rank: int = 2
     d_conv: int = 4
+    activation_checkpointing: bool = False
     seed: int = 17
 
 
@@ -160,6 +161,7 @@ def _build_model(name: str, config: TrainingConfig) -> torch.nn.Module:
             memory_width=config.memory_width,
             update_rank=config.update_rank,
             d_conv=config.d_conv,
+            activation_checkpointing=config.activation_checkpointing,
             channel_mixer="jordan",
             readout_mode="albert_invariants",
             **variant,
