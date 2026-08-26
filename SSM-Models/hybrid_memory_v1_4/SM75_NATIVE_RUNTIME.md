@@ -93,6 +93,16 @@ predictions are identical. See the
 [`artifact`](artifacts/g15br3_logical_component_sm75_2026-08-26.json), SHA-256
 `0fe54b8ce38868d67a7ecb0cb888f2279d8809c2bbaf3ccbda678326ff808959`.
 
+G15B-R4 completed on the same runtime from clean commit `d014259` in 5,031.34
+seconds. It replays the sealed R3 metrics exactly, passes all runtime and
+provenance gates, and verifies monolithic, component, recurrent, and parallel
+FP64 algebra to maximum residual `4.44e-15`. Only the value-plus-tail arms
+pass; neither value-only arm authorizes training. See the
+[`result`](G15BR4_OWNERSHIP_BACKGROUND_RESULTS.md) and
+[`artifact`](artifacts/g15br4_ownership_background_sm75_2026-08-26.json),
+SHA-256
+`921d45e3c492e172fae62064120e9e051dca2965bacc44891268b135d8cef26e`.
+
 The native WSL environment also exposes CUDA-only `causal_conv1d`,
 `mamba_ssm`, and FLA Hub kernels to Transformers. The baseline registry now
 dispatches by the actual input tensor: CUDA keeps the resolved native kernel,

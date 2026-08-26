@@ -1237,6 +1237,33 @@ retrospectively waived. The nine-times-state, oracle-ownership construction is
 mechanism evidence, not a trainable or matched architecture. Do not train yet;
 freeze an ownership/background-coupling factorial first.
 
+## G15B-R4 ownership/background result
+
+The prospective zero-update
+[`G15B-R4`](G15BR4_OWNERSHIP_BACKGROUND_RESULTS.md) factorial completed from
+clean commit `d014259` on exact SM75 in 5,031.34 seconds; artifact SHA-256
+`921d45e3c492e172fae62064120e9e051dca2965bacc44891268b135d8cef26e`.
+It crosses value-only versus value-plus-`t+1` component ownership with
+background included versus excluded only at locally observable query
+positions.
+
+Only `vt_lww_bgplus` and `vt_lww_bgminus` pass. Ordinary overwrite for the
+value-only `BG+` arm is `0.702962`, `0.764486`, and `0.753418` at lengths 128,
+512, and 1,024, below learned erase at `0.767822`, `0.832764`, and `0.828776`.
+Its constructed-guard accuracy is only `0.938965`--`0.941813`, and seed 2311
+collapses. The value-plus-tail arms reach `0.895752`--`0.954346` with
+background and `0.899821`--`0.954264` without it, while remaining essentially
+perfect on the guard.
+
+Excluding background barely changes `VT` but destroys `V`, because under
+value-only ownership the necessary learned continuation remains in the
+background component. R3 replays exactly, every integrity gate passes, and
+the FP64 component/scan contract has maximum residual `4.44e-15`. The result
+is decisive but negative for training authorization: the useful association
+is a seed-sensitive two-token write transaction whose tail can consume the
+next event marker. No value-only arm passes, so fresh explicit-slot training
+remains blocked pending a causal, non-overlapping pending-write/commit law.
+
 ## G16 one-seed trained-frontier result
 
 The clean exact-SM75 cohort from commit `5796a851df02` completed all four real

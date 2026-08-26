@@ -261,8 +261,13 @@ new matched natural-data and complete-step hardware evidence.
   post-same-key-overwrite recall falls 10.3--12.1 points. G15B-R3's oracle
   component reset repairs ordinary overwrite by 12.2--12.8 points and reaches
   1.0 on its guard, but fails the frozen saturated-baseline improvement and
-  FP32 replay-tolerance gates. Ownership/coupling diagnosis, not more generic
-  transport geometry, is the next move.
+  FP32 replay-tolerance gates. G15B-R4's exact-replay factorial then passes only
+  the value-plus-tail arms. Value-only overwrite remains below learned at every
+  length and collapses for seed 2311; excluding background harms value-only but
+  not value-plus-tail behavior. This localizes the retained association to
+  ambiguous `t+1` ownership rather than shared background and keeps fresh
+  explicit-slot training blocked; more generic transport geometry is not the
+  repair.
   Spin remains a specialized prior for
   supplied or coherent frames; learned topology, full three-carrier triality
   utility, natural text, and scaling remain open.
@@ -393,6 +398,8 @@ new matched natural-data and complete-step hardware evidence.
 - [G15B-R2 exact-SM75 artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g15br2_collision_erase_sm75_2026-08-26.json)
 - [G15B-R3 component-replacement result](../../SSM-Models/hybrid_memory_v1_4/G15BR3_LOGICAL_COMPONENT_RESULTS.md)
 - [G15B-R3 exact-SM75 artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g15br3_logical_component_sm75_2026-08-26.json)
+- [G15B-R4 ownership/background result](../../SSM-Models/hybrid_memory_v1_4/G15BR4_OWNERSHIP_BACKGROUND_RESULTS.md)
+- [G15B-R4 exact-SM75 artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g15br4_ownership_background_sm75_2026-08-26.json)
 - [G16 SM75 frontier-shootout protocol](../../SSM-Models/hybrid_memory_v1_4/G16_SM75_FRONTIER_SHOOTOUT_PROTOCOL_2026-08-25.md)
 - [G16 trained-frontier results](../../SSM-Models/hybrid_memory_v1_4/G16_SM75_FRONTIER_SHOOTOUT_RESULTS.md)
 - [G16 exact-SM75 runtime qualification artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g16_runtime_qualification_sm75_2026-08-25.json)

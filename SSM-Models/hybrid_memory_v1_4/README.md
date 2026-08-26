@@ -140,9 +140,17 @@ key an oracle replaceable component. It raises ordinary overwrite by
 cell, but fails the frozen gate because the guard baseline is already saturated
 and two learned-replay FP32 logit residuals exceed `5e-4` despite identical
 predictions. This supports component replacement as a mechanism without
-authorizing training. A prospective ownership/background-coupling factorial is
-next; its contract is frozen in the
-[`G15B-R4 protocol`](G15BR4_OWNERSHIP_BACKGROUND_PROTOCOL_2026-08-26.md).
+authorizing training. The completed
+[`G15B-R4 ownership/background result`](G15BR4_OWNERSHIP_BACKGROUND_RESULTS.md)
+then separates value-only from value-plus-`t+1` ownership and query-time
+background support. Both value-plus-tail arms pass, including the arm that
+excludes background, while both value-only arms fail; seed 2311 collapses
+under value-only replacement. The retained checkpoints therefore implement a
+two-token write transaction rather than a value-local slot. The frozen
+decision remains **do not train** until a causal, non-overlapping transaction
+boundary is demonstrated. See the
+[`R4 protocol`](G15BR4_OWNERSHIP_BACKGROUND_PROTOCOL_2026-08-26.md) and
+[`exact-SM75 artifact`](artifacts/g15br4_ownership_background_sm75_2026-08-26.json).
 
 In parallel, the frozen
 [`G16 SM75 shootout protocol`](G16_SM75_FRONTIER_SHOOTOUT_PROTOCOL_2026-08-25.md)

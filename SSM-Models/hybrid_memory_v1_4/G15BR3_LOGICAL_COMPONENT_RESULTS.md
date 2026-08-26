@@ -165,6 +165,12 @@ It crosses value-only versus value-plus-tail ownership with query-time
 background inclusion, binds R3 as an ineligible reference arm, and requires a
 value-only pass before any training screen.
 
+That successor is now complete. Only the two value-plus-tail arms pass; both
+value-only arms fail, so no training is authorized. Excluding background does
+not harm the tail-owned arm, which localizes the necessary content to the
+learned continuation rather than shared-background support. See the
+[`G15B-R4 result`](G15BR4_OWNERSHIP_BACKGROUND_RESULTS.md).
+
 ## Nonclaims
 
 No parameter was trained or updated. Component ownership and reset timing use

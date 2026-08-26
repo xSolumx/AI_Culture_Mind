@@ -349,11 +349,17 @@ It improves pre-overwrite recall but makes post-same-key-overwrite recall
 replaceable component: ordinary overwrite gains 12.2--12.8 points and its
 constructed guard reaches 1.0, but the frozen saturated-baseline improvement
 and FP32 replay-tolerance gates fail. Trainable slot promotion remains blocked
-pending an ownership/coupling factorial. See
+pending an ownership/coupling factorial. That prospective G15B-R4 factorial
+is now complete: both value-plus-tail arms pass and both value-only arms fail,
+so the frozen decision is still do not train. Background exclusion leaves the
+tail-owned arm essentially unchanged, localizing the useful association to a
+two-token write continuation rather than to shared background support. See
 [`G15BR_CHECKPOINT_REPAIR_RESULTS.md`](G15BR_CHECKPOINT_REPAIR_RESULTS.md) and
 [`G15BR1_EVENT_ERASE_RESULTS.md`](G15BR1_EVENT_ERASE_RESULTS.md) and
 [`G15BR2_COLLISION_ERASE_RESULTS.md`](G15BR2_COLLISION_ERASE_RESULTS.md) and
-[`G15BR3_LOGICAL_COMPONENT_RESULTS.md`](G15BR3_LOGICAL_COMPONENT_RESULTS.md).
+[`G15BR3_LOGICAL_COMPONENT_RESULTS.md`](G15BR3_LOGICAL_COMPONENT_RESULTS.md)
+and
+[`G15BR4_OWNERSHIP_BACKGROUND_RESULTS.md`](G15BR4_OWNERSHIP_BACKGROUND_RESULTS.md).
 
 The constrained `su3_torus` arm is an additional scientific ablation, not a
 replacement for the four frozen primary arms.

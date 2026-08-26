@@ -203,9 +203,15 @@ overwrite queries but makes post-same-key-overwrite recall 10.3--12.1 points
 worse. G15B-R3's oracle component reset then raises ordinary overwrite by
 12.2--12.8 points and reaches 1.0 on its constructed guard, but fails its
 frozen saturated-baseline improvement and FP32 replay-tolerance gates. This is
-component-replacement mechanism evidence, not training authorization; an
-ownership/background-coupling factorial is next. Spin transport requires a coherent moving-
-frame task, or co-transported keys and queries, before it is eligible again.
+component-replacement mechanism evidence, not training authorization. The
+completed G15B-R4 ownership/background factorial then finds that only
+value-plus-`t+1` ownership passes, with or without the shared background read;
+both value-only arms fail and seed 2311 collapses. The retained state therefore
+uses a two-token write transaction, not a clean value-local slot. Training
+remains blocked pending a causal non-overlapping commit law. Spin transport
+requires a coherent moving-frame task, or co-transported keys and queries,
+before it is eligible again. See
+[`G15BR4_OWNERSHIP_BACKGROUND_RESULTS.md`](G15BR4_OWNERSHIP_BACKGROUND_RESULTS.md).
 
 ## Claim ledger
 
@@ -222,7 +228,7 @@ runtime and finite contract probes; G15B learned content addresses and causal
 matrix use but rejected the current collision-erase controller and generic
 token-wise Spin transport.
 
-**Open:** a temporally observable last-write-wins controller; learned benefit
+**Open:** a temporally observable, non-overlapping write-transaction controller; learned benefit
 from coherent-frame Spin transport; sparse conjugate tori; moving (G_2)
 frames; generic language improvement; long-range factual recall; and a matched
 scaling advantage.

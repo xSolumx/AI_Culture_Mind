@@ -208,6 +208,15 @@ predictions. This is bounded replacement-mechanism evidence, not authorization
 for fresh training. See
 [`G15BR3_LOGICAL_COMPONENT_RESULTS.md`](G15BR3_LOGICAL_COMPONENT_RESULTS.md).
 
+G15B-R4 then crosses value-only versus value-plus-`t+1` ownership with
+query-time background inclusion. Both tail-owned arms pass and both value-only
+arms fail; excluding background leaves `VT` essentially unchanged but
+collapses `V`. The retained checkpoints therefore use a two-token write
+transaction, not a value-local slot or an intrinsically background-dependent
+read. Because the continuation sometimes owns the next event marker, this is
+not a clean training law. The frozen decision remains do not train. See
+[`G15BR4_OWNERSHIP_BACKGROUND_RESULTS.md`](G15BR4_OWNERSHIP_BACKGROUND_RESULTS.md).
+
 ## Claim boundary
 
 This is a completed, exact-SM75, three-seed commissioned-controller failure and

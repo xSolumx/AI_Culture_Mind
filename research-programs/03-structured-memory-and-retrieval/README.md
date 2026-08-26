@@ -181,8 +181,16 @@ representation.
   post-same-key-overwrite recall by 10.3--12.1 points. G15B-R3's oracle per-key
   component reset repairs ordinary overwrite by 12.2--12.8 points and reaches
   1.0 on a constructed guard, but fails the frozen saturated-baseline
-  improvement and FP32 replay-tolerance gates. Fresh training remains blocked
-  pending an ownership/coupling factorial. Generic transport remains
+  improvement and FP32 replay-tolerance gates. G15B-R4 then runs the frozen
+  ownership/background factorial with exact R3 replay and `4.44e-15` maximum
+  FP64 residual. Only `VT/BG+` and `VT/BG-` pass. Value-only `V/BG+`
+  reaches only 0.7030/0.7645/0.7534 ordinary overwrite versus learned
+  0.7678/0.8328/0.8288 and collapses on seed 2311; its constructed guard is
+  only 0.9390--0.9418. Removing background destroys value-only behavior but
+  leaves both value-plus-tail arms near 0.90--0.95 overwrite and 1.0 guard
+  accuracy. The useful retained association is therefore localized to
+  ambiguous `t+1` ownership, not shared background, and fresh explicit-slot
+  training remains blocked. Generic transport remains
   identity by default;
   Spin belongs in supplied/coherent-frame
   specialized tasks. Learned topology, full three-carrier triality utility,
@@ -309,6 +317,8 @@ representation.
 - [G15B-R2 exact-SM75 artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g15br2_collision_erase_sm75_2026-08-26.json)
 - [G15B-R3 component-replacement result](../../SSM-Models/hybrid_memory_v1_4/G15BR3_LOGICAL_COMPONENT_RESULTS.md)
 - [G15B-R3 exact-SM75 artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g15br3_logical_component_sm75_2026-08-26.json)
+- [G15B-R4 ownership/background result](../../SSM-Models/hybrid_memory_v1_4/G15BR4_OWNERSHIP_BACKGROUND_RESULTS.md)
+- [G15B-R4 exact-SM75 artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g15br4_ownership_background_sm75_2026-08-26.json)
 - [G16 SM75 frontier-shootout protocol](../../SSM-Models/hybrid_memory_v1_4/G16_SM75_FRONTIER_SHOOTOUT_PROTOCOL_2026-08-25.md)
 - [G16 trained-frontier results](../../SSM-Models/hybrid_memory_v1_4/G16_SM75_FRONTIER_SHOOTOUT_RESULTS.md)
 - [G16 exact-SM75 runtime qualification artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g16_runtime_qualification_sm75_2026-08-25.json)

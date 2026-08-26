@@ -94,7 +94,14 @@
 > G15B-R3's oracle per-key component reset raises ordinary overwrite by
 > 12.2--12.8 points over learned erase and reaches 1.0 on its constructed guard,
 > but fails the frozen saturated-guard improvement and FP32 logit-parity gates.
-> Fresh slot training remains blocked pending an ownership/coupling factorial.
+> G15B-R4 prospectively factors value-only versus value-plus-tail ownership and
+> shared-background inclusion. Only the two value-plus-tail arms pass; both
+> value-only arms fail, with ordinary `V/BG+` overwrite at
+> 0.7030/0.7645/0.7534 versus learned 0.7678/0.8328/0.8288 and a seed-2311
+> collapse. Excluding background destroys the value-only arm but not the
+> passing tail arms, so useful retained-checkpoint association is localized to
+> ambiguous `t+1` ownership rather than shared background. Fresh explicit-slot
+> training remains blocked.
 > Generic transport stays identity by default; Spin is
 > reserved for supplied or coherent-frame specialized tasks. G16 has completed
 > its one-seed SM75 development
@@ -130,6 +137,8 @@
 > [G15B-R2 exact-SM75 artifact](hybrid_memory_v1_4/artifacts/g15br2_collision_erase_sm75_2026-08-26.json),
 > [G15B-R3 component-replacement result](hybrid_memory_v1_4/G15BR3_LOGICAL_COMPONENT_RESULTS.md),
 > [G15B-R3 exact-SM75 artifact](hybrid_memory_v1_4/artifacts/g15br3_logical_component_sm75_2026-08-26.json),
+> [G15B-R4 ownership/background result](hybrid_memory_v1_4/G15BR4_OWNERSHIP_BACKGROUND_RESULTS.md),
+> [G15B-R4 exact-SM75 artifact](hybrid_memory_v1_4/artifacts/g15br4_ownership_background_sm75_2026-08-26.json),
 > [G16 SM75 frontier-shootout protocol](hybrid_memory_v1_4/G16_SM75_FRONTIER_SHOOTOUT_PROTOCOL_2026-08-25.md),
 > [G16 trained-frontier results](hybrid_memory_v1_4/G16_SM75_FRONTIER_SHOOTOUT_RESULTS.md),
 > [G16 exact-SM75 runtime qualification artifact](hybrid_memory_v1_4/artifacts/g16_runtime_qualification_sm75_2026-08-25.json),

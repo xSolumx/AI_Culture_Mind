@@ -611,3 +611,29 @@ with prospective absolute `0.995` success plus non-regression. Only a passing
 value-only arm can authorize a separately frozen explicit-slot training
 screen. See
 [`G15BR4_OWNERSHIP_BACKGROUND_PROTOCOL_2026-08-26.md`](G15BR4_OWNERSHIP_BACKGROUND_PROTOCOL_2026-08-26.md).
+
+The exact-SM75 R4 quality run subsequently completed from clean commit
+`d014259` in 5,031.34 seconds. The sealed R3 reference replays at zero metric
+residual, every provenance/runtime gate passes, and the FP64 algebraic
+contract has maximum residual `4.44e-15`. Both value-plus-tail arms pass the
+prospective ceiling-aware gates. Neither value-only arm passes. With
+background included, value-only overwrite is `0.702962`, `0.764486`, and
+`0.753418`, below the learned arm at all three lengths, and its guard is only
+`0.938965`--`0.941813`. Seed 2311 is the decisive multi-seed collapse.
+
+Removing query-time background leaves value-plus-tail accuracy essentially
+unchanged but destroys the value-only arm. This localizes the useful
+association to the learned `t+1` continuation: it is not an intrinsic need
+for a shared background read. Because those tails include following write and
+item markers, the passing law is not a clean semantic slot boundary. Record
+the frozen decision exactly: **do not train; passing behavior remains
+dependent on ambiguous value-plus-tail ownership**. Artifact SHA-256:
+`921d45e3c492e172fae62064120e9e051dca2965bacc44891268b135d8cef26e`.
+See
+[`G15BR4_OWNERSHIP_BACKGROUND_RESULTS.md`](G15BR4_OWNERSHIP_BACKGROUND_RESULTS.md).
+
+The next bounded question is transaction formation, not another optimizer or
+erase-amplitude sweep: can a causal pending-write/commit variable reproduce
+the required continuation without assigning the current event marker's own
+injection to the preceding key? No fresh explicit-slot training is authorized
+until that ownership problem has a prospective falsifier.
