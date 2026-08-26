@@ -226,16 +226,24 @@ separately frozen residual-delta write law; geometry remains blocked. See the
 SHA-256
 `2a41ed4694c4b2df473e08e6a62e455a309ffa7106616ffdfe420346eee4b469`.
 
-The next bounded prospective identity-memory step is
+The next bounded identity-memory step is
 [`G15B-D coupled residual delta`](G15BD_RESIDUAL_DELTA_PROTOCOL_2026-08-26.md).
 It couples removal of the addressed old value and insertion of the new value
 through one channelwise delta strength while preserving the G15B-E parameter
 names, shapes, state size, optimizer partition, data, and budget. The
-[`Phase-0 result ledger`](G15BD_PHASE0_QUALIFICATION_RESULTS.md) and
-[`exact-SM75 harness`](g15bd_phase0_qualification.py) are implemented, but
-exact clean-commit SM75 qualification is pending. No G15B-D learning,
-natural-text, geometry, or promotion result exists, and no development output
-is evidentiary.
+[`Phase-0 result`](G15BD_PHASE0_QUALIFICATION_RESULTS.md) passed every exact
+clean-SM75 implementation gate from commit `549e6d98d0bebc35fad32daa498486fd075aa906`.
+`P/D` each have 22,161 total/active parameters and 1,408 FP32 state bytes;
+direct transition, injection, and coupling residuals are zero, maximum FP64
+logit/state/read residuals are `2.776e-16`/`1.110e-16`/`3.469e-18`, and all
+declared gradients are finite and nonzero. The
+[`artifact`](artifacts/g15bd_phase0_qualification_sm75_2026-08-26.json) has
+SHA-256
+`44a8556b60db7cb8c5e1edc239255dc510b62f03960e4514a49b645e79123921`.
+This authorizes only prospective Phase-1 constructed training; no G15B-D
+learning, natural-text, geometry, or promotion result exists. The frozen
+runner and pending execution status are recorded in
+[`G15BD_PHASE1_RESULTS.md`](G15BD_PHASE1_RESULTS.md).
 
 In parallel, the frozen
 [`G16 SM75 shootout protocol`](G16_SM75_FRONTIER_SHOOTOUT_PROTOCOL_2026-08-25.md)
@@ -383,9 +391,12 @@ remains label-supervised with 774,400 useful query labels per seed.
   fresh-seed P/A curriculum, value-position objectives, effective-gate
   statistics/interventions, numerical boundary audit, checkpoints, and frozen
   fail-closed adjudication.
-- [`g15bd_phase0_qualification.py`](g15bd_phase0_qualification.py): pending
-  clean-SM75 P/D matching, direct residual-delta formula, contraction,
+- [`g15bd_phase0_qualification.py`](g15bd_phase0_qualification.py): passed
+  exact clean-SM75 P/D matching, direct residual-delta formula, contraction,
   scan/chunk/step/mask, gradient, and provenance qualification harness.
+- [`g15bd_residual_delta_cohort.py`](g15bd_residual_delta_cohort.py): frozen
+  P/D constructed-training curriculum, D-only causal interventions, paired
+  provenance, numerical boundaries, and fail-closed Phase-1 adjudication.
 - [`model.py`](model.py): eight-kind hybrid shell, local convolution caches,
   checkpointing, diagnostics, and exact cache-byte accounting.
 - [`fla_adapter.py`](fla_adapter.py): fail-closed semantic and optional official

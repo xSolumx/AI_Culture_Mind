@@ -1,0 +1,687 @@
+{
+  "adjudication": {
+    "decision": "authorize prospective G15B-D Phase-1 constructed training",
+    "passed": true
+  },
+  "environment": {
+    "compute_capability": [
+      7,
+      5
+    ],
+    "cuda_runtime": "12.8",
+    "device": "cuda",
+    "device_name": "NVIDIA GeForce RTX 2070 SUPER",
+    "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.35",
+    "python": "3.11.16",
+    "torch": "2.9.0+cu128"
+  },
+  "evidentiary": true,
+  "experiment": "G15B-D Phase-0 coupled residual-delta qualification",
+  "git_commit_at_start": "549e6d98d0bebc35fad32daa498486fd075aa906",
+  "git_status_at_start": [],
+  "protocol": "SSM-Models/hybrid_memory_v1_4/G15BD_RESIDUAL_DELTA_PROTOCOL_2026-08-26.md",
+  "qualification": {
+    "bounded_and_direct_law": {
+      "arms": {
+        "D": {
+          "effective_gates_strictly_interior": true,
+          "mode": "residual_delta",
+          "passed": true,
+          "transition_and_injection_finite": true,
+          "transition_spectral_norm_maximum": 0.9995000000000026
+        },
+        "P": {
+          "effective_gates_strictly_interior": true,
+          "mode": "product",
+          "passed": true,
+          "transition_and_injection_finite": true,
+          "transition_spectral_norm_maximum": 0.9995000000000024
+        }
+      },
+      "direct_residual_delta_law": {
+        "effective_erase_write_maximum_absolute_residual": 0.0,
+        "frozen_bound": 1e-10,
+        "injection_maximum_absolute_residual": 0.0,
+        "passed": true,
+        "transition_maximum_absolute_residual": 0.0
+      },
+      "passed": true
+    },
+    "elapsed_seconds": 2.116289300000002,
+    "execution": {
+      "D": {
+        "fp32": {
+          "bounds": {
+            "logit": 0.0005035400390625,
+            "read": 0.0005035400390625,
+            "state": 0.0005035400390625
+          },
+          "dtype": "torch.float32",
+          "fp32_bound_formula": "128 * finfo(float32).eps * sequence_length * max(1, reference_absmax)",
+          "gate_mode": "residual_delta",
+          "logit_maximum_absolute_residuals": {
+            "chunk_vs_recurrent": 8.940696716308594e-08,
+            "masked_compact": 5.960464477539063e-08,
+            "parallel_vs_recurrent": 2.9802322387695312e-08,
+            "step_vs_recurrent": 8.940696716308594e-08
+          },
+          "passed": true,
+          "predictions_exact": {
+            "chunk_vs_recurrent": true,
+            "masked_compact": true,
+            "parallel_vs_recurrent": true,
+            "step_vs_recurrent": true
+          },
+          "read_maximum_absolute_residuals": {
+            "chunk_vs_recurrent": 1.3969838619232178e-09,
+            "parallel_vs_recurrent": 1.0477378964424133e-09
+          },
+          "reference_maximum_absolute_logit": 0.4780319333076477,
+          "reference_maximum_absolute_read": 0.005554812960326672,
+          "reference_maximum_absolute_state": 0.005851175170391798,
+          "state_maximum_absolute_residuals": {
+            "chunk_vs_recurrent": {
+              "convolution": 0.0,
+              "memory": 2.7939677238464355e-09
+            },
+            "masked_compact": {
+              "maximum": 5.960464477539063e-08
+            },
+            "masked_step_vs_full": {
+              "convolution": 5.960464477539063e-08,
+              "memory": 4.656612873077393e-10
+            },
+            "parallel_vs_recurrent": {
+              "convolution": 0.0,
+              "memory": 2.7939677238464355e-09
+            },
+            "step_vs_recurrent": {
+              "convolution": 4.470348358154297e-08,
+              "memory": 1.3969838619232178e-09
+            }
+          }
+        },
+        "fp64": {
+          "bounds": {
+            "logit": 1e-10,
+            "read": 1e-10,
+            "state": 1e-10
+          },
+          "dtype": "torch.float64",
+          "fp32_bound_formula": null,
+          "gate_mode": "residual_delta",
+          "logit_maximum_absolute_residuals": {
+            "chunk_vs_recurrent": 2.220446049250313e-16,
+            "masked_compact": 2.220446049250313e-16,
+            "parallel_vs_recurrent": 1.1102230246251565e-16,
+            "step_vs_recurrent": 2.220446049250313e-16
+          },
+          "passed": true,
+          "predictions_exact": {
+            "chunk_vs_recurrent": true,
+            "masked_compact": true,
+            "parallel_vs_recurrent": true,
+            "step_vs_recurrent": true
+          },
+          "read_maximum_absolute_residuals": {
+            "chunk_vs_recurrent": 3.469446951953614e-18,
+            "parallel_vs_recurrent": 3.469446951953614e-18
+          },
+          "reference_maximum_absolute_logit": 0.41642663519795076,
+          "reference_maximum_absolute_read": 0.007032780629207128,
+          "reference_maximum_absolute_state": 0.010187667907116933,
+          "state_maximum_absolute_residuals": {
+            "chunk_vs_recurrent": {
+              "convolution": 0.0,
+              "memory": 4.336808689942018e-18
+            },
+            "masked_compact": {
+              "maximum": 1.1102230246251565e-16
+            },
+            "masked_step_vs_full": {
+              "convolution": 1.1102230246251565e-16,
+              "memory": 1.3010426069826053e-18
+            },
+            "parallel_vs_recurrent": {
+              "convolution": 0.0,
+              "memory": 5.204170427930421e-18
+            },
+            "step_vs_recurrent": {
+              "convolution": 1.1102230246251565e-16,
+              "memory": 1.734723475976807e-18
+            }
+          }
+        }
+      },
+      "P": {
+        "fp32": {
+          "bounds": {
+            "logit": 0.0005035400390625,
+            "read": 0.0005035400390625,
+            "state": 0.0005035400390625
+          },
+          "dtype": "torch.float32",
+          "fp32_bound_formula": "128 * finfo(float32).eps * sequence_length * max(1, reference_absmax)",
+          "gate_mode": "product",
+          "logit_maximum_absolute_residuals": {
+            "chunk_vs_recurrent": 8.940696716308594e-08,
+            "masked_compact": 5.960464477539063e-08,
+            "parallel_vs_recurrent": 2.9802322387695312e-08,
+            "step_vs_recurrent": 8.940696716308594e-08
+          },
+          "passed": true,
+          "predictions_exact": {
+            "chunk_vs_recurrent": true,
+            "masked_compact": true,
+            "parallel_vs_recurrent": true,
+            "step_vs_recurrent": true
+          },
+          "read_maximum_absolute_residuals": {
+            "chunk_vs_recurrent": 1.3969838619232178e-09,
+            "parallel_vs_recurrent": 1.3969838619232178e-09
+          },
+          "reference_maximum_absolute_logit": 0.4780319333076477,
+          "reference_maximum_absolute_read": 0.005554813891649246,
+          "reference_maximum_absolute_state": 0.005851178430020809,
+          "state_maximum_absolute_residuals": {
+            "chunk_vs_recurrent": {
+              "convolution": 0.0,
+              "memory": 2.3283064365386963e-09
+            },
+            "masked_compact": {
+              "maximum": 5.960464477539063e-08
+            },
+            "masked_step_vs_full": {
+              "convolution": 5.960464477539063e-08,
+              "memory": 4.656612873077393e-10
+            },
+            "parallel_vs_recurrent": {
+              "convolution": 0.0,
+              "memory": 2.7939677238464355e-09
+            },
+            "step_vs_recurrent": {
+              "convolution": 4.470348358154297e-08,
+              "memory": 1.3969838619232178e-09
+            }
+          }
+        },
+        "fp64": {
+          "bounds": {
+            "logit": 1e-10,
+            "read": 1e-10,
+            "state": 1e-10
+          },
+          "dtype": "torch.float64",
+          "fp32_bound_formula": null,
+          "gate_mode": "product",
+          "logit_maximum_absolute_residuals": {
+            "chunk_vs_recurrent": 2.220446049250313e-16,
+            "masked_compact": 2.7755575615628914e-16,
+            "parallel_vs_recurrent": 1.1102230246251565e-16,
+            "step_vs_recurrent": 2.220446049250313e-16
+          },
+          "passed": true,
+          "predictions_exact": {
+            "chunk_vs_recurrent": true,
+            "masked_compact": true,
+            "parallel_vs_recurrent": true,
+            "step_vs_recurrent": true
+          },
+          "read_maximum_absolute_residuals": {
+            "chunk_vs_recurrent": 3.469446951953614e-18,
+            "parallel_vs_recurrent": 3.469446951953614e-18
+          },
+          "reference_maximum_absolute_logit": 0.4164266351976052,
+          "reference_maximum_absolute_read": 0.007032780907978072,
+          "reference_maximum_absolute_state": 0.010187668310970765,
+          "state_maximum_absolute_residuals": {
+            "chunk_vs_recurrent": {
+              "convolution": 0.0,
+              "memory": 8.673617379884035e-18
+            },
+            "masked_compact": {
+              "maximum": 1.1102230246251565e-16
+            },
+            "masked_step_vs_full": {
+              "convolution": 1.1102230246251565e-16,
+              "memory": 1.734723475976807e-18
+            },
+            "parallel_vs_recurrent": {
+              "convolution": 0.0,
+              "memory": 6.938893903907228e-18
+            },
+            "step_vs_recurrent": {
+              "convolution": 1.1102230246251565e-16,
+              "memory": 1.734723475976807e-18
+            }
+          }
+        }
+      }
+    },
+    "gradient_reach": {
+      "D": {
+        "gate_mode": "residual_delta",
+        "loss": 0.012747940607368946,
+        "passed": true,
+        "paths": {
+          "embedding.weight": {
+            "matching_parameters": [
+              {
+                "finite": true,
+                "maximum_absolute_gradient": 0.0028607789427042007,
+                "name": "embedding.weight",
+                "nonzero": true
+              }
+            ],
+            "passed": true
+          },
+          "lm_head.weight": {
+            "matching_parameters": [
+              {
+                "finite": true,
+                "maximum_absolute_gradient": 0.002400333294644952,
+                "name": "lm_head.weight",
+                "nonzero": true
+              }
+            ],
+            "passed": true
+          },
+          "local_conv.conv.weight": {
+            "matching_parameters": [
+              {
+                "finite": true,
+                "maximum_absolute_gradient": 2.713727837999613e-07,
+                "name": "blocks.0.local_conv.conv.weight",
+                "nonzero": true
+              }
+            ],
+            "passed": true
+          },
+          "mixer.commit_projection.weight": {
+            "matching_parameters": [
+              {
+                "finite": true,
+                "maximum_absolute_gradient": 3.8309701722027967e-07,
+                "name": "blocks.0.mixer.commit_projection.weight",
+                "nonzero": true
+              }
+            ],
+            "passed": true
+          },
+          "mixer.decay_projection.weight": {
+            "matching_parameters": [
+              {
+                "finite": true,
+                "maximum_absolute_gradient": 6.989835377169129e-10,
+                "name": "blocks.0.mixer.decay_projection.weight",
+                "nonzero": true
+              }
+            ],
+            "passed": true
+          },
+          "mixer.erase_projection.weight": {
+            "matching_parameters": [
+              {
+                "finite": true,
+                "maximum_absolute_gradient": 3.8309701722027967e-07,
+                "name": "blocks.0.mixer.erase_projection.weight",
+                "nonzero": true
+              }
+            ],
+            "passed": true
+          },
+          "mixer.key_projection.weight": {
+            "matching_parameters": [
+              {
+                "finite": true,
+                "maximum_absolute_gradient": 3.1833512821322074e-06,
+                "name": "blocks.0.mixer.key_projection.weight",
+                "nonzero": true
+              }
+            ],
+            "passed": true
+          },
+          "mixer.output_gate.weight": {
+            "matching_parameters": [
+              {
+                "finite": true,
+                "maximum_absolute_gradient": 9.874700481304899e-06,
+                "name": "blocks.0.mixer.output_gate.weight",
+                "nonzero": true
+              }
+            ],
+            "passed": true
+          },
+          "mixer.output_projection.weight": {
+            "matching_parameters": [
+              {
+                "finite": true,
+                "maximum_absolute_gradient": 9.93929643300362e-06,
+                "name": "blocks.0.mixer.output_projection.weight",
+                "nonzero": true
+              }
+            ],
+            "passed": true
+          },
+          "mixer.query_projection.weight": {
+            "matching_parameters": [
+              {
+                "finite": true,
+                "maximum_absolute_gradient": 3.8017153656255687e-06,
+                "name": "blocks.0.mixer.query_projection.weight",
+                "nonzero": true
+              }
+            ],
+            "passed": true
+          },
+          "mixer.value_projection.weight": {
+            "matching_parameters": [
+              {
+                "finite": true,
+                "maximum_absolute_gradient": 1.2660542779485695e-05,
+                "name": "blocks.0.mixer.value_projection.weight",
+                "nonzero": true
+              }
+            ],
+            "passed": true
+          },
+          "mixer.write_projection.weight": {
+            "matching_parameters": [
+              {
+                "finite": true,
+                "maximum_absolute_gradient": 2.778146495074907e-07,
+                "name": "blocks.0.mixer.write_projection.weight",
+                "nonzero": true
+              }
+            ],
+            "passed": true
+          }
+        }
+      },
+      "P": {
+        "gate_mode": "product",
+        "loss": 0.012747940607368946,
+        "passed": true,
+        "paths": {
+          "embedding.weight": {
+            "matching_parameters": [
+              {
+                "finite": true,
+                "maximum_absolute_gradient": 0.0028607789427042007,
+                "name": "embedding.weight",
+                "nonzero": true
+              }
+            ],
+            "passed": true
+          },
+          "lm_head.weight": {
+            "matching_parameters": [
+              {
+                "finite": true,
+                "maximum_absolute_gradient": 0.002400333294644952,
+                "name": "lm_head.weight",
+                "nonzero": true
+              }
+            ],
+            "passed": true
+          },
+          "local_conv.conv.weight": {
+            "matching_parameters": [
+              {
+                "finite": true,
+                "maximum_absolute_gradient": 2.7137281222167076e-07,
+                "name": "blocks.0.local_conv.conv.weight",
+                "nonzero": true
+              }
+            ],
+            "passed": true
+          },
+          "mixer.commit_projection.weight": {
+            "matching_parameters": [
+              {
+                "finite": true,
+                "maximum_absolute_gradient": 3.4827004924409266e-07,
+                "name": "blocks.0.mixer.commit_projection.weight",
+                "nonzero": true
+              }
+            ],
+            "passed": true
+          },
+          "mixer.decay_projection.weight": {
+            "matching_parameters": [
+              {
+                "finite": true,
+                "maximum_absolute_gradient": 6.989836487392154e-10,
+                "name": "blocks.0.mixer.decay_projection.weight",
+                "nonzero": true
+              }
+            ],
+            "passed": true
+          },
+          "mixer.erase_projection.weight": {
+            "matching_parameters": [
+              {
+                "finite": true,
+                "maximum_absolute_gradient": 4.5917346369606094e-08,
+                "name": "blocks.0.mixer.erase_projection.weight",
+                "nonzero": true
+              }
+            ],
+            "passed": true
+          },
+          "mixer.key_projection.weight": {
+            "matching_parameters": [
+              {
+                "finite": true,
+                "maximum_absolute_gradient": 3.183351509505883e-06,
+                "name": "blocks.0.mixer.key_projection.weight",
+                "nonzero": true
+              }
+            ],
+            "passed": true
+          },
+          "mixer.output_gate.weight": {
+            "matching_parameters": [
+              {
+                "finite": true,
+                "maximum_absolute_gradient": 9.874702300294302e-06,
+                "name": "blocks.0.mixer.output_gate.weight",
+                "nonzero": true
+              }
+            ],
+            "passed": true
+          },
+          "mixer.output_projection.weight": {
+            "matching_parameters": [
+              {
+                "finite": true,
+                "maximum_absolute_gradient": 9.939298251993023e-06,
+                "name": "blocks.0.mixer.output_projection.weight",
+                "nonzero": true
+              }
+            ],
+            "passed": true
+          },
+          "mixer.query_projection.weight": {
+            "matching_parameters": [
+              {
+                "finite": true,
+                "maximum_absolute_gradient": 3.801716047746595e-06,
+                "name": "blocks.0.mixer.query_projection.weight",
+                "nonzero": true
+              }
+            ],
+            "passed": true
+          },
+          "mixer.value_projection.weight": {
+            "matching_parameters": [
+              {
+                "finite": true,
+                "maximum_absolute_gradient": 1.26605455079698e-05,
+                "name": "blocks.0.mixer.value_projection.weight",
+                "nonzero": true
+              }
+            ],
+            "passed": true
+          },
+          "mixer.write_projection.weight": {
+            "matching_parameters": [
+              {
+                "finite": true,
+                "maximum_absolute_gradient": 2.803892868996627e-07,
+                "name": "blocks.0.mixer.write_projection.weight",
+                "nonzero": true
+              }
+            ],
+            "passed": true
+          }
+        }
+      }
+    },
+    "matched_initialization": {
+      "active_parameters": {
+        "D": 22161,
+        "P": 22161
+      },
+      "initial_effective_gate_frozen_bound": 2e-08,
+      "initial_effective_gate_maximum_absolute_residuals": {
+        "coupled_D": 0.0,
+        "erase": 1.862645149230957e-09,
+        "write": 1.862645149230957e-09
+      },
+      "initial_function_frozen_bound": 2e-06,
+      "initial_function_maximum_absolute_residuals": {
+        "convolution_state": 0.0,
+        "logit": 2.9802322387695312e-08,
+        "memory_state": 3.259629011154175e-09
+      },
+      "initial_parameter_sha256": {
+        "D": "68a0f761949ce2e82416cfe34ce88303837f510696a23e41f77e97f391ba766e",
+        "P": "68a0f761949ce2e82416cfe34ce88303837f510696a23e41f77e97f391ba766e"
+      },
+      "initial_predictions_equal": true,
+      "optimizer_partition": {
+        "D": {
+          "adamw_decay": [
+            "blocks.0.local_conv.conv.weight"
+          ],
+          "adamw_no_decay": [
+            "embedding.weight",
+            "blocks.0.mixer_norm.weight",
+            "blocks.0.ffn_norm.weight",
+            "blocks.0.mixer.output_norm.weight",
+            "blocks.0.local_conv.conv.bias",
+            "final_norm.weight",
+            "lm_head.weight"
+          ],
+          "muon": [
+            "blocks.0.input_projection.weight",
+            "blocks.0.ffn.gate_projection.weight",
+            "blocks.0.ffn.up_projection.weight",
+            "blocks.0.ffn.down_projection.weight",
+            "blocks.0.mixer.query_projection.weight",
+            "blocks.0.mixer.key_projection.weight",
+            "blocks.0.mixer.value_projection.weight",
+            "blocks.0.mixer.output_gate.weight",
+            "blocks.0.mixer.output_projection.weight"
+          ],
+          "scalar_adamw": [
+            "blocks.0.residual_scale",
+            "blocks.0.mixer.commit_projection.weight",
+            "blocks.0.mixer.commit_projection.bias",
+            "blocks.0.mixer.erase_projection.weight",
+            "blocks.0.mixer.erase_projection.bias",
+            "blocks.0.mixer.write_projection.weight",
+            "blocks.0.mixer.write_projection.bias",
+            "blocks.0.mixer.decay_projection.weight",
+            "blocks.0.mixer.decay_projection.bias"
+          ]
+        },
+        "P": {
+          "adamw_decay": [
+            "blocks.0.local_conv.conv.weight"
+          ],
+          "adamw_no_decay": [
+            "embedding.weight",
+            "blocks.0.mixer_norm.weight",
+            "blocks.0.ffn_norm.weight",
+            "blocks.0.mixer.output_norm.weight",
+            "blocks.0.local_conv.conv.bias",
+            "final_norm.weight",
+            "lm_head.weight"
+          ],
+          "muon": [
+            "blocks.0.input_projection.weight",
+            "blocks.0.ffn.gate_projection.weight",
+            "blocks.0.ffn.up_projection.weight",
+            "blocks.0.ffn.down_projection.weight",
+            "blocks.0.mixer.query_projection.weight",
+            "blocks.0.mixer.key_projection.weight",
+            "blocks.0.mixer.value_projection.weight",
+            "blocks.0.mixer.output_gate.weight",
+            "blocks.0.mixer.output_projection.weight"
+          ],
+          "scalar_adamw": [
+            "blocks.0.residual_scale",
+            "blocks.0.mixer.commit_projection.weight",
+            "blocks.0.mixer.commit_projection.bias",
+            "blocks.0.mixer.erase_projection.weight",
+            "blocks.0.mixer.erase_projection.bias",
+            "blocks.0.mixer.write_projection.weight",
+            "blocks.0.mixer.write_projection.bias",
+            "blocks.0.mixer.decay_projection.weight",
+            "blocks.0.mixer.decay_projection.bias"
+          ]
+        }
+      },
+      "passed": true,
+      "state_capacity_bytes_batch1_fp32": {
+        "D": 1408,
+        "P": 1408
+      },
+      "state_dict_tensor_equality": {
+        "blocks.0.ffn.down_projection.weight": true,
+        "blocks.0.ffn.gate_projection.weight": true,
+        "blocks.0.ffn.up_projection.weight": true,
+        "blocks.0.ffn_norm.weight": true,
+        "blocks.0.input_projection.weight": true,
+        "blocks.0.local_conv.conv.bias": true,
+        "blocks.0.local_conv.conv.weight": true,
+        "blocks.0.mixer.commit_projection.bias": true,
+        "blocks.0.mixer.commit_projection.weight": true,
+        "blocks.0.mixer.decay_projection.bias": true,
+        "blocks.0.mixer.decay_projection.weight": true,
+        "blocks.0.mixer.erase_projection.bias": true,
+        "blocks.0.mixer.erase_projection.weight": true,
+        "blocks.0.mixer.key_projection.weight": true,
+        "blocks.0.mixer.output_gate.weight": true,
+        "blocks.0.mixer.output_norm.weight": true,
+        "blocks.0.mixer.output_projection.weight": true,
+        "blocks.0.mixer.query_projection.weight": true,
+        "blocks.0.mixer.value_projection.weight": true,
+        "blocks.0.mixer.write_projection.bias": true,
+        "blocks.0.mixer.write_projection.weight": true,
+        "blocks.0.mixer_norm.weight": true,
+        "blocks.0.residual_scale": true,
+        "embedding.weight": true,
+        "final_norm.weight": true,
+        "lm_head.weight": true
+      },
+      "total_parameters": {
+        "D": 22161,
+        "P": 22161
+      }
+    },
+    "passed": true,
+    "peak_cuda_memory_bytes": 32148480
+  },
+  "schema_version": 1,
+  "source_files": {
+    "SSM-Models/hybrid_memory_v1_4/G15BD_RESIDUAL_DELTA_PROTOCOL_2026-08-26.md": "3aa68ef6ec694fc2fea25d04aebd05de6d7fba9132329fbf30dff04983627138",
+    "SSM-Models/hybrid_memory_v1_4/g15bd_phase0_qualification.py": "6d9d49eff78ff979423f5ca7894ff9167fd53d6ddb271b0d2c4eae2d8ffa57e4",
+    "SSM-Models/hybrid_memory_v1_4/g15be_phase0_qualification.py": "df4fcf5667cd8e9c995181d2b501e24bbae47147ce0967ac99185d0fff11e844",
+    "SSM-Models/hybrid_memory_v1_4/model.py": "23d2a8ae97ebf4c007768a08aae0722afdaf3f4cc5c1271a96dd1d9f1d1914b4",
+    "SSM-Models/hybrid_memory_v1_4/optimizers.py": "eaf429e03593e918f1f69727b22a0f087c638930f7ce81f80c284e8727258ffa",
+    "SSM-Models/hybrid_memory_v1_4/transactional_delta.py": "88501cbc136ee29a5e0d7aa0626f16971ebf96909c5b0638d84b1a39b4090d04"
+  }
+}

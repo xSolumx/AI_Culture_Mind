@@ -220,8 +220,11 @@ representation.
   Phase-1 screen also fails both arms: `A` misses the frozen `+0.02` margin,
   neither arm passes absolute all-seed quality, and `A` fails valid-event-only
   causal sufficiency for two seeds. A residual-delta write law is only a
-  prospective next test. G15B-D now implements that coupled residual-delta law
-  and its Phase-0 harness, but exact clean-SM75 qualification is pending and no
+  prospective next test. G15B-D now passes exact clean-SM75 Phase-0
+  implementation qualification for that coupled residual-delta law from clean
+  commit `549e6d98d0bebc35fad32daa498486fd075aa906`; matched `P/D` parameters and
+  state, direct-formula coupling, numerical parity, and all declared gradients
+  pass. Only prospective Phase-1 constructed training is authorized; no
   learning result exists. Generic transport remains identity by default;
   Spin belongs in supplied/coherent-frame
   specialized tasks. Learned topology, full three-carrier triality utility,
@@ -365,7 +368,9 @@ representation.
 - [G15B-E Phase-1 quality result](../../SSM-Models/hybrid_memory_v1_4/G15BE_PHASE1_RESULTS.md)
 - [G15B-E Phase-1 exact-SM75 quality artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g15be_phase1_quality_sm75_2026-08-26.json)
 - [G15B-D coupled residual-delta protocol](../../SSM-Models/hybrid_memory_v1_4/G15BD_RESIDUAL_DELTA_PROTOCOL_2026-08-26.md)
-- [G15B-D pending Phase-0 ledger](../../SSM-Models/hybrid_memory_v1_4/G15BD_PHASE0_QUALIFICATION_RESULTS.md)
+- [G15B-D Phase-0 qualification result](../../SSM-Models/hybrid_memory_v1_4/G15BD_PHASE0_QUALIFICATION_RESULTS.md)
+- [G15B-D exact-SM75 Phase-0 artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g15bd_phase0_qualification_sm75_2026-08-26.json)
+- [G15B-D Phase-1 ledger](../../SSM-Models/hybrid_memory_v1_4/G15BD_PHASE1_RESULTS.md)
 - [G16 SM75 frontier-shootout protocol](../../SSM-Models/hybrid_memory_v1_4/G16_SM75_FRONTIER_SHOOTOUT_PROTOCOL_2026-08-25.md)
 - [G16 trained-frontier results](../../SSM-Models/hybrid_memory_v1_4/G16_SM75_FRONTIER_SHOOTOUT_RESULTS.md)
 - [G16 exact-SM75 runtime qualification artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g16_runtime_qualification_sm75_2026-08-25.json)

@@ -423,11 +423,17 @@ The resulting prospective non-geometric successor is
 [`G15B-D coupled residual delta`](G15BD_RESIDUAL_DELTA_PROTOCOL_2026-08-26.md).
 It couples erase and write into one channelwise residual correction while
 holding the G15B-E control, projections, optimizer, state, data, and future
-budget fixed. Its
-[`Phase-0 ledger`](G15BD_PHASE0_QUALIFICATION_RESULTS.md) and
-[`qualification harness`](g15bd_phase0_qualification.py) are implemented, but
-exact clean-commit SM75 Phase 0 is pending. No learning result exists, and
-geometry remains blocked.
+budget fixed. Its exact clean-SM75
+[`Phase-0 result`](G15BD_PHASE0_QUALIFICATION_RESULTS.md) passes from clean
+commit `549e6d98d0bebc35fad32daa498486fd075aa906`: `P/D` are matched at 22,161
+active parameters and 1,408 FP32 state bytes, direct transition/injection and
+coupling residuals are zero, predictions are exact, and all declared
+gradients are finite and nonzero. See the
+[`artifact`](artifacts/g15bd_phase0_qualification_sm75_2026-08-26.json),
+SHA-256
+`44a8556b60db7cb8c5e1edc239255dc510b62f03960e4514a49b645e79123921`.
+This authorizes only prospective Phase-1 constructed training. No learning
+result exists, and geometry remains blocked.
 
 The constrained `su3_torus` arm is an additional scientific ablation, not a
 replacement for the four frozen primary arms.

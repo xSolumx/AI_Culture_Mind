@@ -122,6 +122,46 @@ def test_interventions_operate_on_effective_edits_and_reconstruct() -> None:
         )
 
 
+def test_residual_delta_interventions_use_native_channelwise_scan() -> None:
+    batch = _batch()
+    model = build_model("D", 2581, torch.device("cpu")).eval()
+    with torch.no_grad():
+        ordinary = model(batch.token_ids)["logits"]
+        replay = effective_edit_intervention_forward(
+            model, batch, "learned_reconstruction"
+        )
+        event_only = effective_edit_intervention_forward(
+            model, batch, "valid_event_only"
+        )
+        non_event_only = effective_edit_intervention_forward(
+            model, batch, "non_event_only"
+        )
+        permuted = effective_edit_intervention_forward(
+            model, batch, "permuted_write_binding"
+        )
+    torch.testing.assert_close(replay["logits"], ordinary, rtol=0.0, atol=0.0)
+    torch.testing.assert_close(
+        replay["effective_erase"],
+        replay["effective_write"],
+        rtol=0.0,
+        atol=0.0,
+    )
+    event = _event_mask(batch, dtype=torch.float32).bool()
+    assert (
+        torch.count_nonzero(
+            event_only["effective_write"][~event.expand_as(event_only["effective_write"])]
+        )
+        == 0
+    )
+    assert (
+        torch.count_nonzero(
+            non_event_only["effective_write"][event.expand_as(non_event_only["effective_write"])]
+        )
+        == 0
+    )
+    assert torch.isfinite(permuted["logits"]).all()
+
+
 def test_diagnostics_expose_only_bounded_effective_gate_metrics() -> None:
     batch = _batch()
     model = build_model("A", 2491, torch.device("cpu"))

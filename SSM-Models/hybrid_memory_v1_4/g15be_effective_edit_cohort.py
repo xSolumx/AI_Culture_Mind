@@ -54,7 +54,7 @@ EXPECTED_PHASE0_SHA256 = (
 )
 QUALITY_SEEDS = (2481, 2483, 2489)
 ARMS = ("P", "A")
-Arm = Literal["P", "A"]
+Arm = Literal["P", "A", "D"]
 TASK_CYCLE: tuple[TaskName, ...] = (
     "mqar",
     "overwrite",
@@ -85,10 +85,14 @@ def frozen_config(mode: Literal["smoke", "quality"]) -> CohortConfig:
 
 
 def build_model(arm: Arm, seed: int, device: torch.device) -> HybridMemoryLM:
-    if arm not in ARMS:
-        raise ValueError(f"unknown G15B-E arm {arm!r}")
+    if arm not in (*ARMS, "D"):
+        raise ValueError(f"unknown effective-edit arm {arm!r}")
     torch.manual_seed(seed)
-    gate_mode = "product" if arm == "P" else "logit_additive"
+    gate_mode = {
+        "P": "product",
+        "A": "logit_additive",
+        "D": "residual_delta",
+    }[arm]
     model = HybridMemoryLM(
         HybridMemoryConfig(
             vocab_size=VOCAB_SIZE,
@@ -215,6 +219,51 @@ def _effective_controls(
     return query, key, value, erase, write, retention
 
 
+def _execute_effective_transitions(
+    mixer: TransactionalDeltaMemory,
+    transition: torch.Tensor,
+    injection: torch.Tensor,
+    initial_state: torch.Tensor,
+    *,
+    scan_mode: Literal["recurrent", "parallel"],
+) -> tuple[torch.Tensor, torch.Tensor]:
+    """Execute an intervention transition in the mixer's native state layout."""
+
+    if mixer.config.effective_edit_gate_mode != "residual_delta":
+        executor = (
+            mixer._recurrent_states
+            if scan_mode == "recurrent"
+            else mixer._parallel_states
+        )
+        return executor(transition, injection, initial_state)
+    batch, heads, key_dim, value_dim = initial_state.shape
+    scan_initial = (
+        initial_state.permute(0, 1, 3, 2)
+        .contiguous()
+        .view(batch, heads * value_dim, key_dim, 1)
+    )
+    executor = (
+        mixer._recurrent_states
+        if scan_mode == "recurrent"
+        else mixer._parallel_states
+    )
+    scan_states, scan_final = executor(transition, injection, scan_initial)
+    scan_states = scan_states.squeeze(-1)
+    scan_final = scan_final.squeeze(-1)
+    length = scan_states.shape[2]
+    states = (
+        scan_states.view(batch, heads, value_dim, length, key_dim)
+        .permute(0, 1, 3, 4, 2)
+        .contiguous()
+    )
+    final_state = (
+        scan_final.view(batch, heads, value_dim, key_dim)
+        .permute(0, 1, 3, 2)
+        .contiguous()
+    )
+    return states, final_state
+
+
 @torch.no_grad()
 def effective_edit_intervention_forward(
     model: HybridMemoryLM,
@@ -249,14 +298,16 @@ def effective_edit_intervention_forward(
         write = write * (1.0 - event)
     elif intervention == "permuted_write_binding":
         projected_value = projected_value.clone()
-        write = write.clone()
+        if mixer.config.effective_edit_gate_mode != "residual_delta":
+            write = write.clone()
         for row in range(batch.batch_size):
             positions = batch.write_positions[row]
             if positions.numel() > 1:
                 projected_value[row, positions] = projected_value[
                     row, positions.roll(1)
                 ]
-                write[row, positions] = write[row, positions.roll(1)]
+                if mixer.config.effective_edit_gate_mode != "residual_delta":
+                    write[row, positions] = write[row, positions.roll(1)]
     unit_event = torch.ones_like(erase)
     transition, injection = mixer._transitions(
         key,
@@ -267,10 +318,12 @@ def effective_edit_intervention_forward(
         retention,
         None,
     )
-    states, final_state = mixer._parallel_states(
+    states, final_state = _execute_effective_transitions(
+        mixer,
         transition,
         injection,
         full.new_zeros(full.shape[0], *mixer.config.state_shape),
+        scan_mode="parallel",
     )
     read = torch.einsum("bthk,bhtkv->bthv", query, states)
     output_gate = F.silu(mixer.output_gate(full).view_as(read))
@@ -293,7 +346,11 @@ def effective_edit_intervention_forward(
 
 
 def _batch_for_update(
-    phase: Phase, *, seed: int, global_update: int
+    phase: Phase,
+    *,
+    seed: int,
+    global_update: int,
+    namespace: str = "g15be-train",
 ) -> InterleavedBatch:
     task = TASK_CYCLE[global_update % len(TASK_CYCLE)]
     return generate_interleaved_batch(
@@ -303,7 +360,7 @@ def _batch_for_update(
         phase.live_keys,
         phase.max_writes,
         phase.queries,
-        seed=_stable_seed("g15be-train", seed, global_update, task),
+        seed=_stable_seed(namespace, seed, global_update, task),
     )
 
 
@@ -629,7 +686,12 @@ def _boundary_audit(model: HybridMemoryLM, *, seed: int, batch_size: int) -> tup
 
 @torch.no_grad()
 def _evaluate(
-    model: HybridMemoryLM, config: CohortConfig, *, seed: int, arm: Arm
+    model: HybridMemoryLM,
+    config: CohortConfig,
+    *,
+    seed: int,
+    arm: Arm,
+    namespace: str = "g15be",
 ) -> tuple[dict[str, Any], set[str]]:
     cells = {}
     fingerprints: set[str] = set()
@@ -642,14 +704,14 @@ def _evaluate(
                 seed=seed,
                 decisions=config.evaluation_decisions,
                 batch_cap=config.evaluation_batch_cap,
-                namespace="g15be-eval",
+                namespace=f"{namespace}-eval",
                 interventions=False,
             )
             cells[f"{task}:L{length}"] = cell
             fingerprints.update(hashes)
     intervention_cells = {}
     intervention_hashes: set[str] = set()
-    if arm == "A":
+    if arm in ("A", "D"):
         for task in ("mqar", "overwrite", "selective"):
             for length in (512, 1024):
                 cell, hashes = _evaluate_cell(
@@ -659,7 +721,7 @@ def _evaluate(
                     seed=seed,
                     decisions=config.intervention_decisions,
                     batch_cap=config.intervention_batch_cap,
-                    namespace="g15be-intervention",
+                    namespace=f"{namespace}-intervention",
                     interventions=True,
                 )
                 intervention_cells[f"{task}:L{length}"] = cell
@@ -668,7 +730,7 @@ def _evaluate(
         raise RuntimeError("standard and intervention fingerprints overlap")
     boundary, boundary_hash = _boundary_audit(
         model,
-        seed=_stable_seed("g15be-boundary", seed),
+        seed=_stable_seed(f"{namespace}-boundary", seed),
         batch_size=min(config.evaluation_batch_cap, 8),
     )
     if boundary_hash in fingerprints or boundary_hash in intervention_hashes:
@@ -818,6 +880,9 @@ def _train_arm(
     seed: int,
     device: torch.device,
     checkpoint_directory: Path,
+    experiment_name: str = "G15B-E effective edit",
+    namespace: str = "g15be",
+    checkpoint_prefix: str = "g15be",
 ) -> dict[str, Any]:
     model = build_model(arm, seed, device)
     initial_hash = _model_state_sha256(model)
@@ -841,7 +906,10 @@ def _train_arm(
         phase_queries = 0
         for phase_update in range(phase.updates):
             batch = _batch_for_update(
-                phase, seed=seed, global_update=global_update
+                phase,
+                seed=seed,
+                global_update=global_update,
+                namespace=f"{namespace}-train",
             ).to(device)
             fingerprint = batch.fingerprint()
             train_fingerprints.add(fingerprint)
@@ -855,11 +923,15 @@ def _train_arm(
             output = model(batch.token_ids, return_diagnostics=True)
             loss, components = commissioned_losses(output, batch)
             if not bool(torch.isfinite(loss)):
-                raise RuntimeError(f"nonfinite G15B-E loss at update {global_update}")
+                raise RuntimeError(
+                    f"nonfinite {experiment_name} loss at update {global_update}"
+                )
             loss.backward()
             gradient_norm = nn.utils.clip_grad_norm_(model.parameters(), 1.0)
             if not bool(torch.isfinite(gradient_norm)):
-                raise RuntimeError(f"nonfinite G15B-E gradient at update {global_update}")
+                raise RuntimeError(
+                    f"nonfinite {experiment_name} gradient at update {global_update}"
+                )
             optimizer.step()
             if phase_update == 0 or phase_update + 1 == phase.updates or global_update % 100 == 0:
                 loss_samples.append(
@@ -893,19 +965,21 @@ def _train_arm(
     _sync(device)
     training_seconds = time.perf_counter() - started
     evaluation_started = time.perf_counter()
-    evaluation, evaluation_hashes = _evaluate(model, config, seed=seed, arm=arm)
+    evaluation, evaluation_hashes = _evaluate(
+        model, config, seed=seed, arm=arm, namespace=namespace
+    )
     _sync(device)
     evaluation_seconds = time.perf_counter() - evaluation_started
     intersection = train_fingerprints & evaluation_hashes
     if intersection:
         raise RuntimeError("training and evaluation fingerprints overlap")
     checkpoint_directory.mkdir(parents=True, exist_ok=True)
-    checkpoint = checkpoint_directory / f"g15be_{arm.lower()}_seed{seed}.pt"
+    checkpoint = checkpoint_directory / f"{checkpoint_prefix}_{arm.lower()}_seed{seed}.pt"
     temporary = checkpoint.with_suffix(".pt.tmp")
     torch.save(
         {
             "schema_version": 1,
-            "experiment": "G15B-E effective edit",
+            "experiment": experiment_name,
             "arm": arm,
             "seed": seed,
             "cohort": asdict(config),

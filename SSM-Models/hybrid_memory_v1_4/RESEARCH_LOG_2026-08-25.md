@@ -884,7 +884,7 @@ candidate is only a prospectively frozen residual-delta write law. Do not
 promote G15B-E, reopen geometry, or infer natural-text, tokenizer, optimizer,
 efficiency, scaling, or universal transactional-memory conclusions.
 
-## 2026-08-26: G15B-D prospective residual-delta implementation
+## 2026-08-26: G15B-D Phase-0 residual-delta qualification
 
 The bounded follow-up is frozen in
 [`G15BD_RESIDUAL_DELTA_PROTOCOL_2026-08-26.md`](G15BD_RESIDUAL_DELTA_PROTOCOL_2026-08-26.md).
@@ -893,9 +893,19 @@ couple removal of the addressed old prediction to insertion of the target.
 The product control, declared projections, optimizer assignment, state bytes,
 data, seeds, curriculum, and prospective budget remain matched to G15B-E.
 
-The implementation, pending
-[`Phase-0 result ledger`](G15BD_PHASE0_QUALIFICATION_RESULTS.md), and
-[`exact-SM75 qualification harness`](g15bd_phase0_qualification.py) exist.
-Exact clean-commit SM75 Phase 0 has not yet completed. Record no development
-run as evidence. No G15B-D learning, causal-use, natural-text, scaling,
-optimizer, geometry, or promotion claim exists.
+The exact clean-SM75
+[`Phase-0 result`](G15BD_PHASE0_QUALIFICATION_RESULTS.md) passed every frozen
+gate from clean commit `549e6d98d0bebc35fad32daa498486fd075aa906`. On WSL2,
+RTX 2070 SUPER SM75, Python 3.11.16, PyTorch 2.9.0+cu128, and CUDA 12.8,
+`P/D` each have 22,161 total/active parameters, 1,408 FP32 state bytes, and
+identical initial hashes. Direct transition, injection, and coupling residuals
+are zero; the maximum `D` spectral norm is `0.9995000000000026`; FP64
+logit/state/read maxima are `2.776e-16`/`1.110e-16`/`3.469e-18`; FP32 maxima
+are `8.941e-8`/`5.960e-8`/`1.397e-9`; predictions are exact and every
+declared gradient is finite and nonzero. The 2.116-second
+[`artifact`](artifacts/g15bd_phase0_qualification_sm75_2026-08-26.json),
+SHA-256
+`44a8556b60db7cb8c5e1edc239255dc510b62f03960e4514a49b645e79123921`,
+authorizes only prospective Phase-1 constructed training. No G15B-D learning,
+causal-use, natural-text, scaling, optimizer, geometry, or promotion claim
+exists.

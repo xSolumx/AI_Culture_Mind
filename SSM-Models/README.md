@@ -136,10 +136,13 @@
 > `A` fails causal-use sufficiency. All numerical boundary audits pass. The
 > next residual-delta write law is only prospective, and geometry remains
 > blocked.
-> That prospective G15B-D coupled residual-delta implementation, Phase-0
-> ledger, and exact-SM75 qualification harness now exist. Exact clean-commit
-> SM75 Phase 0 is pending; no G15B-D runtime, learning, natural-text, or
-> promotion result is claimed.
+> G15B-D coupled residual delta now passes exact clean-SM75 Phase-0
+> implementation qualification from clean commit
+> `549e6d98d0bebc35fad32daa498486fd075aa906`. `P/D` each have 22,161 active
+> parameters and 1,408 FP32 state bytes; direct transition/injection/coupling
+> residuals are zero, numerical parity and all declared gradients pass, and
+> the result authorizes only prospective Phase-1 constructed training. No
+> G15B-D learning, natural-text, geometry, or promotion result is claimed.
 > Generic transport stays identity by default; Spin is
 > reserved for supplied or coherent-frame specialized tasks. G16 has completed
 > its one-seed SM75 development
@@ -192,7 +195,9 @@
 > [G15B-E Phase-1 quality result](hybrid_memory_v1_4/G15BE_PHASE1_RESULTS.md),
 > [G15B-E Phase-1 quality artifact](hybrid_memory_v1_4/artifacts/g15be_phase1_quality_sm75_2026-08-26.json),
 > [G15B-D residual-delta protocol](hybrid_memory_v1_4/G15BD_RESIDUAL_DELTA_PROTOCOL_2026-08-26.md),
-> [G15B-D pending Phase-0 ledger](hybrid_memory_v1_4/G15BD_PHASE0_QUALIFICATION_RESULTS.md),
+> [G15B-D Phase-0 qualification result](hybrid_memory_v1_4/G15BD_PHASE0_QUALIFICATION_RESULTS.md),
+> [G15B-D exact-SM75 Phase-0 artifact](hybrid_memory_v1_4/artifacts/g15bd_phase0_qualification_sm75_2026-08-26.json),
+> [G15B-D Phase-1 ledger](hybrid_memory_v1_4/G15BD_PHASE1_RESULTS.md),
 > [G16 SM75 frontier-shootout protocol](hybrid_memory_v1_4/G16_SM75_FRONTIER_SHOOTOUT_PROTOCOL_2026-08-25.md),
 > [G16 trained-frontier results](hybrid_memory_v1_4/G16_SM75_FRONTIER_SHOOTOUT_RESULTS.md),
 > [G16 exact-SM75 runtime qualification artifact](hybrid_memory_v1_4/artifacts/g16_runtime_qualification_sm75_2026-08-25.json),

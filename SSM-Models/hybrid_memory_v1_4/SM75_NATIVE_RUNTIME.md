@@ -186,6 +186,21 @@ See the
 This is exact-SM75 execution evidence plus a bounded negative quality result,
 not a general throughput or model-family conclusion.
 
+G15B-D Phase 0 completed on the same exact runtime from clean commit
+`549e6d9` in `2.1162893` seconds with 32,148,480 peak CUDA bytes. The matched
+`P/D` arms each have 22,161 total/active parameters and 1,408 FP32 state
+bytes. Direct transition, injection, and coupling residuals are zero; maximum
+FP64 logit/state/read residuals are
+`2.776e-16`/`1.110e-16`/`3.469e-18`, and FP32 maxima are
+`8.941e-8`/`5.960e-8`/`1.397e-9`, with exact predictions and finite nonzero
+gradients throughout. See the
+[`result`](G15BD_PHASE0_QUALIFICATION_RESULTS.md) and
+[`artifact`](artifacts/g15bd_phase0_qualification_sm75_2026-08-26.json),
+SHA-256
+`44a8556b60db7cb8c5e1edc239255dc510b62f03960e4514a49b645e79123921`.
+This qualifies only prospective Phase-1 constructed training; it is not a
+learning, natural-text, geometry, promotion, or throughput result.
+
 The native WSL environment also exposes CUDA-only `causal_conv1d`,
 `mamba_ssm`, and FLA Hub kernels to Transformers. The baseline registry now
 dispatches by the actual input tensor: CUDA keeps the resolved native kernel,

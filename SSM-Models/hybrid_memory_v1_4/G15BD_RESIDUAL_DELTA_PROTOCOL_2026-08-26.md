@@ -9,9 +9,12 @@ before any G15B-D training batch, checkpoint, or learning metric
 **Phase-0 result ledger:**
 [`G15BD_PHASE0_QUALIFICATION_RESULTS.md`](G15BD_PHASE0_QUALIFICATION_RESULTS.md)
 
-**Status:** implementation and exact-SM75 Phase-0 qualification are
-prospective. No G15B-D learning result exists yet. Geometry and natural-text
-promotion remain blocked.
+**Exact Phase-0 artifact:**
+[`artifacts/g15bd_phase0_qualification_sm75_2026-08-26.json`](artifacts/g15bd_phase0_qualification_sm75_2026-08-26.json)
+
+**Status:** exact clean-SM75 Phase 0 passed and authorizes only prospective
+Phase-1 constructed training. No G15B-D learning result exists yet. Geometry,
+natural text, and model promotion remain blocked.
 
 ## Diagnosed learning problem
 

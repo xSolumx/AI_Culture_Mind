@@ -1446,21 +1446,31 @@ that logit addition does not materially improve this matched constructed
 screen. The next residual-delta write law is only a prospective recommendation
 requiring its own frozen protocol; natural text and geometry remain blocked.
 
-## G15B-D prospective coupled residual-delta implementation
+## G15B-D Phase-0 exact-SM75 qualification
 
 The follow-up is now frozen in the
 [`G15B-D protocol`](G15BD_RESIDUAL_DELTA_PROTOCOL_2026-08-26.md). Product `P`
 remains the matched historical control; residual-delta `D` couples removal and
 insertion through one channelwise effective strength while retaining the same
 declared projections, optimizer assignment, recurrent state, data, and future
-budget. The
-[`Phase-0 result ledger`](G15BD_PHASE0_QUALIFICATION_RESULTS.md) and
-[`qualification harness`](g15bd_phase0_qualification.py) are implemented.
+budget. The clean evidentiary
+[`Phase-0 result`](G15BD_PHASE0_QUALIFICATION_RESULTS.md) passes every frozen
+implementation gate from commit `549e6d98d0bebc35fad32daa498486fd075aa906`.
+`P/D` each have 22,161 total/active parameters and 1,408 FP32 state bytes with
+identical initialized hashes. The effective-gate residual is `1.863e-9`,
+coupled-`D` and direct transition/injection/coupling residuals are zero, the
+maximum transition spectral norm is `0.9995000000000026`, predictions are
+exact, and every declared gradient is finite and nonzero. Maximum FP64
+logit/state/read residuals are `2.776e-16`/`1.110e-16`/`3.469e-18`; FP32
+maxima are `8.941e-8`/`5.960e-8`/`1.397e-9`.
 
-Exact clean-commit SM75 Phase 0 is pending. There is no qualifying artifact,
+The exact-SM75
+[`artifact`](artifacts/g15bd_phase0_qualification_sm75_2026-08-26.json) has
+SHA-256
+`44a8556b60db7cb8c5e1edc239255dc510b62f03960e4514a49b645e79123921`.
+It authorizes only prospective Phase-1 constructed training. There is no
 trained G15B-D model, learning result, causal-use result, natural-text result,
-or geometry authorization. Development execution is not evidence and is not
-reported here.
+or geometry authorization.
 
 ## G16 one-seed trained-frontier result
 
