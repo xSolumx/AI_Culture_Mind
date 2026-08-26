@@ -214,10 +214,11 @@
 > F4/E6 canonical coordinates of the second kind now execute through exact
 > small-block primitive actions and a fused sparse-event Delta recurrence built
 > specifically for SM75.  At one E6 event per 32 tokens, the 40,858-parameter
-> candidate is 2.36x faster and uses 69% less peak allocation than dense E6.
-> The cheap-action gate passes; the complete model remains 1.41x slower and
-> 1.28x heavier than parameter-matched official fused Mamba-2, so the stronger
-> systems gate fails.  See the
+> candidate is 2.40x faster and uses 69% less peak allocation than dense E6.
+> It also beats its same-parameter dead-action control in 2/3 fresh text seeds
+> by 0.0073 mean bpb.  The cheap transport component passes; the complete model
+> remains 1.53x slower than parameter-matched official fused Mamba-2 and loses
+> all three quality seeds, so the stronger model gate fails.  See the
 > [preregistered SM75 result](pure_f4_delta_ssm_v1_3/SM75_PRIMITIVE_TRANSPORT_RESULTS.md)
 > and [model boundary](pure_f4_delta_ssm_v1_3/README.md).
 

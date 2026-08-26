@@ -112,9 +112,11 @@ def summarize(
 
     candidate = arms["e6_primitive_event"]
     dead = arms["e6_primitive_dead"]
+    dense = arms["e6_safe"]
     mamba = arms["mamba2_official"]
     candidate_seed = candidate["bits_per_byte_by_seed"]
     dead_seed = dead["bits_per_byte_by_seed"]
+    dense_seed = dense["bits_per_byte_by_seed"]
     mamba_seed = mamba["bits_per_byte_by_seed"]
     wins_vs_dead = sum(
         float(candidate_seed[str(seed)]) < float(dead_seed[str(seed)])
@@ -124,11 +126,18 @@ def summarize(
         float(candidate_seed[str(seed)]) < float(mamba_seed[str(seed)])
         for seed in expected_seeds
     )
+    wins_vs_dense = sum(
+        float(candidate_seed[str(seed)]) < float(dense_seed[str(seed)])
+        for seed in expected_seeds
+    )
     mean_minus_dead = float(candidate["mean_bits_per_byte"]) - float(
         dead["mean_bits_per_byte"]
     )
     mean_minus_mamba = float(candidate["mean_bits_per_byte"]) - float(
         mamba["mean_bits_per_byte"]
+    )
+    mean_minus_dense = float(candidate["mean_bits_per_byte"]) - float(
+        dense["mean_bits_per_byte"]
     )
     parameter_residual = (
         int(candidate["parameters"]) - int(mamba["parameters"])
@@ -153,6 +162,8 @@ def summarize(
         "comparisons": {
             "candidate_seed_wins_vs_dead_budget": wins_vs_dead,
             "candidate_mean_bpb_minus_dead_budget": mean_minus_dead,
+            "candidate_seed_wins_vs_dense_e6": wins_vs_dense,
+            "candidate_mean_bpb_minus_dense_e6": mean_minus_dense,
             "candidate_seed_wins_vs_mamba2": wins_vs_mamba,
             "candidate_mean_bpb_minus_mamba2": mean_minus_mamba,
             "candidate_parameter_residual_fraction_vs_mamba2": parameter_residual,

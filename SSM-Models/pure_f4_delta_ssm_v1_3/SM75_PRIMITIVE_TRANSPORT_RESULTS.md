@@ -12,10 +12,10 @@ The dense exceptional action was an implementation failure, not an unavoidable
 cost of F4 or E6(-26).  Exact canonical exceptional transport is now cheap
 enough to be a real SM75 component.
 
-At the frozen `1/32` event density, the fused E6 model is `2.36x` faster than
+At the frozen `1/32` event density, the fused E6 model is `2.40x` faster than
 the old all-token dense E6 model and uses only `31.1%` of its peak CUDA
 allocation.  It passes the separate cheap-action-path gate.  The complete
-model is still `1.41x` slower than official fused Mamba-2 and uses `1.28x` its
+model is still `1.53x` slower than official fused Mamba-2 and uses `1.28x` its
 peak allocation, so the stronger Mamba-competitive systems gate fails.
 
 This is a successful backend and recurrence result, not yet a natural-text
@@ -103,8 +103,8 @@ recorded repetitions.
 
 | Action | Native forward | Forward speedup vs dense same-chart oracle | Native forward+backward | F+B speedup |
 |---|---:|---:|---:|---:|
-| F4 | `0.12 ms` | `535.0x` | `0.34 ms` | `428.6x` |
-| E6(-26) | `0.10 ms` | `953.9x` | `0.34 ms` | `654.4x` |
+| F4 | `0.23 ms` | `294.7x` | `0.41 ms` | `415.4x` |
+| E6(-26) | `0.10 ms` | `1035.2x` | `0.35 ms` | `628.5x` |
 
 Maximum FP32 discrepancies from the dense same-chart oracle are:
 
@@ -131,16 +131,16 @@ has 40,848.
 
 | Arm | Median complete step | p10-p90 | Maximum peak allocation |
 |---|---:|---:|---:|
-| E6 primitive dead budget | `31.23 ms` | `30.24-44.37 ms` | `48,991,744 B` |
-| E6 primitive event, `1/32` | **`19.77 ms`** | `18.92-36.67 ms` | **`44,691,968 B`** |
-| dense all-token direct E6 | `46.60 ms` | `45.69-49.15 ms` | `143,790,592 B` |
-| official fused Mamba-2 | **`14.04 ms`** | `11.92-21.23 ms` | **`34,982,400 B`** |
+| E6 primitive dead budget | `33.15 ms` | `30.14-56.46 ms` | `48,991,744 B` |
+| E6 primitive event, `1/32` | **`19.89 ms`** | `18.90-37.00 ms` | **`44,691,968 B`** |
+| dense all-token direct E6 | `47.68 ms` | `46.27-71.88 ms` | `143,790,592 B` |
+| official fused Mamba-2 | **`13.01 ms`** | `12.02-19.04 ms` | **`34,982,400 B`** |
 
 The candidate ratios are:
 
-- `0.633x` dead-budget time and `0.912x` dead-budget peak;
-- `0.424x` dense-E6 time and `0.311x` dense-E6 peak;
-- `1.408x` Mamba-2 time and `1.278x` Mamba-2 peak.
+- `0.600x` dead-budget time and `0.912x` dead-budget peak;
+- `0.417x` dense-E6 time and `0.311x` dense-E6 peak;
+- `1.530x` Mamba-2 time and `1.278x` Mamba-2 peak.
 
 The primitive arm being faster than its dead-budget control is not evidence
 that an action has negative cost.  The fused kernel replaces the generic
@@ -183,7 +183,37 @@ Not yet supported or promoted:
 - natural-text quality superiority over the dead-budget control or Mamba-2;
 - E7(-25) or E8(-24) carriers.
 
-The immediate quality question is now clean: with cost no longer dominated by
-dense matrix exponentials, does sparse exceptional transport learn anything
-useful on ordinary text?  That requires the separately summarized fresh-seed
-cohort; no answer is inferred from these systems measurements.
+## Fresh-seed natural-text result
+
+The new cohort uses raw Tiny Shakespeare bytes, three fresh seeds, 1,000
+updates, batch 4, length 128, 32 fixed validation batches, eager FP32, AdamW,
+and identical target digests within each seed.  Every arm writes an external
+checkpoint whose SHA-256 is verified by the fail-closed summary.  All reports
+bind clean commit `a62bc63` and the same source hashes.
+
+The summary is
+[`artifacts/sparse_quality_summary_sm75_2026-08-26.json`](artifacts/sparse_quality_summary_sm75_2026-08-26.json).
+
+| Arm | Parameters | Mean validation bpb | Geometric mean train bytes/s | Maximum training peak |
+|---|---:|---:|---:|---:|
+| E6 primitive dead budget | 40,858 | `2.962925` | `14,238.3` | `48,951,296 B` |
+| E6 primitive event, `1/32` | 40,858 | **`2.955639`** | **`18,584.5`** | **`44,651,520 B`** |
+| dense all-token direct E6 | 40,858 | `2.949676` | `9,559.4` | `145,969,664 B` |
+| official fused Mamba-2 | 40,848 | **`2.790171`** | **`36,549.4`** | **`35,990,528 B`** |
+
+Sparse E6 beats its exact dead-budget control in seeds 2677 and 2699, loses in
+2683, and improves mean bpb by `0.007286`.  Together with the systems pass,
+this satisfies the frozen narrow promotion for **cheap exceptional transport
+with positive local text evidence**.
+
+The stronger conclusions fail:
+
+- sparse E6 beats dense E6 in only one of three seeds and is worse by
+  `0.005963` mean bpb;
+- it loses all three seeds to Mamba-2 and is worse by `0.165468` mean bpb;
+- it fails both the Mamba quality gate and the Mamba systems gate.
+
+The result supports sparse transport as a viable learned component.  It does
+not support this complete architecture as a Mamba-2 replacement, does not
+establish a learned event router, and does not revive dense all-token
+exceptional transport.

@@ -116,5 +116,9 @@ Mamba-2 gate.  See
 [`SM75_PRIMITIVE_TRANSPORT_RESULTS.md`](SM75_PRIMITIVE_TRANSPORT_RESULTS.md).
 
 No v1.3.2 natural-text quality conclusion is backfilled from the systems
-result.  Its parameter-matched dead-action/E6/Mamba cohort is a new experiment
-with its own artifacts and fail-closed summary.
+result.  Its separate parameter-matched dead-action/E6/Mamba cohort subsequently
+completed: sparse E6 beats the dead control in 2/3 seeds by `0.007286` mean bpb,
+but loses all three seeds to Mamba-2 by `0.165468` mean bpb.  The component-
+level gate passes; the complete-model promotion fails.  The source-bound
+artifacts and checkpoints are summarized in
+[`SM75_PRIMITIVE_TRANSPORT_RESULTS.md`](SM75_PRIMITIVE_TRANSPORT_RESULTS.md).

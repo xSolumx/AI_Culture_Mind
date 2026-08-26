@@ -70,10 +70,14 @@ exact-data, numerical, empirical, and open claims in
 
 The new systems result is in
 [`SM75_PRIMITIVE_TRANSPORT_RESULTS.md`](SM75_PRIMITIVE_TRANSPORT_RESULTS.md).
-At one E6 action per 32 tokens, the complete candidate is 2.36x faster and uses
+At one E6 action per 32 tokens, the complete candidate is 2.40x faster and uses
 69% less peak allocation than dense all-token E6.  It passes the cheap-action
-gate, but remains 1.41x slower and 1.28x larger in peak allocation than official
+gate, but remains 1.53x slower and 1.28x larger in peak allocation than official
 fused Mamba-2, so the stronger complete-model systems gate remains failed.
+In the subsequent clean three-seed text cohort, sparse E6 beats its exact
+dead-budget control in two seeds and improves mean bpb by 0.0073, while losing
+all three seeds to Mamba-2.  This promotes cheap sparse exceptional transport
+as a research component, not the complete language model.
 
 The v1.3.1 repaired model law and matched natural-text results are retained in
 [`QUALITY_LEARNING_RESULTS.md`](QUALITY_LEARNING_RESULTS.md). F4 and E6 learn

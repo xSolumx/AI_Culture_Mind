@@ -116,12 +116,21 @@ kernel alone solved the systems problem.
 - WSL native suite: 72/72 passing.
 - Fused recurrence output/final error at most about `6.6e-9`; all seven input
   gradient families at most about `9e-8` from the portable recurrence.
-- Isolated action: F4/E6 forward+backward speedups of `428.6x` and `654.4x`
+- Isolated action: F4/E6 forward+backward speedups of `415.4x` and `628.5x`
   over the dense same-chart oracle.
-- Complete sparse E6 step: `19.77 ms` median and `44,691,968 B` maximum peak,
-  versus dense E6 at `46.60 ms` and `143,790,592 B`.
-- Official fused Mamba-2 remains ahead at `14.04 ms` and `34,982,400 B`.
+- Complete sparse E6 step: `19.89 ms` median and `44,691,968 B` maximum peak,
+  versus dense E6 at `47.68 ms` and `143,790,592 B`.
+- Official fused Mamba-2 remains ahead at `13.01 ms` and `34,982,400 B`.
 
-The cheap-action gate passes.  The complete-model Mamba systems gate fails.
-No quality conclusion is drawn until the fresh three-seed cohort completes.
+The clean-revision systems rerun gives `19.89 ms` sparse E6 versus `47.68 ms`
+dense E6 and `13.01 ms` Mamba-2.  The cheap-action gate passes; the complete-
+model Mamba systems gate fails.
+
+The fresh seeds 2677/2683/2699 then completed 12/12 natural-text cells and
+verified all external checkpoint hashes.  Sparse E6 beats the exact dead-
+budget control in 2/3 seeds and improves mean bpb from `2.962925` to
+`2.955639`, passing the frozen local quality gate.  Dense E6 remains slightly
+better at `2.949676`; Mamba-2 remains decisively better at `2.790171` and wins
+all three seeds.  Cheap exceptional transport is therefore promoted as a
+learned component, while the complete model is not promoted over Mamba-2.
 See [`SM75_PRIMITIVE_TRANSPORT_RESULTS.md`](SM75_PRIMITIVE_TRANSPORT_RESULTS.md).
