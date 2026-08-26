@@ -43,6 +43,9 @@ class TrainingConfig:
     update_rank: int = 2
     d_conv: int = 4
     activation_checkpointing: bool = False
+    primitive_sequence_backend: str = "auto"
+    channel_mixer: str = "jordan"
+    readout_mode: str = "albert_invariants"
     seed: int = 17
 
 
@@ -162,8 +165,9 @@ def _build_model(name: str, config: TrainingConfig) -> torch.nn.Module:
             update_rank=config.update_rank,
             d_conv=config.d_conv,
             activation_checkpointing=config.activation_checkpointing,
-            channel_mixer="jordan",
-            readout_mode="albert_invariants",
+            primitive_sequence_backend=config.primitive_sequence_backend,
+            channel_mixer=config.channel_mixer,
+            readout_mode=config.readout_mode,
             **variant,
         )
     )

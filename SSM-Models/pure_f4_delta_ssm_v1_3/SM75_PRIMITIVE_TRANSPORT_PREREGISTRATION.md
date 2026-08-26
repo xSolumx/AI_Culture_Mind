@@ -159,6 +159,29 @@ recomputed during backward, and streaming/inference execution is unchanged.
 The checkpointed arm must still satisfy the same complete-step time and memory
 thresholds; no memory-only pass is allowed.
 
+### Long-context recurrent repair
+
+**Amendment frozen after the recurrent fixed-token ladder failed and before
+measuring the chunked path.**
+
+If the persistent recurrence passes at `(B,L)=(32,128)` but loses fixed-token
+throughput as batch concurrency falls, the next repair is the exact separable
+two-sided affine scan.  Within each 32-token block, the first 31 Delta edits
+compile to a one-sided head-space affine operator.  The final edit plus event
+transport forms
+
+\[
+S \mapsto A S R^T + B.
+\]
+
+These block maps compose associatively because Delta control acts on the head
+axis and exceptional transport acts on the 27D value axis.  The implementation
+must parallel-scan block operators and reconstruct all within-block token
+states.  Dense 27 by 27 actions are permitted only at the scheduled `L/32`
+events, never at every token.  The raw scan and complete model must match the
+recurrent oracle in outputs, final state, and gradients before a second ladder
+run.  The original fixed-token and Mamba thresholds remain unchanged.
+
 ### Mamba-competitive systems promotion
 
 This stronger gate requires both complete training-step time and peak CUDA

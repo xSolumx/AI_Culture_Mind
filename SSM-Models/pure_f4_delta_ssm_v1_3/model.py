@@ -35,6 +35,7 @@ from .scan import (
     compile_one_sided_delta_transition,
     direct_recurrent_delta_scan,
     parallel_delta_scan,
+    parallel_chunked_primitive_delta_scan,
     parallel_one_sided_delta_scan,
     recurrent_delta_scan,
     recurrent_one_sided_delta_scan,
@@ -74,6 +75,9 @@ class ExceptionalDeltaConfig:
     action_event_stride: int = 32
     primitive_backend: Literal["auto", "reference", "cuda"] = "auto"
     primitive_transport_enabled: bool = True
+    primitive_sequence_backend: Literal[
+        "auto", "recurrent", "chunked_parallel"
+    ] = "auto"
     identity_fast_path: bool = True
     d_conv: int = 4
     local_mixer: Literal["depthwise_conv", "none"] = "depthwise_conv"
@@ -139,6 +143,12 @@ class ExceptionalDeltaConfig:
                 raise ValueError("canonical_product supports only F4 or E6")
             if self.action_factors != 1:
                 raise ValueError("canonical_product has one ordered primitive chart")
+        if self.primitive_sequence_backend not in {
+            "auto",
+            "recurrent",
+            "chunked_parallel",
+        }:
+            raise ValueError("unknown primitive sequence backend")
         if (
             self.action_schedule is not None
             and len(self.action_schedule) != self.num_layers
@@ -565,7 +575,41 @@ class ExceptionalDeltaBlock(nn.Module):
                 and value.dtype == torch.float32
                 and torch.cuda.get_device_capability(value.device) == (7, 5)
             )
-            if use_native_primitive:
+            use_chunked_parallel = (
+                self.config.primitive_sequence_backend == "chunked_parallel"
+                or (
+                    self.config.primitive_sequence_backend == "auto"
+                    and value.shape[1] >= 256
+                )
+            ) and phase == 0 and value.shape[1] % stride == 0
+            if use_chunked_parallel:
+                basis = torch.eye(
+                    self.action.representation_dim,
+                    dtype=value.dtype,
+                    device=value.device,
+                ).expand(
+                    value.shape[0],
+                    len(event_positions),
+                    self.action.representation_dim,
+                    self.action.representation_dim,
+                )
+                # Primitive action maps column coordinates.  Applying it to
+                # basis vectors returns rows of R.T, while the affine scan
+                # stores R for the map S -> A S R.T.
+                event_actions = self.action(
+                    basis, event_coordinates
+                ).transpose(-1, -2)
+                reads, _, final_memory = parallel_chunked_primitive_delta_scan(
+                    fields["retention"],
+                    fields["write_key"],
+                    fields["erase_key"],
+                    fields["write_value"],
+                    memory,
+                    fields["query"],
+                    event_actions,
+                    event_stride=stride,
+                )
+            elif use_native_primitive:
                 reads, final_memory = primitive_delta_recurrence_cuda(
                     fields["retention"],
                     fields["write_key"],
@@ -635,7 +679,37 @@ class ExceptionalDeltaBlock(nn.Module):
                 and value.dtype == torch.float32
                 and torch.cuda.get_device_capability(value.device) == (7, 5)
             )
-            if use_native_primitive:
+            use_chunked_parallel = (
+                self.config.primitive_sequence_backend == "chunked_parallel"
+                or (
+                    self.config.primitive_sequence_backend == "auto"
+                    and value.shape[1] >= 256
+                )
+            ) and phase == 0 and value.shape[1] % stride == 0
+            if use_chunked_parallel:
+                identity = torch.eye(
+                    self.action.representation_dim,
+                    dtype=value.dtype,
+                    device=value.device,
+                ).expand(
+                    value.shape[0],
+                    len(event_positions),
+                    self.action.representation_dim,
+                    self.action.representation_dim,
+                )
+                zero_controller = dead_coordinates.sum(dim=-1)[..., None, None]
+                event_actions = identity + zero_controller * 0.0
+                reads, _, final_memory = parallel_chunked_primitive_delta_scan(
+                    fields["retention"],
+                    fields["write_key"],
+                    fields["erase_key"],
+                    fields["write_value"],
+                    memory,
+                    fields["query"],
+                    event_actions,
+                    event_stride=stride,
+                )
+            elif use_native_primitive:
                 reads, final_memory = primitive_delta_recurrence_cuda(
                     fields["retention"],
                     fields["write_key"],

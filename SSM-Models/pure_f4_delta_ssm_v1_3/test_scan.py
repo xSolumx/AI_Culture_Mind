@@ -7,6 +7,7 @@ from .scan import (
     compile_one_sided_delta_transition,
     compose_transition,
     direct_recurrent_delta_scan,
+    parallel_chunked_primitive_delta_scan,
     parallel_delta_scan,
     parallel_one_sided_delta_scan,
     recurrent_delta_scan,
@@ -189,6 +190,64 @@ def test_one_sided_parallel_and_recurrent_scans_match() -> None:
         torch.testing.assert_close(
             actual_tensor, expected_tensor, rtol=2e-11, atol=2e-11
         )
+
+
+def test_chunked_event_scan_matches_dense_token_oracle_and_gradients() -> None:
+    torch.manual_seed(20260826)
+    dtype = torch.float64
+    batch, length, stride, rank, heads, value_dim = 2, 12, 3, 2, 4, 5
+    chunks = length // stride
+    original = [
+        (0.9 + 0.05 * torch.rand(batch, length, heads, dtype=dtype)).requires_grad_(),
+        torch.randn(batch, length, rank, heads, dtype=dtype).requires_grad_(),
+        (0.02 * torch.randn(batch, length, rank, heads, dtype=dtype)).requires_grad_(),
+        torch.randn(batch, length, rank, value_dim, dtype=dtype).requires_grad_(),
+        torch.randn(batch, heads, value_dim, dtype=dtype).requires_grad_(),
+        torch.randn(batch, length, heads, dtype=dtype).requires_grad_(),
+        (0.03 * torch.randn(
+            batch, chunks, value_dim, value_dim, dtype=dtype
+        )).requires_grad_(),
+    ]
+    actual_inputs = [item.detach().clone().requires_grad_(True) for item in original]
+
+    retention, write_key, erase_key, write_value, initial, query, tangents = original
+    event_actions = torch.matrix_exp(tangents)
+    token_actions = torch.eye(value_dim, dtype=dtype).expand(
+        batch, length, value_dim, value_dim
+    ).clone()
+    token_actions[:, stride - 1 :: stride] = event_actions
+    expected = recurrent_delta_scan(
+        compile_delta_transition(
+            retention,
+            write_key,
+            erase_key,
+            write_value,
+            token_actions,
+        ),
+        initial,
+        query,
+    )
+
+    retention, write_key, erase_key, write_value, initial, query, tangents = (
+        actual_inputs
+    )
+    actual = parallel_chunked_primitive_delta_scan(
+        retention,
+        write_key,
+        erase_key,
+        write_value,
+        initial,
+        query,
+        torch.matrix_exp(tangents),
+        event_stride=stride,
+    )
+    for candidate, oracle in zip(actual, expected, strict=True):
+        torch.testing.assert_close(candidate, oracle, rtol=3e-11, atol=3e-11)
+    cotangent = torch.randn_like(expected[0])
+    expected_gradients = torch.autograd.grad(expected[0], original, cotangent)
+    actual_gradients = torch.autograd.grad(actual[0], actual_inputs, cotangent)
+    for candidate, oracle in zip(actual_gradients, expected_gradients, strict=True):
+        torch.testing.assert_close(candidate, oracle, rtol=5e-10, atol=5e-10)
 
 
 def test_segmented_primitive_scan_matches_dense_event_oracle_and_gradients() -> None:

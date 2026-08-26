@@ -119,6 +119,44 @@ def test_activation_checkpointing_preserves_outputs_states_and_gradients() -> No
         torch.testing.assert_close(candidate, oracle, rtol=2e-12, atol=2e-12)
 
 
+def test_chunked_primitive_model_matches_recurrent_outputs_and_gradients() -> None:
+    torch.manual_seed(20260827)
+    common = {
+        "num_layers": 2,
+        "action_geometry": "canonical_product",
+        "primitive_backend": "reference",
+        "action_event_stride": 3,
+    }
+    recurrent = _tiny(
+        primitive_sequence_backend="recurrent", **common
+    ).double().train()
+    chunked = _tiny(
+        primitive_sequence_backend="chunked_parallel", **common
+    ).double().train()
+    chunked.load_state_dict(recurrent.state_dict())
+    tokens = torch.randint(0, 256, (2, 6))
+    expected = recurrent(tokens)
+    actual = chunked(tokens)
+    torch.testing.assert_close(
+        actual["logits"], expected["logits"], rtol=2e-6, atol=3e-8
+    )
+    for candidate_state, oracle_state in zip(
+        actual["states"], expected["states"], strict=True
+    ):
+        torch.testing.assert_close(
+            candidate_state.memory, oracle_state.memory, rtol=2e-6, atol=1e-8
+        )
+    cotangent = torch.randn_like(actual["logits"])
+    expected_gradients = torch.autograd.grad(
+        expected["logits"], tuple(recurrent.parameters()), cotangent
+    )
+    actual_gradients = torch.autograd.grad(
+        actual["logits"], tuple(chunked.parameters()), cotangent
+    )
+    for candidate, oracle in zip(actual_gradients, expected_gradients, strict=True):
+        torch.testing.assert_close(candidate, oracle, rtol=3e-4, atol=2e-7)
+
+
 def test_every_action_tier_and_update_parameterization_executes() -> None:
     tokens = torch.randint(0, 256, (1, 2))
     for algebra in ("identity", "g2", "spin7", "spin8", "spin9", "f4", "e6"):

@@ -380,6 +380,109 @@ def parallel_one_sided_delta_scan(
     return _read(states, query), states, states[:, -1]
 
 
+def parallel_chunked_primitive_delta_scan(
+    retention: torch.Tensor,
+    write_key: torch.Tensor,
+    erase_key: torch.Tensor,
+    write_value: torch.Tensor,
+    initial_state: torch.Tensor,
+    query: torch.Tensor | None,
+    event_actions: torch.Tensor,
+    *,
+    event_stride: int,
+) -> tuple[torch.Tensor | None, torch.Tensor, torch.Tensor]:
+    """Exact log-depth scan for end-of-chunk two-sided event actions.
+
+    Delta edits act on the head axis while exceptional transport acts on the
+    value axis.  A stride-sized block therefore compiles to the separable map
+    ``S -> A @ S @ R.T + B``.  The block maps are scanned associatively, then
+    the token states inside all blocks are reconstructed in parallel.
+    """
+
+    if retention.ndim != 3 or event_stride < 1:
+        raise ValueError("retention must be (B,L,H) and stride must be positive")
+    batch, length, heads = retention.shape
+    if length % event_stride:
+        raise ValueError("length must be divisible by the end-event stride")
+    if write_key.shape != erase_key.shape or write_key.ndim != 4:
+        raise ValueError("keys must share shape (B,L,R,H)")
+    rank = write_key.shape[2]
+    value_dim = write_value.shape[-1]
+    if write_key.shape != (batch, length, rank, heads):
+        raise ValueError("key shape mismatch")
+    if write_value.shape != (batch, length, rank, value_dim):
+        raise ValueError("write value shape mismatch")
+    if initial_state.shape != (batch, heads, value_dim):
+        raise ValueError("initial state shape mismatch")
+    if query is not None and query.shape != retention.shape:
+        raise ValueError("query must match retention")
+    chunks = length // event_stride
+    if event_actions.shape != (batch, chunks, value_dim, value_dim):
+        raise ValueError("event actions must be (B,L/stride,V,V)")
+
+    transition = compile_one_sided_delta_transition(
+        retention, write_key, erase_key, write_value
+    )
+    left = transition.left.reshape(
+        batch, chunks, event_stride, heads, heads
+    )
+    bias = transition.bias.reshape(
+        batch, chunks, event_stride, heads, value_dim
+    )
+    event_left = left[:, :, -1]
+    event_bias = bias[:, :, -1]
+
+    if event_stride == 1:
+        chunk_transition = TwoSidedAffineTransition(
+            left=event_left,
+            right=event_actions,
+            bias=event_bias,
+        )
+        pre_prefix = None
+    else:
+        pre_length = event_stride - 1
+        pre_transition = OneSidedAffineTransition(
+            left=left[:, :, :pre_length].reshape(
+                batch * chunks, pre_length, heads, heads
+            ),
+            bias=bias[:, :, :pre_length].reshape(
+                batch * chunks, pre_length, heads, value_dim
+            ),
+        )
+        pre_prefix = one_sided_transition_prefix_scan(pre_transition)
+        pre_final_left = pre_prefix.left[:, -1].reshape(
+            batch, chunks, heads, heads
+        )
+        pre_final_bias = pre_prefix.bias[:, -1].reshape(
+            batch, chunks, heads, value_dim
+        )
+        chunk_transition = TwoSidedAffineTransition(
+            left=event_left @ pre_final_left,
+            right=event_actions,
+            bias=(
+                event_bias
+                + event_left @ pre_final_bias @ event_actions.transpose(-1, -2)
+            ),
+        )
+
+    chunk_prefix = transition_prefix_scan(chunk_transition)
+    chunk_ends = apply_transition(chunk_prefix, initial_state[:, None])
+    chunk_starts = torch.cat((initial_state[:, None], chunk_ends[:, :-1]), dim=1)
+
+    if event_stride == 1:
+        states = chunk_ends[:, :, None]
+    else:
+        if pre_prefix is None:
+            raise AssertionError("pre-event prefix was not constructed")
+        flat_starts = chunk_starts.reshape(batch * chunks, heads, value_dim)
+        pre_states = apply_one_sided_transition(
+            pre_prefix, flat_starts[:, None]
+        ).reshape(batch, chunks, event_stride - 1, heads, value_dim)
+        states = torch.cat((pre_states, chunk_ends[:, :, None]), dim=2)
+    states = states.reshape(batch, length, heads, value_dim)
+    return _read(states, query), states, chunk_ends[:, -1]
+
+
 __all__ = [
     "OneSidedAffineTransition",
     "TwoSidedAffineTransition",
@@ -392,6 +495,7 @@ __all__ = [
     "direct_recurrent_delta_scan",
     "one_sided_transition_prefix_scan",
     "parallel_delta_scan",
+    "parallel_chunked_primitive_delta_scan",
     "parallel_one_sided_delta_scan",
     "segmented_primitive_delta_scan",
     "recurrent_delta_scan",

@@ -135,6 +135,9 @@ def _run_child(args: argparse.Namespace) -> dict[str, object]:
         update_rank=args.update_rank,
         d_conv=args.d_conv,
         activation_checkpointing=args.activation_checkpointing,
+        primitive_sequence_backend=args.primitive_sequence_backend,
+        channel_mixer=args.channel_mixer,
+        readout_mode=args.readout_mode,
         learning_rate=args.learning_rate,
         seed=seed,
     )
@@ -144,7 +147,12 @@ def _run_child(args: argparse.Namespace) -> dict[str, object]:
         and args.mamba_d_model is not None
         else config
     )
-    model = _build_paired_model(args.child_variant, build_config, device)
+    base_model = _build_paired_model(args.child_variant, build_config, device)
+    model = (
+        torch.compile(base_model, mode=args.compile_mode)
+        if args.compile_exceptional and isinstance(base_model, ExceptionalDeltaLM)
+        else base_model
+    )
     model.train()
     optimizer = torch.optim.AdamW(
         model.parameters(), lr=args.learning_rate, weight_decay=0.01
@@ -219,23 +227,23 @@ def _run_child(args: argparse.Namespace) -> dict[str, object]:
         if isinstance(value, torch.Tensor)
     )
     action_buffer_bytes = 0
-    if isinstance(model, ExceptionalDeltaLM):
+    if isinstance(base_model, ExceptionalDeltaLM):
         action_buffer_bytes = sum(
             _tensor_bytes(buffer)
-            for block in model.blocks
+            for block in base_model.blocks
             for buffer in block.action.buffers()
         )
-    model_buffer_bytes = sum(_tensor_bytes(buffer) for buffer in model.buffers())
+    model_buffer_bytes = sum(_tensor_bytes(buffer) for buffer in base_model.buffers())
     event_stride = (
-        model.config.action_event_stride
-        if isinstance(model, ExceptionalDeltaLM)
-        and model.config.action_geometry == "canonical_product"
+        base_model.config.action_event_stride
+        if isinstance(base_model, ExceptionalDeltaLM)
+        and base_model.config.action_geometry == "canonical_product"
         else None
     )
     transport_enabled = (
-        model.config.primitive_transport_enabled
-        if isinstance(model, ExceptionalDeltaLM)
-        and model.config.action_geometry == "canonical_product"
+        base_model.config.primitive_transport_enabled
+        if isinstance(base_model, ExceptionalDeltaLM)
+        and base_model.config.action_geometry == "canonical_product"
         else None
     )
     events_per_layer = (
@@ -258,15 +266,42 @@ def _run_child(args: argparse.Namespace) -> dict[str, object]:
         "cycle": args.cycle,
         "seed": seed,
         "model_d_model": build_config.d_model,
+        "execution": (
+            f"torch_compile_{args.compile_mode}"
+            if args.compile_exceptional and isinstance(base_model, ExceptionalDeltaLM)
+            else "eager"
+        ),
         "mamba_ssm_runtime": mamba_runtime,
-        "parameters": parameter_count(model),
-        "parameter_bytes": sum(_tensor_bytes(p) for p in model.parameters()),
+        "parameters": parameter_count(base_model),
+        "parameter_bytes": sum(_tensor_bytes(p) for p in base_model.parameters()),
         "model_buffer_bytes": model_buffer_bytes,
         "action_buffer_bytes": action_buffer_bytes,
         "optimizer_state_bytes": optimizer_bytes,
-        "cache_scalars": getattr(model, "cache_scalars", None),
+        "cache_scalars": getattr(base_model, "cache_scalars", None),
         "event_stride": event_stride,
         "primitive_transport_enabled": transport_enabled,
+        "primitive_sequence_backend_config": (
+            base_model.config.primitive_sequence_backend
+            if isinstance(base_model, ExceptionalDeltaLM)
+            else None
+        ),
+        "primitive_sequence_backend_effective": (
+            "chunked_parallel"
+            if isinstance(base_model, ExceptionalDeltaLM)
+            and base_model.config.action_geometry == "canonical_product"
+            and (
+                base_model.config.primitive_sequence_backend == "chunked_parallel"
+                or (
+                    base_model.config.primitive_sequence_backend == "auto"
+                    and args.sequence_length >= 256
+                )
+            )
+            and args.sequence_length % base_model.config.action_event_stride == 0
+            else "recurrent"
+            if isinstance(base_model, ExceptionalDeltaLM)
+            and base_model.config.action_geometry == "canonical_product"
+            else None
+        ),
         "events_per_layer": events_per_layer,
         "event_density": (
             events_per_layer / args.sequence_length if args.sequence_length else 0.0
@@ -318,6 +353,12 @@ def _child_command(args: argparse.Namespace, variant: str, cycle: int) -> list[s
         str(args.d_conv),
         "--learning-rate",
         str(args.learning_rate),
+        "--primitive-sequence-backend",
+        args.primitive_sequence_backend,
+        "--channel-mixer",
+        args.channel_mixer,
+        "--readout-mode",
+        args.readout_mode,
         "--seed",
         str(args.seed),
         "--device",
@@ -327,6 +368,8 @@ def _child_command(args: argparse.Namespace, variant: str, cycle: int) -> list[s
         command.extend(("--mamba-d-model", str(args.mamba_d_model)))
     if args.activation_checkpointing:
         command.append("--activation-checkpointing")
+    if args.compile_exceptional:
+        command.extend(("--compile-exceptional", "--compile-mode", args.compile_mode))
     if args.require_sm75:
         command.append("--require-sm75")
     return command
@@ -519,6 +562,11 @@ def _run_parent(args: argparse.Namespace) -> dict[str, object]:
             "update_rank": args.update_rank,
             "d_conv": args.d_conv,
             "activation_checkpointing": args.activation_checkpointing,
+            "primitive_sequence_backend": args.primitive_sequence_backend,
+            "channel_mixer": args.channel_mixer,
+            "readout_mode": args.readout_mode,
+            "compile_exceptional": args.compile_exceptional,
+            "compile_mode": args.compile_mode,
             "learning_rate": args.learning_rate,
             "seed": args.seed,
         },
@@ -566,6 +614,25 @@ def main() -> None:
     parser.add_argument("--d-conv", type=int, default=4)
     parser.add_argument("--learning-rate", type=float, default=3e-3)
     parser.add_argument("--activation-checkpointing", action="store_true")
+    parser.add_argument(
+        "--primitive-sequence-backend",
+        choices=("auto", "recurrent", "chunked_parallel"),
+        default="auto",
+    )
+    parser.add_argument(
+        "--channel-mixer", choices=("jordan", "swiglu", "none"), default="jordan"
+    )
+    parser.add_argument(
+        "--readout-mode",
+        choices=("albert_invariants", "vector"),
+        default="albert_invariants",
+    )
+    parser.add_argument("--compile-exceptional", action="store_true")
+    parser.add_argument(
+        "--compile-mode",
+        choices=("default", "reduce-overhead", "max-autotune"),
+        default="default",
+    )
     parser.add_argument("--seed", type=int, default=20260826)
     parser.add_argument("--device", choices=("cuda",), default="cuda")
     parser.add_argument("--require-sm75", action="store_true")

@@ -218,6 +218,12 @@ def _benchmark_command(args: argparse.Namespace, length: int) -> list[str]:
         str(args.d_conv),
         "--learning-rate",
         str(args.learning_rate),
+        "--primitive-sequence-backend",
+        args.primitive_sequence_backend,
+        "--channel-mixer",
+        args.channel_mixer,
+        "--readout-mode",
+        args.readout_mode,
         "--seed",
         str(args.seed),
         "--device",
@@ -269,6 +275,9 @@ def _run(args: argparse.Namespace) -> dict[str, object]:
             "d_conv": args.d_conv,
             "learning_rate": args.learning_rate,
             "activation_checkpointing": args.activation_checkpointing,
+            "primitive_sequence_backend": args.primitive_sequence_backend,
+            "channel_mixer": args.channel_mixer,
+            "readout_mode": args.readout_mode,
             "seed": args.seed,
         },
         "environment": {
@@ -305,6 +314,19 @@ def main() -> None:
     parser.add_argument("--d-conv", type=int, default=4)
     parser.add_argument("--learning-rate", type=float, default=3e-3)
     parser.add_argument("--activation-checkpointing", action="store_true")
+    parser.add_argument(
+        "--primitive-sequence-backend",
+        choices=("auto", "recurrent", "chunked_parallel"),
+        default="auto",
+    )
+    parser.add_argument(
+        "--channel-mixer", choices=("jordan", "swiglu", "none"), default="jordan"
+    )
+    parser.add_argument(
+        "--readout-mode",
+        choices=("albert_invariants", "vector"),
+        default="albert_invariants",
+    )
     parser.add_argument("--seed", type=int, default=20260826)
     parser.add_argument("--device", choices=("cuda",), default="cuda")
     parser.add_argument("--require-sm75", action="store_true")

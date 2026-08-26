@@ -98,6 +98,11 @@ def test_child_command_propagates_mamba_width() -> None:
         device = "cuda"
         require_sm75 = True
         activation_checkpointing = False
+        primitive_sequence_backend = "auto"
+        channel_mixer = "jordan"
+        readout_mode = "albert_invariants"
+        compile_exceptional = False
+        compile_mode = "default"
 
     command = _child_command(Args(), "mamba2_official", 0)
     index = command.index("--mamba-d-model")
