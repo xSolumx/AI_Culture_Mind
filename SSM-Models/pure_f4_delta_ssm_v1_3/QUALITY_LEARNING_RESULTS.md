@@ -122,3 +122,12 @@ but loses all three seeds to Mamba-2 by `0.165468` mean bpb.  The component-
 level gate passes; the complete-model promotion fails.  The source-bound
 artifacts and checkpoints are summarized in
 [`SM75_PRIMITIVE_TRANSPORT_RESULTS.md`](SM75_PRIMITIVE_TRANSPORT_RESULTS.md).
+
+Subsequent systems work must not be read backward into this quality result.
+The representative four-layer checkpointed candidate now passes matched
+training-step time and memory against Mamba-2 at batch 32 / length 128.  A
+separate two-layer SwiGLU/vector-read arm also passes 4,096-token bulk prefill,
+cache-building prefill, and recurrent-cache gates, while failing one-token
+decode at `1.70x` Mamba-2.  Neither arm has completed a fresh matched text
+cohort.  The `2.955639` bpb result above belongs specifically to the earlier
+Jordan/invariant host and cannot be transferred to the lean systems arm.

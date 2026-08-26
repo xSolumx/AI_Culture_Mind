@@ -64,20 +64,29 @@ This package now has both a portable semantic PyTorch implementation and a
 source-built Linux/WSL CUDA backend compiled specifically for SM75.  The native
 backend is not an Ampere fallback: it implements the F4/E6 primitive action and
 the full sparse-event Delta recurrence directly on the RTX 2070 SUPER.  The
-canonical WSL SM75 suite passes 72 tests.  The generated audit separates
+current canonical WSL SM75 suite passes 85 tests.  The generated audit separates
 exact-data, numerical, empirical, and open claims in
 [`artifacts/algebra_audit.json`](artifacts/algebra_audit.json).
 
 The new systems result is in
 [`SM75_PRIMITIVE_TRANSPORT_RESULTS.md`](SM75_PRIMITIVE_TRANSPORT_RESULTS.md).
-At one E6 action per 32 tokens, the complete candidate is 2.40x faster and uses
-69% less peak allocation than dense all-token E6.  It passes the cheap-action
-gate, but remains 1.53x slower and 1.28x larger in peak allocation than official
-fused Mamba-2, so the stronger complete-model systems gate remains failed.
-In the subsequent clean three-seed text cohort, sparse E6 beats its exact
-dead-budget control in two seeds and improves mean bpb by 0.0073, while losing
-all three seeds to Mamba-2.  This promotes cheap sparse exceptional transport
-as a research component, not the complete language model.
+At one E6 action per 32 tokens, the 0.68M-parameter checkpointed training arm
+is 1.099x its exact dead-action control, 0.289x dense all-token E6, and 0.955x
+official fused Mamba-2; peak allocation is 0.959x Mamba-2.  Both representative
+systems gates pass.  A fixed-token long-context ladder still fails because the
+persistent kernel loses occupancy at low batch concurrency; the exact parallel
+chunk scan improves the hardest development cell 3.26x but has not passed the
+clean all-context gate.  In true cached inference, sparse E6 prefill is 0.711x
+Mamba-2 time and its cache is only 1.38% as large, but complete eager one-token
+decode is 1.70x slower and fails promotion.  The exceptional action itself is
+not the remaining decode bottleneck: active/dead decode is 0.998x.
+
+In the clean three-seed text cohort for the earlier Jordan/invariant host,
+sparse E6 beats its exact dead-budget control in two seeds and improves mean
+bpb by 0.0073, while losing all three seeds to Mamba-2.  This promotes cheap
+sparse exceptional transport as a research component, not the complete
+language model.  Quality evidence does not transfer to the lean two-layer
+SwiGLU/vector systems arm.
 
 The v1.3.1 repaired model law and matched natural-text results are retained in
 [`QUALITY_LEARNING_RESULTS.md`](QUALITY_LEARNING_RESULTS.md). F4 and E6 learn
@@ -136,14 +145,21 @@ python -m pure_f4_delta_ssm_v1_3.benchmark_primitive_action `
 python -m pure_f4_delta_ssm_v1_3.benchmark_sparse_action_cost `
   --cycles 3 --warmups 20 --samples 50 --require-sm75 `
   --output SSM-Models/pure_f4_delta_ssm_v1_3/artifacts/sparse_action_cost.json
+python -m pure_f4_delta_ssm_v1_3.benchmark_sparse_context_scaling `
+  --cycles 2 --warmups 10 --samples 20 --activation-checkpointing `
+  --require-sm75 --output SSM-Models/pure_f4_delta_ssm_v1_3/artifacts/context.json
+python -m pure_f4_delta_ssm_v1_3.benchmark_sparse_inference_cost `
+  --cycles 3 --prefix-length 4096 --require-sm75 `
+  --output SSM-Models/pure_f4_delta_ssm_v1_3/artifacts/inference.json
 ```
 
 The dense-action cost problem is solved for periodic sparse events.  The next
-architecture promotion gate is not "make it larger."  It is quality learning
-for the sparse candidate versus the same-parameter dead-action control and
-official fused Mamba-2, followed by a genuinely learned hard event router if
-periodic transport proves useful.  Dense exceptional action at every token
-remains a historical negative control.
+systems work is fusing chunk-map composition for low-batch long training and
+fusing the ordinary one-token host around the already-cheap action.  The next
+quality gate is a fresh cohort for the lean two-layer systems arm versus its
+same-parameter dead-action control and official fused Mamba-2, followed by a
+learned hard event router only if periodic transport remains useful.  Dense
+exceptional action at every token remains a historical negative control.
 
 See [CONSTRAINT_AUDIT.md](CONSTRAINT_AUDIT.md) for the research-chain audit and
 [MATHEMATICAL_DESIGN.md](MATHEMATICAL_DESIGN.md) for the equations and the

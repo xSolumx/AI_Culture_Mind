@@ -212,13 +212,15 @@
 
 > **2026-08-26 Pure Exceptional Delta SSM v1.3.2 cheap transport.**
 > F4/E6 canonical coordinates of the second kind now execute through exact
-> small-block primitive actions and a fused sparse-event Delta recurrence built
-> specifically for SM75.  At one E6 event per 32 tokens, the 40,858-parameter
-> candidate is 2.40x faster and uses 69% less peak allocation than dense E6.
-> It also beats its same-parameter dead-action control in 2/3 fresh text seeds
-> by 0.0073 mean bpb.  The cheap transport component passes; the complete model
-> remains 1.53x slower than parameter-matched official fused Mamba-2 and loses
-> all three quality seeds, so the stronger model gate fails.  See the
+> small-block primitive actions and fused recurrent/parallel sparse-event Delta
+> backends built for SM75.  At one E6 event per 32 tokens, the representative
+> 0.68M-parameter training arm passes matched time and peak-memory gates against
+> official Mamba-2.  A lean matched arm also beats Mamba-2 on 4K prefill and
+> uses 1.38% of its recurrent cache; active/dead decode is 0.998x, although the
+> complete eager one-token host is still 1.70x slower.  The earlier quality
+> host beats its dead-action control in 2/3 text seeds by 0.0073 mean bpb but
+> loses all three Mamba quality seeds.  The long-training ladder, fused decode,
+> and complete model-quality gates remain open.  See the
 > [preregistered SM75 result](pure_f4_delta_ssm_v1_3/SM75_PRIMITIVE_TRANSPORT_RESULTS.md)
 > and [model boundary](pure_f4_delta_ssm_v1_3/README.md).
 

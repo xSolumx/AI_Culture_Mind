@@ -111,6 +111,10 @@ kernel alone solved the systems problem.
 
 ### Evidence before the quality cohort
 
+The following counts and small-cell timings were the state at that historical
+checkpoint; the representative continuation below supersedes its systems
+boundary.
+
 - Canonical WSL venv: Python 3.11.16, Torch 2.9.0+cu128, RTX 2070 SUPER,
   compute capability exactly 7.5.
 - WSL native suite: 72/72 passing.
@@ -134,3 +138,64 @@ better at `2.949676`; Mamba-2 remains decisively better at `2.790171` and wins
 all three seeds.  Cheap exceptional transport is therefore promoted as a
 learned component, while the complete model is not promoted over Mamba-2.
 See [`SM75_PRIMITIVE_TRANSPORT_RESULTS.md`](SM75_PRIMITIVE_TRANSPORT_RESULTS.md).
+
+## Representative SM75 continuation
+
+The small regression harness hid two different questions.  Its active fused
+arm and dead generic-scan arm did not share the same recurrent backend, so the
+active/dead timing was not a valid marginal-action measurement.  The native
+recurrence now accepts `transport_enabled`: active and dead share the kernel
+launch, saved-state layout, event schedule, coordinate controller, backward
+interface, parameter count, and optimizer state.  Dead skips only the 78
+primitive factors and returns exact zero coordinate gradients.  Portable and
+native parity tests cover both modes.
+
+The representative pair is four candidate layers at width 126 versus four
+official Mamba-2 layers at width 140: 679,866 versus 682,160 parameters.  The
+first clean run exposed host activation memory rather than action memory.
+Replacing autograd's Albert-product intermediates with an exact custom reverse
+rule reduced candidate peak from 905.8 MB to 353.8 MB.  Non-reentrant block
+checkpointing reduced it again to 222.7 MB while preserving outputs, states,
+and gradients.
+
+At batch 32 / length 128, the final clean candidate takes `67.48 ms` and
+222.71 MB versus exact dead at `61.38 ms` / 222.45 MB, dense E6 at
+`233.45 ms` / 665.52 MB, and Mamba-2 at `70.64 ms` / 232.30 MB.  The
+representative cheap-action and Mamba systems gates both pass.  This is the
+first complete matched cell where the exceptional candidate is within both
+time and memory budgets of official Mamba-2 on exact SM75.
+
+## Long-context execution diagnosis
+
+A clean fixed-4,096-token shape ladder then falsified the idea that the
+persistent recurrence scales across context shapes.  Candidate time rises
+from `67.39 ms` at `(32,128)` to `563.57 ms` at `(1,4096)` while peak memory
+stays flat.  Active/dead overhead remains within its gate everywhere.  The
+failure is occupancy: one persistent CUDA block per stream leaves most of the
+40-SM GPU idle at batch 1.
+
+An exact repair now groups 32 token edits into a two-sided affine block map,
+parallel-scans the block maps, and reconstructs within-block states.  Dense
+27 by 27 actions occur only at the scheduled events.  Raw-scan and complete-
+model output/state/gradient parity pass.  The hardest development cell falls
+to `172.59 ms`, a `3.26x` improvement, but remains slower than Mamba-2 and has
+not received a clean full-ladder promotion.  The open cost is block-map scan
+composition and launch integration, not exceptional factor evaluation.
+
+## Cached inference qualification
+
+The inference harness now drives the official Mamba-2 `InferenceParams` path
+and rejects widths that cannot execute its real cached convolution kernel.
+The matched SM75-friendly pair is a two-layer candidate at width 204 with a
+standard SwiGLU host and normalized vector read versus two-layer Mamba-2 at
+width 224: 807,652 versus 808,176 parameters.
+
+At batch 1 and prefix 4,096, sparse E6 bulk prefill is `10.107 ms` versus
+Mamba-2 at `14.215 ms`; cache-building prefill is `10.409 ms` versus
+`27.998 ms`.  Candidate recurrent cache is 6,624 bytes versus Mamba-2 at
+481,280 bytes.  All three gates pass.  Cached one-token decode is `2.392 ms`
+versus Mamba-2 at `1.408 ms`, so streaming promotion fails at `1.700x`.
+Active E6 versus exact dead-action decode is `0.998x`: the group action is
+below measurement noise, and the remaining decode cost is the unfused eager
+host.  The lean two-layer arm is systems evidence only; no quality conclusion
+is transferred from the earlier Jordan/invariant cohort.

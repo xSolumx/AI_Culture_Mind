@@ -174,10 +174,12 @@ approximated on the Albert state.
   about 3.63x faster. Dense exceptional transport remains task-specialized.
 - Pure Exceptional Delta v1.3.2 removes dense matrix exponentials from the
   promoted research path.  Exact canonical F4/E6 block products and a fused
-  sparse-event Delta kernel pass the separate SM75 cheap-action gate at density
-  1/32 and beats its matched dead-action control in 2/3 text seeds.  The
-  complete E6 model remains 1.53x slower than fused Mamba-2 and loses all three
-  quality seeds, so this is a transport/backend promotion rather than a full
+  sparse-event Delta kernel pass representative SM75 training time and memory
+  at density 1/32.  A lean matched arm also beats Mamba-2 on 4K bulk and cache-
+  building prefill, with 1.38% of its recurrent cache; active/dead decode is
+  0.998x, but the complete eager decode host is 1.70x slower.  The persistent
+  long-training ladder remains failed, and the earlier quality host loses all
+  three Mamba seeds.  This is a transport/backend promotion rather than a full
   language-model promotion.
 - Hybrid Memory v1.4/v1.4.5 is a separate active model workspace. Its G15A
   exact SM75/FP32 primary cohort passes across three seeds: full Spin `S`
