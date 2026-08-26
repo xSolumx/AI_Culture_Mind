@@ -1,0 +1,591 @@
+{
+  "adjudication": {
+    "decision": "authorize prospective G15B-E Phase-1 constructed training",
+    "passed": true
+  },
+  "environment": {
+    "compute_capability": [
+      7,
+      5
+    ],
+    "cuda_runtime": "12.8",
+    "device": "cuda",
+    "device_name": "NVIDIA GeForce RTX 2070 SUPER",
+    "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.35",
+    "python": "3.11.16",
+    "torch": "2.9.0+cu128"
+  },
+  "evidentiary": true,
+  "experiment": "G15B-E Phase-0 effective-edit implementation qualification",
+  "git_commit_at_start": "6c0b4aab75362432c6561fcb7d243c4a44f73a09",
+  "git_status_at_start": [],
+  "protocol": "SSM-Models/hybrid_memory_v1_4/G15BE_EFFECTIVE_EDIT_PROTOCOL_2026-08-26.md",
+  "qualification": {
+    "bounded_update": {
+      "arms": {
+        "logit_additive": {
+          "effective_erase_maximum": 0.00999999921457016,
+          "effective_erase_minimum": 0.00999999921457016,
+          "effective_gates_strictly_interior": true,
+          "effective_write_maximum": 0.00999999921457016,
+          "effective_write_minimum": 0.00999999921457016,
+          "passed": true,
+          "transition_and_injection_finite": true,
+          "transition_spectral_norm_maximum": 0.9995000000000027
+        },
+        "product": {
+          "effective_erase_maximum": 0.009999999285972871,
+          "effective_erase_minimum": 0.009999999285972871,
+          "effective_gates_strictly_interior": true,
+          "effective_write_maximum": 0.009999999285972871,
+          "effective_write_minimum": 0.009999999285972871,
+          "passed": true,
+          "transition_and_injection_finite": true,
+          "transition_spectral_norm_maximum": 0.9995000000000025
+        }
+      },
+      "passed": true
+    },
+    "elapsed_seconds": 2.4419741850000065,
+    "execution": {
+      "logit_additive": {
+        "fp32": {
+          "bounds": {
+            "logit": 0.0005035400390625,
+            "read": 0.0005035400390625,
+            "state": 0.0005035400390625
+          },
+          "dtype": "torch.float32",
+          "fp32_bound_formula": "128 * finfo(float32).eps * sequence_length * max(1, reference_absmax)",
+          "gate_mode": "logit_additive",
+          "logit_maximum_absolute_residuals": {
+            "chunk_vs_recurrent": 7.450580596923828e-08,
+            "masked_compact": 8.940696716308594e-08,
+            "parallel_vs_recurrent": 5.960464477539063e-08,
+            "step_vs_recurrent": 8.940696716308594e-08
+          },
+          "passed": true,
+          "predictions_exact": {
+            "chunk_vs_recurrent": true,
+            "masked_compact": true,
+            "parallel_vs_recurrent": true,
+            "step_vs_recurrent": true
+          },
+          "read_maximum_absolute_residuals": {
+            "chunk_vs_recurrent": 1.862645149230957e-09,
+            "parallel_vs_recurrent": 1.862645149230957e-09
+          },
+          "reference_maximum_absolute_logit": 0.4176914095878601,
+          "reference_maximum_absolute_read": 0.007134958170354366,
+          "reference_maximum_absolute_state": 0.01143118180334568,
+          "state_maximum_absolute_residuals": {
+            "chunk_vs_recurrent": {
+              "convolution": 0.0,
+              "memory": 6.51925802230835e-09
+            },
+            "masked_compact": {
+              "maximum": 2.9802322387695312e-08
+            },
+            "masked_step_vs_full": {
+              "convolution": 2.9802322387695312e-08,
+              "memory": 3.4924596548080444e-10
+            },
+            "parallel_vs_recurrent": {
+              "convolution": 0.0,
+              "memory": 6.51925802230835e-09
+            },
+            "step_vs_recurrent": {
+              "convolution": 4.470348358154297e-08,
+              "memory": 9.313225746154785e-10
+            }
+          }
+        },
+        "fp64": {
+          "bounds": {
+            "logit": 1e-10,
+            "read": 1e-10,
+            "state": 1e-10
+          },
+          "dtype": "torch.float64",
+          "fp32_bound_formula": null,
+          "gate_mode": "logit_additive",
+          "logit_maximum_absolute_residuals": {
+            "chunk_vs_recurrent": 1.6653345369377348e-16,
+            "masked_compact": 1.3877787807814457e-16,
+            "parallel_vs_recurrent": 1.1102230246251565e-16,
+            "step_vs_recurrent": 2.7755575615628914e-16
+          },
+          "passed": true,
+          "predictions_exact": {
+            "chunk_vs_recurrent": true,
+            "masked_compact": true,
+            "parallel_vs_recurrent": true,
+            "step_vs_recurrent": true
+          },
+          "read_maximum_absolute_residuals": {
+            "chunk_vs_recurrent": 5.637851296924623e-18,
+            "parallel_vs_recurrent": 4.7704895589362195e-18
+          },
+          "reference_maximum_absolute_logit": 0.4652533552028052,
+          "reference_maximum_absolute_read": 0.008801563372031996,
+          "reference_maximum_absolute_state": 0.01006808203952206,
+          "state_maximum_absolute_residuals": {
+            "chunk_vs_recurrent": {
+              "convolution": 0.0,
+              "memory": 8.673617379884035e-18
+            },
+            "masked_compact": {
+              "maximum": 1.1102230246251565e-16
+            },
+            "masked_step_vs_full": {
+              "convolution": 1.1102230246251565e-16,
+              "memory": 8.673617379884035e-19
+            },
+            "parallel_vs_recurrent": {
+              "convolution": 0.0,
+              "memory": 9.540979117872439e-18
+            },
+            "step_vs_recurrent": {
+              "convolution": 8.326672684688674e-17,
+              "memory": 3.469446951953614e-18
+            }
+          }
+        }
+      },
+      "product": {
+        "fp32": {
+          "bounds": {
+            "logit": 0.0005035400390625,
+            "read": 0.0005035400390625,
+            "state": 0.0005035400390625
+          },
+          "dtype": "torch.float32",
+          "fp32_bound_formula": "128 * finfo(float32).eps * sequence_length * max(1, reference_absmax)",
+          "gate_mode": "product",
+          "logit_maximum_absolute_residuals": {
+            "chunk_vs_recurrent": 7.450580596923828e-08,
+            "masked_compact": 8.940696716308594e-08,
+            "parallel_vs_recurrent": 2.9802322387695312e-08,
+            "step_vs_recurrent": 8.940696716308594e-08
+          },
+          "passed": true,
+          "predictions_exact": {
+            "chunk_vs_recurrent": true,
+            "masked_compact": true,
+            "parallel_vs_recurrent": true,
+            "step_vs_recurrent": true
+          },
+          "read_maximum_absolute_residuals": {
+            "chunk_vs_recurrent": 1.862645149230957e-09,
+            "parallel_vs_recurrent": 1.862645149230957e-09
+          },
+          "reference_maximum_absolute_logit": 0.4176914095878601,
+          "reference_maximum_absolute_read": 0.007134958636015654,
+          "reference_maximum_absolute_state": 0.01143118366599083,
+          "state_maximum_absolute_residuals": {
+            "chunk_vs_recurrent": {
+              "convolution": 0.0,
+              "memory": 4.6566128730773926e-09
+            },
+            "masked_compact": {
+              "maximum": 2.9802322387695312e-08
+            },
+            "masked_step_vs_full": {
+              "convolution": 2.9802322387695312e-08,
+              "memory": 9.313225746154785e-10
+            },
+            "parallel_vs_recurrent": {
+              "convolution": 0.0,
+              "memory": 3.725290298461914e-09
+            },
+            "step_vs_recurrent": {
+              "convolution": 4.470348358154297e-08,
+              "memory": 1.3969838619232178e-09
+            }
+          }
+        },
+        "fp64": {
+          "bounds": {
+            "logit": 1e-10,
+            "read": 1e-10,
+            "state": 1e-10
+          },
+          "dtype": "torch.float64",
+          "fp32_bound_formula": null,
+          "gate_mode": "product",
+          "logit_maximum_absolute_residuals": {
+            "chunk_vs_recurrent": 1.1102230246251565e-16,
+            "masked_compact": 2.220446049250313e-16,
+            "parallel_vs_recurrent": 1.1102230246251565e-16,
+            "step_vs_recurrent": 2.7755575615628914e-16
+          },
+          "passed": true,
+          "predictions_exact": {
+            "chunk_vs_recurrent": true,
+            "masked_compact": true,
+            "parallel_vs_recurrent": true,
+            "step_vs_recurrent": true
+          },
+          "read_maximum_absolute_residuals": {
+            "chunk_vs_recurrent": 4.119968255444917e-18,
+            "parallel_vs_recurrent": 4.228388472693467e-18
+          },
+          "reference_maximum_absolute_logit": 0.46525335520240674,
+          "reference_maximum_absolute_read": 0.0088015634260578,
+          "reference_maximum_absolute_state": 0.010068082100848749,
+          "state_maximum_absolute_residuals": {
+            "chunk_vs_recurrent": {
+              "convolution": 0.0,
+              "memory": 6.938893903907228e-18
+            },
+            "masked_compact": {
+              "maximum": 1.1102230246251565e-16
+            },
+            "masked_step_vs_full": {
+              "convolution": 1.1102230246251565e-16,
+              "memory": 8.673617379884035e-19
+            },
+            "parallel_vs_recurrent": {
+              "convolution": 0.0,
+              "memory": 6.071532165918825e-18
+            },
+            "step_vs_recurrent": {
+              "convolution": 8.326672684688674e-17,
+              "memory": 1.734723475976807e-18
+            }
+          }
+        }
+      }
+    },
+    "gradient_reach": {
+      "logit_additive": {
+        "gate_mode": "logit_additive",
+        "loss": 0.012747940607368946,
+        "passed": true,
+        "paths": {
+          "embedding.weight": {
+            "matching_parameters": [
+              {
+                "finite": true,
+                "maximum_absolute_gradient": 0.0028607789427042007,
+                "name": "embedding.weight",
+                "nonzero": true
+              }
+            ],
+            "passed": true
+          },
+          "lm_head.weight": {
+            "matching_parameters": [
+              {
+                "finite": true,
+                "maximum_absolute_gradient": 0.002400333294644952,
+                "name": "lm_head.weight",
+                "nonzero": true
+              }
+            ],
+            "passed": true
+          },
+          "local_conv.conv.weight": {
+            "matching_parameters": [
+              {
+                "finite": true,
+                "maximum_absolute_gradient": 2.713727837999613e-07,
+                "name": "blocks.0.local_conv.conv.weight",
+                "nonzero": true
+              }
+            ],
+            "passed": true
+          },
+          "mixer.commit_projection.weight": {
+            "matching_parameters": [
+              {
+                "finite": true,
+                "maximum_absolute_gradient": 3.8309698879857024e-07,
+                "name": "blocks.0.mixer.commit_projection.weight",
+                "nonzero": true
+              }
+            ],
+            "passed": true
+          },
+          "mixer.decay_projection.weight": {
+            "matching_parameters": [
+              {
+                "finite": true,
+                "maximum_absolute_gradient": 6.989835377169129e-10,
+                "name": "blocks.0.mixer.decay_projection.weight",
+                "nonzero": true
+              }
+            ],
+            "passed": true
+          },
+          "mixer.erase_projection.weight": {
+            "matching_parameters": [
+              {
+                "finite": true,
+                "maximum_absolute_gradient": 5.0509065374626516e-08,
+                "name": "blocks.0.mixer.erase_projection.weight",
+                "nonzero": true
+              }
+            ],
+            "passed": true
+          },
+          "mixer.key_projection.weight": {
+            "matching_parameters": [
+              {
+                "finite": true,
+                "maximum_absolute_gradient": 3.183351509505883e-06,
+                "name": "blocks.0.mixer.key_projection.weight",
+                "nonzero": true
+              }
+            ],
+            "passed": true
+          },
+          "mixer.output_gate.weight": {
+            "matching_parameters": [
+              {
+                "finite": true,
+                "maximum_absolute_gradient": 9.874700481304899e-06,
+                "name": "blocks.0.mixer.output_gate.weight",
+                "nonzero": true
+              }
+            ],
+            "passed": true
+          },
+          "mixer.output_projection.weight": {
+            "matching_parameters": [
+              {
+                "finite": true,
+                "maximum_absolute_gradient": 9.93929643300362e-06,
+                "name": "blocks.0.mixer.output_projection.weight",
+                "nonzero": true
+              }
+            ],
+            "passed": true
+          },
+          "mixer.query_projection.weight": {
+            "matching_parameters": [
+              {
+                "finite": true,
+                "maximum_absolute_gradient": 3.801715592999244e-06,
+                "name": "blocks.0.mixer.query_projection.weight",
+                "nonzero": true
+              }
+            ],
+            "passed": true
+          },
+          "mixer.value_projection.weight": {
+            "matching_parameters": [
+              {
+                "finite": true,
+                "maximum_absolute_gradient": 1.2660544598475099e-05,
+                "name": "blocks.0.mixer.value_projection.weight",
+                "nonzero": true
+              }
+            ],
+            "passed": true
+          },
+          "mixer.write_projection.weight": {
+            "matching_parameters": [
+              {
+                "finite": true,
+                "maximum_absolute_gradient": 3.0842815590403916e-07,
+                "name": "blocks.0.mixer.write_projection.weight",
+                "nonzero": true
+              }
+            ],
+            "passed": true
+          }
+        }
+      },
+      "product": {
+        "gate_mode": "product",
+        "loss": 0.012747940607368946,
+        "passed": true,
+        "paths": {
+          "embedding.weight": {
+            "matching_parameters": [
+              {
+                "finite": true,
+                "maximum_absolute_gradient": 0.0028607789427042007,
+                "name": "embedding.weight",
+                "nonzero": true
+              }
+            ],
+            "passed": true
+          },
+          "lm_head.weight": {
+            "matching_parameters": [
+              {
+                "finite": true,
+                "maximum_absolute_gradient": 0.002400333294644952,
+                "name": "lm_head.weight",
+                "nonzero": true
+              }
+            ],
+            "passed": true
+          },
+          "local_conv.conv.weight": {
+            "matching_parameters": [
+              {
+                "finite": true,
+                "maximum_absolute_gradient": 2.7137281222167076e-07,
+                "name": "blocks.0.local_conv.conv.weight",
+                "nonzero": true
+              }
+            ],
+            "passed": true
+          },
+          "mixer.commit_projection.weight": {
+            "matching_parameters": [
+              {
+                "finite": true,
+                "maximum_absolute_gradient": 3.4827004924409266e-07,
+                "name": "blocks.0.mixer.commit_projection.weight",
+                "nonzero": true
+              }
+            ],
+            "passed": true
+          },
+          "mixer.decay_projection.weight": {
+            "matching_parameters": [
+              {
+                "finite": true,
+                "maximum_absolute_gradient": 6.989836487392154e-10,
+                "name": "blocks.0.mixer.decay_projection.weight",
+                "nonzero": true
+              }
+            ],
+            "passed": true
+          },
+          "mixer.erase_projection.weight": {
+            "matching_parameters": [
+              {
+                "finite": true,
+                "maximum_absolute_gradient": 4.5917346369606094e-08,
+                "name": "blocks.0.mixer.erase_projection.weight",
+                "nonzero": true
+              }
+            ],
+            "passed": true
+          },
+          "mixer.key_projection.weight": {
+            "matching_parameters": [
+              {
+                "finite": true,
+                "maximum_absolute_gradient": 3.183351509505883e-06,
+                "name": "blocks.0.mixer.key_projection.weight",
+                "nonzero": true
+              }
+            ],
+            "passed": true
+          },
+          "mixer.output_gate.weight": {
+            "matching_parameters": [
+              {
+                "finite": true,
+                "maximum_absolute_gradient": 9.874702300294302e-06,
+                "name": "blocks.0.mixer.output_gate.weight",
+                "nonzero": true
+              }
+            ],
+            "passed": true
+          },
+          "mixer.output_projection.weight": {
+            "matching_parameters": [
+              {
+                "finite": true,
+                "maximum_absolute_gradient": 9.939298251993023e-06,
+                "name": "blocks.0.mixer.output_projection.weight",
+                "nonzero": true
+              }
+            ],
+            "passed": true
+          },
+          "mixer.query_projection.weight": {
+            "matching_parameters": [
+              {
+                "finite": true,
+                "maximum_absolute_gradient": 3.801716047746595e-06,
+                "name": "blocks.0.mixer.query_projection.weight",
+                "nonzero": true
+              }
+            ],
+            "passed": true
+          },
+          "mixer.value_projection.weight": {
+            "matching_parameters": [
+              {
+                "finite": true,
+                "maximum_absolute_gradient": 1.26605455079698e-05,
+                "name": "blocks.0.mixer.value_projection.weight",
+                "nonzero": true
+              }
+            ],
+            "passed": true
+          },
+          "mixer.write_projection.weight": {
+            "matching_parameters": [
+              {
+                "finite": true,
+                "maximum_absolute_gradient": 2.803892868996627e-07,
+                "name": "blocks.0.mixer.write_projection.weight",
+                "nonzero": true
+              }
+            ],
+            "passed": true
+          }
+        }
+      }
+    },
+    "matched_arms": {
+      "additive_active_parameters": 22161,
+      "additive_state_capacity_bytes_batch1_fp32": 1408,
+      "additive_total_parameters": 22161,
+      "initial_effective_erase_maximum_absolute_residual": 1.862645149230957e-09,
+      "initial_effective_gate_frozen_bound": 2e-08,
+      "initial_effective_write_maximum_absolute_residual": 1.862645149230957e-09,
+      "passed": true,
+      "product_active_parameters": 22161,
+      "product_state_capacity_bytes_batch1_fp32": 1408,
+      "product_total_parameters": 22161,
+      "state_capacity_bits_per_single_query_sequence": 11264,
+      "state_dict_tensor_equality": {
+        "blocks.0.ffn.down_projection.weight": true,
+        "blocks.0.ffn.gate_projection.weight": true,
+        "blocks.0.ffn.up_projection.weight": true,
+        "blocks.0.ffn_norm.weight": true,
+        "blocks.0.input_projection.weight": true,
+        "blocks.0.local_conv.conv.bias": true,
+        "blocks.0.local_conv.conv.weight": true,
+        "blocks.0.mixer.commit_projection.bias": true,
+        "blocks.0.mixer.commit_projection.weight": true,
+        "blocks.0.mixer.decay_projection.bias": true,
+        "blocks.0.mixer.decay_projection.weight": true,
+        "blocks.0.mixer.erase_projection.bias": true,
+        "blocks.0.mixer.erase_projection.weight": true,
+        "blocks.0.mixer.key_projection.weight": true,
+        "blocks.0.mixer.output_gate.weight": true,
+        "blocks.0.mixer.output_norm.weight": true,
+        "blocks.0.mixer.output_projection.weight": true,
+        "blocks.0.mixer.query_projection.weight": true,
+        "blocks.0.mixer.value_projection.weight": true,
+        "blocks.0.mixer.write_projection.bias": true,
+        "blocks.0.mixer.write_projection.weight": true,
+        "blocks.0.mixer_norm.weight": true,
+        "blocks.0.residual_scale": true,
+        "embedding.weight": true,
+        "final_norm.weight": true,
+        "lm_head.weight": true
+      }
+    },
+    "passed": true,
+    "peak_cuda_memory_bytes": 20867072
+  },
+  "schema_version": 1,
+  "source_files": {
+    "SSM-Models/hybrid_memory_v1_4/G15BE_EFFECTIVE_EDIT_PROTOCOL_2026-08-26.md": "b38b18e8de52cc12daf74795b21f7dd35d6cbe5e6d40414da79c4a7e12ba639e",
+    "SSM-Models/hybrid_memory_v1_4/g15be_phase0_qualification.py": "df4fcf5667cd8e9c995181d2b501e24bbae47147ce0967ac99185d0fff11e844",
+    "SSM-Models/hybrid_memory_v1_4/model.py": "23d2a8ae97ebf4c007768a08aae0722afdaf3f4cc5c1271a96dd1d9f1d1914b4",
+    "SSM-Models/hybrid_memory_v1_4/transactional_delta.py": "02acb58d56282cb842d9372ee6e5a608fdf83184b7d4d1116f6251e15a6b3cb2"
+  }
+}

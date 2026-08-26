@@ -8,6 +8,16 @@ The working copies live in the WSL Linux filesystem to avoid `/mnt/c` build
 I/O. The repository stores probe code and small JSON evidence, not downloaded
 weights, source clones, virtual environments, or compiled extensions.
 
+G15B-E's exact Phase-0 semantic qualification ran directly from the committed
+`/mnt/c` checkout because it performs no extension build. From clean commit
+`6c0b4aa`, both matched effective-edit arms passed contraction, FP64/FP32
+scan/chunk/step/mask parity, exact-prediction, gradient, and source provenance
+checks in 2.44 seconds, peaking at 20,867,072 allocated CUDA bytes. See the
+[`result`](G15BE_PHASE0_QUALIFICATION_RESULTS.md) and
+[`artifact`](artifacts/g15be_phase0_qualification_sm75_2026-08-26.json),
+SHA-256
+`41b49a6de9a74a563c4dc6f3c0571d8d9b0c7fd8fd95405232be22807d88936b`.
+
 ## Source checkouts
 
 | Implementation | Source revision | Role |

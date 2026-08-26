@@ -811,9 +811,11 @@ An explicitly exploratory post-hoc checkpoint audit finds that `T-AUX` seed
 2381 head 2 fires at every `WRITE_VALUE` and again at the correct tail:
 recall 1.0, precision 0.8, and exactly 6,144 false positives, all
 `WRITE_VALUE` at offset zero. Unsupervised `T` heads likewise split
-prepare/value and tail phases. This motivates only a separately prospective
-staged prepare/commit architecture; it does not alter adjudication or prove
-topology sufficiency.
+prepare/value and tail phases. This initially suggested a separately
+prospective staged parser, but a subsequent identifiability audit found the
+more basic issue: retrieval observes only `c*e` and `c*w`, so the binary
+meaning of `c` is not identifiable. A grammar-supervised staged parser remains
+a possible separate diagnostic, not the mainline language architecture.
 
 Formal `T` and diagnostic `T-AUX` both fail. Per the frozen stop rule, reject
 this tested strict-history symmetric-erase GDN2 law and stop G15B-T before
@@ -821,3 +823,25 @@ geometry. Phase 0 remains a passing implementation result; R5 and R5-S remain
 failed historical retained-checkpoint evidence. Do not infer a universal
 transactional-memory failure, natural-text result, optimizer/tokenizer verdict,
 scaling law, or Spin conclusion.
+
+## 2026-08-26: G15B-E effective-edit Phase-0 qualification
+
+The prospective
+[`G15B-E protocol`](G15BE_EFFECTIVE_EDIT_PROTOCOL_2026-08-26.md) was committed
+before implementation qualification. It compares a fresh full-view product
+law against a logit-additive effective-edit law while holding parameters,
+state, initialized tensors, optimizer family, and future data fixed. The
+shared event logit is continuous; it is not assigned a binary commit-F1 target.
+
+The exact-SM75 Phase-0 artifact ran from clean commit
+`6c0b4aab75362432c6561fcb7d243c4a44f73a09`; SHA-256 is
+`41b49a6de9a74a563c4dc6f3c0571d8d9b0c7fd8fd95405232be22807d88936b`.
+Both arms contain 22,161 active parameters and 1,408 FP32 state bytes, with
+bit-identical initialized tensors. Initial effective gate residual is
+`1.863e-9`, maximum transition spectral norm is about `0.9995`, maximum FP64
+and FP32 logit residuals are `2.78e-16` and `8.94e-8`, predictions are exact,
+and all declared gradient paths are finite and nonzero.
+
+Phase 0 passes. It authorizes only the frozen constructed P/A learning screen.
+Do not infer learning, natural-text quality, optimizer superiority, scaling,
+or geometry from the implementation result.

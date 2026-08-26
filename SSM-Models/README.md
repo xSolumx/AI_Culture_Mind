@@ -129,6 +129,11 @@
 > `+0.05` margin and still misses seed-2381 commit F1. G15B-T stops before
 > geometry, while Phase 0 remains valid and R5/R5-S remain failed historical
 > evidence.
+> The prospectively frozen G15B-E successor now passes exact-SM75 Phase 0. It
+> compares full-view product and logit-additive effective-edit gates with
+> bit-identical initialized tensors, 22,161 parameters, and 1,408 FP32 state
+> bytes. This is implementation qualification only; the fresh-seed P/A
+> learning result remains prospective and geometry remains blocked.
 > Generic transport stays identity by default; Spin is
 > reserved for supplied or coherent-frame specialized tasks. G16 has completed
 > its one-seed SM75 development
@@ -175,6 +180,9 @@
 > [G15B-T Phase-0 artifact](hybrid_memory_v1_4/artifacts/g15bt_phase0_qualification_sm75_2026-08-26.json),
 > [G15B-T Phase-1 quality result](hybrid_memory_v1_4/G15BT_PHASE1_RESULTS.md),
 > [G15B-T Phase-1 quality artifact](hybrid_memory_v1_4/artifacts/g15bt_phase1_quality_sm75_2026-08-26.json),
+> [G15B-E effective-edit protocol](hybrid_memory_v1_4/G15BE_EFFECTIVE_EDIT_PROTOCOL_2026-08-26.md),
+> [G15B-E Phase-0 result](hybrid_memory_v1_4/G15BE_PHASE0_QUALIFICATION_RESULTS.md),
+> [G15B-E Phase-0 artifact](hybrid_memory_v1_4/artifacts/g15be_phase0_qualification_sm75_2026-08-26.json),
 > [G16 SM75 frontier-shootout protocol](hybrid_memory_v1_4/G16_SM75_FRONTIER_SHOOTOUT_PROTOCOL_2026-08-25.md),
 > [G16 trained-frontier results](hybrid_memory_v1_4/G16_SM75_FRONTIER_SHOOTOUT_RESULTS.md),
 > [G16 exact-SM75 runtime qualification artifact](hybrid_memory_v1_4/artifacts/g16_runtime_qualification_sm75_2026-08-25.json),

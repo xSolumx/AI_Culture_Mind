@@ -165,6 +165,12 @@ content addressing and edit laws over richer transport geometry alone.
   improves both, but never reaches the `+0.05` matched margin and seed 2381
   remains below the timing gate. The frozen decision stops G15B-T before
   geometry.
+- G15B-E is the fresh, prospectively frozen identifiability repair. Product and
+  logit-additive effective-edit arms use the full causal value-position view
+  and are matched at 22,161 parameters and 1,408 FP32 state bytes. Exact clean
+  SM75 Phase 0 passes contraction, scan/chunk/step/mask, prediction, gradient,
+  and provenance gates. This authorizes only constructed P/A training; no
+  learning or model promotion exists yet.
 - G16 completed its prospectively frozen one-seed SM75 development shootout.
   Official fused Mamba-2 wins ordinary compression at every context and reaches
   `1.48571` BPRB at L4096 versus v1.4.5 `1.58335`; local semantic GDN2 and
@@ -241,6 +247,13 @@ The completed negative learning result is in the
 [Phase-1 result](hybrid_memory_v1_4/G15BT_PHASE1_RESULTS.md) and
 [Phase-1 quality artifact](hybrid_memory_v1_4/artifacts/g15bt_phase1_quality_sm75_2026-08-26.json),
 SHA-256 `6b6b991643ee6ddf50478f905dbaa53d9df9c8e52a10a8b52265dc8c12397fac`.
+The effective-edit successor is controlled by the
+[G15B-E protocol](hybrid_memory_v1_4/G15BE_EFFECTIVE_EDIT_PROTOCOL_2026-08-26.md),
+with passed implementation evidence in the
+[G15B-E Phase-0 result](hybrid_memory_v1_4/G15BE_PHASE0_QUALIFICATION_RESULTS.md)
+and
+[G15B-E Phase-0 artifact](hybrid_memory_v1_4/artifacts/g15be_phase0_qualification_sm75_2026-08-26.json),
+SHA-256 `41b49a6de9a74a563c4dc6f3c0571d8d9b0c7fd8fd95405232be22807d88936b`.
 The four-arm model harness is frozen separately in the
 [G16 protocol](hybrid_memory_v1_4/G16_SM75_FRONTIER_SHOOTOUT_PROTOCOL_2026-08-25.md),
 with exact source/runtime evidence in the

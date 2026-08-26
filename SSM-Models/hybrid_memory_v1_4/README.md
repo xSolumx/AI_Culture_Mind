@@ -196,6 +196,19 @@ R5 and R5-S remain frozen failed retained-checkpoint results. See the
 and
 [`Phase-1 quality artifact`](artifacts/g15bt_phase1_quality_sm75_2026-08-26.json).
 
+The next prospective identity-memory pivot is
+[`G15B-E effective edit`](G15BE_EFFECTIVE_EDIT_PROTOCOL_2026-08-26.md). It
+removes the unidentifiable binary interpretation of the shared commit factor
+and compares two full-view laws with the same initialized tensors, 22,161
+parameters, and 1,408 FP32 state bytes: product effective gates versus
+logit-additive effective gates. The
+[`Phase-0 exact-SM75 qualification`](G15BE_PHASE0_QUALIFICATION_RESULTS.md)
+passes with maximum FP64/FP32 logit residuals `2.78e-16`/`8.94e-8`, exact
+predictions, finite nonzero gradients, and artifact SHA-256
+`41b49a6de9a74a563c4dc6f3c0571d8d9b0c7fd8fd95405232be22807d88936b`.
+This authorizes only the fresh-seed constructed P/A screen; it is not a
+learning result and does not reopen geometry.
+
 In parallel, the frozen
 [`G16 SM75 shootout protocol`](G16_SM75_FRONTIER_SHOOTOUT_PROTOCOL_2026-08-25.md)
 and [`harness`](frontier_shootout.py) completed the one-seed, 4.096M-target
@@ -332,7 +345,11 @@ remains label-supervised with 774,400 useful query labels per seed.
 - [`transactional_delta.py`](transactional_delta.py): fresh matched `F/T`
   transactional fast weight with strict-history edit controls, scalar commit
   and erase, channelwise write, exact scan/chunk/step execution, and no Spin
-  transport.
+  transport; it also contains the prospectively matched G15B-E
+  product/logit-additive effective-edit parameterizations.
+- [`g15be_phase0_qualification.py`](g15be_phase0_qualification.py): clean-SM75
+  matching, contraction, scan/chunk/step/mask, gradient, and provenance gate
+  for the G15B-E pivot.
 - [`model.py`](model.py): eight-kind hybrid shell, local convolution caches,
   checkpointing, diagnostics, and exact cache-byte accounting.
 - [`fla_adapter.py`](fla_adapter.py): fail-closed semantic and optional official

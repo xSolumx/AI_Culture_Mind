@@ -404,6 +404,14 @@ identity/torus/Spin comparison. See
 [`G15BT_PHASE1_RESULTS.md`](G15BT_PHASE1_RESULTS.md) and the
 [`exact quality artifact`](artifacts/g15bt_phase1_quality_sm75_2026-08-26.json).
 
+The non-geometric successor is the prospectively frozen
+[`G15B-E effective-edit test`](G15BE_EFFECTIVE_EDIT_PROTOCOL_2026-08-26.md).
+Its exact-SM75
+[`Phase-0 qualification`](G15BE_PHASE0_QUALIFICATION_RESULTS.md) passes for
+matched full-view product and logit-additive laws at 22,161 parameters and
+1,408 FP32 state bytes. This authorizes only their fresh-seed constructed
+comparison. No G15B-E learning result exists yet, and geometry remains blocked.
+
 The constrained `su3_torus` arm is an additional scientific ablation, not a
 replacement for the four frozen primary arms.
 

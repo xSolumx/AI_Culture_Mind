@@ -6,8 +6,12 @@ G15B-E training batch, metric, or checkpoint
 **Predecessor result:**
 [`G15BT_PHASE1_RESULTS.md`](G15BT_PHASE1_RESULTS.md)
 
-**Status:** prospective identity-memory pivot; Phase 0 implementation
-qualification pending. No G15B-E learning or model-quality result exists yet.
+**Phase-0 result:**
+[`G15BE_PHASE0_QUALIFICATION_RESULTS.md`](G15BE_PHASE0_QUALIFICATION_RESULTS.md)
+
+**Status:** Phase 0 passed on exact clean SM75 and authorizes only the frozen
+Phase-1 constructed P/A learning screen. No G15B-E learning or model-quality
+result exists yet.
 
 **Pre-execution numerical clarification:** the two algebraically equal initial
 effective gates are required to agree within `2e-8` in FP32 rather than be

@@ -67,6 +67,12 @@ an independent live research workspace. Its local preregistrations, results,
 and artifacts control its claims. Root status pages summarize that work but do
 not replace or silently rewrite its frozen records.
 
+Its newest prospective identity-memory step is
+[`G15B-E`](SSM-Models/hybrid_memory_v1_4/G15BE_EFFECTIVE_EDIT_PROTOCOL_2026-08-26.md):
+matched full-view product versus logit-additive effective edits. Exact SM75
+Phase 0 passes implementation qualification; the constructed learning
+comparison remains prospective and Spin transport remains blocked.
+
 ## Active research programmes
 
 | Programme | Object | Current boundary |

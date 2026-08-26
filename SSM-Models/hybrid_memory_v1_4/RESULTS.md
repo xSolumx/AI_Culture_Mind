@@ -1394,6 +1394,28 @@ frozen training setup; it is not a universal transactional-memory result or
 evidence about natural text, scaling, tokenizer/optimizer superiority, or
 Spin transport.
 
+## G15B-E Phase-0 exact-SM75 qualification
+
+The separately frozen
+[`effective-edit pivot`](G15BE_EFFECTIVE_EDIT_PROTOCOL_2026-08-26.md) passes
+its
+[`Phase-0 implementation qualification`](G15BE_PHASE0_QUALIFICATION_RESULTS.md)
+from clean commit `6c0b4aa` on exact SM75. Product `P` and logit-additive `A`
+are full-view identity-memory arms with 22,161 active parameters, 1,408 FP32
+state bytes, and bit-identical initialized tensors. Their initial effective
+erase/write residuals are `1.863e-9` against the pre-execution `2e-8` bound.
+
+Both arms are finite contractions with maximum transition spectral norm about
+`0.9995`. FP64 and prospectively scaled FP32 scan/chunk/step/mask logit, state,
+and read contracts pass; observed maximum logit residuals are `2.78e-16` and
+`8.94e-8`, and all predictions are exact. Every declared real-LM gradient path
+is finite and nonzero. Artifact SHA-256 is
+`41b49a6de9a74a563c4dc6f3c0571d8d9b0c7fd8fd95405232be22807d88936b`.
+
+The decision authorizes only the prospectively frozen fresh-seed constructed
+P/A learning screen. It is not evidence that A learns better, is not a
+natural-text result, and does not authorize attention or Spin transport.
+
 ## G16 one-seed trained-frontier result
 
 The clean exact-SM75 cohort from commit `5796a851df02` completed all four real
