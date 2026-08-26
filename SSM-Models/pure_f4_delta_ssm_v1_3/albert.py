@@ -416,7 +416,34 @@ def jordan_product(
         structure = build_albert_algebra().torch_orthonormal_structure(left)
     elif structure.shape != (ALBERT_DIM, ALBERT_DIM, ALBERT_DIM):
         raise ValueError("Albert structure must have shape (27,27,27)")
-    return torch.einsum("kij,...i,...j->...k", structure.to(left), left, right)
+    return _DenseJordanProduct.apply(left, right, structure.to(left))
+
+
+class _DenseJordanProduct(torch.autograd.Function):
+    """Memory-bounded exact dense Albert product with recomputed VJP."""
+
+    @staticmethod
+    def forward(
+        ctx,
+        left: torch.Tensor,
+        right: torch.Tensor,
+        structure: torch.Tensor,
+    ) -> torch.Tensor:
+        ctx.save_for_backward(left, right, structure)
+        return torch.einsum("kij,...i,...j->...k", structure, left, right)
+
+    @staticmethod
+    def backward(
+        ctx, output_gradient: torch.Tensor
+    ) -> tuple[torch.Tensor, torch.Tensor, None]:
+        left, right, structure = ctx.saved_tensors
+        left_gradient = torch.einsum(
+            "kij,...k,...j->...i", structure, output_gradient, right
+        )
+        right_gradient = torch.einsum(
+            "kij,...k,...i->...j", structure, output_gradient, left
+        )
+        return left_gradient, right_gradient, None
 
 
 def sparse_jordan_product(

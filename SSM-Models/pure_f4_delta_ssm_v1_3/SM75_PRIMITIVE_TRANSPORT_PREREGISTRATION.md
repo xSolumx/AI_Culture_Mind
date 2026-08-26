@@ -141,6 +141,17 @@ time and peak allocation at most `1.25x` Mamba-2 in every context.  Failure is
 reported as an architecture limitation, not hidden by the smaller regression
 fixture.
 
+### Host-model activation repair
+
+If the representative sparse action is fast but the complete model fails the
+Mamba memory gate, the frozen first repair is not to weaken the threshold.  It
+is to replace autograd's dense-einsum intermediates for the exact Albert Jordan
+product with a custom reverse rule that stores only the two 27D operands and
+the fixed structure tensor, then recomputes the two vector-Jacobian products
+in backward.  Forward remains the same exact dense contraction.  The repair
+must preserve output/gradient tests and is judged by a new clean-revision
+representative rerun against the untouched official Mamba-2 arm.
+
 ### Mamba-competitive systems promotion
 
 This stronger gate requires both complete training-step time and peak CUDA

@@ -19,6 +19,7 @@ from .albert import (
     albert_determinant,
     albert_determinant_via_jordan,
     build_albert_algebra,
+    jordan_product,
     jordan_product_numpy,
     jordan_structure_constants,
 )
@@ -58,6 +59,31 @@ def test_explicit_cubic_matches_jordan_trace_identity_and_gradient() -> None:
     torch.testing.assert_close(
         actual_gradient, expected_gradient, rtol=3e-14, atol=3e-14
     )
+
+
+def test_memory_bounded_jordan_product_matches_raw_einsum_gradients() -> None:
+    torch.manual_seed(20260826)
+    structure = build_albert_algebra().torch_orthonormal_structure(
+        torch.empty((), dtype=torch.float64)
+    )
+    expected_left = torch.randn(2, 3, 27, dtype=torch.float64, requires_grad=True)
+    expected_right = torch.randn(2, 3, 27, dtype=torch.float64, requires_grad=True)
+    actual_left = expected_left.detach().clone().requires_grad_(True)
+    actual_right = expected_right.detach().clone().requires_grad_(True)
+    expected = torch.einsum(
+        "kij,...i,...j->...k", structure, expected_left, expected_right
+    )
+    actual = jordan_product(actual_left, actual_right, structure)
+    torch.testing.assert_close(actual, expected, rtol=0.0, atol=0.0)
+    output_gradient = torch.randn_like(actual)
+    expected_gradients = torch.autograd.grad(
+        expected, (expected_left, expected_right), output_gradient
+    )
+    actual_gradients = torch.autograd.grad(
+        actual, (actual_left, actual_right), output_gradient
+    )
+    for candidate, oracle in zip(actual_gradients, expected_gradients, strict=True):
+        torch.testing.assert_close(candidate, oracle, rtol=2e-15, atol=2e-15)
 
 
 def test_f4_derivations_have_exact_dimension_and_obey_leibniz() -> None:
