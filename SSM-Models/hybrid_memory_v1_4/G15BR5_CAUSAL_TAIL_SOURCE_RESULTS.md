@@ -1,12 +1,15 @@
 # G15B-R5 causal tail-source results
 
 **Frozen protocol:**
-[`G15BR5_CAUSAL_TAIL_SOURCE_PROTOCOL_2026-08-26.md`](G15BR5_CAUSAL_TAIL_SOURCE_PROTOCOL_2026-08-26.md)  
+[`G15BR5_CAUSAL_TAIL_SOURCE_PROTOCOL_2026-08-26.md`](G15BR5_CAUSAL_TAIL_SOURCE_PROTOCOL_2026-08-26.md)
+
 **Exact artifact:**
-[`artifacts/g15br5_causal_tail_source_sm75_2026-08-26.json`](artifacts/g15br5_causal_tail_source_sm75_2026-08-26.json)  
+[`artifacts/g15br5_causal_tail_source_sm75_2026-08-26.json`](artifacts/g15br5_causal_tail_source_sm75_2026-08-26.json)
+
 **SHA-256:**
-`ba627fe34e8dd29458fc1321b52c98242838c3b56e2abdc7e44c749f50aaa313`  
-**Execution commit:** `e039e499b44b8e9bbb1108eb456c051a4702ba4e`  
+`ba627fe34e8dd29458fc1321b52c98242838c3b56e2abdc7e44c749f50aaa313`
+
+**Execution commit:** `e039e499b44b8e9bbb1108eb456c051a4702ba4e`
 **Status:** frozen formal fail; performance-positive history attribution; no
 training authorization pending a prospective numerical ratification
 
