@@ -60,6 +60,7 @@ class OptimizerPartition:
 
 _CONTROL_MARKERS = (
     "coordinate_projection",
+    "commit_projection",
     "erase_projection",
     "write_projection",
     "decay_projection",
