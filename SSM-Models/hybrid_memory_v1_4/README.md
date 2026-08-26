@@ -129,6 +129,13 @@ in the retained representation. No event-erase training is authorized. The
 narrow next checkpoint factorial preserves the write tail and applies erase
 only on true collisions before testing dual addresses or component memory.
 
+That missing cell is now frozen in the
+[`G15B-R2 collision-only erase protocol`](G15BR2_COLLISION_ERASE_PROTOCOL_2026-08-26.md).
+It retains the full learned write program, uses oracle causal collision timing,
+and separately scores pre-overwrite, unrelated-key-after-overwrite, and same-
+key-after-overwrite queries. A pass can support an explicit occupancy-state
+successor, but cannot rescue the present token-local controller.
+
 In parallel, the frozen
 [`G16 SM75 shootout protocol`](G16_SM75_FRONTIER_SHOOTOUT_PROTOCOL_2026-08-25.md)
 and [`harness`](frontier_shootout.py) completed the one-seed, 4.096M-target

@@ -548,3 +548,14 @@ Do not train event-anchored erase. The remaining checkpoint-only factorial is
 collision-only erase with the learned write continuation preserved; R0 changed
 both timing and write, while R1 changed timing at first writes and overwrites.
 See [`G15BR1_EVENT_ERASE_RESULTS.md`](G15BR1_EVENT_ERASE_RESULTS.md).
+
+G15B-R2 is frozen before inspecting any quality metric. It completes the
+missing factorial cell by preserving the learned write continuation and
+restricting soft/unit erase to true collision events. Overwrite queries are
+partitioned into before-any-overwrite, after-unrelated-overwrite-only, and
+after-same-key-overwrite strata. This is oracle causal timing and cannot
+authorize the current token-local controller. If same-key recall does not
+improve, the frozen next interpretation is exact logical-component replacement;
+if it improves while a guard stratum fails, test an oblique/separate erase
+address. See
+[`G15BR2_COLLISION_ERASE_PROTOCOL_2026-08-26.md`](G15BR2_COLLISION_ERASE_PROTOCOL_2026-08-26.md).

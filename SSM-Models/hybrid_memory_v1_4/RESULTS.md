@@ -1203,6 +1203,11 @@ erase but is not sole-cause attribution. Event-erase training is rejected. One
 zero-update factorial cell remains before an address-geometry pivot: preserve
 the learned write tail and restrict erase to true collision events.
 
+The missing collision-only/write-tail cell is prospectively frozen in
+[`G15B-R2`](G15BR2_COLLISION_ERASE_PROTOCOL_2026-08-26.md). It is a zero-update
+oracle-history diagnostic with causal query strata. It has no training or
+promotion authority.
+
 ## G16 one-seed trained-frontier result
 
 The clean exact-SM75 cohort from commit `5796a851df02` completed all four real
