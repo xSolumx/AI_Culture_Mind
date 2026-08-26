@@ -1291,6 +1291,30 @@ independent FP64 maximum is `3.997e-15`. These are consistent with FP32
 non-associativity, but the bound is not waived post hoc. No training is
 authorized before a separately frozen R5-S numerical ratification.
 
+## G15B-R5-S numerical ratification result
+
+The prospectively frozen zero-update
+[`G15B-R5-S`](G15BR5S_NUMERICAL_RATIFICATION_RESULTS.md) cohort completed from
+clean commit `dde868a` on exact SM75 in 1,155.11 seconds; artifact SHA-256
+`3ac514e16e6fa1c720d5ef4244525f5d0f08c233634648e59181c6acfccc3a00`.
+It reconstructed every original R5 aggregate digest, proved individual fresh
+batches deterministic and disjoint, matched all retained checkpoint and R5
+source hashes, and used 512 fresh decisions in every task/length/seed cell.
+
+R5-S formally fails: `0/45` cells and `0/135` H/C/B source cells pass because
+every scaled-logit residual exceeds the frozen `64 * eps` allowance. Ratios
+range from `1.171875` to `66.078125`; the largest absolute logit residual is
+`6.387234e-4`. The other contracts all pass: predictions and categorical
+metrics are exact, maximum BPQ drift is `1.720e-7`, state/read residuals are
+`1.907e-6`/`2.980e-6` against `5e-6`, transitions are bit-exact, and the
+independent FP64 maximum is `5.862e-14`.
+
+This rejects the proposed numerical ratification without refuting R5's
+separate history-source performance evidence. The retained-checkpoint repair
+route stops. The next fresh model should use an exact monolithic residual/read
+path plus an explicit causal pending-write/commit memory, instead of requiring
+two different FP32 reduction trees to produce bitwise-equivalent logits.
+
 ## G16 one-seed trained-frontier result
 
 The clean exact-SM75 cohort from commit `5796a851df02` completed all four real

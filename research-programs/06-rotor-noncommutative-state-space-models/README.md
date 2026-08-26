@@ -272,9 +272,12 @@ new matched natural-data and complete-step hardware evidence.
   0.9424--0.9466 mean ordinary overwrite and 1.0 on the constructed guard.
   The formal quality decision nevertheless fails the frozen BPQ replay and
   FP32 state/read numeric tolerances; discrete replay and learned logits remain
-  exact, and the FP64 contract passes. R5-S must ratify those numerics
-  prospectively before any training. This does not make more generic transport
-  geometry the repair.
+  exact, and the FP64 contract passes. R5-S subsequently fails all 135
+  prospective scaled-logit checks despite exact categorical behavior and
+  passing BPQ, state/read, transition, fingerprint, provenance, and FP64
+  contracts. Retained-checkpoint repair stops. This does not make more generic
+  transport geometry the repair; the next fresh design needs explicit
+  pending-write/commit semantics and an exact monolithic residual/read path.
   Spin remains a specialized prior for
   supplied or coherent frames; learned topology, full three-carrier triality
   utility, natural text, and scaling remain open.
@@ -409,6 +412,8 @@ new matched natural-data and complete-step hardware evidence.
 - [G15B-R4 exact-SM75 artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g15br4_ownership_background_sm75_2026-08-26.json)
 - [G15B-R5 causal-tail-source result](../../SSM-Models/hybrid_memory_v1_4/G15BR5_CAUSAL_TAIL_SOURCE_RESULTS.md)
 - [G15B-R5 exact-SM75 artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g15br5_causal_tail_source_sm75_2026-08-26.json)
+- [G15B-R5-S numerical result](../../SSM-Models/hybrid_memory_v1_4/G15BR5S_NUMERICAL_RATIFICATION_RESULTS.md)
+- [G15B-R5-S exact-SM75 artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g15br5s_numerical_ratification_sm75_2026-08-26.json)
 - [G16 SM75 frontier-shootout protocol](../../SSM-Models/hybrid_memory_v1_4/G16_SM75_FRONTIER_SHOOTOUT_PROTOCOL_2026-08-25.md)
 - [G16 trained-frontier results](../../SSM-Models/hybrid_memory_v1_4/G16_SM75_FRONTIER_SHOOTOUT_RESULTS.md)
 - [G16 exact-SM75 runtime qualification artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g16_runtime_qualification_sm75_2026-08-25.json)

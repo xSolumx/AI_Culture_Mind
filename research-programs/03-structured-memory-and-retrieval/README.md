@@ -199,9 +199,13 @@ representation.
   FP32 no-reset-state/background-read residuals reach
   `2.38e-6`/`3.58e-6` against `2e-6`; batch fingerprints, discrete replay,
   learned logits, observability, and FP64 algebra pass. This is a zero-update
-  retained-checkpoint mechanism result, not authorization to train. A
-  prospectively frozen R5-S numerical ratification is next. Generic transport remains
-  identity by default;
+  retained-checkpoint mechanism result, not authorization to train. The
+  prospectively frozen R5-S cohort then fails every scaled-logit source/cell
+  gate (`0/135`) even though categorical behavior, BPQ, state/read bounds,
+  bit-exact transitions, fingerprint/provenance checks, and FP64 algebra pass.
+  The retained-checkpoint repair route is closed. The next fresh model needs
+  explicit pending-write/commit semantics and an exact monolithic residual/read
+  path. Generic transport remains identity by default;
   Spin belongs in supplied/coherent-frame
   specialized tasks. Learned topology, full three-carrier triality utility,
   natural-text, and scaling remain open.
@@ -331,6 +335,8 @@ representation.
 - [G15B-R4 exact-SM75 artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g15br4_ownership_background_sm75_2026-08-26.json)
 - [G15B-R5 causal-tail-source result](../../SSM-Models/hybrid_memory_v1_4/G15BR5_CAUSAL_TAIL_SOURCE_RESULTS.md)
 - [G15B-R5 exact-SM75 artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g15br5_causal_tail_source_sm75_2026-08-26.json)
+- [G15B-R5-S numerical result](../../SSM-Models/hybrid_memory_v1_4/G15BR5S_NUMERICAL_RATIFICATION_RESULTS.md)
+- [G15B-R5-S exact-SM75 artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g15br5s_numerical_ratification_sm75_2026-08-26.json)
 - [G16 SM75 frontier-shootout protocol](../../SSM-Models/hybrid_memory_v1_4/G16_SM75_FRONTIER_SHOOTOUT_PROTOCOL_2026-08-25.md)
 - [G16 trained-frontier results](../../SSM-Models/hybrid_memory_v1_4/G16_SM75_FRONTIER_SHOOTOUT_RESULTS.md)
 - [G16 exact-SM75 runtime qualification artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g16_runtime_qualification_sm75_2026-08-25.json)

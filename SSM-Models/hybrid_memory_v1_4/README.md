@@ -161,9 +161,18 @@ adjudication remains failed because no-reset BPQ replay differs by at most
 `1.40e-7` against a frozen `1e-12` bound and FP32 state/read residuals reach
 `2.38e-6`/`3.58e-6` against `2e-6`. Discrete replay, learned logits, causal
 locality, and FP64 algebra pass. No training is authorized before a separately
-frozen R5-S numerical ratification. See the
+frozen R5-S numerical ratification. R5-S has now completed and formally fails:
+all 135 source/cell checks exceed its prospective scaled-logit allowance even
+though predictions, BPQ, component state/read bounds, transition identity, and
+independent FP64 algebra pass. The retained-checkpoint repair route therefore
+stops. Preserve R5's history-source evidence, but make the next fresh model's
+ordinary residual/read path exact by construction and learn an explicit causal
+pending-write/commit state. See the
 [`R5 protocol`](G15BR5_CAUSAL_TAIL_SOURCE_PROTOCOL_2026-08-26.md) and
-[`exact-SM75 artifact`](artifacts/g15br5_causal_tail_source_sm75_2026-08-26.json).
+[`exact-SM75 artifact`](artifacts/g15br5_causal_tail_source_sm75_2026-08-26.json),
+plus the
+[`R5-S result`](G15BR5S_NUMERICAL_RATIFICATION_RESULTS.md) and
+[`R5-S artifact`](artifacts/g15br5s_numerical_ratification_sm75_2026-08-26.json).
 
 In parallel, the frozen
 [`G16 SM75 shootout protocol`](G16_SM75_FRONTIER_SHOOTOUT_PROTOCOL_2026-08-25.md)

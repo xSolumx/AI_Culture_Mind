@@ -361,6 +361,25 @@ two-token write continuation rather than to shared background support. See
 and
 [`G15BR4_OWNERSHIP_BACKGROUND_RESULTS.md`](G15BR4_OWNERSHIP_BACKGROUND_RESULTS.md).
 
+G15B-R5 then isolates the ambiguous tail's strict-history, current-token, and
+bias sources under the unchanged full-token transition. Its background-free
+strict-history LWW arm passes all 132 performance and bias-separation checks,
+reaching 0.9424--0.9466 mean ordinary overwrite and 1.0 on the constructed
+guard. Current-only and bias-only arms fail. R5's formal decision nevertheless
+remains failed under its frozen replay/runtime tolerances.
+
+The prospectively frozen R5-S numerical cohort has also completed. It fails all
+135 scaled-logit source/cell checks, with allowance ratios
+1.171875--66.078125. Predictions, categorical metrics, BPQ, state/read bounds,
+bit-exact transitions, fingerprints, source/checkpoint hashes, and independent
+FP64 algebra all pass. This closes retained-checkpoint repair without erasing
+R5's separate history-source evidence. The next fresh architecture must learn
+explicit pending-write/commit semantics and preserve an exact monolithic
+residual/read path before any identity/torus/Spin transport comparison. See
+[`G15BR5_CAUSAL_TAIL_SOURCE_RESULTS.md`](G15BR5_CAUSAL_TAIL_SOURCE_RESULTS.md)
+and
+[`G15BR5S_NUMERICAL_RATIFICATION_RESULTS.md`](G15BR5S_NUMERICAL_RATIFICATION_RESULTS.md).
+
 The constrained `su3_torus` arm is an additional scientific ablation, not a
 replacement for the four frozen primary arms.
 

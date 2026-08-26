@@ -115,6 +115,18 @@ independent FP64 maximum is `3.997e-15`. See the
 SHA-256
 `ba627fe34e8dd29458fc1321b52c98242838c3b56e2abdc7e44c749f50aaa313`.
 
+G15B-R5-S completed on the same runtime from clean commit `dde868a` in
+1,155.11 seconds. It records zero updates, binds the sealed R5 artifact and all
+three retained checkpoints, reconstructs every original aggregate batch
+digest, and proves fresh individual-batch disjointness. The exact quality
+result formally fails only the frozen end-to-end scaled-logit gate: all
+categorical behavior, BPQ, component state/read bounds, bit-exact transitions,
+and independent FP64 algebra pass. See the
+[`result`](G15BR5S_NUMERICAL_RATIFICATION_RESULTS.md) and
+[`artifact`](artifacts/g15br5s_numerical_ratification_sm75_2026-08-26.json),
+SHA-256
+`3ac514e16e6fa1c720d5ef4244525f5d0f08c233634648e59181c6acfccc3a00`.
+
 The native WSL environment also exposes CUDA-only `causal_conv1d`,
 `mamba_ssm`, and FLA Hub kernels to Transformers. The baseline registry now
 dispatches by the actual input tensor: CUDA keeps the resolved native kernel,

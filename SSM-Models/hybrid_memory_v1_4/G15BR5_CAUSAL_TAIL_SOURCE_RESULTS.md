@@ -42,7 +42,8 @@ assignment was exact, and the independent FP64 algebraic maximum was
 `3.9968e-15`. These facts strongly identify FP32 non-associativity rather than
 a semantic recurrence mismatch. The formal R5 result is not relabeled after
 seeing it: its artifact remains a fail and authorizes no training. A separate,
-prospectively frozen R5-S numerical ratification is the next gate.
+prospectively frozen R5-S numerical ratification was the next gate; it has now
+completed and failed as recorded in the follow-up below.
 
 ## Exact execution
 
@@ -181,10 +182,18 @@ The next move is **R5-S**, a separate prospective numerical ratification:
 5. authorize a fresh pending-write/commit training protocol only if numerical
    stability passes without changing any R5 performance metric.
 
-If R5-S fails, stop the retained-checkpoint route. If it passes, the next model
-should learn an explicit causal transaction accumulator and protected
-background-free transaction read on fresh seeds, with parameter/state/compute-
-matched controls. That would still be a training screen, not model promotion.
+The frozen branch rule was: failure stops retained-checkpoint repair; passage
+would support a fresh explicit causal transaction accumulator and protected
+background-free transaction read under parameter/state/compute-matched
+controls. Either branch would still be a training-screen decision, not model
+promotion.
+
+**Completed follow-up:** R5-S failed all 135 prospective scaled-logit checks
+despite exact categorical behavior and passing BPQ, state/read, transition,
+fingerprint, provenance, and FP64 contracts. The retained-checkpoint route is
+therefore stopped exactly as specified above. See the
+[`R5-S result`](G15BR5S_NUMERICAL_RATIFICATION_RESULTS.md) and
+[`exact artifact`](artifacts/g15br5s_numerical_ratification_sm75_2026-08-26.json).
 
 ## Nonclaims
 

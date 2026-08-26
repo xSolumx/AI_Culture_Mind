@@ -111,8 +111,13 @@
 > residuals reach `2.38e-6`/`3.58e-6` against `2e-6` bounds. Batch
 > fingerprints, discrete replay, learned logits, observability, and FP64
 > algebra remain exact or passing. R5 is zero-update checkpoint evidence; no
-> training is authorized until a prospectively frozen R5-S numerical
-> ratification.
+> training was authorized before R5-S. The completed prospective R5-S cohort
+> then fails its scaled-logit gate in all 135 source/cells despite exact
+> categorical behavior, BPQ drift below `1.72e-7`, state/read residuals below
+> `3e-6`, bit-exact transitions, and FP64 algebra below `5.87e-14`. The
+> retained-checkpoint repair route is closed; the next fresh design requires
+> an explicit pending-write/commit state and exact monolithic residual/read
+> path.
 > Generic transport stays identity by default; Spin is
 > reserved for supplied or coherent-frame specialized tasks. G16 has completed
 > its one-seed SM75 development
@@ -152,6 +157,8 @@
 > [G15B-R4 exact-SM75 artifact](hybrid_memory_v1_4/artifacts/g15br4_ownership_background_sm75_2026-08-26.json),
 > [G15B-R5 causal-tail-source result](hybrid_memory_v1_4/G15BR5_CAUSAL_TAIL_SOURCE_RESULTS.md),
 > [G15B-R5 exact-SM75 artifact](hybrid_memory_v1_4/artifacts/g15br5_causal_tail_source_sm75_2026-08-26.json),
+> [G15B-R5-S numerical result](hybrid_memory_v1_4/G15BR5S_NUMERICAL_RATIFICATION_RESULTS.md),
+> [G15B-R5-S exact-SM75 artifact](hybrid_memory_v1_4/artifacts/g15br5s_numerical_ratification_sm75_2026-08-26.json),
 > [G16 SM75 frontier-shootout protocol](hybrid_memory_v1_4/G16_SM75_FRONTIER_SHOOTOUT_PROTOCOL_2026-08-25.md),
 > [G16 trained-frontier results](hybrid_memory_v1_4/G16_SM75_FRONTIER_SHOOTOUT_RESULTS.md),
 > [G16 exact-SM75 runtime qualification artifact](hybrid_memory_v1_4/artifacts/g16_runtime_qualification_sm75_2026-08-25.json),

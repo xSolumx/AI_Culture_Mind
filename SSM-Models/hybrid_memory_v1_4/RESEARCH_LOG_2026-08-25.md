@@ -691,3 +691,32 @@ bit-identical, all reference predictions match, source assignment is exact,
 and FP64 algebra passes at `3.997e-15`. Treat these as a prospectively testable
 numerical-ratification problem, not permission to waive R5 after the result.
 Freeze R5-S before any training; do not erase the formal R5 failure.
+
+## 2026-08-26: G15B-R5-S exact-SM75 numerical result
+
+The prospective R5-S cohort was frozen in commits `d66d6e8` and `534c53b`
+before any stability batch. The implementation was sealed and pushed as
+`dde868a`. The clean exact-SM75 quality run then completed in 1,155.11 seconds
+with artifact SHA-256
+`3ac514e16e6fa1c720d5ef4244525f5d0f08c233634648e59181c6acfccc3a00`.
+
+The result is a formal fail and the retained-checkpoint repair route stops.
+All 135 source/cell checks exceed the frozen scaled-logit allowance; the ratio
+ranges from 1.171875 to 66.078125. No threshold is amended. This is not a
+failure of every numerical contract: all predictions remain identical,
+maximum BPQ drift is `1.720e-7`, state/read residuals remain below `3e-6`,
+source assignment is exact, transitions are bit-identical, and independent
+FP64 algebra passes at `5.862e-14`.
+
+The audit reproduced every sealed R5 aggregate digest, regenerated the fresh
+cohort twice, proved individual fingerprint disjointness, and matched every
+checkpoint and R5 source hash. Worst-batch comparison against a common FP64
+reference places both monolithic and decomposed FP32 read error near
+`2.4e-6`; the downstream RMS-normalized readout and projections amplify that
+into logits separated by as much as `6.387e-4` without categorical change.
+
+Do not waive R5-S or run another tolerance sweep. Preserve R5's independent
+performance-positive history attribution, but pivot the next fresh model to
+an explicit causal pending transaction, separate commit/edit control, and an
+exact monolithic residual/read path. Component reads should protect key
+content, not be summed merely to recreate the monolithic forward path.
