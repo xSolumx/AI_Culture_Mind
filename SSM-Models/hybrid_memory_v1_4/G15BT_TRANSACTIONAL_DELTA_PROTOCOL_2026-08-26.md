@@ -155,6 +155,72 @@ Training curriculum:
 128 -> 256 -> 512 -> 1,024 tokens
 ```
 
+### Frozen Phase-1 execution amendment
+
+**Frozen:** 2026-08-26 after the passing Phase-0 artifact and before every
+G15B-T training batch, including smoke execution.
+
+Every arm uses one transactional-delta block with vocabulary 69, model width
+64, four heads, key/value widths 16, convolution kernel 4, expansion 2,
+dropout 0, tied embeddings, minimum/initial retention `0.999/0.9995`, and
+initial commit/erase/write strengths `0.10/0.10/0.10`. Values are not
+normalized and identity value/output shortcuts are disabled. The model has no
+attention or Spin layer.
+
+The exact quality schedule is:
+
+| Length | Live keys | Max writes | Queries | Batch | Updates | LR |
+|---:|---:|---:|---:|---:|---:|---:|
+| 128 | 4 | 8 | 4 | 32 | 1,000 | 0.003 |
+| 256 | 8 | 16 | 8 | 16 | 1,200 | 0.003 |
+| 512 | 8 | 24 | 8 | 8 | 800 | 0.001 |
+| 1,024 | 8 | 24 | 8 | 4 | 400 | 0.001 |
+
+The deterministic task cycle is `MQAR, overwrite, overwrite, selective,
+needle`. Each seed therefore receives 3,400 optimizer updates per arm.
+Quality evaluation uses 2,048 query decisions per task/length cell with batch
+cap 8. The intervention cohort uses 512 decisions with batch cap 4. The smoke
+mode uses one update per phase and 16 evaluation decisions with batch cap 2;
+it can establish execution only and can never pass or promote Phase 1.
+
+All arms use `HarmonicMuonAdamW`: Muon for eligible hidden matrices,
+scalar-second-moment AdamW for commit/erase/write/decay controls, and ordinary
+AdamW for the remaining declared groups. Muon momentum is `0.95`, Newton--
+Schulz steps 5, Adam betas are `(0.9,0.999)`, weight decay is `0.01`, and the
+global gradient-norm clip is `1.0`. The commit projection is explicitly a
+control tensor in the optimizer partition. Learning rate is the table value.
+No warmup or unlisted scheduler is used.
+
+The primary loss is
+
+```text
+retrieval + 0.25 * reverse_binding + 0.25 * query_to_commit_address
+```
+
+Retrieval is query-position token cross-entropy. Reverse binding predicts the
+write key from the write-value position, matching the causal G15B definition.
+Address prototypes use edit keys only at `write_position + 1`, the first
+post-value commit position, and are compared with query vectors at query
+positions with cosine temperature `0.10`. `T-AUX` alone adds
+`0.25 * balanced_commit_BCE`; its target is the post-value commit mask at
+`write_position + 1`, thresholded at `0.5` for F1. No other primary or
+auxiliary controller label is permitted.
+
+Fresh evaluation namespaces are `g15bt-train`, `g15bt-eval`, and
+`g15bt-intervention`; every individual train/evaluation fingerprint set must
+be disjoint. The fixed needle distances are 64, 448, 960, and 1,984 at lengths
+128, 512, 1,024, and 2,048.
+
+For gate 9, "sharply degrades" means an absolute query-accuracy drop of at
+least `0.25` for commit-zero, memory-zero, permuted-history, and bias-only
+controls at L512 and L1024; each `-1/+1` commit shift must drop overwrite by at
+least `0.10`. For gate 10, erase-zero must drop the
+`after_same_key_overwrite` stratum by at least `0.10`, while its unique-key
+MQAR accuracy may fall by at most `0.02`. Zero-gap/boundary accuracy must meet
+the same `0.90` overwrite threshold. Ordinary-model versus independently
+reconstructed learned-forward logits must stay within `5e-4` with exact query
+predictions. These constants may not be revised after smoke output.
+
 Evaluate on fresh, fingerprint-disjoint cohorts at lengths 128, 512, 1,024,
 and 2,048 for:
 
