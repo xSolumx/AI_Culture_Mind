@@ -9,6 +9,7 @@ import torch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
+from hybrid_memory_v1_4.g15b_interleaved_cohort import _stable_seed
 from hybrid_memory_v1_4.g15b_interleaved_tasks import generate_interleaved_batch
 from hybrid_memory_v1_4.g15bt_transactional_cohort import (
     ARMS,
@@ -180,6 +181,21 @@ def test_boundary_batch_has_zero_gaps_without_local_answer_leakage() -> None:
     # Same-key answers are queried outside the four-token local receptive field.
     assert torch.all(batch.query_positions[:, 0] - batch.write_positions[:, 2] > 4)
     assert torch.all(batch.query_positions[:, 2] - batch.write_positions[:, 3] > 4)
+
+
+def test_boundary_batch_excludes_random_filler_answer_leaks_across_seeds() -> None:
+    seeds = list(range(256)) + [
+        _stable_seed("g15bt-boundary", seed) for seed in (2381, 2383, 2389)
+    ]
+    for seed in seeds:
+        batch = generate_boundary_batch(8, 128, seed=seed)
+        for row in range(batch.batch_size):
+            for query_index in range(batch.queries):
+                position = int(batch.query_positions[row, query_index])
+                target = batch.targets[row, query_index]
+                assert not bool(
+                    (batch.token_ids[row, position - 3 : position + 1] == target).any()
+                )
 
 
 def test_cpu_preflight_and_small_evaluation_cell_execute() -> None:

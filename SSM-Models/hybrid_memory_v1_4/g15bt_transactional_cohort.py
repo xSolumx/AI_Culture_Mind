@@ -466,10 +466,18 @@ def generate_boundary_batch(
             roles[start : start + 2] = torch.tensor((ROLE_QUERY_MARKER, ROLE_QUERY_KEY))
         row_writes = [first + 2, consecutive + 2, consecutive + 5, immediate + 2]
         row_queries = [consecutive + 21, immediate + 4, delayed + 1]
+        row_targets = [new_b, value_a, newest_b]
+        for query_position, target in zip(row_queries, row_targets, strict=True):
+            receptive_start = max(0, query_position - 3)
+            for position in range(receptive_start, query_position + 1):
+                if roles[position] == ROLE_FILLER and tokens[position] == target:
+                    tokens[position] = (
+                        (target - PAYLOAD_START + 1) % PAYLOAD_COUNT
+                    ) + PAYLOAD_START
         rows_tokens.append(tokens)
         rows_roles.append(roles)
         live_keys.append([key_a, key_b])
-        targets.append([new_b, value_a, newest_b])
+        targets.append(row_targets)
         query_positions.append(row_queries)
         query_keys.append([key_b, key_a, key_b])
         query_indices.append([1, 0, 1])
