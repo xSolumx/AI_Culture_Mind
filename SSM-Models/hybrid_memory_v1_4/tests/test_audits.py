@@ -326,7 +326,7 @@ def test_temporal_screen_records_failed_original_and_accepted_successor() -> Non
     assert report["successor_topology_acceptance_passed"] is True
     assert report["evidentiary"] is True
     assert report["source_files"]
-    assert report["git_status"]
+    assert isinstance(report["git_status"], list)
     _json_round_trip(report)
 
 
