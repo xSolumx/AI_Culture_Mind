@@ -433,7 +433,16 @@ gradients are finite and nonzero. See the
 SHA-256
 `44a8556b60db7cb8c5e1edc239255dc510b62f03960e4514a49b645e79123921`.
 This authorizes only prospective Phase-1 constructed training. No learning
-result exists, and geometry remains blocked.
+result exists, and geometry remains blocked. The subsequent clean exact-SM75
+[`Phase-1 smoke`](G15BD_PHASE1_RESULTS.md) completes all preflight and
+numerical execution checks from commit `644330c61bf894ed8ff379872d97d5c591c8555c`,
+but intentionally records `passed=false` and `eligible_for_promotion=false`:
+four updates and 3,840 tokens per arm are execution/profiling evidence only.
+Semantic `D` is not compute- or temporary-memory-matched to `P`. See the
+[`smoke artifact`](artifacts/g15bd_phase1_smoke_sm75_2026-08-26.json),
+SHA-256
+`b96e8e0cf936af6c828c5ec643484c677a556c6e9f687bc453a70ab653e6464e`.
+The frozen quality cohort remains the next gate, and geometry remains blocked.
 
 The constrained `su3_torus` arm is an additional scientific ablation, not a
 replacement for the four frozen primary arms.

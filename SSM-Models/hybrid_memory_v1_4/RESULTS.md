@@ -1472,6 +1472,31 @@ It authorizes only prospective Phase-1 constructed training. There is no
 trained G15B-D model, learning result, causal-use result, natural-text result,
 or geometry authorization.
 
+## G15B-D Phase-1 exact-SM75 smoke
+
+The clean evidentiary smoke from commit
+`644330c61bf894ed8ff379872d97d5c591c8555c` completed on the exact RTX 2070
+SUPER SM75 WSL2 runtime. Preflight, sealed-Phase-0 source binding, optimizer
+assignment, finite nonzero gradients, learned reconstruction, data separation,
+and all numerical boundaries pass. `P/D` each have 67,033 total/active
+parameters, 4,864 FP32 state bytes, and identical initialization.
+
+This was only four updates and 3,840 training tokens per arm. Formal
+adjudication therefore intentionally records `passed=false` and
+`eligible_for_promotion=false`, with decision `smoke execution completed; run
+the frozen quality cohort`. Raw `P/D` mean synchronized step times are
+`0.1022907`/`0.2244913` seconds, evaluation wall times are `2.0444`/`50.6322`
+seconds, and peak CUDA allocations are 448,071,680/4,705,855,488 bytes. The
+semantic `D` implementation is not compute- or temporary-memory-matched to
+`P`, so these are profiling observations rather than efficiency evidence.
+
+See the detailed [`Phase-1 ledger`](G15BD_PHASE1_RESULTS.md) and exact
+[`smoke artifact`](artifacts/g15bd_phase1_smoke_sm75_2026-08-26.json), SHA-256
+`b96e8e0cf936af6c828c5ec643484c677a556c6e9f687bc453a70ab653e6464e`.
+The frozen quality cohort remains unexecuted; no learning, causal-use,
+natural-text, robustness, scaling, geometry, efficiency, or promotion claim
+follows.
+
 ## G16 one-seed trained-frontier result
 
 The clean exact-SM75 cohort from commit `5796a851df02` completed all four real

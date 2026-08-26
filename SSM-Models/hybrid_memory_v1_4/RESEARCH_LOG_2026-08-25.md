@@ -909,3 +909,23 @@ SHA-256
 authorizes only prospective Phase-1 constructed training. No G15B-D learning,
 causal-use, natural-text, scaling, optimizer, geometry, or promotion claim
 exists.
+
+The clean exact-SM75 Phase-1 smoke then completed from commit
+`644330c61bf894ed8ff379872d97d5c591c8555c`. It binds the sealed Phase-0
+artifact, matches `P/D` at 67,033 parameters and 4,864 FP32 state bytes with
+identical initialization, passes all preflight and numerical boundaries, and
+records four updates plus 3,840 training tokens per arm. Formal adjudication is
+intentionally `passed=false` and `eligible_for_promotion=false`; the frozen
+decision is `smoke execution completed; run the frozen quality cohort`.
+
+Raw `P/D` synchronized step time was `0.1022907`/`0.2244913` seconds,
+evaluation wall time was `2.0444`/`50.6322` seconds, and peak CUDA allocation
+was 448,071,680/4,705,855,488 bytes. Semantic `D` is not compute- or temporary-
+memory-matched to `P`, so these figures are a profiling diagnostic, not an
+efficiency comparison. See the detailed
+[`Phase-1 result`](G15BD_PHASE1_RESULTS.md) and
+[`smoke artifact`](artifacts/g15bd_phase1_smoke_sm75_2026-08-26.json),
+SHA-256
+`b96e8e0cf936af6c828c5ec643484c677a556c6e9f687bc453a70ab653e6464e`.
+No learning, causal-use, natural-text, robustness, scaling, efficiency,
+geometry, or promotion result exists until the full quality cohort is sealed.

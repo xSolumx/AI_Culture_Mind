@@ -12,9 +12,16 @@ before any G15B-D training batch, checkpoint, or learning metric
 **Exact Phase-0 artifact:**
 [`artifacts/g15bd_phase0_qualification_sm75_2026-08-26.json`](artifacts/g15bd_phase0_qualification_sm75_2026-08-26.json)
 
-**Status:** exact clean-SM75 Phase 0 passed and authorizes only prospective
-Phase-1 constructed training. No G15B-D learning result exists yet. Geometry,
-natural text, and model promotion remain blocked.
+**Phase-1 result ledger:**
+[`G15BD_PHASE1_RESULTS.md`](G15BD_PHASE1_RESULTS.md)
+
+**Exact Phase-1 smoke artifact:**
+[`artifacts/g15bd_phase1_smoke_sm75_2026-08-26.json`](artifacts/g15bd_phase1_smoke_sm75_2026-08-26.json)
+
+**Status:** exact clean-SM75 Phase 0 passed. The clean Phase-1 execution smoke
+also completed, with formal `passed=false` and `eligible_for_promotion=false`
+because it is not the frozen quality cohort. Run that cohort next. No G15B-D
+quality, efficiency, natural-text, geometry, or model-promotion result exists.
 
 ## Diagnosed learning problem
 
@@ -131,6 +138,15 @@ Conditional on Phase 0, Phase 1 reuses the exact G15B-E quality budget:
 - identical batches, optimizer groups, initialization tensors, parameters,
   state bytes, decision counts, checkpoint/source hashes, and numerical
   audits.
+
+### Prospective SM75 execution amendment
+
+Before any quality execution, the exact L2048/batch-8 D probe allocated
+`7,844,385,280` CUDA bytes on the 8 GiB RTX 2070 SUPER. The quality evaluation
+batch cap is therefore frozen at `4` for **both** P and D. Evaluation decisions
+per cell, seeds, task/length grid, training updates/tokens, gates, and paired
+batch schedules are unchanged. This is a safety margin and grouping change,
+not a quality-gate change; it does not authorize an efficiency comparison.
 
 ## Frozen Phase-1 gates
 

@@ -241,9 +241,21 @@ declared gradients are finite and nonzero. The
 SHA-256
 `44a8556b60db7cb8c5e1edc239255dc510b62f03960e4514a49b645e79123921`.
 This authorizes only prospective Phase-1 constructed training; no G15B-D
-learning, natural-text, geometry, or promotion result exists. The frozen
-runner and pending execution status are recorded in
-[`G15BD_PHASE1_RESULTS.md`](G15BD_PHASE1_RESULTS.md).
+learning, natural-text, geometry, or promotion result exists. The subsequent
+clean exact-SM75
+[`Phase-1 smoke`](G15BD_PHASE1_RESULTS.md) completed from commit
+`644330c61bf894ed8ff379872d97d5c591c8555c`: all preflight and numerical
+boundaries pass, and `P/D` are matched at 67,033 parameters and 4,864 FP32
+state bytes. It is only four updates and 3,840 tokens per arm, so the artifact
+intentionally records `passed=false` and `eligible_for_promotion=false` with
+the decision to run the frozen quality cohort. Raw `P/D` mean step times were
+`0.1022907`/`0.2244913` seconds and peak CUDA allocations were
+448,071,680/4,705,855,488 bytes. Semantic `D` is not compute- or temporary-
+memory-matched to `P`; these are profiling observations, not an efficiency or
+quality conclusion. See the
+[`smoke artifact`](artifacts/g15bd_phase1_smoke_sm75_2026-08-26.json),
+SHA-256
+`b96e8e0cf936af6c828c5ec643484c677a556c6e9f687bc453a70ab653e6464e`.
 
 In parallel, the frozen
 [`G16 SM75 shootout protocol`](G16_SM75_FRONTIER_SHOOTOUT_PROTOCOL_2026-08-25.md)
@@ -396,7 +408,9 @@ remains label-supervised with 774,400 useful query labels per seed.
   scan/chunk/step/mask, gradient, and provenance qualification harness.
 - [`g15bd_residual_delta_cohort.py`](g15bd_residual_delta_cohort.py): frozen
   P/D constructed-training curriculum, D-only causal interventions, paired
-  provenance, numerical boundaries, and fail-closed Phase-1 adjudication.
+  provenance, numerical boundaries, and fail-closed Phase-1 adjudication; the
+  clean exact-SM75 smoke passed execution checks, while quality remains
+  unexecuted.
 - [`model.py`](model.py): eight-kind hybrid shell, local convolution caches,
   checkpointing, diagnostics, and exact cache-byte accounting.
 - [`fla_adapter.py`](fla_adapter.py): fail-closed semantic and optional official

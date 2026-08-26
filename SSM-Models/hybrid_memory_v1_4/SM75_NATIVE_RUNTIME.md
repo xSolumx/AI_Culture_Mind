@@ -201,6 +201,20 @@ SHA-256
 This qualifies only prospective Phase-1 constructed training; it is not a
 learning, natural-text, geometry, promotion, or throughput result.
 
+G15B-D Phase-1 smoke completed on the same exact runtime from clean commit
+`644330c` with all preflight and numerical boundaries passing. `P/D` each have
+67,033 total/active parameters, 4,864 FP32 state bytes, and identical
+initialization; each received four updates and 3,840 training tokens. Raw
+`P/D` mean synchronized step time was `0.1022907`/`0.2244913` seconds,
+evaluation wall time was `2.0444`/`50.6322` seconds, and peak CUDA allocation
+was 448,071,680/4,705,855,488 bytes. Semantic `D` is not compute- or temporary-
+memory-matched to `P`, so these are execution/profiling observations, not an
+efficiency comparison. The artifact intentionally records `passed=false` and
+`eligible_for_promotion=false`, with the frozen quality cohort still pending.
+See the [`result`](G15BD_PHASE1_RESULTS.md) and
+[`artifact`](artifacts/g15bd_phase1_smoke_sm75_2026-08-26.json), SHA-256
+`b96e8e0cf936af6c828c5ec643484c677a556c6e9f687bc453a70ab653e6464e`.
+
 The native WSL environment also exposes CUDA-only `causal_conv1d`,
 `mamba_ssm`, and FLA Hub kernels to Transformers. The baseline registry now
 dispatches by the actual input tensor: CUDA keeps the resolved native kernel,

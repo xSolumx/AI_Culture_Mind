@@ -6,7 +6,7 @@ import argparse
 import json
 import platform
 import subprocess
-from dataclasses import asdict
+from dataclasses import asdict, replace
 from pathlib import Path
 from typing import Any, Literal
 
@@ -15,6 +15,7 @@ import torch
 from .g15b_interleaved_cohort import _sha256, _stable_seed
 from .g15b_interleaved_tasks import generate_interleaved_batch
 from .g15be_effective_edit_cohort import (
+    CohortConfig,
     EVALUATION_LENGTHS,
     EVALUATION_TASKS,
     QUALITY_SEEDS,
@@ -28,7 +29,7 @@ from .g15be_effective_edit_cohort import (
     build_model,
     commissioned_losses,
     effective_edit_intervention_forward,
-    frozen_config,
+    frozen_config as _g15be_frozen_config,
 )
 from .g15br3_logical_component import STRATA
 from .model import parameter_count
@@ -46,6 +47,15 @@ ARMS = ("P", "D")
 Arm = Literal["P", "D"]
 EXPECTED_UPDATES = 3400
 EXPECTED_TOKENS = 13_926_400
+
+
+def frozen_config(mode: Literal["smoke", "quality"]) -> CohortConfig:
+    """Return the frozen cohort with an SM75-safe paired evaluation cap."""
+
+    config = _g15be_frozen_config(mode)
+    if mode == "quality":
+        return replace(config, evaluation_batch_cap=4)
+    return config
 
 
 def _git(*arguments: str) -> str:
@@ -520,4 +530,4 @@ if __name__ == "__main__":
     main()
 
 
-__all__ = ["ARMS", "_adjudicate", "run_preflight"]
+__all__ = ["ARMS", "_adjudicate", "frozen_config", "run_preflight"]

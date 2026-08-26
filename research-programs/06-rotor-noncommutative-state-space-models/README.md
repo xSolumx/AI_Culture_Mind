@@ -294,8 +294,11 @@ new matched natural-data and complete-step hardware evidence.
   clean-SM75 Phase-0 implementation qualification for that law from clean
   commit `549e6d98d0bebc35fad32daa498486fd075aa906`; matched `P/D` parameters and
   state, direct-formula coupling, numerical parity, and all declared gradients
-  pass. Only prospective Phase-1 constructed training is authorized; no
-  learning result exists.
+  pass. Its clean exact-SM75 Phase-1 smoke also passes execution checks, but
+  only four updates and 3,840 tokens per arm were run; formal adjudication and
+  promotion eligibility intentionally remain false. Semantic `D` is not
+  compute- or temporary-memory-matched to `P`, and the quality cohort remains
+  unexecuted. No learning or efficiency result exists.
   Spin remains a specialized prior for
   supplied or coherent frames; learned topology, full three-carrier triality
   utility, natural text, and scaling remain open.
@@ -445,6 +448,8 @@ new matched natural-data and complete-step hardware evidence.
 - [G15B-D coupled residual-delta protocol](../../SSM-Models/hybrid_memory_v1_4/G15BD_RESIDUAL_DELTA_PROTOCOL_2026-08-26.md)
 - [G15B-D Phase-0 qualification result](../../SSM-Models/hybrid_memory_v1_4/G15BD_PHASE0_QUALIFICATION_RESULTS.md)
 - [G15B-D exact-SM75 Phase-0 artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g15bd_phase0_qualification_sm75_2026-08-26.json)
+- [G15B-D Phase-1 smoke result](../../SSM-Models/hybrid_memory_v1_4/G15BD_PHASE1_RESULTS.md)
+- [G15B-D exact-SM75 Phase-1 smoke artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g15bd_phase1_smoke_sm75_2026-08-26.json)
 - [G16 SM75 frontier-shootout protocol](../../SSM-Models/hybrid_memory_v1_4/G16_SM75_FRONTIER_SHOOTOUT_PROTOCOL_2026-08-25.md)
 - [G16 trained-frontier results](../../SSM-Models/hybrid_memory_v1_4/G16_SM75_FRONTIER_SHOOTOUT_RESULTS.md)
 - [G16 exact-SM75 runtime qualification artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g16_runtime_qualification_sm75_2026-08-25.json)

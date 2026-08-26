@@ -141,8 +141,13 @@
 > `549e6d98d0bebc35fad32daa498486fd075aa906`. `P/D` each have 22,161 active
 > parameters and 1,408 FP32 state bytes; direct transition/injection/coupling
 > residuals are zero, numerical parity and all declared gradients pass, and
-> the result authorizes only prospective Phase-1 constructed training. No
-> G15B-D learning, natural-text, geometry, or promotion result is claimed.
+> the result authorizes only prospective Phase-1 constructed training. The
+> clean exact-SM75 smoke then completes all preflight and numerical checks from
+> commit `644330c61bf894ed8ff379872d97d5c591c8555c`, but its four updates and
+> 3,840 tokens per arm intentionally retain `passed=false` and
+> `eligible_for_promotion=false`. Semantic `D` is not compute- or temporary-
+> memory-matched to `P`; the quality cohort remains unexecuted. No G15B-D
+> learning, efficiency, natural-text, geometry, or promotion result is claimed.
 > Generic transport stays identity by default; Spin is
 > reserved for supplied or coherent-frame specialized tasks. G16 has completed
 > its one-seed SM75 development
@@ -197,7 +202,8 @@
 > [G15B-D residual-delta protocol](hybrid_memory_v1_4/G15BD_RESIDUAL_DELTA_PROTOCOL_2026-08-26.md),
 > [G15B-D Phase-0 qualification result](hybrid_memory_v1_4/G15BD_PHASE0_QUALIFICATION_RESULTS.md),
 > [G15B-D exact-SM75 Phase-0 artifact](hybrid_memory_v1_4/artifacts/g15bd_phase0_qualification_sm75_2026-08-26.json),
-> [G15B-D Phase-1 ledger](hybrid_memory_v1_4/G15BD_PHASE1_RESULTS.md),
+> [G15B-D Phase-1 smoke result](hybrid_memory_v1_4/G15BD_PHASE1_RESULTS.md),
+> [G15B-D exact-SM75 Phase-1 smoke artifact](hybrid_memory_v1_4/artifacts/g15bd_phase1_smoke_sm75_2026-08-26.json),
 > [G16 SM75 frontier-shootout protocol](hybrid_memory_v1_4/G16_SM75_FRONTIER_SHOOTOUT_PROTOCOL_2026-08-25.md),
 > [G16 trained-frontier results](hybrid_memory_v1_4/G16_SM75_FRONTIER_SHOOTOUT_RESULTS.md),
 > [G16 exact-SM75 runtime qualification artifact](hybrid_memory_v1_4/artifacts/g16_runtime_qualification_sm75_2026-08-25.json),

@@ -14,6 +14,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 from hybrid_memory_v1_4.g15bd_residual_delta_cohort import (
     ARMS,
     _adjudicate,
+    frozen_config,
     run_preflight,
 )
 from hybrid_memory_v1_4.g15be_effective_edit_cohort import (
@@ -22,7 +23,6 @@ from hybrid_memory_v1_4.g15be_effective_edit_cohort import (
     INTERVENTIONS,
     QUALITY_SEEDS,
     build_model,
-    frozen_config,
 )
 from hybrid_memory_v1_4.model import parameter_count
 
@@ -149,6 +149,8 @@ def _passing_reports(tmp_path: Path) -> list[dict[str, object]]:
 
 
 def test_g15bd_models_and_preflight_are_matched() -> None:
+    assert frozen_config("smoke").evaluation_batch_cap == 2
+    assert frozen_config("quality").evaluation_batch_cap == 4
     models = {
         arm: build_model(arm, 2581, torch.device("cpu"))  # type: ignore[arg-type]
         for arm in ARMS
