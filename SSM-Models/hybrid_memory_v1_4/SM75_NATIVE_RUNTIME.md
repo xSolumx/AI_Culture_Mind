@@ -103,6 +103,18 @@ pass; neither value-only arm authorizes training. See the
 SHA-256
 `921d45e3c492e172fae62064120e9e051dca2965bacc44891268b135d8cef26e`.
 
+G15B-R5 completed on the same runtime from clean commit `e039e49` in 4,611.91
+seconds. The exact quality artifact is evidentiary, records zero updates, binds
+the sealed R4 artifact, matches all batch fingerprints, and verifies causal
+source locality. Its background-free history arm passes all performance and
+bias-separation checks, but formal adjudication fails the frozen FP32 replay
+and state/read tolerances. Learned logits and discrete replay are exact; the
+independent FP64 maximum is `3.997e-15`. See the
+[`result`](G15BR5_CAUSAL_TAIL_SOURCE_RESULTS.md) and
+[`artifact`](artifacts/g15br5_causal_tail_source_sm75_2026-08-26.json),
+SHA-256
+`ba627fe34e8dd29458fc1321b52c98242838c3b56e2abdc7e44c749f50aaa313`.
+
 The native WSL environment also exposes CUDA-only `causal_conv1d`,
 `mamba_ssm`, and FLA Hub kernels to Transformers. The baseline registry now
 dispatches by the actual input tensor: CUDA keeps the resolved native kernel,

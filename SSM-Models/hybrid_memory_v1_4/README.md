@@ -151,14 +151,19 @@ decision remains **do not train** until a causal, non-overlapping transaction
 boundary is demonstrated. See the
 [`R4 protocol`](G15BR4_OWNERSHIP_BACKGROUND_PROTOCOL_2026-08-26.md) and
 [`exact-SM75 artifact`](artifacts/g15br4_ownership_background_sm75_2026-08-26.json).
-The prospective
-[`G15B-R5 protocol`](G15BR5_CAUSAL_TAIL_SOURCE_PROTOCOL_2026-08-26.md) is now
-frozen before new metrics. It asks whether the necessary tail injection can be
-derived from the completed write transaction in the convolution history while
-leaving the current token in an exact residual background path. Prospective
-review adds a bias-only control and requires the background-free history arm:
-the shared-background arm alone can still read current-token residual and
-cannot authorize training.
+The completed
+[`G15B-R5 causal tail-source result`](G15BR5_CAUSAL_TAIL_SOURCE_RESULTS.md)
+separates strict-history, current-token, bias-only, and exact-residual tail
+sources. `h_lww_bgminus` passes all 132 frozen performance and bias-separation
+checks, reaching 0.9424--0.9466 mean ordinary overwrite and 1.0 on the
+constructed guard; current-only and bias-only arms fail. The formal quality
+adjudication remains failed because no-reset BPQ replay differs by at most
+`1.40e-7` against a frozen `1e-12` bound and FP32 state/read residuals reach
+`2.38e-6`/`3.58e-6` against `2e-6`. Discrete replay, learned logits, causal
+locality, and FP64 algebra pass. No training is authorized before a separately
+frozen R5-S numerical ratification. See the
+[`R5 protocol`](G15BR5_CAUSAL_TAIL_SOURCE_PROTOCOL_2026-08-26.md) and
+[`exact-SM75 artifact`](artifacts/g15br5_causal_tail_source_sm75_2026-08-26.json).
 
 In parallel, the frozen
 [`G16 SM75 shootout protocol`](G16_SM75_FRONTIER_SHOOTOUT_PROTOCOL_2026-08-25.md)

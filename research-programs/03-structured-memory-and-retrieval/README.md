@@ -189,8 +189,18 @@ representation.
   only 0.9390--0.9418. Removing background destroys value-only behavior but
   leaves both value-plus-tail arms near 0.90--0.95 overwrite and 1.0 guard
   accuracy. The useful retained association is therefore localized to
-  ambiguous `t+1` ownership, not shared background, and fresh explicit-slot
-  training remains blocked. Generic transport remains
+  ambiguous `t+1` ownership, not shared background. G15B-R5 then decomposes
+  that tail into strict-history, current-token, bias-only, and exact-residual
+  sources without changing the full-token transition. The background-free
+  strict-history LWW arm passes every frozen performance and bias-separation
+  check: mean overwrite is 0.9424/0.9456/0.9466 and every constructed-guard
+  cell is 1.0. The formal exact-SM75 quality adjudication still fails. R4 BPQ
+  replay differs by at most `1.40e-7` against the frozen `1e-12` bound, and
+  FP32 no-reset-state/background-read residuals reach
+  `2.38e-6`/`3.58e-6` against `2e-6`; batch fingerprints, discrete replay,
+  learned logits, observability, and FP64 algebra pass. This is a zero-update
+  retained-checkpoint mechanism result, not authorization to train. A
+  prospectively frozen R5-S numerical ratification is next. Generic transport remains
   identity by default;
   Spin belongs in supplied/coherent-frame
   specialized tasks. Learned topology, full three-carrier triality utility,
@@ -319,6 +329,8 @@ representation.
 - [G15B-R3 exact-SM75 artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g15br3_logical_component_sm75_2026-08-26.json)
 - [G15B-R4 ownership/background result](../../SSM-Models/hybrid_memory_v1_4/G15BR4_OWNERSHIP_BACKGROUND_RESULTS.md)
 - [G15B-R4 exact-SM75 artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g15br4_ownership_background_sm75_2026-08-26.json)
+- [G15B-R5 causal-tail-source result](../../SSM-Models/hybrid_memory_v1_4/G15BR5_CAUSAL_TAIL_SOURCE_RESULTS.md)
+- [G15B-R5 exact-SM75 artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g15br5_causal_tail_source_sm75_2026-08-26.json)
 - [G16 SM75 frontier-shootout protocol](../../SSM-Models/hybrid_memory_v1_4/G16_SM75_FRONTIER_SHOOTOUT_PROTOCOL_2026-08-25.md)
 - [G16 trained-frontier results](../../SSM-Models/hybrid_memory_v1_4/G16_SM75_FRONTIER_SHOOTOUT_RESULTS.md)
 - [G16 exact-SM75 runtime qualification artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g16_runtime_qualification_sm75_2026-08-25.json)

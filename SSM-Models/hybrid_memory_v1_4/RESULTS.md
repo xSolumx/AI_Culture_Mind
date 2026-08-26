@@ -1264,6 +1264,33 @@ is a seed-sensitive two-token write transaction whose tail can consume the
 next event marker. No value-only arm passes, so fresh explicit-slot training
 remains blocked pending a causal, non-overlapping pending-write/commit law.
 
+## G15B-R5 causal tail-source result
+
+The prospectively frozen zero-update
+[`G15B-R5`](G15BR5_CAUSAL_TAIL_SOURCE_RESULTS.md) diagnostic completed from
+clean commit `e039e49` on exact SM75 in 4,611.91 seconds; artifact SHA-256
+`ba627fe34e8dd29458fc1321b52c98242838c3b56e2abdc7e44c749f50aaa313`.
+It decomposes each write tail into strict-history, current-token, bias-only,
+and exact residual sources while preserving the ordinary full-token
+transition.
+
+The background-free strict-history LWW arm passes all 132 frozen performance,
+guard, safety, per-seed, and bias-separation checks. Mean ordinary overwrite is
+`0.942383`, `0.945557`, and `0.946615` at lengths 128, 512, and 1,024 versus
+learned `0.767822`, `0.832764`, and `0.828776`; the constructed guard is 1.0
+throughout. Current-only and bias-only background-free arms remain near chance
+on ordinary overwrite and around 0.63 on the guard. The completed write
+transaction in strict convolution history is therefore the useful injection
+source, conditional on the unchanged current-token-dependent transition.
+
+The frozen formal adjudication remains failed. R4 discrete replay and learned
+logits are exact, but decomposed no-reset BPQ differs by at most `1.397e-7`
+against `1e-12`. FP32 no-reset state/background-read residuals reach
+`2.384e-6`/`3.576e-6` against `2e-6`; source assignment is exact and the
+independent FP64 maximum is `3.997e-15`. These are consistent with FP32
+non-associativity, but the bound is not waived post hoc. No training is
+authorized before a separately frozen R5-S numerical ratification.
+
 ## G16 one-seed trained-frontier result
 
 The clean exact-SM75 cohort from commit `5796a851df02` completed all four real

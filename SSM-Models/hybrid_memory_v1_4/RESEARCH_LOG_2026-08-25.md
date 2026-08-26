@@ -665,3 +665,29 @@ the decomposed tap sum changes addition order. Before any quality run, the R5
 protocol therefore freezes the FP32 structural bound at `2e-6` while retaining
 the independent `1e-10` FP64 bound. No performance or authorization threshold
 was changed.
+
+## 2026-08-26: G15B-R5 exact-SM75 quality result
+
+The clean quality cohort completed from commit `e039e49` in 4,611.91 seconds;
+artifact SHA-256 is
+`ba627fe34e8dd29458fc1321b52c98242838c3b56e2abdc7e44c749f50aaa313`.
+It used all three retained identity checkpoints, 4,096 decisions per cell,
+lengths 128/512/1,024, and zero updates.
+
+The substantive attribution is positive. `h_lww_bgminus` passes all 132 frozen
+performance and bias-separation checks. Mean ordinary overwrite is
+0.9424/0.9456/0.9466 and every constructed-guard mean is 1.0. Current-only and
+bias-only arms fail. The learned association at the ambiguous R4 tail is
+therefore carried by the completed transaction in strict convolution history,
+not bias or the new token alone. This remains injection-source sufficiency
+conditional on the unchanged full-token transition and oracle logical-key
+components.
+
+The frozen formal decision is still a fail. Every discrete R4 replay metric is
+exact, but the decomposed no-reset BPQ differs by at most `1.397e-7` from R4
+against the frozen `1e-12` bound. FP32 no-reset state and background-read
+relations reach `2.384e-6` and `3.576e-6` against `2e-6`. Learned logits are
+bit-identical, all reference predictions match, source assignment is exact,
+and FP64 algebra passes at `3.997e-15`. Treat these as a prospectively testable
+numerical-ratification problem, not permission to waive R5 after the result.
+Freeze R5-S before any training; do not erase the formal R5 failure.

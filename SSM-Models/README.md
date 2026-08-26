@@ -100,8 +100,19 @@
 > 0.7030/0.7645/0.7534 versus learned 0.7678/0.8328/0.8288 and a seed-2311
 > collapse. Excluding background destroys the value-only arm but not the
 > passing tail arms, so useful retained-checkpoint association is localized to
-> ambiguous `t+1` ownership rather than shared background. Fresh explicit-slot
-> training remains blocked.
+> ambiguous `t+1` ownership rather than shared background. G15B-R5 then splits
+> that tail into strict-history, current-token, bias-only, and exact residual
+> sources while retaining the ordinary full-token transition. The
+> background-free strict-history LWW arm passes every frozen performance and
+> bias-separation check: mean ordinary overwrite is 0.9424/0.9456/0.9466 and
+> the constructed guard is 1.0 at all three lengths. The formal quality
+> adjudication nevertheless fails: R4 BPQ replay differs by at most `1.40e-7`
+> against a frozen `1e-12` bound, and FP32 no-reset-state/background-read
+> residuals reach `2.38e-6`/`3.58e-6` against `2e-6` bounds. Batch
+> fingerprints, discrete replay, learned logits, observability, and FP64
+> algebra remain exact or passing. R5 is zero-update checkpoint evidence; no
+> training is authorized until a prospectively frozen R5-S numerical
+> ratification.
 > Generic transport stays identity by default; Spin is
 > reserved for supplied or coherent-frame specialized tasks. G16 has completed
 > its one-seed SM75 development
@@ -139,6 +150,8 @@
 > [G15B-R3 exact-SM75 artifact](hybrid_memory_v1_4/artifacts/g15br3_logical_component_sm75_2026-08-26.json),
 > [G15B-R4 ownership/background result](hybrid_memory_v1_4/G15BR4_OWNERSHIP_BACKGROUND_RESULTS.md),
 > [G15B-R4 exact-SM75 artifact](hybrid_memory_v1_4/artifacts/g15br4_ownership_background_sm75_2026-08-26.json),
+> [G15B-R5 causal-tail-source result](hybrid_memory_v1_4/G15BR5_CAUSAL_TAIL_SOURCE_RESULTS.md),
+> [G15B-R5 exact-SM75 artifact](hybrid_memory_v1_4/artifacts/g15br5_causal_tail_source_sm75_2026-08-26.json),
 > [G16 SM75 frontier-shootout protocol](hybrid_memory_v1_4/G16_SM75_FRONTIER_SHOOTOUT_PROTOCOL_2026-08-25.md),
 > [G16 trained-frontier results](hybrid_memory_v1_4/G16_SM75_FRONTIER_SHOOTOUT_RESULTS.md),
 > [G16 exact-SM75 runtime qualification artifact](hybrid_memory_v1_4/artifacts/g16_runtime_qualification_sm75_2026-08-25.json),
