@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import importlib.metadata
 import json
 import math
 import os
@@ -136,7 +137,13 @@ def _run_child(args: argparse.Namespace) -> dict[str, object]:
         learning_rate=args.learning_rate,
         seed=seed,
     )
-    model = _build_paired_model(args.child_variant, config, device)
+    build_config = (
+        replace(config, d_model=args.mamba_d_model)
+        if args.child_variant == "mamba2_official"
+        and args.mamba_d_model is not None
+        else config
+    )
+    model = _build_paired_model(args.child_variant, build_config, device)
     model.train()
     optimizer = torch.optim.AdamW(
         model.parameters(), lr=args.learning_rate, weight_decay=0.01
@@ -222,16 +229,35 @@ def _run_child(args: argparse.Namespace) -> dict[str, object]:
         model.config.action_event_stride
         if isinstance(model, ExceptionalDeltaLM)
         and model.config.action_geometry == "canonical_product"
-        and model.config.primitive_transport_enabled
+        else None
+    )
+    transport_enabled = (
+        model.config.primitive_transport_enabled
+        if isinstance(model, ExceptionalDeltaLM)
+        and model.config.action_geometry == "canonical_product"
         else None
     )
     events_per_layer = (
         args.sequence_length // event_stride if event_stride is not None else 0
     )
+    mamba_runtime = None
+    if args.child_variant == "mamba2_official":
+        import mamba_ssm
+
+        try:
+            mamba_version = importlib.metadata.version("mamba-ssm")
+        except importlib.metadata.PackageNotFoundError:
+            mamba_version = getattr(mamba_ssm, "__version__", "unknown")
+        mamba_runtime = {
+            "version": mamba_version,
+            "module_path": str(Path(mamba_ssm.__file__).resolve()),
+        }
     return {
         "variant": args.child_variant,
         "cycle": args.cycle,
         "seed": seed,
+        "model_d_model": build_config.d_model,
+        "mamba_ssm_runtime": mamba_runtime,
         "parameters": parameter_count(model),
         "parameter_bytes": sum(_tensor_bytes(p) for p in model.parameters()),
         "model_buffer_bytes": model_buffer_bytes,
@@ -239,12 +265,15 @@ def _run_child(args: argparse.Namespace) -> dict[str, object]:
         "optimizer_state_bytes": optimizer_bytes,
         "cache_scalars": getattr(model, "cache_scalars", None),
         "event_stride": event_stride,
+        "primitive_transport_enabled": transport_enabled,
         "events_per_layer": events_per_layer,
         "event_density": (
             events_per_layer / args.sequence_length if args.sequence_length else 0.0
         ),
         "state_action_applications_per_step": (
             args.batch_size * args.layers * events_per_layer
+            if transport_enabled
+            else 0
         ),
         "timing": _timing_summary(samples_ms),
         "loss_first": losses[0],
@@ -293,6 +322,8 @@ def _child_command(args: argparse.Namespace, variant: str, cycle: int) -> list[s
         "--device",
         args.device,
     ]
+    if args.mamba_d_model is not None:
+        command.extend(("--mamba-d-model", str(args.mamba_d_model)))
     if args.require_sm75:
         command.append("--require-sm75")
     return command
@@ -314,6 +345,9 @@ def _aggregate(rows: list[dict[str, object]]) -> dict[str, object]:
             "timing": _timing_summary(samples),
             "maximum_peak_allocated_bytes": max(peaks),
             "parameters": sorted({int(row["parameters"]) for row in selected}),
+            "model_d_model": sorted(
+                {int(row["model_d_model"]) for row in selected}
+            ),
             "any_dense_sequence_action": any(
                 bool(row["materialized_dense_sequence_action"]) for row in selected
             ),
@@ -340,6 +374,29 @@ def _verdict(summary: dict[str, object]) -> dict[str, object]:
     dead = "e6_primitive_dead"
     dense = "e6_safe"
     mamba = "mamba2_official"
+
+    parameter_sets = {
+        name: [int(value) for value in summary[name]["parameters"]]  # type: ignore[index]
+        for name in required
+    }
+    if any(len(values) != 1 or values[0] <= 0 for values in parameter_sets.values()):
+        return {
+            "cheap_action_path_pass": False,
+            "mamba_competitive_pass": False,
+            "reason": "parameter counts are missing, nonpositive, or inconsistent across cycles",
+            "parameter_sets": parameter_sets,
+        }
+    model_width_sets = {
+        name: [int(value) for value in summary[name]["model_d_model"]]  # type: ignore[index]
+        for name in required
+    }
+    if any(len(values) != 1 or values[0] <= 0 for values in model_width_sets.values()):
+        return {
+            "cheap_action_path_pass": False,
+            "mamba_competitive_pass": False,
+            "reason": "model widths are missing, nonpositive, or inconsistent across cycles",
+            "model_width_sets": model_width_sets,
+        }
     ratios = {
         "candidate_time_over_dead_budget": median(candidate) / median(dead),
         "candidate_peak_over_dead_budget": peak(candidate) / peak(dead),
@@ -348,6 +405,15 @@ def _verdict(summary: dict[str, object]) -> dict[str, object]:
         "candidate_time_over_mamba2": median(candidate) / median(mamba),
         "candidate_peak_over_mamba2": peak(candidate) / peak(mamba),
     }
+    candidate_parameters = parameter_sets[candidate][0]
+    dead_parameters = parameter_sets[dead][0]
+    dense_parameters = parameter_sets[dense][0]
+    mamba_parameters = parameter_sets[mamba][0]
+    dead_parameter_match = candidate_parameters == dead_parameters
+    dense_parameter_match = candidate_parameters == dense_parameters
+    mamba_parameter_residual = (
+        candidate_parameters - mamba_parameters
+    ) / mamba_parameters
     no_dense_candidate = not bool(
         summary[candidate]["any_dense_sequence_action"]  # type: ignore[index]
     )
@@ -357,16 +423,22 @@ def _verdict(summary: dict[str, object]) -> dict[str, object]:
         and ratios["candidate_time_over_dense_e6"] <= 0.75
         and ratios["candidate_peak_over_dense_e6"] <= 0.60
         and no_dense_candidate
+        and dead_parameter_match
+        and dense_parameter_match
     )
     mamba_competitive = (
         ratios["candidate_time_over_mamba2"] <= 1.25
         and ratios["candidate_peak_over_mamba2"] <= 1.25
         and no_dense_candidate
+        and abs(mamba_parameter_residual) <= 0.01
     )
     return {
         "cheap_action_path_pass": cheap,
         "mamba_competitive_pass": mamba_competitive,
         "ratios": ratios,
+        "dead_budget_parameter_match": dead_parameter_match,
+        "dense_e6_parameter_match": dense_parameter_match,
+        "candidate_parameter_residual_fraction_vs_mamba2": mamba_parameter_residual,
         "candidate_has_no_dense_sequence_action": no_dense_candidate,
     }
 
@@ -425,6 +497,7 @@ def _run_parent(args: argparse.Namespace) -> dict[str, object]:
         "primitive_action_cuda.cu",
         "scan.py",
     )
+    mamba_adapter = root.parent / "pure_spin_ssm_v1_2" / "mamba2_baseline.py"
     report = {
         "schema_version": 1,
         "experiment": "complete-step sparse primitive exceptional transport cost",
@@ -437,6 +510,7 @@ def _run_parent(args: argparse.Namespace) -> dict[str, object]:
             "batch_size": args.batch_size,
             "sequence_length": args.sequence_length,
             "d_model": args.d_model,
+            "mamba_d_model": args.mamba_d_model,
             "layers": args.layers,
             "memory_width": args.memory_width,
             "update_rank": args.update_rank,
@@ -461,7 +535,10 @@ def _run_parent(args: argparse.Namespace) -> dict[str, object]:
             "dirty": bool(status.strip()),
             "working_patch_sha256": hashlib.sha256(diff).hexdigest(),
         },
-        "source_sha256": {name: _sha256(root / name) for name in source_names},
+        "source_sha256": {
+            **{name: _sha256(root / name) for name in source_names},
+            "../pure_spin_ssm_v1_2/mamba2_baseline.py": _sha256(mamba_adapter),
+        },
         "rows": rows,
         "summary": summary,
         "verdict": _verdict(summary),
@@ -478,6 +555,7 @@ def main() -> None:
     parser.add_argument("--batch-size", type=int, default=4)
     parser.add_argument("--sequence-length", type=int, default=128)
     parser.add_argument("--d-model", type=int, default=32)
+    parser.add_argument("--mamba-d-model", type=int)
     parser.add_argument("--layers", type=int, default=2)
     parser.add_argument("--memory-width", type=int, default=4)
     parser.add_argument("--update-rank", type=int, default=2)

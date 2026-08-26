@@ -303,3 +303,43 @@ def test_native_sm75_delta_no_event_and_chunk_continuation() -> None:
     )
     torch.testing.assert_close(native[0], oracle[0], atol=2e-7, rtol=2e-6)
     torch.testing.assert_close(native[1], oracle[1], atol=2e-7, rtol=2e-6)
+
+
+@pytest.mark.skipif(
+    sys.platform != "linux"
+    or not torch.cuda.is_available()
+    or torch.cuda.get_device_capability() != (7, 5),
+    reason="the fused Delta recurrence is deliberately WSL/Linux SM75-only",
+)
+def test_native_sm75_transport_disabled_matches_reference_and_zeroes_coordinates() -> None:
+    algebra = "e6"
+    cpu_inputs = _delta_inputs(algebra, length=6)
+    action = PrimitiveExceptionalAction(algebra, backend="cuda").cuda().float()
+    native_inputs = [
+        tensor.float().cuda().detach().requires_grad_() for tensor in cpu_inputs
+    ]
+    oracle_inputs = [
+        tensor.float().cuda().detach().requires_grad_() for tensor in cpu_inputs
+    ]
+    actual = primitive_delta_recurrence_cuda(
+        *native_inputs,
+        action,
+        event_stride=3,
+        event_phase=1,
+        transport_enabled=False,
+    )
+    expected = primitive_delta_recurrence_reference(
+        *oracle_inputs,
+        algebra,
+        event_stride=3,
+        event_phase=1,
+        transport_enabled=False,
+    )
+    torch.testing.assert_close(actual[0], expected[0], atol=2e-7, rtol=2e-6)
+    torch.testing.assert_close(actual[1], expected[1], atol=2e-7, rtol=2e-6)
+    cotangents = (torch.randn_like(actual[0]), torch.randn_like(actual[1]))
+    actual_gradients = torch.autograd.grad(actual, native_inputs, cotangents)
+    expected_gradients = torch.autograd.grad(expected, oracle_inputs, cotangents)
+    for candidate, oracle in zip(actual_gradients, expected_gradients, strict=True):
+        torch.testing.assert_close(candidate, oracle, atol=2e-6, rtol=2e-5)
+    assert torch.count_nonzero(actual_gradients[-1]) == 0

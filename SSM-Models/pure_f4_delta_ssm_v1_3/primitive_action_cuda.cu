@@ -352,7 +352,8 @@ __global__ void primitive_delta_forward_kernel(
     int factors,
     int events,
     int event_stride,
-    int first_event_local) {
+    int first_event_local,
+    bool transport_enabled) {
   extern __shared__ float state[];
   const int linear = threadIdx.x;
   const int width = heads * VALUE_DIM;
@@ -394,7 +395,7 @@ __global__ void primitive_delta_forward_kernel(
     const int event = is_event
         ? (position - first_event_local) / event_stride
         : 0;
-    if (is_event) {
+    if (is_event && transport_enabled) {
       const int slot = active ? value_index : 0;
       const int block = slot / BLOCK_DIM;
       const int row = slot - block * BLOCK_DIM;
@@ -491,7 +492,8 @@ __global__ void primitive_delta_backward_kernel(
     int factors,
     int events,
     int event_stride,
-    int first_event_local) {
+    int first_event_local,
+    bool transport_enabled) {
   extern __shared__ float shared[];
   const int linear = threadIdx.x;
   const int threads = blockDim.x;
@@ -564,7 +566,7 @@ __global__ void primitive_delta_backward_kernel(
     const int event = is_event
         ? (position - first_event_local) / event_stride
         : 0;
-    if (is_event) {
+    if (is_event && transport_enabled) {
       const int slot = active ? value_index : 0;
       const int block = slot / BLOCK_DIM;
       const int row = slot - block * BLOCK_DIM;
@@ -797,7 +799,8 @@ std::vector<torch::Tensor> primitive_delta_forward_cuda(
     torch::Tensor eigenvectors,
     torch::Tensor eigenvalues,
     int64_t event_stride,
-    int64_t first_event_local) {
+    int64_t first_event_local,
+    bool transport_enabled) {
   TORCH_CHECK(retention.is_cuda() && write_key.is_cuda() && erase_key.is_cuda()
       && write_value.is_cuda() && initial_state.is_cuda() && query.is_cuda()
       && event_coordinates.is_cuda(), "all recurrence tensors must be CUDA");
@@ -862,7 +865,7 @@ std::vector<torch::Tensor> primitive_delta_forward_cuda(
           local_generator_squares.data_ptr<float>(), frequencies.data_ptr<float>(),
           eigenvectors.data_ptr<float>(), eigenvalues.data_ptr<float>(),
           reads.data_ptr<float>(), states.data_ptr<float>(), length, heads, rank,
-          factors, events, event_stride, first_event_local);
+          factors, events, event_stride, first_event_local, transport_enabled);
   C10_CUDA_KERNEL_LAUNCH_CHECK();
   auto final_state = states.select(1, length - 1).contiguous();
   return {reads, final_state, states};
@@ -887,7 +890,8 @@ std::vector<torch::Tensor> primitive_delta_backward_cuda(
     torch::Tensor eigenvectors,
     torch::Tensor eigenvalues,
     int64_t event_stride,
-    int64_t first_event_local) {
+    int64_t first_event_local,
+    bool transport_enabled) {
   const int batch = retention.size(0);
   const int length = retention.size(1);
   const int heads = retention.size(2);
@@ -912,7 +916,9 @@ std::vector<torch::Tensor> primitive_delta_backward_cuda(
   auto write_value_gradient = torch::empty_like(write_value);
   auto initial_gradient = torch::empty_like(initial_state);
   auto query_gradient = torch::empty_like(query);
-  auto coordinate_gradient = torch::empty_like(event_coordinates);
+  auto coordinate_gradient = transport_enabled
+      ? torch::empty_like(event_coordinates)
+      : torch::zeros_like(event_coordinates);
   primitive_delta_backward_kernel<<<batch, threads, 3 * threads * sizeof(float),
       at::cuda::getCurrentCUDAStream()>>>(
           retention.data_ptr<float>(), write_key.data_ptr<float>(),
@@ -927,7 +933,8 @@ std::vector<torch::Tensor> primitive_delta_backward_cuda(
           write_key_gradient.data_ptr<float>(), erase_key_gradient.data_ptr<float>(),
           write_value_gradient.data_ptr<float>(), initial_gradient.data_ptr<float>(),
           query_gradient.data_ptr<float>(), coordinate_gradient.data_ptr<float>(),
-          length, heads, rank, factors, events, event_stride, first_event_local);
+          length, heads, rank, factors, events, event_stride, first_event_local,
+          transport_enabled);
   C10_CUDA_KERNEL_LAUNCH_CHECK();
   return {retention_gradient, write_key_gradient, erase_key_gradient,
       write_value_gradient, initial_gradient, query_gradient, coordinate_gradient};

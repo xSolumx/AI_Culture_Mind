@@ -49,9 +49,16 @@ are:
 3. official fused `mamba2_official` from the already qualified local SM75
    environment.
 
-The primary shape is two layers, `d_model=32`, memory width 4, update rank 2,
-batch 4, and sequence length 128.  E6 and Mamba-2 differ by only ten trainable
-parameters.  All arms receive the same byte targets within a seed.
+The first regression shape is two layers, `d_model=32`, memory width 4, update
+rank 2, batch 4, and sequence length 128.  E6 and Mamba-2 differ by only ten
+trainable parameters.  It is a correctness and regression fixture, not the
+decisive claim that the path is cheap at a representative model size.
+
+The representative systems shape is frozen prospectively at four layers,
+candidate `d_model=126`, memory width 8, update rank 2, and Mamba-2
+`d_model=140`.  The candidate/dead arms have 679,866 parameters and official
+Mamba-2 has 682,160, a `-0.336%` residual.  The batch-32, length-128 complete
+step is the primary representative cost cell.
 
 ## Exactness gates
 
@@ -91,6 +98,48 @@ At event density `1/32`, after warm-up:
 
 Passing this gate means exceptional transport is cheap relative to its host
 memory.  It does not mean the complete model is competitive with Mamba-2.
+
+### Fixed-token shape scaling
+
+The representative model is additionally tested at exactly 4,096 target
+tokens per update over
+
+```text
+(B,L) = (32,128), (16,256), (8,512), (4,1024), (2,2048), (1,4096).
+```
+
+The active E6, exact dead-budget, and official fused Mamba-2 arms run in fresh
+processes with the same parameter-matching rule.  Dense E6 is omitted from the
+long-context ladder because the regression cell has already established its
+cost and materializing it at every ladder point would spend GPU time without
+strengthening the cheap-path claim.
+
+The dead-budget control is required to use the same fused recurrence launch,
+saved-state layout, event schedule, coordinate controller, backward interface,
+and optimizer budget as the active arm.  A native kernel flag skips only the
+78 primitive state factors and emits exact zero coordinate gradients.  The
+older generic-scan dead arm is not eligible for marginal-cost claims.
+
+This is deliberately called shape scaling, not pure context scaling: batch
+concurrency and the number of independently reset streams change with length.
+It is still the relevant stress test for whether a persistent recurrent kernel
+collapses when long contexts reduce available batch parallelism.
+
+The fixed-token scaling gate requires all of the following:
+
+- clean, identical source revision and exact SM75 in every cell;
+- exact active/dead parameter parity and at most 1% absolute residual versus
+  Mamba-2;
+- no saved `[B,L,27,27]` candidate action tensor;
+- active/dead time at most `1.25x` and peak allocation at most `1.30x` in
+  every context;
+- candidate maximum/minimum median-step spread at most `2.0x` and peak-memory
+  spread at most `1.5x` across the fixed-token ladder.
+
+The independent Mamba-competitive ladder gate additionally requires candidate
+time and peak allocation at most `1.25x` Mamba-2 in every context.  Failure is
+reported as an architecture limitation, not hidden by the smaller regression
+fixture.
 
 ### Mamba-competitive systems promotion
 

@@ -39,7 +39,8 @@ std::vector<torch::Tensor> primitive_delta_forward_cuda(
     torch::Tensor eigenvectors,
     torch::Tensor eigenvalues,
     int64_t event_stride,
-    int64_t first_event_local);
+    int64_t first_event_local,
+    bool transport_enabled);
 
 std::vector<torch::Tensor> primitive_delta_backward_cuda(
     torch::Tensor retention,
@@ -60,7 +61,8 @@ std::vector<torch::Tensor> primitive_delta_backward_cuda(
     torch::Tensor eigenvectors,
     torch::Tensor eigenvalues,
     int64_t event_stride,
-    int64_t first_event_local);
+    int64_t first_event_local,
+    bool transport_enabled);
 
 PYBIND11_MODULE(TORCH_EXTENSION_NAME, module) {
   module.def("forward", &primitive_action_forward_cuda,

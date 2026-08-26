@@ -521,7 +521,7 @@ class ExceptionalDeltaBlock(nn.Module):
             memory = value.new_zeros((value.shape[0], *self.state_shape))
 
         next_phase = 0
-        dead_action_zero: torch.Tensor | None = None
+        used_fused_primitive = False
         if use_primitive_events:
             phase = 0 if state is None else state.transport_phase
             stride = self.config.action_event_stride
@@ -591,6 +591,7 @@ class ExceptionalDeltaBlock(nn.Module):
                     event_phase=stride - 1,
                     position_offset=phase,
                 )
+            used_fused_primitive = True
             next_phase = (phase + value.shape[1]) % stride
         elif primitive_action:
             # The dead-budget control retains the event-only coordinate head,
@@ -605,19 +606,65 @@ class ExceptionalDeltaBlock(nn.Module):
                 event_phase=stride - 1,
                 position_offset=phase,
             )
-            event_indices = [
+            event_positions = tuple(
                 first_event + event * stride for event in range(event_count)
-            ]
+            )
+            event_indices = list(event_positions)
             if self.action_controller is None:
                 raise AssertionError("primitive action controller is unavailable")
-            dead_coordinates = self.action_controller(value[:, event_indices])
-            dead_action_zero = dead_coordinates.sum() * 0.0
+            dead_coordinates = self.action_controller(value[:, event_indices]).reshape(
+                value.shape[0],
+                len(event_positions),
+                self.config.action_factors,
+                self.action.coordinate_dim,
+            )
+            dead_coordinates = (
+                dead_coordinates[:, :, 0, :]
+                * self.config.action_coordinate_scale
+            )
+            if valid_mask is not None and event_positions:
+                dead_coordinates = dead_coordinates * valid_mask[
+                    :, event_indices, None
+                ].to(dead_coordinates.dtype)
+            use_native_primitive = self.action.backend == "cuda" or (
+                self.action.backend == "auto"
+                and sys.platform == "linux"
+                and value.device.type == "cuda"
+                and value.dtype == torch.float32
+                and torch.cuda.get_device_capability(value.device) == (7, 5)
+            )
+            if use_native_primitive:
+                reads, final_memory = primitive_delta_recurrence_cuda(
+                    fields["retention"],
+                    fields["write_key"],
+                    fields["erase_key"],
+                    fields["write_value"],
+                    memory,
+                    fields["query"],
+                    dead_coordinates,
+                    self.action,
+                    event_stride=stride,
+                    event_phase=stride - 1,
+                    position_offset=phase,
+                    transport_enabled=False,
+                )
+            else:
+                reads, final_memory = primitive_delta_recurrence_reference(
+                    fields["retention"],
+                    fields["write_key"],
+                    fields["erase_key"],
+                    fields["write_value"],
+                    memory,
+                    fields["query"],
+                    dead_coordinates,
+                    self.action.algebra,
+                    event_stride=stride,
+                    event_phase=stride - 1,
+                    position_offset=phase,
+                    transport_enabled=False,
+                )
+            used_fused_primitive = True
             next_phase = (phase + value.shape[1]) % stride
-            if scan_mode == "auto":
-                if value.shape[1] > 256:
-                    scan_mode = "recurrent_direct"
-                else:
-                    scan_mode = "parallel" if value.shape[1] > 1 else "recurrent"
         elif scan_mode == "auto":
             if value.shape[1] > 256:
                 scan_mode = "recurrent_direct"
@@ -633,7 +680,7 @@ class ExceptionalDeltaBlock(nn.Module):
                 fields["retention"] = fields["retention"] * torch.exp(
                     -log_norm_bound
                 )[..., None]
-        if use_primitive_events:
+        if used_fused_primitive:
             pass
         elif scan_mode == "recurrent_direct":
             reads, _, final_memory = direct_recurrent_delta_scan(
@@ -676,8 +723,6 @@ class ExceptionalDeltaBlock(nn.Module):
             )
         if reads is None:
             raise AssertionError("query was supplied but scan returned no reads")
-        if dead_action_zero is not None:
-            reads = reads + dead_action_zero
         if isinstance(self.read_features, AlbertInvariantReadout):
             read_features = self.read_features(reads, self.readout_structure)
         else:

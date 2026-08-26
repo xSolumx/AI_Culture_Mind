@@ -410,6 +410,7 @@ def primitive_delta_recurrence_reference(
     event_stride: int,
     event_phase: int = 0,
     position_offset: int = 0,
+    transport_enabled: bool = True,
 ) -> tuple[torch.Tensor, torch.Tensor]:
     """Portable oracle for retention/erase/event-action/write/read semantics."""
 
@@ -458,9 +459,15 @@ def primitive_delta_recurrence_reference(
             "brh,brv->bhv", write_key[:, position], projections
         )
         if position >= first_local and (position - first_local) % event_stride == 0:
-            state = primitive_product_reference(
-                state, event_coordinates[:, event], algebra
-            )
+            if transport_enabled:
+                state = primitive_product_reference(
+                    state, event_coordinates[:, event], algebra
+                )
+            else:
+                # Preserve a real zero-gradient path through the matched event
+                # controller while removing only the state transport.
+                zero_controller = event_coordinates[:, event].sum(dim=-1)
+                state = state + zero_controller[:, None, None] * 0.0
             event += 1
         state = state + torch.einsum(
             "brh,brv->bhv", write_key[:, position], write_value[:, position]
@@ -482,10 +489,12 @@ class _PrimitiveDeltaCuda(torch.autograd.Function):
         initial_state,
         query,
         event_coordinates,
-        *metadata_and_layout,
+        *metadata_layout_and_flag,
     ):
-        metadata = metadata_and_layout[:-2]
-        event_stride, first_event_local = metadata_and_layout[-2:]
+        metadata = metadata_layout_and_flag[:-3]
+        event_stride, first_event_local, transport_enabled = (
+            metadata_layout_and_flag[-3:]
+        )
         reads, final_state, states = _cuda_extension().delta_forward(
             retention.contiguous(),
             write_key.contiguous(),
@@ -497,6 +506,7 @@ class _PrimitiveDeltaCuda(torch.autograd.Function):
             *metadata,
             event_stride,
             first_event_local,
+            transport_enabled,
         )
         ctx.save_for_backward(
             retention,
@@ -511,6 +521,7 @@ class _PrimitiveDeltaCuda(torch.autograd.Function):
         )
         ctx.event_stride = event_stride
         ctx.first_event_local = first_event_local
+        ctx.transport_enabled = transport_enabled
         ctx.metadata_count = len(metadata)
         return reads, final_state
 
@@ -535,8 +546,9 @@ class _PrimitiveDeltaCuda(torch.autograd.Function):
             *metadata,
             ctx.event_stride,
             ctx.first_event_local,
+            ctx.transport_enabled,
         )
-        return (*gradients, *(None for _ in metadata), None, None)
+        return (*gradients, *(None for _ in metadata), None, None, None)
 
 
 def primitive_delta_recurrence_cuda(
@@ -552,6 +564,7 @@ def primitive_delta_recurrence_cuda(
     event_stride: int,
     event_phase: int = 0,
     position_offset: int = 0,
+    transport_enabled: bool = True,
 ) -> tuple[torch.Tensor, torch.Tensor]:
     """Fused SM75 sparse-event Delta recurrence returning reads and final state."""
 
@@ -587,6 +600,7 @@ def primitive_delta_recurrence_cuda(
         *metadata,
         event_stride,
         first_local,
+        transport_enabled,
     )
 
 
