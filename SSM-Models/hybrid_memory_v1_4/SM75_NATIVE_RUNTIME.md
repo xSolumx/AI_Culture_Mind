@@ -82,6 +82,24 @@ erase on post-same-key-overwrite recall. See the
 [`artifact`](artifacts/g15br2_collision_erase_sm75_2026-08-26.json), SHA-256
 `90652fe7034e5901b968eb5d139f02eb8bc714b0417c0889e16a2fdd6b7cf924`.
 
+G15B-R3 completed on the same runtime from clean commit `3e2e5f0` in
+3,485.5 seconds. It binds all four parent artifacts and preserves baseline
+metrics exactly. Oracle component reset repairs ordinary overwrite and reaches
+1.0 on the constructed guard, but the frozen result fails: learned component
+replay has maximum FP32 logit residual `7.34e-4` against the `5e-4` bound in
+one seed and `5.87e-4` in another, although state residuals pass and query
+predictions are identical. See the
+[`result`](G15BR3_LOGICAL_COMPONENT_RESULTS.md) and
+[`artifact`](artifacts/g15br3_logical_component_sm75_2026-08-26.json), SHA-256
+`0fe54b8ce38868d67a7ecb0cb888f2279d8809c2bbaf3ccbda678326ff808959`.
+
+The native WSL environment also exposes CUDA-only `causal_conv1d`,
+`mamba_ssm`, and FLA Hub kernels to Transformers. The baseline registry now
+dispatches by the actual input tensor: CUDA keeps the resolved native kernel,
+while CPU-only model checks call Transformers' own decorated PyTorch fallback.
+This prevents an installed CUDA extension from intercepting CPU tests without
+substituting a different architecture or disabling the SM75 kernel path.
+
 ## Reproduction
 
 Run [`native_sm75_probe.py`](native_sm75_probe.py) with an explicit backend,

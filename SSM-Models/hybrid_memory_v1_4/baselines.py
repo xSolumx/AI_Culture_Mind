@@ -15,6 +15,7 @@ import importlib.util
 import platform
 from collections.abc import Callable
 from dataclasses import asdict, dataclass
+from functools import wraps
 from typing import Any
 
 import torch
@@ -400,14 +401,80 @@ def _transformers_availability(name: str, component: str) -> AvailabilityHook:
     return check
 
 
+def _install_device_safe_kernel_dispatch(
+    module: object, function_names: tuple[str, ...]
+) -> None:
+    """Keep Hub kernels on CUDA and the official Torch path on CPU.
+
+    Transformers' Hub-kernel wrapper may resolve an installed CUDA extension
+    before it sees the runtime tensor. Some extensions then raise on a CPU
+    model instead of returning control to the decorated PyTorch fallback. This
+    dispatcher is deliberately tensor-device based: it does not replace the
+    Transformers architecture, and it leaves the resolved native kernel intact
+    for CUDA execution.
+    """
+
+    for function_name in function_names:
+        accelerated = getattr(module, function_name, None)
+        if accelerated is None:
+            continue
+        if getattr(accelerated, "_hybrid_device_safe_dispatch", False):
+            continue
+        fallback = getattr(accelerated, "__wrapped__", None)
+        if fallback is None:
+            continue
+
+        @wraps(accelerated)
+        def dispatch(
+            *args: Any,
+            _accelerated: Callable[..., Any] = accelerated,
+            _fallback: Callable[..., Any] = fallback,
+            **call_kwargs: Any,
+        ) -> Any:
+            tensors = [value for value in args if isinstance(value, torch.Tensor)] + [
+                value
+                for value in call_kwargs.values()
+                if isinstance(value, torch.Tensor)
+            ]
+            if tensors and tensors[0].device.type != "cuda":
+                return _fallback(*args, **call_kwargs)
+            return _accelerated(*args, **call_kwargs)
+
+        dispatch._hybrid_device_safe_dispatch = True  # type: ignore[attr-defined]
+        setattr(module, function_name, dispatch)
+
+
 def _transformers_mamba2_factory(**kwargs: Any) -> nn.Module:
     from transformers import Mamba2Config, Mamba2ForCausalLM
+    from transformers.models.mamba2 import modeling_mamba2
+
+    _install_device_safe_kernel_dispatch(
+        modeling_mamba2,
+        (
+            "causal_conv1d_update",
+            "causal_conv1d_fn",
+            "mamba2_split_conv1d_scan_combined",
+            "mamba2_selective_state_update",
+            "mamba2_chunk_scan",
+        ),
+    )
 
     return Mamba2ForCausalLM(Mamba2Config(**kwargs))
 
 
 def _transformers_olmo_hybrid_factory(**kwargs: Any) -> nn.Module:
     from transformers import OlmoHybridConfig, OlmoHybridForCausalLM
+    from transformers.models.olmo_hybrid import modeling_olmo_hybrid
+
+    _install_device_safe_kernel_dispatch(
+        modeling_olmo_hybrid,
+        (
+            "causal_conv1d_update",
+            "causal_conv1d_fn",
+            "torch_chunk_gated_delta_rule",
+            "torch_recurrent_gated_delta_rule",
+        ),
+    )
 
     return OlmoHybridForCausalLM(OlmoHybridConfig(**kwargs))
 

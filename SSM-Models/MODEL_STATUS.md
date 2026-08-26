@@ -28,7 +28,7 @@ controlling evidence for their exact numbers.
 | [Pure Spin(8) v1.1](pure_spin8_ssm/CONTRACT.md) | Maintained task-bounded Spin(8) family | Frozen supplied, latent-token, continuous-observation, endpoint-only, calibration, and compiler cohorts | Strong exact/synthetic center-sensitive tracking and shared-action transfer; no natural-language, generic retrieval, or matched modern-SSM superiority |
 | [Pure Spin v1.2](pure_spin_ssm_v1_2/README.md) | Implemented frontier model with current CUDA backend | Current tests/backends plus [frontier training result](pure_spin_ssm_v1_2/FRONTIER_TRAINING_RESULTS.md) | Fused Mamba-2 wins all three matched Tiny Shakespeare quality seeds, 2.4942 versus 2.7477 mean bpb; low-level throughput ordering is unresolved at observed repeatability |
 | [Pure Exceptional Delta v1.3](pure_f4_delta_ssm_v1_3/README.md) | Experimental Albert/F4/E6 model | Algebra/model suite and small natural-text development cohorts | The exceptional hierarchy is executable, but the fresh [layer-localization result](pure_f4_delta_ssm_v1_3/SHAKESPEARE_LAYER_LOCALIZATION_RESULTS.md) rejects early E6 transport; identity is the supported natural-text reference |
-| [Hybrid Memory v1.4/v1.4.5](hybrid_memory_v1_4/README.md) | Active research workspace; no root-level promotion | G-series preregistrations, results, and artifacts inside the active directory | Validated small hybrid causal learner and commissioned synthetic memory; G13 rejects long-context archive promotion; G14 is a constructed mechanism task; after the distinct G15A-L/F observation/precision failures and G15A-R repair, G15A-S confirms composition-only signed-dictionary transfer under oracle edit timing. G15B rejects the token/local-convolution commissioned controller; R0 rejects tied delta, R1 rejects erase at every write, and R2 rejects collision-only symmetric erase despite perfect timing and the preserved write tail. G15C/external-only and fresh scalar-erase training are blocked. The prospective R3 checkpoint diagnostic tests a frozen two-token logical-component reset; identity transport remains the generic default, with Spin reserved for supplied/coherent-frame tasks |
+| [Hybrid Memory v1.4/v1.4.5](hybrid_memory_v1_4/README.md) | Active research workspace; no root-level promotion | G-series preregistrations, results, and artifacts inside the active directory | Validated small hybrid causal learner and commissioned synthetic memory; G13 rejects long-context archive promotion; G14 is a constructed mechanism task; after the distinct G15A-L/F observation/precision failures and G15A-R repair, G15A-S confirms composition-only signed-dictionary transfer under oracle edit timing. G15B rejects the token/local-convolution commissioned controller; R0 rejects tied delta, while R1/R2 reject scalar symmetric erase. R3's oracle component reset repairs ordinary overwrite by 12.2--12.8 points and reaches 1.0 on its guard, but misses the frozen saturated-baseline improvement and FP32 replay-tolerance gates. Fresh slot training remains blocked pending an ownership/coupling factorial; identity transport remains the generic default, with Spin reserved for supplied/coherent-frame tasks |
 | [Dense SO(8) Cayley scan](pure_rotor_ssm/dense_so8_cayley_scan.py) | Experimental control | Structural tests and one CUDA feasibility smoke in the [design report](experiments/DENSE_SO8_CAYLEY_SCAN_DESIGN.md) | Exact 28-direction chart and bounded scan are implemented; no training, quality, or comparative speed claim |
 | [SpinorDeltaLM](../Spin8-SSM-Benchmark/README.md) | Historical isolated benchmark model | Completed short benchmark artifacts under its own directory | Useful controlled historical evidence; not the maintained Pure Rotor/Pure Spin successor |
 | [SpinorModel](../SpinorModel/README.md) | Historical prototype | Original tensor-GA baseline and separate overhaul | Implementation provenance only; commands reproduce the historical model, not the current frontier |
@@ -131,8 +131,10 @@ content addressing and edit laws over richer transport geometry alone.
   overwrite drops 9.7--11.5 points, all nine non-needle gates fail, and learned
   key prototypes are highly nonorthogonal. G15B-R2 then supplies perfect
   collision timing with the full write tail, but post-same-key-overwrite recall
-  falls 10.3--12.1 points. Scalar symmetric erase is rejected; exact logical-
-  component replacement is next. Spin transport remains
+  falls 10.3--12.1 points. G15B-R3 replaces an oracle per-key component and
+  repairs ordinary overwrite by 12.2--12.8 points while reaching 1.0 on its
+  guard, but its frozen gate still fails. Ownership/coupling diagnosis is next.
+  Spin transport remains
   specialized to supplied/coherent-frame tasks.
 - G16 completed its prospectively frozen one-seed SM75 development shootout.
   Official fused Mamba-2 wins ordinary compression at every context and reaches
@@ -183,6 +185,10 @@ The collision-only successor is recorded in the
 [G15B-R2 result](hybrid_memory_v1_4/G15BR2_COLLISION_ERASE_RESULTS.md) and
 [G15B-R2 artifact](hybrid_memory_v1_4/artifacts/g15br2_collision_erase_sm75_2026-08-26.json),
 SHA-256 `90652fe7034e5901b968eb5d139f02eb8bc714b0417c0889e16a2fdd6b7cf924`.
+The component-replacement successor is recorded in the
+[G15B-R3 result](hybrid_memory_v1_4/G15BR3_LOGICAL_COMPONENT_RESULTS.md) and
+[G15B-R3 artifact](hybrid_memory_v1_4/artifacts/g15br3_logical_component_sm75_2026-08-26.json),
+SHA-256 `0fe54b8ce38868d67a7ecb0cb888f2279d8809c2bbaf3ccbda678326ff808959`.
 The four-arm model harness is frozen separately in the
 [G16 protocol](hybrid_memory_v1_4/G16_SM75_FRONTIER_SHOOTOUT_PROTOCOL_2026-08-25.md),
 with exact source/runtime evidence in the

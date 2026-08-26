@@ -200,9 +200,11 @@ overwrite by 9.7--11.5 points. Learned-key prototype overlap is high, so the
 symmetric erase operator is not an isolated-slot update. G15B-R2 then restricts
 erase to true collisions while preserving the write tail; it improves pre-
 overwrite queries but makes post-same-key-overwrite recall 10.3--12.1 points
-worse. The scalar erase route is closed. Exact logical-component replacement
-of the complete learned write program is next. Spin transport
-requires a coherent moving-
+worse. G15B-R3's oracle component reset then raises ordinary overwrite by
+12.2--12.8 points and reaches 1.0 on its constructed guard, but fails its
+frozen saturated-baseline improvement and FP32 replay-tolerance gates. This is
+component-replacement mechanism evidence, not training authorization; an
+ownership/background-coupling factorial is next. Spin transport requires a coherent moving-
 frame task, or co-transported keys and queries, before it is eligible again.
 
 ## Claim ledger

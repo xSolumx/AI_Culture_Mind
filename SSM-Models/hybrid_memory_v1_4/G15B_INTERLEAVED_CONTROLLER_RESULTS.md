@@ -198,6 +198,16 @@ overwrite recall 10.3--12.1 points worse. The scalar symmetric erase route is
 therefore closed for these checkpoints. See
 [`G15BR2_COLLISION_ERASE_RESULTS.md`](G15BR2_COLLISION_ERASE_RESULTS.md).
 
+G15B-R3 then gives each commissioned logical key an oracle component and
+resets that component at every valid write. It raises ordinary overwrite by
+12.2--12.8 points over learned erase and reaches 1.0 in every constructed
+guard cell, including unrelated-overwrite queries. The frozen promotion still
+fails because the guard baseline is already saturated and learned component
+replay misses its FP32 logit tolerance in two seeds despite identical
+predictions. This is bounded replacement-mechanism evidence, not authorization
+for fresh training. See
+[`G15BR3_LOGICAL_COMPONENT_RESULTS.md`](G15BR3_LOGICAL_COMPONENT_RESULTS.md).
+
 ## Claim boundary
 
 This is a completed, exact-SM75, three-seed commissioned-controller failure and

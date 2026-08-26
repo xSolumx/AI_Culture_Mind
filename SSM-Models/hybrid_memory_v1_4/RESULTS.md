@@ -1214,6 +1214,29 @@ The scalar symmetric erase route is rejected. Exact logical-component
 replacement of the full learned write program is the next checkpoint-only
 mechanism test.
 
+## G15B-R3 oracle component-replacement result
+
+The frozen zero-update
+[`G15B-R3`](G15BR3_LOGICAL_COMPONENT_RESULTS.md) diagnostic completed from
+clean commit `3e2e5f0` on exact SM75; artifact SHA-256
+`0fe54b8ce38868d67a7ecb0cb888f2279d8809c2bbaf3ccbda678326ff808959`.
+It decomposes erase-free state into one oracle component per commissioned key
+plus background and resets the selected component at every valid write.
+
+Ordinary overwrite improves by 12.2--12.8 accuracy points versus learned erase
+and by 51.9--55.5 versus erase-free no reset. Post-same-key recall improves by
+13.6--14.3 and 59.3--63.4 points respectively. The deterministic guard
+populates every causal stratum and component reset reaches exactly 1.0 at all
+lengths without damaging unrelated-key queries.
+
+The frozen overall gate nevertheless fails. It requires a 0.10 guard gain over
+an already `0.999674`--`0.999919` learned baseline, and learned component replay
+exceeds the `5e-4` FP32 logit tolerance in two seeds (`7.34e-4` and `5.87e-4`)
+despite identical query predictions and passing state residuals. This is not
+retrospectively waived. The nine-times-state, oracle-ownership construction is
+mechanism evidence, not a trainable or matched architecture. Do not train yet;
+freeze an ownership/background-coupling factorial first.
+
 ## G16 one-seed trained-frontier result
 
 The clean exact-SM75 cohort from commit `5796a851df02` completed all four real

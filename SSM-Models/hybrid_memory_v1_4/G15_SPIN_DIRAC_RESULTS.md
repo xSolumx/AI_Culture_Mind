@@ -345,11 +345,15 @@ overwrite loss. Learned key prototypes have mean absolute off-diagonal cosine
 without proving sole cause. Event-erase training is rejected. G15B-R2 then
 keeps the write tail and restricts erase to perfect oracle collision timing.
 It improves pre-overwrite recall but makes post-same-key-overwrite recall
-10.3--12.1 points worse. Scalar symmetric erase is rejected; exact replacement
-of the complete learned per-key write component is next. See
+10.3--12.1 points worse. G15B-R3 subsequently supplies an oracle per-key
+replaceable component: ordinary overwrite gains 12.2--12.8 points and its
+constructed guard reaches 1.0, but the frozen saturated-baseline improvement
+and FP32 replay-tolerance gates fail. Trainable slot promotion remains blocked
+pending an ownership/coupling factorial. See
 [`G15BR_CHECKPOINT_REPAIR_RESULTS.md`](G15BR_CHECKPOINT_REPAIR_RESULTS.md) and
 [`G15BR1_EVENT_ERASE_RESULTS.md`](G15BR1_EVENT_ERASE_RESULTS.md) and
-[`G15BR2_COLLISION_ERASE_RESULTS.md`](G15BR2_COLLISION_ERASE_RESULTS.md).
+[`G15BR2_COLLISION_ERASE_RESULTS.md`](G15BR2_COLLISION_ERASE_RESULTS.md) and
+[`G15BR3_LOGICAL_COMPONENT_RESULTS.md`](G15BR3_LOGICAL_COMPONENT_RESULTS.md).
 
 The constrained `su3_torus` arm is an additional scientific ablation, not a
 replacement for the four frozen primary arms.

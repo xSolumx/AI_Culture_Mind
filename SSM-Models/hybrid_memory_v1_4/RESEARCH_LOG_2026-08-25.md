@@ -574,3 +574,29 @@ repair. Do not train a scalar erase controller. The next oracle should reset
 the complete value-token-plus-tail component for the overwritten logical key
 under the same learned transitions. See
 [`G15BR2_COLLISION_ERASE_RESULTS.md`](G15BR2_COLLISION_ERASE_RESULTS.md).
+
+G15B-R3 was frozen before retained-checkpoint intervention metrics. It assigns
+value-token plus in-range `t+1` injection to an oracle logical-key component,
+disables the rejected symmetric erase, and compares exact component reset
+against an erase-free no-reset control. A deterministic guard separately
+populates before-any, unrelated-only, and same-key-overwrite histories. The
+first attempted quality invocation stopped before evaluating a batch on a
+final-token write; the protocol was amended fail-closed to record its value
+without inventing a tail, then recommitted before the evidentiary run.
+
+The exact-SM75 quality run completed from clean commit `3e2e5f0` in 3,485.5
+seconds. Oracle component reset raises ordinary overwrite 12.2--12.8 points
+over learned erase and post-same-key recall 13.6--14.3 points; it reaches 1.0
+in every constructed-guard cell and preserves unrelated keys. The registered
+promotion still fails. The guard requires a 0.10 gain over an already
+0.9997--0.9999 learned arm, while LWW is perfect, and learned decomposition
+exceeds the `5e-4` FP32 logit tolerance in seeds 2309/2333 despite identical
+query predictions and passing state residuals. Artifact SHA-256:
+`0fe54b8ce38868d67a7ecb0cb888f2279d8809c2bbaf3ccbda678326ff808959`.
+
+Record this as strong bounded component-replacement mechanism evidence but a
+failed R3 promotion gate. It does not authorize training. The next prospective
+diagnostic must separate value-only/tail ownership, following-marker tails,
+background contribution, and numerical reconstruction, with an absolute
+ceiling-aware guard frozen before quality. See
+[`G15BR3_LOGICAL_COMPONENT_RESULTS.md`](G15BR3_LOGICAL_COMPONENT_RESULTS.md).

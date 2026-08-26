@@ -137,6 +137,13 @@ slot, GDN2/KDA, or dual-address training.
 The corrected and now frozen implementation contract is
 [`G15BR3_LOGICAL_COMPONENT_PROTOCOL_2026-08-26.md`](G15BR3_LOGICAL_COMPONENT_PROTOCOL_2026-08-26.md).
 
+That successor has now completed. Oracle component reset raises ordinary
+overwrite by 12.2--12.8 points over learned erase and reaches 1.0 on a
+constructed all-strata guard, but its frozen promotion gate fails on
+saturated-baseline improvement and FP32 replay tolerance. It therefore
+supports the replacement mechanism without authorizing training. See
+[`G15BR3_LOGICAL_COMPONENT_RESULTS.md`](G15BR3_LOGICAL_COMPONENT_RESULTS.md).
+
 ## Claim boundary
 
 This is a completed exact-SM75, three-checkpoint, zero-update causal diagnostic
