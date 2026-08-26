@@ -637,3 +637,13 @@ erase-amplitude sweep: can a causal pending-write/commit variable reproduce
 the required continuation without assigning the current event marker's own
 injection to the preceding key? No fresh explicit-slot training is authorized
 until that ownership problem has a prospective falsifier.
+
+G15B-R5 is now frozen before any history-only/current-only metric. At each
+write tail it decomposes the exact width-four depthwise-convolution
+preactivation into bias, three strict-history taps, and the current-token tap.
+The candidate key component receives an injection generated either from
+history only or current only; exact `full - source` injection remains in
+background so the no-reset sum reconstructs the original recurrence. Only a
+passing history-only arm can authorize a separately frozen pending-write/
+commit training screen. See
+[`G15BR5_CAUSAL_TAIL_SOURCE_PROTOCOL_2026-08-26.md`](G15BR5_CAUSAL_TAIL_SOURCE_PROTOCOL_2026-08-26.md).

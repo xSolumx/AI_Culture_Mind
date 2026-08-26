@@ -151,6 +151,11 @@ decision remains **do not train** until a causal, non-overlapping transaction
 boundary is demonstrated. See the
 [`R4 protocol`](G15BR4_OWNERSHIP_BACKGROUND_PROTOCOL_2026-08-26.md) and
 [`exact-SM75 artifact`](artifacts/g15br4_ownership_background_sm75_2026-08-26.json).
+The prospective
+[`G15B-R5 protocol`](G15BR5_CAUSAL_TAIL_SOURCE_PROTOCOL_2026-08-26.md) is now
+frozen before new metrics. It asks whether the necessary tail injection can be
+derived from the completed write transaction in the convolution history while
+leaving the current token in an exact residual background path.
 
 In parallel, the frozen
 [`G16 SM75 shootout protocol`](G16_SM75_FRONTIER_SHOOTOUT_PROTOCOL_2026-08-25.md)
