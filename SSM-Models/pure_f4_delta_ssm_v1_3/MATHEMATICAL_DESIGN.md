@@ -165,6 +165,92 @@ octonion multiplication nor the Albert Jordan product is claimed associative;
 they are used pointwise to construct linear operators and nonlinear channel
 features.
 
+## Canonical primitive transport
+
+Version 1.3.2 adds a second exact chart.  The original direct chart is a
+coordinate system of the first kind,
+
+\[
+R_{\mathrm{direct}}(\theta)
+=\exp\!\left(\sum_{a=0}^{F-1}\theta_aG_a\right).
+\]
+
+The cheap chart uses canonical coordinates of the second kind,
+
+\[
+R_{\mathrm{canonical}}(\theta)
+=\exp(\theta_{F-1}G_{F-1})\cdots\exp(\theta_0G_0).
+\]
+
+They have the same tangent basis at the identity but are not equal for finite
+coordinates when generators do not commute.  The canonical path is therefore
+a new exact group-valued parameterization, not an approximation to or a faster
+implementation of the direct chart.
+
+Every maintained F4/E6 generator decomposes into nine disconnected real
+blocks of size at most three.  For a compact skew block (K) with frequency
+(\omega),
+
+\[
+e^{\theta K}
+=I+\frac{\sin(\omega\theta)}{\omega}K
++\frac{1-\cos(\omega\theta)}{\omega^2}K^2.
+\]
+
+For a symmetric noncompact block (P=U\Lambda U^{\mathsf T}),
+
+\[
+e^{\theta P}=U\,\operatorname{diag}(e^{\theta\lambda_i})U^{\mathsf T}.
+\]
+
+The block metadata is derived once from the maintained float64 generator bank.
+It is frozen model data; no eigendecomposition is differentiated.  Every
+factor remains in F4 or E6(-26), ordered products preserve the Albert cubic,
+and F4 products additionally preserve the Euclidean trace metric.
+
+For noncompact E6 factors the model uses the additive bound
+
+\[
+\log\lVert R(\theta)\rVert_2
+\leq
+\sum_{a\in\mathrm{noncompact}}|\theta_a|\lVert G_a\rVert_2
+\]
+
+to compensate retention only at active events.  This controls the right
+action; it does not by itself prove contraction of the full left erase/write
+operator.
+
+## Fused sparse-event recurrence
+
+Periodic events are defined in absolute stream coordinates, so chunking does
+not change which tokens receive transport.  At ordinary tokens the recurrence
+is
+
+\[
+\widetilde S_t=D(r_t)S_{t-1},\qquad
+U_t=\left(I-\sum_j k_{tj}e_{tj}^{\mathsf T}\right)\widetilde S_t,
+\qquad
+S_t=U_t+\sum_j k_{tj}z_{tj}^{\mathsf T}.
+\]
+
+At an event, the value action is inserted after erase and before write:
+
+\[
+S_t=R_tU_t+\sum_j k_{tj}z_{tj}^{\mathsf T}.
+\]
+
+The SM75 kernel evaluates the entire chronological recurrence inside one CUDA
+launch per layer.  This intentionally gives up parallel prefix depth for a
+small-state, low-launch recurrent implementation suited to Turing.  Forward
+returns (y_t=q_t^{\mathsf T}S_t) and the final cache.  Reverse mode walks time
+backwards, reconstructs pre-action event states with inverse primitive
+products, and differentiates all edit, query, state, and coordinate inputs.
+
+Training stores (S_t) for reverse mode, giving (O(BLHV)) saved state.  It never
+stores a dense value action or its prefix tower, avoiding the old
+(O(BLV^2)) action materialization.  Streaming inference retains only the
+constant-size state, convolution cache, and event phase.
+
 ### Identity specialization and numerical algebra
 
 When (R_t=I), the value-axis action is not merely cheap; it is absent from the

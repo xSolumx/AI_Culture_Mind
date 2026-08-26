@@ -124,8 +124,9 @@ noncompact, so retention below one does not by itself bound
 S' = LSR^T+B.
 \]
 
-Version 1.3.1 uses tied Delta erase by default and compensates retention by a
-certified Frobenius/logarithmic-norm upper bound on the E6 symmetric component:
+The direct v1.3.1 chart uses tied Delta erase by default and compensates
+retention by a certified Frobenius/logarithmic-norm upper bound on the E6
+symmetric component:
 
 \[
 \rho_{\mathrm{effective}}
@@ -134,6 +135,22 @@ certified Frobenius/logarithmic-norm upper bound on the E6 symmetric component:
 
 This is conservative but makes the stability policy explicit. Historical
 uncompensated and independent-erase settings remain named controls.
+
+The canonical-product v1.3.2 path instead uses the product bound
+
+\[
+\log\lVert R\rVert_2
+\leq\sum_{a\in\mathrm{noncompact}}
+|\theta_a|\lVert G_a\rVert_2.
+\]
+
+The generator norms and compact/noncompact mask are precomputed once, so this
+bound is evaluated only for real sparse events.  The native SM75 recurrence
+applies the 52/78 exact small-block primitives directly and never constructs a
+dense 27 by 27 action.  This demonstrates the systems strategy that any future
+56D or 248D rung would require: sparse exact root/subgroup products first,
+followed by a fused carrier-specific recurrence.  It does not remove the need
+to construct and verify the correct Freudenthal or adjoint carrier.
 
 ## Decision
 

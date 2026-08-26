@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import Callable
 
 import torch
 
@@ -267,6 +268,93 @@ def direct_recurrent_delta_scan(
     return _read(stacked, query), stacked, state
 
 
+def segmented_primitive_delta_scan(
+    retention: torch.Tensor,
+    write_key: torch.Tensor,
+    erase_key: torch.Tensor,
+    write_value: torch.Tensor,
+    initial_state: torch.Tensor,
+    query: torch.Tensor | None,
+    event_positions: tuple[int, ...],
+    event_coordinates: torch.Tensor,
+    action_apply: Callable[[torch.Tensor, torch.Tensor], torch.Tensor],
+) -> tuple[torch.Tensor | None, torch.Tensor, torch.Tensor]:
+    """Exact sparse-event scan without materializing dense value actions.
+
+    Identity spans use the one-sided associative scan. At each declared event
+    the Delta edit is evaluated directly and the primitive action is applied
+    between erase and write, matching ``compile_delta_transition``.
+    """
+
+    length = retention.shape[1]
+    if tuple(sorted(set(event_positions))) != event_positions:
+        raise ValueError("event positions must be unique and sorted")
+    if any(position < 0 or position >= length for position in event_positions):
+        raise ValueError("event position lies outside the sequence")
+    if event_coordinates.shape[:2] != (
+        retention.shape[0],
+        len(event_positions),
+    ):
+        raise ValueError("event coordinates must have shape (batch,events,factors)")
+
+    transition = compile_one_sided_delta_transition(
+        retention, write_key, erase_key, write_value
+    )
+    state = initial_state
+    state_chunks: list[torch.Tensor] = []
+    read_chunks: list[torch.Tensor] = []
+    cursor = 0
+    for event_index, position in enumerate(event_positions):
+        if position > cursor:
+            span = OneSidedAffineTransition(
+                transition.left[:, cursor:position],
+                transition.bias[:, cursor:position],
+            )
+            span_query = None if query is None else query[:, cursor:position]
+            span_reads, span_states, state = parallel_one_sided_delta_scan(
+                span, state, span_query
+            )
+            state_chunks.append(span_states)
+            if span_reads is not None:
+                read_chunks.append(span_reads)
+
+        state = retention[:, position, :, None] * state
+        erased_values = torch.einsum(
+            "brh,bhv->brv", erase_key[:, position], state
+        )
+        state = state - torch.einsum(
+            "brh,brv->bhv", write_key[:, position], erased_values
+        )
+        state = action_apply(state, event_coordinates[:, event_index])
+        state = state + torch.einsum(
+            "brh,brv->bhv", write_key[:, position], write_value[:, position]
+        )
+        event_state = state[:, None]
+        state_chunks.append(event_state)
+        if query is not None:
+            event_read = _read(event_state, query[:, position : position + 1])
+            if event_read is None:
+                raise AssertionError("event query unexpectedly returned no read")
+            read_chunks.append(event_read)
+        cursor = position + 1
+
+    if cursor < length:
+        span = OneSidedAffineTransition(
+            transition.left[:, cursor:], transition.bias[:, cursor:]
+        )
+        span_query = None if query is None else query[:, cursor:]
+        span_reads, span_states, state = parallel_one_sided_delta_scan(
+            span, state, span_query
+        )
+        state_chunks.append(span_states)
+        if span_reads is not None:
+            read_chunks.append(span_reads)
+
+    states = torch.cat(state_chunks, dim=1)
+    reads = torch.cat(read_chunks, dim=1) if query is not None else None
+    return reads, states, state
+
+
 def parallel_delta_scan(
     transition: TwoSidedAffineTransition,
     initial_state: torch.Tensor,
@@ -305,6 +393,7 @@ __all__ = [
     "one_sided_transition_prefix_scan",
     "parallel_delta_scan",
     "parallel_one_sided_delta_scan",
+    "segmented_primitive_delta_scan",
     "recurrent_delta_scan",
     "recurrent_one_sided_delta_scan",
     "transition_prefix_scan",

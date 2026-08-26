@@ -67,3 +67,61 @@ moving a dense 27D frame every token. Further exceptional work should be sparse
 and event-conditioned. E7 belongs in a separate 56D Freudenthal correctness
 package; E8 remains algebra-only on SM75 until a sparse representation has a
 specific falsifiable task.
+
+## V1.3.2 cheap-transport continuation
+
+The cost of moving the 27D frame was reopened as the primary failure rather
+than accepted as an architectural tax.
+
+### Exact action redesign
+
+- Derived disconnected blocks of size at most three for every maintained F4
+  and E6 generator.
+- Added canonical coordinates of the second kind: an ordered product of exact
+  one-parameter subgroup actions.
+- Kept the old direct exponential-of-a-sum chart as a scientifically distinct
+  control; no equivalence between the two finite-coordinate charts is claimed.
+- Added a float64 portable action oracle, a dense same-chart oracle, and an
+  FP32 CUDA kernel compiled explicitly for `sm_75`.
+- Added handwritten action backward that reconstructs intermediate primitive
+  states with inverse group elements.
+
+### Failed first integration
+
+The first sparse model called four separate associative scans around four
+native actions at length 128.  Although the isolated action was hundreds of
+times faster than its dense oracle, the model took 3.11 seconds for 40 updates
+versus 1.95 seconds for dense E6.  This falsified the idea that a fast side
+kernel alone solved the systems problem.
+
+### Fused recurrence
+
+- Fused retention, independent erase, periodic primitive action, write, read,
+  and final-state production into one SM75 kernel.
+- Added handwritten reverse-time gradients for all seven recurrence inputs.
+- Moved the exceptional coordinate controller to active event tokens only.
+- Added a same-parameter dead-budget arm whose action head participates in
+  backward and receives optimizer state while its state action is zero.
+- Repaired benchmark target hashing so no CUDA-to-CPU synchronization occurs
+  inside timed updates.
+- Separated training peak allocation from final validation allocation.
+- Added a fresh-process complete-step cost harness with raw timing samples,
+  saved-tensor shape audit, source hashes, patch hash, parameter/optimizer/
+  buffer bytes, and independent cheap-action and Mamba-competitive verdicts.
+
+### Evidence before the quality cohort
+
+- Canonical WSL venv: Python 3.11.16, Torch 2.9.0+cu128, RTX 2070 SUPER,
+  compute capability exactly 7.5.
+- WSL native suite: 72/72 passing.
+- Fused recurrence output/final error at most about `6.6e-9`; all seven input
+  gradient families at most about `9e-8` from the portable recurrence.
+- Isolated action: F4/E6 forward+backward speedups of `428.6x` and `654.4x`
+  over the dense same-chart oracle.
+- Complete sparse E6 step: `19.77 ms` median and `44,691,968 B` maximum peak,
+  versus dense E6 at `46.60 ms` and `143,790,592 B`.
+- Official fused Mamba-2 remains ahead at `14.04 ms` and `34,982,400 B`.
+
+The cheap-action gate passes.  The complete-model Mamba systems gate fails.
+No quality conclusion is drawn until the fresh three-seed cohort completes.
+See [`SM75_PRIMITIVE_TRANSPORT_RESULTS.md`](SM75_PRIMITIVE_TRANSPORT_RESULTS.md).

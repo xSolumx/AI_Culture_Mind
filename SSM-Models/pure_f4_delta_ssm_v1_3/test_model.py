@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import copy
+import sys
 
 import pytest
 import torch
@@ -159,6 +160,84 @@ def test_independent_write_gate_is_bounded_and_reaches_gradients() -> None:
     assert bool(((fields["write_gate"] > 0) & (fields["write_gate"] < 1)).all())
     fields["write_value"].square().mean().backward()
     assert block.controller.bias.grad is not None
+
+
+def test_canonical_product_sparse_events_execute_and_stream_exactly() -> None:
+    torch.manual_seed(101)
+    model = _tiny(
+        action_geometry="canonical_product",
+        primitive_backend="reference",
+        action_event_stride=4,
+        local_mixer="none",
+        channel_mixer="none",
+    ).double().eval()
+    tokens = torch.randint(0, 256, (1, 9))
+    full = model(tokens)
+    first = model(tokens[:, :3])
+    second = model(tokens[:, 3:], states=first["states"])
+    torch.testing.assert_close(
+        torch.cat((first["logits"], second["logits"]), dim=1),
+        full["logits"],
+        rtol=3e-10,
+        atol=3e-10,
+    )
+    assert first["states"][0].transport_phase == 3
+    assert second["states"][0].transport_phase == 1
+    full["logits"].square().mean().backward()
+    action_controller = model.blocks[0].action_controller
+    assert action_controller is not None
+    gradient = action_controller.weight.grad
+    assert gradient is not None
+    assert float(gradient.abs().sum()) > 0.0
+
+
+@pytest.mark.skipif(
+    sys.platform != "linux"
+    or not torch.cuda.is_available()
+    or torch.cuda.get_device_capability() != (7, 5),
+    reason="the fused whole-model integration is deliberately WSL/Linux SM75-only",
+)
+def test_native_canonical_model_matches_reference_and_streams() -> None:
+    torch.manual_seed(103)
+    common = {
+        "action_geometry": "canonical_product",
+        "action_event_stride": 4,
+        "local_mixer": "none",
+        "channel_mixer": "none",
+    }
+    reference = _tiny(primitive_backend="reference", **common).cuda().float().eval()
+    native = _tiny(primitive_backend="cuda", **common).cuda().float().eval()
+    native.load_state_dict(reference.state_dict())
+    tokens = torch.randint(0, 256, (2, 9), device="cuda")
+    expected = reference(tokens)["logits"]
+    actual = native(tokens)["logits"]
+    torch.testing.assert_close(actual, expected, atol=3e-6, rtol=3e-5)
+
+    native.zero_grad(set_to_none=True)
+    reference.zero_grad(set_to_none=True)
+    cotangent = torch.randn_like(actual)
+    actual.backward(cotangent)
+    expected.backward(cotangent)
+    for candidate, oracle in zip(
+        native.parameters(), reference.parameters(), strict=True
+    ):
+        if candidate.grad is None or oracle.grad is None:
+            assert candidate.grad is None and oracle.grad is None
+        else:
+            torch.testing.assert_close(
+                candidate.grad, oracle.grad, atol=2e-5, rtol=5e-4
+            )
+
+    with torch.no_grad():
+        full = native(tokens)["logits"]
+        first = native(tokens[:, :3])
+        second = native(tokens[:, 3:], states=first["states"])
+    torch.testing.assert_close(
+        torch.cat((first["logits"], second["logits"]), dim=1),
+        full,
+        atol=3e-6,
+        rtol=3e-5,
+    )
 
 
 def test_full_streaming_state_makes_chunked_model_exact() -> None:

@@ -211,7 +211,7 @@ def profile(args: argparse.Namespace) -> dict[str, object]:
     root = Path(__file__).resolve().parent
     return {
         "schema_version": 1,
-        "experiment": "Pure Exceptional Delta SSM v1.3.1 development profile",
+        "experiment": "Pure Exceptional Delta SSM v1.3.2 development profile",
         "status": "development bottleneck measurement; not a promoted benchmark",
         "seed": args.seed,
         "shape": {

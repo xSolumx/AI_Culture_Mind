@@ -13,7 +13,7 @@ from .albert import ALBERT_DIM, build_albert_algebra
 ExceptionalAlgebra = Literal[
     "identity", "g2", "spin7", "spin8", "spin9", "f4", "e6"
 ]
-ActionGeometry = Literal["direct", "polar", "cartan"]
+ActionGeometry = Literal["direct", "polar", "cartan", "canonical_product"]
 
 
 def exponential_action(
@@ -93,6 +93,16 @@ class ExceptionalAction(nn.Module):
         if generators.ndim != 3 or generators.shape[-1] != generators.shape[-2]:
             raise ValueError("generators must have shape (count,dimension,dimension)")
         self.register_buffer("generators", generators, persistent=True)
+        self.register_buffer(
+            "generators_fp32", generators.float(), persistent=False
+        )
+
+    def _runtime_generators(self, coordinates: torch.Tensor) -> torch.Tensor:
+        if coordinates.dtype == torch.float32:
+            return self.generators_fp32
+        if coordinates.dtype == self.generators.dtype:
+            return self.generators
+        return self.generators.to(coordinates)
 
     def log_operator_norm_bound(self, coordinates: torch.Tensor) -> torch.Tensor:
         """Certified upper bound for ``log(||ordered(coordinates)||_2)``.
@@ -108,7 +118,7 @@ class ExceptionalAction(nn.Module):
         if self.algebra != "e6":
             return coordinates.new_zeros(shape)
         content_coordinates = coordinates[..., 52:]
-        content_generators = self.generators[52:].to(coordinates)
+        content_generators = self._runtime_generators(coordinates)[52:]
         symmetric_tangent = lie_tangent(content_coordinates, content_generators)
         return torch.linalg.matrix_norm(symmetric_tangent, ord="fro").sum(dim=-1)
 
@@ -121,10 +131,12 @@ class ExceptionalAction(nn.Module):
         return self.generators.shape[-1]
 
     def forward(self, coordinates: torch.Tensor) -> torch.Tensor:
-        return exponential_action(coordinates, self.generators.to(coordinates))
+        return exponential_action(coordinates, self._runtime_generators(coordinates))
 
     def ordered(self, coordinates: torch.Tensor) -> torch.Tensor:
-        return ordered_exponential_action(coordinates, self.generators.to(coordinates))
+        return ordered_exponential_action(
+            coordinates, self._runtime_generators(coordinates)
+        )
 
 
 class IdentityAction(nn.Module):
@@ -178,6 +190,22 @@ class E6PolarAction(nn.Module):
         self.register_buffer(
             "content_generators", torch.tensor(data.e6[52:], dtype=torch.float64)
         )
+        self.register_buffer(
+            "compact_generators_fp32", self.compact_generators.float(), persistent=False
+        )
+        self.register_buffer(
+            "content_generators_fp32", self.content_generators.float(), persistent=False
+        )
+
+    def _runtime_banks(
+        self, coordinates: torch.Tensor
+    ) -> tuple[torch.Tensor, torch.Tensor]:
+        if coordinates.dtype == torch.float32:
+            return self.compact_generators_fp32, self.content_generators_fp32
+        return (
+            self.compact_generators.to(coordinates),
+            self.content_generators.to(coordinates),
+        )
 
     @property
     def coordinate_dim(self) -> int:
@@ -191,12 +219,9 @@ class E6PolarAction(nn.Module):
         if coordinates.shape[-1] != self.coordinate_dim:
             raise ValueError("E6 polar coordinates must have final dimension 78")
         compact_coordinates, content_coordinates = coordinates.split((52, 26), dim=-1)
-        compact_tangent = lie_tangent(
-            compact_coordinates, self.compact_generators.to(coordinates)
-        )
-        content_tangent = lie_tangent(
-            content_coordinates, self.content_generators.to(coordinates)
-        )
+        compact_generators, content_generators = self._runtime_banks(coordinates)
+        compact_tangent = lie_tangent(compact_coordinates, compact_generators)
+        content_tangent = lie_tangent(content_coordinates, content_generators)
         if torch.is_grad_enabled() and coordinates.requires_grad:
             compact = torch.matrix_exp(compact_tangent)
             content = torch.matrix_exp(content_tangent)
@@ -212,7 +237,7 @@ class E6PolarAction(nn.Module):
     def log_operator_norm_bound(self, coordinates: torch.Tensor) -> torch.Tensor:
         content_coordinates = coordinates[..., 52:]
         content_tangent = lie_tangent(
-            content_coordinates, self.content_generators.to(coordinates)
+            content_coordinates, self._runtime_banks(coordinates)[1]
         )
         return torch.linalg.matrix_norm(content_tangent, ord="fro").sum(dim=-1)
 
@@ -234,9 +259,28 @@ class E6CartanAction(nn.Module):
             "compact_generators", torch.tensor(data.f4, dtype=torch.float64)
         )
         self.register_buffer(
-            "radial_eigenvalues",
-            torch.tensor(np.diagonal(radial, axis1=1, axis2=2).copy(), dtype=torch.float64),
+            "compact_generators_fp32", self.compact_generators.float(), persistent=False
         )
+        self.register_buffer(
+            "radial_eigenvalues",
+            torch.tensor(
+                np.diagonal(radial, axis1=1, axis2=2).copy(),
+                dtype=torch.float64,
+            ),
+        )
+        self.register_buffer(
+            "radial_eigenvalues_fp32", self.radial_eigenvalues.float(), persistent=False
+        )
+
+    def _runtime_compact(self, coordinates: torch.Tensor) -> torch.Tensor:
+        if coordinates.dtype == torch.float32:
+            return self.compact_generators_fp32
+        return self.compact_generators.to(coordinates)
+
+    def _runtime_radial(self, coordinates: torch.Tensor) -> torch.Tensor:
+        if coordinates.dtype == torch.float32:
+            return self.radial_eigenvalues_fp32
+        return self.radial_eigenvalues.to(coordinates)
 
     @property
     def coordinate_dim(self) -> int:
@@ -252,7 +296,7 @@ class E6CartanAction(nn.Module):
         left_coordinates, radial_coordinates, right_coordinates = coordinates.split(
             (52, 2, 52), dim=-1
         )
-        generators = self.compact_generators.to(coordinates)
+        generators = self._runtime_compact(coordinates)
         left_tangent = lie_tangent(left_coordinates, generators)
         right_tangent = lie_tangent(right_coordinates, generators)
         if torch.is_grad_enabled() and coordinates.requires_grad:
@@ -263,7 +307,7 @@ class E6CartanAction(nn.Module):
                 torch.stack((left_tangent, right_tangent), dim=-3)
             ).unbind(dim=-3)
         log_diagonal = torch.einsum(
-            "...a,ai->...i", radial_coordinates, self.radial_eigenvalues.to(coordinates)
+            "...a,ai->...i", radial_coordinates, self._runtime_radial(coordinates)
         )
         radial = torch.diag_embed(torch.exp(log_diagonal))
         return left @ radial @ right
@@ -276,7 +320,7 @@ class E6CartanAction(nn.Module):
         log_diagonal = torch.einsum(
             "...a,ai->...i",
             radial_coordinates,
-            self.radial_eigenvalues.to(coordinates),
+            self._runtime_radial(coordinates),
         )
         return log_diagonal.amax(dim=-1).clamp_min(0.0).sum(dim=-1)
 
@@ -300,11 +344,18 @@ def build_exceptional_action(
     *,
     geometry: ActionGeometry = "direct",
     generators: torch.Tensor | np.ndarray | None = None,
+    primitive_backend: str = "auto",
 ) -> nn.Module:
     """Build an action without making geometry a hidden model assumption."""
 
     if generators is None and algebra == "identity":
         return IdentityAction()
+    if geometry == "canonical_product":
+        if generators is not None or algebra not in {"f4", "e6"}:
+            raise ValueError("canonical_product supports only built-in F4 or E6")
+        from .primitive_action import PrimitiveExceptionalAction
+
+        return PrimitiveExceptionalAction(algebra, backend=primitive_backend)
     if generators is not None or algebra != "e6" or geometry == "direct":
         return ExceptionalAction(algebra, generators=generators)
     if geometry == "polar":

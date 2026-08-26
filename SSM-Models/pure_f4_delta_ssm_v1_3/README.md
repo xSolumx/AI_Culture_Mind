@@ -1,4 +1,4 @@
-# Pure Exceptional Delta SSM v1.3.1
+# Pure Exceptional Delta SSM v1.3.2
 
 **Research author:** Hayden Austin
 
@@ -31,6 +31,12 @@ carriers; they are not extra generators on the Albert state. See
 - executable G2, Spin(7), Spin(8), and Spin(9) stabilizer restrictions inside
   the same representation;
 - direct, polar, and Cartan (KAK) E6 action charts with complete autograd;
+- exact canonical-coordinate F4/E6 products built from fixed blocks of size at
+  most three, with no dense matrix exponential;
+- a native FP32 SM75 canonical-action kernel and fused sparse-event Delta
+  recurrence with handwritten backward for all recurrence inputs;
+- an event-only exceptional coordinate head and a parameter/optimizer-matched
+  dead-action control;
 - one or more ordered Lie exponentials per token;
 - a configurable rank-(r) Delta memory update with tied safe default and
   independent erase/write controls;
@@ -54,13 +60,22 @@ carriers; they are not extra generators on the Albert state. See
 
 ## Status
 
-This is a semantic PyTorch implementation with an accepted eager identity fast
-path and an opt-in fixed-shape `torch.compile` tier, not a custom CUDA kernel or
-a promoted trained model. The v1.3.1 suite currently has 46 tests. The generated
-audit separates exact-data, numerical, empirical, and open claims in
-`artifacts/algebra_audit.json`.
+This package now has both a portable semantic PyTorch implementation and a
+source-built Linux/WSL CUDA backend compiled specifically for SM75.  The native
+backend is not an Ampere fallback: it implements the F4/E6 primitive action and
+the full sparse-event Delta recurrence directly on the RTX 2070 SUPER.  The
+canonical WSL SM75 suite passes 72 tests.  The generated audit separates
+exact-data, numerical, empirical, and open claims in
+[`artifacts/algebra_audit.json`](artifacts/algebra_audit.json).
 
-The repaired model law and the SM75 results are in
+The new systems result is in
+[`SM75_PRIMITIVE_TRANSPORT_RESULTS.md`](SM75_PRIMITIVE_TRANSPORT_RESULTS.md).
+At one E6 action per 32 tokens, the complete candidate is 2.36x faster and uses
+69% less peak allocation than dense all-token E6.  It passes the cheap-action
+gate, but remains 1.41x slower and 1.28x larger in peak allocation than official
+fused Mamba-2, so the stronger complete-model systems gate remains failed.
+
+The v1.3.1 repaired model law and matched natural-text results are retained in
 [`QUALITY_LEARNING_RESULTS.md`](QUALITY_LEARNING_RESULTS.md). F4 and E6 learn
 hidden action coordinates unavailable to their predecessor algebras and
 extrapolate from length 4 to length 16 on a controlled composition task. On a
@@ -102,7 +117,7 @@ python -m pytest -q SSM-Models/pure_f4_delta_ssm_v1_3
 python -m pure_f4_delta_ssm_v1_3.audit_algebra `
   --output SSM-Models/pure_f4_delta_ssm_v1_3/artifacts/algebra_audit.json
 python -m pure_f4_delta_ssm_v1_3.benchmark_train `
-  --device cuda --require-sm75 --variant e6_safe `
+  --device cuda --require-sm75 --variants e6_safe `
   --steps 1000 --seed 2633 `
   --output SSM-Models/pure_f4_delta_ssm_v1_3/artifacts/shakespeare_screen.json
 python -m pure_f4_delta_ssm_v1_3.benchmark_exceptional_learning `
@@ -112,12 +127,19 @@ python -m pure_f4_delta_ssm_v1_3.benchmark_exceptional_learning `
 python -m pure_f4_delta_ssm_v1_3.benchmark_optimization `
   --compile-mode reduce-overhead `
   --output SSM-Models/pure_f4_delta_ssm_v1_3/artifacts/optimization.json
+python -m pure_f4_delta_ssm_v1_3.benchmark_primitive_action `
+  --output SSM-Models/pure_f4_delta_ssm_v1_3/artifacts/primitive_action.json
+python -m pure_f4_delta_ssm_v1_3.benchmark_sparse_action_cost `
+  --cycles 3 --warmups 20 --samples 50 --require-sm75 `
+  --output SSM-Models/pure_f4_delta_ssm_v1_3/artifacts/sparse_action_cost.json
 ```
 
-The next architecture promotion gate is not “make it larger.” It is sparse,
-event-conditioned exceptional transport inside a content-addressed memory law,
-compared against the same identity and official fused Mamba-2 controls. Dense
-exceptional action at every token has now failed the generic-text gate.
+The dense-action cost problem is solved for periodic sparse events.  The next
+architecture promotion gate is not "make it larger."  It is quality learning
+for the sparse candidate versus the same-parameter dead-action control and
+official fused Mamba-2, followed by a genuinely learned hard event router if
+periodic transport proves useful.  Dense exceptional action at every token
+remains a historical negative control.
 
 See [CONSTRAINT_AUDIT.md](CONSTRAINT_AUDIT.md) for the research-chain audit and
 [MATHEMATICAL_DESIGN.md](MATHEMATICAL_DESIGN.md) for the equations and the

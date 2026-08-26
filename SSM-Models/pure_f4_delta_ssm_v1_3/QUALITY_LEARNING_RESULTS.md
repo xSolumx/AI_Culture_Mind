@@ -105,3 +105,16 @@ Exceptional transport is not dead, but its supported role is now precise:
 4. Dense exceptional action every token is not the production direction.
 5. The next credible model is sparse/event-only exceptional transport inside a
    memory law whose addressing and transaction timing already work.
+
+## V1.3.2 continuation
+
+The dense-action cost conclusion above is historical and remains valid for the
+v1.3.1 direct all-token chart.  Version 1.3.2 adds a different exact canonical-
+product chart and a fused one-event-per-32-token SM75 recurrence.  It passes a
+separate cheap-action systems gate while still missing the complete-model
+Mamba-2 gate.  See
+[`SM75_PRIMITIVE_TRANSPORT_RESULTS.md`](SM75_PRIMITIVE_TRANSPORT_RESULTS.md).
+
+No v1.3.2 natural-text quality conclusion is backfilled from the systems
+result.  Its parameter-matched dead-action/E6/Mamba cohort is a new experiment
+with its own artifacts and fail-closed summary.

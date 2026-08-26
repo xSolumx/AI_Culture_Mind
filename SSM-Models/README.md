@@ -210,6 +210,17 @@
 > [SM75 runtime ledger](hybrid_memory_v1_4/SM75_NATIVE_RUNTIME.md), and
 > [current model inventory](MODEL_STATUS.md).
 
+> **2026-08-26 Pure Exceptional Delta SSM v1.3.2 cheap transport.**
+> F4/E6 canonical coordinates of the second kind now execute through exact
+> small-block primitive actions and a fused sparse-event Delta recurrence built
+> specifically for SM75.  At one E6 event per 32 tokens, the 40,858-parameter
+> candidate is 2.36x faster and uses 69% less peak allocation than dense E6.
+> The cheap-action gate passes; the complete model remains 1.41x slower and
+> 1.28x heavier than parameter-matched official fused Mamba-2, so the stronger
+> systems gate fails.  See the
+> [preregistered SM75 result](pure_f4_delta_ssm_v1_3/SM75_PRIMITIVE_TRANSPORT_RESULTS.md)
+> and [model boundary](pure_f4_delta_ssm_v1_3/README.md).
+
 > **2026-08-26 Pure Exceptional Delta SSM v1.3.1 repair and learning gate.**
 > The 27D carrier now implements the complete named
 > `G2 -> Spin(7) -> Spin(8) -> Spin(9) -> F4 -> E6(-26)` ladder, a safer

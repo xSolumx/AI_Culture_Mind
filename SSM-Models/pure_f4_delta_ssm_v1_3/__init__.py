@@ -19,6 +19,14 @@ from .albert import (
     build_albert_algebra,
 )
 from .model import ExceptionalDeltaConfig, ExceptionalDeltaLM, ExceptionalDeltaState
+from .primitive_action import (
+    PrimitiveExceptionalAction,
+    dense_primitive_product_oracle,
+    primitive_delta_recurrence_cuda,
+    primitive_delta_recurrence_reference,
+    primitive_event_layout,
+    primitive_product_reference,
+)
 from .scan import (
     OneSidedAffineTransition,
     TwoSidedAffineTransition,
@@ -29,6 +37,7 @@ from .scan import (
     parallel_one_sided_delta_scan,
     recurrent_delta_scan,
     recurrent_one_sided_delta_scan,
+    segmented_primitive_delta_scan,
 )
 
 __all__ = [
@@ -46,16 +55,23 @@ __all__ = [
     "ExceptionalDeltaState",
     "IdentityAction",
     "OneSidedAffineTransition",
+    "PrimitiveExceptionalAction",
     "TwoSidedAffineTransition",
     "build_albert_algebra",
     "build_exceptional_action",
     "compile_delta_transition",
     "compile_one_sided_delta_transition",
     "direct_recurrent_delta_scan",
+    "dense_primitive_product_oracle",
     "exponential_action",
     "ordered_exponential_action",
     "parallel_delta_scan",
     "parallel_one_sided_delta_scan",
+    "primitive_delta_recurrence_cuda",
+    "primitive_delta_recurrence_reference",
+    "primitive_event_layout",
     "recurrent_delta_scan",
     "recurrent_one_sided_delta_scan",
+    "primitive_product_reference",
+    "segmented_primitive_delta_scan",
 ]

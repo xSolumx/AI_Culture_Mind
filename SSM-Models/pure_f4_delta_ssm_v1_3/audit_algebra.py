@@ -82,7 +82,7 @@ def build_report() -> dict[str, object]:
     diagonal = np.eye(27)[:3]
     report = {
         "schema_version": 1,
-        "experiment": "Pure Exceptional Delta SSM v1.3.1 algebra audit",
+        "experiment": "Pure Exceptional Delta SSM v1.3.2 algebra audit",
         "construction_hash_sha256": _hash_arrays(
             structure,
             algebra.f4_raw,

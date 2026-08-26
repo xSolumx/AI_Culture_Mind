@@ -75,12 +75,33 @@ VARIANTS = {
     "spin8_safe": {"action_algebra": "spin8", "action_geometry": "direct"},
     "spin9_safe": {"action_algebra": "spin9", "action_geometry": "direct"},
     "f4_safe": {"action_algebra": "f4", "action_geometry": "direct"},
+    "f4_primitive_event": {
+        "action_algebra": "f4",
+        "action_geometry": "canonical_product",
+        "action_event_stride": 32,
+    },
     "f4_matched": {
         "action_algebra": "f4",
         "action_geometry": "direct",
         "d_model_override": 33,
     },
     "e6_safe": {"action_algebra": "e6", "action_geometry": "direct"},
+    "e6_primitive_event": {
+        "action_algebra": "e6",
+        "action_geometry": "canonical_product",
+        "action_event_stride": 32,
+    },
+    "e6_primitive_dead": {
+        "action_algebra": "e6",
+        "action_geometry": "canonical_product",
+        "action_event_stride": 32,
+        "primitive_transport_enabled": False,
+    },
+    "e6_primitive_all_token": {
+        "action_algebra": "e6",
+        "action_geometry": "canonical_product",
+        "action_event_stride": 1,
+    },
     "mamba2_official": {"baseline": "mamba2_official"},
     "f4_delta": {"action_algebra": "f4", "action_geometry": "direct"},
     "e6_direct_delta": {"action_algebra": "e6", "action_geometry": "direct"},
@@ -309,8 +330,11 @@ def _run_one(
             sequence_length=config.sequence_length,
             generator=generator,
         )
+        # Hash the CPU target stream before transfer.  Copying CUDA targets
+        # back to the host inside every measured update forced a full device
+        # synchronization and contaminated the complete-step timing.
+        target_digest.update(targets.numpy().tobytes())
         inputs, targets = inputs.to(device), targets.to(device)
-        target_digest.update(targets.detach().cpu().numpy().tobytes())
         optimizer.zero_grad(set_to_none=True)
         logits = _forward_logits(model, inputs)
         loss = F.cross_entropy(logits.flatten(0, 1), targets.flatten())
@@ -327,6 +351,9 @@ def _run_one(
     if device.type == "cuda":
         torch.cuda.synchronize()
     seconds = time.perf_counter() - start
+    training_peak_cuda_bytes = (
+        int(torch.cuda.max_memory_allocated()) if device.type == "cuda" else None
+    )
     final_loss = _evaluate(
         model, validation, device, mark_compile_step=mark_compile_step
     )
@@ -368,9 +395,7 @@ def _run_one(
         "training_target_sha256": target_digest.hexdigest(),
         "checkpoint": str(checkpoint) if checkpoint is not None else None,
         "checkpoint_sha256": checkpoint_sha256,
-        "peak_cuda_bytes": (
-            int(torch.cuda.max_memory_allocated()) if device.type == "cuda" else None
-        ),
+        "peak_cuda_bytes": training_peak_cuda_bytes,
     }
 
 
@@ -462,7 +487,7 @@ def main() -> None:
     root = Path(__file__).resolve().parent
     report = {
         "schema_version": 2,
-        "experiment": "Pure Exceptional Delta SSM v1.3.1 natural-text development screen",
+        "experiment": "Pure Exceptional Delta SSM v1.3.2 natural-text development screen",
         "status": "development evidence; interpret through an explicit cohort contract",
         "config": asdict(config),
         "variants": args.variants,
@@ -520,6 +545,9 @@ def main() -> None:
                 "benchmark_train.py",
                 "data.py",
                 "model.py",
+                "primitive_action.py",
+                "primitive_action_bindings.cpp",
+                "primitive_action_cuda.cu",
                 "scan.py",
             )
         },

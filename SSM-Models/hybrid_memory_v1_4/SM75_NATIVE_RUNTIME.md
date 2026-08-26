@@ -66,6 +66,7 @@ having a same-named wheel installed is insufficient.
 
 | Backend | Result on SM75 | Eligibility boundary |
 |---|---|---|
+| Pure Exceptional v1.3.2 primitive F4/E6 | pass | repository-source CUDA compiled with explicit `sm_75`; exact canonical action plus fused sparse Delta forward/backward, 72/72 WSL tests; [systems result](../pure_f4_delta_ssm_v1_3/SM75_PRIMITIVE_TRANSPORT_RESULTS.md) |
 | Mamba-3 SISO | pass | native training forward/backward; complete finite input and all-parameter gradients |
 | Mamba-3 MIMO | fail | TileLang selects an SM80 TF32 MMA path; no fallback and no SM75 baseline |
 | FLA GDN2 fused recurrent | fail training qualification | finite output/input gradient, but recurrent-core parameter gradients are absent; inference mode is not a training baseline |

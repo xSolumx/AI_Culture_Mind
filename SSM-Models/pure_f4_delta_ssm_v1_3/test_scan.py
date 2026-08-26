@@ -11,6 +11,7 @@ from .scan import (
     parallel_one_sided_delta_scan,
     recurrent_delta_scan,
     recurrent_one_sided_delta_scan,
+    segmented_primitive_delta_scan,
 )
 
 
@@ -188,3 +189,62 @@ def test_one_sided_parallel_and_recurrent_scans_match() -> None:
         torch.testing.assert_close(
             actual_tensor, expected_tensor, rtol=2e-11, atol=2e-11
         )
+
+
+def test_segmented_primitive_scan_matches_dense_event_oracle_and_gradients() -> None:
+    torch.manual_seed(97)
+    dtype = torch.float64
+    batch, length, rank, key_dim, value_dim = 2, 9, 2, 3, 5
+    event_positions = (3, 7)
+    generator = torch.zeros(value_dim, value_dim, dtype=dtype)
+    generator[0, 1], generator[1, 0] = -1.0, 1.0
+    original = [
+        (0.9 + 0.05 * torch.rand(batch, length, key_dim, dtype=dtype)).requires_grad_(),
+        torch.randn(batch, length, rank, key_dim, dtype=dtype).requires_grad_(),
+        (0.02 * torch.randn(batch, length, rank, key_dim, dtype=dtype)).requires_grad_(),
+        torch.randn(batch, length, rank, value_dim, dtype=dtype).requires_grad_(),
+        torch.randn(batch, key_dim, value_dim, dtype=dtype).requires_grad_(),
+        torch.randn(batch, length, key_dim, dtype=dtype).requires_grad_(),
+        (0.03 * torch.randn(batch, len(event_positions), 1, dtype=dtype)).requires_grad_(),
+    ]
+    segmented_inputs = [item.detach().clone().requires_grad_(True) for item in original]
+
+    retention, write_key, erase_key, write_value, initial, query, angles = original
+    action = torch.eye(value_dim, dtype=dtype).expand(
+        batch, length, value_dim, value_dim
+    ).clone()
+    action[:, list(event_positions)] = torch.matrix_exp(
+        angles[..., 0, None, None] * generator
+    )
+    expected = recurrent_delta_scan(
+        compile_delta_transition(
+            retention, write_key, erase_key, write_value, action
+        ),
+        initial,
+        query,
+    )
+
+    retention, write_key, erase_key, write_value, initial, query, angles = segmented_inputs
+
+    def apply(state: torch.Tensor, coordinates: torch.Tensor) -> torch.Tensor:
+        matrix = torch.matrix_exp(coordinates[..., 0, None, None] * generator)
+        return state @ matrix.transpose(-1, -2)
+
+    actual = segmented_primitive_delta_scan(
+        retention,
+        write_key,
+        erase_key,
+        write_value,
+        initial,
+        query,
+        event_positions,
+        angles,
+        apply,
+    )
+    for candidate, oracle in zip(actual, expected, strict=True):
+        torch.testing.assert_close(candidate, oracle, rtol=3e-11, atol=3e-11)
+    cotangent = torch.randn_like(expected[0])
+    expected_gradients = torch.autograd.grad(expected[0], original, cotangent)
+    actual_gradients = torch.autograd.grad(actual[0], segmented_inputs, cotangent)
+    for candidate, oracle in zip(actual_gradients, expected_gradients, strict=True):
+        torch.testing.assert_close(candidate, oracle, rtol=4e-10, atol=4e-10)

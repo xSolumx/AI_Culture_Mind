@@ -8,6 +8,7 @@ axiom.  Kernel promotion follows semantic and empirical falsification.
 
 from __future__ import annotations
 
+import sys
 from collections.abc import Sequence
 from dataclasses import asdict, dataclass
 from pathlib import Path
@@ -37,8 +38,14 @@ from .scan import (
     recurrent_delta_scan,
     recurrent_one_sided_delta_scan,
 )
+from .primitive_action import (
+    PrimitiveExceptionalAction,
+    primitive_delta_recurrence_cuda,
+    primitive_delta_recurrence_reference,
+    primitive_event_layout,
+)
 
-__version__ = "1.3.1"
+__version__ = "1.3.2"
 
 
 @dataclass(frozen=True)
@@ -51,7 +58,9 @@ class ExceptionalDeltaConfig:
     action_algebra: Literal[
         "identity", "g2", "spin7", "spin8", "spin9", "f4", "e6"
     ] = "e6"
-    action_geometry: Literal["direct", "polar", "cartan"] = "direct"
+    action_geometry: Literal[
+        "direct", "polar", "cartan", "canonical_product"
+    ] = "direct"
     action_schedule: (
         tuple[
             Literal["identity", "g2", "spin7", "spin8", "spin9", "f4", "e6"],
@@ -61,6 +70,9 @@ class ExceptionalDeltaConfig:
     ) = None
     action_coordinate_scale: float = 0.02
     action_factors: int = 1
+    action_event_stride: int = 32
+    primitive_backend: Literal["auto", "reference", "cuda"] = "auto"
+    primitive_transport_enabled: bool = True
     identity_fast_path: bool = True
     d_conv: int = 4
     local_mixer: Literal["depthwise_conv", "none"] = "depthwise_conv"
@@ -97,6 +109,7 @@ class ExceptionalDeltaConfig:
             self.memory_width,
             self.update_rank,
             self.action_factors,
+            self.action_event_stride,
             self.expansion,
         )
         if min(dimensions) < 1:
@@ -119,6 +132,11 @@ class ExceptionalDeltaConfig:
             raise ValueError("unknown query parameterization")
         if self.noncompact_stability not in {"none", "frobenius_bound"}:
             raise ValueError("unknown noncompact stability policy")
+        if self.action_geometry == "canonical_product":
+            if self.action_algebra not in {"f4", "e6"}:
+                raise ValueError("canonical_product supports only F4 or E6")
+            if self.action_factors != 1:
+                raise ValueError("canonical_product has one ordered primitive chart")
         if (
             self.action_schedule is not None
             and len(self.action_schedule) != self.num_layers
@@ -132,6 +150,7 @@ class ExceptionalDeltaState:
 
     memory: torch.Tensor
     convolution: torch.Tensor
+    transport_phase: int = 0
 
 
 class CausalDepthwiseConv1d(nn.Module):
@@ -295,13 +314,16 @@ class ExceptionalDeltaBlock(nn.Module):
             action_algebra or config.action_algebra,
             geometry=config.action_geometry,
             generators=generators,
+            primitive_backend=config.primitive_backend,
         )
         h = config.memory_width
         r = config.update_rank
         v = self.action.representation_dim
         f = self.action.coordinate_dim
+        self._sparse_action_controller = isinstance(
+            self.action, PrimitiveExceptionalAction
+        )
         self._segments = {
-            "coordinates": config.action_factors * f,
             "retention": h,
             "write_key": r * h,
             "erase_key": r * h,
@@ -310,7 +332,17 @@ class ExceptionalDeltaBlock(nn.Module):
             "write_value": r * v,
             "query": h,
         }
+        if not self._sparse_action_controller:
+            self._segments = {
+                "coordinates": config.action_factors * f,
+                **self._segments,
+            }
         self.controller = nn.Linear(config.d_model, sum(self._segments.values()))
+        self.action_controller = (
+            nn.Linear(config.d_model, config.action_factors * f)
+            if self._sparse_action_controller
+            else None
+        )
         use_invariants = config.readout_mode == "albert_invariants" or (
             config.readout_mode == "auto" and v == ALBERT_DIM
         )
@@ -344,7 +376,8 @@ class ExceptionalDeltaBlock(nn.Module):
             )
         elif use_invariants:
             readout_structure = torch.tensor(
-                orthonormal_jordan_structure_constants(), dtype=torch.float64
+                orthonormal_jordan_structure_constants(),
+                dtype=torch.float64,
             )
         else:
             readout_structure = None
@@ -364,7 +397,10 @@ class ExceptionalDeltaBlock(nn.Module):
     def _initialize_controller(self) -> None:
         nn.init.normal_(self.controller.weight, mean=0.0, std=0.02)
         nn.init.zeros_(self.controller.bias)
-        start = self._segments["coordinates"]
+        if self.action_controller is not None:
+            nn.init.normal_(self.action_controller.weight, mean=0.0, std=0.02)
+            nn.init.zeros_(self.action_controller.bias)
+        start = self._segments.get("coordinates", 0)
         stop = start + self._segments["retention"]
         with torch.no_grad():
             self.controller.bias[start:stop].fill_(self.config.retention_bias)
@@ -407,12 +443,16 @@ class ExceptionalDeltaBlock(nn.Module):
         rank = self.config.update_rank
         width = self.config.memory_width
         value_dim = self.action.representation_dim
-        fields["coordinates"] = (
-            fields["coordinates"].reshape(
-                batch, length, self.config.action_factors, self.action.coordinate_dim
+        if "coordinates" in fields:
+            fields["coordinates"] = (
+                fields["coordinates"].reshape(
+                    batch,
+                    length,
+                    self.config.action_factors,
+                    self.action.coordinate_dim,
+                )
+                * self.config.action_coordinate_scale
             )
-            * self.config.action_coordinate_scale
-        )
         fields["retention"] = self._retention(fields["retention"])
         fields["write_key"] = fields["write_key"].reshape(batch, length, rank, width)
         fields["erase_key"] = fields["erase_key"].reshape(batch, length, rank, width)
@@ -434,7 +474,8 @@ class ExceptionalDeltaBlock(nn.Module):
             if valid_mask.shape != hidden.shape[:2]:
                 raise ValueError("valid_mask must have shape (batch,length)")
             mask = valid_mask.to(dtype=hidden.dtype)
-            fields["coordinates"] = fields["coordinates"] * mask[..., None, None]
+            if "coordinates" in fields:
+                fields["coordinates"] = fields["coordinates"] * mask[..., None, None]
             fields["retention"] = torch.where(
                 valid_mask[..., None], fields["retention"], torch.ones_like(fields["retention"])
             )
@@ -467,16 +508,123 @@ class ExceptionalDeltaBlock(nn.Module):
             )
         value = F.silu(local_value)
         fields = self._control_fields(value, valid_mask)
-        use_identity_fast_path = self.config.identity_fast_path and isinstance(
-            self.action, IdentityAction
+        primitive_action = isinstance(self.action, PrimitiveExceptionalAction)
+        use_primitive_events = (
+            primitive_action and self.config.primitive_transport_enabled
         )
-        if scan_mode == "auto":
+        use_identity_fast_path = self.config.identity_fast_path and (
+            isinstance(self.action, IdentityAction)
+            or (primitive_action and not self.config.primitive_transport_enabled)
+        )
+        memory = None if state is None else state.memory
+        if memory is None:
+            memory = value.new_zeros((value.shape[0], *self.state_shape))
+
+        next_phase = 0
+        dead_action_zero: torch.Tensor | None = None
+        if use_primitive_events:
+            phase = 0 if state is None else state.transport_phase
+            stride = self.config.action_event_stride
+            first_event, event_count = primitive_event_layout(
+                value.shape[1],
+                stride,
+                event_phase=stride - 1,
+                position_offset=phase,
+            )
+            event_positions = tuple(
+                first_event + event * stride for event in range(event_count)
+            )
+            event_indices = list(event_positions)
+            if self.action_controller is None:
+                raise AssertionError("primitive action controller is unavailable")
+            event_coordinates = self.action_controller(value[:, event_indices]).reshape(
+                value.shape[0],
+                len(event_positions),
+                self.config.action_factors,
+                self.action.coordinate_dim,
+            )
+            event_coordinates = (
+                event_coordinates[:, :, 0, :]
+                * self.config.action_coordinate_scale
+            )
+            if valid_mask is not None and event_positions:
+                event_coordinates = event_coordinates * valid_mask[
+                    :, event_indices, None
+                ].to(event_coordinates.dtype)
+            if event_positions and self.config.noncompact_stability == "frobenius_bound":
+                bounds = self.action.log_operator_norm_bound(event_coordinates)
+                multiplier = torch.ones_like(fields["retention"])
+                multiplier[:, event_indices] = torch.exp(-bounds)[..., None]
+                fields["retention"] = fields["retention"] * multiplier
+            use_native_primitive = self.action.backend == "cuda" or (
+                self.action.backend == "auto"
+                and sys.platform == "linux"
+                and value.device.type == "cuda"
+                and value.dtype == torch.float32
+                and torch.cuda.get_device_capability(value.device) == (7, 5)
+            )
+            if use_native_primitive:
+                reads, final_memory = primitive_delta_recurrence_cuda(
+                    fields["retention"],
+                    fields["write_key"],
+                    fields["erase_key"],
+                    fields["write_value"],
+                    memory,
+                    fields["query"],
+                    event_coordinates,
+                    self.action,
+                    event_stride=stride,
+                    event_phase=stride - 1,
+                    position_offset=phase,
+                )
+            else:
+                reads, final_memory = primitive_delta_recurrence_reference(
+                    fields["retention"],
+                    fields["write_key"],
+                    fields["erase_key"],
+                    fields["write_value"],
+                    memory,
+                    fields["query"],
+                    event_coordinates,
+                    self.action.algebra,
+                    event_stride=stride,
+                    event_phase=stride - 1,
+                    position_offset=phase,
+                )
+            next_phase = (phase + value.shape[1]) % stride
+        elif primitive_action:
+            # The dead-budget control retains the event-only coordinate head,
+            # its backward path, parameters, and optimizer state.  Multiplying
+            # by zero removes only the state action, isolating its marginal
+            # systems and quality effect.
+            phase = 0 if state is None else state.transport_phase
+            stride = self.config.action_event_stride
+            first_event, event_count = primitive_event_layout(
+                value.shape[1],
+                stride,
+                event_phase=stride - 1,
+                position_offset=phase,
+            )
+            event_indices = [
+                first_event + event * stride for event in range(event_count)
+            ]
+            if self.action_controller is None:
+                raise AssertionError("primitive action controller is unavailable")
+            dead_coordinates = self.action_controller(value[:, event_indices])
+            dead_action_zero = dead_coordinates.sum() * 0.0
+            next_phase = (phase + value.shape[1]) % stride
+            if scan_mode == "auto":
+                if value.shape[1] > 256:
+                    scan_mode = "recurrent_direct"
+                else:
+                    scan_mode = "parallel" if value.shape[1] > 1 else "recurrent"
+        elif scan_mode == "auto":
             if value.shape[1] > 256:
                 scan_mode = "recurrent_direct"
             else:
                 scan_mode = "parallel" if value.shape[1] > 1 else "recurrent"
         action = None
-        if not use_identity_fast_path:
+        if not use_primitive_events and not use_identity_fast_path:
             action = self.action.ordered(fields["coordinates"])
             if self.config.noncompact_stability == "frobenius_bound":
                 log_norm_bound = self.action.log_operator_norm_bound(
@@ -485,10 +633,9 @@ class ExceptionalDeltaBlock(nn.Module):
                 fields["retention"] = fields["retention"] * torch.exp(
                     -log_norm_bound
                 )[..., None]
-        memory = None if state is None else state.memory
-        if memory is None:
-            memory = value.new_zeros((value.shape[0], *self.state_shape))
-        if scan_mode == "recurrent_direct":
+        if use_primitive_events:
+            pass
+        elif scan_mode == "recurrent_direct":
             reads, _, final_memory = direct_recurrent_delta_scan(
                 fields["retention"],
                 fields["write_key"],
@@ -529,6 +676,8 @@ class ExceptionalDeltaBlock(nn.Module):
             )
         if reads is None:
             raise AssertionError("query was supplied but scan returned no reads")
+        if dead_action_zero is not None:
+            reads = reads + dead_action_zero
         if isinstance(self.read_features, AlbertInvariantReadout):
             read_features = self.read_features(reads, self.readout_structure)
         else:
@@ -539,7 +688,9 @@ class ExceptionalDeltaBlock(nn.Module):
             channel_input = self.channel_norm(hidden)
             channel_update = self.channel(channel_input)
             hidden = hidden + self.dropout(channel_update)
-        return hidden, ExceptionalDeltaState(final_memory, next_convolution)
+        return hidden, ExceptionalDeltaState(
+            final_memory, next_convolution, next_phase
+        )
 
 
 class ExceptionalDeltaLM(nn.Module):

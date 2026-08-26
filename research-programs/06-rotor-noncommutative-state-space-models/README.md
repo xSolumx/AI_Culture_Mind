@@ -2,7 +2,7 @@
 
 **Research author:** Hayden Austin
 
-**Last reconciled:** 2026-08-25
+**Last reconciled:** 2026-08-26
 
 ## Scope
 
@@ -20,7 +20,10 @@ one 27D Albert carrier with selectable
 `G2 / Spin(7) / Spin(8) / Spin(9) / F4 / E6(-26) / custom` action banks and a
 repaired Delta memory. F4 and E6 pass controlled hidden-action learning gates,
 but official fused Mamba-2 wins every matched exact-SM75 natural-text seed.
-Dense exceptional action is therefore not promoted. E7(-25) requires a new
+Dense exceptional action is therefore not promoted.  Version 1.3.2 adds exact
+canonical primitive products and a fused sparse-event recurrence: the
+exceptional action path now passes its SM75 cost gate, while the complete model
+still misses the separate Mamba-2 systems gate. E7(-25) requires a new
 56D Freudenthal carrier and E8(-24) a 248D adjoint carrier; neither is silently
 approximated on the Albert state.
 
@@ -169,6 +172,12 @@ approximated on the Albert state.
   repaired, parameter-matched exact-SM75 text cohort remains negative: official
   fused Mamba-2 wins all three seeds by 0.15865 mean bpb over safe E6 and is
   about 3.63x faster. Dense exceptional transport remains task-specialized.
+- Pure Exceptional Delta v1.3.2 removes dense matrix exponentials from the
+  promoted research path.  Exact canonical F4/E6 block products and a fused
+  sparse-event Delta kernel pass the separate SM75 cheap-action gate at density
+  1/32.  The complete E6 model remains 1.41x slower than fused Mamba-2, so this
+  is a transport/backend promotion rather than a full language-model systems
+  promotion.
 - Hybrid Memory v1.4/v1.4.5 is a separate active model workspace. Its G15A
   exact SM75/FP32 primary cohort passes across three seeds: full Spin `S`
   reaches 1.0 symmetry macro versus 0.2 for commuting `C` and 0.1 for `I` and
@@ -408,6 +417,7 @@ approximated on the Albert state.
 - [Current model inventory](../../SSM-Models/MODEL_STATUS.md)
 - [Pure Spin v1.2 frontier result](../../SSM-Models/pure_spin_ssm_v1_2/FRONTIER_TRAINING_RESULTS.md)
 - [Pure Exceptional Delta v1.3.1 quality and learnability result](../../SSM-Models/pure_f4_delta_ssm_v1_3/QUALITY_LEARNING_RESULTS.md)
+- [Pure Exceptional Delta v1.3.2 SM75 primitive transport result](../../SSM-Models/pure_f4_delta_ssm_v1_3/SM75_PRIMITIVE_TRANSPORT_RESULTS.md)
 - [Exceptional multi-carrier ladder boundary](../../SSM-Models/pure_f4_delta_ssm_v1_3/EXCEPTIONAL_LADDER.md)
 - [Hybrid Memory frontier review](../../SSM-Models/hybrid_memory_v1_4/FRONTIER_REVIEW_2026-08-25.md)
 - [Hybrid Spin/torus architecture boundary](../../SSM-Models/hybrid_memory_v1_4/SPIN_TORUS_RESEARCH.md)
