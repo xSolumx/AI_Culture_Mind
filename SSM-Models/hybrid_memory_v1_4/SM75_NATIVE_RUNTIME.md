@@ -26,7 +26,7 @@ having a same-named wheel installed is insufficient.
 
 | Environment | Python / Torch / CUDA | Installed source packages |
 |---|---|---|
-| `/home/local/.venvs/sm75-native-2026` | 3.11 / 2.9.0+cu128 / 12.8 | FLA 0.5.2, Mamba 2.3.2.post1, causal-conv1d 1.7.0 |
+| `/home/local/.venvs/sm75-native-2026` | 3.11 / 2.9.0+cu128 / 12.8 | FLA 0.5.2, Mamba 2.3.2.post1, causal-conv1d 1.7.0; `pip` 24.0 and `pytest` 9.1.1 were bootstrapped on 2026-08-26 for in-venv contract tests |
 | `/home/local/.venvs/sm75-mamba3-py310` | 3.10 / 2.9.0+cu128 / 12.8 | Mamba 2.3.2.post1, TileLang |
 | `/home/local/.venvs/sm75-flash-turing` | 3.11 / 2.9.0+cu128 / 12.8 | source-built `flash-attn-turing` extension |
 

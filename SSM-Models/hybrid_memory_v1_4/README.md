@@ -134,7 +134,10 @@ improves MQAR by 0.8--1.2 points and pre-overwrite queries by 1.8--2.1, but
 symmetric erase at a true same-key overwrite makes that stratum 10.3--12.1
 points worse. Perfect collision timing and the full learned write tail are
 therefore insufficient. The next checkpoint mechanism is exact replacement of
-the complete per-key logical write component, not another scalar erase gate.
+a frozen per-key two-token write component, not another scalar erase gate. The
+prospective [`G15B-R3 protocol`](G15BR3_LOGICAL_COMPONENT_PROTOCOL_2026-08-26.md)
+adds learned/erase-free decomposition proofs and a constructed overwrite guard
+that populates all causal query strata; no R3 quality result exists yet.
 
 In parallel, the frozen
 [`G16 SM75 shootout protocol`](G16_SM75_FRONTIER_SHOOTOUT_PROTOCOL_2026-08-25.md)

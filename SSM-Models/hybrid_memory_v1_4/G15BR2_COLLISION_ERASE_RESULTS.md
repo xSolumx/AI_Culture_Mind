@@ -118,20 +118,24 @@ component and one component per logical key:
 M_t=C_t^{(0)}+\sum_j C_t^{(j)}.
 \]
 
-Every component receives the same learned linear transition. The complete
-value-token plus one-token-tail injection is assigned to its logical key. At
-an overwrite of key `j`, reset `C^{(j)}` before adding the new learned write
-program; leave every other component untouched. This exactly tests last-write-
-wins at the representation actually learned, without assuming orthogonal keys
-or a rank-one erase direction.
+Every component receives the same learned linear transition. A frozen
+value-token plus one-token-tail ownership convention assigns injections to a
+logical key. This is a prospective post-hoc diagnostic, not a claim that R0
+uniquely identified the complete semantic component: the following token may
+be the next event marker as well as filler. Reset `C^{(j)}` at each locally
+observable valid write before adding the new learned injection; the first reset
+is a no-op and later resets test last-write-wins without collision labels.
 
 The construction remains affine-scan compatible: each key component is a
-parallel scan whose left transition is zeroed at that key's overwrite events.
+parallel scan whose left transition is zeroed at that key's valid-write events.
 It is an oracle slot decomposition and expands state by the number of live
 keys. A pass would motivate a learned slot/occupancy architecture with explicit
-replacement. A failure would show that these checkpoints' decoder relies on
-additive history strongly enough that a new model must be trained around the
-correct state law rather than repaired post hoc.
+replacement. A failure would reject only this frozen two-token ownership/reset
+construction; it would not establish why the decoder fails or falsify fresh
+slot, GDN2/KDA, or dual-address training.
+
+The corrected and now frozen implementation contract is
+[`G15BR3_LOGICAL_COMPONENT_PROTOCOL_2026-08-26.md`](G15BR3_LOGICAL_COMPONENT_PROTOCOL_2026-08-26.md).
 
 ## Claim boundary
 

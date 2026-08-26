@@ -8,6 +8,13 @@ inspected.
 
 **Status:** prospective zero-update checkpoint diagnostic
 
+**Pre-execution amendment:** repository/generator audit found that the token
+immediately after a write may be the next event marker rather than filler. No
+retained-checkpoint R3 metric had been inspected. The frozen convention below
+therefore assigns the in-range `t+1` injection by temporal position, reports
+its role, resets on every locally observable valid write, and adds a constructed
+guard cohort that populates the unrelated-overwrite stratum.
+
 ## Question
 
 G15B-R2 supplies perfect causal collision timing and preserves the learned
@@ -15,7 +22,7 @@ two-token write microprogram, but symmetric learned-key erase still lowers
 post-same-key-overwrite recall by 10.3--12.1 points. R3 asks the narrower
 representation question:
 
-> Can the retained decoder use exact last-write-wins when the complete learned
+> Can the retained decoder use exact last-write-wins when a frozen learned
 > value-token plus one-token-tail contribution is assigned to its logical key
 > and that whole component, rather than a rank-one direction, is replaced at a
 > true overwrite?
@@ -57,39 +64,44 @@ is disabled. Decompose
 M_t=C_t^{(0)}+\sum_{j=1}^{K}C_t^{(j)}.
 \]
 
-`C^(0)` receives every background injection. `C^(j)` receives the complete
-learned injection at each value token written to logical key `j` and at the
-immediately following filler token. Every component otherwise receives the
-same learned linear transition.
+`C^(0)` receives every background injection. `C^(j)` receives the learned
+injection at each value token written to logical key `j` and at the immediately
+following in-range token. That token may be filler or the next event marker;
+its role is reported. This is a frozen temporal ownership convention, not a
+claim that the learned representation has a unique semantic decomposition.
+Every component otherwise receives the same learned linear transition.
 
-At a true overwrite of logical key `j`, `component_replace` sets the left
+At every valid write of logical key `j`, `erase_free_lww` sets the left
 transition for `C^(j)` to zero at that value-token position before adding the
-new learned injection. All other components remain untouched. This is exact
-component replacement:
+new learned injection. The first reset is a provable no-op because that key
+component is initially empty; subsequent resets implement last-write-wins
+without an unobservable collision label. All other components remain
+untouched:
 
 \[
 C_t^{(j)}=U_t^{(j)}
 \]
 
-at the collision, followed by the untouched learned one-token tail.
+at the write event, followed by the untouched learned one-token tail.
 
-The one-token tail is frozen because R0 identified it prospectively as the
+The one-token tail is frozen because R0 identified it prospectively as a strong
 structured continuation. Every write must have exactly one in-range following
-`ROLE_FILLER` token; ownership conflicts fail closed.
+token; ownership conflicts fail closed. R3 does not claim that this convention
+captures the complete learned logical association.
 
 ## Frozen interventions
 
 1. `learned`: untouched checkpoint recurrence.
-2. `no_symmetric_erase`: learned controls with only scalar symmetric erase set
-   to zero; ordinary shared state, no component reset.
-3. `component_replay`: the no-symmetric-erase recurrence decomposed into one
-   background plus one component per live logical key, with no reset. This is
-   an algebra/integrity control and must reconstruct arm 2.
-4. `component_replace`: the same decomposition, with exact same-key component
-   reset only at true overwrite events.
+2. `learned_decomposed_replay`: learned transition and frozen injection
+   partition, with no reset. This integrity arm must reconstruct arm 1.
+3. `erase_free_no_reset`: the same decomposition with scalar symmetric erase
+   disabled and no reset. It must reconstruct an internal erase-free monolithic
+   control.
+4. `erase_free_lww`: arm 3 with exact logical-key component reset at every
+   valid write.
 
 Learned query, key, value, write, retention, output gate, decoder, identity
-transport, and the full two-token write microprogram remain unchanged in all
+transport, and the frozen two-token write ownership remain unchanged in all
 non-baseline arms. Disabling symmetric erase is part of the frozen state-law
 pivot: the component reset replaces its erase function rather than stacking a
 second erase mechanism on top.
@@ -105,6 +117,26 @@ For overwrite cells, report the same mutually exclusive causal strata as R2:
 If a frozen schedule does not populate a stratum, report zero support and make
 no claim about it.
 
+R3 also evaluates a deterministic constructed guard schedule at every length:
+
+```text
+write A -> write B -> query A -> query B -> overwrite A
+-> query B -> query A -> query B -> query A -> query B -> query A
+```
+
+It yields two `before_any_overwrite`, three
+`after_unrelated_overwrite_only`, and three `after_same_key_overwrite` queries
+per episode. Keys, values, event gaps, rows, and seeds are deterministic and
+balanced; the guard uses the same vocabulary and validated causal batch
+contract. Failure to populate any guard stratum invalidates adjudication.
+
+**Smoke-calibrated numerical amendment before quality:** the retained-checkpoint
+smoke preserved query predictions and reconstructed the component-summed FP32
+state within `3.6e-7`, but downstream RMS normalization amplified maximum logit
+residual to `3.1e-4`. No quality result had run and no performance threshold
+was changed. The parity gate below therefore requires state residual at most
+`2e-6`, logit residual at most `5e-4`, and identical query predictions.
+
 ## Integrity
 
 - parent and checkpoint hashes must match exactly;
@@ -113,11 +145,13 @@ no claim about it.
 - ordinary model-forward and reconstructed learned-control logits must be bit-
   identical;
 - every token injection must belong to exactly one component;
-- every valid value-token plus following filler injection must belong to the
+- every valid value-token plus following in-range token injection must belong to the
   matching live-key component;
-- component-replay logits must reconstruct `no_symmetric_erase` with maximum
-  absolute residual at most `5e-5`, with identical query predictions;
-- exact collision/reset masks, the local-write decoder, and the R0 temporal-
+- learned-decomposed logits must reconstruct `learned`, and erase-free
+  decomposed logits must reconstruct an erase-free monolithic recurrence, each
+  with maximum state residual at most `2e-6`, maximum logit residual at most
+  `5e-4`, and identical query predictions;
+- exact valid-write/reset masks, the local-write decoder, and the R0 temporal-
   observability witness must pass;
 - the result must start from a clean commit on CUDA compute capability `(7,5)`.
 
@@ -127,16 +161,17 @@ is explicitly not state-, parameter-, compute-, or wall-time-matched.
 
 ## Frozen decision
 
-`component_replace` supports a fresh explicit-slot/occupancy state-law screen
+`erase_free_lww` supports a fresh explicit-slot/occupancy state-law screen
 only if every three-seed mean satisfies:
 
 - overall overwrite improves by at least `0.10` over both `learned` and
-  `no_symmetric_erase` at every length;
+  `erase_free_no_reset` at every length;
 - `after_same_key_overwrite` improves by at least `0.10` over both controls at
   every populated length;
-- `before_any_overwrite` and `after_unrelated_overwrite_only` trail
-  `no_symmetric_erase` by no more than `0.02` wherever populated;
-- MQAR and selective copy trail `no_symmetric_erase` by no more than `0.02` at
+- `before_any_overwrite` and `after_unrelated_overwrite_only` trail both
+  `erase_free_no_reset` and `learned` by no more than `0.02` in the constructed
+  guard cohort;
+- MQAR and selective copy trail `learned` by no more than `0.02` at
   every length;
 - needle accuracy is at least `0.999` at every length;
 - every integrity gate passes.
@@ -147,10 +182,10 @@ inference. It does not revive G15C or the present token-local controller.
 
 If replacement improves post-same-key recall but misses a guard, inspect tail
 ownership and background/component coupling before training. If it does not
-improve post-same-key recall, terminate post-hoc repair of these checkpoints:
-their decoder depends on additive history or representation details not
-captured by exact two-token logical components. That failure would not falsify
-training a new explicit-slot architecture from scratch.
+improve post-same-key recall, reject this frozen post-hoc ownership/reset
+construction. That failure would not prove why the decoder fails, and would not
+falsify last-write-wins learning, GDN2/KDA, dual-address edits, or training a
+new explicit-slot architecture from scratch.
 
 ## Exact reproduction
 
