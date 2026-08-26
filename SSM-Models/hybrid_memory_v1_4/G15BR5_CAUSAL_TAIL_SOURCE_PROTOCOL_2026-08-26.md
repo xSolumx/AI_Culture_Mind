@@ -18,6 +18,17 @@ component state tolerance. The independent FP64 bound remains `1e-10`. The
 smoke is non-evidentiary and changes no performance, bias-separation, or
 training-authorization gate.
 
+**Pre-quality implementation audit:** before any evidentiary metric, an
+independent adversarial code review found that the first implementation
+computed independent FP64 source injections but scanned FP32-cast injections,
+recorded two FP32 residual families without gating them, and initialized the
+shared-transition check as a constant. The implementation was corrected to
+scan the independent FP64 injections, adjudicate no-reset-state and background-
+read residuals at the established `2e-6` component tolerance, and make every
+source arm consume the same precomputed transition tensors. Negative mutation
+tests now fail each repaired gate. These are integrity repairs; no performance,
+bias-separation, or authorization threshold changed.
+
 ## Question
 
 G15B-R4 shows that the retained identity checkpoints need the injection one
