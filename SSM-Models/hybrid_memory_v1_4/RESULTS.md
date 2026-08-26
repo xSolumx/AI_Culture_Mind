@@ -1203,10 +1203,16 @@ erase but is not sole-cause attribution. Event-erase training is rejected. One
 zero-update factorial cell remains before an address-geometry pivot: preserve
 the learned write tail and restrict erase to true collision events.
 
-The missing collision-only/write-tail cell is prospectively frozen in
-[`G15B-R2`](G15BR2_COLLISION_ERASE_PROTOCOL_2026-08-26.md). It is a zero-update
-oracle-history diagnostic with causal query strata. It has no training or
-promotion authority.
+The missing collision-only/write-tail cell is completed in
+[`G15B-R2`](G15BR2_COLLISION_ERASE_RESULTS.md), artifact SHA-256
+`90652fe7034e5901b968eb5d139f02eb8bc714b0417c0889e16a2fdd6b7cf924`.
+Perfect oracle collision timing improves MQAR by 0.8--1.2 points and queries
+before any overwrite by 1.8--2.1, but degrades post-same-key-overwrite recall
+by 10.3--12.1 and aggregate overwrite by 8.7--10.4. No unrelated-overwrite-only
+queries occur in the commissioned schedule, so that guard remains unmeasured.
+The scalar symmetric erase route is rejected. Exact logical-component
+replacement of the full learned write program is the next checkpoint-only
+mechanism test.
 
 ## G16 one-seed trained-frontier result
 

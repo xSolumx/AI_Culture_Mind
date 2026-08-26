@@ -197,10 +197,11 @@ a structured one-token write continuation. G15B-R1 preserves that learned
 write window and anchors independent erase to every locally observable write
 event, but both erase arms still fail every non-needle gate and reduce
 overwrite by 9.7--11.5 points. Learned-key prototype overlap is high, so the
-symmetric erase operator is not an isolated-slot update. The last zero-update
-factorial restricts erase to true collisions while preserving the write tail;
-if that fails, move to dual/separate erase addresses or logical component
-memory. Spin transport
+symmetric erase operator is not an isolated-slot update. G15B-R2 then restricts
+erase to true collisions while preserving the write tail; it improves pre-
+overwrite queries but makes post-same-key-overwrite recall 10.3--12.1 points
+worse. The scalar erase route is closed. Exact logical-component replacement
+of the complete learned write program is next. Spin transport
 requires a coherent moving-
 frame task, or co-transported keys and queries, before it is eligible again.
 

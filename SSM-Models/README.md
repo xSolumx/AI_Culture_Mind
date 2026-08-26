@@ -89,9 +89,10 @@
 > erase to that continuation degrades every non-needle cell. G15B-R1 preserves
 > the continuation but rejects erase at every valid write: overwrite drops
 > 9.7--11.5 points, all nine non-needle gates fail, and learned-key prototype
-> overlap is high. Fresh event-erase training remains blocked. The remaining
-> checkpoint factorial restricts oracle erase to true collisions while keeping
-> the write tail. Generic transport stays identity by default; Spin is
+> overlap is high. G15B-R2 then supplies perfect collision timing while keeping
+> the write tail, but post-same-key-overwrite recall falls 10.3--12.1 points.
+> Scalar symmetric erase is rejected; exact replacement of the complete
+> logical write component is next. Generic transport stays identity by default; Spin is
 > reserved for supplied or coherent-frame specialized tasks. G16 has completed
 > its one-seed SM75 development
 > shootout: official fused Mamba-2 wins every ordinary-compression context and
@@ -122,6 +123,8 @@
 > [G15B-R0 exact-SM75 artifact](hybrid_memory_v1_4/artifacts/g15br_checkpoint_repair_sm75_2026-08-26.json),
 > [G15B-R1 event-erase result](hybrid_memory_v1_4/G15BR1_EVENT_ERASE_RESULTS.md),
 > [G15B-R1 exact-SM75 artifact](hybrid_memory_v1_4/artifacts/g15br1_event_erase_sm75_2026-08-26.json),
+> [G15B-R2 collision-erase result](hybrid_memory_v1_4/G15BR2_COLLISION_ERASE_RESULTS.md),
+> [G15B-R2 exact-SM75 artifact](hybrid_memory_v1_4/artifacts/g15br2_collision_erase_sm75_2026-08-26.json),
 > [G16 SM75 frontier-shootout protocol](hybrid_memory_v1_4/G16_SM75_FRONTIER_SHOOTOUT_PROTOCOL_2026-08-25.md),
 > [G16 trained-frontier results](hybrid_memory_v1_4/G16_SM75_FRONTIER_SHOOTOUT_RESULTS.md),
 > [G16 exact-SM75 runtime qualification artifact](hybrid_memory_v1_4/artifacts/g16_runtime_qualification_sm75_2026-08-25.json),

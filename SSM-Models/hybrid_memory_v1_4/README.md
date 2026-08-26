@@ -125,16 +125,16 @@ every locally observable write event, yet both soft and unit erase lose all
 nine non-needle gates. Overwrite falls by 9.7--11.5 points rather than
 improving. Mean absolute off-diagonal learned-key cosine is `0.54822`, with a
 `0.999934` maximum, so symmetric rank-one erase is not an isolated-slot update
-in the retained representation. No event-erase training is authorized. The
-narrow next checkpoint factorial preserves the write tail and applies erase
-only on true collisions before testing dual addresses or component memory.
+in the retained representation. No event-erase training is authorized.
 
-That missing cell is now frozen in the
-[`G15B-R2 collision-only erase protocol`](G15BR2_COLLISION_ERASE_PROTOCOL_2026-08-26.md).
-It retains the full learned write program, uses oracle causal collision timing,
-and separately scores pre-overwrite, unrelated-key-after-overwrite, and same-
-key-after-overwrite queries. A pass can support an explicit occupancy-state
-successor, but cannot rescue the present token-local controller.
+The completed
+[`G15B-R2 collision-only erase result`](G15BR2_COLLISION_ERASE_RESULTS.md)
+closes the missing factorial cell. Removing learned erase outside collisions
+improves MQAR by 0.8--1.2 points and pre-overwrite queries by 1.8--2.1, but
+symmetric erase at a true same-key overwrite makes that stratum 10.3--12.1
+points worse. Perfect collision timing and the full learned write tail are
+therefore insufficient. The next checkpoint mechanism is exact replacement of
+the complete per-key logical write component, not another scalar erase gate.
 
 In parallel, the frozen
 [`G16 SM75 shootout protocol`](G16_SM75_FRONTIER_SHOOTOUT_PROTOCOL_2026-08-25.md)

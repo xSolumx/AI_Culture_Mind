@@ -129,6 +129,13 @@ history but remains unobservable to the present token-local controller.
   address or exact logical-component replacement, not fresh scalar-gate
   training.
 
+G15B-R2 subsequently fills this collision-only/write-tail cell. It improves
+queries before any overwrite, but degrades post-same-key-overwrite recall by
+10.3--12.1 points. The commissioned schedule contains no unrelated-overwrite-
+only queries. Exact logical-component replacement is selected over another
+scalar erase intervention. See
+[`G15BR2_COLLISION_ERASE_RESULTS.md`](G15BR2_COLLISION_ERASE_RESULTS.md).
+
 ## Claim boundary
 
 This is a completed exact-SM75, three-checkpoint, zero-update causal diagnostic

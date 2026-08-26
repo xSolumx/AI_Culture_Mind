@@ -74,6 +74,14 @@ valid write. See the
 [`artifact`](artifacts/g15br1_event_erase_sm75_2026-08-26.json), SHA-256
 `c015b128846e4b5c63d927778815a87728a7d613369163b1027ed3dd9f0b2912`.
 
+G15B-R2 completed on the same runtime from clean commit `5eae963`, preserving
+the full learned write program while applying erase only at true collisions.
+It passed all provenance and runtime-integrity checks but rejected symmetric
+erase on post-same-key-overwrite recall. See the
+[`result`](G15BR2_COLLISION_ERASE_RESULTS.md) and
+[`artifact`](artifacts/g15br2_collision_erase_sm75_2026-08-26.json), SHA-256
+`90652fe7034e5901b968eb5d139f02eb8bc714b0417c0889e16a2fdd6b7cf924`.
+
 ## Reproduction
 
 Run [`native_sm75_probe.py`](native_sm75_probe.py) with an explicit backend,

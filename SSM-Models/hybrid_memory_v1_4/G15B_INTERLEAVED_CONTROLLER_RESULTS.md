@@ -192,6 +192,12 @@ is not an isolated-slot update in the retained representation. No event-erase
 training is authorized. See
 [`G15BR1_EVENT_ERASE_RESULTS.md`](G15BR1_EVENT_ERASE_RESULTS.md).
 
+G15B-R2 then preserves the learned write tail and supplies perfect causal
+collision timing. It improves pre-overwrite queries but makes post-same-key-
+overwrite recall 10.3--12.1 points worse. The scalar symmetric erase route is
+therefore closed for these checkpoints. See
+[`G15BR2_COLLISION_ERASE_RESULTS.md`](G15BR2_COLLISION_ERASE_RESULTS.md).
+
 ## Claim boundary
 
 This is a completed, exact-SM75, three-seed commissioned-controller failure and

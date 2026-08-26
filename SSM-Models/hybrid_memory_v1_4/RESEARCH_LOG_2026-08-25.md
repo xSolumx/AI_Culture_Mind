@@ -559,3 +559,18 @@ improve, the frozen next interpretation is exact logical-component replacement;
 if it improves while a guard stratum fails, test an oblique/separate erase
 address. See
 [`G15BR2_COLLISION_ERASE_PROTOCOL_2026-08-26.md`](G15BR2_COLLISION_ERASE_PROTOCOL_2026-08-26.md).
+
+G15B-R2 completed from clean commit `5eae963` on exact SM75 in 1,690.2
+seconds. Parent hashes, all baseline accuracy/episode/BPQ cells, ordinary
+logits, local and collision masks, the observability witness, and bitwise non-
+erase controls pass exactly. Collision-only erase raises MQAR by 0.8--1.2
+points and pre-overwrite recall by 1.8--2.1, yet lowers post-same-key-overwrite
+recall by 10.3--12.1 and aggregate overwrite by 8.7--10.4. The registered
+unrelated-overwrite-only stratum is empty in this generator, so no claim is
+made for it. Artifact SHA-256:
+`90652fe7034e5901b968eb5d139f02eb8bc714b0417c0889e16a2fdd6b7cf924`.
+This rules out first-write collateral and erase amplitude as the primary
+repair. Do not train a scalar erase controller. The next oracle should reset
+the complete value-token-plus-tail component for the overwritten logical key
+under the same learned transitions. See
+[`G15BR2_COLLISION_ERASE_RESULTS.md`](G15BR2_COLLISION_ERASE_RESULTS.md).

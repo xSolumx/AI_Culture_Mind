@@ -176,9 +176,12 @@ representation.
   learned controllers use a structured one-token write continuation. G15B-R1
   preserves that continuation but rejects erase at every valid write: all nine
   non-needle gates fail, overwrite drops 9.7--11.5 points, and learned-key
-  prototype overlap is high. Event-erase training remains blocked. The final
-  checkpoint factorial preserves the write tail and restricts oracle erase to
-  true collisions. Generic transport remains identity by default;
+  prototype overlap is high. G15B-R2 then preserves the write tail and supplies
+  perfect collision timing, but collision-only symmetric erase lowers
+  post-same-key-overwrite recall by 10.3--12.1 points. Event-erase training and
+  scalar symmetric erase are blocked. Exact logical-component replacement is
+  the next zero-update checkpoint diagnostic. Generic transport remains
+  identity by default;
   Spin belongs in supplied/coherent-frame
   specialized tasks. Learned topology, full three-carrier triality utility,
   natural-text, and scaling remain open.
@@ -300,6 +303,8 @@ representation.
 - [G15B-R0 exact-SM75 artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g15br_checkpoint_repair_sm75_2026-08-26.json)
 - [G15B-R1 event-erase result](../../SSM-Models/hybrid_memory_v1_4/G15BR1_EVENT_ERASE_RESULTS.md)
 - [G15B-R1 exact-SM75 artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g15br1_event_erase_sm75_2026-08-26.json)
+- [G15B-R2 collision-only erase result](../../SSM-Models/hybrid_memory_v1_4/G15BR2_COLLISION_ERASE_RESULTS.md)
+- [G15B-R2 exact-SM75 artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g15br2_collision_erase_sm75_2026-08-26.json)
 - [G16 SM75 frontier-shootout protocol](../../SSM-Models/hybrid_memory_v1_4/G16_SM75_FRONTIER_SHOOTOUT_PROTOCOL_2026-08-25.md)
 - [G16 trained-frontier results](../../SSM-Models/hybrid_memory_v1_4/G16_SM75_FRONTIER_SHOOTOUT_RESULTS.md)
 - [G16 exact-SM75 runtime qualification artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g16_runtime_qualification_sm75_2026-08-25.json)

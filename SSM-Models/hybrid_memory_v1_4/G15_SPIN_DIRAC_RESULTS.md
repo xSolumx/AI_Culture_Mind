@@ -342,11 +342,14 @@ bitwise intact and anchors independent erase to every locally observable write
 event. It also fails all nine non-needle gates, including a 9.7--11.5 point
 overwrite loss. Learned key prototypes have mean absolute off-diagonal cosine
 `0.54822` and maximum `0.999934`, making collateral symmetric erase plausible
-without proving sole cause. Event-erase training is rejected. The remaining
-factorial control keeps the learned write tail and restricts oracle erase to
-true collisions before any dual-address or logical-component pivot. See
+without proving sole cause. Event-erase training is rejected. G15B-R2 then
+keeps the write tail and restricts erase to perfect oracle collision timing.
+It improves pre-overwrite recall but makes post-same-key-overwrite recall
+10.3--12.1 points worse. Scalar symmetric erase is rejected; exact replacement
+of the complete learned per-key write component is next. See
 [`G15BR_CHECKPOINT_REPAIR_RESULTS.md`](G15BR_CHECKPOINT_REPAIR_RESULTS.md) and
-[`G15BR1_EVENT_ERASE_RESULTS.md`](G15BR1_EVENT_ERASE_RESULTS.md).
+[`G15BR1_EVENT_ERASE_RESULTS.md`](G15BR1_EVENT_ERASE_RESULTS.md) and
+[`G15BR2_COLLISION_ERASE_RESULTS.md`](G15BR2_COLLISION_ERASE_RESULTS.md).
 
 The constrained `su3_torus` arm is an additional scientific ablation, not a
 replacement for the four frozen primary arms.

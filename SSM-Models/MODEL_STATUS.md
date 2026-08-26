@@ -129,9 +129,10 @@ content addressing and edit laws over richer transport geometry alone.
   continuation, and tying erase to it degrades every non-needle cell. G15B-R1
   preserves that continuation but rejects erase at every valid write:
   overwrite drops 9.7--11.5 points, all nine non-needle gates fail, and learned
-  key prototypes are highly nonorthogonal. Event-erase training is blocked.
-  The remaining factorial keeps the write tail and restricts oracle erase to
-  true collisions. Spin transport remains
+  key prototypes are highly nonorthogonal. G15B-R2 then supplies perfect
+  collision timing with the full write tail, but post-same-key-overwrite recall
+  falls 10.3--12.1 points. Scalar symmetric erase is rejected; exact logical-
+  component replacement is next. Spin transport remains
   specialized to supplied/coherent-frame tasks.
 - G16 completed its prospectively frozen one-seed SM75 development shootout.
   Official fused Mamba-2 wins ordinary compression at every context and reaches
@@ -178,6 +179,10 @@ The event-erase successor is recorded in the
 [G15B-R1 result](hybrid_memory_v1_4/G15BR1_EVENT_ERASE_RESULTS.md) and
 [G15B-R1 artifact](hybrid_memory_v1_4/artifacts/g15br1_event_erase_sm75_2026-08-26.json),
 SHA-256 `c015b128846e4b5c63d927778815a87728a7d613369163b1027ed3dd9f0b2912`.
+The collision-only successor is recorded in the
+[G15B-R2 result](hybrid_memory_v1_4/G15BR2_COLLISION_ERASE_RESULTS.md) and
+[G15B-R2 artifact](hybrid_memory_v1_4/artifacts/g15br2_collision_erase_sm75_2026-08-26.json),
+SHA-256 `90652fe7034e5901b968eb5d139f02eb8bc714b0417c0889e16a2fdd6b7cf924`.
 The four-arm model harness is frozen separately in the
 [G16 protocol](hybrid_memory_v1_4/G16_SM75_FRONTIER_SHOOTOUT_PROTOCOL_2026-08-25.md),
 with exact source/runtime evidence in the
