@@ -600,3 +600,14 @@ diagnostic must separate value-only/tail ownership, following-marker tails,
 background contribution, and numerical reconstruction, with an absolute
 ceiling-aware guard frozen before quality. See
 [`G15BR3_LOGICAL_COMPONENT_RESULTS.md`](G15BR3_LOGICAL_COMPONENT_RESULTS.md).
+
+G15B-R4 is now frozen before inspecting any new intervention metric. It is a
+two-by-two retained-checkpoint factorial: value-only versus value-plus-tail
+component ownership, crossed with background included versus excluded only at
+locally observable query positions. It retains matching no-reset controls,
+binds the sealed R3 arm as an ineligible reference, adds a separate FP64
+algebraic contract, and replaces R3's ceiling-blocked guard-superiority test
+with prospective absolute `0.995` success plus non-regression. Only a passing
+value-only arm can authorize a separately frozen explicit-slot training
+screen. See
+[`G15BR4_OWNERSHIP_BACKGROUND_PROTOCOL_2026-08-26.md`](G15BR4_OWNERSHIP_BACKGROUND_PROTOCOL_2026-08-26.md).

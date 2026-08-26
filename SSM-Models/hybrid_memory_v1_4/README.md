@@ -141,7 +141,8 @@ cell, but fails the frozen gate because the guard baseline is already saturated
 and two learned-replay FP32 logit residuals exceed `5e-4` despite identical
 predictions. This supports component replacement as a mechanism without
 authorizing training. A prospective ownership/background-coupling factorial is
-next.
+next; its contract is frozen in the
+[`G15B-R4 protocol`](G15BR4_OWNERSHIP_BACKGROUND_PROTOCOL_2026-08-26.md).
 
 In parallel, the frozen
 [`G16 SM75 shootout protocol`](G16_SM75_FRONTIER_SHOOTOUT_PROTOCOL_2026-08-25.md)

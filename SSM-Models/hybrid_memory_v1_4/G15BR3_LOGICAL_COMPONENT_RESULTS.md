@@ -159,6 +159,12 @@ This is a new prospective test, not a retrospective repair of R3. Only a
 separate passing protocol may authorize fresh explicit-slot/occupancy training
 with learned ownership and matched controls.
 
+That successor is now frozen as the
+[`G15B-R4 ownership/background factorial`](G15BR4_OWNERSHIP_BACKGROUND_PROTOCOL_2026-08-26.md).
+It crosses value-only versus value-plus-tail ownership with query-time
+background inclusion, binds R3 as an ineligible reference arm, and requires a
+value-only pass before any training screen.
+
 ## Nonclaims
 
 No parameter was trained or updated. Component ownership and reset timing use
