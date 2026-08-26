@@ -276,8 +276,14 @@ new matched natural-data and complete-step hardware evidence.
   prospective scaled-logit checks despite exact categorical behavior and
   passing BPQ, state/read, transition, fingerprint, provenance, and FP64
   contracts. Retained-checkpoint repair stops. This does not make more generic
-  transport geometry the repair; the next fresh design needs explicit
-  pending-write/commit semantics and an exact monolithic residual/read path.
+  transport geometry the repair. Fresh G15B-T now implements explicit
+  strict-history commit/edit control and an exact monolithic residual/read
+  path. Its exact clean-SM75 Phase-0 qualification passes with matched 38,082-
+  parameter `F/T` arms, exact current/history causality, nonexpansive measured
+  transitions, `8.94e-8` maximum FP32 logit residual, exact predictions, and
+  finite nonzero declared gradients. Only prospective Phase-1 constructed
+  training is authorized; no G15B-T learning or model-quality result exists.
+  R5 and R5-S retain their failed historical adjudications.
   Spin remains a specialized prior for
   supplied or coherent frames; learned topology, full three-carrier triality
   utility, natural text, and scaling remain open.
@@ -414,6 +420,9 @@ new matched natural-data and complete-step hardware evidence.
 - [G15B-R5 exact-SM75 artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g15br5_causal_tail_source_sm75_2026-08-26.json)
 - [G15B-R5-S numerical result](../../SSM-Models/hybrid_memory_v1_4/G15BR5S_NUMERICAL_RATIFICATION_RESULTS.md)
 - [G15B-R5-S exact-SM75 artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g15br5s_numerical_ratification_sm75_2026-08-26.json)
+- [G15B-T transactional-delta protocol](../../SSM-Models/hybrid_memory_v1_4/G15BT_TRANSACTIONAL_DELTA_PROTOCOL_2026-08-26.md)
+- [G15B-T Phase-0 qualification result](../../SSM-Models/hybrid_memory_v1_4/G15BT_PHASE0_QUALIFICATION_RESULTS.md)
+- [G15B-T Phase-0 exact-SM75 artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g15bt_phase0_qualification_sm75_2026-08-26.json)
 - [G16 SM75 frontier-shootout protocol](../../SSM-Models/hybrid_memory_v1_4/G16_SM75_FRONTIER_SHOOTOUT_PROTOCOL_2026-08-25.md)
 - [G16 trained-frontier results](../../SSM-Models/hybrid_memory_v1_4/G16_SM75_FRONTIER_SHOOTOUT_RESULTS.md)
 - [G16 exact-SM75 runtime qualification artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g16_runtime_qualification_sm75_2026-08-25.json)

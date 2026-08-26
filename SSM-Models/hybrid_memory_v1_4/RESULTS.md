@@ -1315,6 +1315,33 @@ route stops. The next fresh model should use an exact monolithic residual/read
 path plus an explicit causal pending-write/commit memory, instead of requiring
 two different FP32 reduction trees to produce bitwise-equivalent logits.
 
+## G15B-T Phase-0 implementation qualification
+
+The fresh
+[`G15B-T transactional-delta`](G15BT_PHASE0_QUALIFICATION_RESULTS.md) Phase-0
+qualification passed from clean commit `86372b8` on exact SM75; artifact
+SHA-256 is
+`0b4683ad3b66f7dc010e03737550873cd695d46ade897f21e094d38f4ece2438`.
+This is an architecture and runtime result, not training.
+
+The full-view `F` and strict-history `T` arms are exactly matched at 38,082
+total/active parameters and 5,632 bytes of batch-2 FP32 state capacity. A
+current-token intervention changes the full view while leaving history, edit
+controls, affine transition, injection, and post-update state bit-identical;
+the current-to-history residual is zero and the prior-history effect is
+`6.290625`. The maximum transition spectral norm is `0.9995000000000012`.
+
+FP64 recurrent/parallel/chunk/step maximum logit and state residuals are
+`2.776e-16` and `1.665e-16`. FP32 maxima are `8.941e-8` and `5.960e-8`, with
+exact predictions. Every declared gradient path is finite and nonzero. The
+qualification took `1.8024` seconds and peaked at 23,233,536 CUDA bytes on the
+RTX 2070 SUPER.
+
+The frozen decision authorizes only the prospective Phase-1 constructed
+`F/T/T-AUX` training screen. No learned commit, overwrite, natural-text,
+scaling, efficiency, optimizer, tokenizer, or model-promotion claim follows.
+The failed R5 and R5-S artifacts remain unchanged historical evidence.
+
 ## G16 one-seed trained-frontier result
 
 The clean exact-SM75 cohort from commit `5796a851df02` completed all four real

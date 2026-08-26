@@ -127,6 +127,20 @@ and independent FP64 algebra pass. See the
 SHA-256
 `3ac514e16e6fa1c720d5ef4244525f5d0f08c233634648e59181c6acfccc3a00`.
 
+G15B-T Phase 0 completed on the same exact runtime from clean commit `86372b8`
+in `1.802395058` seconds. The clean evidentiary qualification passed matched
+parameter/state, causal history, contraction, FP64/FP32 parity, exact
+prediction, and gradient-reach gates without fallback. `F/T` each have 38,082
+active parameters and 5,632 batch-2 FP32 state bytes; peak CUDA allocation was
+23,233,536 bytes. Maximum FP64 logit/state residuals were
+`2.776e-16`/`1.665e-16`, and FP32 maxima were `8.941e-8`/`5.960e-8`. See the
+[`result`](G15BT_PHASE0_QUALIFICATION_RESULTS.md) and
+[`artifact`](artifacts/g15bt_phase0_qualification_sm75_2026-08-26.json),
+SHA-256
+`0b4683ad3b66f7dc010e03737550873cd695d46ade897f21e094d38f4ece2438`.
+This qualifies prospective Phase-1 execution only; it is not a trained-model
+or throughput result.
+
 The native WSL environment also exposes CUDA-only `causal_conv1d`,
 `mamba_ssm`, and FLA Hub kernels to Transformers. The baseline registry now
 dispatches by the actual input tensor: CUDA keeps the resolved native kernel,

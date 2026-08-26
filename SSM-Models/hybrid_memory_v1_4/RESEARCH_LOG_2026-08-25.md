@@ -720,3 +720,31 @@ performance-positive history attribution, but pivot the next fresh model to
 an explicit causal pending transaction, separate commit/edit control, and an
 exact monolithic residual/read path. Component reads should protect key
 content, not be summed merely to recreate the monolithic forward path.
+
+## 2026-08-26: G15B-T Phase-0 exact-SM75 qualification
+
+The fresh G15B-T transactional-delta implementation completed its frozen
+Phase-0 qualification from clean commit `86372b8`. The exact artifact SHA-256
+is `0b4683ad3b66f7dc010e03737550873cd695d46ade897f21e094d38f4ece2438`.
+It is a fresh model initialization path; no G15B/R checkpoint or optimizer
+state is loaded.
+
+The matched full-view `F` and strict-history `T` arms each have 38,082
+total/active parameters and 5,632 bytes of batch-2 FP32 state capacity.
+Current-token mutation leaves the strict-history preactivation, edit controls,
+transition, injection, and post-update state bit-identical with zero residual,
+while an in-window prior mutation produces effect `6.290625`. The maximum
+transition spectral norm is `0.9995000000000012` and all transition/injection
+tensors are finite.
+
+FP64 maximum logit/state residuals are `2.776e-16`/`1.665e-16`; FP32 maxima are
+`8.941e-8`/`5.960e-8`, and predictions are exact. A real loss reaches every
+declared embedding, convolution, commit/edit, read/output, and LM-head path
+with finite nonzero gradients. The SM75 harness took `1.8024` seconds and
+peaked at 23,233,536 CUDA bytes. Windows reported 405 passed and 6 skipped;
+twenty focused WSL tests passed, and the final post-harness full WSL suite
+reported 411 passed in 60.09 seconds.
+
+The frozen decision authorizes the prospective Phase-1 constructed training
+screen only. Do not call Phase 0 a learning or model-quality result, do not
+promote T-AUX, and do not rewrite the failed R5/R5-S evidence.

@@ -380,6 +380,18 @@ residual/read path before any identity/torus/Spin transport comparison. See
 and
 [`G15BR5S_NUMERICAL_RATIFICATION_RESULTS.md`](G15BR5S_NUMERICAL_RATIFICATION_RESULTS.md).
 
+The resulting fresh pivot is G15B-T, not another retained-checkpoint repair.
+Its
+[`Phase-0 exact-SM75 qualification`](G15BT_PHASE0_QUALIFICATION_RESULTS.md)
+passes at clean commit `86372b8`: matched `F/T` arms each contain 38,082 active
+parameters and 5,632 batch-2 FP32 state bytes; current-token mutation has zero
+effect on the strict-history edit path; the prior-history effect is nonzero;
+the maximum transition spectral norm is `0.9995000000000012`; FP64 and FP32
+maximum logit residuals are `2.78e-16` and `8.94e-8`; predictions are exact;
+and all declared gradients are finite/nonzero. This authorizes only the
+prospective Phase-1 constructed screen. It is not learned-memory evidence and
+does not revise R5 or R5-S.
+
 The constrained `su3_torus` arm is an additional scientific ablation, not a
 replacement for the four frozen primary arms.
 

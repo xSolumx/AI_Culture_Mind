@@ -173,6 +173,19 @@ pending-write/commit state. See the
 plus the
 [`R5-S result`](G15BR5S_NUMERICAL_RATIFICATION_RESULTS.md) and
 [`R5-S artifact`](artifacts/g15br5s_numerical_ratification_sm75_2026-08-26.json).
+The fresh architectural pivot is now implemented under the
+[`G15B-T transactional-delta protocol`](G15BT_TRANSACTIONAL_DELTA_PROTOCOL_2026-08-26.md).
+Its
+[`Phase-0 qualification`](G15BT_PHASE0_QUALIFICATION_RESULTS.md) passes every
+exact clean-SM75 implementation gate: `F` and `T` each have 38,082 active
+parameters and 5,632 batch-2 FP32 state bytes; current-token mutation leaves
+the history/edit path bit-identical, prior-history effect is nonzero, maximum
+transition spectral norm is `0.9995000000000012`, and FP64/FP32 maximum
+logit residuals are `2.78e-16`/`8.94e-8` with exact predictions. All declared
+gradient paths are finite and nonzero. This authorizes only prospective
+Phase-1 constructed training; G15B-T has no learning or quality result yet.
+R5 and R5-S remain frozen failed retained-checkpoint results. See the
+[`Phase-0 artifact`](artifacts/g15bt_phase0_qualification_sm75_2026-08-26.json).
 
 In parallel, the frozen
 [`G16 SM75 shootout protocol`](G16_SM75_FRONTIER_SHOOTOUT_PROTOCOL_2026-08-25.md)
@@ -185,13 +198,15 @@ Hybrid (`1.61413`) lose; every arm fails learned recall. See the
 target-matched but optimizer-specific and one seed, so it rejects the current
 local development candidates without promoting a universal model family.
 
-This track exposes seven explicit mixer kinds in one causal language-model
+This track exposes eight explicit mixer kinds in one causal language-model
 shell:
 
 - bounded sliding-window RoPE attention with a complete streaming KV cache;
 - content-addressed Gated DeltaNet v1 fast-weight memory;
 - decoupled GDN2 semantic memory with independent channelwise decay, erase,
   and write;
+- matched full-view/strict-history transactional delta with scalar commit,
+  symmetric scalar erase, channelwise writes, and exact monolithic readout;
 - the maintained repository DeltaProduct reference;
 - hierarchical selected-block affine memory;
 - bounded rung-routed Spin(8) memory; and
@@ -305,7 +320,11 @@ remains label-supervised with 774,400 useful query labels per seed.
 - [`spin_dirac_memory.py`](spin_dirac_memory.py): content-addressed `8_v ->
   8_s+` matrix memory with bounded edits, two-sided transport, exact fixed
   torus arms, full Spin actions, and a Clifford-coupled read.
-- [`model.py`](model.py): seven-kind hybrid shell, local convolution caches,
+- [`transactional_delta.py`](transactional_delta.py): fresh matched `F/T`
+  transactional fast weight with strict-history edit controls, scalar commit
+  and erase, channelwise write, exact scan/chunk/step execution, and no Spin
+  transport.
+- [`model.py`](model.py): eight-kind hybrid shell, local convolution caches,
   checkpointing, diagnostics, and exact cache-byte accounting.
 - [`fla_adapter.py`](fla_adapter.py): fail-closed semantic and optional official
   FLA DeltaRule operator adapters.

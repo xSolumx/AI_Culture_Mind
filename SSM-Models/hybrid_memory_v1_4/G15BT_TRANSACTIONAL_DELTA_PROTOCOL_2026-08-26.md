@@ -3,8 +3,14 @@
 **Frozen:** 2026-08-26, after the failed R5-S quality adjudication and before
 any G15B-T training batch, metric, or checkpoint.
 
-**Status:** prospective fresh-model mechanism screen; retained G15B
-checkpoints are out of scope
+**Phase-0 result:**
+[`G15BT_PHASE0_QUALIFICATION_RESULTS.md`](G15BT_PHASE0_QUALIFICATION_RESULTS.md)
+**Exact Phase-0 artifact:**
+[`artifacts/g15bt_phase0_qualification_sm75_2026-08-26.json`](artifacts/g15bt_phase0_qualification_sm75_2026-08-26.json)
+
+**Status:** Phase 0 passed exact clean SM75 and authorizes only the prospective
+Phase-1 constructed training screen below. No G15B-T learning or model-quality
+claim exists yet; retained G15B checkpoints remain out of scope.
 
 ## Why this is a pivot rather than R5-R6
 
