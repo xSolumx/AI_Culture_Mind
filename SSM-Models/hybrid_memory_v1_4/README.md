@@ -182,10 +182,17 @@ parameters and 5,632 batch-2 FP32 state bytes; current-token mutation leaves
 the history/edit path bit-identical, prior-history effect is nonzero, maximum
 transition spectral norm is `0.9995000000000012`, and FP64/FP32 maximum
 logit residuals are `2.78e-16`/`8.94e-8` with exact predictions. All declared
-gradient paths are finite and nonzero. This authorizes only prospective
-Phase-1 constructed training; G15B-T has no learning or quality result yet.
-R5 and R5-S remain frozen failed retained-checkpoint results. See the
-[`Phase-0 artifact`](artifacts/g15bt_phase0_qualification_sm75_2026-08-26.json).
+gradient paths are finite and nonzero. The
+[`Phase-1 result ledger`](G15BT_PHASE1_RESULTS.md) now records a separate exact
+clean-SM75 execution smoke from commit `b3fd297`: all three 67,033-parameter
+arms execute their paired schedules, and the strict-history arms pass causal,
+chunk, mask-compaction, intervention-reconstruction, and tail-role contracts.
+The smoke is non-promotable and is not learned-memory evidence; the frozen
+three-seed quality cohort remains pending. R5 and R5-S remain frozen failed
+retained-checkpoint results. See the
+[`Phase-0 artifact`](artifacts/g15bt_phase0_qualification_sm75_2026-08-26.json)
+and
+[`Phase-1 smoke artifact`](artifacts/g15bt_phase1_smoke_sm75_2026-08-26.json).
 
 In parallel, the frozen
 [`G16 SM75 shootout protocol`](G16_SM75_FRONTIER_SHOOTOUT_PROTOCOL_2026-08-25.md)

@@ -1342,6 +1342,22 @@ The frozen decision authorizes only the prospective Phase-1 constructed
 scaling, efficiency, optimizer, tokenizer, or model-promotion claim follows.
 The failed R5 and R5-S artifacts remain unchanged historical evidence.
 
+## G15B-T Phase-1 clean-SM75 execution smoke
+
+The frozen
+[`Phase-1 runner and result ledger`](G15BT_PHASE1_RESULTS.md) completed its
+clean exact-SM75 smoke from commit `b3fd297`; artifact SHA-256 is
+`f306e65b85ee3ab1a9b1ad8b8fce56e884227435a7e64f738dffb614f102673d`.
+All three matched arms have 67,033 active parameters and 4,864 FP32 state
+bytes per sequence. Initial hashes and standard evaluation schedules match;
+the strict-history arms pass current-token invariance, nonzero prior-history,
+chunk, arbitrary-mask compaction, and balanced tail-role support contracts.
+
+This is execution evidence only. The smoke uses four updates and 3,840 tokens
+per arm, returns `eligible_for_promotion=false` by construction, and carries no
+learning or model-quality claim. The prospective three-seed quality cohort is
+the next authorized experiment.
+
 ## G16 one-seed trained-frontier result
 
 The clean exact-SM75 cohort from commit `5796a851df02` completed all four real

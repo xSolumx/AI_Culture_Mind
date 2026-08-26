@@ -392,6 +392,14 @@ and all declared gradients are finite/nonzero. This authorizes only the
 prospective Phase-1 constructed screen. It is not learned-memory evidence and
 does not revise R5 or R5-S.
 
+The Phase-1 runner is now sealed at `b3fd297`. Its exact clean-SM75 execution
+smoke passes the paired optimizer/schedule path and the strict-history causal,
+chunk, mask-compaction, reconstructed-intervention, and mixed tail-role
+contracts. All `F/T/T-AUX` arms have 67,033 active parameters and 4,864 FP32
+state bytes per sequence. The four-update smoke is explicitly non-promotable;
+the frozen three-seed quality cohort remains the first learning result. See
+[`G15BT_PHASE1_RESULTS.md`](G15BT_PHASE1_RESULTS.md).
+
 The constrained `su3_torus` arm is an additional scientific ablation, not a
 replacement for the four frozen primary arms.
 

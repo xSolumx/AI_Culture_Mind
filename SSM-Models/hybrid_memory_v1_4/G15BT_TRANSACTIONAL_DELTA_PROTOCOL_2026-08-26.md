@@ -7,10 +7,14 @@ any G15B-T training batch, metric, or checkpoint.
 [`G15BT_PHASE0_QUALIFICATION_RESULTS.md`](G15BT_PHASE0_QUALIFICATION_RESULTS.md)
 **Exact Phase-0 artifact:**
 [`artifacts/g15bt_phase0_qualification_sm75_2026-08-26.json`](artifacts/g15bt_phase0_qualification_sm75_2026-08-26.json)
+**Phase-1 result ledger:**
+[`G15BT_PHASE1_RESULTS.md`](G15BT_PHASE1_RESULTS.md)
 
 **Status:** Phase 0 passed exact clean SM75 and authorizes only the prospective
-Phase-1 constructed training screen below. No G15B-T learning or model-quality
-claim exists yet; retained G15B checkpoints remain out of scope.
+Phase-1 constructed training screen below. The exact clean-SM75 Phase-1 smoke
+has passed execution but is non-promotable by construction; the quality cohort
+remains pending. No G15B-T learning or model-quality claim exists yet;
+retained G15B checkpoints remain out of scope.
 
 ## Why this is a pivot rather than R5-R6
 

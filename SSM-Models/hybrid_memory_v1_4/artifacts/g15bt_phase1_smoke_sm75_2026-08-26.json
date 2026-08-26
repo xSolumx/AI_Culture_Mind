@@ -1,0 +1,4713 @@
+{
+  "adjudication": {
+    "decision": "smoke execution completed; run the frozen quality cohort",
+    "eligible_for_promotion": false,
+    "passed": false
+  },
+  "environment": {
+    "compute_capability": [
+      7,
+      5
+    ],
+    "cuda_runtime": "12.8",
+    "device": "NVIDIA GeForce RTX 2070 SUPER",
+    "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.35",
+    "python": "3.11.16",
+    "torch": "2.9.0+cu128"
+  },
+  "evidentiary": true,
+  "experiment": "G15B-T transactional controller",
+  "git_commit_at_start": "b3fd2971090d9e755966e5d0dc73091a18813734",
+  "git_status_at_start": [],
+  "mode": "smoke",
+  "phase0_artifact_sha256": "0b4683ad3b66f7dc010e03737550873cd695d46ade897f21e094d38f4ece2438",
+  "preflight": {
+    "active_parameter_counts": {
+      "F": 67033,
+      "T": 67033,
+      "T-AUX": 67033
+    },
+    "checks": {
+      "finite_nonzero_gradients": true,
+      "learned_reconstruction": true,
+      "matched_arms": true,
+      "optimizer_partition": true,
+      "sealed_phase0": true
+    },
+    "gradients_finite_nonzero": {
+      "F": true,
+      "T": true,
+      "T-AUX": true
+    },
+    "initial_parameter_sha256": {
+      "F": "645dc65593b3ce91c23828c5573e388a61f9d000d014651b805a8deff135275f",
+      "T": "645dc65593b3ce91c23828c5573e388a61f9d000d014651b805a8deff135275f",
+      "T-AUX": "645dc65593b3ce91c23828c5573e388a61f9d000d014651b805a8deff135275f"
+    },
+    "learned_reconstruction_maximum_absolute_logit_residual": 0.0,
+    "learned_reconstruction_predictions_equal": true,
+    "losses": {
+      "F": 5.754116535186768,
+      "T": 5.7502217292785645,
+      "T-AUX": 6.051215171813965
+    },
+    "optimizer_partition": {
+      "assigned_tensors": 25,
+      "commit_control_names": [
+        "blocks.0.mixer.commit_projection.weight",
+        "blocks.0.mixer.commit_projection.bias"
+      ],
+      "groups": [
+        {
+          "learning_rate": 0.003,
+          "names": [
+            "blocks.0.input_projection.weight",
+            "blocks.0.ffn.gate_projection.weight",
+            "blocks.0.ffn.up_projection.weight",
+            "blocks.0.ffn.down_projection.weight",
+            "blocks.0.mixer.query_projection.weight",
+            "blocks.0.mixer.key_projection.weight",
+            "blocks.0.mixer.value_projection.weight",
+            "blocks.0.mixer.output_gate.weight",
+            "blocks.0.mixer.output_projection.weight"
+          ],
+          "optimizer": "torch.optim.Muon",
+          "parameters": 53248,
+          "role": "hidden_matrices",
+          "second_moment": null,
+          "tensors": 9,
+          "weight_decay": 0.01
+        },
+        {
+          "learning_rate": 0.003,
+          "names": [
+            "blocks.0.residual_scale",
+            "blocks.0.mixer.commit_projection.weight",
+            "blocks.0.mixer.commit_projection.bias",
+            "blocks.0.mixer.erase_projection.weight",
+            "blocks.0.mixer.erase_projection.bias",
+            "blocks.0.mixer.write_projection.weight",
+            "blocks.0.mixer.write_projection.bias",
+            "blocks.0.mixer.decay_projection.weight",
+            "blocks.0.mixer.decay_projection.bias"
+          ],
+          "optimizer": "ScalarSecondMomentAdamW",
+          "parameters": 8841,
+          "role": "memory_controls",
+          "second_moment": "one scalar per parameter tensor",
+          "tensors": 9,
+          "weight_decay": 0.0
+        },
+        {
+          "learning_rate": 0.003,
+          "names": [
+            "blocks.0.local_conv.conv.weight"
+          ],
+          "optimizer": "torch.optim.AdamW",
+          "parameters": 256,
+          "role": "non_matrix_decay",
+          "second_moment": "coordinatewise",
+          "tensors": 1,
+          "weight_decay": 0.01
+        },
+        {
+          "learning_rate": 0.003,
+          "names": [
+            "embedding.weight",
+            "blocks.0.mixer_norm.weight",
+            "blocks.0.ffn_norm.weight",
+            "blocks.0.mixer.output_norm.weight",
+            "blocks.0.local_conv.conv.bias",
+            "final_norm.weight"
+          ],
+          "optimizer": "torch.optim.AdamW",
+          "parameters": 4688,
+          "role": "embedding_norm_bias",
+          "second_moment": "coordinatewise",
+          "tensors": 6,
+          "weight_decay": 0.0
+        }
+      ],
+      "passed": true,
+      "trainable_tensors": 25
+    },
+    "parameter_counts": {
+      "F": 67033,
+      "T": 67033,
+      "T-AUX": 67033
+    },
+    "passed": true,
+    "phase0_sha256": "0b4683ad3b66f7dc010e03737550873cd695d46ade897f21e094d38f4ece2438",
+    "state_bytes_per_sequence_fp32": {
+      "F": 4864,
+      "T": 4864,
+      "T-AUX": 4864
+    }
+  },
+  "protocol": {
+    "evaluation_batch_cap": 2,
+    "evaluation_decisions": 16,
+    "intervention_batch_cap": 2,
+    "intervention_decisions": 16,
+    "mode": "smoke",
+    "phases": [
+      {
+        "batch_size": 2,
+        "learning_rate": 0.003,
+        "length": 128,
+        "live_keys": 4,
+        "max_writes": 8,
+        "queries": 4,
+        "updates": 1
+      },
+      {
+        "batch_size": 2,
+        "learning_rate": 0.003,
+        "length": 256,
+        "live_keys": 8,
+        "max_writes": 16,
+        "queries": 8,
+        "updates": 1
+      },
+      {
+        "batch_size": 2,
+        "learning_rate": 0.001,
+        "length": 512,
+        "live_keys": 8,
+        "max_writes": 24,
+        "queries": 8,
+        "updates": 1
+      },
+      {
+        "batch_size": 2,
+        "learning_rate": 0.001,
+        "length": 1024,
+        "live_keys": 8,
+        "max_writes": 24,
+        "queries": 8,
+        "updates": 1
+      }
+    ],
+    "seeds": [
+      23
+    ]
+  },
+  "schema_version": 1,
+  "seed_arm_reports": [
+    {
+      "active_parameters": 67033,
+      "arm": "F",
+      "checkpoint": "/home/local/ai-culture-mind-checkpoints/g15bt-b3fd297-smoke/g15bt_f_seed23.pt",
+      "checkpoint_sha256": "480dcff7a3711d15506044429268762766f6f304045f912eeec6f935c26204a4",
+      "evaluation": {
+        "boundary_audit": {
+          "causal_intervention": {
+            "current_edit_controls_bit_identical": false,
+            "current_history_maximum_absolute_residual": 0.0,
+            "current_injection_bit_identical": false,
+            "current_transition_bit_identical": false,
+            "passed": false,
+            "position": 7,
+            "prior_edit_control_effect": 0.0
+          },
+          "chunk_boundary_maximum_absolute_logit_residual": 2.384185791015625e-07,
+          "chunk_boundary_predictions_equal": true,
+          "commit_tail_role_support": {
+            "filler": 4,
+            "query_marker": 2,
+            "write_marker": 2
+          },
+          "commit_tail_role_support_passed": true,
+          "masked_compact_maximum_absolute_logit_residual": 0.0,
+          "masked_compact_maximum_absolute_state_residual": 0.0,
+          "masked_compact_predictions_equal": true,
+          "masked_step_maximum_absolute_logit_residual": 3.5762786865234375e-07,
+          "masked_step_predictions_equal": true,
+          "passed": false,
+          "query_accuracy": 0.0
+        },
+        "boundary_batch_sha256": "9fcc27a172fd5f4060a8432fceafc94ade7bd0ed6336f02fc8ddff87469b4dcc",
+        "cells": {
+          "mqar:L1024": {
+            "bits_per_query": 6.288423177151183,
+            "completed_tail_commit": {
+              "f1": 0.0,
+              "false_positive_rate": 0.0,
+              "fn": 64,
+              "fp": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "tn": 8128,
+              "tp": 0
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 1024,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.125,
+            "query_decisions": 16,
+            "task": "mqar"
+          },
+          "mqar:L128": {
+            "bits_per_query": 6.247627516505318,
+            "completed_tail_commit": {
+              "f1": 0.0,
+              "false_positive_rate": 0.0,
+              "fn": 64,
+              "fp": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "tn": 960,
+              "tp": 0
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 128,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.125,
+            "query_decisions": 16,
+            "task": "mqar"
+          },
+          "mqar:L2048": {
+            "bits_per_query": 6.256616017770012,
+            "completed_tail_commit": {
+              "f1": 0.0,
+              "false_positive_rate": 0.0,
+              "fn": 64,
+              "fp": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "tn": 16320,
+              "tp": 0
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 2048,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.3125,
+            "query_decisions": 16,
+            "task": "mqar"
+          },
+          "mqar:L512": {
+            "bits_per_query": 6.223210107666421,
+            "completed_tail_commit": {
+              "f1": 0.0,
+              "false_positive_rate": 0.0,
+              "fn": 64,
+              "fp": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "tn": 4032,
+              "tp": 0
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 512,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.0625,
+            "query_decisions": 16,
+            "task": "mqar"
+          },
+          "needle:L1024": {
+            "bits_per_query": 6.14186403363482,
+            "completed_tail_commit": {
+              "f1": 0.0,
+              "false_positive_rate": 0.0,
+              "fn": 64,
+              "fp": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "tn": 65472,
+              "tp": 0
+            },
+            "evaluation_batch_fingerprints": 8,
+            "exact_episode_accuracy": 0.0,
+            "length": 1024,
+            "query_accuracy": 0.0,
+            "query_address_top1": 1.0,
+            "query_decisions": 16,
+            "task": "needle"
+          },
+          "needle:L128": {
+            "bits_per_query": 6.217442669469736,
+            "completed_tail_commit": {
+              "f1": 0.0,
+              "false_positive_rate": 0.0,
+              "fn": 64,
+              "fp": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "tn": 8128,
+              "tp": 0
+            },
+            "evaluation_batch_fingerprints": 8,
+            "exact_episode_accuracy": 0.0,
+            "length": 128,
+            "query_accuracy": 0.0,
+            "query_address_top1": 1.0,
+            "query_decisions": 16,
+            "task": "needle"
+          },
+          "needle:L2048": {
+            "bits_per_query": 6.155500452030407,
+            "completed_tail_commit": {
+              "f1": 0.0,
+              "false_positive_rate": 0.0,
+              "fn": 64,
+              "fp": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "tn": 131008,
+              "tp": 0
+            },
+            "evaluation_batch_fingerprints": 8,
+            "exact_episode_accuracy": 0.0,
+            "length": 2048,
+            "query_accuracy": 0.0,
+            "query_address_top1": 1.0,
+            "query_decisions": 16,
+            "task": "needle"
+          },
+          "needle:L512": {
+            "bits_per_query": 6.207396388910911,
+            "completed_tail_commit": {
+              "f1": 0.0,
+              "false_positive_rate": 0.0,
+              "fn": 64,
+              "fp": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "tn": 32704,
+              "tp": 0
+            },
+            "evaluation_batch_fingerprints": 8,
+            "exact_episode_accuracy": 0.0,
+            "length": 512,
+            "query_accuracy": 0.0,
+            "query_address_top1": 1.0,
+            "query_decisions": 16,
+            "task": "needle"
+          },
+          "overwrite:L1024": {
+            "bits_per_query": 6.10970018223576,
+            "completed_tail_commit": {
+              "f1": 0.0,
+              "false_positive_rate": 0.0,
+              "fn": 192,
+              "fp": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "tn": 8000,
+              "tp": 0
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 1024,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.375,
+            "query_decisions": 16,
+            "query_strata": {
+              "after_same_key_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 14
+              },
+              "after_unrelated_overwrite_only": {
+                "accuracy": null,
+                "query_decisions": 0
+              },
+              "before_any_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 2
+              }
+            },
+            "task": "overwrite"
+          },
+          "overwrite:L128": {
+            "bits_per_query": 6.184542904307634,
+            "completed_tail_commit": {
+              "f1": 0.0,
+              "false_positive_rate": 0.0,
+              "fn": 188,
+              "fp": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "tn": 836,
+              "tp": 0
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 128,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.0,
+            "query_decisions": 16,
+            "query_strata": {
+              "after_same_key_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 14
+              },
+              "after_unrelated_overwrite_only": {
+                "accuracy": null,
+                "query_decisions": 0
+              },
+              "before_any_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 2
+              }
+            },
+            "task": "overwrite"
+          },
+          "overwrite:L2048": {
+            "bits_per_query": 6.196971058589583,
+            "completed_tail_commit": {
+              "f1": 0.0,
+              "false_positive_rate": 0.0,
+              "fn": 192,
+              "fp": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "tn": 16192,
+              "tp": 0
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 2048,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.1875,
+            "query_decisions": 16,
+            "query_strata": {
+              "after_same_key_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 14
+              },
+              "after_unrelated_overwrite_only": {
+                "accuracy": null,
+                "query_decisions": 0
+              },
+              "before_any_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 2
+              }
+            },
+            "task": "overwrite"
+          },
+          "overwrite:L512": {
+            "bits_per_query": 6.140396333692357,
+            "completed_tail_commit": {
+              "f1": 0.0,
+              "false_positive_rate": 0.0,
+              "fn": 192,
+              "fp": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "tn": 3904,
+              "tp": 0
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 512,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.25,
+            "query_decisions": 16,
+            "query_strata": {
+              "after_same_key_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 14
+              },
+              "after_unrelated_overwrite_only": {
+                "accuracy": null,
+                "query_decisions": 0
+              },
+              "before_any_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 2
+              }
+            },
+            "task": "overwrite"
+          },
+          "overwrite_guard:L1024": {
+            "bits_per_query": 6.194433282593452,
+            "completed_tail_commit": {
+              "f1": 0.0,
+              "false_positive_rate": 0.0,
+              "fn": 24,
+              "fp": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "tn": 8168,
+              "tp": 0
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 1024,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.0625,
+            "query_decisions": 16,
+            "query_strata": {
+              "after_same_key_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 6
+              },
+              "after_unrelated_overwrite_only": {
+                "accuracy": 0.0,
+                "query_decisions": 6
+              },
+              "before_any_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 4
+              }
+            },
+            "task": "overwrite_guard"
+          },
+          "overwrite_guard:L128": {
+            "bits_per_query": 6.160485971104944,
+            "completed_tail_commit": {
+              "f1": 0.0,
+              "false_positive_rate": 0.0,
+              "fn": 24,
+              "fp": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "tn": 1000,
+              "tp": 0
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 128,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.0,
+            "query_decisions": 16,
+            "query_strata": {
+              "after_same_key_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 6
+              },
+              "after_unrelated_overwrite_only": {
+                "accuracy": 0.0,
+                "query_decisions": 6
+              },
+              "before_any_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 4
+              }
+            },
+            "task": "overwrite_guard"
+          },
+          "overwrite_guard:L2048": {
+            "bits_per_query": 6.330051233827224,
+            "completed_tail_commit": {
+              "f1": 0.0,
+              "false_positive_rate": 0.0,
+              "fn": 24,
+              "fp": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "tn": 16360,
+              "tp": 0
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 2048,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.0,
+            "query_decisions": 16,
+            "query_strata": {
+              "after_same_key_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 6
+              },
+              "after_unrelated_overwrite_only": {
+                "accuracy": 0.0,
+                "query_decisions": 6
+              },
+              "before_any_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 4
+              }
+            },
+            "task": "overwrite_guard"
+          },
+          "overwrite_guard:L512": {
+            "bits_per_query": 6.1398356702505446,
+            "completed_tail_commit": {
+              "f1": 0.0,
+              "false_positive_rate": 0.0,
+              "fn": 24,
+              "fp": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "tn": 4072,
+              "tp": 0
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 512,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.0,
+            "query_decisions": 16,
+            "query_strata": {
+              "after_same_key_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 6
+              },
+              "after_unrelated_overwrite_only": {
+                "accuracy": 0.0,
+                "query_decisions": 6
+              },
+              "before_any_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 4
+              }
+            },
+            "task": "overwrite_guard"
+          },
+          "selective:L1024": {
+            "bits_per_query": 6.180606565394686,
+            "completed_tail_commit": {
+              "f1": 0.0,
+              "false_positive_rate": 0.0,
+              "fn": 64,
+              "fp": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "tn": 8128,
+              "tp": 0
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 1024,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.125,
+            "query_decisions": 16,
+            "task": "selective"
+          },
+          "selective:L128": {
+            "bits_per_query": 6.303810808889181,
+            "completed_tail_commit": {
+              "f1": 0.0,
+              "false_positive_rate": 0.0,
+              "fn": 64,
+              "fp": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "tn": 960,
+              "tp": 0
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 128,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.1875,
+            "query_decisions": 16,
+            "task": "selective"
+          },
+          "selective:L2048": {
+            "bits_per_query": 6.184871735136083,
+            "completed_tail_commit": {
+              "f1": 0.0,
+              "false_positive_rate": 0.0,
+              "fn": 64,
+              "fp": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "tn": 16320,
+              "tp": 0
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 2048,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.25,
+            "query_decisions": 16,
+            "task": "selective"
+          },
+          "selective:L512": {
+            "bits_per_query": 6.152135869440253,
+            "completed_tail_commit": {
+              "f1": 0.0,
+              "false_positive_rate": 0.0,
+              "fn": 64,
+              "fp": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "tn": 4032,
+              "tp": 0
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 512,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.0625,
+            "query_decisions": 16,
+            "task": "selective"
+          }
+        },
+        "intervention_batch_fingerprints": 0,
+        "intervention_cells": {},
+        "intervention_evaluation_schedule_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "standard_evaluation_schedule_sha256": "cbf2f83cf3793d04eb0f2b577d4cff175b422e450ce4cfd410927c939f9c7246"
+      },
+      "evaluation_batch_fingerprints": 49,
+      "evaluation_wall_seconds": 1.9832194160000256,
+      "initial_parameter_sha256": "645dc65593b3ce91c23828c5573e388a61f9d000d014651b805a8deff135275f",
+      "loss_samples": [
+        {
+          "components": {
+            "query_to_commit_address": 1.4321705102920532,
+            "retrieval": 4.320247173309326,
+            "reverse_binding": 4.283872127532959
+          },
+          "global_update": 1,
+          "gradient_norm": 6.502731800079346,
+          "learning_rate": 0.003,
+          "phase": 1,
+          "phase_update": 1,
+          "task": "mqar",
+          "total": 5.749258041381836
+        },
+        {
+          "components": {
+            "query_to_commit_address": 1.9998348951339722,
+            "retrieval": 4.290641784667969,
+            "reverse_binding": 4.2709550857543945
+          },
+          "global_update": 2,
+          "gradient_norm": 4.47910737991333,
+          "learning_rate": 0.003,
+          "phase": 2,
+          "phase_update": 1,
+          "task": "overwrite",
+          "total": 5.858338832855225
+        },
+        {
+          "components": {
+            "query_to_commit_address": 1.9462835788726807,
+            "retrieval": 4.3131327629089355,
+            "reverse_binding": 4.3234782218933105
+          },
+          "global_update": 3,
+          "gradient_norm": 3.480464458465576,
+          "learning_rate": 0.001,
+          "phase": 3,
+          "phase_update": 1,
+          "task": "overwrite",
+          "total": 5.880573272705078
+        },
+        {
+          "components": {
+            "query_to_commit_address": 2.233649253845215,
+            "retrieval": 4.277449131011963,
+            "reverse_binding": 4.280261039733887
+          },
+          "global_update": 4,
+          "gradient_norm": 5.381602764129639,
+          "learning_rate": 0.001,
+          "phase": 4,
+          "phase_update": 1,
+          "task": "selective",
+          "total": 5.905926704406738
+        }
+      ],
+      "mean_synchronized_step_seconds": 0.09564677574999791,
+      "optimizer_partition": [
+        {
+          "learning_rate": 0.003,
+          "names": [
+            "blocks.0.input_projection.weight",
+            "blocks.0.ffn.gate_projection.weight",
+            "blocks.0.ffn.up_projection.weight",
+            "blocks.0.ffn.down_projection.weight",
+            "blocks.0.mixer.query_projection.weight",
+            "blocks.0.mixer.key_projection.weight",
+            "blocks.0.mixer.value_projection.weight",
+            "blocks.0.mixer.output_gate.weight",
+            "blocks.0.mixer.output_projection.weight"
+          ],
+          "optimizer": "torch.optim.Muon",
+          "parameters": 53248,
+          "role": "hidden_matrices",
+          "second_moment": null,
+          "tensors": 9,
+          "weight_decay": 0.01
+        },
+        {
+          "learning_rate": 0.003,
+          "names": [
+            "blocks.0.residual_scale",
+            "blocks.0.mixer.commit_projection.weight",
+            "blocks.0.mixer.commit_projection.bias",
+            "blocks.0.mixer.erase_projection.weight",
+            "blocks.0.mixer.erase_projection.bias",
+            "blocks.0.mixer.write_projection.weight",
+            "blocks.0.mixer.write_projection.bias",
+            "blocks.0.mixer.decay_projection.weight",
+            "blocks.0.mixer.decay_projection.bias"
+          ],
+          "optimizer": "ScalarSecondMomentAdamW",
+          "parameters": 8841,
+          "role": "memory_controls",
+          "second_moment": "one scalar per parameter tensor",
+          "tensors": 9,
+          "weight_decay": 0.0
+        },
+        {
+          "learning_rate": 0.003,
+          "names": [
+            "blocks.0.local_conv.conv.weight"
+          ],
+          "optimizer": "torch.optim.AdamW",
+          "parameters": 256,
+          "role": "non_matrix_decay",
+          "second_moment": "coordinatewise",
+          "tensors": 1,
+          "weight_decay": 0.01
+        },
+        {
+          "learning_rate": 0.003,
+          "names": [
+            "embedding.weight",
+            "blocks.0.mixer_norm.weight",
+            "blocks.0.ffn_norm.weight",
+            "blocks.0.mixer.output_norm.weight",
+            "blocks.0.local_conv.conv.bias",
+            "final_norm.weight"
+          ],
+          "optimizer": "torch.optim.AdamW",
+          "parameters": 4688,
+          "role": "embedding_norm_bias",
+          "second_moment": "coordinatewise",
+          "tensors": 6,
+          "weight_decay": 0.0
+        }
+      ],
+      "parameters": 67033,
+      "peak_cuda_memory_bytes": 446703616,
+      "phase_execution": [
+        {
+          "declared": {
+            "batch_size": 2,
+            "learning_rate": 0.003,
+            "length": 128,
+            "live_keys": 4,
+            "max_writes": 8,
+            "queries": 4,
+            "updates": 1
+          },
+          "optimizer_group_learning_rates": [
+            0.003
+          ],
+          "phase": 1,
+          "query_decisions": 8,
+          "task_batches": {
+            "mqar": 1,
+            "needle": 0,
+            "overwrite": 0,
+            "selective": 0
+          },
+          "tokens": 256
+        },
+        {
+          "declared": {
+            "batch_size": 2,
+            "learning_rate": 0.003,
+            "length": 256,
+            "live_keys": 8,
+            "max_writes": 16,
+            "queries": 8,
+            "updates": 1
+          },
+          "optimizer_group_learning_rates": [
+            0.003
+          ],
+          "phase": 2,
+          "query_decisions": 16,
+          "task_batches": {
+            "mqar": 0,
+            "needle": 0,
+            "overwrite": 1,
+            "selective": 0
+          },
+          "tokens": 512
+        },
+        {
+          "declared": {
+            "batch_size": 2,
+            "learning_rate": 0.001,
+            "length": 512,
+            "live_keys": 8,
+            "max_writes": 24,
+            "queries": 8,
+            "updates": 1
+          },
+          "optimizer_group_learning_rates": [
+            0.001
+          ],
+          "phase": 3,
+          "query_decisions": 16,
+          "task_batches": {
+            "mqar": 0,
+            "needle": 0,
+            "overwrite": 1,
+            "selective": 0
+          },
+          "tokens": 1024
+        },
+        {
+          "declared": {
+            "batch_size": 2,
+            "learning_rate": 0.001,
+            "length": 1024,
+            "live_keys": 8,
+            "max_writes": 24,
+            "queries": 8,
+            "updates": 1
+          },
+          "optimizer_group_learning_rates": [
+            0.001
+          ],
+          "phase": 4,
+          "query_decisions": 16,
+          "task_batches": {
+            "mqar": 0,
+            "needle": 0,
+            "overwrite": 0,
+            "selective": 1
+          },
+          "tokens": 2048
+        }
+      ],
+      "seed": 23,
+      "state_bytes_per_sequence_fp32": 4864,
+      "train_evaluation_hash_intersection": [],
+      "training_batch_fingerprints": 4,
+      "training_schedule_sha256": "fe8171d77fcd75188ae0aaee65cca6c0ba5df134857c85cb401396c8d21342e5",
+      "training_tokens": 3840,
+      "training_tokens_per_second": 10036.930073934258,
+      "training_updates": 4,
+      "training_wall_seconds": 0.38258710299999166
+    },
+    {
+      "active_parameters": 67033,
+      "arm": "T",
+      "checkpoint": "/home/local/ai-culture-mind-checkpoints/g15bt-b3fd297-smoke/g15bt_t_seed23.pt",
+      "checkpoint_sha256": "89d6325603cc7e1f345ad83ec459d775b1b9eef88ed018dfc9cbc332b52fc339",
+      "evaluation": {
+        "boundary_audit": {
+          "causal_intervention": {
+            "current_edit_controls_bit_identical": true,
+            "current_history_maximum_absolute_residual": 0.0,
+            "current_injection_bit_identical": true,
+            "current_transition_bit_identical": true,
+            "passed": true,
+            "position": 7,
+            "prior_edit_control_effect": 0.1966037154197693
+          },
+          "chunk_boundary_maximum_absolute_logit_residual": 2.384185791015625e-07,
+          "chunk_boundary_predictions_equal": true,
+          "commit_tail_role_support": {
+            "filler": 4,
+            "query_marker": 2,
+            "write_marker": 2
+          },
+          "commit_tail_role_support_passed": true,
+          "masked_compact_maximum_absolute_logit_residual": 0.0,
+          "masked_compact_maximum_absolute_state_residual": 0.0,
+          "masked_compact_predictions_equal": true,
+          "masked_step_maximum_absolute_logit_residual": 3.5762786865234375e-07,
+          "masked_step_predictions_equal": true,
+          "passed": true,
+          "query_accuracy": 0.0
+        },
+        "boundary_batch_sha256": "9fcc27a172fd5f4060a8432fceafc94ade7bd0ed6336f02fc8ddff87469b4dcc",
+        "cells": {
+          "mqar:L1024": {
+            "bits_per_query": 6.309190426208169,
+            "completed_tail_commit": {
+              "f1": 0.0,
+              "false_positive_rate": 0.0,
+              "fn": 64,
+              "fp": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "tn": 8128,
+              "tp": 0
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 1024,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.1875,
+            "query_decisions": 16,
+            "task": "mqar"
+          },
+          "mqar:L128": {
+            "bits_per_query": 6.228060018420751,
+            "completed_tail_commit": {
+              "f1": 0.0,
+              "false_positive_rate": 0.0,
+              "fn": 64,
+              "fp": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "tn": 960,
+              "tp": 0
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 128,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.125,
+            "query_decisions": 16,
+            "task": "mqar"
+          },
+          "mqar:L2048": {
+            "bits_per_query": 6.250620702560934,
+            "completed_tail_commit": {
+              "f1": 0.0,
+              "false_positive_rate": 0.0,
+              "fn": 64,
+              "fp": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "tn": 16320,
+              "tp": 0
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 2048,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.3125,
+            "query_decisions": 16,
+            "task": "mqar"
+          },
+          "mqar:L512": {
+            "bits_per_query": 6.219509728950456,
+            "completed_tail_commit": {
+              "f1": 0.0,
+              "false_positive_rate": 0.0,
+              "fn": 64,
+              "fp": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "tn": 4032,
+              "tp": 0
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 512,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.25,
+            "query_decisions": 16,
+            "task": "mqar"
+          },
+          "needle:L1024": {
+            "bits_per_query": 6.168957234547167,
+            "completed_tail_commit": {
+              "f1": 0.0,
+              "false_positive_rate": 0.0,
+              "fn": 64,
+              "fp": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "tn": 65472,
+              "tp": 0
+            },
+            "evaluation_batch_fingerprints": 8,
+            "exact_episode_accuracy": 0.0,
+            "length": 1024,
+            "query_accuracy": 0.0,
+            "query_address_top1": 1.0,
+            "query_decisions": 16,
+            "task": "needle"
+          },
+          "needle:L128": {
+            "bits_per_query": 6.214323076165735,
+            "completed_tail_commit": {
+              "f1": 0.0,
+              "false_positive_rate": 0.0,
+              "fn": 64,
+              "fp": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "tn": 8128,
+              "tp": 0
+            },
+            "evaluation_batch_fingerprints": 8,
+            "exact_episode_accuracy": 0.0,
+            "length": 128,
+            "query_accuracy": 0.0,
+            "query_address_top1": 1.0,
+            "query_decisions": 16,
+            "task": "needle"
+          },
+          "needle:L2048": {
+            "bits_per_query": 6.169570094723517,
+            "completed_tail_commit": {
+              "f1": 0.0,
+              "false_positive_rate": 0.0,
+              "fn": 64,
+              "fp": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "tn": 131008,
+              "tp": 0
+            },
+            "evaluation_batch_fingerprints": 8,
+            "exact_episode_accuracy": 0.0,
+            "length": 2048,
+            "query_accuracy": 0.0,
+            "query_address_top1": 1.0,
+            "query_decisions": 16,
+            "task": "needle"
+          },
+          "needle:L512": {
+            "bits_per_query": 6.224075610356888,
+            "completed_tail_commit": {
+              "f1": 0.0,
+              "false_positive_rate": 0.0,
+              "fn": 64,
+              "fp": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "tn": 32704,
+              "tp": 0
+            },
+            "evaluation_batch_fingerprints": 8,
+            "exact_episode_accuracy": 0.0,
+            "length": 512,
+            "query_accuracy": 0.0,
+            "query_address_top1": 1.0,
+            "query_decisions": 16,
+            "task": "needle"
+          },
+          "overwrite:L1024": {
+            "bits_per_query": 6.104707181915911,
+            "completed_tail_commit": {
+              "f1": 0.0,
+              "false_positive_rate": 0.0,
+              "fn": 192,
+              "fp": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "tn": 8000,
+              "tp": 0
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 1024,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.3125,
+            "query_decisions": 16,
+            "query_strata": {
+              "after_same_key_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 14
+              },
+              "after_unrelated_overwrite_only": {
+                "accuracy": null,
+                "query_decisions": 0
+              },
+              "before_any_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 2
+              }
+            },
+            "task": "overwrite"
+          },
+          "overwrite:L128": {
+            "bits_per_query": 6.161736628942018,
+            "completed_tail_commit": {
+              "f1": 0.0,
+              "false_positive_rate": 0.0,
+              "fn": 188,
+              "fp": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "tn": 836,
+              "tp": 0
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 128,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.0,
+            "query_decisions": 16,
+            "query_strata": {
+              "after_same_key_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 14
+              },
+              "after_unrelated_overwrite_only": {
+                "accuracy": null,
+                "query_decisions": 0
+              },
+              "before_any_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 2
+              }
+            },
+            "task": "overwrite"
+          },
+          "overwrite:L2048": {
+            "bits_per_query": 6.205739422061173,
+            "completed_tail_commit": {
+              "f1": 0.0,
+              "false_positive_rate": 0.0,
+              "fn": 192,
+              "fp": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "tn": 16192,
+              "tp": 0
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 2048,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.1875,
+            "query_decisions": 16,
+            "query_strata": {
+              "after_same_key_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 14
+              },
+              "after_unrelated_overwrite_only": {
+                "accuracy": null,
+                "query_decisions": 0
+              },
+              "before_any_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 2
+              }
+            },
+            "task": "overwrite"
+          },
+          "overwrite:L512": {
+            "bits_per_query": 6.140582762885892,
+            "completed_tail_commit": {
+              "f1": 0.0,
+              "false_positive_rate": 0.0,
+              "fn": 192,
+              "fp": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "tn": 3904,
+              "tp": 0
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 512,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.25,
+            "query_decisions": 16,
+            "query_strata": {
+              "after_same_key_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 14
+              },
+              "after_unrelated_overwrite_only": {
+                "accuracy": null,
+                "query_decisions": 0
+              },
+              "before_any_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 2
+              }
+            },
+            "task": "overwrite"
+          },
+          "overwrite_guard:L1024": {
+            "bits_per_query": 6.182564415892108,
+            "completed_tail_commit": {
+              "f1": 0.0,
+              "false_positive_rate": 0.0,
+              "fn": 24,
+              "fp": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "tn": 8168,
+              "tp": 0
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 1024,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.125,
+            "query_decisions": 16,
+            "query_strata": {
+              "after_same_key_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 6
+              },
+              "after_unrelated_overwrite_only": {
+                "accuracy": 0.0,
+                "query_decisions": 6
+              },
+              "before_any_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 4
+              }
+            },
+            "task": "overwrite_guard"
+          },
+          "overwrite_guard:L128": {
+            "bits_per_query": 6.141123476340205,
+            "completed_tail_commit": {
+              "f1": 0.0,
+              "false_positive_rate": 0.0,
+              "fn": 24,
+              "fp": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "tn": 1000,
+              "tp": 0
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 128,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.0,
+            "query_decisions": 16,
+            "query_strata": {
+              "after_same_key_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 6
+              },
+              "after_unrelated_overwrite_only": {
+                "accuracy": 0.0,
+                "query_decisions": 6
+              },
+              "before_any_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 4
+              }
+            },
+            "task": "overwrite_guard"
+          },
+          "overwrite_guard:L2048": {
+            "bits_per_query": 6.326134844901777,
+            "completed_tail_commit": {
+              "f1": 0.0,
+              "false_positive_rate": 0.0,
+              "fn": 24,
+              "fp": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "tn": 16360,
+              "tp": 0
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 2048,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.0,
+            "query_decisions": 16,
+            "query_strata": {
+              "after_same_key_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 6
+              },
+              "after_unrelated_overwrite_only": {
+                "accuracy": 0.0,
+                "query_decisions": 6
+              },
+              "before_any_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 4
+              }
+            },
+            "task": "overwrite_guard"
+          },
+          "overwrite_guard:L512": {
+            "bits_per_query": 6.110765786740505,
+            "completed_tail_commit": {
+              "f1": 0.0,
+              "false_positive_rate": 0.0,
+              "fn": 24,
+              "fp": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "tn": 4072,
+              "tp": 0
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 512,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.0,
+            "query_decisions": 16,
+            "query_strata": {
+              "after_same_key_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 6
+              },
+              "after_unrelated_overwrite_only": {
+                "accuracy": 0.0,
+                "query_decisions": 6
+              },
+              "before_any_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 4
+              }
+            },
+            "task": "overwrite_guard"
+          },
+          "selective:L1024": {
+            "bits_per_query": 6.186753913267125,
+            "completed_tail_commit": {
+              "f1": 0.0,
+              "false_positive_rate": 0.0,
+              "fn": 64,
+              "fp": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "tn": 8128,
+              "tp": 0
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 1024,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.1875,
+            "query_decisions": 16,
+            "task": "selective"
+          },
+          "selective:L128": {
+            "bits_per_query": 6.29754582488355,
+            "completed_tail_commit": {
+              "f1": 0.0,
+              "false_positive_rate": 0.0,
+              "fn": 64,
+              "fp": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "tn": 960,
+              "tp": 0
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 128,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.0625,
+            "query_decisions": 16,
+            "task": "selective"
+          },
+          "selective:L2048": {
+            "bits_per_query": 6.210069945209899,
+            "completed_tail_commit": {
+              "f1": 0.0,
+              "false_positive_rate": 0.0,
+              "fn": 64,
+              "fp": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "tn": 16320,
+              "tp": 0
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 2048,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.0625,
+            "query_decisions": 16,
+            "task": "selective"
+          },
+          "selective:L512": {
+            "bits_per_query": 6.1661283779144505,
+            "completed_tail_commit": {
+              "f1": 0.0,
+              "false_positive_rate": 0.0,
+              "fn": 64,
+              "fp": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "tn": 4032,
+              "tp": 0
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 512,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.125,
+            "query_decisions": 16,
+            "task": "selective"
+          }
+        },
+        "intervention_batch_fingerprints": 6,
+        "intervention_cells": {
+          "mqar:L1024": {
+            "bits_per_query": 6.067151674412301,
+            "completed_tail_commit": {
+              "f1": 0.0,
+              "false_positive_rate": 0.0,
+              "fn": 64,
+              "fp": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "tn": 8128,
+              "tp": 0
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "interventions": {
+              "bias_only_history": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  }
+                }
+              },
+              "commit_shift_minus_one": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  }
+                }
+              },
+              "commit_shift_plus_one": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  }
+                }
+              },
+              "commit_zero": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  }
+                }
+              },
+              "erase_zero": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  }
+                }
+              },
+              "learned_reconstruction": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  }
+                }
+              },
+              "memory_zero": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  }
+                }
+              },
+              "permuted_history": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  }
+                }
+              }
+            },
+            "length": 1024,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.0625,
+            "query_decisions": 16,
+            "reconstruction_maximum_absolute_logit_residual": 0.0,
+            "reconstruction_query_predictions_equal": true,
+            "task": "mqar"
+          },
+          "mqar:L512": {
+            "bits_per_query": 6.307119755091781,
+            "completed_tail_commit": {
+              "f1": 0.0,
+              "false_positive_rate": 0.0,
+              "fn": 64,
+              "fp": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "tn": 4032,
+              "tp": 0
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "interventions": {
+              "bias_only_history": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  }
+                }
+              },
+              "commit_shift_minus_one": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  }
+                }
+              },
+              "commit_shift_plus_one": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  }
+                }
+              },
+              "commit_zero": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  }
+                }
+              },
+              "erase_zero": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  }
+                }
+              },
+              "learned_reconstruction": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  }
+                }
+              },
+              "memory_zero": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  }
+                }
+              },
+              "permuted_history": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  }
+                }
+              }
+            },
+            "length": 512,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.125,
+            "query_decisions": 16,
+            "reconstruction_maximum_absolute_logit_residual": 0.0,
+            "reconstruction_query_predictions_equal": true,
+            "task": "mqar"
+          },
+          "overwrite:L1024": {
+            "bits_per_query": 6.164439508282978,
+            "completed_tail_commit": {
+              "f1": 0.0,
+              "false_positive_rate": 0.0,
+              "fn": 192,
+              "fp": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "tn": 8000,
+              "tp": 0
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "interventions": {
+              "bias_only_history": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 14
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 2
+                  }
+                }
+              },
+              "commit_shift_minus_one": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 14
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 2
+                  }
+                }
+              },
+              "commit_shift_plus_one": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 14
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 2
+                  }
+                }
+              },
+              "commit_zero": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 14
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 2
+                  }
+                }
+              },
+              "erase_zero": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 14
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 2
+                  }
+                }
+              },
+              "learned_reconstruction": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 14
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 2
+                  }
+                }
+              },
+              "memory_zero": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 14
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 2
+                  }
+                }
+              },
+              "permuted_history": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 14
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 2
+                  }
+                }
+              }
+            },
+            "length": 1024,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.25,
+            "query_decisions": 16,
+            "query_strata": {
+              "after_same_key_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 14
+              },
+              "after_unrelated_overwrite_only": {
+                "accuracy": null,
+                "query_decisions": 0
+              },
+              "before_any_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 2
+              }
+            },
+            "reconstruction_maximum_absolute_logit_residual": 0.0,
+            "reconstruction_query_predictions_equal": true,
+            "task": "overwrite"
+          },
+          "overwrite:L512": {
+            "bits_per_query": 6.154703226452333,
+            "completed_tail_commit": {
+              "f1": 0.0,
+              "false_positive_rate": 0.0,
+              "fn": 192,
+              "fp": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "tn": 3904,
+              "tp": 0
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "interventions": {
+              "bias_only_history": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 14
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 2
+                  }
+                }
+              },
+              "commit_shift_minus_one": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 14
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 2
+                  }
+                }
+              },
+              "commit_shift_plus_one": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 14
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 2
+                  }
+                }
+              },
+              "commit_zero": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 14
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 2
+                  }
+                }
+              },
+              "erase_zero": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 14
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 2
+                  }
+                }
+              },
+              "learned_reconstruction": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 14
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 2
+                  }
+                }
+              },
+              "memory_zero": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 14
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 2
+                  }
+                }
+              },
+              "permuted_history": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 14
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 2
+                  }
+                }
+              }
+            },
+            "length": 512,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.0625,
+            "query_decisions": 16,
+            "query_strata": {
+              "after_same_key_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 14
+              },
+              "after_unrelated_overwrite_only": {
+                "accuracy": null,
+                "query_decisions": 0
+              },
+              "before_any_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 2
+              }
+            },
+            "reconstruction_maximum_absolute_logit_residual": 0.0,
+            "reconstruction_query_predictions_equal": true,
+            "task": "overwrite"
+          },
+          "overwrite_guard:L1024": {
+            "bits_per_query": 6.263405204895473,
+            "completed_tail_commit": {
+              "f1": 0.0,
+              "false_positive_rate": 0.0,
+              "fn": 24,
+              "fp": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "tn": 8168,
+              "tp": 0
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "interventions": {
+              "bias_only_history": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 6
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": 0.0,
+                    "query_decisions": 6
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 4
+                  }
+                }
+              },
+              "commit_shift_minus_one": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 6
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": 0.0,
+                    "query_decisions": 6
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 4
+                  }
+                }
+              },
+              "commit_shift_plus_one": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 6
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": 0.0,
+                    "query_decisions": 6
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 4
+                  }
+                }
+              },
+              "commit_zero": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 6
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": 0.0,
+                    "query_decisions": 6
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 4
+                  }
+                }
+              },
+              "erase_zero": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 6
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": 0.0,
+                    "query_decisions": 6
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 4
+                  }
+                }
+              },
+              "learned_reconstruction": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 6
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": 0.0,
+                    "query_decisions": 6
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 4
+                  }
+                }
+              },
+              "memory_zero": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 6
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": 0.0,
+                    "query_decisions": 6
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 4
+                  }
+                }
+              },
+              "permuted_history": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 6
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": 0.0,
+                    "query_decisions": 6
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 4
+                  }
+                }
+              }
+            },
+            "length": 1024,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.0,
+            "query_decisions": 16,
+            "query_strata": {
+              "after_same_key_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 6
+              },
+              "after_unrelated_overwrite_only": {
+                "accuracy": 0.0,
+                "query_decisions": 6
+              },
+              "before_any_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 4
+              }
+            },
+            "reconstruction_maximum_absolute_logit_residual": 0.0,
+            "reconstruction_query_predictions_equal": true,
+            "task": "overwrite_guard"
+          },
+          "overwrite_guard:L512": {
+            "bits_per_query": 6.066442417960142,
+            "completed_tail_commit": {
+              "f1": 0.0,
+              "false_positive_rate": 0.0,
+              "fn": 24,
+              "fp": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "tn": 4072,
+              "tp": 0
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "interventions": {
+              "bias_only_history": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 6
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": 0.0,
+                    "query_decisions": 6
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 4
+                  }
+                }
+              },
+              "commit_shift_minus_one": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 6
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": 0.0,
+                    "query_decisions": 6
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 4
+                  }
+                }
+              },
+              "commit_shift_plus_one": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 6
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": 0.0,
+                    "query_decisions": 6
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 4
+                  }
+                }
+              },
+              "commit_zero": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 6
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": 0.0,
+                    "query_decisions": 6
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 4
+                  }
+                }
+              },
+              "erase_zero": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 6
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": 0.0,
+                    "query_decisions": 6
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 4
+                  }
+                }
+              },
+              "learned_reconstruction": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 6
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": 0.0,
+                    "query_decisions": 6
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 4
+                  }
+                }
+              },
+              "memory_zero": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 6
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": 0.0,
+                    "query_decisions": 6
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 4
+                  }
+                }
+              },
+              "permuted_history": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 6
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": 0.0,
+                    "query_decisions": 6
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 4
+                  }
+                }
+              }
+            },
+            "length": 512,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.0,
+            "query_decisions": 16,
+            "query_strata": {
+              "after_same_key_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 6
+              },
+              "after_unrelated_overwrite_only": {
+                "accuracy": 0.0,
+                "query_decisions": 6
+              },
+              "before_any_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 4
+              }
+            },
+            "reconstruction_maximum_absolute_logit_residual": 0.0,
+            "reconstruction_query_predictions_equal": true,
+            "task": "overwrite_guard"
+          }
+        },
+        "intervention_evaluation_schedule_sha256": "fcf594e037666e947b088a6f2135bf4105b45f1258466ef2b61591d6666f48f7",
+        "standard_evaluation_schedule_sha256": "cbf2f83cf3793d04eb0f2b577d4cff175b422e450ce4cfd410927c939f9c7246"
+      },
+      "evaluation_batch_fingerprints": 55,
+      "evaluation_wall_seconds": 2.680634918999999,
+      "initial_parameter_sha256": "645dc65593b3ce91c23828c5573e388a61f9d000d014651b805a8deff135275f",
+      "loss_samples": [
+        {
+          "components": {
+            "query_to_commit_address": 1.4394807815551758,
+            "retrieval": 4.320256233215332,
+            "reverse_binding": 4.283873558044434
+          },
+          "global_update": 1,
+          "gradient_norm": 6.270331382751465,
+          "learning_rate": 0.003,
+          "phase": 1,
+          "phase_update": 1,
+          "task": "mqar",
+          "total": 5.751094818115234
+        },
+        {
+          "components": {
+            "query_to_commit_address": 1.9572893381118774,
+            "retrieval": 4.293435096740723,
+            "reverse_binding": 4.272823333740234
+          },
+          "global_update": 2,
+          "gradient_norm": 4.341676712036133,
+          "learning_rate": 0.003,
+          "phase": 2,
+          "phase_update": 1,
+          "task": "overwrite",
+          "total": 5.850963115692139
+        },
+        {
+          "components": {
+            "query_to_commit_address": 2.0366475582122803,
+            "retrieval": 4.308187484741211,
+            "reverse_binding": 4.320544719696045
+          },
+          "global_update": 3,
+          "gradient_norm": 3.449155807495117,
+          "learning_rate": 0.001,
+          "phase": 3,
+          "phase_update": 1,
+          "task": "overwrite",
+          "total": 5.897485733032227
+        },
+        {
+          "components": {
+            "query_to_commit_address": 2.2724242210388184,
+            "retrieval": 4.2734055519104,
+            "reverse_binding": 4.27685546875
+          },
+          "global_update": 4,
+          "gradient_norm": 5.080234527587891,
+          "learning_rate": 0.001,
+          "phase": 4,
+          "phase_update": 1,
+          "task": "selective",
+          "total": 5.9107255935668945
+        }
+      ],
+      "mean_synchronized_step_seconds": 0.052169261999999605,
+      "optimizer_partition": [
+        {
+          "learning_rate": 0.003,
+          "names": [
+            "blocks.0.input_projection.weight",
+            "blocks.0.ffn.gate_projection.weight",
+            "blocks.0.ffn.up_projection.weight",
+            "blocks.0.ffn.down_projection.weight",
+            "blocks.0.mixer.query_projection.weight",
+            "blocks.0.mixer.key_projection.weight",
+            "blocks.0.mixer.value_projection.weight",
+            "blocks.0.mixer.output_gate.weight",
+            "blocks.0.mixer.output_projection.weight"
+          ],
+          "optimizer": "torch.optim.Muon",
+          "parameters": 53248,
+          "role": "hidden_matrices",
+          "second_moment": null,
+          "tensors": 9,
+          "weight_decay": 0.01
+        },
+        {
+          "learning_rate": 0.003,
+          "names": [
+            "blocks.0.residual_scale",
+            "blocks.0.mixer.commit_projection.weight",
+            "blocks.0.mixer.commit_projection.bias",
+            "blocks.0.mixer.erase_projection.weight",
+            "blocks.0.mixer.erase_projection.bias",
+            "blocks.0.mixer.write_projection.weight",
+            "blocks.0.mixer.write_projection.bias",
+            "blocks.0.mixer.decay_projection.weight",
+            "blocks.0.mixer.decay_projection.bias"
+          ],
+          "optimizer": "ScalarSecondMomentAdamW",
+          "parameters": 8841,
+          "role": "memory_controls",
+          "second_moment": "one scalar per parameter tensor",
+          "tensors": 9,
+          "weight_decay": 0.0
+        },
+        {
+          "learning_rate": 0.003,
+          "names": [
+            "blocks.0.local_conv.conv.weight"
+          ],
+          "optimizer": "torch.optim.AdamW",
+          "parameters": 256,
+          "role": "non_matrix_decay",
+          "second_moment": "coordinatewise",
+          "tensors": 1,
+          "weight_decay": 0.01
+        },
+        {
+          "learning_rate": 0.003,
+          "names": [
+            "embedding.weight",
+            "blocks.0.mixer_norm.weight",
+            "blocks.0.ffn_norm.weight",
+            "blocks.0.mixer.output_norm.weight",
+            "blocks.0.local_conv.conv.bias",
+            "final_norm.weight"
+          ],
+          "optimizer": "torch.optim.AdamW",
+          "parameters": 4688,
+          "role": "embedding_norm_bias",
+          "second_moment": "coordinatewise",
+          "tensors": 6,
+          "weight_decay": 0.0
+        }
+      ],
+      "parameters": 67033,
+      "peak_cuda_memory_bytes": 447752192,
+      "phase_execution": [
+        {
+          "declared": {
+            "batch_size": 2,
+            "learning_rate": 0.003,
+            "length": 128,
+            "live_keys": 4,
+            "max_writes": 8,
+            "queries": 4,
+            "updates": 1
+          },
+          "optimizer_group_learning_rates": [
+            0.003
+          ],
+          "phase": 1,
+          "query_decisions": 8,
+          "task_batches": {
+            "mqar": 1,
+            "needle": 0,
+            "overwrite": 0,
+            "selective": 0
+          },
+          "tokens": 256
+        },
+        {
+          "declared": {
+            "batch_size": 2,
+            "learning_rate": 0.003,
+            "length": 256,
+            "live_keys": 8,
+            "max_writes": 16,
+            "queries": 8,
+            "updates": 1
+          },
+          "optimizer_group_learning_rates": [
+            0.003
+          ],
+          "phase": 2,
+          "query_decisions": 16,
+          "task_batches": {
+            "mqar": 0,
+            "needle": 0,
+            "overwrite": 1,
+            "selective": 0
+          },
+          "tokens": 512
+        },
+        {
+          "declared": {
+            "batch_size": 2,
+            "learning_rate": 0.001,
+            "length": 512,
+            "live_keys": 8,
+            "max_writes": 24,
+            "queries": 8,
+            "updates": 1
+          },
+          "optimizer_group_learning_rates": [
+            0.001
+          ],
+          "phase": 3,
+          "query_decisions": 16,
+          "task_batches": {
+            "mqar": 0,
+            "needle": 0,
+            "overwrite": 1,
+            "selective": 0
+          },
+          "tokens": 1024
+        },
+        {
+          "declared": {
+            "batch_size": 2,
+            "learning_rate": 0.001,
+            "length": 1024,
+            "live_keys": 8,
+            "max_writes": 24,
+            "queries": 8,
+            "updates": 1
+          },
+          "optimizer_group_learning_rates": [
+            0.001
+          ],
+          "phase": 4,
+          "query_decisions": 16,
+          "task_batches": {
+            "mqar": 0,
+            "needle": 0,
+            "overwrite": 0,
+            "selective": 1
+          },
+          "tokens": 2048
+        }
+      ],
+      "seed": 23,
+      "state_bytes_per_sequence_fp32": 4864,
+      "train_evaluation_hash_intersection": [],
+      "training_batch_fingerprints": 4,
+      "training_schedule_sha256": "fe8171d77fcd75188ae0aaee65cca6c0ba5df134857c85cb401396c8d21342e5",
+      "training_tokens": 3840,
+      "training_tokens_per_second": 18401.640414234866,
+      "training_updates": 4,
+      "training_wall_seconds": 0.20867704799999842
+    },
+    {
+      "active_parameters": 67033,
+      "arm": "T-AUX",
+      "checkpoint": "/home/local/ai-culture-mind-checkpoints/g15bt-b3fd297-smoke/g15bt_taux_seed23.pt",
+      "checkpoint_sha256": "b7a3558643765a58c8d76bdc3c46457a1bf5e2169eb969f250e38dd61ffecbfb",
+      "evaluation": {
+        "boundary_audit": {
+          "causal_intervention": {
+            "current_edit_controls_bit_identical": true,
+            "current_history_maximum_absolute_residual": 0.0,
+            "current_injection_bit_identical": true,
+            "current_transition_bit_identical": true,
+            "passed": true,
+            "position": 7,
+            "prior_edit_control_effect": 0.19669565558433533
+          },
+          "chunk_boundary_maximum_absolute_logit_residual": 2.384185791015625e-07,
+          "chunk_boundary_predictions_equal": true,
+          "commit_tail_role_support": {
+            "filler": 4,
+            "query_marker": 2,
+            "write_marker": 2
+          },
+          "commit_tail_role_support_passed": true,
+          "masked_compact_maximum_absolute_logit_residual": 0.0,
+          "masked_compact_maximum_absolute_state_residual": 0.0,
+          "masked_compact_predictions_equal": true,
+          "masked_step_maximum_absolute_logit_residual": 3.5762786865234375e-07,
+          "masked_step_predictions_equal": true,
+          "passed": true,
+          "query_accuracy": 0.0
+        },
+        "boundary_batch_sha256": "9fcc27a172fd5f4060a8432fceafc94ade7bd0ed6336f02fc8ddff87469b4dcc",
+        "cells": {
+          "mqar:L1024": {
+            "bits_per_query": 6.309152590024979,
+            "completed_tail_commit": {
+              "f1": 0.0,
+              "false_positive_rate": 0.0,
+              "fn": 64,
+              "fp": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "tn": 8128,
+              "tp": 0
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 1024,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.1875,
+            "query_decisions": 16,
+            "task": "mqar"
+          },
+          "mqar:L128": {
+            "bits_per_query": 6.228046259808682,
+            "completed_tail_commit": {
+              "f1": 0.0,
+              "false_positive_rate": 0.0,
+              "fn": 64,
+              "fp": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "tn": 960,
+              "tp": 0
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 128,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.125,
+            "query_decisions": 16,
+            "task": "mqar"
+          },
+          "mqar:L2048": {
+            "bits_per_query": 6.250615199116107,
+            "completed_tail_commit": {
+              "f1": 0.0,
+              "false_positive_rate": 0.0,
+              "fn": 64,
+              "fp": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "tn": 16320,
+              "tp": 0
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 2048,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.3125,
+            "query_decisions": 16,
+            "task": "mqar"
+          },
+          "mqar:L512": {
+            "bits_per_query": 6.2195007858526115,
+            "completed_tail_commit": {
+              "f1": 0.0,
+              "false_positive_rate": 0.0,
+              "fn": 64,
+              "fp": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "tn": 4032,
+              "tp": 0
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 512,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.25,
+            "query_decisions": 16,
+            "task": "mqar"
+          },
+          "needle:L1024": {
+            "bits_per_query": 6.168944851796305,
+            "completed_tail_commit": {
+              "f1": 0.0,
+              "false_positive_rate": 0.0,
+              "fn": 64,
+              "fp": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "tn": 65472,
+              "tp": 0
+            },
+            "evaluation_batch_fingerprints": 8,
+            "exact_episode_accuracy": 0.0,
+            "length": 1024,
+            "query_accuracy": 0.0,
+            "query_address_top1": 1.0,
+            "query_decisions": 16,
+            "task": "needle"
+          },
+          "needle:L128": {
+            "bits_per_query": 6.214315938885725,
+            "completed_tail_commit": {
+              "f1": 0.0,
+              "false_positive_rate": 0.0,
+              "fn": 64,
+              "fp": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "tn": 8128,
+              "tp": 0
+            },
+            "evaluation_batch_fingerprints": 8,
+            "exact_episode_accuracy": 0.0,
+            "length": 128,
+            "query_accuracy": 0.0,
+            "query_address_top1": 1.0,
+            "query_decisions": 16,
+            "task": "needle"
+          },
+          "needle:L2048": {
+            "bits_per_query": 6.169599761730791,
+            "completed_tail_commit": {
+              "f1": 0.0,
+              "false_positive_rate": 0.0,
+              "fn": 64,
+              "fp": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "tn": 131008,
+              "tp": 0
+            },
+            "evaluation_batch_fingerprints": 8,
+            "exact_episode_accuracy": 0.0,
+            "length": 2048,
+            "query_accuracy": 0.0,
+            "query_address_top1": 1.0,
+            "query_decisions": 16,
+            "task": "needle"
+          },
+          "needle:L512": {
+            "bits_per_query": 6.224048351106726,
+            "completed_tail_commit": {
+              "f1": 0.0,
+              "false_positive_rate": 0.0,
+              "fn": 64,
+              "fp": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "tn": 32704,
+              "tp": 0
+            },
+            "evaluation_batch_fingerprints": 8,
+            "exact_episode_accuracy": 0.0,
+            "length": 512,
+            "query_accuracy": 0.0,
+            "query_address_top1": 1.0,
+            "query_decisions": 16,
+            "task": "needle"
+          },
+          "overwrite:L1024": {
+            "bits_per_query": 6.104769095670221,
+            "completed_tail_commit": {
+              "f1": 0.0,
+              "false_positive_rate": 0.0,
+              "fn": 192,
+              "fp": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "tn": 8000,
+              "tp": 0
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 1024,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.3125,
+            "query_decisions": 16,
+            "query_strata": {
+              "after_same_key_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 14
+              },
+              "after_unrelated_overwrite_only": {
+                "accuracy": null,
+                "query_decisions": 0
+              },
+              "before_any_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 2
+              }
+            },
+            "task": "overwrite"
+          },
+          "overwrite:L128": {
+            "bits_per_query": 6.161750387554087,
+            "completed_tail_commit": {
+              "f1": 0.0,
+              "false_positive_rate": 0.0,
+              "fn": 188,
+              "fp": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "tn": 836,
+              "tp": 0
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 128,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.0,
+            "query_decisions": 16,
+            "query_strata": {
+              "after_same_key_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 14
+              },
+              "after_unrelated_overwrite_only": {
+                "accuracy": null,
+                "query_decisions": 0
+              },
+              "before_any_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 2
+              }
+            },
+            "task": "overwrite"
+          },
+          "overwrite:L2048": {
+            "bits_per_query": 6.205735294477552,
+            "completed_tail_commit": {
+              "f1": 0.0,
+              "false_positive_rate": 0.0,
+              "fn": 192,
+              "fp": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "tn": 16192,
+              "tp": 0
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 2048,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.1875,
+            "query_decisions": 16,
+            "query_strata": {
+              "after_same_key_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 14
+              },
+              "after_unrelated_overwrite_only": {
+                "accuracy": null,
+                "query_decisions": 0
+              },
+              "before_any_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 2
+              }
+            },
+            "task": "overwrite"
+          },
+          "overwrite:L512": {
+            "bits_per_query": 6.140541487049686,
+            "completed_tail_commit": {
+              "f1": 0.0,
+              "false_positive_rate": 0.0,
+              "fn": 192,
+              "fp": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "tn": 3904,
+              "tp": 0
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 512,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.25,
+            "query_decisions": 16,
+            "query_strata": {
+              "after_same_key_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 14
+              },
+              "after_unrelated_overwrite_only": {
+                "accuracy": null,
+                "query_decisions": 0
+              },
+              "before_any_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 2
+              }
+            },
+            "task": "overwrite"
+          },
+          "overwrite_guard:L1024": {
+            "bits_per_query": 6.182655222731763,
+            "completed_tail_commit": {
+              "f1": 0.0,
+              "false_positive_rate": 0.0,
+              "fn": 24,
+              "fp": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "tn": 8168,
+              "tp": 0
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 1024,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.125,
+            "query_decisions": 16,
+            "query_strata": {
+              "after_same_key_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 6
+              },
+              "after_unrelated_overwrite_only": {
+                "accuracy": 0.0,
+                "query_decisions": 6
+              },
+              "before_any_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 4
+              }
+            },
+            "task": "overwrite_guard"
+          },
+          "overwrite_guard:L128": {
+            "bits_per_query": 6.141007903998825,
+            "completed_tail_commit": {
+              "f1": 0.0,
+              "false_positive_rate": 0.0,
+              "fn": 24,
+              "fp": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "tn": 1000,
+              "tp": 0
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 128,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.0,
+            "query_decisions": 16,
+            "query_strata": {
+              "after_same_key_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 6
+              },
+              "after_unrelated_overwrite_only": {
+                "accuracy": 0.0,
+                "query_decisions": 6
+              },
+              "before_any_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 4
+              }
+            },
+            "task": "overwrite_guard"
+          },
+          "overwrite_guard:L2048": {
+            "bits_per_query": 6.326274494814277,
+            "completed_tail_commit": {
+              "f1": 0.0,
+              "false_positive_rate": 0.0,
+              "fn": 24,
+              "fp": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "tn": 16360,
+              "tp": 0
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 2048,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.0,
+            "query_decisions": 16,
+            "query_strata": {
+              "after_same_key_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 6
+              },
+              "after_unrelated_overwrite_only": {
+                "accuracy": 0.0,
+                "query_decisions": 6
+              },
+              "before_any_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 4
+              }
+            },
+            "task": "overwrite_guard"
+          },
+          "overwrite_guard:L512": {
+            "bits_per_query": 6.110737581585764,
+            "completed_tail_commit": {
+              "f1": 0.0,
+              "false_positive_rate": 0.0,
+              "fn": 24,
+              "fp": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "tn": 4072,
+              "tp": 0
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 512,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.0,
+            "query_decisions": 16,
+            "query_strata": {
+              "after_same_key_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 6
+              },
+              "after_unrelated_overwrite_only": {
+                "accuracy": 0.0,
+                "query_decisions": 6
+              },
+              "before_any_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 4
+              }
+            },
+            "task": "overwrite_guard"
+          },
+          "selective:L1024": {
+            "bits_per_query": 6.186781430491264,
+            "completed_tail_commit": {
+              "f1": 0.0,
+              "false_positive_rate": 0.0,
+              "fn": 64,
+              "fp": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "tn": 8128,
+              "tp": 0
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 1024,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.1875,
+            "query_decisions": 16,
+            "task": "selective"
+          },
+          "selective:L128": {
+            "bits_per_query": 6.2975533921201885,
+            "completed_tail_commit": {
+              "f1": 0.0,
+              "false_positive_rate": 0.0,
+              "fn": 64,
+              "fp": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "tn": 960,
+              "tp": 0
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 128,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.0625,
+            "query_decisions": 16,
+            "task": "selective"
+          },
+          "selective:L2048": {
+            "bits_per_query": 6.21007820037714,
+            "completed_tail_commit": {
+              "f1": 0.0,
+              "false_positive_rate": 0.0,
+              "fn": 64,
+              "fp": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "tn": 16320,
+              "tp": 0
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 2048,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.0625,
+            "query_decisions": 16,
+            "task": "selective"
+          },
+          "selective:L512": {
+            "bits_per_query": 6.166092605523072,
+            "completed_tail_commit": {
+              "f1": 0.0,
+              "false_positive_rate": 0.0,
+              "fn": 64,
+              "fp": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "tn": 4032,
+              "tp": 0
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "length": 512,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.125,
+            "query_decisions": 16,
+            "task": "selective"
+          }
+        },
+        "intervention_batch_fingerprints": 6,
+        "intervention_cells": {
+          "mqar:L1024": {
+            "bits_per_query": 6.067122781326956,
+            "completed_tail_commit": {
+              "f1": 0.0,
+              "false_positive_rate": 0.0,
+              "fn": 64,
+              "fp": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "tn": 8128,
+              "tp": 0
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "interventions": {
+              "bias_only_history": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  }
+                }
+              },
+              "commit_shift_minus_one": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  }
+                }
+              },
+              "commit_shift_plus_one": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  }
+                }
+              },
+              "commit_zero": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  }
+                }
+              },
+              "erase_zero": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  }
+                }
+              },
+              "learned_reconstruction": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  }
+                }
+              },
+              "memory_zero": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  }
+                }
+              },
+              "permuted_history": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  }
+                }
+              }
+            },
+            "length": 1024,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.0625,
+            "query_decisions": 16,
+            "reconstruction_maximum_absolute_logit_residual": 0.0,
+            "reconstruction_query_predictions_equal": true,
+            "task": "mqar"
+          },
+          "mqar:L512": {
+            "bits_per_query": 6.307221568821092,
+            "completed_tail_commit": {
+              "f1": 0.0,
+              "false_positive_rate": 0.0,
+              "fn": 64,
+              "fp": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "tn": 4032,
+              "tp": 0
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "interventions": {
+              "bias_only_history": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  }
+                }
+              },
+              "commit_shift_minus_one": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  }
+                }
+              },
+              "commit_shift_plus_one": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  }
+                }
+              },
+              "commit_zero": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  }
+                }
+              },
+              "erase_zero": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  }
+                }
+              },
+              "learned_reconstruction": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  }
+                }
+              },
+              "memory_zero": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  }
+                }
+              },
+              "permuted_history": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  }
+                }
+              }
+            },
+            "length": 512,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.125,
+            "query_decisions": 16,
+            "reconstruction_maximum_absolute_logit_residual": 0.0,
+            "reconstruction_query_predictions_equal": true,
+            "task": "mqar"
+          },
+          "overwrite:L1024": {
+            "bits_per_query": 6.164493854800651,
+            "completed_tail_commit": {
+              "f1": 0.0,
+              "false_positive_rate": 0.0,
+              "fn": 192,
+              "fp": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "tn": 8000,
+              "tp": 0
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "interventions": {
+              "bias_only_history": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 14
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 2
+                  }
+                }
+              },
+              "commit_shift_minus_one": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 14
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 2
+                  }
+                }
+              },
+              "commit_shift_plus_one": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 14
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 2
+                  }
+                }
+              },
+              "commit_zero": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 14
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 2
+                  }
+                }
+              },
+              "erase_zero": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 14
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 2
+                  }
+                }
+              },
+              "learned_reconstruction": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 14
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 2
+                  }
+                }
+              },
+              "memory_zero": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 14
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 2
+                  }
+                }
+              },
+              "permuted_history": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 14
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 2
+                  }
+                }
+              }
+            },
+            "length": 1024,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.25,
+            "query_decisions": 16,
+            "query_strata": {
+              "after_same_key_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 14
+              },
+              "after_unrelated_overwrite_only": {
+                "accuracy": null,
+                "query_decisions": 0
+              },
+              "before_any_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 2
+              }
+            },
+            "reconstruction_maximum_absolute_logit_residual": 0.0,
+            "reconstruction_query_predictions_equal": true,
+            "task": "overwrite"
+          },
+          "overwrite:L512": {
+            "bits_per_query": 6.154699786799315,
+            "completed_tail_commit": {
+              "f1": 0.0,
+              "false_positive_rate": 0.0,
+              "fn": 192,
+              "fp": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "tn": 3904,
+              "tp": 0
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "interventions": {
+              "bias_only_history": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 14
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 2
+                  }
+                }
+              },
+              "commit_shift_minus_one": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 14
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 2
+                  }
+                }
+              },
+              "commit_shift_plus_one": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 14
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 2
+                  }
+                }
+              },
+              "commit_zero": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 14
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 2
+                  }
+                }
+              },
+              "erase_zero": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 14
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 2
+                  }
+                }
+              },
+              "learned_reconstruction": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 14
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 2
+                  }
+                }
+              },
+              "memory_zero": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 14
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 2
+                  }
+                }
+              },
+              "permuted_history": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 14
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": null,
+                    "query_decisions": 0
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 2
+                  }
+                }
+              }
+            },
+            "length": 512,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.0625,
+            "query_decisions": 16,
+            "query_strata": {
+              "after_same_key_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 14
+              },
+              "after_unrelated_overwrite_only": {
+                "accuracy": null,
+                "query_decisions": 0
+              },
+              "before_any_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 2
+              }
+            },
+            "reconstruction_maximum_absolute_logit_residual": 0.0,
+            "reconstruction_query_predictions_equal": true,
+            "task": "overwrite"
+          },
+          "overwrite_guard:L1024": {
+            "bits_per_query": 6.26338663076918,
+            "completed_tail_commit": {
+              "f1": 0.0,
+              "false_positive_rate": 0.0,
+              "fn": 24,
+              "fp": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "tn": 8168,
+              "tp": 0
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "interventions": {
+              "bias_only_history": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 6
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": 0.0,
+                    "query_decisions": 6
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 4
+                  }
+                }
+              },
+              "commit_shift_minus_one": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 6
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": 0.0,
+                    "query_decisions": 6
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 4
+                  }
+                }
+              },
+              "commit_shift_plus_one": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 6
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": 0.0,
+                    "query_decisions": 6
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 4
+                  }
+                }
+              },
+              "commit_zero": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 6
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": 0.0,
+                    "query_decisions": 6
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 4
+                  }
+                }
+              },
+              "erase_zero": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 6
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": 0.0,
+                    "query_decisions": 6
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 4
+                  }
+                }
+              },
+              "learned_reconstruction": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 6
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": 0.0,
+                    "query_decisions": 6
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 4
+                  }
+                }
+              },
+              "memory_zero": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 6
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": 0.0,
+                    "query_decisions": 6
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 4
+                  }
+                }
+              },
+              "permuted_history": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 6
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": 0.0,
+                    "query_decisions": 6
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 4
+                  }
+                }
+              }
+            },
+            "length": 1024,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.0,
+            "query_decisions": 16,
+            "query_strata": {
+              "after_same_key_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 6
+              },
+              "after_unrelated_overwrite_only": {
+                "accuracy": 0.0,
+                "query_decisions": 6
+              },
+              "before_any_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 4
+              }
+            },
+            "reconstruction_maximum_absolute_logit_residual": 0.0,
+            "reconstruction_query_predictions_equal": true,
+            "task": "overwrite_guard"
+          },
+          "overwrite_guard:L512": {
+            "bits_per_query": 6.066427283486867,
+            "completed_tail_commit": {
+              "f1": 0.0,
+              "false_positive_rate": 0.0,
+              "fn": 24,
+              "fp": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "tn": 4072,
+              "tp": 0
+            },
+            "evaluation_batch_fingerprints": 1,
+            "exact_episode_accuracy": 0.0,
+            "interventions": {
+              "bias_only_history": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 6
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": 0.0,
+                    "query_decisions": 6
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 4
+                  }
+                }
+              },
+              "commit_shift_minus_one": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 6
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": 0.0,
+                    "query_decisions": 6
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 4
+                  }
+                }
+              },
+              "commit_shift_plus_one": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 6
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": 0.0,
+                    "query_decisions": 6
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 4
+                  }
+                }
+              },
+              "commit_zero": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 6
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": 0.0,
+                    "query_decisions": 6
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 4
+                  }
+                }
+              },
+              "erase_zero": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 6
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": 0.0,
+                    "query_decisions": 6
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 4
+                  }
+                }
+              },
+              "learned_reconstruction": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 6
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": 0.0,
+                    "query_decisions": 6
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 4
+                  }
+                }
+              },
+              "memory_zero": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 6
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": 0.0,
+                    "query_decisions": 6
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 4
+                  }
+                }
+              },
+              "permuted_history": {
+                "drop_from_learned": 0.0,
+                "query_accuracy": 0.0,
+                "query_strata": {
+                  "after_same_key_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 6
+                  },
+                  "after_unrelated_overwrite_only": {
+                    "accuracy": 0.0,
+                    "query_decisions": 6
+                  },
+                  "before_any_overwrite": {
+                    "accuracy": 0.0,
+                    "query_decisions": 4
+                  }
+                }
+              }
+            },
+            "length": 512,
+            "query_accuracy": 0.0,
+            "query_address_top1": 0.0,
+            "query_decisions": 16,
+            "query_strata": {
+              "after_same_key_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 6
+              },
+              "after_unrelated_overwrite_only": {
+                "accuracy": 0.0,
+                "query_decisions": 6
+              },
+              "before_any_overwrite": {
+                "accuracy": 0.0,
+                "query_decisions": 4
+              }
+            },
+            "reconstruction_maximum_absolute_logit_residual": 0.0,
+            "reconstruction_query_predictions_equal": true,
+            "task": "overwrite_guard"
+          }
+        },
+        "intervention_evaluation_schedule_sha256": "fcf594e037666e947b088a6f2135bf4105b45f1258466ef2b61591d6666f48f7",
+        "standard_evaluation_schedule_sha256": "cbf2f83cf3793d04eb0f2b577d4cff175b422e450ce4cfd410927c939f9c7246"
+      },
+      "evaluation_batch_fingerprints": 55,
+      "evaluation_wall_seconds": 2.6025942519999887,
+      "initial_parameter_sha256": "645dc65593b3ce91c23828c5573e388a61f9d000d014651b805a8deff135275f",
+      "loss_samples": [
+        {
+          "components": {
+            "balanced_commit": 1.2039728164672852,
+            "query_to_commit_address": 1.4394807815551758,
+            "retrieval": 4.320256233215332,
+            "reverse_binding": 4.283873558044434
+          },
+          "global_update": 1,
+          "gradient_norm": 6.270819664001465,
+          "learning_rate": 0.003,
+          "phase": 1,
+          "phase_update": 1,
+          "task": "mqar",
+          "total": 6.052087783813477
+        },
+        {
+          "components": {
+            "balanced_commit": 1.1912018060684204,
+            "query_to_commit_address": 1.957324504852295,
+            "retrieval": 4.293431758880615,
+            "reverse_binding": 4.272828102111816
+          },
+          "global_update": 2,
+          "gradient_norm": 4.342334747314453,
+          "learning_rate": 0.003,
+          "phase": 2,
+          "phase_update": 1,
+          "task": "overwrite",
+          "total": 6.148770809173584
+        },
+        {
+          "components": {
+            "balanced_commit": 1.1784048080444336,
+            "query_to_commit_address": 2.0366196632385254,
+            "retrieval": 4.308156967163086,
+            "reverse_binding": 4.320558547973633
+          },
+          "global_update": 3,
+          "gradient_norm": 3.4494385719299316,
+          "learning_rate": 0.001,
+          "phase": 3,
+          "phase_update": 1,
+          "task": "overwrite",
+          "total": 6.192052841186523
+        },
+        {
+          "components": {
+            "balanced_commit": 1.1771031618118286,
+            "query_to_commit_address": 2.272305488586426,
+            "retrieval": 4.2734222412109375,
+            "reverse_binding": 4.276861667633057
+          },
+          "global_update": 4,
+          "gradient_norm": 5.080875873565674,
+          "learning_rate": 0.001,
+          "phase": 4,
+          "phase_update": 1,
+          "task": "selective",
+          "total": 6.204989910125732
+        }
+      ],
+      "mean_synchronized_step_seconds": 0.05650224750000632,
+      "optimizer_partition": [
+        {
+          "learning_rate": 0.003,
+          "names": [
+            "blocks.0.input_projection.weight",
+            "blocks.0.ffn.gate_projection.weight",
+            "blocks.0.ffn.up_projection.weight",
+            "blocks.0.ffn.down_projection.weight",
+            "blocks.0.mixer.query_projection.weight",
+            "blocks.0.mixer.key_projection.weight",
+            "blocks.0.mixer.value_projection.weight",
+            "blocks.0.mixer.output_gate.weight",
+            "blocks.0.mixer.output_projection.weight"
+          ],
+          "optimizer": "torch.optim.Muon",
+          "parameters": 53248,
+          "role": "hidden_matrices",
+          "second_moment": null,
+          "tensors": 9,
+          "weight_decay": 0.01
+        },
+        {
+          "learning_rate": 0.003,
+          "names": [
+            "blocks.0.residual_scale",
+            "blocks.0.mixer.commit_projection.weight",
+            "blocks.0.mixer.commit_projection.bias",
+            "blocks.0.mixer.erase_projection.weight",
+            "blocks.0.mixer.erase_projection.bias",
+            "blocks.0.mixer.write_projection.weight",
+            "blocks.0.mixer.write_projection.bias",
+            "blocks.0.mixer.decay_projection.weight",
+            "blocks.0.mixer.decay_projection.bias"
+          ],
+          "optimizer": "ScalarSecondMomentAdamW",
+          "parameters": 8841,
+          "role": "memory_controls",
+          "second_moment": "one scalar per parameter tensor",
+          "tensors": 9,
+          "weight_decay": 0.0
+        },
+        {
+          "learning_rate": 0.003,
+          "names": [
+            "blocks.0.local_conv.conv.weight"
+          ],
+          "optimizer": "torch.optim.AdamW",
+          "parameters": 256,
+          "role": "non_matrix_decay",
+          "second_moment": "coordinatewise",
+          "tensors": 1,
+          "weight_decay": 0.01
+        },
+        {
+          "learning_rate": 0.003,
+          "names": [
+            "embedding.weight",
+            "blocks.0.mixer_norm.weight",
+            "blocks.0.ffn_norm.weight",
+            "blocks.0.mixer.output_norm.weight",
+            "blocks.0.local_conv.conv.bias",
+            "final_norm.weight"
+          ],
+          "optimizer": "torch.optim.AdamW",
+          "parameters": 4688,
+          "role": "embedding_norm_bias",
+          "second_moment": "coordinatewise",
+          "tensors": 6,
+          "weight_decay": 0.0
+        }
+      ],
+      "parameters": 67033,
+      "peak_cuda_memory_bytes": 447752704,
+      "phase_execution": [
+        {
+          "declared": {
+            "batch_size": 2,
+            "learning_rate": 0.003,
+            "length": 128,
+            "live_keys": 4,
+            "max_writes": 8,
+            "queries": 4,
+            "updates": 1
+          },
+          "optimizer_group_learning_rates": [
+            0.003
+          ],
+          "phase": 1,
+          "query_decisions": 8,
+          "task_batches": {
+            "mqar": 1,
+            "needle": 0,
+            "overwrite": 0,
+            "selective": 0
+          },
+          "tokens": 256
+        },
+        {
+          "declared": {
+            "batch_size": 2,
+            "learning_rate": 0.003,
+            "length": 256,
+            "live_keys": 8,
+            "max_writes": 16,
+            "queries": 8,
+            "updates": 1
+          },
+          "optimizer_group_learning_rates": [
+            0.003
+          ],
+          "phase": 2,
+          "query_decisions": 16,
+          "task_batches": {
+            "mqar": 0,
+            "needle": 0,
+            "overwrite": 1,
+            "selective": 0
+          },
+          "tokens": 512
+        },
+        {
+          "declared": {
+            "batch_size": 2,
+            "learning_rate": 0.001,
+            "length": 512,
+            "live_keys": 8,
+            "max_writes": 24,
+            "queries": 8,
+            "updates": 1
+          },
+          "optimizer_group_learning_rates": [
+            0.001
+          ],
+          "phase": 3,
+          "query_decisions": 16,
+          "task_batches": {
+            "mqar": 0,
+            "needle": 0,
+            "overwrite": 1,
+            "selective": 0
+          },
+          "tokens": 1024
+        },
+        {
+          "declared": {
+            "batch_size": 2,
+            "learning_rate": 0.001,
+            "length": 1024,
+            "live_keys": 8,
+            "max_writes": 24,
+            "queries": 8,
+            "updates": 1
+          },
+          "optimizer_group_learning_rates": [
+            0.001
+          ],
+          "phase": 4,
+          "query_decisions": 16,
+          "task_batches": {
+            "mqar": 0,
+            "needle": 0,
+            "overwrite": 0,
+            "selective": 1
+          },
+          "tokens": 2048
+        }
+      ],
+      "seed": 23,
+      "state_bytes_per_sequence_fp32": 4864,
+      "train_evaluation_hash_intersection": [],
+      "training_batch_fingerprints": 4,
+      "training_schedule_sha256": "fe8171d77fcd75188ae0aaee65cca6c0ba5df134857c85cb401396c8d21342e5",
+      "training_tokens": 3840,
+      "training_tokens_per_second": 16990.47458244723,
+      "training_updates": 4,
+      "training_wall_seconds": 0.22600899000002528
+    }
+  ],
+  "source_files": {
+    "SSM-Models/hybrid_memory_v1_4/G15BT_TRANSACTIONAL_DELTA_PROTOCOL_2026-08-26.md": "e712c4d7f9867db47d3e454f8f72f0c3fa4544a85f7901b1193f66e6872b2855",
+    "SSM-Models/hybrid_memory_v1_4/g15b_interleaved_tasks.py": "234284b1d8e4ad9eb15c86f9cadb2e9f10d1c7bf6a3bcbb4c7534c4a5c225e9e",
+    "SSM-Models/hybrid_memory_v1_4/g15bt_transactional_cohort.py": "899d424f738b269f77f505c9942bef8563728014d70b820a49e6e410308dd0a8",
+    "SSM-Models/hybrid_memory_v1_4/model.py": "0d78a96374201a14083638e999e9b21f4a54ef53b82338bf142b4a1bedccbbf7",
+    "SSM-Models/hybrid_memory_v1_4/optimizers.py": "eaf429e03593e918f1f69727b22a0f087c638930f7ce81f80c284e8727258ffa",
+    "SSM-Models/hybrid_memory_v1_4/transactional_delta.py": "fae2e9a78072bcf53f607513080a09feafd943242abccde4edf81504da94415a"
+  }
+}

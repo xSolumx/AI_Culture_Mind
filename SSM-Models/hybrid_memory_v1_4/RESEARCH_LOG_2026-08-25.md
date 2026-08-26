@@ -748,3 +748,30 @@ reported 411 passed in 60.09 seconds.
 The frozen decision authorizes the prospective Phase-1 constructed training
 screen only. Do not call Phase 0 a learning or model-quality result, do not
 promote T-AUX, and do not rewrite the failed R5/R5-S evidence.
+
+## 2026-08-26: G15B-T Phase-1 exact-SM75 execution smoke
+
+The prospective Phase-1 execution schedule was frozen before training in
+commit `2d84334`; the runner, optimizer partition, interventions, and
+fail-closed adjudicator were then sealed in `b3fd297`. A first dirty smoke
+exposed a terminal-write bug: an out-of-range post-value commit was being
+clamped onto the final token. The runner now masks terminal tails before
+gathering or supervision, with a deterministic regression test. Dirty smoke
+outputs remain outside the repository and carry no evidence.
+
+The subsequent clean exact-SM75 smoke completed from full commit
+`b3fd2971090d9e755966e5d0dc73091a18813734`. Artifact SHA-256 is
+`f306e65b85ee3ab1a9b1ad8b8fce56e884227435a7e64f738dffb614f102673d`.
+All preflight checks pass; `F`, `T`, and `T-AUX` are matched at 67,033 active
+parameters and 4,864 FP32 state bytes per sequence. Initial hashes and
+standard evaluation schedules match. `T` and `T-AUX` pass bit-identical
+current-token edit invariance, nonzero prior-history effects, chunk/step
+parity, exact compacted-mask logits/state/cache, reconstructed-forward parity,
+and filler/write-marker/query-marker commit-tail support.
+
+The smoke uses only four updates and 3,840 tokens per arm. Its frozen
+adjudicator therefore returns `passed=false` and
+`eligible_for_promotion=false`, independent of observed metrics. This is
+execution evidence, not learning evidence. The next authorized run is the
+unchanged three-seed quality cohort; no geometry arm enters before identity T
+passes.
