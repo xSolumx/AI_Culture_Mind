@@ -22,9 +22,11 @@ Every discrete replay metric and learned logit was exact, while:
 - the independently recomputed FP64 algebra remained exact to
   `3.996803e-15`.
 
-R5-S asks whether these failures reproduce as bounded FP32 reduction-order
-effects on fresh batches, with exact discrete behavior and independently exact
-FP64 algebra, or expose a real semantic divergence.
+R5-S asks whether fresh batches show any semantic divergence above fixed FP32
+engineering bounds, with exact discrete behavior and independently exact FP64
+algebra. A pass is consistent with reduction-order effects; it cannot prove
+that reduction order caused the original R5 maxima because the sealed artifact
+does not retain their per-batch locations.
 
 R5-S does not change R5's frozen artifact, decision, thresholds, or pass list.
 It is a new prospective stability cohort. A pass can ratify the numerics needed
@@ -52,9 +54,12 @@ record all parent, checkpoint, protocol, and source hashes.
 
 ## Fresh stability cohort
 
-R5-S never re-scores R5 performance gates. It uses a new deterministic batch
-namespace, `g15br5s-stability`, with no batch fingerprint equal to the
-corresponding R5/R4 cell.
+R5-S never re-scores R5 performance gates. It reconstructs every original
+`g15b-eval` batch, reproduces each sealed aggregate cell digest, and retains
+the individual fingerprint set. It then generates the new deterministic
+`g15br5s-stability` cohort twice, requires both copies to be identical, and
+requires every fresh individual fingerprint to be absent from the original
+set.
 
 Evaluate:
 
@@ -76,9 +81,9 @@ Let `eps = torch.finfo(torch.float32).eps`.
 
 R5-S freezes two complementary tolerances before fresh execution:
 
-1. an absolute component-algebra ceiling of `5e-6`, reusing the already
-   implemented R5 FP32 injection-integrity scale rather than choosing the
-   observed `3.576279e-6` as the threshold;
+1. an absolute component-algebra ceiling of `5e-6`, reusing an already
+   implemented R5 FP32 injection-integrity threshold as a prospective
+   engineering ceiling. This is not a derived state/read forward-error bound;
 2. a symmetric scaled-logit tolerance
 
    ```text
@@ -91,10 +96,10 @@ all scan lengths. Its scientific role is constrained by exact prediction
 agreement, an independent FP64 contract at `1e-10`, and the separate `5e-6`
 absolute ceiling. Report the maximum ratio to the scaled allowance.
 
-For scalar BPQ, require both:
-
-- absolute difference at most `1e-6`;
-- relative difference at most `64 * eps` using a denominator floored at one.
+For scalar BPQ, require absolute difference at most `1e-6` and report relative
+difference diagnostically. The relative measure is not a second gate because,
+with a denominator floored at one, it would be redundant with the stricter
+absolute rule.
 
 No tolerance applies to categorical behavior: query predictions, query
 accuracy, and exact-episode accuracy must match exactly.
@@ -114,6 +119,8 @@ accuracy, and exact-episode accuracy must match exactly.
 - R5 FP32 source-assignment residual is zero and injection-sum residual is at
   most `5e-6`;
 - every R5 FP64 algebraic contract is at most `1e-10`.
+- every current R5 helper/model/task source hash and retained checkpoint hash
+  matches the sealed R5 artifact exactly.
 
 ### Fresh cohort audit
 
@@ -126,16 +133,27 @@ At every batch and for each source H, C, and B:
   absolute maximum residual `5e-6`;
 - full read equals key read plus background read to absolute maximum residual
   `5e-6`;
-- full transitions are the same shared tensor objects across sources;
+- full injection is bit-identical to, and left/right transitions are computed
+  bit-identically by two independent erase-free full-token transition calls;
 - candidate logits meet the frozen 64-epsilon scaled tolerance;
 - every query prediction, query accuracy, and exact-episode accuracy matches
   the direct monolithic path exactly;
-- BPQ meets both frozen scalar tolerances;
+- BPQ meets the frozen absolute tolerance and reports relative error;
 - outputs are finite;
-- the independent FP64 convolution/source/component/recurrent/parallel
-  contract passes at `1e-10` for the first batch of every task/length cell;
-- fresh fingerprints are deterministic, complete, and disjoint from the
-  corresponding R5 fingerprints.
+- every batch records its normalized state/read/logit/BPQ severity; the single
+  worst normalized batch in each task/length/checkpoint cell is regenerated
+  exactly and checked against a common FP64 scan/read reference;
+- on that retained worst batch, report FP32 monolithic and decomposed distances
+  separately from the common FP64 reference, state/read magnitudes, normalized
+  errors, and the independently recomputed FP64 convolution/source/component/
+  recurrent/parallel contract; require FP64 algebra at `1e-10`;
+- reconstructed original aggregate digests equal R5, fresh generation is
+  deterministic on a second replay, and individual fresh/original fingerprint
+  sets are disjoint.
+
+The fresh cohort is one eighth the decision count of R5 and cannot localize or
+replay the original artifact's worst state/read batch. This limitation is
+mandatory in the result interpretation.
 
 Quality fails closed on any dirty start, non-CUDA device, non-SM75 hardware,
 missing hash, incomplete cell, threshold miss, prediction mismatch, or
@@ -146,16 +164,19 @@ nonfinite output.
 R5-S passes only if every sealed-artifact and fresh-cohort gate passes for all
 three checkpoints.
 
-- **Pass:** record that R5's formal fail is numerically ratified but unchanged;
-  support drafting, not executing, a separately frozen fresh-seed
-  pending-write/commit training screen with learned addresses, explicit
-  transaction occupancy, protected background-free read, and matched
-  controls.
+- **Pass:** record that R5's formal fail is unchanged and that no semantic
+  divergence was detected above the prospective engineering bounds on the
+  smaller fresh cohort. The result is consistent with bounded FP32
+  reduction-order effects and supports drafting, not executing, a separately
+  frozen fresh-seed pending-write/commit training screen with learned
+  addresses, explicit transaction occupancy, protected background-free read,
+  and matched controls.
 - **Fail:** stop retained-checkpoint tail repair and do not draft or execute
   that training screen until the failing numerical mechanism is understood.
 
 No post-run threshold amendment is allowed. R5-S does not use performance
-metrics to choose a tolerance and never promotes an R5 arm by itself.
+metrics to choose a tolerance, cannot prove the cause of R5's original maxima,
+and never promotes an R5 arm by itself.
 
 ## Exact reproduction target
 
