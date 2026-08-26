@@ -14,6 +14,14 @@ For unit key ``k`` and effective erase/write gates ``beta,alpha in [0,1]``:
 The historical product mode uses ``beta=c*e`` and ``alpha=c*w``. G15B-E's
 matched mode instead forms the effective gates by adding the corresponding
 logits. The shared logit is continuous and has no required binary semantics.
+G15B-D couples removal and replacement with one channelwise residual-delta
+strength ``beta_j``:
+
+``S_t[:, j] = (I - beta_j k k^T) diag(r) S_{t-1}[:, j] + beta_j k v_j``.
+
+This is the usual delta correction written as an affine transition.  It keeps
+the parameter/state contract of the earlier modes while preventing the erase
+and write amplitudes from learning incompatible edit laws.
 
 The symmetric erase and bounded retention are nonexpansive.  The affine law is
 scan-compatible.  This module is semantic PyTorch code, not a fused-kernel or
@@ -33,7 +41,7 @@ from torch.nn import functional as F
 from .gated_delta import GatedDeltaScanMode, _affine_prefix_scan, _positive_integer
 
 TransactionalControllerMode = Literal["full", "history"]
-EffectiveEditGateMode = Literal["product", "logit_additive"]
+EffectiveEditGateMode = Literal["product", "logit_additive", "residual_delta"]
 
 
 @dataclass(frozen=True)
@@ -68,9 +76,14 @@ class TransactionalDeltaConfig:
                 _positive_integer(name, value)
         if self.controller_mode not in ("full", "history"):
             raise ValueError("controller_mode must be 'full' or 'history'")
-        if self.effective_edit_gate_mode not in ("product", "logit_additive"):
+        if self.effective_edit_gate_mode not in (
+            "product",
+            "logit_additive",
+            "residual_delta",
+        ):
             raise ValueError(
-                "effective_edit_gate_mode must be 'product' or 'logit_additive'"
+                "effective_edit_gate_mode must be 'product', 'logit_additive', "
+                "or 'residual_delta'"
             )
         for name in (
             "normalize_values",
@@ -125,8 +138,8 @@ class TransactionalDeltaMemory(nn.Module):
     memory_kind = "strict_history_transactional_fast_weight"
     supports_episode_writes = True
     claim_boundary = (
-        "Prospective G15B-T/G15B-E semantic recurrence; no learned-transaction, "
-        "natural-text, fused-kernel, or model-promotion claim."
+        "Prospective G15B-T/G15B-E/G15B-D semantic recurrence; no "
+        "learned-transaction, natural-text, fused-kernel, or model-promotion claim."
     )
 
     def __init__(self, config: TransactionalDeltaConfig) -> None:
@@ -297,7 +310,7 @@ class TransactionalDeltaMemory(nn.Module):
         if self.config.effective_edit_gate_mode == "product":
             erase = torch.sigmoid(erase_logits)
             write = torch.sigmoid(write_logits)
-        else:
+        elif self.config.effective_edit_gate_mode == "logit_additive":
             initial_commit_logit = self._logit(
                 self.config.initial_commit_strength
             )
@@ -319,6 +332,24 @@ class TransactionalDeltaMemory(nn.Module):
             )
             erase = torch.sigmoid(event_logits + erase_logits + erase_offset)
             write = torch.sigmoid(event_logits + write_logits + write_offset)
+        else:
+            initial_commit_logit = self._logit(
+                self.config.initial_commit_strength
+            )
+            residual_offset = (
+                self._logit(
+                    self.config.initial_commit_strength
+                    * self.config.initial_erase_strength
+                )
+                - initial_commit_logit
+                - self._logit(self.config.initial_erase_strength)
+                - self._logit(self.config.initial_write_strength)
+            )
+            edit = torch.sigmoid(
+                event_logits + erase_logits + write_logits + residual_offset
+            )
+            erase = edit
+            write = edit
         retention_unit = torch.sigmoid(self.decay_projection(edit_inputs)).view(
             batch, length, heads, key_dim
         )
@@ -341,6 +372,32 @@ class TransactionalDeltaMemory(nn.Module):
         eye = torch.eye(
             self.config.resolved_key_dim, dtype=key.dtype, device=key.device
         )
+        if self.config.effective_edit_gate_mode == "residual_delta":
+            # Each value channel receives its own coupled delta correction.
+            # Flattening (head, value-channel) into the scan-head axis retains
+            # the existing exact affine prefix-scan implementation.
+            key_projector = key.unsqueeze(-1) * key.unsqueeze(-2)
+            transition = eye - erase[..., None, None] * key_projector.unsqueeze(3)
+            transition = transition @ torch.diag_embed(retention).unsqueeze(3)
+            injection = key.unsqueeze(3) * (write * value).unsqueeze(-1)
+            transition = transition.permute(0, 2, 3, 1, 4, 5).contiguous()
+            injection = injection.permute(0, 2, 3, 1, 4).contiguous()
+            batch, heads, value_dim, length, key_dim, _ = transition.shape
+            transition = transition.view(
+                batch, heads * value_dim, length, key_dim, key_dim
+            )
+            injection = injection.view(
+                batch, heads * value_dim, length, key_dim, 1
+            )
+            if valid_mask is not None:
+                valid = valid_mask[:, None, :, None, None]
+                transition = torch.where(valid, transition, eye)
+                injection = torch.where(
+                    valid_mask[:, None, :, None, None],
+                    injection,
+                    torch.zeros_like(injection),
+                )
+            return transition, injection
         if self.config.effective_edit_gate_mode == "product":
             effective_erase = commit * erase
             effective_write = commit * write
@@ -411,7 +468,35 @@ class TransactionalDeltaMemory(nn.Module):
             initial_state = full_inputs.new_zeros(
                 full_inputs.shape[0], *self.config.state_shape
             )
-        if scan_mode == "recurrent":
+        if self.config.effective_edit_gate_mode == "residual_delta":
+            batch, heads, key_dim, value_dim = initial_state.shape
+            scan_initial_state = (
+                initial_state.permute(0, 1, 3, 2)
+                .contiguous()
+                .view(batch, heads * value_dim, key_dim, 1)
+            )
+            if scan_mode == "recurrent":
+                scan_states, scan_final_state = self._recurrent_states(
+                    transition, injection, scan_initial_state
+                )
+            else:
+                scan_states, scan_final_state = self._parallel_states(
+                    transition, injection, scan_initial_state
+                )
+            scan_states = scan_states.squeeze(-1)
+            scan_final_state = scan_final_state.squeeze(-1)
+            length = scan_states.shape[2]
+            states = (
+                scan_states.view(batch, heads, value_dim, length, key_dim)
+                .permute(0, 1, 3, 4, 2)
+                .contiguous()
+            )
+            final_state = (
+                scan_final_state.view(batch, heads, value_dim, key_dim)
+                .permute(0, 1, 3, 2)
+                .contiguous()
+            )
+        elif scan_mode == "recurrent":
             states, final_state = self._recurrent_states(
                 transition, injection, initial_state
             )
@@ -451,6 +536,11 @@ class TransactionalDeltaMemory(nn.Module):
                 commit * write
                 if self.config.effective_edit_gate_mode == "product"
                 else write
+            ),
+            "residual_delta_strength": (
+                write
+                if self.config.effective_edit_gate_mode == "residual_delta"
+                else torch.zeros_like(write)
             ),
             "retention": retention,
             "read": read,

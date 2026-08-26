@@ -214,7 +214,28 @@ implemented. Its exact clean-SM75 execution smoke from commit `475221e`
 passes all runtime/integrity contracts with maximum trained logit residual
 `3.576e-7` and exact predictions; artifact SHA-256 is
 `ac5829d23625a0bc111ee19b5c1ef3d6f5dcd63b6e9a3324121c3220bd36ebe2`.
-The smoke is non-promotable by construction; quality execution remains pending.
+The smoke remains non-promotable by construction. The subsequent exact-SM75
+quality cohort from clean commit `c2f160c` completes all six reports, 20,400
+updates, and 83,558,400 tokens, but both arms fail. Mean `P/A` overwrite is
+`0.9266/0.9181`, `0.9227/0.9282`, and `0.9233/0.9250` at L128/L512/L1024;
+`A` never reaches the frozen `+0.02` margin, misses absolute all-seed quality,
+and fails valid-event-only causal sufficiency for seeds 2483/2489. All trained
+boundary audits pass with exact predictions. The frozen decision is to test a
+separately frozen residual-delta write law; geometry remains blocked. See the
+[`quality artifact`](artifacts/g15be_phase1_quality_sm75_2026-08-26.json),
+SHA-256
+`2a41ed4694c4b2df473e08e6a62e455a309ffa7106616ffdfe420346eee4b469`.
+
+The next bounded prospective identity-memory step is
+[`G15B-D coupled residual delta`](G15BD_RESIDUAL_DELTA_PROTOCOL_2026-08-26.md).
+It couples removal of the addressed old value and insertion of the new value
+through one channelwise delta strength while preserving the G15B-E parameter
+names, shapes, state size, optimizer partition, data, and budget. The
+[`Phase-0 result ledger`](G15BD_PHASE0_QUALIFICATION_RESULTS.md) and
+[`exact-SM75 harness`](g15bd_phase0_qualification.py) are implemented, but
+exact clean-commit SM75 qualification is pending. No G15B-D learning,
+natural-text, geometry, or promotion result exists, and no development output
+is evidentiary.
 
 In parallel, the frozen
 [`G16 SM75 shootout protocol`](G16_SM75_FRONTIER_SHOOTOUT_PROTOCOL_2026-08-25.md)
@@ -353,7 +374,8 @@ remains label-supervised with 774,400 useful query labels per seed.
   transactional fast weight with strict-history edit controls, scalar commit
   and erase, channelwise write, exact scan/chunk/step execution, and no Spin
   transport; it also contains the prospectively matched G15B-E
-  product/logit-additive effective-edit parameterizations.
+  product/logit-additive effective-edit parameterizations and the prospective
+  G15B-D coupled residual-delta law.
 - [`g15be_phase0_qualification.py`](g15be_phase0_qualification.py): clean-SM75
   matching, contraction, scan/chunk/step/mask, gradient, and provenance gate
   for the G15B-E pivot.
@@ -361,6 +383,9 @@ remains label-supervised with 774,400 useful query labels per seed.
   fresh-seed P/A curriculum, value-position objectives, effective-gate
   statistics/interventions, numerical boundary audit, checkpoints, and frozen
   fail-closed adjudication.
+- [`g15bd_phase0_qualification.py`](g15bd_phase0_qualification.py): pending
+  clean-SM75 P/D matching, direct residual-delta formula, contraction,
+  scan/chunk/step/mask, gradient, and provenance qualification harness.
 - [`model.py`](model.py): eight-kind hybrid shell, local convolution caches,
   checkpointing, diagnostics, and exact cache-byte accounting.
 - [`fla_adapter.py`](fla_adapter.py): fail-closed semantic and optional official

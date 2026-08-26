@@ -1088,24 +1088,23 @@ def _adjudicate(config: CohortConfig, reports: list[dict[str, Any]]) -> dict[str
                 means[arm] - by_arm_seed[(arm, seed)]["evaluation"]["cells"][f"overwrite:L{length}"]["query_accuracy"] <= 0.03
                 for seed in QUALITY_SEEDS
             )
-    passed = all(checks.values())
-    product_checks: dict[str, bool] = {}
+    product_specific_checks: dict[str, bool] = {}
     for seed in QUALITY_SEEDS:
         cells = by_arm_seed[("P", seed)]["evaluation"]["cells"]
         for length in (128, 512, 1024):
             overwrite = cells[f"overwrite:L{length}"]
             post_same = overwrite["query_strata"]["after_same_key_overwrite"]["accuracy"]
-            product_checks[f"P:{seed}:overwrite:L{length}"] = (
+            product_specific_checks[f"P:{seed}:overwrite:L{length}"] = (
                 overwrite["query_accuracy"] >= 0.93
             )
-            product_checks[f"P:{seed}:post_same:L{length}"] = (
+            product_specific_checks[f"P:{seed}:post_same:L{length}"] = (
                 post_same is not None and post_same >= 0.92
             )
-            product_checks[f"P:{seed}:mqar_selective:L{length}"] = all(
+            product_specific_checks[f"P:{seed}:mqar_selective:L{length}"] = all(
                 cells[f"{task}:L{length}"]["query_accuracy"] >= 0.98
                 for task in ("mqar", "selective")
             )
-        product_checks[f"P:{seed}:needle_guard"] = all(
+        product_specific_checks[f"P:{seed}:needle_guard"] = all(
             cells[f"needle:L{length}"]["query_accuracy"] == 1.0
             and cells[f"overwrite_guard:L{length}"]["query_accuracy"] >= 0.99
             and all(
@@ -1125,19 +1124,33 @@ def _adjudicate(config: CohortConfig, reports: list[dict[str, Any]]) -> dict[str
             )
             for length in EVALUATION_LENGTHS
         )
-    product_checks.update(
+    shared_integrity_checks = {
+        name: value
+        for name, value in checks.items()
+        if not name.startswith(("A:", "P:"))
+    }
+    product_specific_checks.update(
         {
             name: value
             for name, value in checks.items()
-            if not name.startswith("A:") and not name.startswith("boundary:A:")
+            if name.startswith("P:")
         }
     )
-    p_passed = all(product_checks.values())
-    a_absolute_passed = all(
-        value
+    additive_specific_checks = {
+        name: value
         for name, value in checks.items()
-        if not name.startswith("A:mean_minus_P:")
-    )
+        if name.startswith("A:") and not name.startswith("A:mean_minus_P:")
+    }
+    comparative_checks = {
+        name: value
+        for name, value in checks.items()
+        if name.startswith("A:mean_minus_P:")
+    }
+    product_checks = {**shared_integrity_checks, **product_specific_checks}
+    additive_checks = {**shared_integrity_checks, **additive_specific_checks}
+    p_passed = all(product_checks.values())
+    a_absolute_passed = all(additive_checks.values())
+    passed = a_absolute_passed and all(comparative_checks.values())
     if passed and p_passed:
         decision = "both pass; run a fresh compiled-efficiency comparison"
     elif passed:
@@ -1156,6 +1169,9 @@ def _adjudicate(config: CohortConfig, reports: list[dict[str, Any]]) -> dict[str
         "product_absolute_quality_passed": p_passed,
         "product_diagnostic_checks": product_checks,
         "additive_absolute_and_causal_passed": a_absolute_passed,
+        "additive_absolute_and_causal_checks": additive_checks,
+        "comparative_checks": comparative_checks,
+        "shared_integrity_checks": shared_integrity_checks,
         "checks": checks,
         "decision": decision,
     }

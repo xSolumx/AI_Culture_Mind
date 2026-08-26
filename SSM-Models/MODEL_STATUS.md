@@ -28,7 +28,7 @@ controlling evidence for their exact numbers.
 | [Pure Spin(8) v1.1](pure_spin8_ssm/CONTRACT.md) | Maintained task-bounded Spin(8) family | Frozen supplied, latent-token, continuous-observation, endpoint-only, calibration, and compiler cohorts | Strong exact/synthetic center-sensitive tracking and shared-action transfer; no natural-language, generic retrieval, or matched modern-SSM superiority |
 | [Pure Spin v1.2](pure_spin_ssm_v1_2/README.md) | Implemented frontier model with current CUDA backend | Current tests/backends plus [frontier training result](pure_spin_ssm_v1_2/FRONTIER_TRAINING_RESULTS.md) | Fused Mamba-2 wins all three matched Tiny Shakespeare quality seeds, 2.4942 versus 2.7477 mean bpb; low-level throughput ordering is unresolved at observed repeatability |
 | [Pure Exceptional Delta v1.3](pure_f4_delta_ssm_v1_3/README.md) | Experimental Albert/F4/E6 model | Algebra/model suite and small natural-text development cohorts | The exceptional hierarchy is executable, but the fresh [layer-localization result](pure_f4_delta_ssm_v1_3/SHAKESPEARE_LAYER_LOCALIZATION_RESULTS.md) rejects early E6 transport; identity is the supported natural-text reference |
-| [Hybrid Memory v1.4/v1.4.5](hybrid_memory_v1_4/README.md) | Active research workspace; no root-level promotion | G-series preregistrations, results, and artifacts inside the active directory | Validated small hybrid causal learner and commissioned synthetic memory; G13 rejects long-context archive promotion; G14 is a constructed mechanism task; after the distinct G15A-L/F observation/precision failures and G15A-R repair, G15A-S confirms composition-only signed-dictionary transfer under oracle edit timing. G15B rejects the token/local-convolution commissioned controller; R0 rejects tied delta, while R1/R2 reject scalar symmetric erase. R3's oracle component reset repairs ordinary overwrite by 12.2--12.8 points and reaches 1.0 on its guard, but misses the frozen saturated-baseline improvement and FP32 replay-tolerance gates. R4 then shows that only ambiguous value-plus-tail ownership passes; value-only arms fail and background removal does not harm the tail arms. R5 localizes the useful source to strict history conditional on the full-token transition: its background-free arm passes all performance/bias gates, but frozen replay/runtime numeric gates fail. R5-S then fails all 135 prospective scaled-logit checks despite exact categorical behavior and passing state/read, BPQ, transition, fingerprint, and FP64 contracts. Retained-checkpoint repair is closed. Fresh G15B-T passes Phase-0 implementation qualification but fails the completed exact-SM75 Phase-1 quality screen: primary `T` trails `F` on mean overwrite throughout and misses commit timing, while diagnostic-only `T-AUX` improves both but misses the frozen margin and one seed's timing gate. Both fail, and G15B-T stops before geometry. Identity transport remains the generic default before any Spin comparison |
+| [Hybrid Memory v1.4/v1.4.5](hybrid_memory_v1_4/README.md) | Active research workspace; no root-level promotion | G-series preregistrations, results, and artifacts inside the active directory | Validated small hybrid causal learner and commissioned synthetic memory; G13 rejects long-context archive promotion; G14 is a constructed mechanism task; after the distinct G15A-L/F observation/precision failures and G15A-R repair, G15A-S confirms composition-only signed-dictionary transfer under oracle edit timing. G15B rejects the token/local-convolution commissioned controller; retained-checkpoint repairs do not promote it. G15B-T passes implementation qualification but fails its transactional quality screen. G15B-E also passes implementation qualification but fails matched product/logit-additive learning. G15B-D now implements the prospectively frozen coupled residual-delta successor and Phase-0 harness, but exact clean-SM75 qualification and every learning claim remain pending. Identity transport remains the generic default before any Spin comparison |
 | [Dense SO(8) Cayley scan](pure_rotor_ssm/dense_so8_cayley_scan.py) | Experimental control | Structural tests and one CUDA feasibility smoke in the [design report](experiments/DENSE_SO8_CAYLEY_SCAN_DESIGN.md) | Exact 28-direction chart and bounded scan are implemented; no training, quality, or comparative speed claim |
 | [SpinorDeltaLM](../Spin8-SSM-Benchmark/README.md) | Historical isolated benchmark model | Completed short benchmark artifacts under its own directory | Useful controlled historical evidence; not the maintained Pure Rotor/Pure Spin successor |
 | [SpinorModel](../SpinorModel/README.md) | Historical prototype | Original tensor-GA baseline and separate overhaul | Implementation provenance only; commands reproduce the historical model, not the current frontier |
@@ -166,11 +166,19 @@ content addressing and edit laws over richer transport geometry alone.
   remains below the timing gate. The frozen decision stops G15B-T before
   geometry.
 - G15B-E is the fresh, prospectively frozen identifiability repair. Product and
-  logit-additive effective-edit arms use the full causal value-position view
-  and are matched at 22,161 parameters and 1,408 FP32 state bytes. Exact clean
-  SM75 Phase 0 passes contraction, scan/chunk/step/mask, prediction, gradient,
-  and provenance gates. This authorizes only constructed P/A training; no
-  learning or model promotion exists yet.
+  logit-additive effective-edit arms use the full causal value-position view.
+  Exact clean SM75 Phase 0 passes contraction, scan/chunk/step/mask,
+  prediction, gradient, and provenance gates. The completed matched Phase-1
+  cohort then fails both trained arms across 20,400 updates and 83,558,400
+  tokens: additive `A` never reaches the `+0.02` mean overwrite margin, neither
+  arm passes absolute all-seed quality, and `A` fails causal-use sufficiency.
+  All trained numerical boundaries pass. The next residual-delta write law is
+  only prospective; no model promotion or geometry follows.
+- G15B-D now implements that prospectively frozen coupled residual-delta law
+  plus its Phase-0 qualification harness. Product `P` and residual `D` retain
+  matched projections, optimizer assignment, recurrent state, data, and
+  future budget. Exact clean-commit SM75 Phase 0 remains pending. There is no
+  G15B-D learning, causal-use, natural-text, geometry, or promotion result.
 - G16 completed its prospectively frozen one-seed SM75 development shootout.
   Official fused Mamba-2 wins ordinary compression at every context and reaches
   `1.48571` BPRB at L4096 versus v1.4.5 `1.58335`; local semantic GDN2 and
@@ -254,6 +262,14 @@ with passed implementation evidence in the
 and
 [G15B-E Phase-0 artifact](hybrid_memory_v1_4/artifacts/g15be_phase0_qualification_sm75_2026-08-26.json),
 SHA-256 `41b49a6de9a74a563c4dc6f3c0571d8d9b0c7fd8fd95405232be22807d88936b`.
+The completed negative learning evidence is in the
+[G15B-E Phase-1 result](hybrid_memory_v1_4/G15BE_PHASE1_RESULTS.md) and
+[G15B-E quality artifact](hybrid_memory_v1_4/artifacts/g15be_phase1_quality_sm75_2026-08-26.json),
+SHA-256 `2a41ed4694c4b2df473e08e6a62e455a309ffa7106616ffdfe420346eee4b469`.
+The prospective successor is frozen in the
+[G15B-D protocol](hybrid_memory_v1_4/G15BD_RESIDUAL_DELTA_PROTOCOL_2026-08-26.md),
+with an unexecuted
+[Phase-0 result ledger](hybrid_memory_v1_4/G15BD_PHASE0_QUALIFICATION_RESULTS.md).
 The four-arm model harness is frozen separately in the
 [G16 protocol](hybrid_memory_v1_4/G16_SM75_FRONTIER_SHOOTOUT_PROTOCOL_2026-08-25.md),
 with exact source/runtime evidence in the

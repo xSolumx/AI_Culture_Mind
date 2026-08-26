@@ -409,8 +409,25 @@ The non-geometric successor is the prospectively frozen
 Its exact-SM75
 [`Phase-0 qualification`](G15BE_PHASE0_QUALIFICATION_RESULTS.md) passes for
 matched full-view product and logit-additive laws at 22,161 parameters and
-1,408 FP32 state bytes. This authorizes only their fresh-seed constructed
-comparison. No G15B-E learning result exists yet, and geometry remains blocked.
+1,408 FP32 state bytes. The completed exact-SM75 Phase-1 quality cohort then
+fails both trained arms. Across 20,400 updates and 83,558,400 tokens, additive
+`A` never reaches the frozen `+0.02` overwrite margin over product `P`, misses
+absolute all-seed quality, and fails valid-event-only causal sufficiency for
+two seeds. All trained numerical boundaries pass with exact predictions. The
+frozen decision recommends only a separately frozen residual-delta write-law
+test; geometry remains blocked. See the
+[`Phase-1 result`](G15BE_PHASE1_RESULTS.md) and
+[`quality artifact`](artifacts/g15be_phase1_quality_sm75_2026-08-26.json).
+
+The resulting prospective non-geometric successor is
+[`G15B-D coupled residual delta`](G15BD_RESIDUAL_DELTA_PROTOCOL_2026-08-26.md).
+It couples erase and write into one channelwise residual correction while
+holding the G15B-E control, projections, optimizer, state, data, and future
+budget fixed. Its
+[`Phase-0 ledger`](G15BD_PHASE0_QUALIFICATION_RESULTS.md) and
+[`qualification harness`](g15bd_phase0_qualification.py) are implemented, but
+exact clean-commit SM75 Phase 0 is pending. No learning result exists, and
+geometry remains blocked.
 
 The constrained `su3_torus` arm is an additional scientific ablation, not a
 replacement for the four frozen primary arms.

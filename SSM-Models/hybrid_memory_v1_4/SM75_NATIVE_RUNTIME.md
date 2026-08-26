@@ -24,6 +24,20 @@ external checkpoints, and trained boundary comparison with exact predictions;
 maximum logit/state residuals were `3.576e-7`/`8.941e-8`. The smoke artifact
 SHA-256 is
 `ac5829d23625a0bc111ee19b5c1ef3d6f5dcd63b6e9a3324121c3220bd36ebe2`.
+
+The subsequent G15B-E quality cohort completed all six reports on the same
+exact runtime from clean commit `c2f160c`: 20,400 updates and 83,558,400
+training tokens across matched `P/A` arms. Source binding, schedules,
+fingerprints, checkpoints, gradients, learned reconstruction, and every
+trained numerical boundary pass. The learning result does not: both arms fail
+their frozen quality conjunctions, and additive `A` also fails causal-use
+sufficiency. See the
+[`Phase-1 result`](G15BE_PHASE1_RESULTS.md) and
+[`quality artifact`](artifacts/g15be_phase1_quality_sm75_2026-08-26.json),
+SHA-256
+`2a41ed4694c4b2df473e08e6a62e455a309ffa7106616ffdfe420346eee4b469`.
+This is exact-SM75 execution evidence plus a bounded negative learning result,
+not a throughput, natural-text, or model-family conclusion.
 It is execution evidence only and cannot promote either arm.
 
 ## Source checkouts

@@ -15,9 +15,13 @@ G15B-E training batch, metric, or checkpoint
 **Phase-1 execution smoke:**
 [`artifacts/g15be_phase1_smoke_sm75_2026-08-26.json`](artifacts/g15be_phase1_smoke_sm75_2026-08-26.json)
 
-**Status:** Phase 0 passed on exact clean SM75 and authorizes only the frozen
-Phase-1 constructed P/A learning screen. No G15B-E learning or model-quality
-result exists yet.
+**Exact Phase-1 quality artifact:**
+[`artifacts/g15be_phase1_quality_sm75_2026-08-26.json`](artifacts/g15be_phase1_quality_sm75_2026-08-26.json)
+
+**Status:** Phase 0 and the execution smoke passed on exact clean SM75. The
+completed Phase-1 quality cohort fails both product `P` and logit-additive
+`A`; the frozen decision is to test a separately frozen residual-delta write
+law. Geometry remains blocked.
 
 **Pre-execution numerical clarification:** the two algebraically equal initial
 effective gates are required to agree within `2e-8` in FP32 rather than be

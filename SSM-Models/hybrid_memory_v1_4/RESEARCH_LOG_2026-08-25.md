@@ -855,4 +855,47 @@ then completed from commit `475221e`; artifact SHA-256 is
 `ac5829d23625a0bc111ee19b5c1ef3d6f5dcd63b6e9a3324121c3220bd36ebe2`.
 Both arms completed the full smoke runner with exact predictions and maximum
 logit/state residuals `3.576e-7`/`8.941e-8`. Four updates carry no learning
-claim. The unchanged quality cohort is next.
+claim. It qualified the unchanged quality cohort reported below.
+
+## 2026-08-26: G15B-E effective-edit Phase-1 rejection
+
+The sealed quality cohort completed from clean commit
+`c2f160cf7c9a7824dc9c04de49495ad6922fce64` on the exact RTX 2070 SUPER SM75
+runtime. The evidentiary artifact is
+[`artifacts/g15be_phase1_quality_sm75_2026-08-26.json`](artifacts/g15be_phase1_quality_sm75_2026-08-26.json),
+SHA-256
+`2a41ed4694c4b2df473e08e6a62e455a309ffa7106616ffdfe420346eee4b469`.
+All six reports, 20,400 optimizer updates, and 83,558,400 training tokens
+completed. Phase-0 source binding, schedules, fingerprints, optimizer
+partition, gradients, learned reconstruction, checkpoints, and numerical
+boundary audits pass.
+
+Mean `P/A` ordinary overwrite is `0.926595/0.918132` at L128,
+`0.922689/0.928223` at L512, `0.923340/0.924967` at L1024, and
+`0.921875/0.918620` at L2048. `A` never reaches the frozen `+0.02` mean margin
+and both arms miss absolute all-seed quality. Additive valid-event-only
+execution fails causal sufficiency for seeds 2483 and 2489; seed 2489 also
+fails erase-zero MQAR preservation. Address alignment is explicitly trained,
+and unsupported ordinary-overwrite strata remain null.
+
+Formal `P` and `A` both fail. Logit-additive effective edits did not materially
+improve this matched constructed screen. Per the frozen decision, the next
+candidate is only a prospectively frozen residual-delta write law. Do not
+promote G15B-E, reopen geometry, or infer natural-text, tokenizer, optimizer,
+efficiency, scaling, or universal transactional-memory conclusions.
+
+## 2026-08-26: G15B-D prospective residual-delta implementation
+
+The bounded follow-up is frozen in
+[`G15BD_RESIDUAL_DELTA_PROTOCOL_2026-08-26.md`](G15BD_RESIDUAL_DELTA_PROTOCOL_2026-08-26.md).
+It changes one learning law: `D` uses a single channelwise delta strength to
+couple removal of the addressed old prediction to insertion of the target.
+The product control, declared projections, optimizer assignment, state bytes,
+data, seeds, curriculum, and prospective budget remain matched to G15B-E.
+
+The implementation, pending
+[`Phase-0 result ledger`](G15BD_PHASE0_QUALIFICATION_RESULTS.md), and
+[`exact-SM75 qualification harness`](g15bd_phase0_qualification.py) exist.
+Exact clean-commit SM75 Phase 0 has not yet completed. Record no development
+run as evidence. No G15B-D learning, causal-use, natural-text, scaling,
+optimizer, geometry, or promotion claim exists.

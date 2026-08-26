@@ -150,7 +150,63 @@ def test_product_and_additive_effective_edits_are_matched_at_initialization() ->
     )
 
 
-@pytest.mark.parametrize("gate_mode", ("product", "logit_additive"))
+def test_product_and_residual_delta_are_functionally_matched_at_initialization() -> None:
+    torch.manual_seed(2481)
+    product = TransactionalDeltaMemory(
+        TransactionalDeltaConfig(
+            12,
+            heads=3,
+            key_dim=4,
+            value_dim=4,
+            controller_mode="full",
+            effective_edit_gate_mode="product",
+        )
+    ).double()
+    torch.manual_seed(2481)
+    residual = TransactionalDeltaMemory(
+        TransactionalDeltaConfig(
+            12,
+            heads=3,
+            key_dim=4,
+            value_dim=4,
+            controller_mode="full",
+            effective_edit_gate_mode="residual_delta",
+        )
+    ).double()
+    assert product.state_dict().keys() == residual.state_dict().keys()
+    for name, tensor in product.state_dict().items():
+        assert torch.equal(tensor, residual.state_dict()[name]), name
+
+    inputs = torch.randn(2, 7, 12, dtype=torch.float64)
+    product_controls = product._controls(inputs, inputs)
+    residual_controls = residual._controls(inputs, inputs)
+    product_erase = product_controls[3] * product_controls[4]
+    product_write = product_controls[3] * product_controls[5]
+    torch.testing.assert_close(
+        product_erase.expand_as(residual_controls[4]),
+        residual_controls[4],
+        rtol=0.0,
+        atol=1e-8,
+    )
+    torch.testing.assert_close(
+        product_write,
+        residual_controls[5],
+        rtol=0.0,
+        atol=1e-8,
+    )
+    product_output, product_state = product(
+        inputs, inputs, scan_mode="recurrent"
+    )
+    residual_output, residual_state = residual(
+        inputs, inputs, scan_mode="recurrent"
+    )
+    torch.testing.assert_close(product_output, residual_output, rtol=0.0, atol=1e-8)
+    torch.testing.assert_close(product_state, residual_state, rtol=0.0, atol=1e-8)
+
+
+@pytest.mark.parametrize(
+    "gate_mode", ("product", "logit_additive", "residual_delta")
+)
 def test_effective_edit_gate_modes_remain_bounded_and_contracting(
     gate_mode: str,
 ) -> None:
@@ -180,6 +236,98 @@ def test_effective_edit_gate_modes_remain_bounded_and_contracting(
         gate = diagnostics[name]
         assert isinstance(gate, torch.Tensor)
         assert bool(((gate > 0.0) & (gate < 1.0)).all())
+
+
+def test_residual_delta_recurrent_and_parallel_execution_agree() -> None:
+    torch.manual_seed(2484)
+    layer = TransactionalDeltaMemory(
+        TransactionalDeltaConfig(
+            12,
+            heads=3,
+            key_dim=3,
+            value_dim=5,
+            controller_mode="full",
+            effective_edit_gate_mode="residual_delta",
+        )
+    ).double()
+    inputs = torch.randn(2, 13, 12, dtype=torch.float64)
+    initial = torch.randn(2, 3, 3, 5, dtype=torch.float64)
+    valid_mask = torch.tensor(
+        [
+            [
+                True,
+                True,
+                False,
+                True,
+                True,
+                False,
+                True,
+                True,
+                True,
+                False,
+                True,
+                True,
+                True,
+            ],
+            [
+                True,
+                False,
+                True,
+                True,
+                False,
+                True,
+                True,
+                True,
+                False,
+                True,
+                True,
+                False,
+                True,
+            ],
+        ]
+    )
+    recurrent_output, recurrent_state, recurrent_diagnostics = layer(
+        inputs,
+        inputs,
+        initial,
+        valid_mask=valid_mask,
+        scan_mode="recurrent",
+        return_diagnostics=True,
+    )
+    parallel_output, parallel_state, parallel_diagnostics = layer(
+        inputs,
+        inputs,
+        initial,
+        valid_mask=valid_mask,
+        scan_mode="parallel",
+        return_diagnostics=True,
+    )
+    torch.testing.assert_close(
+        recurrent_output, parallel_output, rtol=1e-11, atol=1e-11
+    )
+    torch.testing.assert_close(
+        recurrent_state, parallel_state, rtol=1e-11, atol=1e-11
+    )
+    torch.testing.assert_close(
+        recurrent_diagnostics["state_norm"],
+        parallel_diagnostics["state_norm"],
+        rtol=1e-11,
+        atol=1e-11,
+    )
+    strength = recurrent_diagnostics["residual_delta_strength"]
+    assert isinstance(strength, torch.Tensor)
+    torch.testing.assert_close(
+        strength,
+        recurrent_diagnostics["effective_erase_strength"],
+        rtol=0.0,
+        atol=0.0,
+    )
+    torch.testing.assert_close(
+        strength,
+        recurrent_diagnostics["effective_write_strength"],
+        rtol=0.0,
+        atol=0.0,
+    )
 
 
 def test_strict_history_is_current_invariant_and_prior_sensitive() -> None:

@@ -131,10 +131,18 @@ def test_diagnostics_expose_only_bounded_effective_gate_metrics() -> None:
         assert bool(((gate > 0.0) & (gate < 1.0)).all())
 
 
-def test_phase1_preflight_passes_on_semantic_cpu_path() -> None:
+def test_phase1_preflight_closes_after_sealed_core_source_changes() -> None:
     report = run_preflight(torch.device("cpu"))
-    assert report["passed"] is True
-    assert all(report["checks"].values())
+    assert report["passed"] is False
+    assert report["checks"]["phase0_core_sources_unchanged"] is False
+    assert report["phase0_core_source_matches"][
+        "SSM-Models/hybrid_memory_v1_4/transactional_delta.py"
+    ] is False
+    assert all(
+        value
+        for name, value in report["checks"].items()
+        if name != "phase0_core_sources_unchanged"
+    )
 
 
 def _passing_cell(task: str, length: int, decisions: int) -> dict[str, object]:
@@ -293,6 +301,39 @@ def test_product_decision_uses_its_full_absolute_gate_vector(tmp_path: Path) -> 
     assert result["passed"] is True
     assert result["product_absolute_quality_passed"] is False
     assert result["decision"].startswith("A passes and P fails")
+
+
+def test_additive_decision_does_not_depend_on_product_seed_robustness(
+    tmp_path: Path,
+) -> None:
+    reports = _passing_reports(tmp_path)
+    reports[0]["evaluation"]["cells"]["overwrite:L128"]["query_accuracy"] = 0.50
+    result = _adjudicate(frozen_config("quality"), reports)
+    assert result["checks"]["P:worst_seed:L128"] is False
+    assert result["product_absolute_quality_passed"] is False
+    assert result["additive_absolute_and_causal_passed"] is True
+    assert result["passed"] is True
+    assert "P:worst_seed:L128" not in result[
+        "additive_absolute_and_causal_checks"
+    ]
+
+
+def test_diagnostic_subsets_are_explicitly_separated(tmp_path: Path) -> None:
+    result = _adjudicate(frozen_config("quality"), _passing_reports(tmp_path))
+    assert result["shared_integrity_checks"]
+    assert result["comparative_checks"]
+    assert all(
+        not name.startswith(("A:", "P:"))
+        for name in result["shared_integrity_checks"]
+    )
+    assert all(
+        name.startswith("A:mean_minus_P:")
+        for name in result["comparative_checks"]
+    )
+    assert all(
+        not name.startswith("P:")
+        for name in result["additive_absolute_and_causal_checks"]
+    )
 
 
 def test_dirty_execution_is_always_ineligible() -> None:

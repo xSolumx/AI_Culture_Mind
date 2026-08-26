@@ -1416,6 +1416,52 @@ The decision authorizes only the prospectively frozen fresh-seed constructed
 P/A learning screen. It is not evidence that A learns better, is not a
 natural-text result, and does not authorize attention or Spin transport.
 
+## G15B-E Phase-1 exact-SM75 quality result
+
+The sealed
+[`G15B-E Phase-1 quality result`](G15BE_PHASE1_RESULTS.md) completed from
+clean commit `c2f160c` on exact SM75. Its six matched `P/A` reports contain
+20,400 updates and 83,558,400 training tokens; artifact SHA-256 is
+`2a41ed4694c4b2df473e08e6a62e455a309ffa7106616ffdfe420346eee4b469`.
+All provenance, schedules, fingerprints, checkpoints, gradients,
+reconstruction, finite-output, and trained numerical-boundary checks pass.
+
+Three-seed mean ordinary overwrite is:
+
+| Length | Product `P` | Additive `A` | `A - P` |
+|---:|---:|---:|---:|
+| 128 | 0.926595 | 0.918132 | -0.008464 |
+| 512 | 0.922689 | 0.928223 | +0.005534 |
+| 1,024 | 0.923340 | 0.924967 | +0.001628 |
+| 2,048 | 0.921875 | 0.918620 | -0.003255 |
+
+Neither arm passes absolute all-seed quality, and `A` never reaches the
+frozen `+0.02` L128/L512/L1024 margin. `A` also fails valid-event-only causal
+sufficiency for seeds 2483/2489 and erase-zero MQAR preservation for seed
+2489. Trained address alignment is not unsupervised generic-association
+evidence, and unsupported ordinary-overwrite strata remain `null`.
+
+Formal product and additive decisions both fail. The bounded conclusion is
+that logit addition does not materially improve this matched constructed
+screen. The next residual-delta write law is only a prospective recommendation
+requiring its own frozen protocol; natural text and geometry remain blocked.
+
+## G15B-D prospective coupled residual-delta implementation
+
+The follow-up is now frozen in the
+[`G15B-D protocol`](G15BD_RESIDUAL_DELTA_PROTOCOL_2026-08-26.md). Product `P`
+remains the matched historical control; residual-delta `D` couples removal and
+insertion through one channelwise effective strength while retaining the same
+declared projections, optimizer assignment, recurrent state, data, and future
+budget. The
+[`Phase-0 result ledger`](G15BD_PHASE0_QUALIFICATION_RESULTS.md) and
+[`qualification harness`](g15bd_phase0_qualification.py) are implemented.
+
+Exact clean-commit SM75 Phase 0 is pending. There is no qualifying artifact,
+trained G15B-D model, learning result, causal-use result, natural-text result,
+or geometry authorization. Development execution is not evidence and is not
+reported here.
+
 ## G16 one-seed trained-frontier result
 
 The clean exact-SM75 cohort from commit `5796a851df02` completed all four real
