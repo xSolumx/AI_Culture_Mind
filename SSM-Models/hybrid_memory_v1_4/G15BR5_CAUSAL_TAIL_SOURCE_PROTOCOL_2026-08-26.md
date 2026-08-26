@@ -10,6 +10,14 @@ added by prospective adversarial review before implementation metrics.
 
 **Status:** prospective zero-update retained-checkpoint diagnostic
 
+**Pre-quality execution amendment:** after the performance and authorization
+gates were frozen, a dirty-tree, 16-decision CPU smoke exposed a `9.54e-7`
+FP32 convolution-reconstruction residual from summation order. The FP32
+structural bound is therefore frozen at `2e-6`, matching the established
+component state tolerance. The independent FP64 bound remains `1e-10`. The
+smoke is non-evidentiary and changes no performance, bias-separation, or
+training-authorization gate.
+
 ## Question
 
 G15B-R4 shows that the retained identity checkpoints need the injection one
@@ -176,7 +184,8 @@ populate all three strata at every length or adjudication fails closed.
   kernel four, stride/dilation one, and `groups == expanded width`;
 - reconstruct direct local-convolution preactivations from bias plus history
   and current contributions under both full-sequence and arbitrary-chunk
-  execution; include per-tap impulse tests so reversed kernel indexing fails;
+  execution to FP32 maximum residual `2e-6`; include per-tap impulse tests so
+  reversed kernel indexing fails;
 - prove `u_full = b + h + c` and the exact residual identity
   `I_source + (I_full - I_source) = I_full` under an independent FP64
   contract with residual at most `1e-10`;

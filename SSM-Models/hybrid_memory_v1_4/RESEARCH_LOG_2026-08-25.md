@@ -656,3 +656,12 @@ contain convolution bias. R5 now includes a bias-only arm, requires history to
 beat its matched bias control, and authorizes training only from a passing
 background-free history arm. It also labels the result as injection-source
 sufficiency conditional on the unchanged full-token transition.
+
+The first dirty-tree, 16-decision CPU implementation smoke is explicitly
+non-evidentiary. It passed the FP64 algebraic contract at `1.55e-15`, exact
+source assignments, finite outputs, control preservation, and query-prediction
+parity, but direct FP32 convolution reconstruction reached `9.54e-7` because
+the decomposed tap sum changes addition order. Before any quality run, the R5
+protocol therefore freezes the FP32 structural bound at `2e-6` while retaining
+the independent `1e-10` FP64 bound. No performance or authorization threshold
+was changed.
