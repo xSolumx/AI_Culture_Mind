@@ -188,6 +188,34 @@ This stronger gate requires both complete training-step time and peak CUDA
 allocation to be at most `1.25x` official fused Mamba-2.  It is reported
 independently and cannot be inferred from the isolated-kernel result.
 
+### Cached inference qualification
+
+Training-step evidence does not establish cheap autoregressive use.  The
+separate inference gate uses only real streaming states:
+
+- candidate `d_model=204`, two layers, standard SwiGLU host, normalized 27D
+  vector read, memory width 8, and sparse E6 events every 32 tokens;
+- official Mamba-2 `d_model=224`, two layers, using its real
+  `InferenceParams` allocation and cached one-token step;
+- 807,652 versus 808,176 parameters, a `-0.065%` residual;
+- batch 1, prefix length 4,096, 32 untimed decode tokens, 64 timed tokens, and
+  three fresh processes per arm on exact SM75.
+
+Mamba widths whose official cached convolution path rejects its tensor-stride
+contract are ineligible; there is no portable or emulated fallback.  Bulk
+no-cache prefill and cache-building prefill are measured separately from true
+one-token decode.
+
+The streaming gate requires candidate/dead decode time, candidate/Mamba-2
+decode time, and candidate/Mamba-2 recurrent-cache bytes each to be at most
+`1.25x`, with exact candidate/dead parameter parity and at most 1% residual
+versus Mamba-2.  Bulk prefill and cache-building prefill receive independent
+`1.25x` verdicts.
+
+The lean SwiGLU/vector host is a hardware-aware systems arm only until it
+passes a fresh quality cohort.  Earlier natural-text evidence for the
+Jordan/invariant host does not transfer to this arm.
+
 ## Learning gates
 
 Systems qualification precedes a full natural-text cohort.  A promoted quality

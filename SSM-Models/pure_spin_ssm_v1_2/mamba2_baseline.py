@@ -42,10 +42,17 @@ class OfficialMamba2LM(nn.Module):
         self.lm_head.weight = self.embedding.weight
         self.apply(_initialize_language_model_module)
 
-    def forward(self, token_ids: torch.Tensor) -> dict[str, torch.Tensor]:
+    def forward(
+        self,
+        token_ids: torch.Tensor,
+        *,
+        inference_params=None,
+    ) -> dict[str, torch.Tensor]:
         hidden = self.embedding(token_ids)
         for norm, layer in zip(self.norms, self.layers, strict=True):
-            hidden = hidden + layer(norm(hidden))
+            hidden = hidden + layer(
+                norm(hidden), inference_params=inference_params
+            )
         return {"logits": self.lm_head(self.final_norm(hidden))}
 
 
