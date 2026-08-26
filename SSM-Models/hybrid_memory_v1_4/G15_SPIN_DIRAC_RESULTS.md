@@ -392,13 +392,17 @@ and all declared gradients are finite/nonzero. This authorizes only the
 prospective Phase-1 constructed screen. It is not learned-memory evidence and
 does not revise R5 or R5-S.
 
-The Phase-1 runner is now sealed at `b3fd297`. Its exact clean-SM75 execution
-smoke passes the paired optimizer/schedule path and the strict-history causal,
-chunk, mask-compaction, reconstructed-intervention, and mixed tail-role
-contracts. All `F/T/T-AUX` arms have 67,033 active parameters and 4,864 FP32
-state bytes per sequence. The four-update smoke is explicitly non-promotable;
-the frozen three-seed quality cohort remains the first learning result. See
-[`G15BT_PHASE1_RESULTS.md`](G15BT_PHASE1_RESULTS.md).
+The sealed Phase-1 quality cohort has now completed from clean commit
+`0c664f3` on exact SM75. Its nine `F/T/T-AUX` reports contain 30,600 updates
+and 125,337,600 tokens. Primary `T` fails: it trails `F` on mean overwrite at
+every length, seed 2381 collapses to `0.8071--0.8213`, and completed-tail
+commit F1 fails every seed/task/length. Diagnostic-only `T-AUX` improves mean
+overwrite to `0.9264--0.9308` and mostly learns commit timing, but it never
+clears the frozen `+0.05` margin and seed 2381 remains at about 0.8889 commit
+F1. Both arms formally fail. The frozen decision stops G15B-T before any
+identity/torus/Spin comparison. See
+[`G15BT_PHASE1_RESULTS.md`](G15BT_PHASE1_RESULTS.md) and the
+[`exact quality artifact`](artifacts/g15bt_phase1_quality_sm75_2026-08-26.json).
 
 The constrained `su3_torus` arm is an additional scientific ablation, not a
 replacement for the four frozen primary arms.

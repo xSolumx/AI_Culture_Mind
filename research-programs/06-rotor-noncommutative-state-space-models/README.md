@@ -281,9 +281,12 @@ new matched natural-data and complete-step hardware evidence.
   path. Its exact clean-SM75 Phase-0 qualification passes with matched 38,082-
   parameter `F/T` arms, exact current/history causality, nonexpansive measured
   transitions, `8.94e-8` maximum FP32 logit residual, exact predictions, and
-  finite nonzero declared gradients. Only prospective Phase-1 constructed
-  training is authorized; no G15B-T learning or model-quality result exists.
-  R5 and R5-S retain their failed historical adjudications.
+  finite nonzero declared gradients. The completed exact-SM75 Phase-1 cohort
+  then formally fails both primary `T` and diagnostic-only `T-AUX`: `T` trails
+  `F` on mean overwrite throughout and misses commit timing, while `T-AUX`
+  improves both without reaching the frozen margin or all-seed timing gate.
+  G15B-T stops before geometry. R5 and R5-S retain their failed historical
+  adjudications.
   Spin remains a specialized prior for
   supplied or coherent frames; learned topology, full three-carrier triality
   utility, natural text, and scaling remain open.
@@ -423,6 +426,8 @@ new matched natural-data and complete-step hardware evidence.
 - [G15B-T transactional-delta protocol](../../SSM-Models/hybrid_memory_v1_4/G15BT_TRANSACTIONAL_DELTA_PROTOCOL_2026-08-26.md)
 - [G15B-T Phase-0 qualification result](../../SSM-Models/hybrid_memory_v1_4/G15BT_PHASE0_QUALIFICATION_RESULTS.md)
 - [G15B-T Phase-0 exact-SM75 artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g15bt_phase0_qualification_sm75_2026-08-26.json)
+- [G15B-T Phase-1 quality result](../../SSM-Models/hybrid_memory_v1_4/G15BT_PHASE1_RESULTS.md)
+- [G15B-T Phase-1 exact-SM75 quality artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g15bt_phase1_quality_sm75_2026-08-26.json)
 - [G16 SM75 frontier-shootout protocol](../../SSM-Models/hybrid_memory_v1_4/G16_SM75_FRONTIER_SHOOTOUT_PROTOCOL_2026-08-25.md)
 - [G16 trained-frontier results](../../SSM-Models/hybrid_memory_v1_4/G16_SM75_FRONTIER_SHOOTOUT_RESULTS.md)
 - [G16 exact-SM75 runtime qualification artifact](../../SSM-Models/hybrid_memory_v1_4/artifacts/g16_runtime_qualification_sm75_2026-08-25.json)

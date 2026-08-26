@@ -775,3 +775,49 @@ adjudicator therefore returns `passed=false` and
 execution evidence, not learning evidence. The next authorized run is the
 unchanged three-seed quality cohort; no geometry arm enters before identity T
 passes.
+
+## 2026-08-26: G15B-T Phase-1 exact-SM75 quality rejection
+
+The unchanged three-seed quality cohort completed from clean commit
+`0c664f317d82789b5215da4658d2b59cbfe4c414` on the exact RTX 2070 SUPER SM75
+runtime. The evidentiary artifact is
+[`artifacts/g15bt_phase1_quality_sm75_2026-08-26.json`](artifacts/g15bt_phase1_quality_sm75_2026-08-26.json),
+SHA-256
+`6b6b991643ee6ddf50478f905dbaa53d9df9c8e52a10a8b52265dc8c12397fac`.
+All nine reports, 30,600 optimizer updates, and 125,337,600 training tokens
+completed. Source, schedule, fingerprint, checkpoint, optimizer-partition,
+gradient, and learned-reconstruction integrity checks pass.
+
+Mean `F/T/T-AUX` overwrite at L128 is `0.895508/0.881022/0.930827`; at L512
+it is `0.909668/0.890137/0.926432`; at L1024 it is
+`0.909017/0.888835/0.930013`; and at L2048 it is
+`0.910319/0.879069/0.927897`. `T` is below `F` in every mean cell. Its seed
+2381 collapses to 0.813477/0.821289/0.811523/0.807129, while seeds 2383 and
+2389 are much stronger. Address top-1 is 1.0 throughout, but `T` completed-tail
+commit F1 fails every seed/task/length. Address top-1 is trained by the
+declared query-to-commit-address objective and is not independent unsupervised
+association evidence. Ordinary overwrite contains no unrelated-only support;
+only the constructed guard contributes 768 unrelated-only decisions per cell.
+
+`T-AUX` shows that explicit timing supervision helps: seeds 2383 and 2389
+learn nearly perfect commit timing and its overwrite mean exceeds `F` at every
+length. It still fails prospectively. Seed 2381 remains around 0.8889 commit
+F1, and every mean overwrite advantage is below the required `+0.05`.
+Moreover, `T` seed 2383 has a `8.952e-4` chunk-boundary logit residual against
+the frozen `5e-4` limit, and `T` seed 2389 misses exact L2048 needle recall by
+one of 2,048 decisions.
+
+An explicitly exploratory post-hoc checkpoint audit finds that `T-AUX` seed
+2381 head 2 fires at every `WRITE_VALUE` and again at the correct tail:
+recall 1.0, precision 0.8, and exactly 6,144 false positives, all
+`WRITE_VALUE` at offset zero. Unsupervised `T` heads likewise split
+prepare/value and tail phases. This motivates only a separately prospective
+staged prepare/commit architecture; it does not alter adjudication or prove
+topology sufficiency.
+
+Formal `T` and diagnostic `T-AUX` both fail. Per the frozen stop rule, reject
+this tested strict-history symmetric-erase GDN2 law and stop G15B-T before
+geometry. Phase 0 remains a passing implementation result; R5 and R5-S remain
+failed historical retained-checkpoint evidence. Do not infer a universal
+transactional-memory failure, natural-text result, optimizer/tokenizer verdict,
+scaling law, or Spin conclusion.

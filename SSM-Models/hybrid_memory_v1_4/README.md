@@ -184,15 +184,17 @@ transition spectral norm is `0.9995000000000012`, and FP64/FP32 maximum
 logit residuals are `2.78e-16`/`8.94e-8` with exact predictions. All declared
 gradient paths are finite and nonzero. The
 [`Phase-1 result ledger`](G15BT_PHASE1_RESULTS.md) now records a separate exact
-clean-SM75 execution smoke from commit `b3fd297`: all three 67,033-parameter
-arms execute their paired schedules, and the strict-history arms pass causal,
-chunk, mask-compaction, intervention-reconstruction, and tail-role contracts.
-The smoke is non-promotable and is not learned-memory evidence; the frozen
-three-seed quality cohort remains pending. R5 and R5-S remain frozen failed
-retained-checkpoint results. See the
+clean-SM75 quality cohort from commit `0c664f3`. Across 30,600 updates and
+125,337,600 tokens, primary `T` fails and diagnostic-only `T-AUX` also fails.
+Mean `F/T/T-AUX` overwrite is `0.8955/0.8810/0.9308` at L128 and
+`0.9103/0.8791/0.9279` at L2048: `T` trails `F` throughout, while `T-AUX`
+never reaches the frozen `+0.05` margin. Address top-1 is 1.0, but `T` commit
+F1 fails every seed/task/length and seed 2381 collapses to
+`0.8071--0.8213` overwrite. The frozen decision stops G15B-T before geometry.
+R5 and R5-S remain frozen failed retained-checkpoint results. See the
 [`Phase-0 artifact`](artifacts/g15bt_phase0_qualification_sm75_2026-08-26.json)
 and
-[`Phase-1 smoke artifact`](artifacts/g15bt_phase1_smoke_sm75_2026-08-26.json).
+[`Phase-1 quality artifact`](artifacts/g15bt_phase1_quality_sm75_2026-08-26.json).
 
 In parallel, the frozen
 [`G16 SM75 shootout protocol`](G16_SM75_FRONTIER_SHOOTOUT_PROTOCOL_2026-08-25.md)

@@ -1355,8 +1355,44 @@ chunk, arbitrary-mask compaction, and balanced tail-role support contracts.
 
 This is execution evidence only. The smoke uses four updates and 3,840 tokens
 per arm, returns `eligible_for_promotion=false` by construction, and carries no
-learning or model-quality claim. The prospective three-seed quality cohort is
-the next authorized experiment.
+learning or model-quality claim. It qualified the prospective three-seed
+quality cohort reported below.
+
+## G15B-T Phase-1 exact-SM75 quality result
+
+The completed
+[`Phase-1 quality result`](G15BT_PHASE1_RESULTS.md) contains nine clean-SM75
+seed/arm reports from commit `0c664f3`; exact artifact SHA-256 is
+`6b6b991643ee6ddf50478f905dbaa53d9df9c8e52a10a8b52265dc8c12397fac`.
+The cohort completed 30,600 updates and 125,337,600 tokens with matched
+67,033-parameter, 4,864-state-byte `F/T/T-AUX` arms. Provenance, schedules,
+fingerprints, checkpoints, optimizer partitions, finite gradients, and
+learned-forward reconstruction all pass.
+
+Three-seed mean ordinary overwrite is:
+
+| Length | `F` | `T` | `T-AUX` |
+|---:|---:|---:|---:|
+| 128 | 0.895508 | 0.881022 | 0.930827 |
+| 512 | 0.909668 | 0.890137 | 0.926432 |
+| 1,024 | 0.909017 | 0.888835 | 0.930013 |
+| 2,048 | 0.910319 | 0.879069 | 0.927897 |
+
+Primary `T` trails `F` at every length and seed 2381 reaches only
+`0.8071--0.8213`. Query-address top-1 is 1.0 throughout, but `T` completed-tail
+commit F1 fails every seed/task/length. Timing-supervised `T-AUX` raises mean
+overwrite and reaches near-perfect commit F1 for seeds 2383/2389, yet seed
+2381 remains about 0.8889 and no mean overwrite cell clears the required
+`+0.05` margin over `F`. `T` seed 2383 also has a `8.952e-4` trained
+chunk-boundary residual against the frozen `5e-4` bound, and seed 2389 reaches
+`0.999512`, not exactly 1.0, on L2048 needle recall.
+
+Formal `T` and diagnostic-only `T-AUX` both fail. The frozen decision is to
+stop G15B-T after the constructed Phase-1 failure, before any geometry arm.
+This rejects the tested one-block strict-history symmetric-erase law under the
+frozen training setup; it is not a universal transactional-memory result or
+evidence about natural text, scaling, tokenizer/optimizer superiority, or
+Spin transport.
 
 ## G16 one-seed trained-frontier result
 

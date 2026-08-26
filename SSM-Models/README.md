@@ -122,8 +122,13 @@
 > causality, nonexpansive transition, scan/chunk/step parity, prediction, and
 > gradient-reach gates. Both arms have 38,082 active parameters and 5,632
 > batch-2 FP32 state bytes; the maximum FP32 logit residual is `8.94e-8`.
-> Phase 0 authorizes only prospective constructed Phase-1 training. No G15B-T
-> learning or model-quality result exists yet, and R5/R5-S remain failed.
+> The completed exact-SM75 Phase-1 cohort then formally rejects both primary
+> `T` and diagnostic `T-AUX`. `T` trails `F` on mean overwrite at every length,
+> its commit F1 fails every seed/task/length, and seed 2381 collapses;
+> timing-supervised `T-AUX` improves overwrite but never clears the frozen
+> `+0.05` margin and still misses seed-2381 commit F1. G15B-T stops before
+> geometry, while Phase 0 remains valid and R5/R5-S remain failed historical
+> evidence.
 > Generic transport stays identity by default; Spin is
 > reserved for supplied or coherent-frame specialized tasks. G16 has completed
 > its one-seed SM75 development
@@ -168,6 +173,8 @@
 > [G15B-T transactional protocol](hybrid_memory_v1_4/G15BT_TRANSACTIONAL_DELTA_PROTOCOL_2026-08-26.md),
 > [G15B-T Phase-0 result](hybrid_memory_v1_4/G15BT_PHASE0_QUALIFICATION_RESULTS.md),
 > [G15B-T Phase-0 artifact](hybrid_memory_v1_4/artifacts/g15bt_phase0_qualification_sm75_2026-08-26.json),
+> [G15B-T Phase-1 quality result](hybrid_memory_v1_4/G15BT_PHASE1_RESULTS.md),
+> [G15B-T Phase-1 quality artifact](hybrid_memory_v1_4/artifacts/g15bt_phase1_quality_sm75_2026-08-26.json),
 > [G16 SM75 frontier-shootout protocol](hybrid_memory_v1_4/G16_SM75_FRONTIER_SHOOTOUT_PROTOCOL_2026-08-25.md),
 > [G16 trained-frontier results](hybrid_memory_v1_4/G16_SM75_FRONTIER_SHOOTOUT_RESULTS.md),
 > [G16 exact-SM75 runtime qualification artifact](hybrid_memory_v1_4/artifacts/g16_runtime_qualification_sm75_2026-08-25.json),

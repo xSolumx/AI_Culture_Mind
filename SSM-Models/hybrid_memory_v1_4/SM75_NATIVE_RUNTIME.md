@@ -141,6 +141,19 @@ SHA-256
 This qualifies prospective Phase-1 execution only; it is not a trained-model
 or throughput result.
 
+G15B-T Phase 1 subsequently completed all nine quality reports on the same
+exact runtime from clean commit `0c664f3`: 30,600 updates and 125,337,600
+training tokens across matched `F/T/T-AUX` arms. Runtime provenance, source
+hashes, schedules, fingerprints, checkpoints, finite gradients, and learned
+reconstruction pass. The trained result does not: primary `T` and diagnostic
+`T-AUX` both fail their frozen quality gates, so G15B-T stops before geometry.
+See the
+[`quality result`](G15BT_PHASE1_RESULTS.md) and
+[`artifact`](artifacts/g15bt_phase1_quality_sm75_2026-08-26.json), SHA-256
+`6b6b991643ee6ddf50478f905dbaa53d9df9c8e52a10a8b52265dc8c12397fac`.
+This is exact-SM75 execution evidence plus a bounded negative quality result,
+not a general throughput or model-family conclusion.
+
 The native WSL environment also exposes CUDA-only `causal_conv1d`,
 `mamba_ssm`, and FLA Hub kernels to Transformers. The baseline registry now
 dispatches by the actual input tensor: CUDA keeps the resolved native kernel,
