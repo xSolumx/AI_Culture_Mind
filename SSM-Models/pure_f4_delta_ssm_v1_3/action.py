@@ -10,7 +10,9 @@ from torch import nn
 
 from .albert import ALBERT_DIM, build_albert_algebra
 
-ExceptionalAlgebra = Literal["identity", "spin8", "spin9", "f4", "e6"]
+ExceptionalAlgebra = Literal[
+    "identity", "g2", "spin7", "spin8", "spin9", "f4", "e6"
+]
 ActionGeometry = Literal["direct", "polar", "cartan"]
 
 
@@ -74,6 +76,8 @@ class ExceptionalAction(nn.Module):
         if generators is None:
             data = build_albert_algebra()
             arrays = {
+                "g2": data.g2,
+                "spin7": data.spin7,
                 "spin8": data.spin8,
                 "spin9": data.spin9,
                 "f4": data.f4,
@@ -89,6 +93,24 @@ class ExceptionalAction(nn.Module):
         if generators.ndim != 3 or generators.shape[-1] != generators.shape[-2]:
             raise ValueError("generators must have shape (count,dimension,dimension)")
         self.register_buffer("generators", generators, persistent=True)
+
+    def log_operator_norm_bound(self, coordinates: torch.Tensor) -> torch.Tensor:
+        """Certified upper bound for ``log(||ordered(coordinates)||_2)``.
+
+        Compact built-in actions are orthogonal.  For direct E6(-26), only the
+        symmetric ``L(J_0)`` component can expand the Euclidean trace metric;
+        the Frobenius norm bounds its logarithmic matrix norm.  Bounds add
+        across ordered factors.  Custom banks deliberately return zero because
+        no structure has been certified for them.
+        """
+
+        shape = coordinates.shape[:-2]
+        if self.algebra != "e6":
+            return coordinates.new_zeros(shape)
+        content_coordinates = coordinates[..., 52:]
+        content_generators = self.generators[52:].to(coordinates)
+        symmetric_tangent = lie_tangent(content_coordinates, content_generators)
+        return torch.linalg.matrix_norm(symmetric_tangent, ord="fro").sum(dim=-1)
 
     @property
     def coordinate_dim(self) -> int:
@@ -130,6 +152,9 @@ class IdentityAction(nn.Module):
         return identity.expand(
             *coordinates.shape[:-2], self.representation_dim, self.representation_dim
         )
+
+    def log_operator_norm_bound(self, coordinates: torch.Tensor) -> torch.Tensor:
+        return coordinates.new_zeros(coordinates.shape[:-2])
 
 
 class E6PolarAction(nn.Module):
@@ -183,6 +208,13 @@ class E6PolarAction(nn.Module):
 
     def ordered(self, coordinates: torch.Tensor) -> torch.Tensor:
         return _ordered_actions(coordinates, self.forward, self.representation_dim)
+
+    def log_operator_norm_bound(self, coordinates: torch.Tensor) -> torch.Tensor:
+        content_coordinates = coordinates[..., 52:]
+        content_tangent = lie_tangent(
+            content_coordinates, self.content_generators.to(coordinates)
+        )
+        return torch.linalg.matrix_norm(content_tangent, ord="fro").sum(dim=-1)
 
 
 class E6CartanAction(nn.Module):
@@ -238,6 +270,15 @@ class E6CartanAction(nn.Module):
 
     def ordered(self, coordinates: torch.Tensor) -> torch.Tensor:
         return _ordered_actions(coordinates, self.forward, self.representation_dim)
+
+    def log_operator_norm_bound(self, coordinates: torch.Tensor) -> torch.Tensor:
+        radial_coordinates = coordinates[..., 52:54]
+        log_diagonal = torch.einsum(
+            "...a,ai->...i",
+            radial_coordinates,
+            self.radial_eigenvalues.to(coordinates),
+        )
+        return log_diagonal.amax(dim=-1).clamp_min(0.0).sum(dim=-1)
 
 
 def _ordered_actions(

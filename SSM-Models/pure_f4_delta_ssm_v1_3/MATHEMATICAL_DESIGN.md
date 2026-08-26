@@ -1,6 +1,6 @@
 # Mathematical design: Albert memory and exceptional transport
 
-## One carrier, four nested actions
+## One carrier, six nested actions
 
 Let
 
@@ -29,11 +29,15 @@ Albert cubic determinant; only (F_4) preserves the positive trace metric.
 
 Fixing one primitive diagonal idempotent gives a 36-dimensional Spin(9)
 stabilizer. Fixing the full ordered diagonal Jordan frame gives a
-28-dimensional Spin(8) stabilizer. Thus the former separate local programmes
-become restrictions of one action carrier:
+28-dimensional Spin(8) stabilizer. Inside that alignment, fixing one scalar
+octonion unit gives the 21-dimensional vector-stabilizer Spin(7); fixing the
+corresponding units across the triality carriers gives the 14-dimensional G2
+automorphism algebra. Thus the former separate local programmes become
+restrictions of one action carrier:
 
 \[
-\mathrm{Spin}(8)\subset\mathrm{Spin}(9)\subset F_4\subset E_{6(-26)}.
+G_2\subset\mathrm{Spin}(7)\subset\mathrm{Spin}(8)\subset
+\mathrm{Spin}(9)\subset F_4\subset E_{6(-26)}.
 \]
 
 The numerical stabilizer bases are runtime alignments inside the exact-data
@@ -106,9 +110,22 @@ S_t=A_tS_{t-1}R_t^{\mathsf T}+B_t,
 o_t=S_t^{\mathsf T}q_t.
 \]
 
-Tying (e_{t,j}=\beta_{t,j}k_{t,j}) recovers block DeltaRule. The default
-keeps erase and write directions independent because the local evidence never
-proved tying optimal.
+Tying (e_{t,j}=\beta_{t,j}k_{t,j}) recovers block DeltaRule. Version 1.3.1
+uses this contractive tied law by default because unconstrained independent
+erase does not certify stability. Independent and unconstrained directions
+remain explicit falsifiers. A separate sigmoid write-strength gate controls
+the additive term, and queries are normalized by default.
+
+For noncompact E6(-26), bounded left retention alone is insufficient because
+the right action can expand. The direct and polar charts therefore compensate
+retention using a conservative bound on the symmetric tangent:
+
+\[
+\rho_{\mathrm{effective}}
+=\rho\exp(-\lVert P\rVert_F).
+\]
+
+Compact G2 through F4 have zero compensation in the invariant trace metric.
 
 ## Readout keeps both direction and exceptional scale
 
@@ -192,6 +209,15 @@ The exceptional analogue of projective geometry is instead the octonionic
 projective plane (\mathbb OP^2=F_4/\mathrm{Spin}(9)), realized by rank-one
 Albert elements. This may become a router/address manifold without replacing
 the 27D memory.
+
+## Carrier horizon
+
+The 27D Albert carrier ends honestly at E6(-26). Continuing the compatible
+real-form chain to E7(-25) requires the 56D Freudenthal system with its
+symplectic and quartic invariants. A linear E8(-24) continuation requires the
+248D adjoint carrier; the 57D quasiconformal realization is nonlinear and does
+not satisfy this affine scan law. The exact boundary and branching data are in
+[`EXCEPTIONAL_LADDER.md`](EXCEPTIONAL_LADDER.md).
 
 ## Sources and horizon
 

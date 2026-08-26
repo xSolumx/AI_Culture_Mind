@@ -1,5 +1,9 @@
 # Tiny Shakespeare development results
 
+> Historical v1.3.0 evidence. The settings and conclusions are preserved;
+> current v1.3.1 memory-law and matched Mamba-2 evidence is in
+> [`QUALITY_LEARNING_RESULTS.md`](QUALITY_LEARNING_RESULTS.md).
+
 **Date:** 2026-08-21
 **Status:** development evidence; no promoted language-quality claim
 

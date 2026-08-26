@@ -1,5 +1,9 @@
 # Shakespeare layer-localization fresh-seed result
 
+> Historical v1.3.0 localization evidence. It remains a valid negative result;
+> the repaired v1.3.1 cohort and official Mamba-2 comparison are documented in
+> [`QUALITY_LEARNING_RESULTS.md`](QUALITY_LEARNING_RESULTS.md).
+
 **Research author:** Hayden Austin
 
 **Date:** 2026-08-21

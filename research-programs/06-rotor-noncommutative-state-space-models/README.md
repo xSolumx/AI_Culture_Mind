@@ -13,14 +13,16 @@ v1.1 family uses a faithful `(8v,8s+,8s-)` cache. This is a model-design and
 controlled-ablation programme, distinct from the general scan/compiler algebra
 and from representation-theorem claims made without a trained model.
 
-The 2026-08-21 development successor
+The 2026-08-26 repaired development successor
 `SSM-Models/pure_f4_delta_ssm_v1_3/` is intentionally not yet called a
 maintained trained model. It supplies the semantic and algebraic machinery for
 one 27D Albert carrier with selectable
-`Spin(8) / Spin(9) / F4 / E6(-26) / custom` action banks and a generalized
-delta memory. Its local audit removed inherited compactness, monotone-schedule,
-rank-one, tied-address, and incomplete-cache restrictions. Promotion requires
-new matched natural-data and complete-step hardware evidence.
+`G2 / Spin(7) / Spin(8) / Spin(9) / F4 / E6(-26) / custom` action banks and a
+repaired Delta memory. F4 and E6 pass controlled hidden-action learning gates,
+but official fused Mamba-2 wins every matched exact-SM75 natural-text seed.
+Dense exceptional action is therefore not promoted. E7(-25) requires a new
+56D Freudenthal carrier and E8(-24) a 248D adjoint carrier; neither is silently
+approximated on the Albert state.
 
 ## Core Questions
 
@@ -162,9 +164,11 @@ new matched natural-data and complete-step hardware evidence.
   negative: fused Mamba-2 wins all three seeds and averages 2.4942 bpb versus
   2.7477 for Pure Spin. The local steady-step throughput ordering is unresolved
   at the observed run-to-run variation.
-- Pure Exceptional Delta v1.3's fresh five-seed layer-localization gate rejects
-  early E6 transport: it wins only 2/5 seeds and is worse by 0.0093 bpb on
-  average. Identity remains the supported generic natural-text reference.
+- Pure Exceptional Delta v1.3.1's controlled composition gate establishes that
+  F4 and E6 action coordinates are learnable when required by the target. Its
+  repaired, parameter-matched exact-SM75 text cohort remains negative: official
+  fused Mamba-2 wins all three seeds by 0.15865 mean bpb over safe E6 and is
+  about 3.63x faster. Dense exceptional transport remains task-specialized.
 - Hybrid Memory v1.4/v1.4.5 is a separate active model workspace. Its G15A
   exact SM75/FP32 primary cohort passes across three seeds: full Spin `S`
   reaches 1.0 symmetry macro versus 0.2 for commuting `C` and 0.1 for `I` and
@@ -403,7 +407,8 @@ new matched natural-data and complete-step hardware evidence.
 - [Final-only octonion-law result](../../SSM-Models/experiments/OCTONION_FINAL_ONLY_RESULTS.md)
 - [Current model inventory](../../SSM-Models/MODEL_STATUS.md)
 - [Pure Spin v1.2 frontier result](../../SSM-Models/pure_spin_ssm_v1_2/FRONTIER_TRAINING_RESULTS.md)
-- [Pure Exceptional Delta layer-localization result](../../SSM-Models/pure_f4_delta_ssm_v1_3/SHAKESPEARE_LAYER_LOCALIZATION_RESULTS.md)
+- [Pure Exceptional Delta v1.3.1 quality and learnability result](../../SSM-Models/pure_f4_delta_ssm_v1_3/QUALITY_LEARNING_RESULTS.md)
+- [Exceptional multi-carrier ladder boundary](../../SSM-Models/pure_f4_delta_ssm_v1_3/EXCEPTIONAL_LADDER.md)
 - [Hybrid Memory frontier review](../../SSM-Models/hybrid_memory_v1_4/FRONTIER_REVIEW_2026-08-25.md)
 - [Hybrid Spin/torus architecture boundary](../../SSM-Models/hybrid_memory_v1_4/SPIN_TORUS_RESEARCH.md)
 - [G15 Spin-Dirac status and result ledger](../../SSM-Models/hybrid_memory_v1_4/G15_SPIN_DIRAC_RESULTS.md)

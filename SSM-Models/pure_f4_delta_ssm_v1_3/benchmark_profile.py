@@ -72,6 +72,8 @@ def profile(args: argparse.Namespace) -> dict[str, object]:
     rows: dict[str, object] = {}
     action_specs = (
         ("identity", "identity", "direct"),
+        ("g2", "g2", "direct"),
+        ("spin7", "spin7", "direct"),
         ("spin8", "spin8", "direct"),
         ("spin9", "spin9", "direct"),
         ("f4", "f4", "direct"),
@@ -94,6 +96,12 @@ def profile(args: argparse.Namespace) -> dict[str, object]:
                 dtype=dtype,
             )
         ).requires_grad_()
+        cotangent = torch.randn(
+            action.representation_dim,
+            action.representation_dim,
+            device=device,
+            dtype=dtype,
+        )
 
         def action_training_forward(
             _action: torch.nn.Module = action,
@@ -114,7 +122,10 @@ def profile(args: argparse.Namespace) -> dict[str, object]:
         ) -> None:
             _coordinates.grad = None
             matrix = _action.ordered(_coordinates)
-            matrix.square().mean().backward()
+            # Frobenius norm is constant for compact orthogonal actions and
+            # therefore gives a mathematically zero gradient.  A fixed random
+            # cotangent measures the actual VJP path instead.
+            (matrix * cotangent).mean().backward()
 
         action_training_samples = measure(
             action_training_forward,
@@ -200,7 +211,7 @@ def profile(args: argparse.Namespace) -> dict[str, object]:
     root = Path(__file__).resolve().parent
     return {
         "schema_version": 1,
-        "experiment": "Pure Exceptional Delta SSM v1.3 development profile",
+        "experiment": "Pure Exceptional Delta SSM v1.3.1 development profile",
         "status": "development bottleneck measurement; not a promoted benchmark",
         "seed": args.seed,
         "shape": {
@@ -221,6 +232,11 @@ def profile(args: argparse.Namespace) -> dict[str, object]:
             "device": str(device),
             "device_name": (
                 torch.cuda.get_device_name(device) if device.type == "cuda" else None
+            ),
+            "compute_capability": (
+                list(torch.cuda.get_device_capability(device))
+                if device.type == "cuda"
+                else None
             ),
             "cuda_runtime": torch.version.cuda,
             "dtype": args.dtype,

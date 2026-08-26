@@ -29,6 +29,8 @@ ALBERT_DIM = 27
 ALBERT_TRACEFREE_DIM = 26
 F4_DIM = 52
 E6_DIM = 78
+G2_DIM = 14
+SPIN7_DIM = 21
 SPIN8_DIM = 28
 SPIN9_DIM = 36
 
@@ -255,6 +257,8 @@ class AlbertAlgebra:
     f4_raw: np.ndarray
     f4: np.ndarray
     f4_tracefree: np.ndarray
+    g2: np.ndarray
+    spin7: np.ndarray
     spin8: np.ndarray
     spin9: np.ndarray
     e6: np.ndarray
@@ -278,6 +282,10 @@ class AlbertAlgebra:
     def torch_generators(self, algebra: str, reference: torch.Tensor) -> torch.Tensor:
         if algebra == "f4":
             generators = self.f4
+        elif algebra == "g2":
+            generators = self.g2
+        elif algebra == "spin7":
+            generators = self.spin7
         elif algebra == "spin8":
             generators = self.spin8
         elif algebra == "spin9":
@@ -324,6 +332,29 @@ def build_albert_algebra() -> AlbertAlgebra:
     spin8_coefficients = _nullspace(spin8_constraints, SPIN8_DIM)
     spin8 = np.einsum("af,fij->aij", spin8_coefficients, f4)
 
+    # Complete the compact Albert ladder with one named triality embedding.
+    # The three off-diagonal octonion slots start at coordinates 3, 11, and
+    # 19.  Stabilizing the scalar unit in the first 8D carrier selects the
+    # vector-stabilizer Spin(7) inside Spin(8); stabilizing the corresponding
+    # unit in a second triality carrier selects their common compact G2.  The
+    # third unit is then fixed automatically.  These bases inherit the same
+    # numerical alignment boundary as the Spin(8)/Spin(9) stabilizers above.
+    octonion_units = np.eye(ALBERT_DIM, dtype=np.float64)[[3, 11, 19]]
+    spin7_constraints = np.stack(
+        [generator @ octonion_units[0] for generator in spin8], axis=1
+    )
+    spin7_coefficients = _nullspace(spin7_constraints, SPIN7_DIM)
+    spin7 = np.einsum("af,fij->aij", spin7_coefficients, spin8)
+    g2_constraints = np.concatenate(
+        [
+            np.stack([generator @ point for generator in spin8], axis=1)
+            for point in octonion_units[:2]
+        ],
+        axis=0,
+    )
+    g2_coefficients = _nullspace(g2_constraints, G2_DIM)
+    g2 = np.einsum("af,fij->aij", g2_coefficients, spin8)
+
     tracefree_basis = tracefree_to_raw_basis()
     metric = trace_metric()
     f4_tracefree = np.einsum(
@@ -348,6 +379,8 @@ def build_albert_algebra() -> AlbertAlgebra:
         f4_raw=f4_raw,
         f4=f4,
         f4_tracefree=f4_tracefree,
+        g2=g2,
+        spin7=spin7,
         spin8=spin8,
         spin9=spin9,
         e6=e6,
@@ -470,6 +503,8 @@ __all__ = [
     "ALBERT_TRACEFREE_DIM",
     "E6_DIM",
     "F4_DIM",
+    "G2_DIM",
+    "SPIN7_DIM",
     "SPIN8_DIM",
     "SPIN9_DIM",
     "AlbertAlgebra",

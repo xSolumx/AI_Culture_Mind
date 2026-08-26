@@ -32,6 +32,12 @@ def test_safe_numeric_backends_are_the_defaults() -> None:
     assert config.identity_fast_path is True
     assert config.albert_determinant_backend == "jordan"
     assert config.albert_product_backend == "dense"
+    assert config.key_parameterization == "tied_delta"
+    assert config.query_parameterization == "normalized"
+    assert config.noncompact_stability == "frobenius_bound"
+    assert torch.sigmoid(torch.tensor(config.retention_bias)).item() == pytest.approx(
+        0.9995, abs=1e-7
+    )
 
 
 def test_model_shape_causality_backward_and_finite_state() -> None:
@@ -80,7 +86,7 @@ def test_full_model_parallel_recurrent_output_and_gradient_parity() -> None:
 
 def test_every_action_tier_and_update_parameterization_executes() -> None:
     tokens = torch.randint(0, 256, (1, 2))
-    for algebra in ("identity", "spin8", "spin9", "f4", "e6"):
+    for algebra in ("identity", "g2", "spin7", "spin8", "spin9", "f4", "e6"):
         model = _tiny(
             action_algebra=algebra,
             channel_mixer="none",
@@ -111,6 +117,48 @@ def test_subgroup_schedule_is_explicit_but_not_forced_monotone() -> None:
         )
     )
     assert [block.action.coordinate_dim for block in reverse.blocks] == [78, 52, 36, 28]
+
+
+def test_completed_compact_ladder_has_named_coordinate_dimensions() -> None:
+    model = ExceptionalDeltaLM(
+        ExceptionalDeltaConfig(
+            d_model=8,
+            num_layers=6,
+            memory_width=2,
+            action_schedule=("g2", "spin7", "spin8", "spin9", "f4", "e6"),
+        )
+    )
+    assert [block.action.coordinate_dim for block in model.blocks] == [
+        14,
+        21,
+        28,
+        36,
+        52,
+        78,
+    ]
+
+
+def test_noncompact_bound_compensates_e6_action_expansion() -> None:
+    torch.manual_seed(91)
+    block = _tiny(channel_mixer="none", local_mixer="none").double().blocks[0]
+    coordinates = 0.03 * torch.randn(2, 3, 1, 78, dtype=torch.float64)
+    action = block.action.ordered(coordinates)
+    bound = block.action.log_operator_norm_bound(coordinates)
+    actual = torch.linalg.matrix_norm(action, ord=2)
+    assert bool((actual <= torch.exp(bound) * (1.0 + 1e-12)).all())
+    effective = 0.9995 * torch.exp(-bound) * actual
+    assert bool((effective <= 0.9995 * (1.0 + 1e-12)).all())
+
+
+def test_independent_write_gate_is_bounded_and_reaches_gradients() -> None:
+    torch.manual_seed(93)
+    block = _tiny(action_algebra="identity", channel_mixer="none").blocks[0]
+    hidden = torch.randn(2, 5, 16, requires_grad=True)
+    fields = block._control_fields(hidden)
+    assert fields["write_gate"].shape == (2, 5, 2)
+    assert bool(((fields["write_gate"] > 0) & (fields["write_gate"] < 1)).all())
+    fields["write_value"].square().mean().backward()
+    assert block.controller.bias.grad is not None
 
 
 def test_full_streaming_state_makes_chunked_model_exact() -> None:

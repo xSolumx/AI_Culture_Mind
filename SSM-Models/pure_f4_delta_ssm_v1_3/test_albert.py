@@ -12,6 +12,8 @@ from .action import (
 from .albert import (
     E6_DIM,
     F4_DIM,
+    G2_DIM,
+    SPIN7_DIM,
     SPIN8_DIM,
     SPIN9_DIM,
     albert_determinant,
@@ -76,9 +78,13 @@ def test_f4_derivations_have_exact_dimension_and_obey_leibniz() -> None:
 
 def test_executable_subgroup_ladder_has_expected_dimensions_and_closure() -> None:
     algebra = build_albert_algebra()
+    assert algebra.g2.shape[0] == G2_DIM
+    assert algebra.spin7.shape[0] == SPIN7_DIM
     assert algebra.spin8.shape[0] == SPIN8_DIM
     assert algebra.spin9.shape[0] == SPIN9_DIM
     for generators, dimension in (
+        (algebra.g2, G2_DIM),
+        (algebra.spin7, SPIN7_DIM),
         (algebra.spin8, SPIN8_DIM),
         (algebra.spin9, SPIN9_DIM),
     ):
@@ -89,6 +95,12 @@ def test_executable_subgroup_ladder_has_expected_dimensions_and_closure() -> Non
         for generator in generators[::5]:
             assert _span_residual(generator, algebra.f4) < 2e-13
     diagonal = np.eye(27)[:3]
+    triality_units = np.eye(27)[[3, 11, 19]]
+    assert np.max(np.abs(algebra.spin7 @ triality_units[0])) < 1e-13
+    assert (
+        np.max(np.abs(np.einsum("fij,pj->fpi", algebra.g2, triality_units)))
+        < 1e-13
+    )
     assert np.max(np.abs(np.einsum("fij,pj->fpi", algebra.spin8, diagonal))) < 1e-13
     assert np.max(np.abs(np.einsum("fij,j->fi", algebra.spin9, diagonal[0]))) < 1e-13
 

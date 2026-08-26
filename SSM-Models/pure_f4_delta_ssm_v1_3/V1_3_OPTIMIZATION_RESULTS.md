@@ -1,5 +1,11 @@
 # V1.3 rigorous optimization result
 
+> Historical v1.3.0 optimization evidence. The identity CUDA-graph result
+> remains valid for its recorded source. Current exceptional execution uses
+> `torch.compile(mode="default")`; `reduce-overhead` is rejected because
+> exceptional `matrix_exp` cannot be captured on the SM75 runtime. See
+> [`QUALITY_LEARNING_RESULTS.md`](QUALITY_LEARNING_RESULTS.md).
+
 **Date:** 2026-08-21  
 **Hardware:** NVIDIA GeForce RTX 2070 SUPER, WSL2, PyTorch 2.10.0+cu130  
 **Status:** accepted semantic fast path; rejected determinant shortcut; optional

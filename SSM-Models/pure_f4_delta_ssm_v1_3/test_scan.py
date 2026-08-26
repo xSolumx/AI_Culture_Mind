@@ -6,6 +6,7 @@ from .scan import (
     compile_delta_transition,
     compile_one_sided_delta_transition,
     compose_transition,
+    direct_recurrent_delta_scan,
     parallel_delta_scan,
     parallel_one_sided_delta_scan,
     recurrent_delta_scan,
@@ -74,6 +75,39 @@ def test_parallel_and_recurrent_scans_match_outputs_states_and_gradients() -> No
     parallel_gradients = torch.autograd.grad(parallel_reads, parallel_inputs, output_gradient)
     for actual, expected in zip(parallel_gradients, recurrent_gradients, strict=True):
         torch.testing.assert_close(actual, expected, rtol=3e-10, atol=3e-10)
+
+
+def test_direct_rank_r_recurrence_matches_compiled_transition_and_gradients() -> None:
+    expected_inputs, _, _ = _fixture()
+    actual_inputs = [
+        value.detach().clone().requires_grad_(True) for value in expected_inputs
+    ]
+    expected = _run(expected_inputs, recurrent_delta_scan)
+    retention, write_key, erase_key, write_value, tangent, initial, query = actual_inputs
+    actual = direct_recurrent_delta_scan(
+        retention,
+        write_key,
+        erase_key,
+        write_value,
+        initial,
+        query,
+        torch.matrix_exp(tangent),
+    )
+    for actual_tensor, expected_tensor in zip(actual, expected, strict=True):
+        torch.testing.assert_close(
+            actual_tensor, expected_tensor, rtol=2e-11, atol=2e-11
+        )
+    output_gradient = torch.randn_like(expected[0])
+    expected_gradients = torch.autograd.grad(
+        expected[0], expected_inputs, output_gradient
+    )
+    actual_gradients = torch.autograd.grad(actual[0], actual_inputs, output_gradient)
+    for actual_gradient, expected_gradient in zip(
+        actual_gradients, expected_gradients, strict=True
+    ):
+        torch.testing.assert_close(
+            actual_gradient, expected_gradient, rtol=3e-10, atol=3e-10
+        )
 
 
 def test_rank_one_tied_keys_recover_delta_prediction_error_update() -> None:

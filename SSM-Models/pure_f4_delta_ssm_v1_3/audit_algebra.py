@@ -61,6 +61,8 @@ def build_report() -> dict[str, object]:
     determinant_errors: dict[str, float] = {}
     orthogonality_errors: dict[str, float] = {}
     for name, generators in (
+        ("g2", algebra.g2),
+        ("spin7", algebra.spin7),
         ("spin8", algebra.spin8),
         ("spin9", algebra.spin9),
         ("f4", algebra.f4),
@@ -80,13 +82,21 @@ def build_report() -> dict[str, object]:
     diagonal = np.eye(27)[:3]
     report = {
         "schema_version": 1,
-        "experiment": "Pure Exceptional Delta SSM v1.3 algebra audit",
+        "experiment": "Pure Exceptional Delta SSM v1.3.1 algebra audit",
         "construction_hash_sha256": _hash_arrays(
-            structure, algebra.f4_raw, algebra.spin8, algebra.spin9, algebra.e6
+            structure,
+            algebra.f4_raw,
+            algebra.g2,
+            algebra.spin7,
+            algebra.spin8,
+            algebra.spin9,
+            algebra.e6,
         ),
         "dimensions": {
             "albert": 27,
             "tracefree_albert": 26,
+            "g2": int(algebra.g2.shape[0]),
+            "spin7": int(algebra.spin7.shape[0]),
             "spin8": int(algebra.spin8.shape[0]),
             "spin9": int(algebra.spin9.shape[0]),
             "f4": int(algebra.f4.shape[0]),
@@ -101,6 +111,18 @@ def build_report() -> dict[str, object]:
             "f4_skew_max_abs": float(np.max(np.abs(algebra.f4 + algebra.f4.swapaxes(1, 2)))),
             "e6_complement_symmetric_max_abs": float(
                 np.max(np.abs(algebra.e6[52:] - algebra.e6[52:].swapaxes(1, 2)))
+            ),
+            "spin7_first_triality_unit_fix_max_abs": float(
+                np.max(np.abs(algebra.spin7 @ np.eye(27)[3]))
+            ),
+            "g2_two_triality_units_fix_max_abs": float(
+                np.max(
+                    np.abs(
+                        np.einsum(
+                            "fij,pj->fpi", algebra.g2, np.eye(27)[[3, 11]]
+                        )
+                    )
+                )
             ),
             "spin8_diagonal_frame_fix_max_abs": float(
                 np.max(np.abs(np.einsum("fij,pj->fpi", algebra.spin8, diagonal)))
@@ -119,8 +141,8 @@ def build_report() -> dict[str, object]:
         ),
         "claim_boundary": {
             "exact": "dyadic Albert product and modular rank-52 derivation witness",
-            "numerical": "Spin(8)/Spin(9) stabilizer alignment and floating exponential invariants",
-            "open": "optimized kernels, trained quality, scaling, and E7/Freudenthal continuation",
+            "numerical": "G2/Spin(7)/Spin(8)/Spin(9) stabilizer alignment and floating exponential invariants",
+            "open": "custom fused kernels, general task transfer, scaling, and E7/Freudenthal continuation",
         },
     }
     return report

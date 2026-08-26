@@ -131,3 +131,30 @@ its cold compilation cost is material. Full evidence is in
   needs a 56D symplectic/quartic carrier and a separate correctness gate.
 - No CUDA or quality claim is inherited from v1.2. Those require new matched
   artifacts.
+
+## V1.3.1 amendment — 2026-08-26
+
+The completed audit found three additional accidental restrictions and one
+real carrier boundary.
+
+1. The old `sigmoid(2)=0.8808` retention initialization retained only about
+   `0.00030` of an untouched state after 64 tokens. V1.3.1 initializes at
+   `0.9995`, adds an independent write-strength gate, and normalizes queries.
+2. Independent erase directions plus scalar retention did not certify a
+   contractive left transition. Tied Delta erase is now the safe default;
+   independent and unconstrained laws remain named controls.
+3. Noncompact E6 transport can expand the right action. Direct and polar E6
+   now apply a conservative symmetric-tangent norm compensation.
+4. The 27D carrier can implement the full named
+   `G2 -> Spin(7) -> Spin(8) -> Spin(9) -> F4 -> E6(-26)` ladder, but not E7 or
+   E8. E7(-25) requires a 56D Freudenthal carrier; linear E8(-24) requires the
+   248D adjoint.
+
+The repaired learning evidence separates optimization from usefulness. F4 and
+E6 each learn hidden generator coordinates unavailable to their predecessor
+and extrapolate to longer compositions on all three seeds. Yet official fused
+Mamba-2 beats every exceptional arm on all three matched SM75 natural-text
+seeds. Dense exceptional action is therefore supported for aligned mechanisms,
+not promoted as a generic language-memory prior. See
+[`QUALITY_LEARNING_RESULTS.md`](QUALITY_LEARNING_RESULTS.md) and
+[`EXCEPTIONAL_LADDER.md`](EXCEPTIONAL_LADDER.md).

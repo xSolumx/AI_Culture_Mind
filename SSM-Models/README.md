@@ -210,6 +210,19 @@
 > [SM75 runtime ledger](hybrid_memory_v1_4/SM75_NATIVE_RUNTIME.md), and
 > [current model inventory](MODEL_STATUS.md).
 
+> **2026-08-26 Pure Exceptional Delta SSM v1.3.1 repair and learning gate.**
+> The 27D carrier now implements the complete named
+> `G2 -> Spin(7) -> Spin(8) -> Spin(9) -> F4 -> E6(-26)` ladder, a safer
+> tied-Delta/write-gated memory law, noncompact E6 norm compensation, and a
+> bounded-memory direct recurrence for long sequences. Controlled hidden-
+> coordinate tests show that F4 and E6 learn directions unavailable to their
+> predecessor groups and extrapolate through length-16 compositions on all
+> three seeds. The matched exact-SM75 natural-text gate is negative: official
+> fused Mamba-2 wins all three seeds, with better mean bpb, about 3.63x the
+> training throughput, and roughly one quarter of the peak CUDA allocation.
+> See [quality and learnability results](pure_f4_delta_ssm_v1_3/QUALITY_LEARNING_RESULTS.md)
+> and the [multi-carrier ladder boundary](pure_f4_delta_ssm_v1_3/EXCEPTIONAL_LADDER.md).
+
 > **2026-08-21 Pure Exceptional Delta SSM v1.3 development boundary.**
 > [`pure_f4_delta_ssm_v1_3/`](pure_f4_delta_ssm_v1_3/) now contains an isolated
 > semantic PyTorch implementation of the full Albert-algebra hierarchy

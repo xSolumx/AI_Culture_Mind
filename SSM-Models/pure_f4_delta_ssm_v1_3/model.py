@@ -31,13 +31,14 @@ from .albert import (
 from .scan import (
     compile_delta_transition,
     compile_one_sided_delta_transition,
+    direct_recurrent_delta_scan,
     parallel_delta_scan,
     parallel_one_sided_delta_scan,
     recurrent_delta_scan,
     recurrent_one_sided_delta_scan,
 )
 
-__version__ = "1.3.0-dev"
+__version__ = "1.3.1"
 
 
 @dataclass(frozen=True)
@@ -47,10 +48,16 @@ class ExceptionalDeltaConfig:
     num_layers: int = 4
     memory_width: int = 8
     update_rank: int = 2
-    action_algebra: Literal["identity", "spin8", "spin9", "f4", "e6"] = "e6"
+    action_algebra: Literal[
+        "identity", "g2", "spin7", "spin8", "spin9", "f4", "e6"
+    ] = "e6"
     action_geometry: Literal["direct", "polar", "cartan"] = "direct"
     action_schedule: (
-        tuple[Literal["identity", "spin8", "spin9", "f4", "e6"], ...] | None
+        tuple[
+            Literal["identity", "g2", "spin7", "spin8", "spin9", "f4", "e6"],
+            ...,
+        ]
+        | None
     ) = None
     action_coordinate_scale: float = 0.02
     action_factors: int = 1
@@ -66,11 +73,19 @@ class ExceptionalDeltaConfig:
     expansion: int = 2
     key_parameterization: Literal[
         "independent_bounded", "tied_delta", "unconstrained"
-    ] = "independent_bounded"
+    ] = "tied_delta"
+    query_parameterization: Literal["normalized", "bounded", "unconstrained"] = (
+        "normalized"
+    )
     retention_parameterization: Literal[
         "sigmoid", "exp_negative", "unconstrained"
     ] = "exp_negative"
-    retention_bias: float = 2.0
+    # exp(-softplus(-x)) == sigmoid(x).  The historical 2.0 default retained
+    # only about 3e-4 of an untouched state over 64 tokens.  The new default is
+    # logit(0.9995), an initial half-life of roughly 1,386 tokens.
+    retention_bias: float = 7.6004023345004
+    write_gate_bias: float = -2.0
+    noncompact_stability: Literal["none", "frobenius_bound"] = "frobenius_bound"
     dropout: float = 0.0
     tie_embeddings: bool = True
 
@@ -96,6 +111,14 @@ class ExceptionalDeltaConfig:
             raise ValueError("albert_determinant_backend must be explicit or jordan")
         if not 0.0 <= self.dropout < 1.0:
             raise ValueError("dropout must lie in [0,1)")
+        if self.query_parameterization not in {
+            "normalized",
+            "bounded",
+            "unconstrained",
+        }:
+            raise ValueError("unknown query parameterization")
+        if self.noncompact_stability not in {"none", "frobenius_bound"}:
+            raise ValueError("unknown noncompact stability policy")
         if (
             self.action_schedule is not None
             and len(self.action_schedule) != self.num_layers
@@ -253,7 +276,10 @@ class ExceptionalDeltaBlock(nn.Module):
     def __init__(
         self,
         config: ExceptionalDeltaConfig,
-        action_algebra: Literal["identity", "spin8", "spin9", "f4", "e6"] | None = None,
+        action_algebra: Literal[
+            "identity", "g2", "spin7", "spin8", "spin9", "f4", "e6"
+        ]
+        | None = None,
         generators: torch.Tensor | None = None,
     ) -> None:
         super().__init__()
@@ -280,6 +306,7 @@ class ExceptionalDeltaBlock(nn.Module):
             "write_key": r * h,
             "erase_key": r * h,
             "erase_gate": r,
+            "write_gate": r,
             "write_value": r * v,
             "query": h,
         }
@@ -341,6 +368,14 @@ class ExceptionalDeltaBlock(nn.Module):
         stop = start + self._segments["retention"]
         with torch.no_grad():
             self.controller.bias[start:stop].fill_(self.config.retention_bias)
+            write_gate_start = 0
+            for name, size in self._segments.items():
+                if name == "write_gate":
+                    break
+                write_gate_start += size
+            self.controller.bias[
+                write_gate_start : write_gate_start + self._segments["write_gate"]
+            ].fill_(self.config.write_gate_bias)
 
     def _retention(self, raw: torch.Tensor) -> torch.Tensor:
         mode = self.config.retention_parameterization
@@ -382,12 +417,19 @@ class ExceptionalDeltaBlock(nn.Module):
         fields["write_key"] = fields["write_key"].reshape(batch, length, rank, width)
         fields["erase_key"] = fields["erase_key"].reshape(batch, length, rank, width)
         fields["erase_gate"] = fields["erase_gate"].reshape(batch, length, rank)
+        fields["write_gate"] = torch.sigmoid(
+            fields["write_gate"].reshape(batch, length, rank)
+        )
         fields["write_value"] = fields["write_value"].reshape(
             batch, length, rank, value_dim
-        )
+        ) * fields["write_gate"][..., None]
         fields["write_key"], fields["erase_key"] = self._keys(
             fields["write_key"], fields["erase_key"], fields["erase_gate"]
         )
+        if self.config.query_parameterization == "normalized":
+            fields["query"] = F.normalize(fields["query"], dim=-1)
+        elif self.config.query_parameterization == "bounded":
+            fields["query"] = torch.tanh(fields["query"])
         if valid_mask is not None:
             if valid_mask.shape != hidden.shape[:2]:
                 raise ValueError("valid_mask must have shape (batch,length)")
@@ -398,6 +440,7 @@ class ExceptionalDeltaBlock(nn.Module):
             )
             fields["write_key"] = fields["write_key"] * mask[..., None, None]
             fields["write_value"] = fields["write_value"] * mask[..., None, None]
+            fields["write_gate"] = fields["write_gate"] * mask[..., None]
             fields["query"] = fields["query"] * mask[..., None]
         return fields
 
@@ -406,7 +449,9 @@ class ExceptionalDeltaBlock(nn.Module):
         hidden: torch.Tensor,
         state: ExceptionalDeltaState | None = None,
         *,
-        scan_mode: Literal["auto", "recurrent", "parallel"] = "auto",
+        scan_mode: Literal[
+            "auto", "recurrent", "recurrent_direct", "parallel"
+        ] = "auto",
         valid_mask: torch.Tensor | None = None,
     ) -> tuple[torch.Tensor, ExceptionalDeltaState]:
         value, gate = self.input_projection(self.norm(hidden)).chunk(2, dim=-1)
@@ -425,15 +470,52 @@ class ExceptionalDeltaBlock(nn.Module):
         use_identity_fast_path = self.config.identity_fast_path and isinstance(
             self.action, IdentityAction
         )
-        if use_identity_fast_path:
+        if scan_mode == "auto":
+            if value.shape[1] > 256:
+                scan_mode = "recurrent_direct"
+            else:
+                scan_mode = "parallel" if value.shape[1] > 1 else "recurrent"
+        action = None
+        if not use_identity_fast_path:
+            action = self.action.ordered(fields["coordinates"])
+            if self.config.noncompact_stability == "frobenius_bound":
+                log_norm_bound = self.action.log_operator_norm_bound(
+                    fields["coordinates"]
+                )
+                fields["retention"] = fields["retention"] * torch.exp(
+                    -log_norm_bound
+                )[..., None]
+        memory = None if state is None else state.memory
+        if memory is None:
+            memory = value.new_zeros((value.shape[0], *self.state_shape))
+        if scan_mode == "recurrent_direct":
+            reads, _, final_memory = direct_recurrent_delta_scan(
+                fields["retention"],
+                fields["write_key"],
+                fields["erase_key"],
+                fields["write_value"],
+                memory,
+                fields["query"],
+                action,
+            )
+        elif use_identity_fast_path:
             transition = compile_one_sided_delta_transition(
                 fields["retention"],
                 fields["write_key"],
                 fields["erase_key"],
                 fields["write_value"],
             )
+            scanner = (
+                parallel_one_sided_delta_scan
+                if scan_mode == "parallel"
+                else recurrent_one_sided_delta_scan
+            )
+            reads, _, final_memory = scanner(
+                transition, memory, fields["query"]
+            )
         else:
-            action = self.action.ordered(fields["coordinates"])
+            if action is None:
+                raise AssertionError("exceptional action was not constructed")
             transition = compile_delta_transition(
                 fields["retention"],
                 fields["write_key"],
@@ -441,20 +523,10 @@ class ExceptionalDeltaBlock(nn.Module):
                 fields["write_value"],
                 action,
             )
-        memory = None if state is None else state.memory
-        if memory is None:
-            memory = value.new_zeros((value.shape[0], *self.state_shape))
-        if scan_mode == "auto":
-            scan_mode = "parallel" if value.shape[1] > 1 else "recurrent"
-        if use_identity_fast_path:
-            scanner = (
-                parallel_one_sided_delta_scan
-                if scan_mode == "parallel"
-                else recurrent_one_sided_delta_scan
-            )
-        else:
             scanner = parallel_delta_scan if scan_mode == "parallel" else recurrent_delta_scan
-        reads, _, final_memory = scanner(transition, memory, fields["query"])
+            reads, _, final_memory = scanner(
+                transition, memory, fields["query"]
+            )
         if reads is None:
             raise AssertionError("query was supplied but scan returned no reads")
         if isinstance(self.read_features, AlbertInvariantReadout):
@@ -521,7 +593,9 @@ class ExceptionalDeltaLM(nn.Module):
         token_ids: torch.Tensor,
         states: Sequence[ExceptionalDeltaState | None] | None = None,
         *,
-        scan_mode: Literal["auto", "recurrent", "parallel"] = "auto",
+        scan_mode: Literal[
+            "auto", "recurrent", "recurrent_direct", "parallel"
+        ] = "auto",
         valid_mask: torch.Tensor | None = None,
     ) -> dict[str, Any]:
         if token_ids.ndim != 2 or token_ids.shape[1] < 1:

@@ -219,6 +219,54 @@ def recurrent_one_sided_delta_scan(
     return _read(stacked, query), stacked, state
 
 
+def direct_recurrent_delta_scan(
+    retention: torch.Tensor,
+    write_key: torch.Tensor,
+    erase_key: torch.Tensor,
+    write_value: torch.Tensor,
+    initial_state: torch.Tensor,
+    query: torch.Tensor | None = None,
+    action: torch.Tensor | None = None,
+) -> tuple[torch.Tensor | None, torch.Tensor, torch.Tensor]:
+    """Exact bounded-memory rank-r recurrence without dense transition prefixes.
+
+    This is the semantic form targeted by the SM75 kernel.  It avoids
+    materializing the ``H x H`` erase matrix and, unlike Hillis--Steele, never
+    stores ``log2(length)`` copies of the full ``V x V`` right action.  The
+    Python loop is a correctness/long-context backend, not a fused speed claim.
+    """
+
+    if write_key.shape != erase_key.shape:
+        raise ValueError("write and erase keys must have identical shapes")
+    if write_value.shape[:-1] != write_key.shape[:-1]:
+        raise ValueError("write values must share key leading and rank axes")
+    if retention.shape[:2] != write_key.shape[:2]:
+        raise ValueError("retention and keys must share batch/sequence axes")
+    if action is not None and (
+        action.shape[:2] != retention.shape[:2]
+        or action.shape[-2:] != (write_value.shape[-1], write_value.shape[-1])
+    ):
+        raise ValueError("action must match batch, sequence, and value dimensions")
+    state = initial_state
+    states = []
+    for position in range(retention.shape[1]):
+        state = retention[:, position, :, None] * state
+        erased_values = torch.einsum(
+            "brh,bhv->brv", erase_key[:, position], state
+        )
+        state = state - torch.einsum(
+            "brh,brv->bhv", write_key[:, position], erased_values
+        )
+        if action is not None:
+            state = state @ action[:, position].transpose(-1, -2)
+        state = state + torch.einsum(
+            "brh,brv->bhv", write_key[:, position], write_value[:, position]
+        )
+        states.append(state)
+    stacked = torch.stack(states, dim=1)
+    return _read(stacked, query), stacked, state
+
+
 def parallel_delta_scan(
     transition: TwoSidedAffineTransition,
     initial_state: torch.Tensor,
@@ -253,6 +301,7 @@ __all__ = [
     "compile_one_sided_delta_transition",
     "compose_one_sided_transition",
     "compose_transition",
+    "direct_recurrent_delta_scan",
     "one_sided_transition_prefix_scan",
     "parallel_delta_scan",
     "parallel_one_sided_delta_scan",
